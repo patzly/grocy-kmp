@@ -1,0 +1,66 @@
+[versions]
+# Core build tooling
+agp = "9.4.1"
+kotlin = "2.4.20"
+
+# Android SDK levels
+android-compileSdk = "37"
+android-targetSdk = "37"
+android-minSdk = "24"
+android-wear-minSdk = "30"
+
+# Multiplatform Compose and navigation
+compose-multiplatform = "1.12.1"
+compose-material3 = "1.9.0"
+jetbrains-navigation3 = "1.1.2"
+jetbrains-lifecycle = "2.11.0"
+kotlinx-serialization = "1.11.0"
+
+# Android runner entry point
+androidx-activity = "1.13.0"
+
+# Wear OS
+androidx-wear-compose = "1.7.0"
+
+[libraries]
+# Multiplatform Compose runtime and UI
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-multiplatform" }
+compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose-multiplatform" }
+compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose-multiplatform" }
+compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose-multiplatform" }
+compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-multiplatform" }
+compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-material3" }
+compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-multiplatform" }
+
+# State management and serialization
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+jetbrains-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "jetbrains-lifecycle" }
+
+# Navigation 3 for Compose Multiplatform (brings the matching navigation3-runtime)
+jetbrains-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "jetbrains-navigation3" }
+
+# Android application host dependencies
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
+
+# Build logic (convention plugins)
+android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+
+# Wear OS UI
+androidx-wear-compose-foundation = { module = "androidx.wear.compose:compose-foundation", version.ref = "androidx-wear-compose" }
+androidx-wear-compose-material3 = { module = "androidx.wear.compose:compose-material3", version.ref = "androidx-wear-compose" }
+
+[plugins]
+# Core plugins
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-kmp-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+
+# Convention plugins (build-logic)
+grocy-kmp-library = { id = "grocy.kmp.library" }
+grocy-kmp-compose = { id = "grocy.kmp.compose" }
+grocy-android-application = { id = "grocy.android.application" }
+grocy-web-application = { id = "grocy.web.application" }
