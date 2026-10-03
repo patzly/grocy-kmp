@@ -80,7 +80,7 @@ include(":apps:web")
 // Core Modules
 include(":core:model")
 include(":core:network")
-//include(":core:data")
+include(":core:data")
 //include(":core:resources")
 include(":core:design")
 include(":core:navigation")

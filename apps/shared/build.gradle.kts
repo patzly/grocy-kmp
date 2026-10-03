@@ -5,6 +5,7 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
+            implementation(projects.core.data)
             implementation(projects.core.design)
             implementation(projects.core.navigation)
             implementation(projects.core.network)

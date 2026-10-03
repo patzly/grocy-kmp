@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.apps.shared
 
+import com.patrickzedler.grocy.core.data.auth.AuthRepository
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.createGrocyHttpClient
 
@@ -14,4 +15,6 @@ class AppGraph(
     private val httpClient by lazy { createGrocyHttpClient() }
 
     val grocyApi by lazy { GrocyApi(httpClient) }
+
+    val authRepository by lazy { AuthRepository(platform.credentialStore, grocyApi) }
 }
