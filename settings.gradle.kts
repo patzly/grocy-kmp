@@ -78,8 +78,8 @@ include(":apps:wear")
 include(":apps:web")
 
 // Core Modules
-//include(":core:model")
-//include(":core:network")
+include(":core:model")
+include(":core:network")
 //include(":core:data")
 //include(":core:resources")
 include(":core:design")

@@ -1,5 +1,8 @@
 package com.patrickzedler.grocy.apps.shared
 
+import com.patrickzedler.grocy.core.network.GrocyApi
+import com.patrickzedler.grocy.core.network.createGrocyHttpClient
+
 /**
  * Manual dependency injection: creates every shared object once and hands it to the features.
  *
@@ -7,4 +10,8 @@ package com.patrickzedler.grocy.apps.shared
  */
 class AppGraph(
     private val platform: PlatformDependencies,
-)
+) {
+    private val httpClient by lazy { createGrocyHttpClient() }
+
+    val grocyApi by lazy { GrocyApi(httpClient) }
+}
