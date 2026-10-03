@@ -3,14 +3,13 @@
 /local.properties
 /.idea
 .DS_Store
-/build
+build/
 /captures
 .externalNativeBuild
 .cxx
 
 # Kotlin & Multiplatform
 .kotlin
-kotlin-js-store
 node_modules
 
 # Signing & Keystores
@@ -24,23 +23,3 @@ node_modules
 # OS & Environment
 Thumbs.db
 .direnv
-# Project exclude paths
-/apps/android-foss/build/
-/apps/android-play/build/
-/apps/wear/build/
-/apps/web/build/
-/apps/web/build/classes/kotlin/wasmJs/main/
-/build-logic/convention/build/
-/build-logic/convention/build/classes/kotlin/main/
-/core/design/build/
-/core/design/build/classes/kotlin/android/main/
-/core/design/build/classes/kotlin/wasmJs/main/
-/core/navigation/build/
-/core/navigation/build/classes/kotlin/android/main/
-/core/navigation/build/classes/kotlin/wasmJs/main/
-/feature/start/api/build/
-/feature/start/api/build/classes/kotlin/android/main/
-/feature/start/api/build/classes/kotlin/wasmJs/main/
-/feature/start/impl/build/
-/feature/start/impl/build/classes/kotlin/android/main/
-/feature/start/impl/build/classes/kotlin/wasmJs/main/

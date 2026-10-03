@@ -4,25 +4,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.patrickzedler.grocy.core.design.GrocyTheme
-import com.patrickzedler.grocy.core.navigation.GrocyNavDisplay
-import com.patrickzedler.grocy.feature.start.api.StartRoute
-import com.patrickzedler.grocy.feature.start.api.startRouteSerializers
-import com.patrickzedler.grocy.feature.start.impl.startEntry
+import com.patrickzedler.grocy.apps.shared.GrocyApp
 
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
+    val graph = (application as FossApplication).graph
     setContent {
-      GrocyTheme {
-        GrocyNavDisplay(
-          startRoute = StartRoute,
-          routeSerializers = startRouteSerializers,
-        ) {
-          startEntry()
-        }
-      }
+      GrocyApp(graph)
     }
   }
 }

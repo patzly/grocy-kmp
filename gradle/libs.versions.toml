@@ -11,13 +11,27 @@ android-wear-minSdk = "30"
 
 # Multiplatform Compose and navigation
 compose-multiplatform = "1.12.1"
-compose-material3 = "1.9.0"
+# Alpha on purpose: Material 3 Expressive, matching Compose Multiplatform 1.12.1
+compose-material3 = "1.12.0-alpha03"
 jetbrains-navigation3 = "1.1.2"
 jetbrains-lifecycle = "2.11.0"
 kotlinx-serialization = "1.11.0"
 
+# Networking
+ktor = "3.6.0"
+
+# Storage (Android only, credentials)
+androidx-datastore = "1.2.1"
+
 # Android runner entry point
 androidx-activity = "1.13.0"
+
+# Barcode scanning
+androidx-camera = "1.6.2"
+zxing = "3.5.4"
+mlkit-barcode-scanning = "17.3.0"
+# npm package for the web scanner, used via npm() in Gradle, not a Maven artifact
+npm-zxing-wasm = "3.1.4"
 
 # Wear OS
 androidx-wear-compose = "1.7.0"
@@ -35,12 +49,36 @@ compose-components-resources = { module = "org.jetbrains.compose.components:comp
 # State management and serialization
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 jetbrains-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "jetbrains-lifecycle" }
+jetbrains-lifecycle-viewmodel-navigation3 = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "jetbrains-lifecycle" }
 
 # Navigation 3 for Compose Multiplatform (brings the matching navigation3-runtime)
 jetbrains-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "jetbrains-navigation3" }
 
+# Networking
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
+
+# Storage
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
+
 # Android application host dependencies
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
+
+# Barcode scanning: camera (Android)
+androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "androidx-camera" }
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "androidx-camera" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "androidx-camera" }
+androidx-camera-compose = { module = "androidx.camera:camera-compose", version.ref = "androidx-camera" }
+
+# Barcode scanning: decoders
+zxing-core = { module = "com.google.zxing:core", version.ref = "zxing" }
+# Closed source, only for core:scanner-mlkit and android-play
+mlkit-barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "mlkit-barcode-scanning" }
 
 # Build logic (convention plugins)
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }

@@ -73,6 +73,7 @@ rootProject.name = "grocy-kmp"
 // Applications
 include(":apps:android-foss")
 include(":apps:android-play")
+include(":apps:shared")
 include(":apps:wear")
 include(":apps:web")
 

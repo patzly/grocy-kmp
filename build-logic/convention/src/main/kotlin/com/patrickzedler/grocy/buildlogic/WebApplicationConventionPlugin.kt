@@ -26,6 +26,12 @@ class WebApplicationConventionPlugin : Plugin<Project> {
                 }
                 binaries.executable()
             }
+
+            sourceSets.wasmJsMain.dependencies {
+                // ComposeViewport, the browser entry point of every web app
+                implementation(libs.library("compose-runtime"))
+                implementation(libs.library("compose-ui"))
+            }
         }
     }
 }
