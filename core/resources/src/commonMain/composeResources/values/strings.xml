@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <!-- Common actions -->
+  <string name="action_more_options">More options</string>
+
   <!-- Login: choice -->
   <string name="login_choice_title">Welcome to Grocy</string>
   <string name="login_choice_subtitle">ERP beyond your fridge</string>

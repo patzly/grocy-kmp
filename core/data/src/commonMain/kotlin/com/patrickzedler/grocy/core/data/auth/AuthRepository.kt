@@ -17,15 +17,22 @@ class AuthRepository(
     }
 
     /**
-     * Verifies that [connection] reaches a Grocy server that accepts it, then stores it.
+     * Checks that [connection] reaches a Grocy server that accepts it, without storing anything.
      *
      * @throws GrocyApiException if the server is unreachable, rejects the key or is no Grocy server.
      */
-    suspend fun login(connection: ServerConnection) {
+    suspend fun verify(connection: ServerConnection) {
         // Fails early with a clear error if the address is no Grocy server at all
         grocyApi.systemInfo(connection)
         // Requires authentication, so this is where a wrong API key shows up
         grocyApi.currentUser(connection)
+    }
+
+    /**
+     * Stores [connection] and thereby logs in. Call [verify] first, unless the connection was
+     * already verified elsewhere.
+     */
+    suspend fun saveLogin(connection: ServerConnection) {
         credentialStore.save(connection)
     }
 
