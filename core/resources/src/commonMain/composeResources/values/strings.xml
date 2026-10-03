@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Login: choice -->
+  <string name="login_choice_title">Welcome to Grocy</string>
+  <string name="login_choice_subtitle">ERP beyond your fridge</string>
+  <string name="login_choice_own_server">Own server</string>
+  <string name="login_choice_demo_server">Demo server</string>
+
+  <!-- Login: errors -->
+  <string name="login_error_unreachable">The server could not be reached. Check your connection and the server address.</string>
+  <string name="login_error_unauthorized">The API key was rejected.</string>
+  <string name="login_error_not_grocy">This address does not belong to a Grocy server.</string>
+  <string name="login_error_unknown">Something went wrong. Please try again.</string>
+</resources>
