@@ -9,8 +9,16 @@ import kotlinx.serialization.modules.polymorphic
 @Serializable
 data object LoginChoiceRoute : Route
 
+@Serializable
+data object LoginScanRoute : Route
+
+@Serializable
+data object LoginManualRoute : Route
+
 val loginRouteSerializers = SerializersModule {
     polymorphic(NavKey::class) {
         subclass(LoginChoiceRoute::class, LoginChoiceRoute.serializer())
+        subclass(LoginScanRoute::class, LoginScanRoute.serializer())
+        subclass(LoginManualRoute::class, LoginManualRoute.serializer())
     }
 }

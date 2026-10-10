@@ -57,7 +57,7 @@ private fun GrocyNavigation(
     }
 
     GrocyNavDisplay(navigator) {
-        loginEntries(graph)
+        loginEntries(graph, navigator)
         startEntry()
     }
 }

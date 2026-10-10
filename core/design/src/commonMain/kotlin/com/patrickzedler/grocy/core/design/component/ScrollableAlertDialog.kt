@@ -1,0 +1,358 @@
+package com.patrickzedler.grocy.core.design.component
+
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.semantics.paneTitle
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.takeOrElse
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.resources.dialog_pane_title
+import org.jetbrains.compose.resources.stringResource
+
+@Composable
+fun ScrollableAlertDialog(
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+    horizontalBasePadding: Dp = 32.dp,
+    verticalBasePadding: Dp = 8.dp,
+    paneTitle: String = stringResource(Res.string.dialog_pane_title),
+    properties: DialogProperties = scrollableAlertDialogProperties(),
+    content: @Composable () -> Unit,
+) {
+    Dialog(onDismissRequest = onDismissRequest, properties = properties) {
+        val layoutDirection = LocalLayoutDirection.current
+        val safePadding = WindowInsets.safeDrawing.asPaddingValues()
+
+        val horizontalPadding = maxOf(
+            safePadding.calculateStartPadding(layoutDirection),
+            safePadding.calculateEndPadding(layoutDirection)
+        ) + horizontalBasePadding
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onDismissRequest
+                )
+                .padding(
+                    start = horizontalPadding,
+                    end = horizontalPadding,
+                    top = safePadding.calculateTopPadding() + verticalBasePadding,
+                    bottom = safePadding.calculateBottomPadding() + verticalBasePadding
+                ),
+            contentAlignment = Alignment.Center,
+        ) {
+            Box(
+                modifier = modifier
+                    .sizeIn(
+                        minWidth = 280.dp,
+                        maxWidth = 560.dp,
+                        maxHeight = 600.dp
+                    )
+                    .pointerInput(Unit) {
+                        detectTapGestures { }
+                    }
+                    .semantics { this.paneTitle = paneTitle },
+                propagateMinConstraints = true,
+            ) {
+                content()
+            }
+        }
+    }
+}
+
+@Composable
+fun ScrollableAlertDialogContent(
+    confirmButton: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    title: @Composable (() -> Unit)? = null,
+    icon: @Composable (() -> Unit)? = null,
+    subtitle: @Composable (() -> Unit)? = null,
+    dismissButton: @Composable (() -> Unit)? = null,
+    extraButton: @Composable (() -> Unit)? = null,
+    scrollState: ScrollState? = rememberScrollState(),
+    isScrollableControlledByContent: Boolean = false,
+    iconContentColor: Color = MaterialTheme.colorScheme.secondary,
+    titleContentColor: Color = MaterialTheme.colorScheme.onSurface,
+    textContentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
+    scrollableContentPadding: PaddingValues = PaddingValues(horizontal = 24.dp, vertical = 16.dp),
+    content: @Composable (() -> Unit)? = null,
+) {
+    Surface(
+        shape = AlertDialogDefaults.shape,
+        color = AlertDialogDefaults.containerColor,
+        tonalElevation = AlertDialogDefaults.TonalElevation,
+        modifier = modifier,
+    ) {
+        Column(modifier = Modifier.padding(vertical = 24.dp)) {
+            icon?.let {
+                CompositionLocalProvider(LocalContentColor provides iconContentColor) {
+                    Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                        icon()
+                    }
+                }
+            }
+
+            title?.let {
+                ProvideContentColorTextStyle(
+                    contentColor = titleContentColor,
+                    textStyle = MaterialTheme.typography.headlineSmall,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .padding(
+                                start = 24.dp,
+                                end = 24.dp,
+                                top = if (icon == null) 0.dp else 16.dp,
+                                bottom = if (subtitle == null) 16.dp else 4.dp,
+                            )
+                            .align(
+                                if (icon == null) Alignment.Start else Alignment.CenterHorizontally
+                            )
+                    ) {
+                        title()
+                    }
+                }
+            }
+
+            subtitle?.let {
+                ProvideContentColorTextStyle(
+                    contentColor = textContentColor,
+                    textStyle = MaterialTheme.typography.bodyMedium,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .padding(start = 24.dp, end = 24.dp, top = 0.dp, bottom = 16.dp)
+                            .align(
+                                if (icon == null) Alignment.Start else Alignment.CenterHorizontally
+                            ),
+                    ) {
+                        subtitle()
+                    }
+                }
+            }
+
+            val isScrollable by remember(scrollState, isScrollableControlledByContent) {
+                derivedStateOf {
+                    if (isScrollableControlledByContent) {
+                        true
+                    } else {
+                        scrollState?.let { it.maxValue > 0 } ?: false
+                    }
+                }
+            }
+
+            if (isScrollable && content != null) {
+                HorizontalDivider()
+            }
+
+            content?.let {
+                ProvideContentColorTextStyle(
+                    contentColor = textContentColor,
+                    textStyle = MaterialTheme.typography.bodyMedium,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f, fill = false)
+                            .align(Alignment.Start)
+                            .then(
+                                if (!isScrollableControlledByContent && scrollState != null) {
+                                    Modifier.verticalScroll(scrollState)
+                                } else {
+                                    Modifier
+                                }
+                            )
+                    ) {
+                        val layoutDirection = LocalLayoutDirection.current
+                        val applyContentPadding = isScrollable && !isScrollableControlledByContent
+                        Box(
+                            modifier = Modifier.padding(
+                                start = scrollableContentPadding.calculateStartPadding(layoutDirection),
+                                top = if (applyContentPadding) {
+                                    scrollableContentPadding.calculateTopPadding()
+                                } else {
+                                    0.dp
+                                },
+                                end = scrollableContentPadding.calculateEndPadding(layoutDirection),
+                                bottom = if (applyContentPadding) {
+                                    scrollableContentPadding.calculateBottomPadding()
+                                } else {
+                                    0.dp
+                                }
+                            ),
+                        ) {
+                            content()
+                        }
+                    }
+                }
+            }
+
+            if (isScrollable && content != null) {
+                HorizontalDivider()
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 24.dp, start = 24.dp, end = 24.dp),
+            ) {
+                AlertDialogCombinedButtons(
+                    confirmButton = confirmButton,
+                    dismissButton = dismissButton,
+                    extraButton = extraButton,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun AlertDialogCombinedButtons(
+    confirmButton: @Composable () -> Unit,
+    dismissButton: @Composable (() -> Unit)?,
+    extraButton: @Composable (() -> Unit)?
+) {
+    ProvideContentColorTextStyle(
+        contentColor = MaterialTheme.colorScheme.primary,
+        textStyle = MaterialTheme.typography.labelLarge,
+        content = {
+            val buttonPaddingFromMICS =
+                LocalMinimumInteractiveComponentSize.current.takeOrElse { 0.dp } -
+                    ButtonDefaults.MinHeight
+            val mainAxisSpacing = 8.dp
+            val crossAxisSpacing = (8.dp - buttonPaddingFromMICS).coerceIn(0.dp, 8.dp)
+
+            Layout(
+                content = {
+                    extraButton?.let { Box(Modifier.layoutId("extra")) { it() } }
+                    dismissButton?.let { Box(Modifier.layoutId("dismiss")) { it() } }
+                    Box(Modifier.layoutId("confirm")) { confirmButton() }
+                }
+            ) { measurables, constraints ->
+                val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)
+                val extraPlaceable = measurables.find { it.layoutId == "extra" }
+                    ?.measure(looseConstraints)
+                val dismissPlaceable = measurables.find { it.layoutId == "dismiss" }
+                    ?.measure(looseConstraints)
+                val confirmPlaceable = measurables.find { it.layoutId == "confirm" }
+                    ?.measure(looseConstraints)
+
+                val hasExtra = extraPlaceable != null && extraPlaceable.width > 0
+                val hasDismiss = dismissPlaceable != null && dismissPlaceable.width > 0
+
+                val wExtra = if (hasExtra) extraPlaceable.width else 0
+                val wDismiss = if (hasDismiss) dismissPlaceable.width else 0
+                val wConfirm = confirmPlaceable?.width ?: 0
+
+                val hExtra = if (hasExtra) extraPlaceable.height else 0
+                val hDismiss = if (hasDismiss) dismissPlaceable.height else 0
+                val hConfirm = confirmPlaceable?.height ?: 0
+
+                val mainAxisSpacingPx = mainAxisSpacing.roundToPx()
+                val crossAxisSpacingPx = crossAxisSpacing.roundToPx()
+                val thresholdPx = 8.dp.roundToPx()
+
+                val groupWidth = wConfirm + (if (hasDismiss) mainAxisSpacingPx + wDismiss else 0)
+                val gap = constraints.maxWidth - wExtra - groupWidth
+
+                val isStacked = (hasExtra && gap < thresholdPx) || groupWidth > constraints.maxWidth
+
+                if (isStacked) {
+                    val height = hConfirm +
+                        (if (hasDismiss) crossAxisSpacingPx + hDismiss else 0) +
+                        (if (hasExtra) crossAxisSpacingPx + hExtra else 0)
+
+                    layout(constraints.maxWidth, height) {
+                        var y = 0
+                        confirmPlaceable?.placeRelative(constraints.maxWidth - wConfirm, y)
+                        y += hConfirm + crossAxisSpacingPx
+
+                        if (hasDismiss) {
+                            dismissPlaceable.placeRelative(constraints.maxWidth - wDismiss, y)
+                            y += hDismiss + crossAxisSpacingPx
+                        }
+
+                        if (hasExtra) {
+                            extraPlaceable.placeRelative(constraints.maxWidth - wExtra, y)
+                        }
+                    }
+                } else {
+                    val height = maxOf(hExtra, hConfirm, hDismiss)
+                    layout(constraints.maxWidth, height) {
+                        if (hasExtra) {
+                            extraPlaceable.placeRelative(0, (height - hExtra) / 2)
+                        }
+                        confirmPlaceable?.placeRelative(
+                            constraints.maxWidth - wConfirm,
+                            (height - hConfirm) / 2
+                        )
+                        if (hasDismiss) {
+                            dismissPlaceable.placeRelative(
+                                constraints.maxWidth - wConfirm - mainAxisSpacingPx - wDismiss,
+                                (height - hDismiss) / 2
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    )
+}
+
+@Composable
+internal fun ProvideContentColorTextStyle(
+    contentColor: Color,
+    textStyle: TextStyle,
+    content: @Composable () -> Unit,
+) {
+    val mergedStyle = LocalTextStyle.current.merge(textStyle)
+    CompositionLocalProvider(
+        LocalContentColor provides contentColor,
+        LocalTextStyle provides mergedStyle,
+        content = content,
+    )
+}

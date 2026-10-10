@@ -1,13 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
   <!-- Common actions -->
+  <string name="action_back">Back</string>
   <string name="action_more_options">More options</string>
+
+  <!-- Dialogs -->
+  <string name="dialog_pane_title">Dialog</string>
 
   <!-- Login: choice -->
   <string name="login_choice_title">Welcome to Grocy</string>
   <string name="login_choice_subtitle">ERP beyond your fridge</string>
   <string name="login_choice_own_server">Own server</string>
   <string name="login_choice_demo_server">Demo server</string>
+
+  <!-- Login: shared -->
+  <string name="login_title">Login</string>
+
+  <!-- Login: scan -->
+  <string name="login_scan_explanation">In Grocy, open **Manage API keys**, create a key and tap its QR code icon. Then scan the code here.</string>
+  <string name="login_scan_manual">Enter data manually</string>
+
+  <!-- Login: manual -->
+  <string name="login_manual_type_grocy">Grocy</string>
+  <string name="login_manual_type_home_assistant">Home Assistant</string>
+  <string name="login_manual_server_url">Grocy address</string>
+  <string name="login_manual_url_invalid">Enter a valid address</string>
+  <string name="login_manual_api_key">API key</string>
+  <string name="login_manual_create_key">Create key</string>
+  <string name="login_manual_ha_url">Home Assistant address</string>
+  <string name="login_manual_ha_url_hint">Also works with Nabu Casa</string>
+  <string name="login_manual_ha_token">Long-lived access token</string>
+  <string name="login_manual_ha_create_token">Create token</string>
+  <string name="login_manual_ingress_id">Ingress proxy identifier</string>
+  <string name="login_manual_ingress_id_hint">The part of the Grocy add-on address after hassio_ingress/</string>
+  <string name="login_manual_ha_pending">Login through Home Assistant follows in a later version.</string>
+  <string name="login_manual_connect">Connect</string>
 
   <!-- Login: errors -->
   <string name="login_error_unreachable">The server could not be reached. Check your connection and the server address.</string>

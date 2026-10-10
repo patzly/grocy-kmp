@@ -50,12 +50,13 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun LoginChoiceScreen(
     viewModel: LoginChoiceViewModel,
+    onOwnServerClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LoginChoiceContent(
         uiState = uiState,
-        onOwnServerClick = {},
+        onOwnServerClick = onOwnServerClick,
         onDemoServerClick = viewModel::loginWithDemoServer,
         modifier = modifier,
     )
@@ -120,8 +121,6 @@ private fun LoginChoiceContent(
                                 onClick = onOwnServerClick,
                                 shapes = ButtonDefaults.shapesFor(buttonHeight),
                                 contentPadding = buttonContentPaddingHorizontal,
-                                // Enabled with the manual and QR code login screens
-                                enabled = false,
                                 interactionSource = ownServerInteractionSource,
                                 modifier = Modifier
                                     .fillMaxWidth()
