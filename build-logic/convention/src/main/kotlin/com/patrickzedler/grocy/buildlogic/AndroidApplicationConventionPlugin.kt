@@ -15,7 +15,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 class AndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
         pluginManager.apply(libs.pluginId("android-application"))
-        pluginManager.apply(libs.pluginId("compose-compiler"))
 
         val moduleNamespace = derivedNamespace
         val compileSdkLevel = libs.intVersion("android-compileSdk")
@@ -45,6 +44,15 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 targetSdk {
                     version = release(targetSdkLevel)
                 }
+                manifestPlaceholders += mapOf(
+                    "appIcon" to "@mipmap/ic_launcher",
+                    "appLabel" to "@string/app_name",
+                )
+            }
+
+            androidResources {
+                // Only languages the app itself supports, libraries bring many more
+                localeFilters += listOf("en")
             }
 
             // Without the environment variables the builds stay unsigned, never debug-signed
@@ -62,12 +70,18 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                         include = false
                     }
                 }
+
                 create("nightly") {
                     initWith(getByName("release"))
                     applicationIdSuffix = ".nightly"
                     versionNameSuffix = nightlyVersionSuffix
                     signingConfig = nightlySigning
                     matchingFallbacks += "release"
+                    // Installs next to the regular app, so it needs to look different in the launcher
+                    manifestPlaceholders += mapOf(
+                        "appIcon" to "@mipmap/ic_launcher_nightly",
+                        "appLabel" to "@string/app_name_nightly",
+                    )
                 }
             }
 
@@ -79,10 +93,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             compileOptions {
                 sourceCompatibility = JavaVersion.VERSION_21
                 targetCompatibility = JavaVersion.VERSION_21
-            }
-
-            buildFeatures {
-                compose = true
             }
         }
 

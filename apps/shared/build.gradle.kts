@@ -3,6 +3,11 @@ plugins {
 }
 
 kotlin {
+    android {
+        // Launcher icon, themes and backup rules, shared by both phone apps
+        androidResources.enable = true
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.data)
@@ -13,6 +18,10 @@ kotlin {
             implementation(projects.feature.login.impl)
             implementation(projects.feature.start.api)
             implementation(projects.feature.start.impl)
+        }
+        androidMain.dependencies {
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.core.splashscreen)
         }
     }
 }

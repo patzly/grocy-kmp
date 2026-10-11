@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="Theme.Grocy" parent="android:Theme.Material.Light.NoActionBar">
+    <item name="android:windowBackground">@color/green_theme_surface</item>
+  </style>
+
+  <style name="Theme.Grocy.Splash" parent="Theme.SplashScreen">
+    <item name="windowSplashScreenBackground">@color/green_theme_surface</item>
+    <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo_anim</item>
+    <item name="postSplashScreenTheme">@style/Theme.Grocy</item>
+  </style>
+
+</resources>

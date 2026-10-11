@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.data.auth.AuthState
 import com.patrickzedler.grocy.core.design.GrocyTheme
+import com.patrickzedler.grocy.core.design.rememberThemeFontsReady
 import com.patrickzedler.grocy.core.navigation.GrocyNavDisplay
 import com.patrickzedler.grocy.core.navigation.rememberNavigator
 import com.patrickzedler.grocy.feature.login.api.LoginChoiceRoute
@@ -23,16 +24,27 @@ private val routeSerializers = startRouteSerializers + loginRouteSerializers
 
 /**
  * Shared entry point of the Android and web apps.
+ *
+ * [onContentReady] is called once the first real screen is shown, platforms use it to remove
+ * their splash screen.
  */
 @Composable
 fun GrocyApp(
     graph: AppGraph,
+    onContentReady: () -> Unit = {},
 ) {
     GrocyTheme {
         val authState by graph.authRepository.authState
             .collectAsStateWithLifecycle(initialValue = null)
+        val fontsReady = rememberThemeFontsReady()
+
         // Null only for the moment until the stored login has been read
-        authState?.let { GrocyNavigation(graph, it) }
+        authState?.let {
+            GrocyNavigation(graph, it)
+            LaunchedEffect(fontsReady) {
+                if (fontsReady) onContentReady()
+            }
+        }
     }
 }
 
@@ -57,7 +69,7 @@ private fun GrocyNavigation(
     }
 
     GrocyNavDisplay(navigator) {
-        loginEntries(graph, navigator)
+        loginEntries(graph.loginDependencies, navigator)
         startEntry()
     }
 }

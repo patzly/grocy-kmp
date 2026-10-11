@@ -3,18 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KMP Client for Grocy, the self-hosted groceries and household management solution">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#F8FAF0" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#11140F" media="(prefers-color-scheme: dark)">
     <title>Grocy</title>
+    <link rel="icon" href="favicon.ico" sizes="32x32">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="manifest" href="manifest.webmanifest">
     <style>
+        :root {
+            --background: #F8FAF0;
+            --indicator: #446732;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background: #11140F;
+                --indicator: #A9D291;
+            }
+        }
+
         html, body {
             width: 100%;
             height: 100%;
             margin: 0;
             padding: 0;
             overflow: hidden;
+            background: var(--background);
+        }
+
+        #composeApp {
+            width: 100%;
+            height: 100%;
+        }
+
+        #loading {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            background: var(--background);
+        }
+
+        #loading img {
+            width: 96px;
+            height: 96px;
+        }
+
+        #loading .indicator {
+            width: 32px;
+            height: 32px;
+            border: 4px solid transparent;
+            border-top-color: var(--indicator);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #loading .indicator {
+                animation-duration: 3s;
+            }
         }
     </style>
     <script src="grocy.js"></script>
 </head>
 <body>
+<div id="composeApp"></div>
+<div id="loading" role="progressbar" aria-label="Loading Grocy">
+    <picture>
+        <source srcset="logo/logo-dark.svg" media="(prefers-color-scheme: dark)">
+        <img src="logo/logo-light.svg" alt="">
+    </picture>
+    <div class="indicator"></div>
+</div>
+<noscript>Grocy needs JavaScript and WebAssembly to run.</noscript>
 </body>
 </html>
