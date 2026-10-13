@@ -1,8 +1,10 @@
 package com.patrickzedler.grocy.apps.shared
 
 import com.patrickzedler.grocy.core.data.auth.AuthRepository
+import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.createGrocyHttpClient
+import com.patrickzedler.grocy.feature.about.impl.AboutDependencies
 import com.patrickzedler.grocy.feature.login.impl.LoginDependencies
 
 /**
@@ -20,8 +22,19 @@ class AppGraph(
 
     internal val authRepository by lazy { AuthRepository(platform.credentialStore, grocyApi) }
 
+    private val unlockRepository by lazy {
+        UnlockRepository(platform.unlockChecker, platform.settingsStore)
+    }
+
     internal val loginDependencies: LoginDependencies = object : LoginDependencies {
         override val authRepository: AuthRepository
             get() = this@AppGraph.authRepository
+    }
+
+    internal val aboutDependencies: AboutDependencies = object : AboutDependencies {
+        override val unlockRepository: UnlockRepository
+            get() = this@AppGraph.unlockRepository
+        override val versionName: String
+            get() = platform.versionName
     }
 }

@@ -12,6 +12,8 @@ import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.rememberThemeFontsReady
 import com.patrickzedler.grocy.core.navigation.GrocyNavDisplay
 import com.patrickzedler.grocy.core.navigation.rememberNavigator
+import com.patrickzedler.grocy.feature.about.api.aboutRouteSerializers
+import com.patrickzedler.grocy.feature.about.impl.aboutEntries
 import com.patrickzedler.grocy.feature.login.api.LoginChoiceRoute
 import com.patrickzedler.grocy.feature.login.api.loginRouteSerializers
 import com.patrickzedler.grocy.feature.login.impl.loginEntries
@@ -20,7 +22,8 @@ import com.patrickzedler.grocy.feature.start.api.startRouteSerializers
 import com.patrickzedler.grocy.feature.start.impl.startEntry
 import kotlinx.serialization.modules.plus
 
-private val routeSerializers = startRouteSerializers + loginRouteSerializers
+private val routeSerializers =
+    startRouteSerializers + loginRouteSerializers + aboutRouteSerializers
 
 /**
  * Shared entry point of the Android and web apps.
@@ -70,6 +73,7 @@ private fun GrocyNavigation(
 
     GrocyNavDisplay(navigator) {
         loginEntries(graph.loginDependencies, navigator)
-        startEntry()
+        startEntry(navigator)
+        aboutEntries(graph.aboutDependencies, navigator)
     }
 }

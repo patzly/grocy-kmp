@@ -1,12 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <!-- Common actions -->
-  <string name="action_back">Back</string>
-  <string name="action_more_options">More options</string>
+  <!-- App -->
+  <string name="app_name" translatable="false">Grocy</string>
+  <string name="app_developer" translatable="false">Patrick Zedler</string>
+  <string name="app_mail" translatable="false">dev@patrickzedler.com</string>
+  <string name="app_website" translatable="false">https://patrickzedler.com</string>
+  <string name="app_vending_dev" translatable="false">https://play.google.com/store/apps/dev?id=5870283381366287608</string>
+  <string name="app_vending_app" translatable="false">https://play.google.com/store/apps/details?id=com.patrickzedler.grocy</string>
+  <string name="app_vending_key" translatable="false">https://play.google.com/store/apps/details?id=xyz.zedler.patrick.grocy.unlock</string>
+  <string name="app_github" translatable="false">https://github.com/patzly/grocy-kmp</string>
+  <string name="app_translate" translatable="false">https://app.transifex.com/patzly/grocy-kmp/</string>
+  <string name="app_privacy" translatable="false">https://patrickzedler.com/grocy/privacy-policy-grocy/</string>
+
+  <!-- Titles -->
+  <string name="title_about">About</string>
+  <string name="title_feedback">Feedback</string>
+  <string name="title_help">Help</string>
+  <string name="title_licenses">Open source licenses</string>
 
   <!-- Dialogs -->
   <string name="dialog_pane_title">Dialog</string>
+
+  <!-- Common actions -->
+  <string name="action_back">Back</string>
+  <string name="action_more_options">More options</string>
+  <string name="action_cancel">Cancel</string>
+  <string name="action_close">Close</string>
+  <string name="action_learn_more">Learn more</string>
+  <string name="action_open_play_store">Open Google Play</string>
+  <string name="action_recommend">Recommend</string>
+  <string name="action_recommend_description">Tell your friends about Grocy</string>
+  <string name="action_rate">Rate on Google Play</string>
+  <string name="action_rate_description">Motivate the developers</string>
+  <string name="action_support">Support the development</string>
+  <string name="action_support_description">Buy the unlock app</string>
+  <string name="action_email">Send email</string>
+  <string name="action_email_description">Contact the developers</string>
+  <string name="action_issue">Open new issue on GitHub</string>
+  <string name="action_issue_description">Report bugs or request a feature</string>
+  <string name="action_send_feedback">Send feedback</string>
+
+  <!-- Messages -->
+  <string name="msg_recommend">Grocy keeps track of groceries and household on your own Grocy server: %1$s</string>
+  <string name="msg_feedback">Do you have any wishes, questions or errors? Contact us and let us help!\nOtherwise we would be very happy about a nice review in the Play Store.</string>
+  <string name="msg_unlock">Support the development</string>
+  <string name="msg_unlock_description">The unlock app is a small purchase on Google Play that supports the development of Grocy. Once installed, you can also switch to the ML Kit barcode scanner.</string>
 
   <!-- Login: choice -->
   <string name="login_choice_title">Welcome to Grocy</string>
@@ -42,4 +81,34 @@
   <string name="login_error_unauthorized">The API key was rejected.</string>
   <string name="login_error_not_grocy">This address does not belong to a Grocy server.</string>
   <string name="login_error_unknown">Something went wrong. Please try again.</string>
+
+  <!-- About -->
+  <string name="about_version">Version</string>
+  <string name="about_changelog">Changelog</string>
+  <string name="about_changelog_description">New in this version</string>
+  <string name="about_developer">Developer</string>
+  <string name="about_vending" translatable="false">Google Play</string>
+  <string name="about_vending_description">More apps by the developer</string>
+  <string name="about_key">Unlock app</string>
+  <string name="about_key_description_not_installed">Not installed</string>
+  <string name="about_key_description_installed">Installed</string>
+  <string name="about_key_description_ignored">Ignored</string>
+  <string name="about_github" translatable="false">GitHub</string>
+  <string name="about_github_description">Source code</string>
+  <string name="about_translation" translatable="false">Transifex</string>
+  <string name="about_translation_description">Help translate Grocy</string>
+  <string name="about_privacy">Privacy policy</string>
+  <string name="about_privacy_description">How your data is being processed</string>
+
+  <!-- Help -->
+  <string name="help_placeholder">Placeholder question</string>
+  <string name="help_placeholder_answer">Placeholder answer.</string>
+
+  <!-- Licenses -->
+  <string name="license_author_google" translatable="false">Google</string>
+  <string name="license_google_sans_flex" translatable="false">Google Sans Flex</string>
+  <string name="license_google_sans_flex_link" translatable="false">https://fonts.google.com/specimen/Google+Sans+Flex</string>
+  <string name="license_material_icons" translatable="false">Material Symbols</string>
+  <string name="license_material_icons_link" translatable="false">https://github.com/google/material-design-icons</string>
+
 </resources>

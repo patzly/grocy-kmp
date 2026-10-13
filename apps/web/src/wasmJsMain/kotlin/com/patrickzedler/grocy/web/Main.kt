@@ -8,7 +8,7 @@ import com.patrickzedler.grocy.apps.shared.WebPlatformDependencies
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-    val graph = AppGraph(WebPlatformDependencies())
+    val graph = AppGraph(WebPlatformDependencies(versionName = APP_VERSION_NAME))
     ComposeViewport(viewportContainerId = "composeApp") {
         GrocyApp(
             graph = graph,

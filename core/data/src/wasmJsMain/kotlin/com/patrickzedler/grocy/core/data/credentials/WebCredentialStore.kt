@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.core.data.credentials
 
+import com.patrickzedler.grocy.core.data.localStorage
 import com.patrickzedler.grocy.core.model.ServerConnection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,14 +33,3 @@ class WebCredentialStore : CredentialStore {
         const val STORAGE_KEY = "grocy.serverConnection"
     }
 }
-
-@OptIn(ExperimentalWasmJsInterop::class)
-private external interface Storage : JsAny {
-    fun getItem(key: String): String?
-
-    fun setItem(key: String, value: String)
-
-    fun removeItem(key: String)
-}
-
-private external val localStorage: Storage

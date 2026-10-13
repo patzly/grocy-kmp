@@ -18,6 +18,8 @@ kotlin {
             implementation(projects.feature.login.impl)
             implementation(projects.feature.start.api)
             implementation(projects.feature.start.impl)
+            implementation(projects.feature.about.api)
+            implementation(projects.feature.about.impl)
         }
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)

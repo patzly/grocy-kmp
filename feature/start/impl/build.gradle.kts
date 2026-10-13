@@ -5,8 +5,10 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.feature.start.api)
             implementation(projects.core.design)
+            implementation(projects.core.resources)
+            implementation(projects.feature.about.api)
+            implementation(projects.feature.start.api)
         }
     }
 }

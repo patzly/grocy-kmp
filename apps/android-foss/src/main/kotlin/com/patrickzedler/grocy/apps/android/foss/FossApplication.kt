@@ -8,6 +8,6 @@ import com.patrickzedler.grocy.apps.shared.AppGraphOwner
 class FossApplication : Application(), AppGraphOwner {
 
     override val graph: AppGraph by lazy {
-        AppGraph(AndroidPlatformDependencies(this))
+        AppGraph(AndroidPlatformDependencies(this, isPlayVariant = false))
     }
 }
