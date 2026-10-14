@@ -14,9 +14,10 @@ internal val MINIMUM_LOADING_DURATION = 500.milliseconds
  */
 internal suspend inline fun <T> withMinimumDuration(
     minimum: Duration,
+    timeSource: TimeSource = TimeSource.Monotonic,
     block: () -> T,
 ): T {
-    val start = TimeSource.Monotonic.markNow()
+    val start = timeSource.markNow()
     try {
         return block()
     } finally {

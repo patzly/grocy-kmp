@@ -41,6 +41,9 @@ npm-zxing-wasm = "3.1.4"
 # Wear OS
 androidx-wear-compose = "1.7.1"
 
+# Testing
+turbine = "1.2.1"
+
 [libraries]
 # Multiplatform Compose runtime and UI
 compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-multiplatform" }
@@ -91,6 +94,12 @@ androidx-camera-compose = { module = "androidx.camera:camera-compose", version.r
 zxing-core = { module = "com.google.zxing:core", version.ref = "zxing" }
 # Closed source, only for core:scanner-mlkit and android-play
 mlkit-barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "mlkit-barcode-scanning" }
+
+# Testing
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 # Build logic (convention plugins)
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }

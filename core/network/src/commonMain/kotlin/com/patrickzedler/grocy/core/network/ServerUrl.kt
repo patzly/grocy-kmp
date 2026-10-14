@@ -9,22 +9,41 @@ object ServerUrl {
         Http("http://"),
     }
 
+    private val SCHEME_REGEX = Regex("^[a-zA-Z][a-zA-Z0-9+.-]*://")
+
     /**
      * Turns user input into the base URL Grocy expects, e.g.
      * " grocy.example.com/api/ " -> "https://grocy.example.com".
      *
-     * An explicit scheme in the input wins over [scheme]. Returns null if the input is no usable URL.
+     * An explicit scheme in the input wins over [scheme]. Returns null if the input is no
+     * usable URL.
      */
     fun normalize(input: String, scheme: Scheme = Scheme.Https): String? {
-        var url = input.trim().trimEnd('/')
-        if (url.endsWith("/api")) {
-            url = url.removeSuffix("/api").trimEnd('/')
+        val trimmed = input.trim()
+        // Whitespace is never valid inside a URL, requests would fail in confusing ways
+        if (trimmed.isEmpty() || trimmed.any(Char::isWhitespace)) return null
+
+        val typedScheme = SCHEME_REGEX.find(trimmed)?.value?.lowercase()
+        val prefix = when (typedScheme) {
+            null -> scheme.prefix
+            Scheme.Https.prefix, Scheme.Http.prefix -> typedScheme
+            else -> return null
         }
-        if ("://" !in url) {
-            url = scheme.prefix + url
+
+        var address = trimmed.substring(typedScheme?.length ?: 0).trimEnd('/')
+        if (address.endsWith("/api")) {
+            address = address.removeSuffix("/api").trimEnd('/')
         }
-        val parsed = runCatching { Url(url) }.getOrNull() ?: return null
-        val isHttp = parsed.protocol.name == "http" || parsed.protocol.name == "https"
-        return url.takeIf { isHttp && parsed.host.isNotBlank() }
+
+        // Checked on the input, because Ktor falls back to "localhost" when the host is missing
+        val host = address
+            .substringBefore('/')
+            .substringBefore('?')
+            .substringBefore('#')
+            .substringAfterLast('@')
+        if (host.isEmpty() || host.startsWith(':')) return null
+
+        val url = prefix + address
+        return url.takeIf { runCatching { Url(it) }.isSuccess }
     }
 }

@@ -22,19 +22,9 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastForEachIndexed
-
-// [\s\S] instead of DOT_MATCHES_ALL, which only exists on the JVM
-private val BOLD_REGEX = """<b>([\s\S]*?)</b>|\*\*([\s\S]*?)\*\*""".toRegex()
-
-private val DOMAIN_URL_REGEX = """^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(/.*)?$""".toRegex()
 
 @Composable
 fun FormattedText(
@@ -49,125 +39,7 @@ fun FormattedText(
     val textColorVariant = MaterialTheme.colorScheme.onSurfaceVariant
     val cardShape = MaterialTheme.shapes.medium
 
-    val blocks = remember(text, isDialog) {
-        val normalizedText = text.replace("\r\n", "\n")
-        val parts = normalizedText.split("\n\n")
-
-        parts.mapIndexed { i, p ->
-            val partNext = parts.getOrNull(i + 1).orEmpty()
-            val isNextLink = partNext.startsWith("=> ") || partNext.startsWith("> ")
-            val isNextSubtitle = partNext.startsWith("__")
-
-            when {
-                p.startsWith("__") -> {
-                    TextBlock.Paragraph(
-                        annotatedText = parseAnnotatedText(p.substring(2).trimStart()),
-                        isMedium = true,
-                        keepDistance = true,
-                    )
-                }
-
-                p.startsWith("#") -> {
-                    val firstSpace = p.indexOf(' ')
-                    val prefixEnd = if (firstSpace != -1) firstSpace else p.length
-                    val prefix = p.substring(0, prefixEnd)
-                    val useTNum = prefix.endsWith("_")
-                    val h0 = if (useTNum) prefix.dropLast(1) else prefix
-                    val headlineRaw = if (firstSpace != -1) p.substring(firstSpace + 1) else ""
-
-                    TextBlock.Headline(
-                        annotatedText = parseAnnotatedText(headlineRaw),
-                        level = h0.length,
-                        useTNum = useTNum,
-                        keepDistance = !isNextLink,
-                    )
-                }
-
-                p.startsWith("- ") -> {
-                    val bulletStrings = mutableListOf<String>()
-                    p.lines().forEach { line ->
-                        val trimmed = line.trimStart()
-                        if (trimmed.startsWith("- ")) {
-                            bulletStrings.add(trimmed.removePrefix("- ").trim())
-                        } else if (trimmed.isNotEmpty() && bulletStrings.isNotEmpty()) {
-                            val lastIndex = bulletStrings.lastIndex
-                            bulletStrings[lastIndex] = "${bulletStrings[lastIndex]} $trimmed"
-                        }
-                    }
-                    val bullets = bulletStrings.map {
-                        TextBlock.BulletItem(annotatedText = parseAnnotatedText(it))
-                    }
-                    TextBlock.BulletList(bullets)
-                }
-
-                p.startsWith("> ") || p.startsWith("=> ") -> {
-                    val raw = p.removePrefix("=> ").removePrefix("> ").trim()
-                    val lastSpace = raw.lastIndexOf(' ')
-                    val (label, rawUrl) = if (lastSpace != -1) {
-                        val potentialUrl = raw.substring(lastSpace + 1).trim()
-                        val potentialLabel = raw.substring(0, lastSpace).trim()
-
-                        val isPotentialUrl = potentialUrl.contains("://") ||
-                            potentialUrl.startsWith("mailto:") ||
-                            potentialUrl.startsWith("tel:") ||
-                            potentialUrl.startsWith("www.") ||
-                            DOMAIN_URL_REGEX.matches(potentialUrl)
-
-                        if (isPotentialUrl) {
-                            potentialLabel to potentialUrl
-                        } else {
-                            raw to raw
-                        }
-                    } else {
-                        raw to raw
-                    }
-
-                    val normalizedUrl = if (
-                        !rawUrl.contains("://") &&
-                        !rawUrl.startsWith("mailto:") &&
-                        !rawUrl.startsWith("tel:")
-                    ) {
-                        "https://$rawUrl"
-                    } else {
-                        rawUrl
-                    }
-
-                    TextBlock.Link(text = label, url = normalizedUrl)
-                }
-
-                p.startsWith("? ") -> {
-                    TextBlock.MessageCard(
-                        annotatedText = parseAnnotatedText(p.substring(2)),
-                        isError = false,
-                    )
-                }
-
-                p.startsWith("! ") -> {
-                    TextBlock.MessageCard(
-                        annotatedText = parseAnnotatedText(p.substring(2)),
-                        isError = true,
-                    )
-                }
-
-                p.startsWith("---") -> {
-                    TextBlock.Divider
-                }
-
-                else -> {
-                    val keepDistance = if (isDialog) {
-                        true
-                    } else {
-                        !isNextLink && !isNextSubtitle
-                    }
-                    TextBlock.Paragraph(
-                        annotatedText = parseAnnotatedText(p),
-                        isMedium = isDialog,
-                        keepDistance = keepDistance,
-                    )
-                }
-            }
-        }
-    }
+    val blocks = remember(text, isDialog) { parseFormattedText(text, isDialog) }
 
     Column(modifier = modifier.fillMaxWidth()) {
         blocks.fastForEach { block ->
@@ -228,11 +100,12 @@ fun FormattedText(
                             .padding(bottom = 16.dp),
                     ) {
                         block.bullets.fastForEachIndexed { index, bullet ->
+                            val isLast = index == block.bullets.lastIndex
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .semantics(mergeDescendants = true) {}
-                                    .padding(bottom = if (index == block.bullets.lastIndex) 0.dp else 8.dp),
+                                    .padding(bottom = if (isLast) 0.dp else 8.dp),
                             ) {
                                 Text(
                                     text = "•",
@@ -312,65 +185,6 @@ fun FormattedText(
                     )
                 }
             }
-        }
-    }
-}
-
-private sealed interface TextBlock {
-    data class Headline(
-        val annotatedText: AnnotatedString,
-        val level: Int,
-        val useTNum: Boolean,
-        val keepDistance: Boolean,
-    ) : TextBlock
-
-    data class Paragraph(
-        val annotatedText: AnnotatedString,
-        val isMedium: Boolean,
-        val keepDistance: Boolean,
-    ) : TextBlock
-
-    data class BulletItem(
-        val annotatedText: AnnotatedString,
-    )
-
-    data class BulletList(
-        val bullets: List<BulletItem>,
-    ) : TextBlock
-
-    data class Link(
-        val text: String,
-        val url: String,
-    ) : TextBlock
-
-    data class MessageCard(
-        val annotatedText: AnnotatedString,
-        val isError: Boolean,
-    ) : TextBlock
-
-    data object Divider : TextBlock
-}
-
-private fun parseAnnotatedText(text: String): AnnotatedString {
-    if (text.isEmpty()) return AnnotatedString("")
-    if (!BOLD_REGEX.containsMatchIn(text)) return AnnotatedString(text)
-
-    return buildAnnotatedString {
-        var currentIndex = 0
-        for (match in BOLD_REGEX.findAll(text)) {
-            append(text.substring(currentIndex, match.range.first))
-
-            val boldContent = match.groups[1]?.value
-                ?: match.groups[2]?.value
-                ?: ""
-
-            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                append(boldContent)
-            }
-            currentIndex = match.range.last + 1
-        }
-        if (currentIndex < text.length) {
-            append(text.substring(currentIndex))
         }
     }
 }

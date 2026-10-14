@@ -21,6 +21,8 @@ internal fun Throwable.toLoginError(): LoginError =
         is GrocyApiException.Unreachable -> LoginError.Unreachable
         is GrocyApiException.Unauthorized -> LoginError.Unauthorized
         is GrocyApiException.NotGrocyServer -> LoginError.NotGrocyServer
+        // Login only calls endpoints every Grocy server has, so they are missing at this address
+        is GrocyApiException.HttpError if statusCode == 404 -> LoginError.NotGrocyServer
         else -> LoginError.Unknown
     }
 

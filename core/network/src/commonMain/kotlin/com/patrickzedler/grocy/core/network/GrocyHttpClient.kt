@@ -1,6 +1,8 @@
 package com.patrickzedler.grocy.core.network
 
 import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
@@ -12,7 +14,13 @@ internal val GrocyJson = Json {
 }
 
 /** One client per process, shared by all requests. */
-fun createGrocyHttpClient(): HttpClient = platformHttpClient {
+fun createGrocyHttpClient(): HttpClient = platformHttpClient { configureGrocyClient() }
+
+/** Same configuration as [createGrocyHttpClient] on a given engine, e.g. a mock in tests. */
+fun createGrocyHttpClient(engine: HttpClientEngine): HttpClient =
+    HttpClient(engine) { configureGrocyClient() }
+
+private fun HttpClientConfig<*>.configureGrocyClient() {
     install(ContentNegotiation) {
         json(GrocyJson)
     }

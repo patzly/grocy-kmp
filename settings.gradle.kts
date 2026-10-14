@@ -85,6 +85,7 @@ include(":core:resources")
 include(":core:design")
 include(":core:navigation")
 include(":core:ui")
+include(":core:testing")
 
 // Feature Modules
 include(":feature:about:api")

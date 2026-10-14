@@ -25,5 +25,8 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.core.splashscreen)
         }
+        commonTest.dependencies {
+            implementation(libs.kotlinx.serialization.json)
+        }
     }
 }

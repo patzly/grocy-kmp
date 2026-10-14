@@ -14,5 +14,8 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidx.datastore.preferences)
         }
+        commonTest.dependencies {
+            implementation(projects.core.testing)
+        }
     }
 }

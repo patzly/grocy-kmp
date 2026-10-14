@@ -22,7 +22,7 @@ import com.patrickzedler.grocy.feature.start.api.startRouteSerializers
 import com.patrickzedler.grocy.feature.start.impl.startEntry
 import kotlinx.serialization.modules.plus
 
-private val routeSerializers =
+internal val routeSerializers =
     startRouteSerializers + loginRouteSerializers + aboutRouteSerializers
 
 /**

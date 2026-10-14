@@ -50,6 +50,7 @@ jobs:
           RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
         run: >
           ./gradlew --no-build-cache
+          allTests
           :apps:android-foss:assembleRelease
           :apps:android-play:bundleRelease
           :apps:wear:bundleRelease
