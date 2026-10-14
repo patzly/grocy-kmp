@@ -1,8 +1,6 @@
 package com.patrickzedler.grocy.core.ui
 
 import androidx.compose.runtime.Composable
-import kotlin.js.ExperimentalWasmJsInterop
-import kotlin.js.JsFun
 
 private val ShareText: (String) -> Unit = { shareText(it) }
 
