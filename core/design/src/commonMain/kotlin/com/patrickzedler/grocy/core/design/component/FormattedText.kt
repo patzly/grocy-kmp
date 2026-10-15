@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
@@ -36,6 +37,7 @@ fun FormattedText(
     if (text.isBlank()) return
 
     val uriHandler = LocalUriHandler.current
+    val haptic = LocalHapticFeedback.current
     val textColorVariant = MaterialTheme.colorScheme.onSurfaceVariant
     val cardShape = MaterialTheme.shapes.medium
 
@@ -135,10 +137,8 @@ fun FormattedText(
                             .minimumInteractiveComponentSize()
                             .clip(MaterialTheme.shapes.small)
                             .clickable(role = Role.Button) {
-                                try {
-                                    uriHandler.openUri(block.url)
-                                } catch (_: Exception) {
-                                }
+                                haptic.confirm()
+                                uriHandler.tryOpenUri(block.url)
                             }
                             .padding(vertical = 8.dp),
                     )

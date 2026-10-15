@@ -19,6 +19,7 @@ internal fun Project.configureKmpLibrary(runWasmTests: Boolean) {
 
     val moduleNamespace = derivedNamespace
     val compileSdkLevel = libs.intVersion("android-compileSdk")
+    val compileSdkMinorLevel = libs.intVersion("android-compileSdkMinor")
     val minSdkLevel = libs.intVersion("android-minSdk")
 
     extensions.configure<KotlinMultiplatformExtension> {
@@ -29,7 +30,11 @@ internal fun Project.configureKmpLibrary(runWasmTests: Boolean) {
 
         targets.withType<KotlinMultiplatformAndroidLibraryTarget>().configureEach {
             namespace = moduleNamespace
-            compileSdk = compileSdkLevel
+            compileSdk {
+                version = release(compileSdkLevel) {
+                    minorApiLevel = compileSdkMinorLevel
+                }
+            }
             minSdk = minSdkLevel
             compilerOptions {
                 jvmTarget.set(GrocyJvmTarget)

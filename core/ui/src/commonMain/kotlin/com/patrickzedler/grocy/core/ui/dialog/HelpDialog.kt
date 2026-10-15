@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
+import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_close
@@ -92,9 +93,7 @@ private fun HelpDialogContent(
         isScrollableControlledByContent = true,
     ) {
         val spatialSpec = MaterialTheme.motionScheme.defaultSpatialSpec<androidx.compose.ui.unit.IntSize>()
-        val colors = ListItemDefaults.segmentedColors(
-            containerColor = MaterialTheme.colorScheme.surfaceBright,
-        )
+        val colors = SegmentedListDefaults.colors()
 
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),

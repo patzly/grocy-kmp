@@ -8,14 +8,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialogDefaults
@@ -78,12 +82,13 @@ fun ScrollableAlertDialog(
                     indication = null,
                     onClick = onDismissRequest
                 )
-                .padding(
-                    start = horizontalPadding,
-                    end = horizontalPadding,
-                    top = safePadding.calculateTopPadding() + verticalBasePadding,
-                    bottom = safePadding.calculateBottomPadding() + verticalBasePadding
-                ),
+                // Android's safeDrawing contains the keyboard already, the web adds it here
+                .windowInsetsPadding(
+                    WindowInsets.safeDrawing
+                        .union(WindowInsets.keyboard)
+                        .only(WindowInsetsSides.Vertical),
+                )
+                .padding(horizontal = horizontalPadding, vertical = verticalBasePadding),
             contentAlignment = Alignment.Center,
         ) {
             Box(

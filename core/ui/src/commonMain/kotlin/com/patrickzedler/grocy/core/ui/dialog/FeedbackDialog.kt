@@ -22,6 +22,7 @@ import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
+import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.tryOpenUri
 import com.patrickzedler.grocy.core.model.UnlockState
@@ -136,9 +137,7 @@ private fun FeedbackDialogContent(
             }
         },
     ) {
-        val colors = ListItemDefaults.segmentedColors(
-            containerColor = MaterialTheme.colorScheme.surfaceBright,
-        )
+        val colors = SegmentedListDefaults.colors()
 
         Column(
             modifier = Modifier.fillMaxWidth(),

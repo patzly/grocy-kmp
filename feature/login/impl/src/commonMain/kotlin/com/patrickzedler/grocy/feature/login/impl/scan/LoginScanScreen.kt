@@ -169,7 +169,7 @@ private fun PreviewScanner(shape: Shape) {
             .fillMaxWidth()
             .aspectRatio(16f / 10f)
             .clip(shape)
-            .background(MaterialTheme.colorScheme.surfaceBright),
+            .background(SegmentedListDefaults.containerColor),
     )
 }
 

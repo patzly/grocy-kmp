@@ -14,7 +14,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -31,11 +33,16 @@ object SegmentedListDefaults {
     /** Padding inside a [SegmentedContainer]. */
     val ContainerPadding = PaddingValues(16.dp)
 
-    /** Colors of segmented list items: surfaceBright on the surfaceContainer background. */
+    /** Colors of segmented list items: Material's default surface on surfaceContainer. */
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     @Composable
-    fun colors(): ListItemColors =
-        ListItemDefaults.segmentedColors(containerColor = MaterialTheme.colorScheme.surfaceBright)
+    fun colors(): ListItemColors = ListItemDefaults.segmentedColors()
+
+    /** Container color of segmented items, the same as in [colors]. */
+    val containerColor: Color
+        @Composable
+        @ReadOnlyComposable
+        get() = MaterialTheme.colorScheme.surface
 
     /** Shape of the item at [index] of [count] items in one group. */
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -107,7 +114,7 @@ fun SegmentedContainer(
 ) {
     Surface(
         shape = SegmentedListDefaults.shape(index = index, count = count),
-        color = MaterialTheme.colorScheme.surfaceBright,
+        color = SegmentedListDefaults.containerColor,
         modifier = modifier.fillMaxWidth(),
     ) {
         Column(

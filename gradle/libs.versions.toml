@@ -5,18 +5,23 @@ kotlin = "2.4.21"
 
 # Android SDK levels
 android-compileSdk = "37"
+# Minor SDK release, Compose 1.13 needs at least 37.1
+android-compileSdkMinor = "2"
 android-targetSdk = "37"
 android-minSdk = "24"
 android-wear-minSdk = "30"
 
 # Multiplatform Compose and navigation
 kotlinx-browser = "0.5.0"
-compose-multiplatform = "1.12.1"
+# Alpha on purpose: newest Compose and Material 3 Expressive design state
+compose-multiplatform = "1.13.0-alpha02"
 kotlinx-coroutines = "1.11.0"
-# Alpha on purpose: Material 3 Expressive, matching Compose Multiplatform 1.12.1
-compose-material3 = "1.12.0-alpha03"
+# Alpha on purpose: Material 3 Expressive, matching Compose Multiplatform 1.13.0-alpha02
+compose-material3 = "1.13.0-alpha02"
 jetbrains-navigation3 = "1.1.2"
 jetbrains-lifecycle = "2.11.0"
+# Same version Navigation 3 brings along
+jetbrains-navigationevent = "1.1.0"
 kotlinx-serialization = "1.11.0"
 
 # Theming
@@ -37,7 +42,7 @@ androidx-camera = "1.6.2"
 zxing = "3.5.4"
 mlkit-barcode-scanning = "17.3.0"
 # npm package for the web scanner, used via npm() in Gradle, not a Maven artifact
-npm-zxing-wasm = "3.1.4"
+npm-zxing-wasm = "3.1.5"
 
 # Wear OS
 androidx-wear-compose = "1.7.1"
@@ -68,6 +73,7 @@ jetbrains-lifecycle-viewmodel-navigation3 = { module = "org.jetbrains.androidx.l
 
 # Navigation 3 for Compose Multiplatform (brings the matching navigation3-runtime)
 jetbrains-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "jetbrains-navigation3" }
+jetbrains-navigationevent-compose = { module = "org.jetbrains.androidx.navigationevent:navigationevent-compose", version.ref = "jetbrains-navigationevent" }
 
 # Networking
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }

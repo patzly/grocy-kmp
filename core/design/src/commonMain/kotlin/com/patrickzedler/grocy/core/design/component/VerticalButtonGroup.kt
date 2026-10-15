@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.IntrinsicMeasurable
 import androidx.compose.ui.layout.Layout
@@ -149,11 +150,13 @@ object VerticalButtonGroupDefaults {
         colors: IconButtonColors = IconButtonDefaults.filledIconButtonColors(),
         interactionSource: MutableInteractionSource? = null,
     ) {
+        val haptic = LocalHapticFeedback.current
         val contentDescription = stringResource(Res.string.action_more_options)
 
         HapticTooltipBox(text = contentDescription) {
             FilledIconButton(
                 onClick = {
+                    haptic.confirm()
                     if (menuState.isShowing) menuState.dismiss() else menuState.show()
                 },
                 modifier = modifier,
@@ -625,6 +628,7 @@ internal class ClickableVerticalButtonGroupItem(
             ButtonDefaults.ContentPadding
         }
         val compressionLimit = contentPadding.calculateBottomPadding()
+        val haptic = LocalHapticFeedback.current
 
         val modifier = Modifier
             .then(
@@ -643,7 +647,10 @@ internal class ClickableVerticalButtonGroupItem(
             )
 
         Button(
-            onClick = onClick,
+            onClick = {
+                haptic.confirm()
+                onClick()
+            },
             modifier = modifier,
             interactionSource = interactionSource,
             enabled = enabled,
@@ -664,11 +671,13 @@ internal class ClickableVerticalButtonGroupItem(
 
     @Composable
     override fun MenuContent(state: VerticalButtonGroupMenuState) {
+        val haptic = LocalHapticFeedback.current
         DropdownMenuItem(
             enabled = enabled,
             leadingIcon = icon,
             text = { Text(label) },
             onClick = {
+                haptic.confirm()
                 onClick()
                 state.dismiss()
             },

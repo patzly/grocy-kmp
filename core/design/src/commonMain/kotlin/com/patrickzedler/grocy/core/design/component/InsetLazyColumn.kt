@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.widthIn
@@ -19,10 +17,11 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 
 /**
@@ -42,23 +41,15 @@ fun InsetLazyColumn(
     userScrollEnabled: Boolean = true,
     content: LazyListScope.() -> Unit,
 ) {
-    val layoutDirection = LocalLayoutDirection.current
     val safePadding = WindowInsets.safeDrawing.asPaddingValues()
-    val maxInset = maxOf(
-        safePadding.calculateStartPadding(layoutDirection),
-        safePadding.calculateEndPadding(layoutDirection)
-    )
-    val horizontalPadding = maxInset + horizontalBasePadding
+    val insetPadding = remember(contentPadding, safePadding, horizontalBasePadding) {
+        InsetContentPadding(contentPadding, safePadding, horizontalBasePadding)
+    }
 
     LazyColumn(
         modifier = modifier,
         state = state,
-        contentPadding = PaddingValues(
-            start = horizontalPadding,
-            end = horizontalPadding,
-            top = contentPadding.calculateTopPadding(),
-            bottom = contentPadding.calculateBottomPadding()
-        ),
+        contentPadding = insetPadding,
         reverseLayout = reverseLayout,
         verticalArrangement = verticalArrangement,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -66,6 +57,51 @@ fun InsetLazyColumn(
         userScrollEnabled = userScrollEnabled,
         content = content,
     )
+}
+
+/**
+ * Horizontal padding of [horizontalBasePadding] plus the larger side of [safePadding] on both
+ * sides, vertical padding from [contentPadding]. Values are read during layout, so animated
+ * insets (e.g. the keyboard) relayout the list without recomposing it.
+ */
+internal class InsetContentPadding(
+    private val contentPadding: PaddingValues,
+    private val safePadding: PaddingValues,
+    private val horizontalBasePadding: Dp,
+) : PaddingValues {
+
+    private val horizontalPadding: Dp
+        get() = maxOf(
+            safePadding.calculateLeftPadding(LayoutDirection.Ltr),
+            safePadding.calculateRightPadding(LayoutDirection.Ltr),
+        ) + horizontalBasePadding
+
+    override fun calculateLeftPadding(layoutDirection: LayoutDirection): Dp = horizontalPadding
+
+    override fun calculateTopPadding(): Dp = contentPadding.calculateTopPadding()
+
+    override fun calculateRightPadding(layoutDirection: LayoutDirection): Dp = horizontalPadding
+
+    override fun calculateBottomPadding(): Dp = contentPadding.calculateBottomPadding()
+}
+
+/**
+ * Vertical content padding of a screen list: [top] above, [bottomInsets] plus [spacing] below.
+ * [bottomInsets] is read during layout, so animated insets only relayout the list.
+ */
+internal class ScreenContentPadding(
+    private val top: Dp,
+    private val bottomInsets: PaddingValues,
+    private val spacing: Dp,
+) : PaddingValues {
+
+    override fun calculateLeftPadding(layoutDirection: LayoutDirection): Dp = 0.dp
+
+    override fun calculateTopPadding(): Dp = top
+
+    override fun calculateRightPadding(layoutDirection: LayoutDirection): Dp = 0.dp
+
+    override fun calculateBottomPadding(): Dp = bottomInsets.calculateBottomPadding() + spacing
 }
 
 /**

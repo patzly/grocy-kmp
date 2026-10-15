@@ -18,6 +18,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
 
         val moduleNamespace = derivedNamespace
         val compileSdkLevel = libs.intVersion("android-compileSdk")
+        val compileSdkMinorLevel = libs.intVersion("android-compileSdkMinor")
         val minSdkLevel = libs.intVersion("android-minSdk")
         val targetSdkLevel = libs.intVersion("android-targetSdk")
         val appVersionName = providers.gradleProperty("grocy.versionName").orNull
@@ -30,7 +31,9 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
         extensions.configure<ApplicationExtension> {
             namespace = moduleNamespace
             compileSdk {
-                version = release(compileSdkLevel)
+                version = release(compileSdkLevel) {
+                    minorApiLevel = compileSdkMinorLevel
+                }
             }
 
             defaultConfig {

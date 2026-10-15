@@ -43,6 +43,7 @@ kotlin {
             resources.srcDir(copyZxingWasm)
             dependencies {
                 implementation(projects.apps.shared)
+                implementation(projects.core.design)
             }
         }
     }

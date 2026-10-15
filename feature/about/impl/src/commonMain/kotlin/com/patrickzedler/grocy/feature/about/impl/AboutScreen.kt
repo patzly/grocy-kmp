@@ -21,7 +21,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
@@ -359,13 +358,12 @@ private fun VersionItem(
     modifier: Modifier = Modifier,
 ) {
     ListItem(
-        headlineContent = { Text(versionName) },
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(ListItemDefaults.segmentedShapes(index = 0, count = 4).shape),
+        modifier = modifier.fillMaxWidth(),
         overlineContent = { Text(stringResource(Res.string.about_version)) },
         leadingContent = { AboutItemIcon(Res.drawable.ic_rounded_info) },
+        shapes = ListItemDefaults.segmentedShapes(index = 0, count = 4),
         colors = colors,
+        content = { Text(versionName) },
     )
 }
 

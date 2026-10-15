@@ -32,8 +32,6 @@ fun GrocyTheme(
         AppTheme.SYSTEM -> isSystemInDarkTheme()
     }
 
-    SystemBarAppearance(isDark = isDark)
-
     val dynamicColorScheme = if (color == AppColor.DYNAMIC) {
         platformDynamicColorScheme(isDark = isDark)
     } else {
@@ -50,6 +48,8 @@ fun GrocyTheme(
             modifyColorScheme = ColorScheme::harmonizeError,
         )
     }
+
+    SystemBarAppearance(isDark = isDark, backgroundColor = colorScheme.surfaceContainer)
 
     MaterialExpressiveTheme(
         colorScheme = colorScheme,

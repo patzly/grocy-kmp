@@ -1,11 +1,15 @@
 package com.patrickzedler.grocy.core.design.component
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -18,10 +22,10 @@ import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -31,6 +35,7 @@ import androidx.compose.ui.text.style.TextOverflow
 /**
  * The standard screen: surfaceContainer background, a large top app bar that turns
  * surfaceContainerHighest when scrolled, and an [InsetLazyColumn] for [segmentedGroup]s.
+ * The list shrinks with the keyboard, so a focused text field always stays above it.
  *
  * [navigationIcon] is usually a [NavigateBackButton], [actions] are [AppBarIconButton]s.
  */
@@ -68,15 +73,26 @@ fun SegmentedListScreen(
         },
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
     ) { padding ->
+        // Below the list only the part of the navigation bar the keyboard leaves visible
+        val bottomInsets = WindowInsets.navigationBars
+            .exclude(WindowInsets.keyboard)
+            .asPaddingValues()
+        val topPadding = padding.calculateTopPadding() + SegmentedListDefaults.GroupSpacing
+
         InsetLazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                // Before consuming the scaffold padding, so the list ends right above the keyboard
+                .windowInsetsPadding(WindowInsets.keyboard)
                 .consumeWindowInsets(padding),
             state = listState,
-            contentPadding = PaddingValues(
-                top = padding.calculateTopPadding() + SegmentedListDefaults.GroupSpacing,
-                bottom = padding.calculateBottomPadding() + SegmentedListDefaults.GroupSpacing,
-            ),
+            contentPadding = remember(topPadding, bottomInsets) {
+                ScreenContentPadding(
+                    top = topPadding,
+                    bottomInsets = bottomInsets,
+                    spacing = SegmentedListDefaults.GroupSpacing,
+                )
+            },
             verticalArrangement = Arrangement.spacedBy(SegmentedListDefaults.GroupSpacing),
             content = content,
         )
@@ -101,7 +117,7 @@ fun AppBarIconButton(
     HapticTooltipBox(
         text = contentDescription,
         modifier = modifier,
-        positioning = TooltipAnchorPosition.Below,
+        position = TooltipPosition.Below,
     ) {
         FilledIconButton(
             onClick = {

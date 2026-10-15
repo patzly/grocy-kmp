@@ -1,6 +1,8 @@
 package com.patrickzedler.grocy.core.design.component
 
 import androidx.compose.foundation.MutatePriority
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipAnchorPosition
@@ -20,12 +22,15 @@ import androidx.compose.ui.unit.dp
  * Plain tooltip that vibrates when it opens through a long press.
  *
  * The tooltip does not replace the content description of the wrapped element, set both.
+ * [modifier] goes on an outer box, because TooltipBox places it on an inner one where parent data
+ * such as `Modifier.align` would get lost.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HapticTooltipBox(
     text: String,
     modifier: Modifier = Modifier,
-    positioning: TooltipAnchorPosition = TooltipAnchorPosition.Above,
+    position: TooltipPosition = TooltipPosition.Above,
     spacingBetweenTooltipAndAnchor: Dp = 4.dp,
     content: @Composable () -> Unit,
 ) {
@@ -44,18 +49,25 @@ fun HapticTooltipBox(
         }
     }
 
-    TooltipBox(
-        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
-            positioning = positioning,
-            spacingBetweenTooltipAndAnchor = spacingBetweenTooltipAndAnchor,
-        ),
-        tooltip = {
-            PlainTooltip {
-                Text(text)
-            }
-        },
-        state = state,
-        modifier = modifier,
-        content = content,
-    )
+    Box(modifier = modifier, propagateMinConstraints = true) {
+        TooltipBox(
+            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                positioning = when (position) {
+                    TooltipPosition.Above -> TooltipAnchorPosition.Above
+                    TooltipPosition.Below -> TooltipAnchorPosition.Below
+                },
+                spacingBetweenTooltipAndAnchor = spacingBetweenTooltipAndAnchor,
+            ),
+            tooltip = {
+                PlainTooltip {
+                    Text(text)
+                }
+            },
+            state = state,
+            content = content,
+        )
+    }
 }
+
+/** Side of the anchor a [HapticTooltipBox] shows its tooltip on. */
+enum class TooltipPosition { Above, Below }

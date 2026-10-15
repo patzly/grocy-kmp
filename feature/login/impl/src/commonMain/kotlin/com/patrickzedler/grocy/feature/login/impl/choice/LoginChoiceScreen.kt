@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.login.impl.choice
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,12 +30,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.InsetLazyColumn
 import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
-import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_dns
+import com.patrickzedler.grocy.core.resources.ic_rounded_home
 import com.patrickzedler.grocy.core.resources.ic_rounded_science
 import com.patrickzedler.grocy.core.resources.login_choice_demo_server
 import com.patrickzedler.grocy.core.resources.login_choice_demo_server_description
@@ -71,7 +73,7 @@ private fun LoginChoiceContent(
     modifier: Modifier = Modifier,
 ) {
     val error = uiState.error
-    val count = if (error != null) 4 else 3
+    val count = if (error != null) 3 else 2
 
     Scaffold(
         modifier = modifier,
@@ -91,35 +93,15 @@ private fun LoginChoiceContent(
                 Alignment.CenterVertically,
             ),
         ) {
-            segmentedGroup {
-                SegmentedContainer(
-                    index = 0,
-                    count = count,
-                    contentPadding = PaddingValues(horizontal = 24.dp, vertical = 32.dp),
-                ) {
-                    Text(
-                        text = stringResource(Res.string.login_choice_title),
-                        style = MaterialTheme.typography.headlineLarge,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .semantics { heading() },
-                    )
-                    Text(
-                        text = stringResource(Res.string.login_choice_subtitle),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
-                    )
-                }
+            insetItem(key = "header") {
+                LoginChoiceHeader()
+            }
+            segmentedGroup(key = "choices") {
                 ChoiceItem(
                     title = stringResource(Res.string.login_choice_own_server),
                     description = stringResource(Res.string.login_choice_own_server_description),
                     icon = Res.drawable.ic_rounded_dns,
-                    index = 1,
+                    index = 0,
                     count = count,
                     enabled = !uiState.isLoggingIn,
                     onClick = onOwnServerClick,
@@ -128,19 +110,55 @@ private fun LoginChoiceContent(
                     title = stringResource(Res.string.login_choice_demo_server),
                     description = stringResource(Res.string.login_choice_demo_server_description),
                     icon = Res.drawable.ic_rounded_science,
-                    index = 2,
+                    index = 1,
                     count = count,
                     enabled = !uiState.isLoggingIn,
                     isLoading = uiState.isLoggingIn,
                     onClick = onDemoServerClick,
                 )
                 if (error != null) {
-                    LoginErrorItem(error = error, index = 3, count = count)
+                    LoginErrorItem(error = error, index = 2, count = count)
                 }
             }
         }
     }
 }
+
+/** Logo, welcome and subtitle, the only screen part placed directly on the background. */
+@Composable
+private fun LoginChoiceHeader(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(start = 8.dp, end = 8.dp, bottom = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        // Placeholder until the app logo exists
+        Icon(
+            painter = painterResource(Res.drawable.ic_rounded_home),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(LOGO_SIZE),
+        )
+        Text(
+            text = stringResource(Res.string.login_choice_title),
+            style = MaterialTheme.typography.headlineLarge,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .padding(top = 24.dp)
+                .semantics { heading() },
+        )
+        Text(
+            text = stringResource(Res.string.login_choice_subtitle),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(top = 8.dp),
+        )
+    }
+}
+
+private val LOGO_SIZE = 100.dp
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable

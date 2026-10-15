@@ -1,6 +1,8 @@
 package com.patrickzedler.grocy.core.navigation
 
 import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -9,7 +11,12 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.EntryProviderScope
@@ -49,6 +56,18 @@ fun GrocyNavDisplay(
         )
     }
 
+    // A back the browser animated already (its back gesture preview) must not animate twice
+    var skipPopTransition by remember { mutableStateOf(false) }
+    BrowserBackIntegration(onUserAgentTransition = { skipPopTransition = true })
+    LaunchedEffect(skipPopTransition) {
+        if (skipPopTransition) {
+            // The pop starts in the next frame, afterwards transitions animate again
+            withFrameNanos {}
+            withFrameNanos {}
+            skipPopTransition = false
+        }
+    }
+
     NavDisplay(
         backStack = navigator.backStack,
         modifier = modifier,
@@ -61,10 +80,12 @@ fun GrocyNavDisplay(
         ),
         entryProvider = entryProvider { entries() },
         transitionSpec = { forwardTransition },
-        popTransitionSpec = { backwardTransition },
+        popTransitionSpec = { if (skipPopTransition) NoTransition else backwardTransition },
         predictivePopTransitionSpec = { backwardTransition },
     )
 }
+
+private val NoTransition = EnterTransition.None togetherWith ExitTransition.None
 
 private fun scaleFadeTransition(
     enterScale: Float,

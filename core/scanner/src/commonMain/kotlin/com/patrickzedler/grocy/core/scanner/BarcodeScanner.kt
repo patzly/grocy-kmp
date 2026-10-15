@@ -38,6 +38,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
+import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_error
@@ -70,7 +71,7 @@ private const val SCANNER_ASPECT_RATIO = 16f / 10f
  * Decodes with the engine of [LocalBarcodeDecoderFactory], so ZXing and ML Kit behave the
  * same. The camera starts only when the permission is granted; otherwise the scanner asks
  * for it when the user taps its button, never by itself. Place it as a segmented item: pass the
- * item's [shape], the scanner draws its own surfaceBright background.
+ * item's [shape], the scanner draws the segmented item background itself.
  *
  * @param formats formats to look for; fewer formats scan faster and avoid wrong matches.
  * @param paused stops decoding while the camera keeps running, e.g. while a scan is processed.
@@ -99,7 +100,7 @@ fun BarcodeScanner(
             .fillMaxWidth()
             .aspectRatio(SCANNER_ASPECT_RATIO)
             .clip(shape)
-            .background(MaterialTheme.colorScheme.surfaceBright),
+            .background(SegmentedListDefaults.containerColor),
         contentAlignment = Alignment.Center,
     ) {
         when (access.permission) {

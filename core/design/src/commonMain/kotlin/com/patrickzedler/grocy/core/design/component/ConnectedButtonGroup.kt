@@ -6,13 +6,13 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ButtonGroupMenuState
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
@@ -20,6 +20,7 @@ import androidx.compose.material3.ToggleButtonShapes
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.util.fastForEachIndexed
 import com.patrickzedler.grocy.core.resources.Res
@@ -42,6 +43,7 @@ fun <T> ConnectedButtonGroup(
     label: @Composable (T) -> String = { it.toString() },
 ) {
     if (options.isEmpty()) return
+    val haptic = LocalHapticFeedback.current
 
     ButtonGroup(
         overflowIndicator = { menuState ->
@@ -58,7 +60,10 @@ fun <T> ConnectedButtonGroup(
                 buttonGroupContent = {
                     ToggleButton(
                         checked = isSelected,
-                        onCheckedChange = { if (!isSelected) onCheckedChange(option) },
+                        onCheckedChange = {
+                            haptic.confirm()
+                            if (!isSelected) onCheckedChange(option)
+                        },
                         enabled = enabled,
                         shapes = connectedShapes(index = index, count = options.size),
                     ) {
@@ -70,9 +75,10 @@ fun <T> ConnectedButtonGroup(
                     }
                 },
                 menuContent = { menuState ->
-                    DropdownMenuItem(
+                    SelectableDropdownMenuItem(
                         selected = isSelected,
                         onClick = {
+                            haptic.confirm()
                             if (!isSelected) onCheckedChange(option)
                             menuState.dismiss()
                         },
@@ -101,11 +107,15 @@ private fun OverflowIndicator(
     menuState: ButtonGroupMenuState,
     enabled: Boolean,
 ) {
+    val haptic = LocalHapticFeedback.current
     val contentDescription = stringResource(Res.string.action_more_options)
 
     HapticTooltipBox(text = contentDescription) {
         FilledIconButton(
-            onClick = { if (menuState.isShowing) menuState.dismiss() else menuState.show() },
+            onClick = {
+                haptic.confirm()
+                if (menuState.isShowing) menuState.dismiss() else menuState.show()
+            },
             enabled = enabled,
             modifier = Modifier
                 .minimumInteractiveComponentSize()

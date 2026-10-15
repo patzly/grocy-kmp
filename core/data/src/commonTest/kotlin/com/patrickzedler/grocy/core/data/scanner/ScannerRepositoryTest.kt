@@ -65,6 +65,23 @@ class ScannerRepositoryTest {
     }
 
     @Test
+    fun unlockingKeepsZxingUntilUserSelectsMlKit() = runTest {
+        settingsStore.setScannerEngine(ScannerEngine.ZXING)
+        val repository = repository()
+
+        repository.activeEngine.test {
+            assertEquals(ScannerEngine.ZXING, awaitItem())
+
+            settingsStore.setCheckUnlockKey(false)
+            expectNoEvents()
+            assertEquals(ScannerEngine.ZXING, settingsStore.scannerEngine.value)
+
+            repository.selectEngine(ScannerEngine.ML_KIT)
+            assertEquals(ScannerEngine.ML_KIT, awaitItem())
+        }
+    }
+
+    @Test
     fun selectionIsStoredAndApplied() = runTest {
         checker.keyInstalled = true
         val repository = repository()

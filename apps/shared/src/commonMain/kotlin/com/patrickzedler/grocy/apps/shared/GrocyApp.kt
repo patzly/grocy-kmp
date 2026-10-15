@@ -1,5 +1,9 @@
 package com.patrickzedler.grocy.apps.shared
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -7,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.data.auth.AuthState
 import com.patrickzedler.grocy.core.design.GrocyTheme
@@ -47,11 +52,18 @@ fun GrocyApp(
             .collectAsStateWithLifecycle(initialValue = BarcodeDecoderFactory.Zxing)
 
         CompositionLocalProvider(LocalBarcodeDecoderFactory provides barcodeDecoderFactory) {
-            // Null only for the moment until the stored login has been read
-            authState?.let {
-                GrocyNavigation(graph, it)
-                LaunchedEffect(fontsReady) {
-                    if (fontsReady) onContentReady()
+            // Screen transitions fade, this keeps the window or page behind them out of sight
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surfaceContainer),
+            ) {
+                // Null only for the moment until the stored login has been read
+                authState?.let {
+                    GrocyNavigation(graph, it)
+                    LaunchedEffect(fontsReady) {
+                        if (fontsReady) onContentReady()
+                    }
                 }
             }
         }

@@ -13,6 +13,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color as ComposeColor
 import androidx.compose.ui.platform.LocalContext
 
 @Composable
@@ -30,7 +31,7 @@ internal actual fun platformDynamicColorScheme(isDark: Boolean): ColorScheme? {
 }
 
 @Composable
-internal actual fun SystemBarAppearance(isDark: Boolean) {
+internal actual fun SystemBarAppearance(isDark: Boolean, backgroundColor: ComposeColor) {
     val context = LocalContext.current
     val activity = remember(context) { context.findActivity() }
 

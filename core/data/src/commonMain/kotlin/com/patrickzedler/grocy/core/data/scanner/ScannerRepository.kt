@@ -10,7 +10,8 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 /**
  * Decides which barcode engine scans.
  *
- * [availableEngines] are the engines the platform ships (ML Kit only in the Play app).
+ * [availableEngines] are the engines the platform ships (ML Kit only in the Play app). ZXing is
+ * the default; unlocking never switches the engine, the user has to select ML Kit.
  */
 class ScannerRepository(
     private val settingsStore: SettingsStore,

@@ -2,8 +2,11 @@ package com.patrickzedler.grocy.core.design
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import com.patrickzedler.grocy.core.design.extensions.toCssHex
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.google_sans_flex_medium
 import com.patrickzedler.grocy.core.resources.google_sans_flex_regular
@@ -14,7 +17,22 @@ import org.jetbrains.compose.resources.preloadFont
 internal actual fun platformDynamicColorScheme(isDark: Boolean): ColorScheme? = null
 
 @Composable
-internal actual fun SystemBarAppearance(isDark: Boolean) = Unit
+internal actual fun SystemBarAppearance(isDark: Boolean, backgroundColor: Color) {
+    val cssColor = backgroundColor.toCssHex()
+    // Around the app, e.g. behind the navigation bar of an installed app, the page shows
+    SideEffect { setPageBackground(cssColor) }
+}
+
+@OptIn(ExperimentalWasmJsInterop::class)
+@JsFun(
+    """(color) => {
+        document.documentElement.style.backgroundColor = color;
+        document.body.style.backgroundColor = color;
+        document.querySelectorAll('meta[name="theme-color"]')
+            .forEach((meta) => meta.setAttribute('content', color));
+    }""",
+)
+private external fun setPageBackground(color: String)
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
