@@ -23,10 +23,24 @@ val generateBuildInfo = tasks.register("generateBuildInfo") {
     }
 }
 
+// zxing-wasm downloads its decoder from a CDN by default. The app serves it itself instead:
+// no third party sees who scans, and the version is pinned by yarn.lock.
+val copyZxingWasm = tasks.register<Sync>("copyZxingWasm") {
+    group = "build"
+    description = "Copies the zxing-wasm decoder next to index.html."
+    dependsOn(":kotlinWasmNpmInstall")
+    from(
+        rootProject.layout.buildDirectory
+            .file("wasm/node_modules/zxing-wasm/dist/reader/zxing_reader.wasm"),
+    )
+    into(layout.buildDirectory.dir("generated/zxingWasm"))
+}
+
 kotlin {
     sourceSets {
         wasmJsMain {
             kotlin.srcDir(generateBuildInfo)
+            resources.srcDir(copyZxingWasm)
             dependencies {
                 implementation(projects.apps.shared)
             }

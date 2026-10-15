@@ -25,10 +25,9 @@ class KmpComposeConventionPlugin : Plugin<Project> {
             }
         }
 
-        // Checks the Wasm UI test setup, but these modules run no Wasm tests at all
-        tasks.matching { it.name == "checkComposeUiTestConfigurationForWasmJs" }.configureEach {
-            enabled = false
-        }
+        // These modules run no Wasm tests, so their test binaries are neither compiled nor linked
+        tasks.matching { it.name.contains("WasmJs", ignoreCase = true) && it.name.contains("Test") }
+            .configureEach { enabled = false }
 
         // Compose previews in Android Studio, kept out of the compile classpath
         val uiTooling = libs.library("compose-ui-tooling")

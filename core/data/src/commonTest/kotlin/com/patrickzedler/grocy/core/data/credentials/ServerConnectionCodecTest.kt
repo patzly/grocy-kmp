@@ -35,6 +35,31 @@ class ServerConnectionCodecTest {
             ),
         )
         assertEquals(ServerConnection.Demo(), ServerConnectionCodec.decode("""{"type":"demo"}"""))
+        assertEquals(
+            ServerConnection.HomeAssistant(
+                serverUrl = "https://ha.example.com",
+                accessToken = "token",
+                apiKey = "secret",
+            ),
+            ServerConnectionCodec.decode(
+                """{"type":"home_assistant","serverUrl":"https://ha.example.com",""" +
+                    """"accessToken":"token","apiKey":"secret"}""",
+            ),
+        )
+    }
+
+    @Test
+    fun homeAssistantConnectionSurvivesRoundTrip() {
+        val connection = ServerConnection.HomeAssistant(
+            serverUrl = "https://ha.example.com",
+            accessToken = "token",
+            apiKey = "secret",
+            addonSlug = "local_grocy",
+        )
+
+        val encoded = ServerConnectionCodec.encode(connection)
+
+        assertEquals(connection, ServerConnectionCodec.decode(encoded))
     }
 
     @Test

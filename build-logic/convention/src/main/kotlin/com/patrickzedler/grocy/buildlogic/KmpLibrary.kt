@@ -22,6 +22,11 @@ internal fun Project.configureKmpLibrary(runWasmTests: Boolean) {
     val minSdkLevel = libs.intVersion("android-minSdk")
 
     extensions.configure<KotlinMultiplatformExtension> {
+        compilerOptions {
+            // Platform types such as CameraFrame (ImageProxy on Android, ImageData on the web)
+            freeCompilerArgs.add("-Xexpect-actual-classes")
+        }
+
         targets.withType<KotlinMultiplatformAndroidLibraryTarget>().configureEach {
             namespace = moduleNamespace
             compileSdk = compileSdkLevel

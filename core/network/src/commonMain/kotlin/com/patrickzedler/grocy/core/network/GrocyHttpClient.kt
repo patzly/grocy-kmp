@@ -5,6 +5,7 @@ import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -28,4 +29,6 @@ private fun HttpClientConfig<*>.configureGrocyClient() {
         connectTimeoutMillis = 15_000
         requestTimeoutMillis = 30_000
     }
+    // Home Assistant ingress sessions are created through its WebSocket API
+    install(WebSockets)
 }

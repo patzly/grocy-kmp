@@ -12,6 +12,7 @@ import com.patrickzedler.grocy.feature.login.impl.choice.LoginChoiceViewModel
 import com.patrickzedler.grocy.feature.login.impl.manual.LoginManualScreen
 import com.patrickzedler.grocy.feature.login.impl.manual.LoginManualViewModel
 import com.patrickzedler.grocy.feature.login.impl.scan.LoginScanScreen
+import com.patrickzedler.grocy.feature.login.impl.scan.LoginScanViewModel
 
 fun EntryProviderScope<NavKey>.loginEntries(
     dependencies: LoginDependencies,
@@ -25,6 +26,7 @@ fun EntryProviderScope<NavKey>.loginEntries(
     }
     entry<LoginScanRoute> {
         LoginScanScreen(
+            viewModel = viewModel { LoginScanViewModel(dependencies.authRepository) },
             onBackClick = navigator::goBack,
             onManualEntryClick = { navigator.navigate(LoginManualRoute) },
         )

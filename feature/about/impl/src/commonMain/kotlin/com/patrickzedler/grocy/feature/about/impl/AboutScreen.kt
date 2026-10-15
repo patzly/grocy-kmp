@@ -1,34 +1,18 @@
 package com.patrickzedler.grocy.feature.about.impl
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorPosition
 import androidx.compose.material3.MenuDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
-import androidx.compose.material3.TooltipAnchorPosition
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,24 +22,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.GrocyTheme
-import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
-import com.patrickzedler.grocy.core.design.component.InsetLazyColumn
+import com.patrickzedler.grocy.core.design.component.AppBarIconButton
 import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
+import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.confirm
-import com.patrickzedler.grocy.core.design.component.insetItem
+import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.design.component.tryOpenUri
 import com.patrickzedler.grocy.core.model.UnlockState
 import com.patrickzedler.grocy.core.resources.Res
@@ -154,7 +135,6 @@ internal fun AboutScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun AboutContent(
     versionName: String,
@@ -170,180 +150,131 @@ private fun AboutContent(
     onLicenseFontClick: () -> Unit = {},
     onLicenseIconsClick: () -> Unit = {},
 ) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val uriHandler = LocalUriHandler.current
+    val appWebsite = stringResource(Res.string.app_website)
+    val appVendingDev = stringResource(Res.string.app_vending_dev)
+    val appGithub = stringResource(Res.string.app_github)
+    val appTranslate = stringResource(Res.string.app_translate)
+    val appPrivacy = stringResource(Res.string.app_privacy)
 
-    Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            LargeTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(Res.string.title_about),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-                navigationIcon = { NavigateBackButton(onClick = onBackClick) },
-                actions = {
-                    AboutMenu(
-                        onHelpClick = onHelpClick,
-                        onRecommendClick = onRecommendClick,
-                        onFeedbackClick = onFeedbackClick,
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                ),
-                scrollBehavior = scrollBehavior,
+    SegmentedListScreen(
+        title = stringResource(Res.string.title_about),
+        modifier = modifier,
+        navigationIcon = { NavigateBackButton(onClick = onBackClick) },
+        actions = {
+            AboutMenu(
+                onHelpClick = onHelpClick,
+                onRecommendClick = onRecommendClick,
+                onFeedbackClick = onFeedbackClick,
             )
         },
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
-    ) { padding ->
-        val uriHandler = LocalUriHandler.current
-        val appWebsite = stringResource(Res.string.app_website)
-        val appVendingDev = stringResource(Res.string.app_vending_dev)
-        val appGithub = stringResource(Res.string.app_github)
-        val appTranslate = stringResource(Res.string.app_translate)
-        val appPrivacy = stringResource(Res.string.app_privacy)
-        val colors = ListItemDefaults.segmentedColors(
-            containerColor = MaterialTheme.colorScheme.surfaceBright,
-        )
+    ) {
+        segmentedGroup {
+            val colors = SegmentedListDefaults.colors()
+            VersionItem(versionName = versionName, colors = colors)
+            AboutItem(
+                title = stringResource(Res.string.about_changelog),
+                icon = Res.drawable.ic_rounded_history,
+                index = 1,
+                count = 4,
+                colors = colors,
+                onClick = onChangelogClick,
+                supporting = stringResource(Res.string.about_changelog_description),
+            )
+            AboutItem(
+                title = stringResource(Res.string.app_developer),
+                icon = Res.drawable.ic_rounded_person,
+                index = 2,
+                count = 4,
+                colors = colors,
+                onClick = { uriHandler.tryOpenUri(appWebsite) },
+                overline = stringResource(Res.string.about_developer),
+            )
+            AboutItem(
+                title = stringResource(Res.string.about_vending),
+                icon = Res.drawable.ic_rounded_shop,
+                index = 3,
+                count = 4,
+                colors = colors,
+                onClick = { uriHandler.tryOpenUri(appVendingDev) },
+                supporting = stringResource(Res.string.about_vending_description),
+            )
+        }
 
-        InsetLazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .consumeWindowInsets(padding),
-            contentPadding = PaddingValues(
-                top = padding.calculateTopPadding() + 16.dp,
-                bottom = padding.calculateBottomPadding() + 16.dp,
-            ),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            aboutSection {
-                VersionItem(versionName = versionName, colors = colors)
+        if (unlockState?.isPlayStoreInstalled == true) {
+            segmentedGroup {
                 AboutItem(
-                    title = stringResource(Res.string.about_changelog),
-                    icon = Res.drawable.ic_rounded_history,
-                    index = 1,
-                    count = 4,
-                    colors = colors,
-                    onClick = onChangelogClick,
-                    supporting = stringResource(Res.string.about_changelog_description),
-                )
-                AboutItem(
-                    title = stringResource(Res.string.app_developer),
-                    icon = Res.drawable.ic_rounded_person,
-                    index = 2,
-                    count = 4,
-                    colors = colors,
-                    onClick = { uriHandler.tryOpenUri(appWebsite) },
-                    overline = stringResource(Res.string.about_developer),
-                )
-                AboutItem(
-                    title = stringResource(Res.string.about_vending),
-                    icon = Res.drawable.ic_rounded_shop,
-                    index = 3,
-                    count = 4,
-                    colors = colors,
-                    onClick = { uriHandler.tryOpenUri(appVendingDev) },
-                    supporting = stringResource(Res.string.about_vending_description),
-                )
-            }
-
-            if (unlockState?.isPlayStoreInstalled == true) {
-                aboutSection {
-                    AboutItem(
-                        title = stringResource(Res.string.about_key),
-                        icon = Res.drawable.ic_rounded_key,
-                        index = 0,
-                        count = 1,
-                        colors = colors,
-                        onClick = onKeyClick,
-                        supporting = stringResource(
-                            when {
-                                unlockState.isKeyInstalled ->
-                                    Res.string.about_key_description_installed
-                                !unlockState.checkUnlockKey ->
-                                    Res.string.about_key_description_ignored
-                                else -> Res.string.about_key_description_not_installed
-                            },
-                        ),
-                        onLongClick = onKeyLongClick,
-                    )
-                }
-            }
-
-            aboutSection {
-                AboutItem(
-                    title = stringResource(Res.string.about_github),
-                    icon = Res.drawable.ic_rounded_code,
+                    title = stringResource(Res.string.about_key),
+                    icon = Res.drawable.ic_rounded_key,
                     index = 0,
-                    count = 3,
-                    colors = colors,
-                    onClick = { uriHandler.tryOpenUri(appGithub) },
-                    supporting = stringResource(Res.string.about_github_description),
-                )
-                AboutItem(
-                    title = stringResource(Res.string.about_translation),
-                    icon = Res.drawable.ic_rounded_translate,
-                    index = 1,
-                    count = 3,
-                    colors = colors,
-                    onClick = { uriHandler.tryOpenUri(appTranslate) },
-                    supporting = stringResource(Res.string.about_translation_description),
-                )
-                AboutItem(
-                    title = stringResource(Res.string.about_privacy),
-                    icon = Res.drawable.ic_rounded_policy,
-                    index = 2,
-                    count = 3,
-                    colors = colors,
-                    onClick = { uriHandler.tryOpenUri(appPrivacy) },
-                    supporting = stringResource(Res.string.about_privacy_description),
-                )
-            }
-
-            aboutSection {
-                Text(
-                    text = stringResource(Res.string.title_licenses),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.secondary,
-                    modifier = Modifier
-                        .padding(bottom = 8.dp)
-                        .semantics { heading() },
-                )
-                AboutItem(
-                    title = stringResource(Res.string.license_google_sans_flex),
-                    icon = Res.drawable.ic_rounded_copyright,
-                    index = 0,
-                    count = 2,
-                    colors = colors,
-                    onClick = onLicenseFontClick,
-                    supporting = stringResource(Res.string.license_author_google),
-                )
-                AboutItem(
-                    title = stringResource(Res.string.license_material_icons),
-                    icon = Res.drawable.ic_rounded_copyright,
-                    index = 1,
-                    count = 2,
-                    colors = colors,
-                    onClick = onLicenseIconsClick,
-                    supporting = stringResource(Res.string.license_author_google),
+                    count = 1,
+                    colors = SegmentedListDefaults.colors(),
+                    onClick = onKeyClick,
+                    supporting = stringResource(
+                        when {
+                            unlockState.isKeyInstalled ->
+                                Res.string.about_key_description_installed
+                            !unlockState.checkUnlockKey ->
+                                Res.string.about_key_description_ignored
+                            else -> Res.string.about_key_description_not_installed
+                        },
+                    ),
+                    onLongClick = onKeyLongClick,
                 )
             }
         }
-    }
-}
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-private fun LazyListScope.aboutSection(content: @Composable () -> Unit) {
-    insetItem {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
-        ) {
-            content()
+        segmentedGroup {
+            val colors = SegmentedListDefaults.colors()
+            AboutItem(
+                title = stringResource(Res.string.about_github),
+                icon = Res.drawable.ic_rounded_code,
+                index = 0,
+                count = 3,
+                colors = colors,
+                onClick = { uriHandler.tryOpenUri(appGithub) },
+                supporting = stringResource(Res.string.about_github_description),
+            )
+            AboutItem(
+                title = stringResource(Res.string.about_translation),
+                icon = Res.drawable.ic_rounded_translate,
+                index = 1,
+                count = 3,
+                colors = colors,
+                onClick = { uriHandler.tryOpenUri(appTranslate) },
+                supporting = stringResource(Res.string.about_translation_description),
+            )
+            AboutItem(
+                title = stringResource(Res.string.about_privacy),
+                icon = Res.drawable.ic_rounded_policy,
+                index = 2,
+                count = 3,
+                colors = colors,
+                onClick = { uriHandler.tryOpenUri(appPrivacy) },
+                supporting = stringResource(Res.string.about_privacy_description),
+            )
+        }
+
+        segmentedGroup(title = Res.string.title_licenses) {
+            val colors = SegmentedListDefaults.colors()
+            AboutItem(
+                title = stringResource(Res.string.license_google_sans_flex),
+                icon = Res.drawable.ic_rounded_copyright,
+                index = 0,
+                count = 2,
+                colors = colors,
+                onClick = onLicenseFontClick,
+                supporting = stringResource(Res.string.license_author_google),
+            )
+            AboutItem(
+                title = stringResource(Res.string.license_material_icons),
+                icon = Res.drawable.ic_rounded_copyright,
+                index = 1,
+                count = 2,
+                colors = colors,
+                onClick = onLicenseIconsClick,
+                supporting = stringResource(Res.string.license_author_google),
+            )
         }
     }
 }
@@ -354,38 +285,15 @@ private fun AboutMenu(
     onRecommendClick: () -> Unit,
     onFeedbackClick: () -> Unit,
 ) {
-    val haptic = LocalHapticFeedback.current
     var showMenu by remember { mutableStateOf(false) }
     val moreText = stringResource(Res.string.action_more_options)
 
-    HapticTooltipBox(
-        text = moreText,
-        positioning = TooltipAnchorPosition.Below,
-    ) {
-        FilledIconButton(
-            onClick = {
-                haptic.confirm()
-                showMenu = true
-            },
-            modifier = Modifier
-                .minimumInteractiveComponentSize()
-                .size(
-                IconButtonDefaults.smallContainerSize(
-                    IconButtonDefaults.IconButtonWidthOption.Narrow,
-                ),
-            ),
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                contentColor = MaterialTheme.colorScheme.onSurface,
-            ),
-            shapes = IconButtonDefaults.shapes(),
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_rounded_more_vert),
-                contentDescription = moreText,
-            )
-        }
-    }
+    AppBarIconButton(
+        painter = painterResource(Res.drawable.ic_rounded_more_vert),
+        contentDescription = moreText,
+        onClick = { showMenu = true },
+        narrow = true,
+    )
 
     DropdownMenuPopup(
         expanded = showMenu,

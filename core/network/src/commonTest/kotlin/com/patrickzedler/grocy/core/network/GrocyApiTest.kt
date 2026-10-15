@@ -24,14 +24,24 @@ class GrocyApiTest {
 
     private val requests = mutableListOf<HttpRequestData>()
 
+    private var ingressSessionsCreated = 0
+
     private fun api(
+        apiKeyAsQueryParameter: Boolean = false,
         handler: MockRequestHandleScope.(HttpRequestData) -> HttpResponseData,
     ): GrocyApi {
         val engine = MockEngine { request ->
             requests += request
             handler(request)
         }
-        return GrocyApi(createGrocyHttpClient(engine))
+        return GrocyApi(
+            httpClient = createGrocyHttpClient(engine),
+            ingressSessionSource = {
+                ingressSessionsCreated++
+                IngressSession("/api/hassio_ingress/token", "session-$ingressSessionsCreated")
+            },
+            apiKeyAsQueryParameter = apiKeyAsQueryParameter,
+        )
     }
 
     private fun MockRequestHandleScope.json(
@@ -68,6 +78,66 @@ class GrocyApiTest {
         api.systemInfo(ServerConnection.ApiKey("https://grocy.example.com", "secret-key"))
 
         assertEquals("secret-key", requests.single().headers[GrocyApi.API_KEY_HEADER])
+    }
+
+    @Test
+    fun apiKeyCanBeSentAsQueryParameter() = runTest {
+        val api = api(apiKeyAsQueryParameter = true) { json(SYSTEM_INFO_JSON) }
+
+        api.systemInfo(ServerConnection.ApiKey("https://grocy.example.com", "secret-key"))
+
+        val request = requests.single()
+        assertEquals("secret-key", request.url.parameters[GrocyApi.API_KEY_HEADER])
+        assertNull(request.headers[GrocyApi.API_KEY_HEADER])
+    }
+
+    @Test
+    fun homeAssistantRequestsGoThroughIngressWithSessionCookie() = runTest {
+        val api = api { json(SYSTEM_INFO_JSON) }
+
+        api.systemInfo(HOME_ASSISTANT)
+
+        val request = requests.single()
+        assertEquals(
+            "https://ha.example.com/api/hassio_ingress/token/api/system/info",
+            request.url.toString(),
+        )
+        assertEquals("ingress_session=session-1", request.headers[HttpHeaders.Cookie])
+        assertEquals("grocy-key", request.headers[GrocyApi.API_KEY_HEADER])
+    }
+
+    @Test
+    fun homeAssistantSessionIsReused() = runTest {
+        val api = api { json(SYSTEM_INFO_JSON) }
+
+        api.systemInfo(HOME_ASSISTANT)
+        api.systemInfo(HOME_ASSISTANT)
+
+        assertEquals(1, ingressSessionsCreated)
+    }
+
+    @Test
+    fun expiredIngressSessionIsReplacedOnce() = runTest {
+        val api = api { request ->
+            if (request.headers[HttpHeaders.Cookie] == "ingress_session=session-1") {
+                json("", HttpStatusCode.Unauthorized)
+            } else {
+                json(SYSTEM_INFO_JSON)
+            }
+        }
+
+        api.systemInfo(HOME_ASSISTANT)
+
+        assertEquals(2, ingressSessionsCreated)
+        assertEquals(2, requests.size)
+    }
+
+    @Test
+    fun rejectionWithFreshIngressSessionIsUnauthorized() = runTest {
+        val api = api { json("", HttpStatusCode.Unauthorized) }
+
+        assertFailsWith<GrocyApiException.Unauthorized> { api.systemInfo(HOME_ASSISTANT) }
+        assertEquals(2, ingressSessionsCreated)
     }
 
     @Test
@@ -148,6 +218,11 @@ class GrocyApiTest {
 
     private companion object {
         val DEMO = ServerConnection.Demo()
+        val HOME_ASSISTANT = ServerConnection.HomeAssistant(
+            serverUrl = "https://ha.example.com",
+            accessToken = "ha-token",
+            apiKey = "grocy-key",
+        )
 
         // Shapes as documented in grocy.openapi.json, with fields the client does not use
         const val SYSTEM_INFO_JSON = """

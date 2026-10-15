@@ -5,7 +5,9 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.patrickzedler.grocy.core.model.ScannerEngine
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -20,17 +22,28 @@ class AndroidSettingsStore(
         produceFile = { context.applicationContext.preferencesDataStoreFile(FILE_NAME) },
     )
 
-    override val checkUnlockKey: Flow<Boolean> = dataStore.data
+    private val preferences = dataStore.data
         .catch { e -> if (e is IOException) emit(emptyPreferences()) else throw e }
-        .map { preferences -> preferences[CHECK_UNLOCK_KEY] ?: true }
+
+    override val checkUnlockKey: Flow<Boolean> = preferences
+        .map { it[CHECK_UNLOCK_KEY] ?: true }
         .distinctUntilChanged()
 
     override suspend fun setCheckUnlockKey(checkUnlockKey: Boolean) {
         dataStore.edit { it[CHECK_UNLOCK_KEY] = checkUnlockKey }
     }
 
+    override val scannerEngine: Flow<ScannerEngine> = preferences
+        .map { scannerEngineOf(it[SCANNER_ENGINE]) }
+        .distinctUntilChanged()
+
+    override suspend fun setScannerEngine(scannerEngine: ScannerEngine) {
+        dataStore.edit { it[SCANNER_ENGINE] = scannerEngine.name }
+    }
+
     private companion object {
         const val FILE_NAME = "settings"
         val CHECK_UNLOCK_KEY = booleanPreferencesKey("check_unlock_key")
+        val SCANNER_ENGINE = stringPreferencesKey("scanner_engine")
     }
 }

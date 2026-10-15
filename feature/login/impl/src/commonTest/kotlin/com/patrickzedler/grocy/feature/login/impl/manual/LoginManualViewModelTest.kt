@@ -3,6 +3,7 @@ package com.patrickzedler.grocy.feature.login.impl.manual
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import com.patrickzedler.grocy.core.data.auth.AuthRepository
 import com.patrickzedler.grocy.core.model.ServerConnection
+import com.patrickzedler.grocy.core.network.GrocyApiException
 import com.patrickzedler.grocy.core.network.ServerUrl
 import com.patrickzedler.grocy.core.testing.FakeCredentialStore
 import com.patrickzedler.grocy.core.testing.FakeGrocyServer
@@ -32,7 +33,19 @@ class LoginManualViewModelTest {
     @BeforeTest
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        viewModel = LoginManualViewModel(AuthRepository(credentialStore, server.api))
+        viewModel = viewModel()
+    }
+
+    private fun viewModel(isHomeAssistantSupported: Boolean = true) = LoginManualViewModel(
+        authRepository = AuthRepository(credentialStore, server.api),
+        isHomeAssistantSupported = isHomeAssistantSupported,
+    )
+
+    private fun enterHomeAssistantLogin(viewModel: LoginManualViewModel = this.viewModel) {
+        viewModel.selectServerType(ServerType.HOME_ASSISTANT)
+        viewModel.homeAssistantUrl.setTextAndPlaceCursorAtEnd("ha.example.com")
+        viewModel.homeAssistantToken.setTextAndPlaceCursorAtEnd("ha-token")
+        viewModel.apiKey.setTextAndPlaceCursorAtEnd("secret")
     }
 
     @AfterTest
@@ -67,12 +80,78 @@ class LoginManualViewModelTest {
     }
 
     @Test
-    fun homeAssistantCannotConnectYet() {
+    fun homeAssistantNeedsAddressTokenKeyAndSlug() {
+        enterHomeAssistantLogin()
+        assertTrue(viewModel.canConnect)
+
+        viewModel.addonSlug.setTextAndPlaceCursorAtEnd(" ")
+        assertFalse(viewModel.canConnect)
+
+        viewModel.addonSlug.setTextAndPlaceCursorAtEnd("a0d7b954_grocy")
+        viewModel.homeAssistantToken.setTextAndPlaceCursorAtEnd("")
+        assertFalse(viewModel.canConnect)
+    }
+
+    @Test
+    fun homeAssistantUsesGrocyAddonSlugByDefault() {
+        assertEquals("a0d7b954_grocy", viewModel.addonSlug.text.toString())
+    }
+
+    @Test
+    fun homeAssistantLoginStoresConnection() = runTest {
+        enterHomeAssistantLogin()
+
+        viewModel.connect()
+        advanceUntilIdle()
+
+        assertEquals(
+            ServerConnection.HomeAssistant(
+                serverUrl = "https://ha.example.com",
+                accessToken = "ha-token",
+                apiKey = "secret",
+            ),
+            credentialStore.connection.value,
+        )
+        assertTrue(
+            server.requests.all {
+                it.url.encodedPath.startsWith(FakeGrocyServer.INGRESS_PATH)
+            },
+        )
+    }
+
+    @Test
+    fun rejectedHomeAssistantTokenShowsError() = runTest {
+        server.ingressFailure = GrocyApiException.HomeAssistantTokenRejected()
+        enterHomeAssistantLogin()
+
+        viewModel.connect()
+        advanceUntilIdle()
+
+        assertEquals(LoginError.HomeAssistantTokenRejected, viewModel.error)
+        assertNull(credentialStore.connection.value)
+    }
+
+    @Test
+    fun homeAssistantCannotConnectWhereIngressIsUnsupported() = runTest {
+        val browserViewModel = viewModel(isHomeAssistantSupported = false)
+        enterHomeAssistantLogin(browserViewModel)
+
+        browserViewModel.connect()
+        advanceUntilIdle()
+
+        assertFalse(browserViewModel.canConnect)
+        assertTrue(server.requests.isEmpty())
+    }
+
+    @Test
+    fun switchingTypeKeepsApiKey() {
         enterGrocyLogin()
 
         viewModel.selectServerType(ServerType.HOME_ASSISTANT)
+        viewModel.selectServerType(ServerType.GROCY)
 
-        assertFalse(viewModel.canConnect)
+        assertEquals("secret", viewModel.apiKey.text.toString())
+        assertTrue(viewModel.canConnect)
     }
 
     @Test

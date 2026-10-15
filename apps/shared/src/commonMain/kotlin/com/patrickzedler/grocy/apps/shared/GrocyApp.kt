@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.apps.shared
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,6 +13,8 @@ import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.rememberThemeFontsReady
 import com.patrickzedler.grocy.core.navigation.GrocyNavDisplay
 import com.patrickzedler.grocy.core.navigation.rememberNavigator
+import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
+import com.patrickzedler.grocy.core.scanner.LocalBarcodeDecoderFactory
 import com.patrickzedler.grocy.feature.about.api.aboutRouteSerializers
 import com.patrickzedler.grocy.feature.about.impl.aboutEntries
 import com.patrickzedler.grocy.feature.login.api.LoginChoiceRoute
@@ -40,12 +43,16 @@ fun GrocyApp(
         val authState by graph.authRepository.authState
             .collectAsStateWithLifecycle(initialValue = null)
         val fontsReady = rememberThemeFontsReady()
+        val barcodeDecoderFactory by graph.barcodeDecoderFactory
+            .collectAsStateWithLifecycle(initialValue = BarcodeDecoderFactory.Zxing)
 
-        // Null only for the moment until the stored login has been read
-        authState?.let {
-            GrocyNavigation(graph, it)
-            LaunchedEffect(fontsReady) {
-                if (fontsReady) onContentReady()
+        CompositionLocalProvider(LocalBarcodeDecoderFactory provides barcodeDecoderFactory) {
+            // Null only for the moment until the stored login has been read
+            authState?.let {
+                GrocyNavigation(graph, it)
+                LaunchedEffect(fontsReady) {
+                    if (fontsReady) onContentReady()
+                }
             }
         }
     }

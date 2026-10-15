@@ -17,4 +17,15 @@ sealed class GrocyApiException(
         GrocyApiException("Response is not from a Grocy server", cause)
 
     class HttpError(val statusCode: Int) : GrocyApiException("Unexpected HTTP status $statusCode")
+
+    /** Home Assistant rejected the access token. */
+    class HomeAssistantTokenRejected : GrocyApiException("Access token was rejected")
+
+    /** Home Assistant has no add-on with the slug, or it does not support ingress. */
+    class AddonNotFound(cause: Throwable? = null) :
+        GrocyApiException("Add-on was not found", cause)
+
+    /** The address answered, but not like Home Assistant does. */
+    class NotHomeAssistant(cause: Throwable? = null) :
+        GrocyApiException("Response is not from Home Assistant", cause)
 }

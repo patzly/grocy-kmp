@@ -14,6 +14,9 @@ kotlin {
             implementation(projects.core.design)
             implementation(projects.core.navigation)
             implementation(projects.core.network)
+            // PlatformDependencies exposes the barcode decoders of the platform by engine
+            api(projects.core.scanner)
+            api(projects.core.model)
             implementation(projects.feature.login.api)
             implementation(projects.feature.login.impl)
             implementation(projects.feature.start.api)

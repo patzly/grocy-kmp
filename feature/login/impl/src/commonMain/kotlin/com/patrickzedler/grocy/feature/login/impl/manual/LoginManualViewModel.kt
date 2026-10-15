@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.auth.AuthRepository
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.network.ServerUrl
+import com.patrickzedler.grocy.core.network.isHomeAssistantIngressSupported
 import com.patrickzedler.grocy.feature.login.impl.LoginError
 import com.patrickzedler.grocy.feature.login.impl.MINIMUM_LOADING_DURATION
 import com.patrickzedler.grocy.feature.login.impl.toLoginError
@@ -17,14 +18,19 @@ import com.patrickzedler.grocy.feature.login.impl.withMinimumDuration
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.launch
 
+/**
+ * [isHomeAssistantSupported] is false in browsers, which cannot use ingress; the screen then
+ * explains the alternative instead of offering a login that cannot work.
+ */
 internal class LoginManualViewModel(
     private val authRepository: AuthRepository,
+    val isHomeAssistantSupported: Boolean = isHomeAssistantIngressSupported,
 ) : ViewModel() {
 
     val grocyUrl = TextFieldState()
     val homeAssistantUrl = TextFieldState()
     val homeAssistantToken = TextFieldState()
-    val ingressProxyId = TextFieldState()
+    val addonSlug = TextFieldState(ServerConnection.HomeAssistant.DEFAULT_ADDON_SLUG)
 
     // Needed in both modes, so switching keeps it
     val apiKey = TextFieldState()
@@ -52,11 +58,7 @@ internal class LoginManualViewModel(
     }
 
     val canConnect: Boolean by derivedStateOf {
-        // Home Assistant needs the ingress session, which is not implemented yet
-        !isLoggingIn &&
-            serverType == ServerType.GROCY &&
-            normalizedGrocyUrl != null &&
-            apiKey.text.isNotBlank()
+        !isLoggingIn && connection() != null
     }
 
     fun selectServerType(type: ServerType) {
@@ -70,12 +72,8 @@ internal class LoginManualViewModel(
     }
 
     fun connect() {
-        if (!canConnect) return
-        val serverUrl = normalizedGrocyUrl ?: return
-        val connection = ServerConnection.ApiKey(
-            serverUrl = serverUrl,
-            apiKey = apiKey.text.toString().trim(),
-        )
+        if (isLoggingIn) return
+        val connection = connection() ?: return
 
         isLoggingIn = true
         error = null
@@ -91,6 +89,29 @@ internal class LoginManualViewModel(
             } catch (e: Exception) {
                 isLoggingIn = false
                 error = e.toLoginError()
+            }
+        }
+    }
+
+    /** The connection the input describes, null while it is incomplete. */
+    private fun connection(): ServerConnection? {
+        val key = apiKey.text.toString().trim().takeIf { it.isNotEmpty() } ?: return null
+        return when (serverType) {
+            ServerType.GROCY -> ServerConnection.ApiKey(
+                serverUrl = normalizedGrocyUrl ?: return null,
+                apiKey = key,
+            )
+
+            ServerType.HOME_ASSISTANT -> {
+                if (!isHomeAssistantSupported) return null
+                ServerConnection.HomeAssistant(
+                    serverUrl = normalizedHomeAssistantUrl ?: return null,
+                    accessToken = homeAssistantToken.text.toString().trim()
+                        .takeIf { it.isNotEmpty() } ?: return null,
+                    apiKey = key,
+                    addonSlug = addonSlug.text.toString().trim()
+                        .takeIf { it.isNotEmpty() } ?: return null,
+                )
             }
         }
     }

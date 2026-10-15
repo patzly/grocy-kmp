@@ -17,6 +17,19 @@ class LoginErrorTest {
     }
 
     @Test
+    fun mapsHomeAssistantErrors() {
+        assertEquals(
+            LoginError.HomeAssistantTokenRejected,
+            GrocyApiException.HomeAssistantTokenRejected().toLoginError(),
+        )
+        assertEquals(LoginError.AddonNotFound, GrocyApiException.AddonNotFound().toLoginError())
+        assertEquals(
+            LoginError.NotHomeAssistant,
+            GrocyApiException.NotHomeAssistant().toLoginError(),
+        )
+    }
+
+    @Test
     fun missingEndpointMeansNoGrocyServer() {
         assertEquals(LoginError.NotGrocyServer, GrocyApiException.HttpError(404).toLoginError())
     }

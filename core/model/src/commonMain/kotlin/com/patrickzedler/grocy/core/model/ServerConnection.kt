@@ -32,4 +32,29 @@ sealed interface ServerConnection {
         // Keeps the key out of logs and crash reports
         override fun toString(): String = "ApiKey(serverUrl=$serverUrl, apiKey=***)"
     }
+
+    /**
+     * Grocy add-on reached through Home Assistant ingress, so no port has to be opened.
+     *
+     * [serverUrl] is the Home Assistant base URL; the ingress path of the add-on with [addonSlug]
+     * is looked up with [accessToken] (a long-lived access token) when a session starts.
+     */
+    @Serializable
+    @SerialName("home_assistant")
+    data class HomeAssistant(
+        override val serverUrl: String,
+        val accessToken: String,
+        val apiKey: String,
+        val addonSlug: String = DEFAULT_ADDON_SLUG,
+    ) : ServerConnection {
+
+        // Keeps the secrets out of logs and crash reports
+        override fun toString(): String =
+            "HomeAssistant(serverUrl=$serverUrl, accessToken=***, apiKey=***, addonSlug=$addonSlug)"
+
+        companion object {
+            /** Slug of the community Grocy add-on (hassio-addons repository). */
+            const val DEFAULT_ADDON_SLUG = "a0d7b954_grocy"
+        }
+    }
 }

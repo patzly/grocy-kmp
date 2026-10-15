@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.data.settings
 
 import com.patrickzedler.grocy.core.data.BrowserLocalStorage
 import com.patrickzedler.grocy.core.data.KeyValueStorage
+import com.patrickzedler.grocy.core.model.ScannerEngine
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +24,19 @@ class WebSettingsStore internal constructor(
         checkUnlockKeyState.value = checkUnlockKey
     }
 
+    private val scannerEngineState = MutableStateFlow(
+        scannerEngineOf(storage.get(SCANNER_ENGINE)),
+    )
+
+    override val scannerEngine: Flow<ScannerEngine> = scannerEngineState.asStateFlow()
+
+    override suspend fun setScannerEngine(scannerEngine: ScannerEngine) {
+        storage.set(SCANNER_ENGINE, scannerEngine.name)
+        scannerEngineState.value = scannerEngine
+    }
+
     internal companion object {
         const val CHECK_UNLOCK_KEY = "grocy.checkUnlockKey"
+        const val SCANNER_ENGINE = "grocy.scannerEngine"
     }
 }

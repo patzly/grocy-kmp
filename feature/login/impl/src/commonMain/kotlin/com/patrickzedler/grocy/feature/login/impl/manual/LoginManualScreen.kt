@@ -1,10 +1,9 @@
 package com.patrickzedler.grocy.feature.login.impl.manual
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.text.KeyboardOptions
@@ -12,49 +11,60 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.semantics.LiveRegionMode
-import androidx.compose.ui.semantics.liveRegion
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.ConnectedButtonGroup
-import com.patrickzedler.grocy.core.design.component.InsetLazyColumn
+import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.RoundedSecureTextField
 import com.patrickzedler.grocy.core.design.component.RoundedTextField
-import com.patrickzedler.grocy.core.design.component.insetItem
+import com.patrickzedler.grocy.core.design.component.SegmentedContainer
+import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
+import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.design.component.tryOpenUri
 import com.patrickzedler.grocy.core.network.ServerUrl
 import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.resources.ic_rounded_dns
+import com.patrickzedler.grocy.core.resources.ic_rounded_key
+import com.patrickzedler.grocy.core.resources.login_manual_addon_slug
+import com.patrickzedler.grocy.core.resources.login_manual_addon_slug_hint
 import com.patrickzedler.grocy.core.resources.login_manual_api_key
 import com.patrickzedler.grocy.core.resources.login_manual_connect
 import com.patrickzedler.grocy.core.resources.login_manual_create_key
+import com.patrickzedler.grocy.core.resources.login_manual_create_key_description
+import com.patrickzedler.grocy.core.resources.login_manual_group_addon
+import com.patrickzedler.grocy.core.resources.login_manual_group_grocy
+import com.patrickzedler.grocy.core.resources.login_manual_group_server
 import com.patrickzedler.grocy.core.resources.login_manual_ha_create_token
-import com.patrickzedler.grocy.core.resources.login_manual_ha_pending
+import com.patrickzedler.grocy.core.resources.login_manual_ha_create_token_description
 import com.patrickzedler.grocy.core.resources.login_manual_ha_token
+import com.patrickzedler.grocy.core.resources.login_manual_ha_unsupported
 import com.patrickzedler.grocy.core.resources.login_manual_ha_url
 import com.patrickzedler.grocy.core.resources.login_manual_ha_url_hint
-import com.patrickzedler.grocy.core.resources.login_manual_ingress_id
-import com.patrickzedler.grocy.core.resources.login_manual_ingress_id_hint
 import com.patrickzedler.grocy.core.resources.login_manual_server_url
 import com.patrickzedler.grocy.core.resources.login_manual_type_grocy
 import com.patrickzedler.grocy.core.resources.login_manual_type_home_assistant
 import com.patrickzedler.grocy.core.resources.login_manual_url_invalid
+import com.patrickzedler.grocy.core.resources.login_manual_use_grocy
 import com.patrickzedler.grocy.core.resources.login_title
-import com.patrickzedler.grocy.feature.login.impl.message
+import com.patrickzedler.grocy.feature.login.impl.LoginErrorItem
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -64,218 +74,239 @@ internal fun LoginManualScreen(
     modifier: Modifier = Modifier,
 ) {
     val uriHandler = LocalUriHandler.current
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val isEditable = !viewModel.isLoggingIn
+    val isHomeAssistant = viewModel.serverType == ServerType.HOME_ASSISTANT
 
-    Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            LargeTopAppBar(
-                title = { Text(stringResource(Res.string.login_title)) },
-                navigationIcon = { NavigateBackButton(onClick = onBackClick) },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                ),
-                scrollBehavior = scrollBehavior,
-            )
-        },
-    ) { innerPadding ->
-        InsetLazyColumn(
-            contentPadding = PaddingValues(
-                top = innerPadding.calculateTopPadding() + 8.dp,
-                bottom = innerPadding.calculateBottomPadding() + 16.dp,
-            ),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            insetItem {
+    SegmentedListScreen(
+        title = stringResource(Res.string.login_title),
+        modifier = modifier,
+        navigationIcon = { NavigateBackButton(onClick = onBackClick) },
+    ) {
+        segmentedGroup(key = "type", title = Res.string.login_manual_group_server) {
+            SegmentedContainer(index = 0, count = 1) {
                 ConnectedButtonGroup(
                     options = ServerType.entries,
                     checked = viewModel.serverType,
                     onCheckedChange = viewModel::selectServerType,
                     enabled = isEditable,
                     label = { it.label() },
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
-            insetItem {
-                ConnectedButtonGroup(
-                    options = ServerUrl.Scheme.entries,
-                    checked = viewModel.scheme,
-                    onCheckedChange = viewModel::selectScheme,
-                    enabled = isEditable,
-                    // Protocol names, not translated
-                    label = { it.name.uppercase() },
-                )
-            }
+        }
 
-            when (viewModel.serverType) {
-                ServerType.GROCY -> grocyFields(
-                    viewModel = viewModel,
-                    enabled = isEditable,
-                    onCreateKeyClick = {
-                        viewModel.normalizedGrocyUrl?.let { uriHandler.openUri("$it/manageapikeys") }
-                    },
-                )
+        when {
+            !isHomeAssistant -> grocyGroup(
+                viewModel = viewModel,
+                enabled = isEditable,
+                onCreateKeyClick = {
+                    viewModel.normalizedGrocyUrl?.let { uriHandler.tryOpenUri("$it/manageapikeys") }
+                },
+            )
 
-                ServerType.HOME_ASSISTANT -> homeAssistantFields(
-                    viewModel = viewModel,
-                    enabled = isEditable,
-                    onCreateTokenClick = {
-                        viewModel.normalizedHomeAssistantUrl?.let {
-                            uriHandler.openUri("$it/profile/security")
-                        }
-                    },
-                )
-            }
+            viewModel.isHomeAssistantSupported -> homeAssistantGroups(
+                viewModel = viewModel,
+                enabled = isEditable,
+                onCreateTokenClick = {
+                    viewModel.normalizedHomeAssistantUrl?.let {
+                        uriHandler.tryOpenUri("$it/profile/security")
+                    }
+                },
+            )
 
-            viewModel.error?.let { error ->
-                insetItem {
-                    Text(
-                        text = error.message(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error,
-                        // Screen readers announce the error as soon as it appears
-                        modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+            else -> homeAssistantUnsupportedGroup(
+                onUseGrocyClick = { viewModel.selectServerType(ServerType.GROCY) },
+            )
+        }
+
+        if (!isHomeAssistant || viewModel.isHomeAssistantSupported) {
+            val error = viewModel.error
+            val count = if (error != null) 2 else 1
+            segmentedGroup(key = "connect") {
+                if (error != null) {
+                    LoginErrorItem(error = error, index = 0, count = count)
+                }
+                SegmentedContainer(index = count - 1, count = count) {
+                    ConnectButton(
+                        isLoggingIn = viewModel.isLoggingIn,
+                        enabled = viewModel.canConnect,
+                        onClick = viewModel::connect,
                     )
                 }
-            }
-
-            insetItem {
-                ConnectButton(
-                    isLoggingIn = viewModel.isLoggingIn,
-                    enabled = viewModel.canConnect,
-                    onClick = viewModel::connect,
-                )
             }
         }
     }
 }
 
-private fun LazyListScope.grocyFields(
+private fun LazyListScope.grocyGroup(
     viewModel: LoginManualViewModel,
     enabled: Boolean,
     onCreateKeyClick: () -> Unit,
 ) {
-    insetItem {
-        UrlField(
+    segmentedGroup(key = "grocy", title = Res.string.login_manual_group_grocy) {
+        AddressItem(
             state = viewModel.grocyUrl,
             label = stringResource(Res.string.login_manual_server_url),
-            isInvalid = viewModel.grocyUrl.text.isNotBlank() && viewModel.normalizedGrocyUrl == null,
+            isInvalid = viewModel.grocyUrl.text.isNotBlank() &&
+                viewModel.normalizedGrocyUrl == null,
+            scheme = viewModel.scheme,
+            onSchemeChange = viewModel::selectScheme,
             enabled = enabled,
+            index = 0,
+            count = 3,
         )
-    }
-    insetItem {
-        SecretField(
-            state = viewModel.apiKey,
-            label = stringResource(Res.string.login_manual_api_key),
-            enabled = enabled,
-            imeAction = ImeAction.Done,
-            onDone = viewModel::connect,
-        )
-    }
-    insetItem {
-        Button(
-            onClick = onCreateKeyClick,
-            enabled = enabled && viewModel.normalizedGrocyUrl != null,
-        ) {
-            Text(stringResource(Res.string.login_manual_create_key))
+        SegmentedContainer(index = 1, count = 3) {
+            SecretField(
+                state = viewModel.apiKey,
+                label = stringResource(Res.string.login_manual_api_key),
+                enabled = enabled,
+                imeAction = ImeAction.Done,
+                onDone = viewModel::connect,
+            )
         }
+        LinkItem(
+            title = stringResource(Res.string.login_manual_create_key),
+            description = stringResource(Res.string.login_manual_create_key_description),
+            icon = Res.drawable.ic_rounded_key,
+            enabled = enabled && viewModel.normalizedGrocyUrl != null,
+            index = 2,
+            count = 3,
+            onClick = onCreateKeyClick,
+        )
     }
 }
 
-private fun LazyListScope.homeAssistantFields(
+private fun LazyListScope.homeAssistantGroups(
     viewModel: LoginManualViewModel,
     enabled: Boolean,
     onCreateTokenClick: () -> Unit,
 ) {
-    insetItem {
-        UrlField(
+    segmentedGroup(
+        key = "home_assistant",
+        title = Res.string.login_manual_type_home_assistant,
+    ) {
+        AddressItem(
             state = viewModel.homeAssistantUrl,
             label = stringResource(Res.string.login_manual_ha_url),
+            hint = stringResource(Res.string.login_manual_ha_url_hint),
             isInvalid = viewModel.homeAssistantUrl.text.isNotBlank() &&
                 viewModel.normalizedHomeAssistantUrl == null,
+            scheme = viewModel.scheme,
+            onSchemeChange = viewModel::selectScheme,
             enabled = enabled,
-            hint = stringResource(Res.string.login_manual_ha_url_hint),
+            index = 0,
+            count = 3,
         )
-    }
-    insetItem {
-        SecretField(
-            state = viewModel.homeAssistantToken,
-            label = stringResource(Res.string.login_manual_ha_token),
-            enabled = enabled,
-        )
-    }
-    insetItem {
-        Button(
-            onClick = onCreateTokenClick,
-            enabled = enabled && viewModel.normalizedHomeAssistantUrl != null,
-        ) {
-            Text(stringResource(Res.string.login_manual_ha_create_token))
+        SegmentedContainer(index = 1, count = 3) {
+            SecretField(
+                state = viewModel.homeAssistantToken,
+                label = stringResource(Res.string.login_manual_ha_token),
+                enabled = enabled,
+            )
         }
-    }
-    insetItem {
-        RoundedTextField(
-            state = viewModel.ingressProxyId,
-            label = { Text(stringResource(Res.string.login_manual_ingress_id)) },
-            supportingText = { Text(stringResource(Res.string.login_manual_ingress_id_hint)) },
-            enabled = enabled,
-            lineLimits = TextFieldLineLimits.SingleLine,
-            keyboardOptions = KeyboardOptions(
-                autoCorrectEnabled = false,
-                imeAction = ImeAction.Next,
-            ),
-            modifier = Modifier.fillMaxWidth(),
+        LinkItem(
+            title = stringResource(Res.string.login_manual_ha_create_token),
+            description = stringResource(Res.string.login_manual_ha_create_token_description),
+            icon = Res.drawable.ic_rounded_key,
+            enabled = enabled && viewModel.normalizedHomeAssistantUrl != null,
+            index = 2,
+            count = 3,
+            onClick = onCreateTokenClick,
         )
     }
-    insetItem {
-        SecretField(
-            state = viewModel.apiKey,
-            label = stringResource(Res.string.login_manual_api_key),
-            enabled = enabled,
-        )
-    }
-    insetItem {
-        Card(
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-            ),
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(
-                text = stringResource(Res.string.login_manual_ha_pending),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(16.dp),
+    segmentedGroup(key = "addon", title = Res.string.login_manual_group_addon) {
+        SegmentedContainer(index = 0, count = 2) {
+            RoundedTextField(
+                state = viewModel.addonSlug,
+                label = { Text(stringResource(Res.string.login_manual_addon_slug)) },
+                supportingText = { Text(stringResource(Res.string.login_manual_addon_slug_hint)) },
+                enabled = enabled,
+                lineLimits = TextFieldLineLimits.SingleLine,
+                keyboardOptions = KeyboardOptions(
+                    autoCorrectEnabled = false,
+                    imeAction = ImeAction.Next,
+                ),
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+        SegmentedContainer(index = 1, count = 2) {
+            SecretField(
+                state = viewModel.apiKey,
+                label = stringResource(Res.string.login_manual_api_key),
+                enabled = enabled,
+                imeAction = ImeAction.Done,
+                onDone = viewModel::connect,
             )
         }
     }
 }
 
+private fun LazyListScope.homeAssistantUnsupportedGroup(onUseGrocyClick: () -> Unit) {
+    segmentedGroup(
+        key = "home_assistant_unsupported",
+        title = Res.string.login_manual_type_home_assistant,
+    ) {
+        SegmentedContainer(index = 0, count = 2) {
+            Text(
+                text = stringResource(Res.string.login_manual_ha_unsupported),
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
+        LinkItem(
+            title = stringResource(Res.string.login_manual_use_grocy),
+            description = null,
+            icon = Res.drawable.ic_rounded_dns,
+            enabled = true,
+            index = 1,
+            count = 2,
+            onClick = onUseGrocyClick,
+        )
+    }
+}
+
+/** Scheme buttons and address field in one item, the scheme applies to the address. */
 @Composable
-private fun UrlField(
+private fun AddressItem(
     state: TextFieldState,
     label: String,
     isInvalid: Boolean,
+    scheme: ServerUrl.Scheme,
+    onSchemeChange: (ServerUrl.Scheme) -> Unit,
     enabled: Boolean,
-    modifier: Modifier = Modifier,
+    index: Int,
+    count: Int,
     hint: String? = null,
 ) {
     val invalidText = stringResource(Res.string.login_manual_url_invalid)
     val supportingText = if (isInvalid) invalidText else hint
 
-    RoundedTextField(
-        state = state,
-        label = { Text(label) },
-        supportingText = supportingText?.let { { Text(it) } },
-        isError = isInvalid,
-        enabled = enabled,
-        lineLimits = TextFieldLineLimits.SingleLine,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Uri,
-            autoCorrectEnabled = false,
-            imeAction = ImeAction.Next,
-        ),
-        modifier = modifier.fillMaxWidth(),
-    )
+    SegmentedContainer(index = index, count = count) {
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            ConnectedButtonGroup(
+                options = ServerUrl.Scheme.entries,
+                checked = scheme,
+                onCheckedChange = onSchemeChange,
+                enabled = enabled,
+                // Protocol names, not translated
+                label = { it.name.uppercase() },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            RoundedTextField(
+                state = state,
+                label = { Text(label) },
+                supportingText = supportingText?.let { { Text(it) } },
+                isError = isInvalid,
+                enabled = enabled,
+                lineLimits = TextFieldLineLimits.SingleLine,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Uri,
+                    autoCorrectEnabled = false,
+                    imeAction = ImeAction.Next,
+                ),
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
 }
 
 @Composable
@@ -305,16 +336,53 @@ private fun SecretField(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
+private fun LinkItem(
+    title: String,
+    description: String?,
+    icon: DrawableResource,
+    enabled: Boolean,
+    index: Int,
+    count: Int,
+    onClick: () -> Unit,
+) {
+    val haptic = LocalHapticFeedback.current
+
+    SegmentedListItem(
+        onClick = {
+            haptic.confirm()
+            onClick()
+        },
+        shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
+        colors = SegmentedListDefaults.colors(),
+        enabled = enabled,
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        leadingContent = {
+            LeadingContentWrapper {
+                Icon(painter = painterResource(icon), contentDescription = null)
+            }
+        },
+        supportingContent = description?.let { { Text(it) } },
+        content = { Text(title) },
+    )
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
 private fun ConnectButton(
     isLoggingIn: Boolean,
     enabled: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val haptic = LocalHapticFeedback.current
     val buttonHeight = ButtonDefaults.MediumContainerHeight
 
     Button(
-        onClick = onClick,
+        onClick = {
+            haptic.confirm()
+            onClick()
+        },
         enabled = enabled,
         shapes = ButtonDefaults.shapesFor(buttonHeight),
         contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),

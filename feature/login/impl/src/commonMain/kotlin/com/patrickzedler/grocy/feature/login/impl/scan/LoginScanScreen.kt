@@ -4,109 +4,172 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.FormattedText
-import com.patrickzedler.grocy.core.design.component.InsetLazyColumn
+import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
-import com.patrickzedler.grocy.core.design.component.insetItem
+import com.patrickzedler.grocy.core.design.component.SegmentedContainer
+import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
+import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.resources.ic_rounded_edit_note
+import com.patrickzedler.grocy.core.resources.login_scan_checking
 import com.patrickzedler.grocy.core.resources.login_scan_explanation
 import com.patrickzedler.grocy.core.resources.login_scan_manual
+import com.patrickzedler.grocy.core.resources.login_scan_manual_description
 import com.patrickzedler.grocy.core.resources.login_title
+import com.patrickzedler.grocy.core.scanner.BarcodeFormat
+import com.patrickzedler.grocy.core.scanner.BarcodeScanner
+import com.patrickzedler.grocy.feature.login.impl.LoginError
+import com.patrickzedler.grocy.feature.login.impl.LoginErrorItem
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun LoginScanScreen(
+    viewModel: LoginScanViewModel,
     onBackClick: () -> Unit,
     onManualEntryClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-
-    Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            LargeTopAppBar(
-                title = { Text(stringResource(Res.string.login_title)) },
-                navigationIcon = { NavigateBackButton(onClick = onBackClick) },
-                scrollBehavior = scrollBehavior,
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    LoginScanContent(
+        uiState = uiState,
+        onBackClick = onBackClick,
+        onManualEntryClick = onManualEntryClick,
+        modifier = modifier,
+        scanner = { shape ->
+            BarcodeScanner(
+                onBarcodeScanned = viewModel::onBarcodeScanned,
+                formats = BarcodeFormat.QrCode,
+                shape = shape,
+                paused = uiState.isLoggingIn,
             )
         },
-    ) { innerPadding ->
-        InsetLazyColumn(
-            contentPadding = PaddingValues(
-                top = innerPadding.calculateTopPadding() + 8.dp,
-                bottom = innerPadding.calculateBottomPadding() + 16.dp,
-            ),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            insetItem {
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                    ),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    FormattedText(
-                        text = stringResource(Res.string.login_scan_explanation),
-                        // FormattedText adds the bottom distance after its last paragraph itself
-                        modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
-                    )
-                }
-            }
-            insetItem {
-                ScannerArea()
-            }
-            insetItem {
-                val buttonHeight = ButtonDefaults.MediumContainerHeight
+    )
+}
 
-                FilledTonalButton(
-                    onClick = onManualEntryClick,
-                    shapes = ButtonDefaults.shapesFor(buttonHeight),
-                    contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .heightIn(min = buttonHeight),
-                ) {
-                    Text(stringResource(Res.string.login_scan_manual))
-                }
+/** [scanner] is a slot, so previews show the layout without a camera. */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun LoginScanContent(
+    uiState: LoginScanUiState,
+    onBackClick: () -> Unit,
+    onManualEntryClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    scanner: @Composable (shape: Shape) -> Unit,
+) {
+    val haptic = LocalHapticFeedback.current
+    val error = uiState.error
+    val hasStatus = uiState.isLoggingIn || error != null
+    val count = if (hasStatus) 3 else 2
+
+    SegmentedListScreen(
+        title = stringResource(Res.string.login_title),
+        modifier = modifier,
+        navigationIcon = { NavigateBackButton(onClick = onBackClick) },
+    ) {
+        segmentedGroup(key = "scanner") {
+            scanner(SegmentedListDefaults.shape(index = 0, count = count))
+            SegmentedContainer(
+                index = 1,
+                count = count,
+                // FormattedText adds the distance below its last paragraph itself
+                contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp),
+            ) {
+                FormattedText(text = stringResource(Res.string.login_scan_explanation))
             }
+            when {
+                uiState.isLoggingIn -> CheckingItem(index = 2, count = count)
+                error != null -> LoginErrorItem(error = error, index = 2, count = count)
+            }
+        }
+        segmentedGroup(key = "manual") {
+            SegmentedListItem(
+                onClick = {
+                    haptic.confirm()
+                    onManualEntryClick()
+                },
+                shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
+                colors = SegmentedListDefaults.colors(),
+                enabled = !uiState.isLoggingIn,
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                leadingContent = {
+                    LeadingContentWrapper {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_rounded_edit_note),
+                            contentDescription = null,
+                        )
+                    }
+                },
+                supportingContent = {
+                    Text(stringResource(Res.string.login_scan_manual_description))
+                },
+                content = { Text(stringResource(Res.string.login_scan_manual)) },
+            )
         }
     }
 }
 
-/** Placeholder for the camera preview, which arrives with the scanner. */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun ScannerArea(
-    modifier: Modifier = Modifier,
+private fun CheckingItem(
+    index: Int,
+    count: Int,
 ) {
+    SegmentedContainer(index = index, count = count) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.semantics(mergeDescendants = true) {
+                liveRegion = LiveRegionMode.Polite
+            },
+        ) {
+            LoadingIndicator(modifier = Modifier.size(32.dp))
+            Text(
+                text = stringResource(Res.string.login_scan_checking),
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
+    }
+}
+
+/** Stands in for the camera in previews. */
+@Composable
+private fun PreviewScanner(shape: Shape) {
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(1f)
-            .clip(MaterialTheme.shapes.extraLarge)
-            .background(MaterialTheme.colorScheme.surfaceContainerHighest),
+            .aspectRatio(16f / 10f)
+            .clip(shape)
+            .background(MaterialTheme.colorScheme.surfaceBright),
     )
 }
 
@@ -114,9 +177,37 @@ private fun ScannerArea(
 @Composable
 private fun LoginScanPreview() {
     GrocyTheme {
-        LoginScanScreen(
+        LoginScanContent(
+            uiState = LoginScanUiState(),
             onBackClick = {},
             onManualEntryClick = {},
+            scanner = { PreviewScanner(it) },
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun LoginScanCheckingPreview() {
+    GrocyTheme {
+        LoginScanContent(
+            uiState = LoginScanUiState(isLoggingIn = true),
+            onBackClick = {},
+            onManualEntryClick = {},
+            scanner = { PreviewScanner(it) },
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun LoginScanErrorPreview() {
+    GrocyTheme {
+        LoginScanContent(
+            uiState = LoginScanUiState(error = LoginError.CalendarCode),
+            onBackClick = {},
+            onManualEntryClick = {},
+            scanner = { PreviewScanner(it) },
         )
     }
 }

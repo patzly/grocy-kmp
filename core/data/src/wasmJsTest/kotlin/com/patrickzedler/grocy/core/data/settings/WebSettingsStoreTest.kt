@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.core.data.settings
 
 import com.patrickzedler.grocy.core.data.InMemoryStorage
+import com.patrickzedler.grocy.core.model.ScannerEngine
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -32,5 +33,17 @@ class WebSettingsStoreTest {
         assertFalse(store.checkUnlockKey.first())
         assertEquals("false", storage.values[WebSettingsStore.CHECK_UNLOCK_KEY])
         assertFalse(WebSettingsStore(storage).checkUnlockKey.first())
+    }
+
+    @Test
+    fun scannerEngineIsStoredAndEmitted() = runTest {
+        val storage = InMemoryStorage()
+        val store = WebSettingsStore(storage)
+        assertEquals(ScannerEngine.ZXING, store.scannerEngine.first())
+
+        store.setScannerEngine(ScannerEngine.ML_KIT)
+
+        assertEquals(ScannerEngine.ML_KIT, store.scannerEngine.first())
+        assertEquals(ScannerEngine.ML_KIT, WebSettingsStore(storage).scannerEngine.first())
     }
 }

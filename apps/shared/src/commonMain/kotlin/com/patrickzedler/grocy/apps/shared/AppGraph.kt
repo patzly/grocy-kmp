@@ -1,11 +1,15 @@
 package com.patrickzedler.grocy.apps.shared
 
 import com.patrickzedler.grocy.core.data.auth.AuthRepository
+import com.patrickzedler.grocy.core.data.scanner.ScannerRepository
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.createGrocyHttpClient
+import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.feature.about.impl.AboutDependencies
 import com.patrickzedler.grocy.feature.login.impl.LoginDependencies
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 /**
  * Manual dependency injection: creates every shared object once and hands it to the features.
@@ -24,6 +28,21 @@ class AppGraph(
 
     private val unlockRepository by lazy {
         UnlockRepository(platform.unlockChecker, platform.settingsStore)
+    }
+
+    private val scannerRepository by lazy {
+        ScannerRepository(
+            settingsStore = platform.settingsStore,
+            unlockRepository = unlockRepository,
+            availableEngines = platform.barcodeDecoders.keys,
+        )
+    }
+
+    /** Decoders of the engine that scans right now, provided to every scanner by GrocyApp. */
+    internal val barcodeDecoderFactory: Flow<BarcodeDecoderFactory> by lazy {
+        scannerRepository.activeEngine.map {
+            platform.barcodeDecoders[it] ?: BarcodeDecoderFactory.Zxing
+        }
     }
 
     internal val loginDependencies: LoginDependencies = object : LoginDependencies {

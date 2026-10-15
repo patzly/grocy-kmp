@@ -85,6 +85,8 @@ include(":core:resources")
 include(":core:design")
 include(":core:navigation")
 include(":core:ui")
+include(":core:scanner")
+include(":core:scanner-mlkit")
 include(":core:testing")
 
 // Feature Modules

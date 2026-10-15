@@ -52,6 +52,8 @@
   <string name="login_choice_subtitle">ERP beyond your fridge</string>
   <string name="login_choice_own_server">Own server</string>
   <string name="login_choice_demo_server">Demo server</string>
+  <string name="login_choice_own_server_description">Scan the login code or enter the address</string>
+  <string name="login_choice_demo_server_description">Try Grocy with sample data</string>
 
   <!-- Login: shared -->
   <string name="login_title">Login</string>
@@ -59,6 +61,8 @@
   <!-- Login: scan -->
   <string name="login_scan_explanation">In Grocy, open **Manage API keys**, create a key and tap its QR code icon. Then scan the code here.</string>
   <string name="login_scan_manual">Enter data manually</string>
+  <string name="login_scan_manual_description">Grocy address or Home Assistant</string>
+  <string name="login_scan_checking">Checking the server…</string>
 
   <!-- Login: manual -->
   <string name="login_manual_type_grocy">Grocy</string>
@@ -71,9 +75,15 @@
   <string name="login_manual_ha_url_hint">Also works with Nabu Casa</string>
   <string name="login_manual_ha_token">Long-lived access token</string>
   <string name="login_manual_ha_create_token">Create token</string>
-  <string name="login_manual_ingress_id">Ingress proxy identifier</string>
-  <string name="login_manual_ingress_id_hint">The part of the Grocy add-on address after hassio_ingress/</string>
-  <string name="login_manual_ha_pending">Login through Home Assistant follows in a later version.</string>
+  <string name="login_manual_addon_slug">Add-on slug</string>
+  <string name="login_manual_addon_slug_hint">a0d7b954_grocy for the Grocy add-on of the community add-on repository</string>
+  <string name="login_manual_create_key_description">Opens Manage API keys in Grocy</string>
+  <string name="login_manual_ha_create_token_description">Opens your profile in Home Assistant</string>
+  <string name="login_manual_group_server">Server type</string>
+  <string name="login_manual_group_grocy">Grocy server</string>
+  <string name="login_manual_group_addon">Grocy add-on</string>
+  <string name="login_manual_ha_unsupported">Browsers cannot log in through Home Assistant ingress. In Home Assistant, assign a port to the Grocy add-on under Network, then log in with that address as Grocy server.</string>
+  <string name="login_manual_use_grocy">Log in with a Grocy address</string>
   <string name="login_manual_connect">Connect</string>
 
   <!-- Login: errors -->
@@ -81,6 +91,25 @@
   <string name="login_error_unauthorized">The API key was rejected.</string>
   <string name="login_error_not_grocy">This address does not belong to a Grocy server.</string>
   <string name="login_error_unknown">Something went wrong. Please try again.</string>
+  <string name="login_error_not_login_code">This is no Grocy login code. Scan the QR code of an API key.</string>
+  <string name="login_error_calendar_code">This is the code of a calendar link. Scan the QR code of an API key instead.</string>
+  <string name="login_error_ha_token_rejected">Home Assistant rejected the access token.</string>
+  <string name="login_error_addon_not_found">The Grocy add-on was not found in Home Assistant. Check the add-on slug.</string>
+  <string name="login_error_not_home_assistant">This address does not belong to a Home Assistant server.</string>
+
+  <!-- Scanner -->
+  <string name="scanner_viewfinder">Camera image for scanning codes</string>
+  <string name="scanner_permission_message">Allow camera access to scan codes</string>
+  <string name="scanner_permission_allow">Allow camera</string>
+  <string name="scanner_permission_denied">Camera access is turned off. You can allow it in the app settings.</string>
+  <string name="scanner_permission_denied_browser">Camera access is blocked. You can allow it in the site settings of your browser.</string>
+  <string name="scanner_open_settings">Open settings</string>
+  <string name="scanner_no_camera">No camera was found</string>
+  <string name="scanner_unsupported">This browser does not allow camera access here</string>
+  <string name="scanner_error">The camera could not be started</string>
+  <string name="scanner_retry">Try again</string>
+  <string name="scanner_torch_on">Turn on flashlight</string>
+  <string name="scanner_torch_off">Turn off flashlight</string>
 
   <!-- About -->
   <string name="about_version">Version</string>
