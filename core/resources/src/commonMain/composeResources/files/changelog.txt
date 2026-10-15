@@ -2,14 +2,13 @@
 
 Grocy has been rebuilt from the ground up. This is the first release of the new app, which replaces the previous Grocy Android app.
 
-__What changes for you?
+#### What changes for you?
 
 - The new app has a different package name. Android treats it as a separate app, so it does not update the previous one.
 - Your login is not transferred. Log in once with your server address and API key.
 - Once everything works, you can uninstall the previous app.
-
-__Why a new app?
+#### Why a new app?
 
 The new app is written with Kotlin Multiplatform and Compose. The same code powers the Android app and the web app, so new features arrive on every platform at once.
 
-? Not every feature of the previous app is available yet. The missing ones will follow in the next versions.
+Not every feature of the previous app is available yet. The missing ones will follow in the next versions.
