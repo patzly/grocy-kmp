@@ -131,13 +131,46 @@ class FormattedTextParserTest {
 
         assertEquals(
             listOf(
-                TextBlock.MessageCard(AnnotatedString("Note"), isError = false),
-                TextBlock.MessageCard(AnnotatedString("Warning"), isError = true),
+                card("Note", isError = false),
+                card("Warning", isError = true),
                 TextBlock.Divider,
             ),
             blocks,
         )
     }
+
+    @Test
+    fun messageCardsInDialogsUseTheParagraphSize() {
+        val blocks = parse("? Note\n\n! Warning", isDialog = true)
+
+        assertEquals(
+            listOf(
+                card("Note", isError = false, isMedium = true),
+                card("Warning", isError = true, isMedium = true),
+            ),
+            blocks,
+        )
+    }
+
+    @Test
+    fun dashAfterTheCardMarkerMakesTheTextSmall() {
+        val blocks = parse("?- Footnote\n\n!- Fine print")
+
+        assertEquals(
+            listOf(
+                card("Footnote", isError = false, isSmall = true),
+                card("Fine print", isError = true, isSmall = true),
+            ),
+            blocks,
+        )
+    }
+
+    private fun card(
+        text: String,
+        isError: Boolean,
+        isMedium: Boolean = false,
+        isSmall: Boolean = false,
+    ) = TextBlock.MessageCard(AnnotatedString(text), isError, isMedium, isSmall)
 
     @Test
     fun boldMarkersBecomeBoldSpans() {

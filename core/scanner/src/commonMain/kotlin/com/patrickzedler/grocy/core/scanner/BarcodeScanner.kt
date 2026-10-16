@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,12 +29,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
@@ -65,13 +69,30 @@ import org.jetbrains.compose.resources.stringResource
 /** Landscape, so the scanner leaves room for the rest of the screen. */
 private const val SCANNER_ASPECT_RATIO = 16f / 10f
 
+/** Wide windows with little height (phones in landscape) keep most of it for the screen. */
+private const val MAX_WINDOW_HEIGHT_FRACTION = 0.45f
+
+/** Below this a code no longer fits comfortably into the preview. */
+private val MIN_SCANNER_HEIGHT = 140.dp
+
+/**
+ * Height of a scanner [width] wide in a window [windowHeight] high: 16:10 where the window has
+ * room for it, otherwise a wider strip, so the scanner never fills the screen. Linear codes are
+ * wide anyway and the preview is cropped, never distorted.
+ */
+internal fun scannerHeight(width: Dp, windowHeight: Dp): Dp {
+    val maxHeight = (windowHeight * MAX_WINDOW_HEIGHT_FRACTION).coerceAtLeast(MIN_SCANNER_HEIGHT)
+    return minOf(width / SCANNER_ASPECT_RATIO, maxHeight)
+}
+
 /**
  * Camera barcode scanner, the one scanner of the whole app.
  *
  * Decodes with the engine of [LocalBarcodeDecoderFactory], so ZXing and ML Kit behave the
  * same. The camera starts only when the permission is granted; otherwise the scanner asks
  * for it when the user taps its button, never by itself. Place it as a segmented item: pass the
- * item's [shape], the scanner draws the segmented item background itself.
+ * item's [shape], the scanner draws the segmented item background itself. It fills the item's
+ * width; its height follows [scannerHeight], so it looks right in every window size.
  *
  * @param formats formats to look for; fewer formats scan faster and avoid wrong matches.
  * @param paused stops decoding while the camera keeps running, e.g. while a scan is processed.
@@ -95,10 +116,18 @@ fun BarcodeScanner(
     // Changing it restarts the camera after a failure
     var attempt by remember { mutableIntStateOf(0) }
 
+    val density = LocalDensity.current
+    val windowHeight = with(density) { LocalWindowInfo.current.containerSize.height.toDp() }
+
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .aspectRatio(SCANNER_ASPECT_RATIO)
+            .layout { measurable, constraints ->
+                val width = constraints.maxWidth
+                val height = scannerHeight(width.toDp(), windowHeight).roundToPx()
+                val placeable = measurable.measure(Constraints.fixed(width, height))
+                layout(width, height) { placeable.place(0, 0) }
+            }
             .clip(shape)
             .background(SegmentedListDefaults.containerColor),
         contentAlignment = Alignment.Center,

@@ -168,7 +168,11 @@ fun FormattedText(
                     ) {
                         Text(
                             text = block.annotatedText,
-                            style = MaterialTheme.typography.bodyLarge,
+                            style = when {
+                                block.isSmall -> MaterialTheme.typography.bodySmall
+                                block.isMedium -> MaterialTheme.typography.bodyMedium
+                                else -> MaterialTheme.typography.bodyLarge
+                            },
                             color = contentColor,
                             modifier = Modifier.padding(16.dp),
                         )

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.text.KeyboardOptions
@@ -34,7 +35,9 @@ import com.patrickzedler.grocy.core.design.component.RoundedTextField
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
+import com.patrickzedler.grocy.core.design.component.SegmentedTexts
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.design.component.tryOpenUri
 import com.patrickzedler.grocy.core.network.ServerUrl
@@ -49,13 +52,14 @@ import com.patrickzedler.grocy.core.resources.login_manual_create_key
 import com.patrickzedler.grocy.core.resources.login_manual_create_key_description
 import com.patrickzedler.grocy.core.resources.login_manual_group_addon
 import com.patrickzedler.grocy.core.resources.login_manual_group_grocy
-import com.patrickzedler.grocy.core.resources.login_manual_group_server
 import com.patrickzedler.grocy.core.resources.login_manual_ha_create_token
 import com.patrickzedler.grocy.core.resources.login_manual_ha_create_token_description
 import com.patrickzedler.grocy.core.resources.login_manual_ha_token
 import com.patrickzedler.grocy.core.resources.login_manual_ha_unsupported
 import com.patrickzedler.grocy.core.resources.login_manual_ha_url
 import com.patrickzedler.grocy.core.resources.login_manual_ha_url_hint
+import com.patrickzedler.grocy.core.resources.login_manual_server_type
+import com.patrickzedler.grocy.core.resources.login_manual_server_type_description
 import com.patrickzedler.grocy.core.resources.login_manual_server_url
 import com.patrickzedler.grocy.core.resources.login_manual_type_grocy
 import com.patrickzedler.grocy.core.resources.login_manual_type_home_assistant
@@ -82,8 +86,13 @@ internal fun LoginManualScreen(
         modifier = modifier,
         navigationIcon = { NavigateBackButton(onClick = onBackClick) },
     ) {
-        segmentedGroup(key = "type", title = Res.string.login_manual_group_server) {
+        segmentedGroup(key = "type") {
             SegmentedContainer(index = 0, count = 1) {
+                SegmentedTexts(
+                    headline = stringResource(Res.string.login_manual_server_type),
+                    supporting = stringResource(Res.string.login_manual_server_type_description),
+                    modifier = Modifier.padding(bottom = 12.dp),
+                )
                 ConnectedButtonGroup(
                     options = ServerType.entries,
                     checked = viewModel.serverType,
@@ -120,19 +129,18 @@ internal fun LoginManualScreen(
         }
 
         if (!isHomeAssistant || viewModel.isHomeAssistantSupported) {
-            val error = viewModel.error
-            val count = if (error != null) 2 else 1
-            segmentedGroup(key = "connect") {
-                if (error != null) {
-                    LoginErrorItem(error = error, index = 0, count = count)
+            viewModel.error?.let { error ->
+                segmentedGroup(key = "error") {
+                    LoginErrorItem(error = error, index = 0, count = 1)
                 }
-                SegmentedContainer(index = count - 1, count = count) {
-                    ConnectButton(
-                        isLoggingIn = viewModel.isLoggingIn,
-                        enabled = viewModel.canConnect,
-                        onClick = viewModel::connect,
-                    )
-                }
+            }
+            // The primary action of the form, on the background like a dialog's buttons
+            insetItem(key = "connect") {
+                ConnectButton(
+                    isLoggingIn = viewModel.isLoggingIn,
+                    enabled = viewModel.canConnect,
+                    onClick = viewModel::connect,
+                )
             }
         }
     }

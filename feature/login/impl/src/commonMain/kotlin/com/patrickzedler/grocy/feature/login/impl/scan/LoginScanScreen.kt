@@ -3,7 +3,6 @@ package com.patrickzedler.grocy.feature.login.impl.scan
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,12 +28,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.GrocyTheme
-import com.patrickzedler.grocy.core.design.component.FormattedText
 import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
+import com.patrickzedler.grocy.core.design.component.SegmentedTexts
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.resources.Res
@@ -97,13 +96,8 @@ private fun LoginScanContent(
     ) {
         segmentedGroup(key = "scanner") {
             scanner(SegmentedListDefaults.shape(index = 0, count = count))
-            SegmentedContainer(
-                index = 1,
-                count = count,
-                // FormattedText adds the distance below its last paragraph itself
-                contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp),
-            ) {
-                FormattedText(text = stringResource(Res.string.login_scan_explanation))
+            SegmentedContainer(index = 1, count = count) {
+                SegmentedTexts(supporting = stringResource(Res.string.login_scan_explanation))
             }
             when {
                 uiState.isLoggingIn -> CheckingItem(index = 2, count = count)

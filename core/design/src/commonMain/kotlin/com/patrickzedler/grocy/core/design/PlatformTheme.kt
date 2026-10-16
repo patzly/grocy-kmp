@@ -10,7 +10,7 @@ internal expect fun platformDynamicColorScheme(isDark: Boolean): ColorScheme?
 
 /**
  * Matches the window around the app to the theme: light or dark system bar icons on Android,
- * page background and browser theme color ([backgroundColor]) on the web.
+ * page background and default status bar color ([backgroundColor]) on the web.
  */
 @Composable
 internal expect fun SystemBarAppearance(isDark: Boolean, backgroundColor: Color)

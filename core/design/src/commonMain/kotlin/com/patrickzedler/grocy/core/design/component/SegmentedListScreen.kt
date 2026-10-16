@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.core.design.component
 
+import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
@@ -27,10 +28,12 @@ import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
+import com.patrickzedler.grocy.core.design.StatusBarColorEffect
 
 /**
  * The standard screen: surfaceContainer background, a large top app bar that turns
@@ -50,6 +53,16 @@ fun SegmentedListScreen(
     content: LazyListScope.() -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val containerColor = MaterialTheme.colorScheme.surfaceContainer
+    val scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+    // The same color the large app bar computes from its collapsed fraction
+    StatusBarColorEffect {
+        lerp(
+            containerColor,
+            scrolledContainerColor,
+            FastOutLinearInEasing.transform(scrollBehavior.state.collapsedFraction),
+        )
+    }
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -65,8 +78,8 @@ fun SegmentedListScreen(
                 navigationIcon = navigationIcon,
                 actions = actions,
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                    containerColor = containerColor,
+                    scrolledContainerColor = scrolledContainerColor,
                 ),
                 scrollBehavior = scrollBehavior,
             )

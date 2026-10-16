@@ -59,7 +59,7 @@
   <string name="login_title">Login</string>
 
   <!-- Login: scan -->
-  <string name="login_scan_explanation">In Grocy, open **Manage API keys**, create a key and tap its QR code icon. Then scan the code here.</string>
+  <string name="login_scan_explanation">In Grocy, open Manage API keys, create a key and tap its QR code icon. Then scan the code here.</string>
   <string name="login_scan_manual">Enter data manually</string>
   <string name="login_scan_manual_description">Grocy address or Home Assistant</string>
   <string name="login_scan_checking">Checking the server…</string>
@@ -79,7 +79,8 @@
   <string name="login_manual_addon_slug_hint">a0d7b954_grocy for the Grocy add-on of the community add-on repository</string>
   <string name="login_manual_create_key_description">Opens Manage API keys in Grocy</string>
   <string name="login_manual_ha_create_token_description">Opens your profile in Home Assistant</string>
-  <string name="login_manual_group_server">Server type</string>
+  <string name="login_manual_server_type">Server type</string>
+  <string name="login_manual_server_type_description">Grocy connects to your Grocy server directly, Home Assistant through its Grocy add-on.</string>
   <string name="login_manual_group_grocy">Grocy server</string>
   <string name="login_manual_group_addon">Grocy add-on</string>
   <string name="login_manual_ha_unsupported">Browsers cannot log in through Home Assistant ingress. In Home Assistant, assign a port to the Grocy add-on under Network, then log in with that address as Grocy server.</string>

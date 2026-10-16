@@ -19,8 +19,12 @@ internal actual fun platformDynamicColorScheme(isDark: Boolean): ColorScheme? = 
 @Composable
 internal actual fun SystemBarAppearance(isDark: Boolean, backgroundColor: Color) {
     val cssColor = backgroundColor.toCssHex()
-    // Around the app, e.g. behind the navigation bar of an installed app, the page shows
-    SideEffect { setPageBackground(cssColor) }
+    SideEffect {
+        // Around the app, e.g. in the safe areas of a browser tab, the page shows
+        setPageBackground(cssColor)
+        // Screens without top app bar keep the status bar in the screen background
+        statusBarColors.default = backgroundColor
+    }
 }
 
 @OptIn(ExperimentalWasmJsInterop::class)
@@ -28,8 +32,6 @@ internal actual fun SystemBarAppearance(isDark: Boolean, backgroundColor: Color)
     """(color) => {
         document.documentElement.style.backgroundColor = color;
         document.body.style.backgroundColor = color;
-        document.querySelectorAll('meta[name="theme-color"]')
-            .forEach((meta) => meta.setAttribute('content', color));
     }""",
 )
 private external fun setPageBackground(color: String)

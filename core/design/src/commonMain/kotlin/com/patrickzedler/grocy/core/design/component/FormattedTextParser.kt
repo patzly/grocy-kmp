@@ -44,6 +44,9 @@ internal sealed interface TextBlock {
     data class MessageCard(
         val annotatedText: AnnotatedString,
         val isError: Boolean,
+        /** Like a paragraph around it, or smaller for footnotes. */
+        val isMedium: Boolean,
+        val isSmall: Boolean,
     ) : TextBlock
 
     data object Divider : TextBlock
@@ -73,14 +76,18 @@ internal fun parseFormattedText(text: String, isDialog: Boolean): List<TextBlock
             p.startsWith("- ") -> parseBulletList(p)
             p.startsWith("> ") || p.startsWith("=> ") -> parseLink(p)
 
-            p.startsWith("? ") -> TextBlock.MessageCard(
-                annotatedText = parseAnnotatedText(p.substring(2)),
-                isError = false,
+            p.startsWith("?- ") || p.startsWith("!- ") -> TextBlock.MessageCard(
+                annotatedText = parseAnnotatedText(p.substring(3)),
+                isError = p.startsWith("!"),
+                isMedium = isDialog,
+                isSmall = true,
             )
 
-            p.startsWith("! ") -> TextBlock.MessageCard(
+            p.startsWith("? ") || p.startsWith("! ") -> TextBlock.MessageCard(
                 annotatedText = parseAnnotatedText(p.substring(2)),
-                isError = true,
+                isError = p.startsWith("!"),
+                isMedium = isDialog,
+                isSmall = false,
             )
 
             p.startsWith("---") -> TextBlock.Divider

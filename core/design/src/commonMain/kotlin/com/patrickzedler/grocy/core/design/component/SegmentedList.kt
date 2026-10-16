@@ -123,3 +123,34 @@ fun SegmentedContainer(
         )
     }
 }
+
+/**
+ * Headline and supporting text of a [SegmentedContainer], styled like the texts of a list item,
+ * e.g. above a button group or below a scanner.
+ */
+@Composable
+fun SegmentedTexts(
+    modifier: Modifier = Modifier,
+    headline: String? = null,
+    supporting: String? = null,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+    ) {
+        if (headline != null) {
+            Text(
+                text = headline,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+        }
+        if (supporting != null) {
+            Text(
+                text = supporting,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
