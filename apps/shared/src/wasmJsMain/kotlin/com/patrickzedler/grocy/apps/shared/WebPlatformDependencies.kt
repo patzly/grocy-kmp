@@ -2,6 +2,9 @@ package com.patrickzedler.grocy.apps.shared
 
 import com.patrickzedler.grocy.core.data.credentials.CredentialStore
 import com.patrickzedler.grocy.core.data.credentials.WebCredentialStore
+import com.patrickzedler.grocy.core.data.language.AppLanguageStore
+import com.patrickzedler.grocy.core.data.language.WebAppLanguageStore
+import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.settings.WebSettingsStore
 import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
@@ -20,6 +23,11 @@ class WebPlatformDependencies(
     override val credentialStore: CredentialStore by lazy { WebCredentialStore() }
 
     override val settingsStore: SettingsStore by lazy { WebSettingsStore() }
+
+    override val appLanguageStore: AppLanguageStore by lazy { WebAppLanguageStore() }
+
+    // Browsers keep their console to themselves
+    override val logReader: LogReader? = null
 
     override val unlockChecker: UnlockChecker? = null
 

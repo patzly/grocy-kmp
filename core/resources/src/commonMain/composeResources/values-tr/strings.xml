@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Titles -->
+  <string name="title_about">Hakkında</string>
+  <string name="title_feedback">Geri bildirim</string>
+  <string name="title_help">Yardım</string>
+  <string name="title_licenses">Açık kaynak lisansları</string>
+  <string name="title_logcat">Logcat</string>
+  <string name="title_settings">Ayarlar</string>
+
+  <!-- Dialogs -->
+  <string name="dialog_pane_title">İletişim kutusu</string>
+
+  <!-- Common actions -->
+  <string name="action_back">Geri</string>
+  <string name="action_more_options">Diğer seçenekler</string>
+  <string name="action_cancel">İptal et</string>
+  <string name="action_close">Kapat</string>
+  <string name="action_update">Güncelle</string>
+  <string name="action_later">Daha sonra</string>
+  <string name="action_learn_more">Daha fazla bilgi</string>
+  <string name="action_open_play_store">Google Play’i aç</string>
+  <string name="action_recommend">Tavsiye et</string>
+  <string name="action_recommend_description">Grocy’yi arkadaşlarınıza anlatın</string>
+  <string name="action_rate">Google Play’de puan ver</string>
+  <string name="action_rate_description">Geliştiricileri motive edin</string>
+  <string name="action_support">Geliştirmeyi destekle</string>
+  <string name="action_support_description">Kilit açma uygulamasını satın alın</string>
+  <string name="action_email">E-posta gönder</string>
+  <string name="action_email_description">Geliştiricilerle iletişime geçin</string>
+  <string name="action_issue">GitHub’da yeni sorun kaydı aç</string>
+  <string name="action_issue_description">Hata bildirin veya özellik isteyin</string>
+  <string name="action_send_feedback">Geri bildirim gönder</string>
+  <string name="action_show_logcat">Logcat’i göster</string>
+  <string name="action_reload">Yeniden yükle</string>
+  <string name="action_copy_to_clipboard">Panoya kopyala</string>
+
+  <!-- Messages -->
+  <string name="msg_recommend">Grocy, kendi Grocy sunucunuzda gıdaları ve ev işlerini takip eder: %1$s</string>
+  <string name="msg_feedback">Dilekleriniz veya sorularınız mı var, ya da bir hata mı buldunuz? Bize ulaşın, memnuniyetle yardımcı olalım!\nAksi takdirde Play Store’da güzel bir değerlendirmeye çok seviniriz.</string>
+  <string name="msg_unlock">Geliştirmeyi destekleyin</string>
+  <string name="msg_unlock_description">Kilit açma uygulaması, Google Play’de Grocy’nin geliştirilmesini destekleyen küçük bir satın alımdır. Yüklendikten sonra ML Kit barkod okuyucusuna da geçebilirsiniz.</string>
+
+  <!-- Login: choice -->
+  <string name="login_choice_title">Grocy’ye hoş geldiniz</string>
+  <!-- The slogan of Grocy, which stays English in every language -->
+  <string name="login_choice_subtitle">ERP beyond your fridge</string>
+  <string name="login_choice_own_server">Kendi sunucunuz</string>
+  <string name="login_choice_demo_server">Demo sunucu</string>
+  <string name="login_choice_own_server_description">Giriş kodunu okutun veya adresi girin</string>
+  <string name="login_choice_demo_server_description">Grocy’yi örnek verilerle deneyin</string>
+
+  <!-- Login: shared -->
+  <string name="login_title">Giriş yap</string>
+
+  <!-- Login: scan -->
+  <string name="login_scan_explanation">Grocy’de “API anahtarlarını yönet” sayfasını açın, bir anahtar oluşturun ve QR kodu simgesine dokunun. Ardından kodu burada okutun.</string>
+  <string name="login_scan_manual">Verileri elle gir</string>
+  <string name="login_scan_manual_description">Grocy adresi veya Home Assistant</string>
+  <string name="login_scan_checking">Sunucu kontrol ediliyor…</string>
+
+  <!-- Login: manual -->
+  <string name="login_manual_type_grocy">Grocy</string>
+  <string name="login_manual_type_home_assistant">Home Assistant</string>
+  <string name="login_manual_server_url">Grocy adresi</string>
+  <string name="login_manual_url_invalid">Geçerli bir adres girin</string>
+  <string name="login_manual_api_key">API anahtarı</string>
+  <string name="login_manual_create_key">Anahtar oluştur</string>
+  <string name="login_manual_ha_url">Home Assistant adresi</string>
+  <string name="login_manual_ha_url_hint">Nabu Casa ile de çalışır</string>
+  <string name="login_manual_ha_token">Long-lived access token</string>
+  <string name="login_manual_ha_create_token">Token oluştur</string>
+  <string name="login_manual_addon_slug">Eklenti slug’ı</string>
+  <string name="login_manual_addon_slug_hint">Topluluk eklenti deposundaki Grocy eklentisi için a0d7b954_grocy</string>
+  <string name="login_manual_create_key_description">Grocy’de “API anahtarlarını yönet” sayfasını açar</string>
+  <string name="login_manual_ha_create_token_description">Home Assistant’taki profilinizi açar</string>
+  <string name="login_manual_server_type">Sunucu türü</string>
+  <string name="login_manual_server_type_description">Grocy doğrudan Grocy sunucunuza, Home Assistant ise Grocy eklentisi üzerinden bağlanır.</string>
+  <string name="login_manual_group_grocy">Grocy sunucusu</string>
+  <string name="login_manual_group_addon">Grocy eklentisi</string>
+  <string name="login_manual_ha_unsupported">Tarayıcılar Home Assistant Ingress üzerinden giriş yapamaz. Home Assistant’ta “Ağ” bölümünden Grocy eklentisine bir bağlantı noktası atayın, ardından bu adresle Grocy sunucusu olarak giriş yapın.</string>
+  <string name="login_manual_use_grocy">Grocy adresiyle giriş yap</string>
+  <string name="login_manual_connect">Bağlan</string>
+
+  <!-- Login: errors -->
+  <string name="login_error_unreachable">Sunucuya ulaşılamadı. Bağlantınızı ve sunucu adresini kontrol edin.</string>
+  <string name="login_error_unauthorized">API anahtarı reddedildi.</string>
+  <string name="login_error_not_grocy">Bu adres bir Grocy sunucusuna ait değil.</string>
+  <string name="login_error_unknown">Bir şeyler ters gitti. Lütfen tekrar deneyin.</string>
+  <string name="login_error_not_login_code">Bu bir Grocy giriş kodu değil. Bir API anahtarının QR kodunu okutun.</string>
+  <string name="login_error_calendar_code">Bu, bir takvim bağlantısının kodu. Bunun yerine bir API anahtarının QR kodunu okutun.</string>
+  <string name="login_error_ha_token_rejected">Home Assistant, long-lived access token’ı reddetti.</string>
+  <string name="login_error_addon_not_found">Grocy eklentisi Home Assistant’ta bulunamadı. Eklenti slug’ını kontrol edin.</string>
+  <string name="login_error_not_home_assistant">Bu adres bir Home Assistant sunucusuna ait değil.</string>
+
+  <!-- Scanner -->
+  <string name="scanner_viewfinder">Kod okutmak için kamera görüntüsü</string>
+  <string name="scanner_permission_message">Kod okutmak için kamera erişimine izin verin</string>
+  <string name="scanner_permission_allow">Kameraya izin ver</string>
+  <string name="scanner_permission_denied">Kamera erişimi kapalı. Uygulama ayarlarından izin verebilirsiniz.</string>
+  <string name="scanner_permission_denied_browser">Kamera erişimi engellendi. Tarayıcınızın site ayarlarından izin verebilirsiniz.</string>
+  <string name="scanner_open_settings">Ayarları aç</string>
+  <string name="scanner_no_camera">Kamera bulunamadı</string>
+  <string name="scanner_unsupported">Bu tarayıcı burada kamera erişimine izin vermiyor</string>
+  <string name="scanner_error">Kamera başlatılamadı</string>
+  <string name="scanner_retry">Tekrar dene</string>
+  <string name="scanner_torch_on">El fenerini aç</string>
+  <string name="scanner_torch_off">El fenerini kapat</string>
+
+  <!-- About -->
+  <string name="about_version">Sürüm</string>
+  <string name="about_update">Güncellemeleri kontrol et</string>
+  <string name="about_update_description">Daha yeni bir sürüm arar</string>
+  <string name="about_changelog">Değişiklikler</string>
+  <string name="about_changelog_description">Bu sürümdeki yenilikler</string>
+  <string name="about_developer">Geliştirici</string>
+  <string name="about_vending_description">Geliştiricinin diğer uygulamaları</string>
+  <string name="about_key">Kilit açma uygulaması</string>
+  <string name="about_key_description_not_installed">Yüklü değil</string>
+  <string name="about_key_description_installed">Yüklü</string>
+  <string name="about_key_description_ignored">Yok sayıldı</string>
+  <string name="about_github_description">Kaynak kodu</string>
+  <string name="about_translation_description">Grocy’nin çevirisine yardım edin</string>
+  <string name="about_privacy">Gizlilik politikası</string>
+  <string name="about_privacy_description">Verilerinizin nasıl işlendiği</string>
+
+  <!-- Help -->
+  <string name="help_placeholder">Yer tutucu soru</string>
+  <string name="help_placeholder_answer">Yer tutucu yanıt.</string>
+
+  <!-- Updates -->
+  <string name="update_available">Güncelleme mevcut</string>
+  <string name="update_available_version">Grocy %1$s kullanıma sunuldu. Şimdi güncellensin mi?</string>
+  <string name="update_available_unknown">Grocy’nin yeni bir sürümü mevcut. Şimdi güncellensin mi?</string>
+  <string name="update_none">Güncel</string>
+  <string name="update_none_description">Grocy %1$s en son sürüm.</string>
+  <string name="update_failed">Güncelleme kontrolü başarısız oldu</string>
+  <string name="update_failed_description">Güncellemeler kontrol edilemedi. İnternet bağlantınızı kontrol edip tekrar deneyin.</string>
+
+  <!-- Settings -->
+  <string name="settings_general">Genel</string>
+  <string name="settings_general_description">Uygulamanın görünümü ve dili</string>
+  <string name="settings_server">Sunucu</string>
+  <string name="settings_server_description">Grocy sunucunuz ve girişiniz</string>
+  <string name="settings_user">Kullanıcı ayarları</string>
+  <string name="settings_user_description">Sunucuda saklanan tercihleriniz</string>
+  <string name="settings_network">Ağ</string>
+  <string name="settings_network_description">Uygulamanın sunucunuza nasıl ulaştığı</string>
+  <string name="settings_behavior">Davranış</string>
+  <string name="settings_behavior_description">Siz çalışırken uygulamanın nasıl tepki verdiği</string>
+  <string name="settings_scanner">Barkod okuyucu</string>
+  <string name="settings_scanner_description">Barkodların nasıl okutulduğu</string>
+  <string name="settings_notifications">Bildirimler</string>
+  <string name="settings_notifications_description">Stok ve ev işleriyle ilgili hatırlatıcılar</string>
+  <string name="settings_backup">Yedekleme ve geri yükleme</string>
+  <string name="settings_backup_description">Ayarlarınızı bir dosyaya kaydedin veya geri yükleyin</string>
+  <string name="settings_reset">Tümünü sıfırla</string>
+  <string name="settings_reset_description">Tüm ayarları varsayılan değerlerine döndürür</string>
+  <string name="settings_language">Dil</string>
+  <string name="settings_language_system">Sistem varsayılanı</string>
+  <string name="settings_language_system_description">Cihazınızın dili</string>
+  <string name="settings_language_info">Çeviriler yapay zekâ ile yapılır ve gönüllüler tarafından kontrol edilir. Bir şey yanlış geliyorsa veya diliniz eksikse yardımcı olabilirsiniz.</string>
+  <string name="settings_theme">Tema</string>
+  <string name="settings_theme_description">Uygulamanın renkleri ve parlaklığı</string>
+  <string name="settings_theme_dynamic">Dinamik</string>
+  <string name="settings_theme_static">Statik</string>
+  <string name="settings_theme_hue">Renk tonu</string>
+  <string name="settings_theme_auto">Otomatik</string>
+  <string name="settings_theme_light">Açık</string>
+  <string name="settings_theme_dark">Koyu</string>
+  <string name="settings_contrast">Kontrast</string>
+  <string name="settings_contrast_description">Daha yüksek kontrast, metinlerin ve kontrollerin daha kolay görülmesini sağlar</string>
+  <string name="settings_contrast_dynamic">Dinamik renkler, sistem ayarlarındaki kontrastı kullanır</string>
+  <string name="settings_contrast_dynamic_unsupported">Dinamik renkler, Android 14 ve sonrasında kontrast düzeylerini destekler</string>
+  <string name="settings_contrast_standard">Standart</string>
+  <string name="settings_contrast_medium">Orta</string>
+  <string name="settings_contrast_high">Yüksek</string>
+  <string name="log_empty">Kaydedilmiş hata yok</string>
+  <string name="log_report_crash">Uygulama çöktüyse veya bir şeyler ters gittiyse, hatanın düzeltilebilmesi için günlüğü kopyalayın ve geri bildiriminizle birlikte gönderin.</string>
+</resources>

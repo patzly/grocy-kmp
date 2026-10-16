@@ -1,6 +1,10 @@
 package com.patrickzedler.grocy.core.data.settings
 
 import com.patrickzedler.grocy.core.data.InMemoryStorage
+import com.patrickzedler.grocy.core.model.AppColor
+import com.patrickzedler.grocy.core.model.AppContrast
+import com.patrickzedler.grocy.core.model.AppTheme
+import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -45,5 +49,35 @@ class WebSettingsStoreTest {
 
         assertEquals(ScannerEngine.ML_KIT, store.scannerEngine.first())
         assertEquals(ScannerEngine.ML_KIT, WebSettingsStore(storage).scannerEngine.first())
+    }
+
+    @Test
+    fun appearanceIsStoredAndRestored() = runTest {
+        val storage = InMemoryStorage()
+        val appearance = AppearanceSettings(
+            theme = AppTheme.DARK,
+            color = AppColor.DYNAMIC,
+            hue = 42.5f,
+            contrast = AppContrast.HIGH,
+        )
+
+        WebSettingsStore(storage).setAppearance(appearance)
+
+        assertEquals(appearance, WebSettingsStore(storage).appearance.first())
+    }
+
+    @Test
+    fun storedAppearanceOfEarlierVersionsStaysReadable() = runTest {
+        val storage = InMemoryStorage(
+            WebSettingsStore.THEME to "LIGHT",
+            WebSettingsStore.COLOR to "STATIC",
+            WebSettingsStore.HUE to "200.0",
+            WebSettingsStore.CONTRAST to "MEDIUM",
+        )
+
+        assertEquals(
+            AppearanceSettings(AppTheme.LIGHT, AppColor.STATIC, 200f, AppContrast.MEDIUM),
+            WebSettingsStore(storage).appearance.first(),
+        )
     }
 }

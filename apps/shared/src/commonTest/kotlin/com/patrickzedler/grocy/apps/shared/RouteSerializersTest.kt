@@ -5,6 +5,9 @@ import com.patrickzedler.grocy.feature.about.api.AboutRoute
 import com.patrickzedler.grocy.feature.login.api.LoginChoiceRoute
 import com.patrickzedler.grocy.feature.login.api.LoginManualRoute
 import com.patrickzedler.grocy.feature.login.api.LoginScanRoute
+import com.patrickzedler.grocy.feature.settings.api.GeneralSettingsRoute
+import com.patrickzedler.grocy.feature.settings.api.LogRoute
+import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,6 +26,9 @@ class RouteSerializersTest {
         LoginScanRoute,
         LoginManualRoute,
         AboutRoute,
+        SettingsRoute,
+        GeneralSettingsRoute,
+        LogRoute,
     )
 
     private val json = Json { serializersModule = routeSerializers }

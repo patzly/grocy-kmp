@@ -56,6 +56,7 @@ kotlin {
             dependencies {
                 implementation(projects.apps.shared)
                 implementation(projects.core.design)
+                implementation(projects.core.model)
             }
         }
     }

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Titles -->
+  <string name="title_about">O aplikacji</string>
+  <string name="title_feedback">Opinia</string>
+  <string name="title_help">Pomoc</string>
+  <string name="title_licenses">Licencje open source</string>
+  <string name="title_logcat">Logcat</string>
+  <string name="title_settings">Ustawienia</string>
+
+  <!-- Dialogs -->
+  <string name="dialog_pane_title">Okno dialogowe</string>
+
+  <!-- Common actions -->
+  <string name="action_back">Wstecz</string>
+  <string name="action_more_options">Więcej opcji</string>
+  <string name="action_cancel">Anuluj</string>
+  <string name="action_close">Zamknij</string>
+  <string name="action_update">Aktualizuj</string>
+  <string name="action_later">Później</string>
+  <string name="action_learn_more">Więcej informacji</string>
+  <string name="action_open_play_store">Otwórz Google Play</string>
+  <string name="action_recommend">Poleć</string>
+  <string name="action_recommend_description">Opowiedz znajomym o Grocy</string>
+  <string name="action_rate">Oceń w Google Play</string>
+  <string name="action_rate_description">Zmotywuj programistów</string>
+  <string name="action_support">Wesprzyj rozwój</string>
+  <string name="action_support_description">Kup aplikację odblokowującą</string>
+  <string name="action_email">Wyślij e-mail</string>
+  <string name="action_email_description">Skontaktuj się z programistami</string>
+  <string name="action_issue">Utwórz nowe zgłoszenie na GitHubie</string>
+  <string name="action_issue_description">Zgłoś błąd lub zaproponuj funkcję</string>
+  <string name="action_send_feedback">Wyślij opinię</string>
+  <string name="action_show_logcat">Pokaż logcat</string>
+  <string name="action_reload">Załaduj ponownie</string>
+  <string name="action_copy_to_clipboard">Kopiuj do schowka</string>
+
+  <!-- Messages -->
+  <string name="msg_recommend">Grocy zarządza zakupami spożywczymi i domem na Twoim własnym serwerze Grocy: %1$s</string>
+  <string name="msg_feedback">Masz życzenia lub pytania albo trafił się błąd? Napisz do nas, chętnie pomożemy!\nPoza tym bardzo ucieszy nas miła ocena w Play Store.</string>
+  <string name="msg_unlock">Wesprzyj rozwój</string>
+  <string name="msg_unlock_description">Aplikacja odblokowująca to drobny zakup w Google Play, który wspiera rozwój Grocy. Po jej zainstalowaniu możesz też przełączyć się na skaner kodów kreskowych ML Kit.</string>
+
+  <!-- Login: choice -->
+  <string name="login_choice_title">Witaj w Grocy</string>
+  <!-- The slogan of Grocy, which stays English in every language -->
+  <string name="login_choice_subtitle">ERP beyond your fridge</string>
+  <string name="login_choice_own_server">Własny serwer</string>
+  <string name="login_choice_demo_server">Serwer demo</string>
+  <string name="login_choice_own_server_description">Zeskanuj kod logowania lub wpisz adres</string>
+  <string name="login_choice_demo_server_description">Wypróbuj Grocy z przykładowymi danymi</string>
+
+  <!-- Login: shared -->
+  <string name="login_title">Zaloguj</string>
+
+  <!-- Login: scan -->
+  <string name="login_scan_explanation">W Grocy otwórz „Zarządzaj kluczami API”, utwórz klucz i dotknij jego ikony kodu QR. Następnie zeskanuj kod tutaj.</string>
+  <string name="login_scan_manual">Wpisz dane ręcznie</string>
+  <string name="login_scan_manual_description">Adres Grocy lub Home Assistant</string>
+  <string name="login_scan_checking">Sprawdzanie serwera…</string>
+
+  <!-- Login: manual -->
+  <string name="login_manual_type_grocy">Grocy</string>
+  <string name="login_manual_type_home_assistant">Home Assistant</string>
+  <string name="login_manual_server_url">Adres Grocy</string>
+  <string name="login_manual_url_invalid">Wpisz prawidłowy adres</string>
+  <string name="login_manual_api_key">Klucz API</string>
+  <string name="login_manual_create_key">Utwórz klucz</string>
+  <string name="login_manual_ha_url">Adres Home Assistant</string>
+  <string name="login_manual_ha_url_hint">Działa też z Nabu Casa</string>
+  <string name="login_manual_ha_token">Long-lived access token</string>
+  <string name="login_manual_ha_create_token">Utwórz token</string>
+  <string name="login_manual_addon_slug">Slug dodatku</string>
+  <string name="login_manual_addon_slug_hint">a0d7b954_grocy dla dodatku Grocy z repozytorium dodatków społeczności</string>
+  <string name="login_manual_create_key_description">Otwiera „Zarządzaj kluczami API” w Grocy</string>
+  <string name="login_manual_ha_create_token_description">Otwiera Twój profil w Home Assistant</string>
+  <string name="login_manual_server_type">Typ serwera</string>
+  <string name="login_manual_server_type_description">Grocy łączy się bezpośrednio z Twoim serwerem Grocy, Home Assistant przez swój dodatek Grocy.</string>
+  <string name="login_manual_group_grocy">Serwer Grocy</string>
+  <string name="login_manual_group_addon">Dodatek Grocy</string>
+  <string name="login_manual_ha_unsupported">Przeglądarki nie mogą logować się przez ingress Home Assistant. W Home Assistant przypisz dodatkowi Grocy port w sekcji „Sieć”, a następnie zaloguj się tym adresem jako serwerem Grocy.</string>
+  <string name="login_manual_use_grocy">Zaloguj się adresem Grocy</string>
+  <string name="login_manual_connect">Połącz</string>
+
+  <!-- Login: errors -->
+  <string name="login_error_unreachable">Nie można połączyć się z serwerem. Sprawdź połączenie i adres serwera.</string>
+  <string name="login_error_unauthorized">Klucz API został odrzucony.</string>
+  <string name="login_error_not_grocy">Ten adres nie należy do serwera Grocy.</string>
+  <string name="login_error_unknown">Coś poszło nie tak. Spróbuj ponownie.</string>
+  <string name="login_error_not_login_code">To nie jest kod logowania Grocy. Zeskanuj kod QR klucza API.</string>
+  <string name="login_error_calendar_code">To jest kod linku do kalendarza. Zamiast niego zeskanuj kod QR klucza API.</string>
+  <string name="login_error_ha_token_rejected">Home Assistant odrzucił Long-lived access token.</string>
+  <string name="login_error_addon_not_found">Nie znaleziono dodatku Grocy w Home Assistant. Sprawdź slug dodatku.</string>
+  <string name="login_error_not_home_assistant">Ten adres nie należy do serwera Home Assistant.</string>
+
+  <!-- Scanner -->
+  <string name="scanner_viewfinder">Obraz z kamery do skanowania kodów</string>
+  <string name="scanner_permission_message">Zezwól na dostęp do kamery, aby skanować kody</string>
+  <string name="scanner_permission_allow">Zezwól na dostęp</string>
+  <string name="scanner_permission_denied">Dostęp do kamery jest wyłączony. Możesz go włączyć w ustawieniach aplikacji.</string>
+  <string name="scanner_permission_denied_browser">Dostęp do kamery jest zablokowany. Możesz go włączyć w ustawieniach witryny w przeglądarce.</string>
+  <string name="scanner_open_settings">Otwórz ustawienia</string>
+  <string name="scanner_no_camera">Nie znaleziono kamery</string>
+  <string name="scanner_unsupported">Ta przeglądarka nie zezwala tutaj na dostęp do kamery</string>
+  <string name="scanner_error">Nie udało się uruchomić kamery</string>
+  <string name="scanner_retry">Spróbuj ponownie</string>
+  <string name="scanner_torch_on">Włącz latarkę</string>
+  <string name="scanner_torch_off">Wyłącz latarkę</string>
+
+  <!-- About -->
+  <string name="about_version">Wersja</string>
+  <string name="about_update">Sprawdź aktualizacje</string>
+  <string name="about_update_description">Wyszukaj nowszą wersję</string>
+  <string name="about_changelog">Lista zmian</string>
+  <string name="about_changelog_description">Nowości w tej wersji</string>
+  <string name="about_developer">Programista</string>
+  <string name="about_vending_description">Więcej aplikacji programisty</string>
+  <string name="about_key">Aplikacja odblokowująca</string>
+  <string name="about_key_description_not_installed">Niezainstalowana</string>
+  <string name="about_key_description_installed">Zainstalowana</string>
+  <string name="about_key_description_ignored">Ignorowana</string>
+  <string name="about_github_description">Kod źródłowy</string>
+  <string name="about_translation_description">Pomóż przetłumaczyć Grocy</string>
+  <string name="about_privacy">Polityka prywatności</string>
+  <string name="about_privacy_description">Jak przetwarzane są Twoje dane</string>
+
+  <!-- Help -->
+  <string name="help_placeholder">Przykładowe pytanie</string>
+  <string name="help_placeholder_answer">Przykładowa odpowiedź.</string>
+
+  <!-- Updates -->
+  <string name="update_available">Dostępna aktualizacja</string>
+  <string name="update_available_version">Grocy %1$s jest już dostępny. Zaktualizować teraz?</string>
+  <string name="update_available_unknown">Dostępna jest nowa wersja Grocy. Zaktualizować teraz?</string>
+  <string name="update_none">Aktualna wersja</string>
+  <string name="update_none_description">Grocy %1$s to najnowsza wersja.</string>
+  <string name="update_failed">Sprawdzanie aktualizacji nie powiodło się</string>
+  <string name="update_failed_description">Nie udało się sprawdzić aktualizacji. Sprawdź połączenie z internetem i spróbuj ponownie.</string>
+
+  <!-- Settings -->
+  <string name="settings_general">Ogólne</string>
+  <string name="settings_general_description">Wygląd i język aplikacji</string>
+  <string name="settings_server">Serwer</string>
+  <string name="settings_server_description">Twój serwer Grocy i logowanie</string>
+  <string name="settings_user">Ustawienia użytkownika</string>
+  <string name="settings_user_description">Twoje preferencje zapisane na serwerze</string>
+  <string name="settings_network">Sieć</string>
+  <string name="settings_network_description">Jak aplikacja łączy się z Twoim serwerem</string>
+  <string name="settings_behavior">Zachowanie</string>
+  <string name="settings_behavior_description">Jak aplikacja reaguje podczas pracy</string>
+  <string name="settings_scanner">Skaner</string>
+  <string name="settings_scanner_description">Jak skanowane są kody kreskowe</string>
+  <string name="settings_notifications">Powiadomienia</string>
+  <string name="settings_notifications_description">Przypomnienia o zapasach i obowiązkach</string>
+  <string name="settings_backup">Kopia zapasowa i przywracanie</string>
+  <string name="settings_backup_description">Zapisz ustawienia w pliku lub je przywróć</string>
+  <string name="settings_reset">Zresetuj wszystko</string>
+  <string name="settings_reset_description">Przywraca domyślne wartości wszystkich ustawień</string>
+  <string name="settings_language">Język</string>
+  <string name="settings_language_system">Domyślny systemowy</string>
+  <string name="settings_language_system_description">Język Twojego urządzenia</string>
+  <string name="settings_language_info">Tłumaczenia powstają z pomocą AI i są sprawdzane przez wolontariuszy. Jeśli coś brzmi źle lub brakuje Twojego języka, możesz pomóc.</string>
+  <string name="settings_theme">Motyw</string>
+  <string name="settings_theme_description">Kolory i jasność aplikacji</string>
+  <string name="settings_theme_dynamic">Dynamiczny</string>
+  <string name="settings_theme_static">Statyczny</string>
+  <string name="settings_theme_hue">Odcień</string>
+  <string name="settings_theme_auto">Auto</string>
+  <string name="settings_theme_light">Jasny</string>
+  <string name="settings_theme_dark">Ciemny</string>
+  <string name="settings_contrast">Kontrast</string>
+  <string name="settings_contrast_description">Wyższy kontrast poprawia widoczność tekstu i elementów sterujących</string>
+  <string name="settings_contrast_dynamic">Kolory dynamiczne korzystają z kontrastu z ustawień systemu</string>
+  <string name="settings_contrast_dynamic_unsupported">Kolory dynamiczne obsługują poziomy kontrastu od Androida 14</string>
+  <string name="settings_contrast_standard">Standardowy</string>
+  <string name="settings_contrast_medium">Średni</string>
+  <string name="settings_contrast_high">Wysoki</string>
+  <string name="log_empty">Brak zarejestrowanych błędów</string>
+  <string name="log_report_crash">Jeśli aplikacja uległa awarii lub coś poszło nie tak, skopiuj log i wyślij go razem z opinią, aby można było naprawić błąd.</string>
+</resources>

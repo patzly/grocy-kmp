@@ -24,6 +24,8 @@ kotlin {
             implementation(projects.feature.start.impl)
             implementation(projects.feature.about.api)
             implementation(projects.feature.about.impl)
+            implementation(projects.feature.settings.api)
+            implementation(projects.feature.settings.impl)
         }
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)

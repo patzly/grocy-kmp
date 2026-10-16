@@ -21,12 +21,16 @@ import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.app_name
 import com.patrickzedler.grocy.core.resources.ic_rounded_info
+import com.patrickzedler.grocy.core.resources.ic_rounded_settings
 import com.patrickzedler.grocy.core.resources.title_about
+import com.patrickzedler.grocy.core.resources.title_settings
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun StartScreen(
+    onSettingsClick: () -> Unit,
     onAboutClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -35,7 +39,18 @@ internal fun StartScreen(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(Res.string.app_name)) },
-                actions = { AboutButton(onClick = onAboutClick) },
+                actions = {
+                    ActionButton(
+                        icon = Res.drawable.ic_rounded_settings,
+                        description = stringResource(Res.string.title_settings),
+                        onClick = onSettingsClick,
+                    )
+                    ActionButton(
+                        icon = Res.drawable.ic_rounded_info,
+                        description = stringResource(Res.string.title_about),
+                        onClick = onAboutClick,
+                    )
+                },
             )
         },
     ) { innerPadding ->
@@ -54,9 +69,12 @@ internal fun StartScreen(
 }
 
 @Composable
-private fun AboutButton(onClick: () -> Unit) {
+private fun ActionButton(
+    icon: DrawableResource,
+    description: String,
+    onClick: () -> Unit,
+) {
     val haptic = LocalHapticFeedback.current
-    val description = stringResource(Res.string.title_about)
 
     HapticTooltipBox(
         text = description,
@@ -69,7 +87,7 @@ private fun AboutButton(onClick: () -> Unit) {
             },
         ) {
             Icon(
-                painter = painterResource(Res.drawable.ic_rounded_info),
+                painter = painterResource(icon),
                 contentDescription = description,
             )
         }
@@ -80,6 +98,6 @@ private fun AboutButton(onClick: () -> Unit) {
 @Composable
 private fun StartScreenPreview() {
     GrocyTheme {
-        StartScreen(onAboutClick = {})
+        StartScreen(onSettingsClick = {}, onAboutClick = {})
     }
 }

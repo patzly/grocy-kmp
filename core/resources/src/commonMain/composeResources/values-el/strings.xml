@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Titles -->
+  <string name="title_about">Σχετικά</string>
+  <string name="title_feedback">Σχόλια</string>
+  <string name="title_help">Βοήθεια</string>
+  <string name="title_licenses">Άδειες ανοιχτού κώδικα</string>
+  <string name="title_logcat">Logcat</string>
+  <string name="title_settings">Ρυθμίσεις</string>
+
+  <!-- Dialogs -->
+  <string name="dialog_pane_title">Παράθυρο διαλόγου</string>
+
+  <!-- Common actions -->
+  <string name="action_back">Πίσω</string>
+  <string name="action_more_options">Περισσότερες επιλογές</string>
+  <string name="action_cancel">Ματαίωση</string>
+  <string name="action_close">Κλείσιμο</string>
+  <string name="action_update">Ενημέρωση</string>
+  <string name="action_later">Αργότερα</string>
+  <string name="action_learn_more">Μάθετε περισσότερα</string>
+  <string name="action_open_play_store">Άνοιγμα του Google Play</string>
+  <string name="action_recommend">Σύσταση</string>
+  <string name="action_recommend_description">Πείτε στους φίλους σας για το Grocy</string>
+  <string name="action_rate">Βαθμολογία στο Google Play</string>
+  <string name="action_rate_description">Δώστε κίνητρο στους προγραμματιστές</string>
+  <string name="action_support">Υποστήριξη της ανάπτυξης</string>
+  <string name="action_support_description">Αγοράστε την εφαρμογή ξεκλειδώματος</string>
+  <string name="action_email">Αποστολή email</string>
+  <string name="action_email_description">Επικοινωνήστε με τους προγραμματιστές</string>
+  <string name="action_issue">Νέο ζήτημα στο GitHub</string>
+  <string name="action_issue_description">Αναφέρετε σφάλματα ή ζητήστε μια λειτουργία</string>
+  <string name="action_send_feedback">Αποστολή σχολίων</string>
+  <string name="action_show_logcat">Εμφάνιση logcat</string>
+  <string name="action_reload">Επαναφόρτωση</string>
+  <string name="action_copy_to_clipboard">Αντιγραφή στο πρόχειρο</string>
+
+  <!-- Messages -->
+  <string name="msg_recommend">Το Grocy παρακολουθεί τα τρόφιμα και το νοικοκυριό στον δικό σας διακομιστή Grocy: %1$s</string>
+  <string name="msg_feedback">Έχετε επιθυμίες ή ερωτήσεις ή βρήκατε κάποιο σφάλμα; Επικοινωνήστε μαζί μας και θα σας βοηθήσουμε με χαρά!\nΔιαφορετικά, θα χαρούμε πολύ για μια καλή κριτική στο Play Store.</string>
+  <string name="msg_unlock">Υποστήριξη της ανάπτυξης</string>
+  <string name="msg_unlock_description">Η εφαρμογή ξεκλειδώματος είναι μια μικρή αγορά στο Google Play που υποστηρίζει την ανάπτυξη του Grocy. Μόλις εγκατασταθεί, μπορείτε επίσης να μεταβείτε στον σαρωτή γραμμωτού κώδικα του ML Kit.</string>
+
+  <!-- Login: choice -->
+  <string name="login_choice_title">Καλώς ορίσατε στο Grocy</string>
+  <!-- The slogan of Grocy, which stays English in every language -->
+  <string name="login_choice_subtitle">ERP beyond your fridge</string>
+  <string name="login_choice_own_server">Δικός σας διακομιστής</string>
+  <string name="login_choice_demo_server">Διακομιστής επίδειξης</string>
+  <string name="login_choice_own_server_description">Σαρώστε τον κωδικό σύνδεσης ή εισαγάγετε τη διεύθυνση</string>
+  <string name="login_choice_demo_server_description">Δοκιμάστε το Grocy με δείγματα δεδομένων</string>
+
+  <!-- Login: shared -->
+  <string name="login_title">Σύνδεση</string>
+
+  <!-- Login: scan -->
+  <string name="login_scan_explanation">Στο Grocy, ανοίξτε τη «Διαχείριση κλειδιών API», δημιουργήστε ένα κλειδί και πατήστε το εικονίδιο κωδικού QR του. Στη συνέχεια, σαρώστε τον κωδικό εδώ.</string>
+  <string name="login_scan_manual">Χειροκίνητη εισαγωγή στοιχείων</string>
+  <string name="login_scan_manual_description">Διεύθυνση Grocy ή Home Assistant</string>
+  <string name="login_scan_checking">Έλεγχος του διακομιστή…</string>
+
+  <!-- Login: manual -->
+  <string name="login_manual_type_grocy">Grocy</string>
+  <string name="login_manual_type_home_assistant">Home Assistant</string>
+  <string name="login_manual_server_url">Διεύθυνση Grocy</string>
+  <string name="login_manual_url_invalid">Εισαγάγετε μια έγκυρη διεύθυνση</string>
+  <string name="login_manual_api_key">Κλειδί API</string>
+  <string name="login_manual_create_key">Δημιουργία κλειδιού</string>
+  <string name="login_manual_ha_url">Διεύθυνση Home Assistant</string>
+  <string name="login_manual_ha_url_hint">Λειτουργεί και με το Nabu Casa</string>
+  <string name="login_manual_ha_token">Long-lived access token</string>
+  <string name="login_manual_ha_create_token">Δημιουργία token</string>
+  <string name="login_manual_addon_slug">Slug πρόσθετου</string>
+  <string name="login_manual_addon_slug_hint">a0d7b954_grocy για το πρόσθετο Grocy από το αποθετήριο πρόσθετων της κοινότητας</string>
+  <string name="login_manual_create_key_description">Ανοίγει τη «Διαχείριση κλειδιών API» στο Grocy</string>
+  <string name="login_manual_ha_create_token_description">Ανοίγει το προφίλ σας στο Home Assistant</string>
+  <string name="login_manual_server_type">Τύπος διακομιστή</string>
+  <string name="login_manual_server_type_description">Το Grocy συνδέεται απευθείας στον διακομιστή Grocy σας, το Home Assistant μέσω του πρόσθετου Grocy.</string>
+  <string name="login_manual_group_grocy">Διακομιστής Grocy</string>
+  <string name="login_manual_group_addon">Πρόσθετο Grocy</string>
+  <string name="login_manual_ha_unsupported">Τα προγράμματα περιήγησης δεν μπορούν να συνδεθούν μέσω του Home Assistant Ingress. Στο Home Assistant, αντιστοιχίστε μια θύρα στο πρόσθετο Grocy στην ενότητα «Δίκτυο» και, στη συνέχεια, συνδεθείτε με αυτήν τη διεύθυνση ως διακομιστή Grocy.</string>
+  <string name="login_manual_use_grocy">Σύνδεση με διεύθυνση Grocy</string>
+  <string name="login_manual_connect">Σύνδεση</string>
+
+  <!-- Login: errors -->
+  <string name="login_error_unreachable">Δεν ήταν δυνατή η πρόσβαση στον διακομιστή. Ελέγξτε τη σύνδεσή σας και τη διεύθυνση του διακομιστή.</string>
+  <string name="login_error_unauthorized">Το κλειδί API απορρίφθηκε.</string>
+  <string name="login_error_not_grocy">Αυτή η διεύθυνση δεν ανήκει σε διακομιστή Grocy.</string>
+  <string name="login_error_unknown">Κάτι πήγε στραβά. Δοκιμάστε ξανά.</string>
+  <string name="login_error_not_login_code">Αυτός δεν είναι κωδικός σύνδεσης Grocy. Σαρώστε τον κωδικό QR ενός κλειδιού API.</string>
+  <string name="login_error_calendar_code">Αυτός είναι ο κωδικός ενός συνδέσμου ημερολογίου. Σαρώστε αντί γι’ αυτόν τον κωδικό QR ενός κλειδιού API.</string>
+  <string name="login_error_ha_token_rejected">Το Home Assistant απέρριψε το long-lived access token.</string>
+  <string name="login_error_addon_not_found">Το πρόσθετο Grocy δεν βρέθηκε στο Home Assistant. Ελέγξτε το slug του πρόσθετου.</string>
+  <string name="login_error_not_home_assistant">Αυτή η διεύθυνση δεν ανήκει σε διακομιστή Home Assistant.</string>
+
+  <!-- Scanner -->
+  <string name="scanner_viewfinder">Εικόνα κάμερας για σάρωση κωδικών</string>
+  <string name="scanner_permission_message">Επιτρέψτε την πρόσβαση στην κάμερα για να σαρώσετε κωδικούς</string>
+  <string name="scanner_permission_allow">Να επιτρέπεται η κάμερα</string>
+  <string name="scanner_permission_denied">Η πρόσβαση στην κάμερα είναι απενεργοποιημένη. Μπορείτε να την επιτρέψετε στις ρυθμίσεις της εφαρμογής.</string>
+  <string name="scanner_permission_denied_browser">Η πρόσβαση στην κάμερα είναι αποκλεισμένη. Μπορείτε να την επιτρέψετε στις ρυθμίσεις ιστοτόπου του προγράμματος περιήγησής σας.</string>
+  <string name="scanner_open_settings">Άνοιγμα ρυθμίσεων</string>
+  <string name="scanner_no_camera">Δεν βρέθηκε κάμερα</string>
+  <string name="scanner_unsupported">Αυτό το πρόγραμμα περιήγησης δεν επιτρέπει εδώ την πρόσβαση στην κάμερα</string>
+  <string name="scanner_error">Δεν ήταν δυνατή η εκκίνηση της κάμερας</string>
+  <string name="scanner_retry">Δοκιμάστε ξανά</string>
+  <string name="scanner_torch_on">Ενεργοποίηση φακού</string>
+  <string name="scanner_torch_off">Απενεργοποίηση φακού</string>
+
+  <!-- About -->
+  <string name="about_version">Έκδοση</string>
+  <string name="about_update">Έλεγχος για ενημερώσεις</string>
+  <string name="about_update_description">Αναζήτηση νεότερης έκδοσης</string>
+  <string name="about_changelog">Αρχείο αλλαγών</string>
+  <string name="about_changelog_description">Τι νέο υπάρχει σε αυτήν την έκδοση</string>
+  <string name="about_developer">Προγραμματιστής</string>
+  <string name="about_vending_description">Περισσότερες εφαρμογές του προγραμματιστή</string>
+  <string name="about_key">Εφαρμογή ξεκλειδώματος</string>
+  <string name="about_key_description_not_installed">Δεν έχει εγκατασταθεί</string>
+  <string name="about_key_description_installed">Εγκαταστάθηκε</string>
+  <string name="about_key_description_ignored">Αγνοείται</string>
+  <string name="about_github_description">Πηγαίος κώδικας</string>
+  <string name="about_translation_description">Βοηθήστε στη μετάφραση του Grocy</string>
+  <string name="about_privacy">Πολιτική απορρήτου</string>
+  <string name="about_privacy_description">Πώς γίνεται η επεξεργασία των δεδομένων σας</string>
+
+  <!-- Help -->
+  <string name="help_placeholder">Ερώτηση κράτησης θέσης</string>
+  <string name="help_placeholder_answer">Απάντηση κράτησης θέσης.</string>
+
+  <!-- Updates -->
+  <string name="update_available">Διαθέσιμη ενημέρωση</string>
+  <string name="update_available_version">Το Grocy %1$s είναι διαθέσιμο. Ενημέρωση τώρα;</string>
+  <string name="update_available_unknown">Μια νέα έκδοση του Grocy είναι διαθέσιμη. Ενημέρωση τώρα;</string>
+  <string name="update_none">Ενημερωμένο</string>
+  <string name="update_none_description">Το Grocy %1$s είναι η πιο πρόσφατη έκδοση.</string>
+  <string name="update_failed">Ο έλεγχος για ενημερώσεις απέτυχε</string>
+  <string name="update_failed_description">Δεν ήταν δυνατός ο έλεγχος για ενημερώσεις. Ελέγξτε τη σύνδεσή σας στο διαδίκτυο και δοκιμάστε ξανά.</string>
+
+  <!-- Settings -->
+  <string name="settings_general">Γενικά</string>
+  <string name="settings_general_description">Πώς φαίνεται και μιλά η εφαρμογή</string>
+  <string name="settings_server">Διακομιστής</string>
+  <string name="settings_server_description">Ο διακομιστής Grocy σας και η σύνδεσή σας</string>
+  <string name="settings_user">Ρυθμίσεις χρήστη</string>
+  <string name="settings_user_description">Οι προτιμήσεις σας, αποθηκευμένες στον διακομιστή</string>
+  <string name="settings_network">Δίκτυο</string>
+  <string name="settings_network_description">Πώς η εφαρμογή φτάνει στον διακομιστή σας</string>
+  <string name="settings_behavior">Συμπεριφορά</string>
+  <string name="settings_behavior_description">Πώς αντιδρά η εφαρμογή ενώ εργάζεστε</string>
+  <string name="settings_scanner">Σαρωτής</string>
+  <string name="settings_scanner_description">Πώς σαρώνονται οι γραμμωτοί κώδικες</string>
+  <string name="settings_notifications">Ειδοποιήσεις</string>
+  <string name="settings_notifications_description">Υπενθυμίσεις για τα αποθέματα και τις μικροδουλειές σας</string>
+  <string name="settings_backup">Αντίγραφα ασφαλείας και επαναφορά</string>
+  <string name="settings_backup_description">Αποθηκεύστε τις ρυθμίσεις σας σε ένα αρχείο ή επαναφέρετέ τες</string>
+  <string name="settings_reset">Επαναφορά όλων</string>
+  <string name="settings_reset_description">Επαναφέρει κάθε ρύθμιση στην προεπιλογή της</string>
+  <string name="settings_language">Γλώσσα</string>
+  <string name="settings_language_system">Προεπιλογή συστήματος</string>
+  <string name="settings_language_system_description">Η γλώσσα της συσκευής σας</string>
+  <string name="settings_language_info">Οι μεταφράσεις γίνονται με τεχνητή νοημοσύνη και ελέγχονται από εθελοντές. Αν κάτι ακούγεται λάθος ή λείπει η γλώσσα σας, μπορείτε να βοηθήσετε.</string>
+  <string name="settings_theme">Θέμα</string>
+  <string name="settings_theme_description">Χρώματα και φωτεινότητα της εφαρμογής</string>
+  <string name="settings_theme_dynamic">Δυναμικό</string>
+  <string name="settings_theme_static">Στατικό</string>
+  <string name="settings_theme_hue">Απόχρωση</string>
+  <string name="settings_theme_auto">Αυτόματο</string>
+  <string name="settings_theme_light">Φωτεινό</string>
+  <string name="settings_theme_dark">Σκούρο</string>
+  <string name="settings_contrast">Αντίθεση</string>
+  <string name="settings_contrast_description">Η υψηλότερη αντίθεση κάνει το κείμενο και τα στοιχεία ελέγχου πιο ευδιάκριτα</string>
+  <string name="settings_contrast_dynamic">Τα δυναμικά χρώματα χρησιμοποιούν την αντίθεση των ρυθμίσεων συστήματος</string>
+  <string name="settings_contrast_dynamic_unsupported">Τα δυναμικά χρώματα υποστηρίζουν επίπεδα αντίθεσης από το Android 14 και μετά</string>
+  <string name="settings_contrast_standard">Τυπική</string>
+  <string name="settings_contrast_medium">Μέτρια</string>
+  <string name="settings_contrast_high">Υψηλή</string>
+  <string name="log_empty">Δεν έχουν καταγραφεί σφάλματα</string>
+  <string name="log_report_crash">Αν η εφαρμογή κατέρρευσε ή κάτι πήγε στραβά, αντιγράψτε το αρχείο καταγραφής και στείλτε το μαζί με τα σχόλιά σας, ώστε να διορθωθεί το σφάλμα.</string>
+</resources>

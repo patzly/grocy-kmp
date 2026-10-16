@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Titles -->
+  <string name="title_about">Quant a</string>
+  <string name="title_feedback">Comentaris</string>
+  <string name="title_help">Ajuda</string>
+  <string name="title_licenses">Llicències de codi obert</string>
+  <string name="title_logcat">Logcat</string>
+  <string name="title_settings">Configuració</string>
+
+  <!-- Dialogs -->
+  <string name="dialog_pane_title">Diàleg</string>
+
+  <!-- Common actions -->
+  <string name="action_back">Enrere</string>
+  <string name="action_more_options">Més opcions</string>
+  <string name="action_cancel">Cancel·lar</string>
+  <string name="action_close">Tancar</string>
+  <string name="action_update">Actualitzar</string>
+  <string name="action_later">Més tard</string>
+  <string name="action_learn_more">Més informació</string>
+  <string name="action_open_play_store">Obrir Google Play</string>
+  <string name="action_recommend">Recomanar</string>
+  <string name="action_recommend_description">Parla de Grocy als teus amics</string>
+  <string name="action_rate">Valorar a Google Play</string>
+  <string name="action_rate_description">Motiva els desenvolupadors</string>
+  <string name="action_support">Donar suport al desenvolupament</string>
+  <string name="action_support_description">Compra l’aplicació de desbloqueig</string>
+  <string name="action_email">Enviar un correu electrònic</string>
+  <string name="action_email_description">Contacta amb els desenvolupadors</string>
+  <string name="action_issue">Obrir una incidència nova a GitHub</string>
+  <string name="action_issue_description">Informa d’errors o demana una funció</string>
+  <string name="action_send_feedback">Enviar comentaris</string>
+  <string name="action_show_logcat">Mostrar Logcat</string>
+  <string name="action_reload">Tornar a carregar</string>
+  <string name="action_copy_to_clipboard">Copiar al porta-retalls</string>
+
+  <!-- Messages -->
+  <string name="msg_recommend">Grocy gestiona la compra i la llar al teu propi servidor Grocy: %1$s</string>
+  <string name="msg_feedback">Tens desitjos, preguntes o has trobat un error? Contacta’ns i t’ajudarem de gust.\nSi no, ens faria molta il·lusió una bona valoració a Play Store.</string>
+  <string name="msg_unlock">Donar suport al desenvolupament</string>
+  <string name="msg_unlock_description">L’aplicació de desbloqueig és una petita compra a Google Play que dona suport al desenvolupament de Grocy. Un cop instal·lada, també pots canviar a l’escàner de codis de barres d’ML Kit.</string>
+
+  <!-- Login: choice -->
+  <string name="login_choice_title">Et donem la benvinguda a Grocy</string>
+  <!-- The slogan of Grocy, which stays English in every language -->
+  <string name="login_choice_subtitle">ERP beyond your fridge</string>
+  <string name="login_choice_own_server">Servidor propi</string>
+  <string name="login_choice_demo_server">Servidor de demostració</string>
+  <string name="login_choice_own_server_description">Escaneja el codi d’inici de sessió o introdueix l’adreça</string>
+  <string name="login_choice_demo_server_description">Prova Grocy amb dades d’exemple</string>
+
+  <!-- Login: shared -->
+  <string name="login_title">Iniciar sessió</string>
+
+  <!-- Login: scan -->
+  <string name="login_scan_explanation">A Grocy, obre «Gestiona les claus de l’API», crea una clau i toca la seva icona de codi QR. Després escaneja el codi aquí.</string>
+  <string name="login_scan_manual">Introduir les dades manualment</string>
+  <string name="login_scan_manual_description">Adreça de Grocy o Home Assistant</string>
+  <string name="login_scan_checking">S’està comprovant el servidor…</string>
+
+  <!-- Login: manual -->
+  <string name="login_manual_type_grocy">Grocy</string>
+  <string name="login_manual_type_home_assistant">Home Assistant</string>
+  <string name="login_manual_server_url">Adreça de Grocy</string>
+  <string name="login_manual_url_invalid">Introdueix una adreça vàlida</string>
+  <string name="login_manual_api_key">Clau de l’API</string>
+  <string name="login_manual_create_key">Crear una clau</string>
+  <string name="login_manual_ha_url">Adreça de Home Assistant</string>
+  <string name="login_manual_ha_url_hint">També funciona amb Nabu Casa</string>
+  <string name="login_manual_ha_token">Long-lived access token</string>
+  <string name="login_manual_ha_create_token">Crear un token</string>
+  <string name="login_manual_addon_slug">Slug del complement</string>
+  <string name="login_manual_addon_slug_hint">a0d7b954_grocy per al complement Grocy del repositori de complements de la comunitat</string>
+  <string name="login_manual_create_key_description">Obre «Gestiona les claus de l’API» a Grocy</string>
+  <string name="login_manual_ha_create_token_description">Obre el teu perfil a Home Assistant</string>
+  <string name="login_manual_server_type">Tipus de servidor</string>
+  <string name="login_manual_server_type_description">Grocy es connecta directament al teu servidor Grocy; Home Assistant, a través del seu complement Grocy.</string>
+  <string name="login_manual_group_grocy">Servidor Grocy</string>
+  <string name="login_manual_group_addon">Complement Grocy</string>
+  <string name="login_manual_ha_unsupported">Els navegadors no poden iniciar sessió a través de l’ingress de Home Assistant. A Home Assistant, assigna un port al complement Grocy a «Xarxa» i després inicia sessió amb aquesta adreça com a servidor Grocy.</string>
+  <string name="login_manual_use_grocy">Iniciar sessió amb una adreça de Grocy</string>
+  <string name="login_manual_connect">Connectar</string>
+
+  <!-- Login: errors -->
+  <string name="login_error_unreachable">No s’ha pogut accedir al servidor. Comprova la connexió i l’adreça del servidor.</string>
+  <string name="login_error_unauthorized">S’ha rebutjat la clau de l’API.</string>
+  <string name="login_error_not_grocy">Aquesta adreça no pertany a cap servidor Grocy.</string>
+  <string name="login_error_unknown">Alguna cosa ha anat malament. Torna-ho a provar.</string>
+  <string name="login_error_not_login_code">Aquest no és un codi d’inici de sessió de Grocy. Escaneja el codi QR d’una clau de l’API.</string>
+  <string name="login_error_calendar_code">Aquest és el codi d’un enllaç de calendari. Escaneja en lloc seu el codi QR d’una clau de l’API.</string>
+  <string name="login_error_ha_token_rejected">Home Assistant ha rebutjat el Long-lived access token.</string>
+  <string name="login_error_addon_not_found">No s’ha trobat el complement Grocy a Home Assistant. Comprova el slug del complement.</string>
+  <string name="login_error_not_home_assistant">Aquesta adreça no pertany a cap servidor Home Assistant.</string>
+
+  <!-- Scanner -->
+  <string name="scanner_viewfinder">Imatge de la càmera per escanejar codis</string>
+  <string name="scanner_permission_message">Permet l’accés a la càmera per escanejar codis</string>
+  <string name="scanner_permission_allow">Permetre la càmera</string>
+  <string name="scanner_permission_denied">L’accés a la càmera està desactivat. Pots permetre’l a la configuració de l’aplicació.</string>
+  <string name="scanner_permission_denied_browser">L’accés a la càmera està bloquejat. Pots permetre’l a la configuració del lloc del teu navegador.</string>
+  <string name="scanner_open_settings">Obrir la configuració</string>
+  <string name="scanner_no_camera">No s’ha trobat cap càmera</string>
+  <string name="scanner_unsupported">Aquest navegador no permet l’accés a la càmera aquí</string>
+  <string name="scanner_error">No s’ha pogut iniciar la càmera</string>
+  <string name="scanner_retry">Tornar-ho a provar</string>
+  <string name="scanner_torch_on">Encendre la llanterna</string>
+  <string name="scanner_torch_off">Apagar la llanterna</string>
+
+  <!-- About -->
+  <string name="about_version">Versió</string>
+  <string name="about_update">Cercar actualitzacions</string>
+  <string name="about_update_description">Comprova si hi ha una versió més nova</string>
+  <string name="about_changelog">Historial de canvis</string>
+  <string name="about_changelog_description">Novetats d’aquesta versió</string>
+  <string name="about_developer">Desenvolupador</string>
+  <string name="about_vending_description">Més aplicacions del desenvolupador</string>
+  <string name="about_key">Aplicació de desbloqueig</string>
+  <string name="about_key_description_not_installed">No instal·lada</string>
+  <string name="about_key_description_installed">Instal·lada</string>
+  <string name="about_key_description_ignored">Ignorada</string>
+  <string name="about_github_description">Codi font</string>
+  <string name="about_translation_description">Ajuda a traduir Grocy</string>
+  <string name="about_privacy">Política de privadesa</string>
+  <string name="about_privacy_description">Com es tracten les teves dades</string>
+
+  <!-- Help -->
+  <string name="help_placeholder">Pregunta d’exemple</string>
+  <string name="help_placeholder_answer">Resposta d’exemple.</string>
+
+  <!-- Updates -->
+  <string name="update_available">Actualització disponible</string>
+  <string name="update_available_version">Grocy %1$s està disponible. Vols actualitzar ara?</string>
+  <string name="update_available_unknown">Hi ha una versió nova de Grocy disponible. Vols actualitzar ara?</string>
+  <string name="update_none">Actualitzat</string>
+  <string name="update_none_description">Grocy %1$s és la versió més recent.</string>
+  <string name="update_failed">Error en cercar actualitzacions</string>
+  <string name="update_failed_description">No s’han pogut cercar actualitzacions. Comprova la connexió a internet i torna-ho a provar.</string>
+
+  <!-- Settings -->
+  <string name="settings_general">General</string>
+  <string name="settings_general_description">Aspecte i idioma de l’aplicació</string>
+  <string name="settings_server">Servidor</string>
+  <string name="settings_server_description">El teu servidor Grocy i l’inici de sessió</string>
+  <string name="settings_user">Configuració d’usuari</string>
+  <string name="settings_user_description">Les teves preferències desades al servidor</string>
+  <string name="settings_network">Xarxa</string>
+  <string name="settings_network_description">Com arriba l’aplicació al teu servidor</string>
+  <string name="settings_behavior">Comportament</string>
+  <string name="settings_behavior_description">Com respon l’aplicació mentre treballes</string>
+  <string name="settings_scanner">Escàner</string>
+  <string name="settings_scanner_description">Com s’escanegen els codis de barres</string>
+  <string name="settings_notifications">Notificacions</string>
+  <string name="settings_notifications_description">Recordatoris sobre les existències i les feines de casa</string>
+  <string name="settings_backup">Còpia de seguretat i restauració</string>
+  <string name="settings_backup_description">Desa la configuració en un fitxer o restaura-la</string>
+  <string name="settings_reset">Restablir-ho tot</string>
+  <string name="settings_reset_description">Torna cada opció al seu valor per defecte</string>
+  <string name="settings_language">Idioma</string>
+  <string name="settings_language_system">Per defecte del sistema</string>
+  <string name="settings_language_system_description">L’idioma del teu dispositiu</string>
+  <string name="settings_language_info">Les traduccions es fan amb IA i les revisen voluntaris. Si alguna cosa sona malament o hi falta el teu idioma, pots ajudar.</string>
+  <string name="settings_theme">Tema</string>
+  <string name="settings_theme_description">Colors i brillantor de l’aplicació</string>
+  <string name="settings_theme_dynamic">Dinàmic</string>
+  <string name="settings_theme_static">Estàtic</string>
+  <string name="settings_theme_hue">To</string>
+  <string name="settings_theme_auto">Auto</string>
+  <string name="settings_theme_light">Clar</string>
+  <string name="settings_theme_dark">Fosc</string>
+  <string name="settings_contrast">Contrast</string>
+  <string name="settings_contrast_description">Més contrast fa que el text i els controls es vegin millor</string>
+  <string name="settings_contrast_dynamic">Els colors dinàmics fan servir el contrast de la configuració del sistema</string>
+  <string name="settings_contrast_dynamic_unsupported">Els colors dinàmics admeten nivells de contrast a partir d’Android 14</string>
+  <string name="settings_contrast_standard">Estàndard</string>
+  <string name="settings_contrast_medium">Mitjà</string>
+  <string name="settings_contrast_high">Alt</string>
+  <string name="log_empty">No s’ha registrat cap error</string>
+  <string name="log_report_crash">Si l’aplicació s’ha bloquejat o alguna cosa ha anat malament, copia el registre i envia’l amb els teus comentaris perquè es pugui corregir l’error.</string>
+</resources>

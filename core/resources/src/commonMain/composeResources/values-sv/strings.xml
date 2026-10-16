@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Titles -->
+  <string name="title_about">Om</string>
+  <string name="title_feedback">Feedback</string>
+  <string name="title_help">Hjälp</string>
+  <string name="title_licenses">Licenser för öppen källkod</string>
+  <string name="title_logcat">Logcat</string>
+  <string name="title_settings">Inställningar</string>
+
+  <!-- Dialogs -->
+  <string name="dialog_pane_title">Dialogruta</string>
+
+  <!-- Common actions -->
+  <string name="action_back">Tillbaka</string>
+  <string name="action_more_options">Fler alternativ</string>
+  <string name="action_cancel">Avbryt</string>
+  <string name="action_close">Stäng</string>
+  <string name="action_update">Uppdatera</string>
+  <string name="action_later">Senare</string>
+  <string name="action_learn_more">Läs mer</string>
+  <string name="action_open_play_store">Öppna Google Play</string>
+  <string name="action_recommend">Rekommendera</string>
+  <string name="action_recommend_description">Berätta för dina vänner om Grocy</string>
+  <string name="action_rate">Betygsätt på Google Play</string>
+  <string name="action_rate_description">Motivera utvecklarna</string>
+  <string name="action_support">Stöd utvecklingen</string>
+  <string name="action_support_description">Köp upplåsningsappen</string>
+  <string name="action_email">Skicka e-post</string>
+  <string name="action_email_description">Kontakta utvecklarna</string>
+  <string name="action_issue">Skapa nytt ärende på GitHub</string>
+  <string name="action_issue_description">Rapportera buggar eller önska en funktion</string>
+  <string name="action_send_feedback">Skicka feedback</string>
+  <string name="action_show_logcat">Visa logcat</string>
+  <string name="action_reload">Ladda om</string>
+  <string name="action_copy_to_clipboard">Kopiera till urklipp</string>
+
+  <!-- Messages -->
+  <string name="msg_recommend">Grocy håller koll på matvaror och hushåll på din egen Grocy-server: %1$s</string>
+  <string name="msg_feedback">Har du önskemål eller frågor, eller har du hittat ett fel? Kontakta oss så hjälper vi gärna till!\nAnnars blir vi väldigt glada för ett fint omdöme i Play Store.</string>
+  <string name="msg_unlock">Stöd utvecklingen</string>
+  <string name="msg_unlock_description">Upplåsningsappen är ett litet köp på Google Play som stöder utvecklingen av Grocy. När den är installerad kan du också byta till streckkodsskannern från ML Kit.</string>
+
+  <!-- Login: choice -->
+  <string name="login_choice_title">Välkommen till Grocy</string>
+  <!-- The slogan of Grocy, which stays English in every language -->
+  <string name="login_choice_subtitle">ERP beyond your fridge</string>
+  <string name="login_choice_own_server">Egen server</string>
+  <string name="login_choice_demo_server">Demoserver</string>
+  <string name="login_choice_own_server_description">Skanna inloggningskoden eller ange adressen</string>
+  <string name="login_choice_demo_server_description">Prova Grocy med exempeldata</string>
+
+  <!-- Login: shared -->
+  <string name="login_title">Logga in</string>
+
+  <!-- Login: scan -->
+  <string name="login_scan_explanation">Öppna ”Hantera API-nycklar” i Grocy, skapa en nyckel och tryck på dess QR-kodsikon. Skanna sedan koden här.</string>
+  <string name="login_scan_manual">Ange uppgifter manuellt</string>
+  <string name="login_scan_manual_description">Grocy-adress eller Home Assistant</string>
+  <string name="login_scan_checking">Kontrollerar servern…</string>
+
+  <!-- Login: manual -->
+  <string name="login_manual_type_grocy">Grocy</string>
+  <string name="login_manual_type_home_assistant">Home Assistant</string>
+  <string name="login_manual_server_url">Grocy-adress</string>
+  <string name="login_manual_url_invalid">Ange en giltig adress</string>
+  <string name="login_manual_api_key">API-nyckel</string>
+  <string name="login_manual_create_key">Skapa nyckel</string>
+  <string name="login_manual_ha_url">Home Assistant-adress</string>
+  <string name="login_manual_ha_url_hint">Fungerar även med Nabu Casa</string>
+  <string name="login_manual_ha_token">Long-lived access token</string>
+  <string name="login_manual_ha_create_token">Skapa token</string>
+  <string name="login_manual_addon_slug">Tilläggets slug</string>
+  <string name="login_manual_addon_slug_hint">a0d7b954_grocy för Grocy-tillägget från communityns tilläggsförråd</string>
+  <string name="login_manual_create_key_description">Öppnar ”Hantera API-nycklar” i Grocy</string>
+  <string name="login_manual_ha_create_token_description">Öppnar din profil i Home Assistant</string>
+  <string name="login_manual_server_type">Servertyp</string>
+  <string name="login_manual_server_type_description">Grocy ansluter direkt till din Grocy-server, Home Assistant via sitt Grocy-tillägg.</string>
+  <string name="login_manual_group_grocy">Grocy-server</string>
+  <string name="login_manual_group_addon">Grocy-tillägg</string>
+  <string name="login_manual_ha_unsupported">Webbläsare kan inte logga in via Home Assistant Ingress. Tilldela Grocy-tillägget en port under ”Nätverk” i Home Assistant och logga sedan in med den adressen som Grocy-server.</string>
+  <string name="login_manual_use_grocy">Logga in med en Grocy-adress</string>
+  <string name="login_manual_connect">Anslut</string>
+
+  <!-- Login: errors -->
+  <string name="login_error_unreachable">Servern kunde inte nås. Kontrollera din anslutning och serveradressen.</string>
+  <string name="login_error_unauthorized">API-nyckeln avvisades.</string>
+  <string name="login_error_not_grocy">Den här adressen tillhör ingen Grocy-server.</string>
+  <string name="login_error_unknown">Något gick fel. Försök igen.</string>
+  <string name="login_error_not_login_code">Det här är ingen inloggningskod för Grocy. Skanna QR-koden för en API-nyckel.</string>
+  <string name="login_error_calendar_code">Det här är koden för en kalenderlänk. Skanna QR-koden för en API-nyckel i stället.</string>
+  <string name="login_error_ha_token_rejected">Home Assistant avvisade din long-lived access token.</string>
+  <string name="login_error_addon_not_found">Grocy-tillägget hittades inte i Home Assistant. Kontrollera tilläggets slug.</string>
+  <string name="login_error_not_home_assistant">Den här adressen tillhör ingen Home Assistant-server.</string>
+
+  <!-- Scanner -->
+  <string name="scanner_viewfinder">Kamerabild för att skanna koder</string>
+  <string name="scanner_permission_message">Tillåt kameraåtkomst för att skanna koder</string>
+  <string name="scanner_permission_allow">Tillåt kamera</string>
+  <string name="scanner_permission_denied">Kameraåtkomst är avstängd. Du kan tillåta den i appinställningarna.</string>
+  <string name="scanner_permission_denied_browser">Kameraåtkomst är blockerad. Du kan tillåta den i webbläsarens webbplatsinställningar.</string>
+  <string name="scanner_open_settings">Öppna inställningar</string>
+  <string name="scanner_no_camera">Ingen kamera hittades</string>
+  <string name="scanner_unsupported">Den här webbläsaren tillåter inte kameraåtkomst här</string>
+  <string name="scanner_error">Kameran kunde inte startas</string>
+  <string name="scanner_retry">Försök igen</string>
+  <string name="scanner_torch_on">Tänd ficklampan</string>
+  <string name="scanner_torch_off">Släck ficklampan</string>
+
+  <!-- About -->
+  <string name="about_version">Version</string>
+  <string name="about_update">Sök efter uppdateringar</string>
+  <string name="about_update_description">Letar efter en nyare version</string>
+  <string name="about_changelog">Ändringslogg</string>
+  <string name="about_changelog_description">Nytt i den här versionen</string>
+  <string name="about_developer">Utvecklare</string>
+  <string name="about_vending_description">Fler appar från utvecklaren</string>
+  <string name="about_key">Upplåsningsapp</string>
+  <string name="about_key_description_not_installed">Inte installerad</string>
+  <string name="about_key_description_installed">Installerad</string>
+  <string name="about_key_description_ignored">Ignorerad</string>
+  <string name="about_github_description">Källkod</string>
+  <string name="about_translation_description">Hjälp till att översätta Grocy</string>
+  <string name="about_privacy">Integritetspolicy</string>
+  <string name="about_privacy_description">Hur dina uppgifter behandlas</string>
+
+  <!-- Help -->
+  <string name="help_placeholder">Platshållarfråga</string>
+  <string name="help_placeholder_answer">Platshållarsvar.</string>
+
+  <!-- Updates -->
+  <string name="update_available">Uppdatering tillgänglig</string>
+  <string name="update_available_version">Grocy %1$s är tillgänglig. Uppdatera nu?</string>
+  <string name="update_available_unknown">En ny version av Grocy är tillgänglig. Uppdatera nu?</string>
+  <string name="update_none">Allt är uppdaterat</string>
+  <string name="update_none_description">Grocy %1$s är den senaste versionen.</string>
+  <string name="update_failed">Sökningen efter uppdateringar misslyckades</string>
+  <string name="update_failed_description">Det gick inte att söka efter uppdateringar. Kontrollera din internetanslutning och försök igen.</string>
+
+  <!-- Settings -->
+  <string name="settings_general">Allmänt</string>
+  <string name="settings_general_description">Hur appen ser ut och talar</string>
+  <string name="settings_server">Server</string>
+  <string name="settings_server_description">Din Grocy-server och inloggning</string>
+  <string name="settings_user">Användarinställningar</string>
+  <string name="settings_user_description">Dina preferenser, sparade på servern</string>
+  <string name="settings_network">Nätverk</string>
+  <string name="settings_network_description">Hur appen når din server</string>
+  <string name="settings_behavior">Beteende</string>
+  <string name="settings_behavior_description">Hur appen reagerar medan du arbetar</string>
+  <string name="settings_scanner">Skanner</string>
+  <string name="settings_scanner_description">Hur streckkoder skannas</string>
+  <string name="settings_notifications">Aviseringar</string>
+  <string name="settings_notifications_description">Påminnelser om ditt lager och dina sysslor</string>
+  <string name="settings_backup">Säkerhetskopiering och återställning</string>
+  <string name="settings_backup_description">Spara dina inställningar i en fil eller återställ dem</string>
+  <string name="settings_reset">Nollställ allt</string>
+  <string name="settings_reset_description">Återställer varje inställning till standard</string>
+  <string name="settings_language">Språk</string>
+  <string name="settings_language_system">Systemstandard</string>
+  <string name="settings_language_system_description">Språket på din enhet</string>
+  <string name="settings_language_info">Översättningarna görs med AI och granskas av frivilliga. Om något låter fel eller ditt språk saknas kan du hjälpa till.</string>
+  <string name="settings_theme">Tema</string>
+  <string name="settings_theme_description">Appens färger och ljusstyrka</string>
+  <string name="settings_theme_dynamic">Dynamiskt</string>
+  <string name="settings_theme_static">Statiskt</string>
+  <string name="settings_theme_hue">Nyans</string>
+  <string name="settings_theme_auto">Auto</string>
+  <string name="settings_theme_light">Ljust</string>
+  <string name="settings_theme_dark">Mörkt</string>
+  <string name="settings_contrast">Kontrast</string>
+  <string name="settings_contrast_description">Högre kontrast gör text och reglage lättare att se</string>
+  <string name="settings_contrast_dynamic">Dynamiska färger använder kontrasten från systeminställningarna</string>
+  <string name="settings_contrast_dynamic_unsupported">Dynamiska färger stöder kontrastnivåer från och med Android 14</string>
+  <string name="settings_contrast_standard">Standard</string>
+  <string name="settings_contrast_medium">Medel</string>
+  <string name="settings_contrast_high">Hög</string>
+  <string name="log_empty">Inga fel loggade</string>
+  <string name="log_report_crash">Om appen kraschade eller något gick fel kan du kopiera loggen och skicka den med din feedback, så att felet kan åtgärdas.</string>
+</resources>

@@ -28,6 +28,8 @@ import com.patrickzedler.grocy.feature.about.impl.aboutEntries
 import com.patrickzedler.grocy.feature.login.api.LoginChoiceRoute
 import com.patrickzedler.grocy.feature.login.api.loginRouteSerializers
 import com.patrickzedler.grocy.feature.login.impl.loginEntries
+import com.patrickzedler.grocy.feature.settings.api.settingsRouteSerializers
+import com.patrickzedler.grocy.feature.settings.impl.settingsEntries
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import com.patrickzedler.grocy.feature.start.api.startRouteSerializers
 import com.patrickzedler.grocy.feature.start.impl.startEntry
@@ -35,7 +37,8 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.modules.plus
 
 internal val routeSerializers =
-    startRouteSerializers + loginRouteSerializers + aboutRouteSerializers
+    startRouteSerializers + loginRouteSerializers + aboutRouteSerializers +
+        settingsRouteSerializers
 
 /**
  * Shared entry point of the Android and web apps.
@@ -48,7 +51,11 @@ fun GrocyApp(
     graph: AppGraph,
     onContentReady: () -> Unit = {},
 ) {
-    GrocyTheme {
+    // Nothing until the stored appearance is read, the splash or loading screen covers it
+    val appearance = graph.appearance.collectAsStateWithLifecycle(initialValue = null).value
+        ?: return
+
+    GrocyTheme(appearance = appearance) {
         val authState by graph.authRepository.authState
             .collectAsStateWithLifecycle(initialValue = null)
         val fontsReady = rememberThemeFontsReady()
@@ -99,6 +106,7 @@ private fun GrocyNavigation(
         loginEntries(graph.loginDependencies, navigator)
         startEntry(navigator)
         aboutEntries(graph.aboutDependencies, navigator)
+        settingsEntries(graph.settingsDependencies, navigator)
     }
 }
 

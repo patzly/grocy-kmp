@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Titles -->
+  <string name="title_about">O aplikaci</string>
+  <string name="title_feedback">Zpětná vazba</string>
+  <string name="title_help">Nápověda</string>
+  <string name="title_licenses">Licence open source</string>
+  <string name="title_logcat">Logcat</string>
+  <string name="title_settings">Nastavení</string>
+
+  <!-- Dialogs -->
+  <string name="dialog_pane_title">Dialogové okno</string>
+
+  <!-- Common actions -->
+  <string name="action_back">Zpět</string>
+  <string name="action_more_options">Další možnosti</string>
+  <string name="action_cancel">Zrušit</string>
+  <string name="action_close">Zavřít</string>
+  <string name="action_update">Aktualizovat</string>
+  <string name="action_later">Později</string>
+  <string name="action_learn_more">Další informace</string>
+  <string name="action_open_play_store">Otevřít Google Play</string>
+  <string name="action_recommend">Doporučit</string>
+  <string name="action_recommend_description">Řekněte přátelům o Grocy</string>
+  <string name="action_rate">Ohodnotit na Google Play</string>
+  <string name="action_rate_description">Motivujte vývojáře</string>
+  <string name="action_support">Podpořit vývoj</string>
+  <string name="action_support_description">Kupte si odemykací aplikaci</string>
+  <string name="action_email">Poslat e-mail</string>
+  <string name="action_email_description">Kontaktujte vývojáře</string>
+  <string name="action_issue">Založit nové issue na GitHubu</string>
+  <string name="action_issue_description">Nahlaste chyby nebo navrhněte funkci</string>
+  <string name="action_send_feedback">Odeslat zpětnou vazbu</string>
+  <string name="action_show_logcat">Zobrazit logcat</string>
+  <string name="action_reload">Načíst znovu</string>
+  <string name="action_copy_to_clipboard">Kopírovat do schránky</string>
+
+  <!-- Messages -->
+  <string name="msg_recommend">Grocy spravuje potraviny a domácnost na vašem vlastním serveru Grocy: %1$s</string>
+  <string name="msg_feedback">Máte přání, dotazy nebo jste narazili na chybu? Ozvěte se nám, rádi pomůžeme!\nJinak nás moc potěší pěkné hodnocení v Play Store.</string>
+  <string name="msg_unlock">Podpořit vývoj</string>
+  <string name="msg_unlock_description">Odemykací aplikace je drobný nákup na Google Play, kterým podpoříte vývoj Grocy. Po její instalaci můžete také přepnout na skener čárových kódů ML Kit.</string>
+
+  <!-- Login: choice -->
+  <string name="login_choice_title">Vítejte v Grocy</string>
+  <!-- The slogan of Grocy, which stays English in every language -->
+  <string name="login_choice_subtitle">ERP beyond your fridge</string>
+  <string name="login_choice_own_server">Vlastní server</string>
+  <string name="login_choice_demo_server">Demo server</string>
+  <string name="login_choice_own_server_description">Naskenujte přihlašovací kód nebo zadejte adresu</string>
+  <string name="login_choice_demo_server_description">Vyzkoušejte Grocy s ukázkovými daty</string>
+
+  <!-- Login: shared -->
+  <string name="login_title">Přihlásit se</string>
+
+  <!-- Login: scan -->
+  <string name="login_scan_explanation">V Grocy otevřete „Spravovat API klíče“, vytvořte klíč a klepněte na jeho ikonu QR kódu. Potom kód naskenujte zde.</string>
+  <string name="login_scan_manual">Zadat údaje ručně</string>
+  <string name="login_scan_manual_description">Adresa Grocy nebo Home Assistant</string>
+  <string name="login_scan_checking">Probíhá kontrola serveru…</string>
+
+  <!-- Login: manual -->
+  <string name="login_manual_type_grocy">Grocy</string>
+  <string name="login_manual_type_home_assistant">Home Assistant</string>
+  <string name="login_manual_server_url">Adresa Grocy</string>
+  <string name="login_manual_url_invalid">Zadejte platnou adresu</string>
+  <string name="login_manual_api_key">API klíč</string>
+  <string name="login_manual_create_key">Vytvořit klíč</string>
+  <string name="login_manual_ha_url">Adresa Home Assistant</string>
+  <string name="login_manual_ha_url_hint">Funguje i s Nabu Casa</string>
+  <string name="login_manual_ha_token">Long-lived access token</string>
+  <string name="login_manual_ha_create_token">Vytvořit token</string>
+  <string name="login_manual_addon_slug">Slug doplňku</string>
+  <string name="login_manual_addon_slug_hint">a0d7b954_grocy pro doplněk Grocy z komunitního repozitáře doplňků</string>
+  <string name="login_manual_create_key_description">Otevře „Spravovat API klíče“ v Grocy</string>
+  <string name="login_manual_ha_create_token_description">Otevře váš profil v Home Assistant</string>
+  <string name="login_manual_server_type">Typ serveru</string>
+  <string name="login_manual_server_type_description">Grocy se připojí přímo k vašemu serveru Grocy, Home Assistant přes svůj doplněk Grocy.</string>
+  <string name="login_manual_group_grocy">Server Grocy</string>
+  <string name="login_manual_group_addon">Doplněk Grocy</string>
+  <string name="login_manual_ha_unsupported">Prohlížeče se nemohou přihlásit přes ingress Home Assistant. V Home Assistant přiřaďte doplňku Grocy port v části „Síť“ a pak se přihlaste s touto adresou jako server Grocy.</string>
+  <string name="login_manual_use_grocy">Přihlásit se pomocí adresy Grocy</string>
+  <string name="login_manual_connect">Připojit</string>
+
+  <!-- Login: errors -->
+  <string name="login_error_unreachable">Server není dostupný. Zkontrolujte připojení a adresu serveru.</string>
+  <string name="login_error_unauthorized">API klíč byl odmítnut.</string>
+  <string name="login_error_not_grocy">Tato adresa nepatří serveru Grocy.</string>
+  <string name="login_error_unknown">Něco se pokazilo. Zkuste to prosím znovu.</string>
+  <string name="login_error_not_login_code">Toto není přihlašovací kód Grocy. Naskenujte QR kód API klíče.</string>
+  <string name="login_error_calendar_code">Toto je kód odkazu na kalendář. Naskenujte místo něj QR kód API klíče.</string>
+  <string name="login_error_ha_token_rejected">Home Assistant odmítl Long-lived access token.</string>
+  <string name="login_error_addon_not_found">Doplněk Grocy nebyl v Home Assistant nalezen. Zkontrolujte slug doplňku.</string>
+  <string name="login_error_not_home_assistant">Tato adresa nepatří serveru Home Assistant.</string>
+
+  <!-- Scanner -->
+  <string name="scanner_viewfinder">Obraz z kamery pro skenování kódů</string>
+  <string name="scanner_permission_message">Povolte přístup ke kameře, abyste mohli skenovat kódy</string>
+  <string name="scanner_permission_allow">Povolit kameru</string>
+  <string name="scanner_permission_denied">Přístup ke kameře je vypnutý. Můžete ho povolit v nastavení aplikace.</string>
+  <string name="scanner_permission_denied_browser">Přístup ke kameře je zablokovaný. Můžete ho povolit v nastavení webu ve svém prohlížeči.</string>
+  <string name="scanner_open_settings">Otevřít nastavení</string>
+  <string name="scanner_no_camera">Nebyla nalezena žádná kamera</string>
+  <string name="scanner_unsupported">Tento prohlížeč zde nepovoluje přístup ke kameře</string>
+  <string name="scanner_error">Kameru se nepodařilo spustit</string>
+  <string name="scanner_retry">Zkusit znovu</string>
+  <string name="scanner_torch_on">Zapnout svítilnu</string>
+  <string name="scanner_torch_off">Vypnout svítilnu</string>
+
+  <!-- About -->
+  <string name="about_version">Verze</string>
+  <string name="about_update">Zkontrolovat aktualizace</string>
+  <string name="about_update_description">Vyhledá novější verzi</string>
+  <string name="about_changelog">Seznam změn</string>
+  <string name="about_changelog_description">Novinky v této verzi</string>
+  <string name="about_developer">Vývojář</string>
+  <string name="about_vending_description">Další aplikace od vývojáře</string>
+  <string name="about_key">Odemykací aplikace</string>
+  <string name="about_key_description_not_installed">Nenainstalováno</string>
+  <string name="about_key_description_installed">Nainstalováno</string>
+  <string name="about_key_description_ignored">Ignorováno</string>
+  <string name="about_github_description">Zdrojový kód</string>
+  <string name="about_translation_description">Pomozte přeložit Grocy</string>
+  <string name="about_privacy">Zásady ochrany osobních údajů</string>
+  <string name="about_privacy_description">Jak jsou zpracovávána vaše data</string>
+
+  <!-- Help -->
+  <string name="help_placeholder">Zástupná otázka</string>
+  <string name="help_placeholder_answer">Zástupná odpověď.</string>
+
+  <!-- Updates -->
+  <string name="update_available">Je dostupná aktualizace</string>
+  <string name="update_available_version">Grocy %1$s je k dispozici. Aktualizovat nyní?</string>
+  <string name="update_available_unknown">Je k dispozici nová verze Grocy. Aktualizovat nyní?</string>
+  <string name="update_none">Aktuální verze</string>
+  <string name="update_none_description">Grocy %1$s je nejnovější verze.</string>
+  <string name="update_failed">Kontrola aktualizací selhala</string>
+  <string name="update_failed_description">Aktualizace se nepodařilo zkontrolovat. Zkontrolujte připojení k internetu a zkuste to znovu.</string>
+
+  <!-- Settings -->
+  <string name="settings_general">Obecné</string>
+  <string name="settings_general_description">Vzhled a jazyk aplikace</string>
+  <string name="settings_server">Server</string>
+  <string name="settings_server_description">Váš server Grocy a přihlášení</string>
+  <string name="settings_user">Uživatelské nastavení</string>
+  <string name="settings_user_description">Vaše předvolby uložené na serveru</string>
+  <string name="settings_network">Síť</string>
+  <string name="settings_network_description">Jak se aplikace připojuje k vašemu serveru</string>
+  <string name="settings_behavior">Chování</string>
+  <string name="settings_behavior_description">Jak aplikace reaguje při práci</string>
+  <string name="settings_scanner">Skener</string>
+  <string name="settings_scanner_description">Jak se skenují čárové kódy</string>
+  <string name="settings_notifications">Oznámení</string>
+  <string name="settings_notifications_description">Připomínky k zásobám a povinnostem</string>
+  <string name="settings_backup">Zálohování a obnovení</string>
+  <string name="settings_backup_description">Uložte nastavení do souboru nebo je obnovte</string>
+  <string name="settings_reset">Resetovat vše</string>
+  <string name="settings_reset_description">Vrátí všechna nastavení na výchozí hodnoty</string>
+  <string name="settings_language">Jazyk</string>
+  <string name="settings_language_system">Výchozí nastavení systému</string>
+  <string name="settings_language_system_description">Jazyk vašeho zařízení</string>
+  <string name="settings_language_info">Překlady vznikají pomocí AI a kontrolují je dobrovolníci. Pokud něco zní špatně nebo váš jazyk chybí, můžete pomoci.</string>
+  <string name="settings_theme">Motiv</string>
+  <string name="settings_theme_description">Barvy a jas aplikace</string>
+  <string name="settings_theme_dynamic">Dynamický</string>
+  <string name="settings_theme_static">Statický</string>
+  <string name="settings_theme_hue">Barevný odstín</string>
+  <string name="settings_theme_auto">Auto</string>
+  <string name="settings_theme_light">Světlý</string>
+  <string name="settings_theme_dark">Tmavý</string>
+  <string name="settings_contrast">Kontrast</string>
+  <string name="settings_contrast_description">Vyšší kontrast zlepšuje viditelnost textu a ovládacích prvků</string>
+  <string name="settings_contrast_dynamic">Dynamické barvy používají kontrast ze systémového nastavení</string>
+  <string name="settings_contrast_dynamic_unsupported">Dynamické barvy podporují úrovně kontrastu od Androidu 14</string>
+  <string name="settings_contrast_standard">Standardní</string>
+  <string name="settings_contrast_medium">Střední</string>
+  <string name="settings_contrast_high">Vysoký</string>
+  <string name="log_empty">Nebyly zaznamenány žádné chyby</string>
+  <string name="log_report_crash">Pokud aplikace spadla nebo se něco pokazilo, zkopírujte log a pošlete ho se zpětnou vazbou, aby bylo možné chybu opravit.</string>
+</resources>

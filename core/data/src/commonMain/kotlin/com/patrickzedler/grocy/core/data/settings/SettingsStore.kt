@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.core.data.settings
 
+import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import kotlinx.coroutines.flow.Flow
 
@@ -13,4 +14,8 @@ interface SettingsStore {
     val scannerEngine: Flow<ScannerEngine>
 
     suspend fun setScannerEngine(scannerEngine: ScannerEngine)
+
+    val appearance: Flow<AppearanceSettings>
+
+    suspend fun setAppearance(appearance: AppearanceSettings)
 }

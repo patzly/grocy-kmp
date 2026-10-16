@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Titles -->
+  <string name="title_about">אודות</string>
+  <string name="title_feedback">משוב</string>
+  <string name="title_help">עזרה</string>
+  <string name="title_licenses">רישיונות קוד פתוח</string>
+  <string name="title_logcat">Logcat</string>
+  <string name="title_settings">הגדרות</string>
+
+  <!-- Dialogs -->
+  <string name="dialog_pane_title">חלון דו־שיח</string>
+
+  <!-- Common actions -->
+  <string name="action_back">חזרה</string>
+  <string name="action_more_options">אפשרויות נוספות</string>
+  <string name="action_cancel">ביטול</string>
+  <string name="action_close">סגירה</string>
+  <string name="action_update">עדכון</string>
+  <string name="action_later">מאוחר יותר</string>
+  <string name="action_learn_more">מידע נוסף</string>
+  <string name="action_open_play_store">פתיחת Google Play</string>
+  <string name="action_recommend">המלצה</string>
+  <string name="action_recommend_description">לספר לחברים על Grocy</string>
+  <string name="action_rate">דירוג ב־Google Play</string>
+  <string name="action_rate_description">לעודד את המפתחים</string>
+  <string name="action_support">תמיכה בפיתוח</string>
+  <string name="action_support_description">רכישת אפליקציית ביטול הנעילה</string>
+  <string name="action_email">שליחת אימייל</string>
+  <string name="action_email_description">יצירת קשר עם המפתחים</string>
+  <string name="action_issue">פתיחת דיווח חדש ב־GitHub</string>
+  <string name="action_issue_description">דיווח על באגים או בקשת תכונה</string>
+  <string name="action_send_feedback">שליחת משוב</string>
+  <string name="action_show_logcat">הצגת Logcat</string>
+  <string name="action_reload">טעינה מחדש</string>
+  <string name="action_copy_to_clipboard">העתקה ללוח</string>
+
+  <!-- Messages -->
+  <string name="msg_recommend">עם Grocy אפשר לעקוב אחר מצרכים ומשק הבית בשרת Grocy משלך: %1$s</string>
+  <string name="msg_feedback">יש לך משאלות, שאלות או שגיאות? אפשר לפנות אלינו ונשמח לעזור!\nאחרת נשמח מאוד לביקורת טובה ב־Play Store.</string>
+  <string name="msg_unlock">תמיכה בפיתוח</string>
+  <string name="msg_unlock_description">אפליקציית ביטול הנעילה היא רכישה קטנה ב־Google Play שתומכת בפיתוח של Grocy. לאחר ההתקנה אפשר גם לעבור לסורק הברקודים של ML Kit.</string>
+
+  <!-- Login: choice -->
+  <string name="login_choice_title">ברוכים הבאים ל־Grocy</string>
+  <!-- The slogan of Grocy, which stays English in every language -->
+  <string name="login_choice_subtitle">ERP beyond your fridge</string>
+  <string name="login_choice_own_server">שרת משלך</string>
+  <string name="login_choice_demo_server">שרת הדגמה</string>
+  <string name="login_choice_own_server_description">סריקת קוד הכניסה או הזנת הכתובת</string>
+  <string name="login_choice_demo_server_description">התנסות ב־Grocy עם נתונים לדוגמה</string>
+
+  <!-- Login: shared -->
+  <string name="login_title">כניסה</string>
+
+  <!-- Login: scan -->
+  <string name="login_scan_explanation">ב־Grocy יש לפתוח את „ניהול מפתחות API”, ליצור מפתח ולהקיש על סמל קוד ה־QR שלו. לאחר מכן יש לסרוק כאן את הקוד.</string>
+  <string name="login_scan_manual">הזנת נתונים ידנית</string>
+  <string name="login_scan_manual_description">כתובת Grocy או Home Assistant</string>
+  <string name="login_scan_checking">בדיקת השרת…</string>
+
+  <!-- Login: manual -->
+  <string name="login_manual_type_grocy">Grocy</string>
+  <string name="login_manual_type_home_assistant">Home Assistant</string>
+  <string name="login_manual_server_url">כתובת Grocy</string>
+  <string name="login_manual_url_invalid">יש להזין כתובת תקינה</string>
+  <string name="login_manual_api_key">מפתח API</string>
+  <string name="login_manual_create_key">יצירת מפתח</string>
+  <string name="login_manual_ha_url">כתובת Home Assistant</string>
+  <string name="login_manual_ha_url_hint">עובד גם עם Nabu Casa</string>
+  <string name="login_manual_ha_token">Long-lived access token</string>
+  <string name="login_manual_ha_create_token">יצירת טוקן</string>
+  <string name="login_manual_addon_slug">מזהה התוסף (slug)</string>
+  <string name="login_manual_addon_slug_hint">עבור תוסף Grocy ממאגר התוספים של הקהילה: a0d7b954_grocy</string>
+  <string name="login_manual_create_key_description">פתיחת „ניהול מפתחות API” ב־Grocy</string>
+  <string name="login_manual_ha_create_token_description">פתיחת הפרופיל שלך ב־Home Assistant</string>
+  <string name="login_manual_server_type">סוג השרת</string>
+  <string name="login_manual_server_type_description">האפשרות Grocy מתחברת ישירות לשרת Grocy שלך, והאפשרות Home Assistant מתחברת דרך תוסף Grocy שלו.</string>
+  <string name="login_manual_group_grocy">שרת Grocy</string>
+  <string name="login_manual_group_addon">תוסף Grocy</string>
+  <string name="login_manual_ha_unsupported">דפדפנים לא יכולים להיכנס דרך ה־ingress של Home Assistant. ב־Home Assistant יש להקצות לתוסף Grocy פורט תחת „רשת”, ואז להיכנס עם הכתובת הזו כשרת Grocy.</string>
+  <string name="login_manual_use_grocy">כניסה עם כתובת Grocy</string>
+  <string name="login_manual_connect">התחברות</string>
+
+  <!-- Login: errors -->
+  <string name="login_error_unreachable">לא ניתן להתחבר לשרת. יש לבדוק את החיבור ואת כתובת השרת.</string>
+  <string name="login_error_unauthorized">מפתח ה־API נדחה.</string>
+  <string name="login_error_not_grocy">הכתובת הזו אינה שייכת לשרת Grocy.</string>
+  <string name="login_error_unknown">משהו השתבש. נא לנסות שוב.</string>
+  <string name="login_error_not_login_code">זה לא קוד כניסה של Grocy. יש לסרוק את קוד ה־QR של מפתח API.</string>
+  <string name="login_error_calendar_code">זה הקוד של קישור ללוח שנה. יש לסרוק במקומו את קוד ה־QR של מפתח API.</string>
+  <string name="login_error_ha_token_rejected">ה־Long-lived access token נדחה על ידי Home Assistant.</string>
+  <string name="login_error_addon_not_found">תוסף Grocy לא נמצא ב־Home Assistant. יש לבדוק את מזהה התוסף (slug).</string>
+  <string name="login_error_not_home_assistant">הכתובת הזו אינה שייכת לשרת Home Assistant.</string>
+
+  <!-- Scanner -->
+  <string name="scanner_viewfinder">תמונת המצלמה לסריקת קודים</string>
+  <string name="scanner_permission_message">יש לאפשר גישה למצלמה כדי לסרוק קודים</string>
+  <string name="scanner_permission_allow">מתן גישה למצלמה</string>
+  <string name="scanner_permission_denied">הגישה למצלמה כבויה. אפשר לאשר אותה בהגדרות האפליקציה.</string>
+  <string name="scanner_permission_denied_browser">הגישה למצלמה חסומה. אפשר לאשר אותה בהגדרות האתר בדפדפן.</string>
+  <string name="scanner_open_settings">פתיחת ההגדרות</string>
+  <string name="scanner_no_camera">לא נמצאה מצלמה</string>
+  <string name="scanner_unsupported">הדפדפן הזה לא מאפשר כאן גישה למצלמה</string>
+  <string name="scanner_error">לא ניתן היה להפעיל את המצלמה</string>
+  <string name="scanner_retry">ניסיון חוזר</string>
+  <string name="scanner_torch_on">הדלקת הפנס</string>
+  <string name="scanner_torch_off">כיבוי הפנס</string>
+
+  <!-- About -->
+  <string name="about_version">גרסה</string>
+  <string name="about_update">בדיקת עדכונים</string>
+  <string name="about_update_description">חיפוש גרסה חדשה יותר</string>
+  <string name="about_changelog">יומן שינויים</string>
+  <string name="about_changelog_description">מה חדש בגרסה הזו</string>
+  <string name="about_developer">מפתח</string>
+  <string name="about_vending_description">אפליקציות נוספות של המפתח</string>
+  <string name="about_key">אפליקציית ביטול הנעילה</string>
+  <string name="about_key_description_not_installed">לא מותקנת</string>
+  <string name="about_key_description_installed">מותקנת</string>
+  <string name="about_key_description_ignored">מתעלמים ממנה</string>
+  <string name="about_github_description">קוד מקור</string>
+  <string name="about_translation_description">עזרה בתרגום Grocy</string>
+  <string name="about_privacy">מדיניות פרטיות</string>
+  <string name="about_privacy_description">איך הנתונים שלך מעובדים</string>
+
+  <!-- Help -->
+  <string name="help_placeholder">שאלה לדוגמה</string>
+  <string name="help_placeholder_answer">תשובה לדוגמה.</string>
+
+  <!-- Updates -->
+  <string name="update_available">יש עדכון זמין</string>
+  <string name="update_available_version">גרסה %1$s של Grocy זמינה. לעדכן עכשיו?</string>
+  <string name="update_available_unknown">גרסה חדשה של Grocy זמינה. לעדכן עכשיו?</string>
+  <string name="update_none">הגרסה עדכנית</string>
+  <string name="update_none_description">הגרסה %1$s של Grocy היא העדכנית ביותר.</string>
+  <string name="update_failed">בדיקת העדכונים נכשלה</string>
+  <string name="update_failed_description">לא ניתן היה לבדוק אם יש עדכונים. יש לבדוק את החיבור לאינטרנט ולנסות שוב.</string>
+
+  <!-- Settings -->
+  <string name="settings_general">כללי</string>
+  <string name="settings_general_description">המראה והשפה של האפליקציה</string>
+  <string name="settings_server">שרת</string>
+  <string name="settings_server_description">שרת Grocy שלך והכניסה אליו</string>
+  <string name="settings_user">הגדרות המשתמש</string>
+  <string name="settings_user_description">ההעדפות שלך שנשמרות בשרת</string>
+  <string name="settings_network">רשת</string>
+  <string name="settings_network_description">איך האפליקציה מגיעה לשרת שלך</string>
+  <string name="settings_behavior">התנהגות</string>
+  <string name="settings_behavior_description">איך האפליקציה מגיבה בזמן העבודה</string>
+  <string name="settings_scanner">סורק</string>
+  <string name="settings_scanner_description">איך ברקודים נסרקים</string>
+  <string name="settings_notifications">התראות</string>
+  <string name="settings_notifications_description">תזכורות על המלאי והמטלות</string>
+  <string name="settings_backup">גיבוי ושחזור</string>
+  <string name="settings_backup_description">שמירת ההגדרות בקובץ או שחזור שלהן</string>
+  <string name="settings_reset">איפוס הכול</string>
+  <string name="settings_reset_description">החזרת כל ההגדרות לבררת המחדל</string>
+  <string name="settings_language">שפה</string>
+  <string name="settings_language_system">בררת המחדל של המערכת</string>
+  <string name="settings_language_system_description">השפה של המכשיר שלך</string>
+  <string name="settings_language_info">התרגומים נוצרים בעזרת בינה מלאכותית ונבדקים על ידי מתנדבים. אם משהו נשמע לא נכון או שהשפה שלך חסרה, אפשר לעזור.</string>
+  <string name="settings_theme">ערכת נושא</string>
+  <string name="settings_theme_description">הצבעים והבהירות של האפליקציה</string>
+  <string name="settings_theme_dynamic">דינמית</string>
+  <string name="settings_theme_static">סטטית</string>
+  <string name="settings_theme_hue">גוון צבע</string>
+  <string name="settings_theme_auto">אוטומטי</string>
+  <string name="settings_theme_light">בהיר</string>
+  <string name="settings_theme_dark">כהה</string>
+  <string name="settings_contrast">ניגודיות</string>
+  <string name="settings_contrast_description">ניגודיות גבוהה יותר מקלה לראות טקסט ופקדים</string>
+  <string name="settings_contrast_dynamic">צבעים דינמיים משתמשים בניגודיות שבהגדרות המערכת</string>
+  <string name="settings_contrast_dynamic_unsupported">צבעים דינמיים תומכים ברמות ניגודיות החל מ־Android 14</string>
+  <string name="settings_contrast_standard">רגילה</string>
+  <string name="settings_contrast_medium">בינונית</string>
+  <string name="settings_contrast_high">גבוהה</string>
+  <string name="log_empty">לא נרשמו שגיאות</string>
+  <string name="log_report_crash">אם האפליקציה קרסה או שמשהו השתבש, אפשר להעתיק את היומן ולשלוח אותו עם המשוב כדי שניתן יהיה לתקן את השגיאה.</string>
+</resources>

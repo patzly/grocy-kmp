@@ -13,38 +13,34 @@ import com.materialkolor.rememberDynamicColorScheme
 import com.patrickzedler.grocy.core.model.AppColor
 import com.patrickzedler.grocy.core.model.AppContrast
 import com.patrickzedler.grocy.core.model.AppTheme
+import com.patrickzedler.grocy.core.model.AppearanceSettings
 
-/** Hue of the default seed color. */
-const val DEFAULT_THEME_HUE = 154f
-
+/** Material 3 Expressive theme of the app in the user's [appearance]. */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun GrocyTheme(
-    color: AppColor = AppColor.STATIC,
-    hue: Float = DEFAULT_THEME_HUE,
-    theme: AppTheme = AppTheme.SYSTEM,
-    contrast: AppContrast = AppContrast.STANDARD,
+    appearance: AppearanceSettings = AppearanceSettings(),
     content: @Composable () -> Unit,
 ) {
-    val isDark = when (theme) {
+    val isDark = when (appearance.theme) {
         AppTheme.LIGHT -> false
         AppTheme.DARK -> true
         AppTheme.SYSTEM -> isSystemInDarkTheme()
     }
 
-    val dynamicColorScheme = if (color == AppColor.DYNAMIC) {
+    val dynamicColorScheme = if (appearance.color == AppColor.DYNAMIC) {
         platformDynamicColorScheme(isDark = isDark)
     } else {
         null
     }
     val colorScheme = dynamicColorScheme ?: run {
-        val seedColor = remember(hue) {
-            Hct.from(hue.toDouble(), SEED_CHROMA, SEED_TONE).toColor()
+        val seedColor = remember(appearance.hue) {
+            Hct.from(appearance.hue.toDouble(), SEED_CHROMA, SEED_TONE).toColor()
         }
         rememberDynamicColorScheme(
             seedColor = seedColor,
             isDark = isDark,
-            contrastLevel = contrast.level,
+            contrastLevel = appearance.contrast.level,
             modifyColorScheme = ColorScheme::harmonizeError,
         )
     }
@@ -59,8 +55,9 @@ fun GrocyTheme(
     )
 }
 
-private const val SEED_CHROMA = 70.0
-private const val SEED_TONE = 60.0
+/** Chroma and tone of the seed color, the hue comes from the settings. */
+internal const val SEED_CHROMA = 70.0
+internal const val SEED_TONE = 60.0
 
 private val AppContrast.level: Double
     get() = when (this) {

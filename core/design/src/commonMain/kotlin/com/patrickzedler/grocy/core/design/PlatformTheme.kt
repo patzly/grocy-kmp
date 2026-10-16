@@ -18,3 +18,9 @@ internal expect fun SystemBarAppearance(isDark: Boolean, backgroundColor: Color)
 /** True once the theme fonts can be drawn, so the first visible frame never uses a fallback font. */
 @Composable
 expect fun rememberThemeFontsReady(): Boolean
+
+/** True where the system offers colors from the wallpaper (Android 12 and newer). */
+expect val isDynamicColorAvailable: Boolean
+
+/** True where dynamic colors follow the system's contrast setting (Android 14 and newer). */
+expect val dynamicColorFollowsSystemContrast: Boolean

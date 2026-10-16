@@ -1,15 +1,20 @@
 package com.patrickzedler.grocy.apps.shared
 
 import com.patrickzedler.grocy.core.data.auth.AuthRepository
+import com.patrickzedler.grocy.core.data.language.AppLanguageStore
+import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.scanner.ScannerRepository
+import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
 import com.patrickzedler.grocy.core.data.update.UpdateRepository
+import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.createGrocyHttpClient
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.feature.about.impl.AboutDependencies
 import com.patrickzedler.grocy.feature.login.impl.LoginDependencies
+import com.patrickzedler.grocy.feature.settings.impl.SettingsDependencies
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -46,6 +51,14 @@ class AppGraph(
         UpdateRepository(platform.createAppUpdater(gitHubReleases))
     }
 
+    /** The language of the app, which the Android activity applies before Android 13. */
+    internal val appLanguageStore: AppLanguageStore
+        get() = platform.appLanguageStore
+
+    /** How the app looks, from the general settings. */
+    internal val appearance: Flow<AppearanceSettings>
+        get() = platform.settingsStore.appearance
+
     /** Decoders of the engine that scans right now, provided to every scanner by GrocyApp. */
     internal val barcodeDecoderFactory: Flow<BarcodeDecoderFactory> by lazy {
         scannerRepository.activeEngine.map {
@@ -56,6 +69,17 @@ class AppGraph(
     internal val loginDependencies: LoginDependencies = object : LoginDependencies {
         override val authRepository: AuthRepository
             get() = this@AppGraph.authRepository
+    }
+
+    internal val settingsDependencies: SettingsDependencies = object : SettingsDependencies {
+        override val settingsStore: SettingsStore
+            get() = platform.settingsStore
+        override val appLanguageStore: AppLanguageStore
+            get() = platform.appLanguageStore
+        override val unlockRepository: UnlockRepository
+            get() = this@AppGraph.unlockRepository
+        override val logReader: LogReader?
+            get() = platform.logReader
     }
 
     internal val aboutDependencies: AboutDependencies = object : AboutDependencies {

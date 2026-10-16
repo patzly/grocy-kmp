@@ -1,8 +1,10 @@
 package com.patrickzedler.grocy.core.testing
 
 import com.patrickzedler.grocy.core.data.credentials.CredentialStore
+import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
+import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.ServerConnection
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +30,7 @@ class FakeCredentialStore(
 class FakeSettingsStore(
     checkUnlockKey: Boolean = true,
     scannerEngine: ScannerEngine = ScannerEngine.ZXING,
+    appearance: AppearanceSettings = AppearanceSettings(),
 ) : SettingsStore {
 
     override val checkUnlockKey = MutableStateFlow(checkUnlockKey)
@@ -41,6 +44,12 @@ class FakeSettingsStore(
     override suspend fun setScannerEngine(scannerEngine: ScannerEngine) {
         this.scannerEngine.value = scannerEngine
     }
+
+    override val appearance = MutableStateFlow(appearance)
+
+    override suspend fun setAppearance(appearance: AppearanceSettings) {
+        this.appearance.value = appearance
+    }
 }
 
 /** [UnlockChecker] whose answers tests can change, e.g. to simulate an installation. */
@@ -52,4 +61,20 @@ class FakeUnlockChecker(
     override fun isKeyInstalled(): Boolean = keyInstalled
 
     override fun isPlayStoreInstalled(): Boolean = playStoreInstalled
+}
+
+/** In-memory [AppLanguageStore]; [changes] counts how often the language was set. */
+class FakeAppLanguageStore(
+    initial: String? = null,
+) : AppLanguageStore {
+
+    override val language = MutableStateFlow(initial)
+
+    var changes = 0
+        private set
+
+    override fun setLanguage(tag: String?) {
+        changes++
+        language.value = tag
+    }
 }

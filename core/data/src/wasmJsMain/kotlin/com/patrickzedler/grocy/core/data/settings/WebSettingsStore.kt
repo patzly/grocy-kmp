@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.data.settings
 
 import com.patrickzedler.grocy.core.data.BrowserLocalStorage
 import com.patrickzedler.grocy.core.data.KeyValueStorage
+import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,8 +36,31 @@ class WebSettingsStore internal constructor(
         scannerEngineState.value = scannerEngine
     }
 
+    private val appearanceState = MutableStateFlow(
+        appearanceOf(
+            theme = storage.get(THEME),
+            color = storage.get(COLOR),
+            hue = storage.get(HUE)?.toFloatOrNull(),
+            contrast = storage.get(CONTRAST),
+        ),
+    )
+
+    override val appearance: Flow<AppearanceSettings> = appearanceState.asStateFlow()
+
+    override suspend fun setAppearance(appearance: AppearanceSettings) {
+        storage.set(THEME, appearance.theme.name)
+        storage.set(COLOR, appearance.color.name)
+        storage.set(HUE, appearance.hue.toString())
+        storage.set(CONTRAST, appearance.contrast.name)
+        appearanceState.value = appearance
+    }
+
     internal companion object {
         const val CHECK_UNLOCK_KEY = "grocy.checkUnlockKey"
         const val SCANNER_ENGINE = "grocy.scannerEngine"
+        const val THEME = "grocy.theme"
+        const val COLOR = "grocy.color"
+        const val HUE = "grocy.hue"
+        const val CONTRAST = "grocy.contrast"
     }
 }

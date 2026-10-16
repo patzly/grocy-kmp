@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Titles -->
+  <string name="title_about">Acerca de</string>
+  <string name="title_feedback">Feedback</string>
+  <string name="title_help">Ajuda</string>
+  <string name="title_licenses">Licenças de código aberto</string>
+  <string name="title_logcat">Logcat</string>
+  <string name="title_settings">Definições</string>
+
+  <!-- Dialogs -->
+  <string name="dialog_pane_title">Caixa de diálogo</string>
+
+  <!-- Common actions -->
+  <string name="action_back">Voltar</string>
+  <string name="action_more_options">Mais opções</string>
+  <string name="action_cancel">Cancelar</string>
+  <string name="action_close">Fechar</string>
+  <string name="action_update">Atualizar</string>
+  <string name="action_later">Mais tarde</string>
+  <string name="action_learn_more">Saber mais</string>
+  <string name="action_open_play_store">Abrir Google Play</string>
+  <string name="action_recommend">Recomendar</string>
+  <string name="action_recommend_description">Fale do Grocy aos seus amigos</string>
+  <string name="action_rate">Avaliar no Google Play</string>
+  <string name="action_rate_description">Motive os programadores</string>
+  <string name="action_support">Apoiar o desenvolvimento</string>
+  <string name="action_support_description">Compre a aplicação de desbloqueio</string>
+  <string name="action_email">Enviar email</string>
+  <string name="action_email_description">Contacte os programadores</string>
+  <string name="action_issue">Abrir nova issue no GitHub</string>
+  <string name="action_issue_description">Comunique erros ou peça uma funcionalidade</string>
+  <string name="action_send_feedback">Enviar feedback</string>
+  <string name="action_show_logcat">Mostrar Logcat</string>
+  <string name="action_reload">Recarregar</string>
+  <string name="action_copy_to_clipboard">Copiar para a área de transferência</string>
+
+  <!-- Messages -->
+  <string name="msg_recommend">O Grocy gere as compras e a casa no seu próprio servidor Grocy: %1$s</string>
+  <string name="msg_feedback">Tem desejos, perguntas ou encontrou um erro? Contacte-nos, teremos todo o gosto em ajudar.\nCaso contrário, ficaríamos muito contentes com uma boa avaliação na Play Store.</string>
+  <string name="msg_unlock">Apoiar o desenvolvimento</string>
+  <string name="msg_unlock_description">A aplicação de desbloqueio é uma pequena compra no Google Play que apoia o desenvolvimento do Grocy. Depois de a instalar, também pode mudar para o leitor de códigos de barras do ML Kit.</string>
+
+  <!-- Login: choice -->
+  <string name="login_choice_title">Boas-vindas ao Grocy</string>
+  <!-- The slogan of Grocy, which stays English in every language -->
+  <string name="login_choice_subtitle">ERP beyond your fridge</string>
+  <string name="login_choice_own_server">Servidor próprio</string>
+  <string name="login_choice_demo_server">Servidor de demonstração</string>
+  <string name="login_choice_own_server_description">Leia o código de login ou introduza o endereço</string>
+  <string name="login_choice_demo_server_description">Experimente o Grocy com dados de exemplo</string>
+
+  <!-- Login: shared -->
+  <string name="login_title">Login</string>
+
+  <!-- Login: scan -->
+  <string name="login_scan_explanation">No Grocy, abra «Gerir chaves da API», crie uma chave e toque no respetivo ícone de código QR. Depois, leia o código aqui.</string>
+  <string name="login_scan_manual">Introduzir dados manualmente</string>
+  <string name="login_scan_manual_description">Endereço do Grocy ou Home Assistant</string>
+  <string name="login_scan_checking">A verificar o servidor…</string>
+
+  <!-- Login: manual -->
+  <string name="login_manual_type_grocy">Grocy</string>
+  <string name="login_manual_type_home_assistant">Home Assistant</string>
+  <string name="login_manual_server_url">Endereço do Grocy</string>
+  <string name="login_manual_url_invalid">Introduza um endereço válido</string>
+  <string name="login_manual_api_key">Chave da API</string>
+  <string name="login_manual_create_key">Criar chave</string>
+  <string name="login_manual_ha_url">Endereço do Home Assistant</string>
+  <string name="login_manual_ha_url_hint">Também funciona com o Nabu Casa</string>
+  <string name="login_manual_ha_token">Long-lived access token</string>
+  <string name="login_manual_ha_create_token">Criar token</string>
+  <string name="login_manual_addon_slug">Slug do add-on</string>
+  <string name="login_manual_addon_slug_hint">a0d7b954_grocy para o add-on Grocy do repositório de add-ons da comunidade</string>
+  <string name="login_manual_create_key_description">Abre «Gerir chaves da API» no Grocy</string>
+  <string name="login_manual_ha_create_token_description">Abre o seu perfil no Home Assistant</string>
+  <string name="login_manual_server_type">Tipo de servidor</string>
+  <string name="login_manual_server_type_description">O Grocy liga-se diretamente ao seu servidor Grocy; o Home Assistant, através do respetivo add-on Grocy.</string>
+  <string name="login_manual_group_grocy">Servidor Grocy</string>
+  <string name="login_manual_group_addon">Add-on Grocy</string>
+  <string name="login_manual_ha_unsupported">Os navegadores não conseguem fazer login através do ingress do Home Assistant. No Home Assistant, atribua uma porta ao add-on Grocy em «Rede» e, depois, faça login com esse endereço como servidor Grocy.</string>
+  <string name="login_manual_use_grocy">Fazer login com um endereço do Grocy</string>
+  <string name="login_manual_connect">Ligar</string>
+
+  <!-- Login: errors -->
+  <string name="login_error_unreachable">Não foi possível aceder ao servidor. Verifique a sua ligação e o endereço do servidor.</string>
+  <string name="login_error_unauthorized">A chave da API foi rejeitada.</string>
+  <string name="login_error_not_grocy">Este endereço não pertence a um servidor Grocy.</string>
+  <string name="login_error_unknown">Ocorreu um erro. Tente novamente.</string>
+  <string name="login_error_not_login_code">Este não é um código de login do Grocy. Leia o código QR de uma chave da API.</string>
+  <string name="login_error_calendar_code">Este é o código de uma ligação de calendário. Em vez disso, leia o código QR de uma chave da API.</string>
+  <string name="login_error_ha_token_rejected">O Home Assistant rejeitou o Long-lived access token.</string>
+  <string name="login_error_addon_not_found">O add-on Grocy não foi encontrado no Home Assistant. Verifique o slug do add-on.</string>
+  <string name="login_error_not_home_assistant">Este endereço não pertence a um servidor Home Assistant.</string>
+
+  <!-- Scanner -->
+  <string name="scanner_viewfinder">Imagem da câmara para ler códigos</string>
+  <string name="scanner_permission_message">Permita o acesso à câmara para ler códigos</string>
+  <string name="scanner_permission_allow">Permitir câmara</string>
+  <string name="scanner_permission_denied">O acesso à câmara está desativado. Pode permiti-lo nas definições da aplicação.</string>
+  <string name="scanner_permission_denied_browser">O acesso à câmara está bloqueado. Pode permiti-lo nas definições do site do seu navegador.</string>
+  <string name="scanner_open_settings">Abrir definições</string>
+  <string name="scanner_no_camera">Nenhuma câmara encontrada</string>
+  <string name="scanner_unsupported">Este navegador não permite o acesso à câmara aqui</string>
+  <string name="scanner_error">Não foi possível iniciar a câmara</string>
+  <string name="scanner_retry">Tentar novamente</string>
+  <string name="scanner_torch_on">Ligar a lanterna</string>
+  <string name="scanner_torch_off">Desligar a lanterna</string>
+
+  <!-- About -->
+  <string name="about_version">Versão</string>
+  <string name="about_update">Procurar atualizações</string>
+  <string name="about_update_description">Verifica se existe uma versão mais recente</string>
+  <string name="about_changelog">Histórico de modificações</string>
+  <string name="about_changelog_description">Novidades desta versão</string>
+  <string name="about_developer">Programador</string>
+  <string name="about_vending_description">Mais aplicações do programador</string>
+  <string name="about_key">Aplicação de desbloqueio</string>
+  <string name="about_key_description_not_installed">Não instalada</string>
+  <string name="about_key_description_installed">Instalada</string>
+  <string name="about_key_description_ignored">Ignorada</string>
+  <string name="about_github_description">Código-fonte</string>
+  <string name="about_translation_description">Ajude a traduzir o Grocy</string>
+  <string name="about_privacy">Política de privacidade</string>
+  <string name="about_privacy_description">Como os seus dados são tratados</string>
+
+  <!-- Help -->
+  <string name="help_placeholder">Pergunta de exemplo</string>
+  <string name="help_placeholder_answer">Resposta de exemplo.</string>
+
+  <!-- Updates -->
+  <string name="update_available">Atualização disponível</string>
+  <string name="update_available_version">O Grocy %1$s está disponível. Atualizar agora?</string>
+  <string name="update_available_unknown">Está disponível uma nova versão do Grocy. Atualizar agora?</string>
+  <string name="update_none">Atualizado</string>
+  <string name="update_none_description">O Grocy %1$s é a versão mais recente.</string>
+  <string name="update_failed">Falha ao procurar atualizações</string>
+  <string name="update_failed_description">Não foi possível procurar atualizações. Verifique a sua ligação à Internet e tente novamente.</string>
+
+  <!-- Settings -->
+  <string name="settings_general">Geral</string>
+  <string name="settings_general_description">Aspeto e idioma da aplicação</string>
+  <string name="settings_server">Servidor</string>
+  <string name="settings_server_description">O seu servidor Grocy e o seu login</string>
+  <string name="settings_user">Configurações do utilizador</string>
+  <string name="settings_user_description">As suas preferências guardadas no servidor</string>
+  <string name="settings_network">Rede</string>
+  <string name="settings_network_description">Como a aplicação chega ao seu servidor</string>
+  <string name="settings_behavior">Comportamento</string>
+  <string name="settings_behavior_description">Como a aplicação reage enquanto trabalha</string>
+  <string name="settings_scanner">Leitor de códigos</string>
+  <string name="settings_scanner_description">Como os códigos de barras são lidos</string>
+  <string name="settings_notifications">Notificações</string>
+  <string name="settings_notifications_description">Lembretes sobre o seu stock e as suas tarefas</string>
+  <string name="settings_backup">Cópia de segurança e restauro</string>
+  <string name="settings_backup_description">Guarde as suas definições num ficheiro ou restaure-as</string>
+  <string name="settings_reset">Repor tudo</string>
+  <string name="settings_reset_description">Repõe cada definição no valor padrão</string>
+  <string name="settings_language">Idioma</string>
+  <string name="settings_language_system">Predefinição do sistema</string>
+  <string name="settings_language_system_description">O idioma do seu dispositivo</string>
+  <string name="settings_language_info">As traduções são feitas com IA e revistas por voluntários. Se algo parecer errado ou faltar o seu idioma, pode ajudar.</string>
+  <string name="settings_theme">Tema</string>
+  <string name="settings_theme_description">Cores e brilho da aplicação</string>
+  <string name="settings_theme_dynamic">Dinâmico</string>
+  <string name="settings_theme_static">Estático</string>
+  <string name="settings_theme_hue">Matiz</string>
+  <string name="settings_theme_auto">Auto</string>
+  <string name="settings_theme_light">Claro</string>
+  <string name="settings_theme_dark">Escuro</string>
+  <string name="settings_contrast">Contraste</string>
+  <string name="settings_contrast_description">Mais contraste torna o texto e os controlos mais fáceis de ver</string>
+  <string name="settings_contrast_dynamic">As cores dinâmicas usam o contraste das definições do sistema</string>
+  <string name="settings_contrast_dynamic_unsupported">As cores dinâmicas suportam níveis de contraste a partir do Android 14</string>
+  <string name="settings_contrast_standard">Padrão</string>
+  <string name="settings_contrast_medium">Médio</string>
+  <string name="settings_contrast_high">Alto</string>
+  <string name="log_empty">Nenhum erro registado</string>
+  <string name="log_report_crash">Se a aplicação falhou ou algo correu mal, copie o registo e envie-o com o seu feedback, para que o erro possa ser corrigido.</string>
+</resources>

@@ -79,6 +79,21 @@
             }
         }
     </style>
+    <script>
+        // The language chosen in the app (WebAppLanguageStore), handed to Compose before it
+        // reads the browser's; only well-formed tags, an invalid one would break the start
+        try {
+            const language = localStorage.getItem('grocy.language');
+            if (language && /^[a-zA-Z]{2,3}(-[a-zA-Z0-9]{2,8})*$/.test(language)) {
+                new Intl.Locale(language);
+                Object.defineProperty(navigator, 'language', { get: () => language });
+                Object.defineProperty(navigator, 'languages', { get: () => [language] });
+                document.documentElement.lang = language;
+            }
+        } catch (e) {
+            // Blocked storage or an unknown tag: the browser language applies
+        }
+    </script>
     <script src="grocy.js"></script>
 </head>
 <body>

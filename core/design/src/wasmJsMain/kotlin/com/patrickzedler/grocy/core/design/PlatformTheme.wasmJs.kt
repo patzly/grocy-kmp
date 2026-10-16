@@ -48,3 +48,7 @@ actual fun rememberThemeFontsReady(): Boolean {
     )
     return regular != null && medium != null
 }
+
+actual val isDynamicColorAvailable: Boolean = false
+
+actual val dynamicColorFollowsSystemContrast: Boolean = false

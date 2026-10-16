@@ -1,6 +1,8 @@
 package com.patrickzedler.grocy.apps.shared
 
 import com.patrickzedler.grocy.core.data.credentials.CredentialStore
+import com.patrickzedler.grocy.core.data.language.AppLanguageStore
+import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.update.AppUpdater
 import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
@@ -16,6 +18,10 @@ import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 interface PlatformDependencies {
     val credentialStore: CredentialStore
     val settingsStore: SettingsStore
+    val appLanguageStore: AppLanguageStore
+
+    /** Null where the platform has no log to show (the web app). */
+    val logReader: LogReader?
 
     /** Null where no unlock app exists, which hides everything related to it. */
     val unlockChecker: UnlockChecker?

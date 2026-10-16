@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Titles -->
+  <string name="title_about">Over</string>
+  <string name="title_feedback">Feedback</string>
+  <string name="title_help">Help</string>
+  <string name="title_licenses">Opensourcelicenties</string>
+  <string name="title_logcat">Logcat</string>
+  <string name="title_settings">Instellingen</string>
+
+  <!-- Dialogs -->
+  <string name="dialog_pane_title">Dialoogvenster</string>
+
+  <!-- Common actions -->
+  <string name="action_back">Terug</string>
+  <string name="action_more_options">Meer opties</string>
+  <string name="action_cancel">Annuleer</string>
+  <string name="action_close">Sluit</string>
+  <string name="action_update">Bijwerken</string>
+  <string name="action_later">Later</string>
+  <string name="action_learn_more">Meer informatie</string>
+  <string name="action_open_play_store">Google Play openen</string>
+  <string name="action_recommend">Aanbevelen</string>
+  <string name="action_recommend_description">Vertel je vrienden over Grocy</string>
+  <string name="action_rate">Beoordelen op Google Play</string>
+  <string name="action_rate_description">Motiveer de ontwikkelaars</string>
+  <string name="action_support">Ondersteun de ontwikkeling</string>
+  <string name="action_support_description">Koop de ontgrendel-app</string>
+  <string name="action_email">E-mail sturen</string>
+  <string name="action_email_description">Neem contact op met de ontwikkelaars</string>
+  <string name="action_issue">Nieuwe issue openen op GitHub</string>
+  <string name="action_issue_description">Meld bugs of vraag een functie aan</string>
+  <string name="action_send_feedback">Feedback sturen</string>
+  <string name="action_show_logcat">Logcat tonen</string>
+  <string name="action_reload">Opnieuw laden</string>
+  <string name="action_copy_to_clipboard">Naar klembord kopiëren</string>
+
+  <!-- Messages -->
+  <string name="msg_recommend">Grocy houdt boodschappen en huishouden bij op je eigen Grocy-server: %1$s</string>
+  <string name="msg_feedback">Heb je wensen of vragen, of heb je een fout gevonden? Neem contact met ons op, we helpen je graag!\nAnders zijn we heel blij met een leuke beoordeling in de Play Store.</string>
+  <string name="msg_unlock">Ondersteun de ontwikkeling</string>
+  <string name="msg_unlock_description">De ontgrendel-app is een kleine aankoop op Google Play die de ontwikkeling van Grocy ondersteunt. Als die geïnstalleerd is, kun je ook overschakelen naar de streepjescodescanner van ML Kit.</string>
+
+  <!-- Login: choice -->
+  <string name="login_choice_title">Welkom bij Grocy</string>
+  <!-- The slogan of Grocy, which stays English in every language -->
+  <string name="login_choice_subtitle">ERP beyond your fridge</string>
+  <string name="login_choice_own_server">Eigen server</string>
+  <string name="login_choice_demo_server">Demoserver</string>
+  <string name="login_choice_own_server_description">Scan de inlogcode of voer het adres in</string>
+  <string name="login_choice_demo_server_description">Probeer Grocy uit met voorbeeldgegevens</string>
+
+  <!-- Login: shared -->
+  <string name="login_title">Login</string>
+
+  <!-- Login: scan -->
+  <string name="login_scan_explanation">Open in Grocy “Beheer API sleutels”, maak een sleutel aan en tik op het QR-code-icoon ervan. Scan de code daarna hier.</string>
+  <string name="login_scan_manual">Gegevens handmatig invoeren</string>
+  <string name="login_scan_manual_description">Grocy-adres of Home Assistant</string>
+  <string name="login_scan_checking">Server wordt gecontroleerd…</string>
+
+  <!-- Login: manual -->
+  <string name="login_manual_type_grocy">Grocy</string>
+  <string name="login_manual_type_home_assistant">Home Assistant</string>
+  <string name="login_manual_server_url">Grocy-adres</string>
+  <string name="login_manual_url_invalid">Voer een geldig adres in</string>
+  <string name="login_manual_api_key">API sleutel</string>
+  <string name="login_manual_create_key">Sleutel aanmaken</string>
+  <string name="login_manual_ha_url">Home Assistant-adres</string>
+  <string name="login_manual_ha_url_hint">Werkt ook met Nabu Casa</string>
+  <string name="login_manual_ha_token">Long-lived access token</string>
+  <string name="login_manual_ha_create_token">Token aanmaken</string>
+  <string name="login_manual_addon_slug">Add-on-slug</string>
+  <string name="login_manual_addon_slug_hint">a0d7b954_grocy voor de Grocy-add-on uit de community-add-on-repository</string>
+  <string name="login_manual_create_key_description">Opent “Beheer API sleutels” in Grocy</string>
+  <string name="login_manual_ha_create_token_description">Opent je profiel in Home Assistant</string>
+  <string name="login_manual_server_type">Servertype</string>
+  <string name="login_manual_server_type_description">Grocy maakt rechtstreeks verbinding met je Grocy-server, Home Assistant via de Grocy-add-on.</string>
+  <string name="login_manual_group_grocy">Grocy-server</string>
+  <string name="login_manual_group_addon">Grocy-add-on</string>
+  <string name="login_manual_ha_unsupported">Browsers kunnen niet inloggen via Home Assistant-ingress. Wijs in Home Assistant onder “Netwerk” een poort toe aan de Grocy-add-on en log daarna in met dat adres als Grocy-server.</string>
+  <string name="login_manual_use_grocy">Inloggen met een Grocy-adres</string>
+  <string name="login_manual_connect">Verbinden</string>
+
+  <!-- Login: errors -->
+  <string name="login_error_unreachable">De server is niet bereikbaar. Controleer je verbinding en het serveradres.</string>
+  <string name="login_error_unauthorized">De API sleutel is geweigerd.</string>
+  <string name="login_error_not_grocy">Dit adres hoort niet bij een Grocy-server.</string>
+  <string name="login_error_unknown">Er is iets misgegaan. Probeer het opnieuw.</string>
+  <string name="login_error_not_login_code">Dit is geen Grocy-inlogcode. Scan de QR-code van een API sleutel.</string>
+  <string name="login_error_calendar_code">Dit is de code van een agendalink. Scan in plaats daarvan de QR-code van een API sleutel.</string>
+  <string name="login_error_ha_token_rejected">Home Assistant heeft het long-lived access token geweigerd.</string>
+  <string name="login_error_addon_not_found">De Grocy-add-on is niet gevonden in Home Assistant. Controleer de add-on-slug.</string>
+  <string name="login_error_not_home_assistant">Dit adres hoort niet bij een Home Assistant-server.</string>
+
+  <!-- Scanner -->
+  <string name="scanner_viewfinder">Camerabeeld voor het scannen van codes</string>
+  <string name="scanner_permission_message">Geef toegang tot de camera om codes te scannen</string>
+  <string name="scanner_permission_allow">Camera toestaan</string>
+  <string name="scanner_permission_denied">Cameratoegang is uitgeschakeld. Je kunt die toestaan in de app-instellingen.</string>
+  <string name="scanner_permission_denied_browser">Cameratoegang is geblokkeerd. Je kunt die toestaan in de website-instellingen van je browser.</string>
+  <string name="scanner_open_settings">Instellingen openen</string>
+  <string name="scanner_no_camera">Geen camera gevonden</string>
+  <string name="scanner_unsupported">Deze browser staat hier geen cameratoegang toe</string>
+  <string name="scanner_error">De camera kon niet worden gestart</string>
+  <string name="scanner_retry">Opnieuw proberen</string>
+  <string name="scanner_torch_on">Zaklamp aanzetten</string>
+  <string name="scanner_torch_off">Zaklamp uitzetten</string>
+
+  <!-- About -->
+  <string name="about_version">Versie</string>
+  <string name="about_update">Controleren op updates</string>
+  <string name="about_update_description">Zoekt naar een nieuwere versie</string>
+  <string name="about_changelog">Changelog</string>
+  <string name="about_changelog_description">Nieuw in deze versie</string>
+  <string name="about_developer">Ontwikkelaar</string>
+  <string name="about_vending_description">Meer apps van de ontwikkelaar</string>
+  <string name="about_key">Ontgrendel-app</string>
+  <string name="about_key_description_not_installed">Niet geïnstalleerd</string>
+  <string name="about_key_description_installed">Geïnstalleerd</string>
+  <string name="about_key_description_ignored">Genegeerd</string>
+  <string name="about_github_description">Broncode</string>
+  <string name="about_translation_description">Help Grocy te vertalen</string>
+  <string name="about_privacy">Privacybeleid</string>
+  <string name="about_privacy_description">Hoe je gegevens worden verwerkt</string>
+
+  <!-- Help -->
+  <string name="help_placeholder">Voorbeeldvraag</string>
+  <string name="help_placeholder_answer">Voorbeeldantwoord.</string>
+
+  <!-- Updates -->
+  <string name="update_available">Update beschikbaar</string>
+  <string name="update_available_version">Grocy %1$s is beschikbaar. Nu bijwerken?</string>
+  <string name="update_available_unknown">Er is een nieuwe versie van Grocy beschikbaar. Nu bijwerken?</string>
+  <string name="update_none">Up-to-date</string>
+  <string name="update_none_description">Grocy %1$s is de nieuwste versie.</string>
+  <string name="update_failed">Controleren op updates mislukt</string>
+  <string name="update_failed_description">Kan niet controleren op updates. Controleer je internetverbinding en probeer het opnieuw.</string>
+
+  <!-- Settings -->
+  <string name="settings_general">Algemeen</string>
+  <string name="settings_general_description">Hoe de app eruitziet en spreekt</string>
+  <string name="settings_server">Server</string>
+  <string name="settings_server_description">Je Grocy-server en login</string>
+  <string name="settings_user">Gebruikersinstellingen</string>
+  <string name="settings_user_description">Je voorkeuren, opgeslagen op de server</string>
+  <string name="settings_network">Netwerk</string>
+  <string name="settings_network_description">Hoe de app je server bereikt</string>
+  <string name="settings_behavior">Gedrag</string>
+  <string name="settings_behavior_description">Hoe de app reageert terwijl je werkt</string>
+  <string name="settings_scanner">Scanner</string>
+  <string name="settings_scanner_description">Hoe streepjescodes worden gescand</string>
+  <string name="settings_notifications">Meldingen</string>
+  <string name="settings_notifications_description">Herinneringen over je voorraad en klusjes</string>
+  <string name="settings_backup">Back-up en herstel</string>
+  <string name="settings_backup_description">Sla je instellingen op in een bestand of zet ze terug</string>
+  <string name="settings_reset">Alles resetten</string>
+  <string name="settings_reset_description">Zet elke instelling terug naar de standaardwaarde</string>
+  <string name="settings_language">Taal</string>
+  <string name="settings_language_system">Systeemstandaard</string>
+  <string name="settings_language_system_description">De taal van je apparaat</string>
+  <string name="settings_language_info">Vertalingen worden met AI gemaakt en door vrijwilligers gecontroleerd. Klinkt iets niet goed of ontbreekt je taal, dan kun je helpen.</string>
+  <string name="settings_theme">Thema</string>
+  <string name="settings_theme_description">Kleuren en helderheid van de app</string>
+  <string name="settings_theme_dynamic">Dynamisch</string>
+  <string name="settings_theme_static">Statisch</string>
+  <string name="settings_theme_hue">Kleurtoon</string>
+  <string name="settings_theme_auto">Auto</string>
+  <string name="settings_theme_light">Licht</string>
+  <string name="settings_theme_dark">Donker</string>
+  <string name="settings_contrast">Contrast</string>
+  <string name="settings_contrast_description">Meer contrast maakt tekst en bedieningselementen beter zichtbaar</string>
+  <string name="settings_contrast_dynamic">Dynamische kleuren gebruiken het contrast uit de systeeminstellingen</string>
+  <string name="settings_contrast_dynamic_unsupported">Dynamische kleuren ondersteunen contrastniveaus vanaf Android 14</string>
+  <string name="settings_contrast_standard">Standaard</string>
+  <string name="settings_contrast_medium">Gemiddeld</string>
+  <string name="settings_contrast_high">Hoog</string>
+  <string name="log_empty">Geen fouten gelogd</string>
+  <string name="log_report_crash">Is de app gecrasht of ging er iets mis, kopieer dan het log en stuur het mee met je feedback, zodat de fout kan worden opgelost.</string>
+</resources>

@@ -5,11 +5,14 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.window.ComposeViewport
 import com.patrickzedler.grocy.apps.shared.AppGraph
 import com.patrickzedler.grocy.apps.shared.GrocyApp
 import com.patrickzedler.grocy.apps.shared.WebPlatformDependencies
 import com.patrickzedler.grocy.core.design.component.observeBrowserKeyboard
+import com.patrickzedler.grocy.core.model.isRightToLeft
 
 private const val VIEWPORT_CONTAINER_ID = "composeApp"
 
@@ -19,8 +22,18 @@ fun main() {
         WebPlatformDependencies(versionName = APP_VERSION_NAME, buildId = APP_BUILD_ID),
     )
     observeBrowserKeyboard(VIEWPORT_CONTAINER_ID)
+    // Android takes the direction from the language itself, Compose on the web does not
+    val layoutDirection = if (isRightToLeft(browserLanguage())) {
+        LayoutDirection.Rtl
+    } else {
+        LayoutDirection.Ltr
+    }
+    setDocumentDirection(if (layoutDirection == LayoutDirection.Rtl) "rtl" else "ltr")
     ComposeViewport(viewportContainerId = VIEWPORT_CONTAINER_ID) {
-        CompositionLocalProvider(LocalHapticFeedback provides NoHapticFeedback) {
+        CompositionLocalProvider(
+            LocalHapticFeedback provides NoHapticFeedback,
+            LocalLayoutDirection provides layoutDirection,
+        ) {
             GrocyApp(
                 graph = graph,
                 onContentReady = ::hideLoadingScreen,
@@ -41,3 +54,13 @@ private object NoHapticFeedback : HapticFeedback {
 @OptIn(ExperimentalWasmJsInterop::class)
 @JsFun("() => document.getElementById('loading')?.remove()")
 private external fun hideLoadingScreen()
+
+/** Also for the accessibility tree, which Compose mirrors into the page. */
+@OptIn(ExperimentalWasmJsInterop::class)
+@JsFun("(direction) => { document.documentElement.dir = direction; }")
+private external fun setDocumentDirection(direction: String)
+
+/** The language Compose uses for the texts, index.html puts the one chosen in the app there. */
+@OptIn(ExperimentalWasmJsInterop::class)
+@JsFun("() => navigator.language || 'en'")
+private external fun browserLanguage(): String

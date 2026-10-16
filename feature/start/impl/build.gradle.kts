@@ -8,6 +8,7 @@ kotlin {
             implementation(projects.core.design)
             implementation(projects.core.resources)
             implementation(projects.feature.about.api)
+            implementation(projects.feature.settings.api)
             implementation(projects.feature.start.api)
         }
     }

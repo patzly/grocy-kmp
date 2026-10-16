@@ -18,6 +18,8 @@
   <string name="title_feedback">Feedback</string>
   <string name="title_help">Help</string>
   <string name="title_licenses">Open source licenses</string>
+  <string name="title_logcat">Logcat</string>
+  <string name="title_settings">Settings</string>
 
   <!-- Dialogs -->
   <string name="dialog_pane_title">Dialog</string>
@@ -42,6 +44,9 @@
   <string name="action_issue">Open new issue on GitHub</string>
   <string name="action_issue_description">Report bugs or request a feature</string>
   <string name="action_send_feedback">Send feedback</string>
+  <string name="action_show_logcat">Show logcat</string>
+  <string name="action_reload">Reload</string>
+  <string name="action_copy_to_clipboard">Copy to clipboard</string>
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy keeps track of groceries and household on your own Grocy server: %1$s</string>
@@ -153,4 +158,45 @@
   <string name="update_none_description">Grocy %1$s is the latest version.</string>
   <string name="update_failed">Update check failed</string>
   <string name="update_failed_description">Could not check for updates. Check your internet connection and try again.</string>
+
+  <!-- Settings -->
+  <string name="settings_general">General</string>
+  <string name="settings_general_description">How the app looks and speaks</string>
+  <string name="settings_server">Server</string>
+  <string name="settings_server_description">Your Grocy server and login</string>
+  <string name="settings_user">User settings</string>
+  <string name="settings_user_description">Your preferences stored on the server</string>
+  <string name="settings_network">Network</string>
+  <string name="settings_network_description">How the app reaches your server</string>
+  <string name="settings_behavior">Behavior</string>
+  <string name="settings_behavior_description">How the app responds while you work</string>
+  <string name="settings_scanner">Scanner</string>
+  <string name="settings_scanner_description">How barcodes are scanned</string>
+  <string name="settings_notifications">Notifications</string>
+  <string name="settings_notifications_description">Reminders about your stock and chores</string>
+  <string name="settings_backup">Backup and restore</string>
+  <string name="settings_backup_description">Save your settings to a file or restore them</string>
+  <string name="settings_reset">Reset all</string>
+  <string name="settings_reset_description">Return every setting to its default</string>
+  <string name="settings_language">Language</string>
+  <string name="settings_language_system">System default</string>
+  <string name="settings_language_system_description">The language of your device</string>
+  <string name="settings_language_info">Translations are made with AI and checked by volunteers. If something sounds wrong or your language is missing, you can help.</string>
+  <string name="settings_theme">Theme</string>
+  <string name="settings_theme_description">Colors and brightness of the app</string>
+  <string name="settings_theme_dynamic">Dynamic</string>
+  <string name="settings_theme_static">Static</string>
+  <string name="settings_theme_hue">Color hue</string>
+  <string name="settings_theme_auto">Auto</string>
+  <string name="settings_theme_light">Light</string>
+  <string name="settings_theme_dark">Dark</string>
+  <string name="settings_contrast">Contrast</string>
+  <string name="settings_contrast_description">Higher contrast makes text and controls easier to see</string>
+  <string name="settings_contrast_dynamic">Dynamic colors use the contrast of the system settings</string>
+  <string name="settings_contrast_dynamic_unsupported">Dynamic colors support contrast levels from Android 14 on</string>
+  <string name="settings_contrast_standard">Standard</string>
+  <string name="settings_contrast_medium">Medium</string>
+  <string name="settings_contrast_high">High</string>
+  <string name="log_empty">No errors logged</string>
+  <string name="log_report_crash">If the app crashed or something went wrong, copy the log and send it with your feedback, so the error can be fixed.</string>
 </resources>

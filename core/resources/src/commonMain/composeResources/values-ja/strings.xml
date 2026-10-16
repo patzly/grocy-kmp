@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Titles -->
+  <string name="title_about">アプリについて</string>
+  <string name="title_feedback">フィードバック</string>
+  <string name="title_help">ヘルプ</string>
+  <string name="title_licenses">オープンソースライセンス</string>
+  <string name="title_logcat">Logcat</string>
+  <string name="title_settings">設定</string>
+
+  <!-- Dialogs -->
+  <string name="dialog_pane_title">ダイアログ</string>
+
+  <!-- Common actions -->
+  <string name="action_back">戻る</string>
+  <string name="action_more_options">その他のオプション</string>
+  <string name="action_cancel">キャンセル</string>
+  <string name="action_close">閉じる</string>
+  <string name="action_update">アップデート</string>
+  <string name="action_later">後で</string>
+  <string name="action_learn_more">詳細</string>
+  <string name="action_open_play_store">Google Playを開く</string>
+  <string name="action_recommend">おすすめ</string>
+  <string name="action_recommend_description">友だちにGrocyを紹介</string>
+  <string name="action_rate">Google Playで評価</string>
+  <string name="action_rate_description">開発者を応援</string>
+  <string name="action_support">開発をサポート</string>
+  <string name="action_support_description">アンロックアプリを購入</string>
+  <string name="action_email">メールを送信</string>
+  <string name="action_email_description">開発者に連絡</string>
+  <string name="action_issue">GitHubで新しいIssueを作成</string>
+  <string name="action_issue_description">バグの報告や機能のリクエスト</string>
+  <string name="action_send_feedback">フィードバックを送信</string>
+  <string name="action_show_logcat">Logcatを表示</string>
+  <string name="action_reload">再読み込み</string>
+  <string name="action_copy_to_clipboard">クリップボードにコピー</string>
+
+  <!-- Messages -->
+  <string name="msg_recommend">Grocyなら、ご自身のGrocyサーバーで食料品と家庭を管理できます：%1$s</string>
+  <string name="msg_feedback">ご要望やご質問、不具合はありませんか？お気軽にご連絡ください。喜んでお手伝いします！\nそうでなければ、Play Storeで高評価をいただけるととても嬉しいです。</string>
+  <string name="msg_unlock">開発をサポート</string>
+  <string name="msg_unlock_description">アンロックアプリはGoogle Playで購入できる少額のアプリで、Grocyの開発を支援します。インストールすると、ML Kitのバーコードスキャナーにも切り替えられます。</string>
+
+  <!-- Login: choice -->
+  <string name="login_choice_title">Grocyへようこそ</string>
+  <!-- The slogan of Grocy, which stays English in every language -->
+  <string name="login_choice_subtitle">ERP beyond your fridge</string>
+  <string name="login_choice_own_server">自分のサーバー</string>
+  <string name="login_choice_demo_server">デモサーバー</string>
+  <string name="login_choice_own_server_description">ログインコードをスキャンするか、アドレスを入力</string>
+  <string name="login_choice_demo_server_description">サンプルデータでGrocyを試す</string>
+
+  <!-- Login: shared -->
+  <string name="login_title">ログイン</string>
+
+  <!-- Login: scan -->
+  <string name="login_scan_explanation">Grocyで「APIキー管理」を開き、キーを作成してQRコードのアイコンをタップします。その後、ここでコードをスキャンしてください。</string>
+  <string name="login_scan_manual">手動で入力</string>
+  <string name="login_scan_manual_description">GrocyのアドレスまたはHome Assistant</string>
+  <string name="login_scan_checking">サーバーを確認しています…</string>
+
+  <!-- Login: manual -->
+  <string name="login_manual_type_grocy">Grocy</string>
+  <string name="login_manual_type_home_assistant">Home Assistant</string>
+  <string name="login_manual_server_url">Grocyのアドレス</string>
+  <string name="login_manual_url_invalid">有効なアドレスを入力してください</string>
+  <string name="login_manual_api_key">APIキー</string>
+  <string name="login_manual_create_key">キーを作成</string>
+  <string name="login_manual_ha_url">Home Assistantのアドレス</string>
+  <string name="login_manual_ha_url_hint">Nabu Casaでも利用できます</string>
+  <string name="login_manual_ha_token">Long-lived access token</string>
+  <string name="login_manual_ha_create_token">トークンを作成</string>
+  <string name="login_manual_addon_slug">アドオンのスラッグ</string>
+  <string name="login_manual_addon_slug_hint">コミュニティアドオンリポジトリのGrocyアドオンの場合はa0d7b954_grocy</string>
+  <string name="login_manual_create_key_description">Grocyの「APIキー管理」を開きます</string>
+  <string name="login_manual_ha_create_token_description">Home Assistantのプロフィールを開きます</string>
+  <string name="login_manual_server_type">サーバーの種類</string>
+  <string name="login_manual_server_type_description">「Grocy」はGrocyサーバーに直接接続し、「Home Assistant」はそのGrocyアドオン経由で接続します。</string>
+  <string name="login_manual_group_grocy">Grocyサーバー</string>
+  <string name="login_manual_group_addon">Grocyアドオン</string>
+  <string name="login_manual_ha_unsupported">ブラウザーからはHome Assistantのingress経由でログインできません。Home Assistantの「ネットワーク」でGrocyアドオンにポートを割り当て、そのアドレスをGrocyサーバーとして使ってログインしてください。</string>
+  <string name="login_manual_use_grocy">Grocyのアドレスでログイン</string>
+  <string name="login_manual_connect">接続</string>
+
+  <!-- Login: errors -->
+  <string name="login_error_unreachable">サーバーに接続できませんでした。接続状況とサーバーのアドレスを確認してください。</string>
+  <string name="login_error_unauthorized">APIキーが拒否されました。</string>
+  <string name="login_error_not_grocy">このアドレスはGrocyサーバーのものではありません。</string>
+  <string name="login_error_unknown">問題が発生しました。もう一度お試しください。</string>
+  <string name="login_error_not_login_code">これはGrocyのログインコードではありません。APIキーのQRコードをスキャンしてください。</string>
+  <string name="login_error_calendar_code">これはカレンダーリンクのコードです。代わりにAPIキーのQRコードをスキャンしてください。</string>
+  <string name="login_error_ha_token_rejected">Home AssistantがLong-lived access tokenを拒否しました。</string>
+  <string name="login_error_addon_not_found">Home AssistantでGrocyアドオンが見つかりませんでした。アドオンのスラッグを確認してください。</string>
+  <string name="login_error_not_home_assistant">このアドレスはHome Assistantサーバーのものではありません。</string>
+
+  <!-- Scanner -->
+  <string name="scanner_viewfinder">コードをスキャンするためのカメラ映像</string>
+  <string name="scanner_permission_message">コードをスキャンするには、カメラへのアクセスを許可してください</string>
+  <string name="scanner_permission_allow">カメラを許可</string>
+  <string name="scanner_permission_denied">カメラへのアクセスがオフになっています。アプリの設定で許可できます。</string>
+  <string name="scanner_permission_denied_browser">カメラへのアクセスがブロックされています。ブラウザーのサイト設定で許可できます。</string>
+  <string name="scanner_open_settings">設定を開く</string>
+  <string name="scanner_no_camera">カメラが見つかりません</string>
+  <string name="scanner_unsupported">このブラウザーでは、ここでカメラにアクセスできません</string>
+  <string name="scanner_error">カメラを起動できませんでした</string>
+  <string name="scanner_retry">再試行</string>
+  <string name="scanner_torch_on">ライトをオン</string>
+  <string name="scanner_torch_off">ライトをオフ</string>
+
+  <!-- About -->
+  <string name="about_version">バージョン</string>
+  <string name="about_update">アップデートを確認</string>
+  <string name="about_update_description">新しいバージョンを探す</string>
+  <string name="about_changelog">変更ログ</string>
+  <string name="about_changelog_description">このバージョンの新機能</string>
+  <string name="about_developer">開発者</string>
+  <string name="about_vending_description">開発者のその他のアプリ</string>
+  <string name="about_key">アンロックアプリ</string>
+  <string name="about_key_description_not_installed">未インストール</string>
+  <string name="about_key_description_installed">インストール済み</string>
+  <string name="about_key_description_ignored">無視</string>
+  <string name="about_github_description">ソースコード</string>
+  <string name="about_translation_description">Grocyの翻訳に協力</string>
+  <string name="about_privacy">プライバシーポリシー</string>
+  <string name="about_privacy_description">データの取り扱いについて</string>
+
+  <!-- Help -->
+  <string name="help_placeholder">仮の質問</string>
+  <string name="help_placeholder_answer">仮の回答です。</string>
+
+  <!-- Updates -->
+  <string name="update_available">アップデートがあります</string>
+  <string name="update_available_version">Grocy %1$sが利用可能です。今すぐアップデートしますか？</string>
+  <string name="update_available_unknown">Grocyの新しいバージョンが利用可能です。今すぐアップデートしますか？</string>
+  <string name="update_none">最新の状態です</string>
+  <string name="update_none_description">Grocy %1$sは最新バージョンです。</string>
+  <string name="update_failed">アップデートの確認に失敗しました</string>
+  <string name="update_failed_description">アップデートを確認できませんでした。インターネット接続を確認して、もう一度お試しください。</string>
+
+  <!-- Settings -->
+  <string name="settings_general">全般</string>
+  <string name="settings_general_description">アプリの表示と言語</string>
+  <string name="settings_server">サーバー</string>
+  <string name="settings_server_description">Grocyサーバーとログイン</string>
+  <string name="settings_user">ユーザー設定</string>
+  <string name="settings_user_description">サーバーに保存される個人設定</string>
+  <string name="settings_network">ネットワーク</string>
+  <string name="settings_network_description">アプリがサーバーに接続する方法</string>
+  <string name="settings_behavior">動作</string>
+  <string name="settings_behavior_description">操作中のアプリの反応</string>
+  <string name="settings_scanner">スキャナー</string>
+  <string name="settings_scanner_description">バーコードのスキャン方法</string>
+  <string name="settings_notifications">通知</string>
+  <string name="settings_notifications_description">ストックと家事のリマインダー</string>
+  <string name="settings_backup">バックアップと復元</string>
+  <string name="settings_backup_description">設定をファイルに保存、またはファイルから復元</string>
+  <string name="settings_reset">すべてリセット</string>
+  <string name="settings_reset_description">すべての設定を既定に戻す</string>
+  <string name="settings_language">言語</string>
+  <string name="settings_language_system">システムの既定</string>
+  <string name="settings_language_system_description">デバイスの言語</string>
+  <string name="settings_language_info">翻訳はAIで作成され、ボランティアが確認しています。おかしな表現がある場合や、お使いの言語がない場合は、ぜひご協力ください。</string>
+  <string name="settings_theme">テーマ</string>
+  <string name="settings_theme_description">アプリの色と明るさ</string>
+  <string name="settings_theme_dynamic">ダイナミック</string>
+  <string name="settings_theme_static">固定</string>
+  <string name="settings_theme_hue">色相</string>
+  <string name="settings_theme_auto">自動</string>
+  <string name="settings_theme_light">ライト</string>
+  <string name="settings_theme_dark">ダーク</string>
+  <string name="settings_contrast">コントラスト</string>
+  <string name="settings_contrast_description">コントラストを上げると、テキストや操作部品が見やすくなります</string>
+  <string name="settings_contrast_dynamic">ダイナミックカラーでは、システム設定のコントラストが使用されます</string>
+  <string name="settings_contrast_dynamic_unsupported">ダイナミックカラーのコントラストレベルはAndroid 14以降で利用できます</string>
+  <string name="settings_contrast_standard">標準</string>
+  <string name="settings_contrast_medium">中</string>
+  <string name="settings_contrast_high">高</string>
+  <string name="log_empty">エラーは記録されていません</string>
+  <string name="log_report_crash">アプリがクラッシュしたり問題が発生したりした場合は、ログをコピーしてフィードバックと一緒に送信してください。エラーの修正に役立ちます。</string>
+</resources>

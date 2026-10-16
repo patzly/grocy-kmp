@@ -27,6 +27,15 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             ?: error("Missing grocy.versionCode in the root gradle.properties")
         val nightlyVersionSuffix = providers.gradleProperty("grocy.nightlyVersionSuffix")
             .getOrElse("-nightly")
+        // The languages of the system settings are the app's, see AppLanguages in core:model
+        val localesConfig = providers.fileContents(
+            rootProject.layout.projectDirectory
+                .file("apps/shared/src/androidMain/res/xml/locales_config.xml"),
+        ).asText.get()
+        val appLanguages = Regex("""<locale android:name="([^"]+)"""").findAll(localesConfig)
+            .map { it.groupValues[1] }
+            .flatMap(::resourceLocaleFilters)
+            .toList()
 
         extensions.configure<ApplicationExtension> {
             namespace = moduleNamespace
@@ -55,7 +64,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
 
             androidResources {
                 // Only languages the app itself supports, libraries bring many more
-                localeFilters += listOf("en")
+                localeFilters += appLanguages
             }
 
             // Without the environment variables the builds stay unsigned, never debug-signed
@@ -118,4 +127,14 @@ private fun ApplicationExtension.signingConfigFromEnv(
         keyAlias = env.environmentVariable("${prefix}_KEY_ALIAS").get()
         keyPassword = env.environmentVariable("${prefix}_KEY_PASSWORD").get()
     }
+}
+
+/**
+ * Android resource locale filters of a BCP 47 [tag]: regions as "pt-rBR", Hebrew also under its
+ * old code "iw", which library resources still use.
+ */
+internal fun resourceLocaleFilters(tag: String): List<String> {
+    val parts = tag.split('-')
+    val filter = if (parts.size == 2) "${parts[0]}-r${parts[1]}" else tag
+    return if (parts[0] == "he") listOf(filter, filter.replaceFirst("he", "iw")) else listOf(filter)
 }

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Titles -->
+  <string name="title_about">關於</string>
+  <string name="title_feedback">意見回饋</string>
+  <string name="title_help">說明</string>
+  <string name="title_licenses">開放原始碼授權</string>
+  <string name="title_logcat">Logcat</string>
+  <string name="title_settings">設定</string>
+
+  <!-- Dialogs -->
+  <string name="dialog_pane_title">對話方塊</string>
+
+  <!-- Common actions -->
+  <string name="action_back">返回</string>
+  <string name="action_more_options">更多選項</string>
+  <string name="action_cancel">取消</string>
+  <string name="action_close">關閉</string>
+  <string name="action_update">更新</string>
+  <string name="action_later">稍後</string>
+  <string name="action_learn_more">瞭解詳情</string>
+  <string name="action_open_play_store">開啟 Google Play</string>
+  <string name="action_recommend">推薦</string>
+  <string name="action_recommend_description">向朋友推薦 Grocy</string>
+  <string name="action_rate">在 Google Play 上評分</string>
+  <string name="action_rate_description">給開發人員一點鼓勵</string>
+  <string name="action_support">支持開發</string>
+  <string name="action_support_description">購買解鎖應用程式</string>
+  <string name="action_email">傳送電子郵件</string>
+  <string name="action_email_description">聯絡開發人員</string>
+  <string name="action_issue">在 GitHub 上建立新 Issue</string>
+  <string name="action_issue_description">回報錯誤或提出功能需求</string>
+  <string name="action_send_feedback">傳送意見回饋</string>
+  <string name="action_show_logcat">顯示 Logcat</string>
+  <string name="action_reload">重新載入</string>
+  <string name="action_copy_to_clipboard">複製到剪貼簿</string>
+
+  <!-- Messages -->
+  <string name="msg_recommend">Grocy 在您自己的 Grocy 伺服器上管理食品雜貨與家務：%1$s</string>
+  <string name="msg_feedback">您有任何期望、問題或遇到錯誤嗎？歡迎與我們聯絡，我們很樂意協助！\n若沒有，也非常歡迎您在 Play Store 給我們好評。</string>
+  <string name="msg_unlock">支持開發</string>
+  <string name="msg_unlock_description">解鎖應用程式是 Google Play 上的小額購買，用來支持 Grocy 的開發。安裝後，您也可以改用 ML Kit 條碼掃描器。</string>
+
+  <!-- Login: choice -->
+  <string name="login_choice_title">歡迎使用 Grocy</string>
+  <!-- The slogan of Grocy, which stays English in every language -->
+  <string name="login_choice_subtitle">ERP beyond your fridge</string>
+  <string name="login_choice_own_server">自己的伺服器</string>
+  <string name="login_choice_demo_server">示範伺服器</string>
+  <string name="login_choice_own_server_description">掃描登入碼或輸入網址</string>
+  <string name="login_choice_demo_server_description">使用範例資料試用 Grocy</string>
+
+  <!-- Login: shared -->
+  <string name="login_title">登入</string>
+
+  <!-- Login: scan -->
+  <string name="login_scan_explanation">在 Grocy 中開啟「管理 API 金鑰」，建立金鑰並輕觸其 QR Code 圖示，然後在這裡掃描該條碼。</string>
+  <string name="login_scan_manual">手動輸入資料</string>
+  <string name="login_scan_manual_description">Grocy 網址或 Home Assistant</string>
+  <string name="login_scan_checking">正在檢查伺服器…</string>
+
+  <!-- Login: manual -->
+  <string name="login_manual_type_grocy">Grocy</string>
+  <string name="login_manual_type_home_assistant">Home Assistant</string>
+  <string name="login_manual_server_url">Grocy 網址</string>
+  <string name="login_manual_url_invalid">請輸入有效的網址</string>
+  <string name="login_manual_api_key">API 金鑰</string>
+  <string name="login_manual_create_key">建立金鑰</string>
+  <string name="login_manual_ha_url">Home Assistant 網址</string>
+  <string name="login_manual_ha_url_hint">也適用於 Nabu Casa</string>
+  <string name="login_manual_ha_token">Long-lived access token</string>
+  <string name="login_manual_ha_create_token">建立權杖</string>
+  <string name="login_manual_addon_slug">附加元件 Slug</string>
+  <string name="login_manual_addon_slug_hint">社群附加元件存放庫中的 Grocy 附加元件為 a0d7b954_grocy</string>
+  <string name="login_manual_create_key_description">在 Grocy 中開啟「管理 API 金鑰」</string>
+  <string name="login_manual_ha_create_token_description">在 Home Assistant 中開啟您的個人資料</string>
+  <string name="login_manual_server_type">伺服器類型</string>
+  <string name="login_manual_server_type_description">「Grocy」會直接連線到您的 Grocy 伺服器，「Home Assistant」則透過其 Grocy 附加元件連線。</string>
+  <string name="login_manual_group_grocy">Grocy 伺服器</string>
+  <string name="login_manual_group_addon">Grocy 附加元件</string>
+  <string name="login_manual_ha_unsupported">瀏覽器無法透過 Home Assistant ingress 登入。請在 Home Assistant 的「網路」中為 Grocy 附加元件指派連接埠，然後以該網址作為 Grocy 伺服器登入。</string>
+  <string name="login_manual_use_grocy">使用 Grocy 網址登入</string>
+  <string name="login_manual_connect">連線</string>
+
+  <!-- Login: errors -->
+  <string name="login_error_unreachable">無法連線到伺服器。請檢查您的網路連線和伺服器網址。</string>
+  <string name="login_error_unauthorized">API 金鑰遭到拒絕。</string>
+  <string name="login_error_not_grocy">此網址不屬於 Grocy 伺服器。</string>
+  <string name="login_error_unknown">發生錯誤，請再試一次。</string>
+  <string name="login_error_not_login_code">這不是 Grocy 登入碼。請掃描 API 金鑰的 QR Code。</string>
+  <string name="login_error_calendar_code">這是日曆連結的條碼。請改為掃描 API 金鑰的 QR Code。</string>
+  <string name="login_error_ha_token_rejected">Home Assistant 拒絕了 Long-lived access token。</string>
+  <string name="login_error_addon_not_found">在 Home Assistant 中找不到 Grocy 附加元件。請檢查附加元件 Slug。</string>
+  <string name="login_error_not_home_assistant">此網址不屬於 Home Assistant 伺服器。</string>
+
+  <!-- Scanner -->
+  <string name="scanner_viewfinder">用於掃描條碼的相機畫面</string>
+  <string name="scanner_permission_message">允許存取相機以掃描條碼</string>
+  <string name="scanner_permission_allow">允許使用相機</string>
+  <string name="scanner_permission_denied">相機存取權已關閉。您可以在應用程式設定中允許存取。</string>
+  <string name="scanner_permission_denied_browser">相機存取權已遭封鎖。您可以在瀏覽器的網站設定中允許存取。</string>
+  <string name="scanner_open_settings">開啟設定</string>
+  <string name="scanner_no_camera">找不到相機</string>
+  <string name="scanner_unsupported">此瀏覽器不允許在此存取相機</string>
+  <string name="scanner_error">無法啟動相機</string>
+  <string name="scanner_retry">重試</string>
+  <string name="scanner_torch_on">開啟手電筒</string>
+  <string name="scanner_torch_off">關閉手電筒</string>
+
+  <!-- About -->
+  <string name="about_version">版本</string>
+  <string name="about_update">檢查更新</string>
+  <string name="about_update_description">尋找較新的版本</string>
+  <string name="about_changelog">更新日誌</string>
+  <string name="about_changelog_description">此版本的新功能</string>
+  <string name="about_developer">開發人員</string>
+  <string name="about_vending_description">開發人員的其他應用程式</string>
+  <string name="about_key">解鎖應用程式</string>
+  <string name="about_key_description_not_installed">未安裝</string>
+  <string name="about_key_description_installed">已安裝</string>
+  <string name="about_key_description_ignored">已忽略</string>
+  <string name="about_github_description">原始碼</string>
+  <string name="about_translation_description">協助翻譯 Grocy</string>
+  <string name="about_privacy">隱私權政策</string>
+  <string name="about_privacy_description">您的資料如何處理</string>
+
+  <!-- Help -->
+  <string name="help_placeholder">預留問題</string>
+  <string name="help_placeholder_answer">預留答案。</string>
+
+  <!-- Updates -->
+  <string name="update_available">有可用的更新</string>
+  <string name="update_available_version">Grocy %1$s 已推出。要立即更新嗎？</string>
+  <string name="update_available_unknown">Grocy 有新版本可用。要立即更新嗎？</string>
+  <string name="update_none">已是最新版本</string>
+  <string name="update_none_description">Grocy %1$s 是最新版本。</string>
+  <string name="update_failed">檢查更新失敗</string>
+  <string name="update_failed_description">無法檢查更新。請檢查您的網路連線，然後再試一次。</string>
+
+  <!-- Settings -->
+  <string name="settings_general">一般</string>
+  <string name="settings_general_description">應用程式的外觀與語言</string>
+  <string name="settings_server">伺服器</string>
+  <string name="settings_server_description">您的 Grocy 伺服器與登入資訊</string>
+  <string name="settings_user">使用者設定</string>
+  <string name="settings_user_description">儲存在伺服器上的個人偏好設定</string>
+  <string name="settings_network">網路</string>
+  <string name="settings_network_description">應用程式如何連線到您的伺服器</string>
+  <string name="settings_behavior">行為</string>
+  <string name="settings_behavior_description">應用程式在您操作時如何回應</string>
+  <string name="settings_scanner">掃描器</string>
+  <string name="settings_scanner_description">條碼的掃描方式</string>
+  <string name="settings_notifications">通知</string>
+  <string name="settings_notifications_description">關於庫存與家務的提醒</string>
+  <string name="settings_backup">備份與還原</string>
+  <string name="settings_backup_description">將設定儲存到檔案或從檔案還原</string>
+  <string name="settings_reset">全部重設</string>
+  <string name="settings_reset_description">將所有設定還原為預設值</string>
+  <string name="settings_language">語言</string>
+  <string name="settings_language_system">系統預設</string>
+  <string name="settings_language_system_description">您裝置的語言</string>
+  <string name="settings_language_info">翻譯由 AI 產生，並由志工檢查。如果內容聽起來不對，或缺少您的語言，歡迎協助改進。</string>
+  <string name="settings_theme">主題</string>
+  <string name="settings_theme_description">應用程式的色彩與亮度</string>
+  <string name="settings_theme_dynamic">動態</string>
+  <string name="settings_theme_static">靜態</string>
+  <string name="settings_theme_hue">色調</string>
+  <string name="settings_theme_auto">自動</string>
+  <string name="settings_theme_light">淺色</string>
+  <string name="settings_theme_dark">深色</string>
+  <string name="settings_contrast">對比</string>
+  <string name="settings_contrast_description">提高對比可讓文字和控制項更容易看清楚</string>
+  <string name="settings_contrast_dynamic">動態色彩會使用系統設定的對比</string>
+  <string name="settings_contrast_dynamic_unsupported">動態色彩從 Android 14 起支援對比等級</string>
+  <string name="settings_contrast_standard">標準</string>
+  <string name="settings_contrast_medium">中</string>
+  <string name="settings_contrast_high">高</string>
+  <string name="log_empty">未記錄任何錯誤</string>
+  <string name="log_report_crash">如果應用程式當機或發生問題，請複製記錄檔並隨意見回饋一起傳送，以便修正錯誤。</string>
+</resources>

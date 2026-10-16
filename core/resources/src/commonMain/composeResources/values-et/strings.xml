@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Titles -->
+  <string name="title_about">Teave</string>
+  <string name="title_feedback">Tagasiside</string>
+  <string name="title_help">Abi</string>
+  <string name="title_licenses">Avatud lähtekoodi litsentsid</string>
+  <string name="title_logcat">Logcat</string>
+  <string name="title_settings">Seaded</string>
+
+  <!-- Dialogs -->
+  <string name="dialog_pane_title">Dialoog</string>
+
+  <!-- Common actions -->
+  <string name="action_back">Tagasi</string>
+  <string name="action_more_options">Rohkem valikuid</string>
+  <string name="action_cancel">Tühista</string>
+  <string name="action_close">Sulge</string>
+  <string name="action_update">Uuenda</string>
+  <string name="action_later">Hiljem</string>
+  <string name="action_learn_more">Loe lähemalt</string>
+  <string name="action_open_play_store">Ava Google Play</string>
+  <string name="action_recommend">Soovita</string>
+  <string name="action_recommend_description">Räägi sõpradele Grocyst</string>
+  <string name="action_rate">Hinda Google Plays</string>
+  <string name="action_rate_description">Motiveeri arendajaid</string>
+  <string name="action_support">Toeta arendust</string>
+  <string name="action_support_description">Osta avamisrakendus</string>
+  <string name="action_email">Saada e-kiri</string>
+  <string name="action_email_description">Võta arendajatega ühendust</string>
+  <string name="action_issue">Ava GitHubis uus probleem</string>
+  <string name="action_issue_description">Teata vigadest või soovi uut funktsiooni</string>
+  <string name="action_send_feedback">Saada tagasisidet</string>
+  <string name="action_show_logcat">Näita logcati</string>
+  <string name="action_reload">Laadi uuesti</string>
+  <string name="action_copy_to_clipboard">Kopeeri lõikelauale</string>
+
+  <!-- Messages -->
+  <string name="msg_recommend">Grocy peab arvet toidukaupade ja majapidamise üle sinu enda Grocy serveris: %1$s</string>
+  <string name="msg_feedback">Kas sul on soove või küsimusi või leidsid vea? Võta meiega ühendust, aitame hea meelega!\nMuidu rõõmustaksime väga toreda arvustuse üle Play Store’is.</string>
+  <string name="msg_unlock">Toeta arendust</string>
+  <string name="msg_unlock_description">Avamisrakendus on väike ost Google Plays, mis toetab Grocy arendust. Kui see on installitud, saad lülituda ka ML Kiti triipkoodi skännerile.</string>
+
+  <!-- Login: choice -->
+  <string name="login_choice_title">Tere tulemast Grocysse</string>
+  <!-- The slogan of Grocy, which stays English in every language -->
+  <string name="login_choice_subtitle">ERP beyond your fridge</string>
+  <string name="login_choice_own_server">Oma server</string>
+  <string name="login_choice_demo_server">Demoserver</string>
+  <string name="login_choice_own_server_description">Skänni sisselogimiskood või sisesta aadress</string>
+  <string name="login_choice_demo_server_description">Proovi Grocyt näidisandmetega</string>
+
+  <!-- Login: shared -->
+  <string name="login_title">Logi sisse</string>
+
+  <!-- Login: scan -->
+  <string name="login_scan_explanation">Ava Grocys „Halda API võtmeid“, loo võti ja puuduta selle QR-koodi ikooni. Seejärel skänni kood siin.</string>
+  <string name="login_scan_manual">Sisesta andmed käsitsi</string>
+  <string name="login_scan_manual_description">Grocy aadress või Home Assistant</string>
+  <string name="login_scan_checking">Serveri kontrollimine…</string>
+
+  <!-- Login: manual -->
+  <string name="login_manual_type_grocy">Grocy</string>
+  <string name="login_manual_type_home_assistant">Home Assistant</string>
+  <string name="login_manual_server_url">Grocy aadress</string>
+  <string name="login_manual_url_invalid">Sisesta kehtiv aadress</string>
+  <string name="login_manual_api_key">API võti</string>
+  <string name="login_manual_create_key">Loo võti</string>
+  <string name="login_manual_ha_url">Home Assistanti aadress</string>
+  <string name="login_manual_ha_url_hint">Töötab ka Nabu Casaga</string>
+  <string name="login_manual_ha_token">Long-lived access token</string>
+  <string name="login_manual_ha_create_token">Loo token</string>
+  <string name="login_manual_addon_slug">Lisandmooduli slug</string>
+  <string name="login_manual_addon_slug_hint">a0d7b954_grocy kogukonna lisandmoodulite hoidla Grocy lisandmooduli jaoks</string>
+  <string name="login_manual_create_key_description">Avab Grocys „Halda API võtmeid“</string>
+  <string name="login_manual_ha_create_token_description">Avab sinu profiili Home Assistantis</string>
+  <string name="login_manual_server_type">Serveri tüüp</string>
+  <string name="login_manual_server_type_description">Grocy ühendub otse sinu Grocy serveriga, Home Assistant oma Grocy lisandmooduli kaudu.</string>
+  <string name="login_manual_group_grocy">Grocy server</string>
+  <string name="login_manual_group_addon">Grocy lisandmoodul</string>
+  <string name="login_manual_ha_unsupported">Brauserid ei saa Home Assistanti Ingressi kaudu sisse logida. Määra Home Assistantis jaotises „Võrk“ Grocy lisandmoodulile port ja logi siis selle aadressiga Grocy serverina sisse.</string>
+  <string name="login_manual_use_grocy">Logi sisse Grocy aadressiga</string>
+  <string name="login_manual_connect">Ühenda</string>
+
+  <!-- Login: errors -->
+  <string name="login_error_unreachable">Serveriga ei saadud ühendust. Kontrolli oma ühendust ja serveri aadressi.</string>
+  <string name="login_error_unauthorized">API võti lükati tagasi.</string>
+  <string name="login_error_not_grocy">See aadress ei kuulu Grocy serverile.</string>
+  <string name="login_error_unknown">Midagi läks valesti. Palun proovi uuesti.</string>
+  <string name="login_error_not_login_code">See ei ole Grocy sisselogimiskood. Skänni API võtme QR-kood.</string>
+  <string name="login_error_calendar_code">See on kalendrilingi kood. Skänni selle asemel API võtme QR-kood.</string>
+  <string name="login_error_ha_token_rejected">Home Assistant lükkas long-lived access tokeni tagasi.</string>
+  <string name="login_error_addon_not_found">Grocy lisandmoodulit ei leitud Home Assistantist. Kontrolli lisandmooduli slugi.</string>
+  <string name="login_error_not_home_assistant">See aadress ei kuulu Home Assistanti serverile.</string>
+
+  <!-- Scanner -->
+  <string name="scanner_viewfinder">Kaamerapilt koodide skännimiseks</string>
+  <string name="scanner_permission_message">Koodide skännimiseks luba juurdepääs kaamerale</string>
+  <string name="scanner_permission_allow">Luba kaamera</string>
+  <string name="scanner_permission_denied">Juurdepääs kaamerale on välja lülitatud. Saad selle rakenduse seadetes lubada.</string>
+  <string name="scanner_permission_denied_browser">Juurdepääs kaamerale on blokeeritud. Saad selle oma brauseri saidiseadetes lubada.</string>
+  <string name="scanner_open_settings">Ava seaded</string>
+  <string name="scanner_no_camera">Kaamerat ei leitud</string>
+  <string name="scanner_unsupported">See brauser ei luba siin kaamerale juurde pääseda</string>
+  <string name="scanner_error">Kaamerat ei õnnestunud käivitada</string>
+  <string name="scanner_retry">Proovi uuesti</string>
+  <string name="scanner_torch_on">Lülita taskulamp sisse</string>
+  <string name="scanner_torch_off">Lülita taskulamp välja</string>
+
+  <!-- About -->
+  <string name="about_version">Versioon</string>
+  <string name="about_update">Otsi uuendusi</string>
+  <string name="about_update_description">Kontrollib, kas on uuem versioon</string>
+  <string name="about_changelog">Muutuste logi</string>
+  <string name="about_changelog_description">Uut selles versioonis</string>
+  <string name="about_developer">Arendaja</string>
+  <string name="about_vending_description">Arendaja teised rakendused</string>
+  <string name="about_key">Avamisrakendus</string>
+  <string name="about_key_description_not_installed">Pole installitud</string>
+  <string name="about_key_description_installed">Installitud</string>
+  <string name="about_key_description_ignored">Eiratud</string>
+  <string name="about_github_description">Lähtekood</string>
+  <string name="about_translation_description">Aita Grocyt tõlkida</string>
+  <string name="about_privacy">Privaatsuspoliitika</string>
+  <string name="about_privacy_description">Kuidas sinu andmeid töödeldakse</string>
+
+  <!-- Help -->
+  <string name="help_placeholder">Kohatäitjaküsimus</string>
+  <string name="help_placeholder_answer">Kohatäitjavastus.</string>
+
+  <!-- Updates -->
+  <string name="update_available">Uuendus on saadaval</string>
+  <string name="update_available_version">Grocy %1$s on saadaval. Kas uuendada kohe?</string>
+  <string name="update_available_unknown">Grocy uus versioon on saadaval. Kas uuendada kohe?</string>
+  <string name="update_none">Ajakohane</string>
+  <string name="update_none_description">Grocy %1$s on uusim versioon.</string>
+  <string name="update_failed">Uuenduste otsimine ebaõnnestus</string>
+  <string name="update_failed_description">Uuendusi ei õnnestunud otsida. Kontrolli oma internetiühendust ja proovi uuesti.</string>
+
+  <!-- Settings -->
+  <string name="settings_general">Üldine</string>
+  <string name="settings_general_description">Kuidas rakendus välja näeb ja räägib</string>
+  <string name="settings_server">Server</string>
+  <string name="settings_server_description">Sinu Grocy server ja sisselogimine</string>
+  <string name="settings_user">Kasutajaseaded</string>
+  <string name="settings_user_description">Sinu eelistused, salvestatud serverisse</string>
+  <string name="settings_network">Võrk</string>
+  <string name="settings_network_description">Kuidas rakendus sinu serverini jõuab</string>
+  <string name="settings_behavior">Käitumine</string>
+  <string name="settings_behavior_description">Kuidas rakendus töö ajal reageerib</string>
+  <string name="settings_scanner">Skänner</string>
+  <string name="settings_scanner_description">Kuidas triipkoode skännitakse</string>
+  <string name="settings_notifications">Teavitused</string>
+  <string name="settings_notifications_description">Meeldetuletused varude ja majapidamistööde kohta</string>
+  <string name="settings_backup">Varundamine ja taastamine</string>
+  <string name="settings_backup_description">Salvesta oma seaded faili või taasta need</string>
+  <string name="settings_reset">Nulli kõik</string>
+  <string name="settings_reset_description">Taastab kõigi seadete vaikeväärtused</string>
+  <string name="settings_language">Keel</string>
+  <string name="settings_language_system">Süsteemi vaikimisi</string>
+  <string name="settings_language_system_description">Sinu seadme keel</string>
+  <string name="settings_language_info">Tõlked tehakse tehisintellekti abil ja vabatahtlikud kontrollivad neid. Kui miski kõlab valesti või sinu keel puudub, saad aidata.</string>
+  <string name="settings_theme">Teema</string>
+  <string name="settings_theme_description">Rakenduse värvid ja heledus</string>
+  <string name="settings_theme_dynamic">Dünaamiline</string>
+  <string name="settings_theme_static">Staatiline</string>
+  <string name="settings_theme_hue">Värvitoon</string>
+  <string name="settings_theme_auto">Auto</string>
+  <string name="settings_theme_light">Hele</string>
+  <string name="settings_theme_dark">Tume</string>
+  <string name="settings_contrast">Kontrast</string>
+  <string name="settings_contrast_description">Suurem kontrast muudab teksti ja juhtelemendid paremini nähtavaks</string>
+  <string name="settings_contrast_dynamic">Dünaamilised värvid kasutavad süsteemiseadete kontrasti</string>
+  <string name="settings_contrast_dynamic_unsupported">Dünaamilised värvid toetavad kontrastitasemeid alates Android 14-st</string>
+  <string name="settings_contrast_standard">Standardne</string>
+  <string name="settings_contrast_medium">Keskmine</string>
+  <string name="settings_contrast_high">Kõrge</string>
+  <string name="log_empty">Vigu pole logitud</string>
+  <string name="log_report_crash">Kui rakendus jooksis kokku või midagi läks valesti, kopeeri logi ja saada see koos tagasisidega, et viga saaks parandada.</string>
+</resources>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Titles -->
+  <string name="title_about">О приложении</string>
+  <string name="title_feedback">Отзыв</string>
+  <string name="title_help">Справка</string>
+  <string name="title_licenses">Лицензии открытого ПО</string>
+  <string name="title_logcat">Logcat</string>
+  <string name="title_settings">Настройки</string>
+
+  <!-- Dialogs -->
+  <string name="dialog_pane_title">Диалоговое окно</string>
+
+  <!-- Common actions -->
+  <string name="action_back">Назад</string>
+  <string name="action_more_options">Другие параметры</string>
+  <string name="action_cancel">Отмена</string>
+  <string name="action_close">Закрыть</string>
+  <string name="action_update">Обновить</string>
+  <string name="action_later">Позже</string>
+  <string name="action_learn_more">Подробнее</string>
+  <string name="action_open_play_store">Открыть Google Play</string>
+  <string name="action_recommend">Рекомендовать</string>
+  <string name="action_recommend_description">Расскажите друзьям о Grocy</string>
+  <string name="action_rate">Оценить в Google Play</string>
+  <string name="action_rate_description">Поддержите разработчиков</string>
+  <string name="action_support">Поддержать разработку</string>
+  <string name="action_support_description">Купите приложение разблокировки</string>
+  <string name="action_email">Отправить письмо</string>
+  <string name="action_email_description">Свяжитесь с разработчиками</string>
+  <string name="action_issue">Создать issue на GitHub</string>
+  <string name="action_issue_description">Сообщите об ошибке или предложите функцию</string>
+  <string name="action_send_feedback">Отправить отзыв</string>
+  <string name="action_show_logcat">Показать logcat</string>
+  <string name="action_reload">Перезагрузить</string>
+  <string name="action_copy_to_clipboard">Копировать в буфер обмена</string>
+
+  <!-- Messages -->
+  <string name="msg_recommend">Grocy ведёт учёт продуктов и домашнего хозяйства на вашем собственном сервере Grocy: %1$s</string>
+  <string name="msg_feedback">Есть пожелания, вопросы или нашли ошибку? Напишите нам, мы с радостью поможем!\nА если всё хорошо, будем очень рады отзыву в Play Store.</string>
+  <string name="msg_unlock">Поддержать разработку</string>
+  <string name="msg_unlock_description">Покупая недорогое приложение разблокировки в Google Play, вы поддерживаете разработку Grocy. После его установки можно также переключиться на сканер штрихкодов ML Kit.</string>
+
+  <!-- Login: choice -->
+  <string name="login_choice_title">Добро пожаловать в Grocy</string>
+  <!-- The slogan of Grocy, which stays English in every language -->
+  <string name="login_choice_subtitle">ERP beyond your fridge</string>
+  <string name="login_choice_own_server">Свой сервер</string>
+  <string name="login_choice_demo_server">Демо-сервер</string>
+  <string name="login_choice_own_server_description">Отсканируйте код входа или введите адрес</string>
+  <string name="login_choice_demo_server_description">Попробуйте Grocy с демонстрационными данными</string>
+
+  <!-- Login: shared -->
+  <string name="login_title">Вход</string>
+
+  <!-- Login: scan -->
+  <string name="login_scan_explanation">Откройте в Grocy «Управление ключами доступа к API», создайте ключ и нажмите на его значок QR-кода. Затем отсканируйте код здесь.</string>
+  <string name="login_scan_manual">Ввести данные вручную</string>
+  <string name="login_scan_manual_description">Адрес Grocy или Home Assistant</string>
+  <string name="login_scan_checking">Проверка сервера…</string>
+
+  <!-- Login: manual -->
+  <string name="login_manual_type_grocy">Grocy</string>
+  <string name="login_manual_type_home_assistant">Home Assistant</string>
+  <string name="login_manual_server_url">Адрес Grocy</string>
+  <string name="login_manual_url_invalid">Введите корректный адрес</string>
+  <string name="login_manual_api_key">Ключ доступа к API</string>
+  <string name="login_manual_create_key">Создать ключ</string>
+  <string name="login_manual_ha_url">Адрес Home Assistant</string>
+  <string name="login_manual_ha_url_hint">Работает и с Nabu Casa</string>
+  <string name="login_manual_ha_token">Long-lived access token</string>
+  <string name="login_manual_ha_create_token">Создать токен</string>
+  <string name="login_manual_addon_slug">Slug дополнения</string>
+  <string name="login_manual_addon_slug_hint">a0d7b954_grocy для дополнения Grocy из репозитория дополнений сообщества</string>
+  <string name="login_manual_create_key_description">Открывает «Управление ключами доступа к API» в Grocy</string>
+  <string name="login_manual_ha_create_token_description">Открывает ваш профиль в Home Assistant</string>
+  <string name="login_manual_server_type">Тип сервера</string>
+  <string name="login_manual_server_type_description">Grocy подключается напрямую к вашему серверу Grocy, Home Assistant через своё дополнение Grocy.</string>
+  <string name="login_manual_group_grocy">Сервер Grocy</string>
+  <string name="login_manual_group_addon">Дополнение Grocy</string>
+  <string name="login_manual_ha_unsupported">Браузеры не могут входить через ingress Home Assistant. Назначьте дополнению Grocy порт в Home Assistant в разделе «Сеть», а затем войдите по этому адресу как на сервер Grocy.</string>
+  <string name="login_manual_use_grocy">Войти по адресу Grocy</string>
+  <string name="login_manual_connect">Подключить</string>
+
+  <!-- Login: errors -->
+  <string name="login_error_unreachable">Не удалось подключиться к серверу. Проверьте подключение и адрес сервера.</string>
+  <string name="login_error_unauthorized">Ключ доступа к API отклонён.</string>
+  <string name="login_error_not_grocy">Этот адрес не принадлежит серверу Grocy.</string>
+  <string name="login_error_unknown">Что-то пошло не так. Попробуйте ещё раз.</string>
+  <string name="login_error_not_login_code">Это не код входа Grocy. Отсканируйте QR-код ключа доступа к API.</string>
+  <string name="login_error_calendar_code">Это код ссылки на календарь. Вместо него отсканируйте QR-код ключа доступа к API.</string>
+  <string name="login_error_ha_token_rejected">Home Assistant отклонил Long-lived access token.</string>
+  <string name="login_error_addon_not_found">Дополнение Grocy не найдено в Home Assistant. Проверьте slug дополнения.</string>
+  <string name="login_error_not_home_assistant">Этот адрес не принадлежит серверу Home Assistant.</string>
+
+  <!-- Scanner -->
+  <string name="scanner_viewfinder">Изображение с камеры для сканирования кодов</string>
+  <string name="scanner_permission_message">Разрешите доступ к камере, чтобы сканировать коды</string>
+  <string name="scanner_permission_allow">Разрешить доступ</string>
+  <string name="scanner_permission_denied">Доступ к камере отключён. Его можно разрешить в настройках приложения.</string>
+  <string name="scanner_permission_denied_browser">Доступ к камере заблокирован. Его можно разрешить в настройках сайта в браузере.</string>
+  <string name="scanner_open_settings">Открыть настройки</string>
+  <string name="scanner_no_camera">Камера не найдена</string>
+  <string name="scanner_unsupported">Этот браузер не разрешает здесь доступ к камере</string>
+  <string name="scanner_error">Не удалось запустить камеру</string>
+  <string name="scanner_retry">Повторить</string>
+  <string name="scanner_torch_on">Включить фонарик</string>
+  <string name="scanner_torch_off">Выключить фонарик</string>
+
+  <!-- About -->
+  <string name="about_version">Версия</string>
+  <string name="about_update">Проверить обновления</string>
+  <string name="about_update_description">Поиск новой версии</string>
+  <string name="about_changelog">Список изменений</string>
+  <string name="about_changelog_description">Новое в этой версии</string>
+  <string name="about_developer">Разработчик</string>
+  <string name="about_vending_description">Другие приложения разработчика</string>
+  <string name="about_key">Приложение разблокировки</string>
+  <string name="about_key_description_not_installed">Не установлено</string>
+  <string name="about_key_description_installed">Установлено</string>
+  <string name="about_key_description_ignored">Игнорируется</string>
+  <string name="about_github_description">Исходный код</string>
+  <string name="about_translation_description">Помогите перевести Grocy</string>
+  <string name="about_privacy">Политика конфиденциальности</string>
+  <string name="about_privacy_description">Как обрабатываются ваши данные</string>
+
+  <!-- Help -->
+  <string name="help_placeholder">Вопрос-заглушка</string>
+  <string name="help_placeholder_answer">Ответ-заглушка.</string>
+
+  <!-- Updates -->
+  <string name="update_available">Доступно обновление</string>
+  <string name="update_available_version">Доступна версия Grocy %1$s. Обновить сейчас?</string>
+  <string name="update_available_unknown">Доступна новая версия Grocy. Обновить сейчас?</string>
+  <string name="update_none">Последняя версия</string>
+  <string name="update_none_description">Grocy %1$s является последней версией.</string>
+  <string name="update_failed">Ошибка проверки обновлений</string>
+  <string name="update_failed_description">Не удалось проверить обновления. Проверьте подключение к интернету и попробуйте ещё раз.</string>
+
+  <!-- Settings -->
+  <string name="settings_general">Общие</string>
+  <string name="settings_general_description">Внешний вид и язык приложения</string>
+  <string name="settings_server">Сервер</string>
+  <string name="settings_server_description">Ваш сервер Grocy и вход</string>
+  <string name="settings_user">Пользовательские настройки</string>
+  <string name="settings_user_description">Ваши предпочтения, сохранённые на сервере</string>
+  <string name="settings_network">Сеть</string>
+  <string name="settings_network_description">Как приложение подключается к серверу</string>
+  <string name="settings_behavior">Поведение</string>
+  <string name="settings_behavior_description">Как приложение реагирует во время работы</string>
+  <string name="settings_scanner">Сканер</string>
+  <string name="settings_scanner_description">Как сканируются штрихкоды</string>
+  <string name="settings_notifications">Уведомления</string>
+  <string name="settings_notifications_description">Напоминания о запасах и работах по дому</string>
+  <string name="settings_backup">Резервное копирование и восстановление</string>
+  <string name="settings_backup_description">Сохраните настройки в файл или восстановите их</string>
+  <string name="settings_reset">Сбросить всё</string>
+  <string name="settings_reset_description">Возвращает все настройки к значениям по умолчанию</string>
+  <string name="settings_language">Язык</string>
+  <string name="settings_language_system">Как в системе</string>
+  <string name="settings_language_system_description">Язык вашего устройства</string>
+  <string name="settings_language_info">Переводы создаются с помощью ИИ и проверяются добровольцами. Если что-то звучит неправильно или вашего языка нет, вы можете помочь.</string>
+  <string name="settings_theme">Тема</string>
+  <string name="settings_theme_description">Цвета и яркость приложения</string>
+  <string name="settings_theme_dynamic">Динамическая</string>
+  <string name="settings_theme_static">Статическая</string>
+  <string name="settings_theme_hue">Оттенок</string>
+  <string name="settings_theme_auto">Авто</string>
+  <string name="settings_theme_light">Светлая</string>
+  <string name="settings_theme_dark">Тёмная</string>
+  <string name="settings_contrast">Контраст</string>
+  <string name="settings_contrast_description">Более высокий контраст делает текст и элементы управления заметнее</string>
+  <string name="settings_contrast_dynamic">Динамические цвета используют контраст из настроек системы</string>
+  <string name="settings_contrast_dynamic_unsupported">Динамические цвета поддерживают уровни контраста начиная с Android 14</string>
+  <string name="settings_contrast_standard">Стандартный</string>
+  <string name="settings_contrast_medium">Средний</string>
+  <string name="settings_contrast_high">Высокий</string>
+  <string name="log_empty">Ошибок не зарегистрировано</string>
+  <string name="log_report_crash">Если приложение аварийно завершилось или что-то пошло не так, скопируйте журнал и отправьте его вместе с отзывом, чтобы ошибку можно было исправить.</string>
+</resources>

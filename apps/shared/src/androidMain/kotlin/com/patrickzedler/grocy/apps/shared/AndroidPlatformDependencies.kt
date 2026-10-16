@@ -6,6 +6,8 @@ import android.content.Intent
 import android.net.Uri
 import com.patrickzedler.grocy.core.data.credentials.AndroidCredentialStore
 import com.patrickzedler.grocy.core.data.credentials.CredentialStore
+import com.patrickzedler.grocy.core.data.language.AppLanguageStore
+import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.settings.AndroidSettingsStore
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
@@ -33,6 +35,10 @@ class AndroidPlatformDependencies(
 
     override val settingsStore: SettingsStore by lazy { AndroidSettingsStore(appContext) }
 
+    override val appLanguageStore: AppLanguageStore by lazy { AndroidAppLanguageStore(appContext) }
+
+    override val logReader: LogReader = LogcatReader()
+
     override val unlockChecker: UnlockChecker? =
         if (isPlayVariant) PackageManagerUnlockChecker(appContext) else null
 
@@ -55,7 +61,8 @@ class AndroidPlatformDependencies(
         )
 
     private fun openInBrowser(url: String) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         try {
             appContext.startActivity(intent)
         } catch (_: ActivityNotFoundException) {

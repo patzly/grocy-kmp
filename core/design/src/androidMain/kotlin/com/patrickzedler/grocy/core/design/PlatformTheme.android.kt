@@ -57,3 +57,8 @@ private fun Context.findActivity(): ComponentActivity? {
     }
     return null
 }
+
+actual val isDynamicColorAvailable: Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
+actual val dynamicColorFollowsSystemContrast: Boolean =
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE

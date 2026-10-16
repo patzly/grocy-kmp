@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Titles -->
+  <string name="title_about">Névjegy</string>
+  <string name="title_feedback">Visszajelzés</string>
+  <string name="title_help">Súgó</string>
+  <string name="title_licenses">Nyílt forráskódú licencek</string>
+  <string name="title_logcat">Logcat</string>
+  <string name="title_settings">Beállítások</string>
+
+  <!-- Dialogs -->
+  <string name="dialog_pane_title">Párbeszédablak</string>
+
+  <!-- Common actions -->
+  <string name="action_back">Vissza</string>
+  <string name="action_more_options">További lehetőségek</string>
+  <string name="action_cancel">Mégse</string>
+  <string name="action_close">Bezár</string>
+  <string name="action_update">Frissítés</string>
+  <string name="action_later">Később</string>
+  <string name="action_learn_more">További információ</string>
+  <string name="action_open_play_store">Google Play megnyitása</string>
+  <string name="action_recommend">Ajánlás</string>
+  <string name="action_recommend_description">Mesélj a barátaidnak a Grocyról</string>
+  <string name="action_rate">Értékelés a Google Playen</string>
+  <string name="action_rate_description">Motiváld a fejlesztőket</string>
+  <string name="action_support">A fejlesztés támogatása</string>
+  <string name="action_support_description">Vásárold meg a feloldó alkalmazást</string>
+  <string name="action_email">E-mail küldése</string>
+  <string name="action_email_description">Vedd fel a kapcsolatot a fejlesztőkkel</string>
+  <string name="action_issue">Új hibajegy nyitása a GitHubon</string>
+  <string name="action_issue_description">Jelents hibát, vagy kérj új funkciót</string>
+  <string name="action_send_feedback">Visszajelzés küldése</string>
+  <string name="action_show_logcat">Logcat megjelenítése</string>
+  <string name="action_reload">Újratöltés</string>
+  <string name="action_copy_to_clipboard">Másolás a vágólapra</string>
+
+  <!-- Messages -->
+  <string name="msg_recommend">A Grocy nyilvántartja az élelmiszereket és a háztartást a saját Grocy szervereden: %1$s</string>
+  <string name="msg_feedback">Kívánságod vagy kérdésed van, esetleg hibát találtál? Írj nekünk, szívesen segítünk!\nEgyébként nagyon örülnénk egy kedves értékelésnek a Play Store-ban.</string>
+  <string name="msg_unlock">A fejlesztés támogatása</string>
+  <string name="msg_unlock_description">A feloldó alkalmazás egy kis vásárlás a Google Playen, amely a Grocy fejlesztését támogatja. Ha telepítve van, átválthatsz az ML Kit vonalkódolvasójára is.</string>
+
+  <!-- Login: choice -->
+  <string name="login_choice_title">Üdvözöl a Grocy</string>
+  <!-- The slogan of Grocy, which stays English in every language -->
+  <string name="login_choice_subtitle">ERP beyond your fridge</string>
+  <string name="login_choice_own_server">Saját szerver</string>
+  <string name="login_choice_demo_server">Demószerver</string>
+  <string name="login_choice_own_server_description">Olvasd be a bejelentkezési kódot, vagy add meg a címet</string>
+  <string name="login_choice_demo_server_description">Próbáld ki a Grocyt mintaadatokkal</string>
+
+  <!-- Login: shared -->
+  <string name="login_title">Bejelentkezés</string>
+
+  <!-- Login: scan -->
+  <string name="login_scan_explanation">Nyisd meg a Grocyban az „API kulcsok kezelése” oldalt, hozz létre egy kulcsot, és koppints a QR-kód ikonjára. Ezután olvasd be itt a kódot.</string>
+  <string name="login_scan_manual">Adatok kézi megadása</string>
+  <string name="login_scan_manual_description">Grocy cím vagy Home Assistant</string>
+  <string name="login_scan_checking">Szerver ellenőrzése…</string>
+
+  <!-- Login: manual -->
+  <string name="login_manual_type_grocy">Grocy</string>
+  <string name="login_manual_type_home_assistant">Home Assistant</string>
+  <string name="login_manual_server_url">Grocy cím</string>
+  <string name="login_manual_url_invalid">Adj meg egy érvényes címet</string>
+  <string name="login_manual_api_key">API kulcs</string>
+  <string name="login_manual_create_key">Kulcs létrehozása</string>
+  <string name="login_manual_ha_url">Home Assistant cím</string>
+  <string name="login_manual_ha_url_hint">A Nabu Casával is működik</string>
+  <string name="login_manual_ha_token">Long-lived access token</string>
+  <string name="login_manual_ha_create_token">Token létrehozása</string>
+  <string name="login_manual_addon_slug">Kiegészítő slugja</string>
+  <string name="login_manual_addon_slug_hint">a0d7b954_grocy a közösségi kiegészítőtároló Grocy kiegészítőjéhez</string>
+  <string name="login_manual_create_key_description">Megnyitja a Grocyban az „API kulcsok kezelése” oldalt</string>
+  <string name="login_manual_ha_create_token_description">Megnyitja a profilodat a Home Assistantban</string>
+  <string name="login_manual_server_type">Szervertípus</string>
+  <string name="login_manual_server_type_description">A Grocy közvetlenül a Grocy szerveredhez csatlakozik, a Home Assistant pedig a Grocy kiegészítőjén keresztül.</string>
+  <string name="login_manual_group_grocy">Grocy szerver</string>
+  <string name="login_manual_group_addon">Grocy kiegészítő</string>
+  <string name="login_manual_ha_unsupported">A böngészők nem tudnak bejelentkezni a Home Assistant Ingressen keresztül. A Home Assistantban a „Hálózat” alatt rendelj portot a Grocy kiegészítőhöz, majd jelentkezz be ezzel a címmel Grocy szerverként.</string>
+  <string name="login_manual_use_grocy">Bejelentkezés Grocy címmel</string>
+  <string name="login_manual_connect">Csatlakozás</string>
+
+  <!-- Login: errors -->
+  <string name="login_error_unreachable">A szerver nem érhető el. Ellenőrizd a kapcsolatot és a szerver címét.</string>
+  <string name="login_error_unauthorized">Az API kulcsot elutasították.</string>
+  <string name="login_error_not_grocy">Ez a cím nem Grocy szerverhez tartozik.</string>
+  <string name="login_error_unknown">Valami hiba történt. Próbáld újra.</string>
+  <string name="login_error_not_login_code">Ez nem Grocy bejelentkezési kód. Egy API kulcs QR-kódját olvasd be.</string>
+  <string name="login_error_calendar_code">Ez egy naptárhivatkozás kódja. Helyette egy API kulcs QR-kódját olvasd be.</string>
+  <string name="login_error_ha_token_rejected">A Home Assistant elutasította a long-lived access tokent.</string>
+  <string name="login_error_addon_not_found">A Grocy kiegészítő nem található a Home Assistantban. Ellenőrizd a kiegészítő slugját.</string>
+  <string name="login_error_not_home_assistant">Ez a cím nem Home Assistant szerverhez tartozik.</string>
+
+  <!-- Scanner -->
+  <string name="scanner_viewfinder">Kamerakép a kódok beolvasásához</string>
+  <string name="scanner_permission_message">A kódok beolvasásához engedélyezd a kamera-hozzáférést</string>
+  <string name="scanner_permission_allow">Kamera engedélyezése</string>
+  <string name="scanner_permission_denied">A kamera-hozzáférés ki van kapcsolva. Az alkalmazásbeállításokban engedélyezheted.</string>
+  <string name="scanner_permission_denied_browser">A kamera-hozzáférés le van tiltva. A böngésződ webhelybeállításaiban engedélyezheted.</string>
+  <string name="scanner_open_settings">Beállítások megnyitása</string>
+  <string name="scanner_no_camera">Nem található kamera</string>
+  <string name="scanner_unsupported">Ez a böngésző itt nem engedélyezi a kamera-hozzáférést</string>
+  <string name="scanner_error">A kamerát nem sikerült elindítani</string>
+  <string name="scanner_retry">Újrapróbálás</string>
+  <string name="scanner_torch_on">Zseblámpa bekapcsolása</string>
+  <string name="scanner_torch_off">Zseblámpa kikapcsolása</string>
+
+  <!-- About -->
+  <string name="about_version">Verzió</string>
+  <string name="about_update">Frissítések keresése</string>
+  <string name="about_update_description">Újabb verzió keresése</string>
+  <string name="about_changelog">Változásnapló</string>
+  <string name="about_changelog_description">Újdonságok ebben a verzióban</string>
+  <string name="about_developer">Fejlesztő</string>
+  <string name="about_vending_description">A fejlesztő további alkalmazásai</string>
+  <string name="about_key">Feloldó alkalmazás</string>
+  <string name="about_key_description_not_installed">Nincs telepítve</string>
+  <string name="about_key_description_installed">Telepítve</string>
+  <string name="about_key_description_ignored">Figyelmen kívül hagyva</string>
+  <string name="about_github_description">Forráskód</string>
+  <string name="about_translation_description">Segíts lefordítani a Grocyt</string>
+  <string name="about_privacy">Adatvédelmi irányelvek</string>
+  <string name="about_privacy_description">Hogyan kezeljük az adataidat</string>
+
+  <!-- Help -->
+  <string name="help_placeholder">Helyőrző kérdés</string>
+  <string name="help_placeholder_answer">Helyőrző válasz.</string>
+
+  <!-- Updates -->
+  <string name="update_available">Frissítés érhető el</string>
+  <string name="update_available_version">Elérhető a Grocy %1$s. Frissítesz most?</string>
+  <string name="update_available_unknown">Elérhető a Grocy új verziója. Frissítesz most?</string>
+  <string name="update_none">Naprakész</string>
+  <string name="update_none_description">A Grocy %1$s a legújabb verzió.</string>
+  <string name="update_failed">A frissítések keresése nem sikerült</string>
+  <string name="update_failed_description">Nem sikerült frissítéseket keresni. Ellenőrizd az internetkapcsolatot, és próbáld újra.</string>
+
+  <!-- Settings -->
+  <string name="settings_general">Általános</string>
+  <string name="settings_general_description">Az alkalmazás megjelenése és nyelve</string>
+  <string name="settings_server">Szerver</string>
+  <string name="settings_server_description">A Grocy szervered és a bejelentkezésed</string>
+  <string name="settings_user">Felhasználói beállítások</string>
+  <string name="settings_user_description">A szerveren tárolt preferenciáid</string>
+  <string name="settings_network">Hálózat</string>
+  <string name="settings_network_description">Hogyan éri el az alkalmazás a szerveredet</string>
+  <string name="settings_behavior">Viselkedés</string>
+  <string name="settings_behavior_description">Hogyan reagál az alkalmazás munka közben</string>
+  <string name="settings_scanner">Vonalkódolvasó</string>
+  <string name="settings_scanner_description">A vonalkódok beolvasásának módja</string>
+  <string name="settings_notifications">Értesítések</string>
+  <string name="settings_notifications_description">Emlékeztetők a készletről és a házimunkákról</string>
+  <string name="settings_backup">Biztonsági mentés és visszaállítás</string>
+  <string name="settings_backup_description">Mentsd fájlba a beállításaidat, vagy állítsd vissza őket</string>
+  <string name="settings_reset">Minden visszaállítása</string>
+  <string name="settings_reset_description">Minden beállítást visszaállít az alapértelmezettre</string>
+  <string name="settings_language">Nyelv</string>
+  <string name="settings_language_system">Rendszer alapértelmezése</string>
+  <string name="settings_language_system_description">Az eszközöd nyelve</string>
+  <string name="settings_language_info">A fordítások MI segítségével készülnek, és önkéntesek ellenőrzik őket. Ha valami rosszul hangzik, vagy hiányzik a nyelved, segíthetsz.</string>
+  <string name="settings_theme">Téma</string>
+  <string name="settings_theme_description">Az alkalmazás színei és fényereje</string>
+  <string name="settings_theme_dynamic">Dinamikus</string>
+  <string name="settings_theme_static">Statikus</string>
+  <string name="settings_theme_hue">Színárnyalat</string>
+  <string name="settings_theme_auto">Auto</string>
+  <string name="settings_theme_light">Világos</string>
+  <string name="settings_theme_dark">Sötét</string>
+  <string name="settings_contrast">Kontraszt</string>
+  <string name="settings_contrast_description">A nagyobb kontraszt jobban láthatóvá teszi a szöveget és a vezérlőket</string>
+  <string name="settings_contrast_dynamic">A dinamikus színek a rendszerbeállítások kontrasztját használják</string>
+  <string name="settings_contrast_dynamic_unsupported">A dinamikus színek az Android 14-től támogatják a kontrasztszinteket</string>
+  <string name="settings_contrast_standard">Normál</string>
+  <string name="settings_contrast_medium">Közepes</string>
+  <string name="settings_contrast_high">Magas</string>
+  <string name="log_empty">Nincs naplózott hiba</string>
+  <string name="log_report_crash">Ha az alkalmazás összeomlott, vagy valami hiba történt, másold ki a naplót, és küldd el a visszajelzéseddel, hogy a hibát ki lehessen javítani.</string>
+</resources>

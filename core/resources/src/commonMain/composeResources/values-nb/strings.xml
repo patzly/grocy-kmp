@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Titles -->
+  <string name="title_about">Om</string>
+  <string name="title_feedback">Tilbakemelding</string>
+  <string name="title_help">Hjelp</string>
+  <string name="title_licenses">Lisenser for åpen kildekode</string>
+  <string name="title_logcat">Logcat</string>
+  <string name="title_settings">Innstillinger</string>
+
+  <!-- Dialogs -->
+  <string name="dialog_pane_title">Dialogboks</string>
+
+  <!-- Common actions -->
+  <string name="action_back">Tilbake</string>
+  <string name="action_more_options">Flere alternativer</string>
+  <string name="action_cancel">Avbryt</string>
+  <string name="action_close">Lukk</string>
+  <string name="action_update">Oppdater</string>
+  <string name="action_later">Senere</string>
+  <string name="action_learn_more">Finn ut mer</string>
+  <string name="action_open_play_store">Åpne Google Play</string>
+  <string name="action_recommend">Anbefal</string>
+  <string name="action_recommend_description">Fortell vennene dine om Grocy</string>
+  <string name="action_rate">Vurder på Google Play</string>
+  <string name="action_rate_description">Motiver utviklerne</string>
+  <string name="action_support">Støtt utviklingen</string>
+  <string name="action_support_description">Kjøp opplåsingsappen</string>
+  <string name="action_email">Send e-post</string>
+  <string name="action_email_description">Kontakt utviklerne</string>
+  <string name="action_issue">Opprett ny sak på GitHub</string>
+  <string name="action_issue_description">Rapporter feil eller ønsk deg en funksjon</string>
+  <string name="action_send_feedback">Send tilbakemelding</string>
+  <string name="action_show_logcat">Vis logcat</string>
+  <string name="action_reload">Last inn på nytt</string>
+  <string name="action_copy_to_clipboard">Kopier til utklippstavlen</string>
+
+  <!-- Messages -->
+  <string name="msg_recommend">Grocy holder oversikt over dagligvarer og husholdning på din egen Grocy-server: %1$s</string>
+  <string name="msg_feedback">Har du ønsker eller spørsmål, eller har du funnet en feil? Kontakt oss, så hjelper vi gjerne!\nEllers blir vi veldig glade for en fin vurdering i Play Store.</string>
+  <string name="msg_unlock">Støtt utviklingen</string>
+  <string name="msg_unlock_description">Opplåsingsappen er et lite kjøp på Google Play som støtter utviklingen av Grocy. Når den er installert, kan du også bytte til strekkodeskanneren fra ML Kit.</string>
+
+  <!-- Login: choice -->
+  <string name="login_choice_title">Velkommen til Grocy</string>
+  <!-- The slogan of Grocy, which stays English in every language -->
+  <string name="login_choice_subtitle">ERP beyond your fridge</string>
+  <string name="login_choice_own_server">Egen server</string>
+  <string name="login_choice_demo_server">Demoserver</string>
+  <string name="login_choice_own_server_description">Skann innloggingskoden eller skriv inn adressen</string>
+  <string name="login_choice_demo_server_description">Prøv Grocy med eksempeldata</string>
+
+  <!-- Login: shared -->
+  <string name="login_title">Logg inn</string>
+
+  <!-- Login: scan -->
+  <string name="login_scan_explanation">Åpne «Administrer API-nøkler» i Grocy, opprett en API-nøkkel og trykk på QR-kodeikonet til den. Skann deretter koden her.</string>
+  <string name="login_scan_manual">Skriv inn data manuelt</string>
+  <string name="login_scan_manual_description">Grocy-adresse eller Home Assistant</string>
+  <string name="login_scan_checking">Sjekker serveren…</string>
+
+  <!-- Login: manual -->
+  <string name="login_manual_type_grocy">Grocy</string>
+  <string name="login_manual_type_home_assistant">Home Assistant</string>
+  <string name="login_manual_server_url">Grocy-adresse</string>
+  <string name="login_manual_url_invalid">Skriv inn en gyldig adresse</string>
+  <string name="login_manual_api_key">API-nøkkel</string>
+  <string name="login_manual_create_key">Opprett API-nøkkel</string>
+  <string name="login_manual_ha_url">Home Assistant-adresse</string>
+  <string name="login_manual_ha_url_hint">Fungerer også med Nabu Casa</string>
+  <string name="login_manual_ha_token">Long-lived access token</string>
+  <string name="login_manual_ha_create_token">Opprett token</string>
+  <string name="login_manual_addon_slug">Tilleggets slug</string>
+  <string name="login_manual_addon_slug_hint">a0d7b954_grocy for Grocy-tillegget fra fellesskapets tilleggsdepot</string>
+  <string name="login_manual_create_key_description">Åpner «Administrer API-nøkler» i Grocy</string>
+  <string name="login_manual_ha_create_token_description">Åpner profilen din i Home Assistant</string>
+  <string name="login_manual_server_type">Servertype</string>
+  <string name="login_manual_server_type_description">Grocy kobler seg direkte til Grocy-serveren din, Home Assistant via Grocy-tillegget sitt.</string>
+  <string name="login_manual_group_grocy">Grocy-server</string>
+  <string name="login_manual_group_addon">Grocy-tillegg</string>
+  <string name="login_manual_ha_unsupported">Nettlesere kan ikke logge inn via Home Assistant Ingress. Tildel Grocy-tillegget en port under «Nettverk» i Home Assistant, og logg deretter inn med den adressen som Grocy-server.</string>
+  <string name="login_manual_use_grocy">Logg inn med en Grocy-adresse</string>
+  <string name="login_manual_connect">Koble til</string>
+
+  <!-- Login: errors -->
+  <string name="login_error_unreachable">Serveren kunne ikke nås. Sjekk tilkoblingen din og serveradressen.</string>
+  <string name="login_error_unauthorized">API-nøkkelen ble avvist.</string>
+  <string name="login_error_not_grocy">Denne adressen tilhører ingen Grocy-server.</string>
+  <string name="login_error_unknown">Noe gikk galt. Prøv igjen.</string>
+  <string name="login_error_not_login_code">Dette er ingen innloggingskode for Grocy. Skann QR-koden til en API-nøkkel.</string>
+  <string name="login_error_calendar_code">Dette er koden til en kalenderlenke. Skann QR-koden til en API-nøkkel i stedet.</string>
+  <string name="login_error_ha_token_rejected">Home Assistant avviste din long-lived access token.</string>
+  <string name="login_error_addon_not_found">Grocy-tillegget ble ikke funnet i Home Assistant. Sjekk tilleggets slug.</string>
+  <string name="login_error_not_home_assistant">Denne adressen tilhører ingen Home Assistant-server.</string>
+
+  <!-- Scanner -->
+  <string name="scanner_viewfinder">Kamerabilde for skanning av koder</string>
+  <string name="scanner_permission_message">Gi tilgang til kameraet for å skanne koder</string>
+  <string name="scanner_permission_allow">Tillat kamera</string>
+  <string name="scanner_permission_denied">Kameratilgang er slått av. Du kan tillate den i appinnstillingene.</string>
+  <string name="scanner_permission_denied_browser">Kameratilgang er blokkert. Du kan tillate den i nettstedsinnstillingene i nettleseren din.</string>
+  <string name="scanner_open_settings">Åpne innstillinger</string>
+  <string name="scanner_no_camera">Fant ikke noe kamera</string>
+  <string name="scanner_unsupported">Denne nettleseren tillater ikke kameratilgang her</string>
+  <string name="scanner_error">Kameraet kunne ikke startes</string>
+  <string name="scanner_retry">Prøv igjen</string>
+  <string name="scanner_torch_on">Slå på lommelykten</string>
+  <string name="scanner_torch_off">Slå av lommelykten</string>
+
+  <!-- About -->
+  <string name="about_version">Versjon</string>
+  <string name="about_update">Se etter oppdateringer</string>
+  <string name="about_update_description">Ser etter en nyere versjon</string>
+  <string name="about_changelog">Endringslogg</string>
+  <string name="about_changelog_description">Nytt i denne versjonen</string>
+  <string name="about_developer">Utvikler</string>
+  <string name="about_vending_description">Flere apper fra utvikleren</string>
+  <string name="about_key">Opplåsingsapp</string>
+  <string name="about_key_description_not_installed">Ikke installert</string>
+  <string name="about_key_description_installed">Installert</string>
+  <string name="about_key_description_ignored">Ignorert</string>
+  <string name="about_github_description">Kildekode</string>
+  <string name="about_translation_description">Hjelp til med å oversette Grocy</string>
+  <string name="about_privacy">Personvernerklæring</string>
+  <string name="about_privacy_description">Hvordan dataene dine behandles</string>
+
+  <!-- Help -->
+  <string name="help_placeholder">Plassholderspørsmål</string>
+  <string name="help_placeholder_answer">Plassholdersvar.</string>
+
+  <!-- Updates -->
+  <string name="update_available">Oppdatering tilgjengelig</string>
+  <string name="update_available_version">Grocy %1$s er tilgjengelig. Vil du oppdatere nå?</string>
+  <string name="update_available_unknown">En ny versjon av Grocy er tilgjengelig. Vil du oppdatere nå?</string>
+  <string name="update_none">Alt er oppdatert</string>
+  <string name="update_none_description">Grocy %1$s er den nyeste versjonen.</string>
+  <string name="update_failed">Søket etter oppdateringer mislyktes</string>
+  <string name="update_failed_description">Kunne ikke se etter oppdateringer. Sjekk internettilkoblingen din og prøv igjen.</string>
+
+  <!-- Settings -->
+  <string name="settings_general">Generelt</string>
+  <string name="settings_general_description">Hvordan appen ser ut og snakker</string>
+  <string name="settings_server">Server</string>
+  <string name="settings_server_description">Grocy-serveren din og innloggingen</string>
+  <string name="settings_user">Brukerinnstillinger</string>
+  <string name="settings_user_description">Preferansene dine, lagret på serveren</string>
+  <string name="settings_network">Nettverk</string>
+  <string name="settings_network_description">Hvordan appen når serveren din</string>
+  <string name="settings_behavior">Atferd</string>
+  <string name="settings_behavior_description">Hvordan appen reagerer mens du jobber</string>
+  <string name="settings_scanner">Skanner</string>
+  <string name="settings_scanner_description">Hvordan strekkoder skannes</string>
+  <string name="settings_notifications">Varsler</string>
+  <string name="settings_notifications_description">Påminnelser om beholdning og husarbeid</string>
+  <string name="settings_backup">Sikkerhetskopiering og gjenoppretting</string>
+  <string name="settings_backup_description">Lagre innstillingene dine i en fil eller gjenopprett dem</string>
+  <string name="settings_reset">Tilbakestill alt</string>
+  <string name="settings_reset_description">Setter alle innstillinger tilbake til standard</string>
+  <string name="settings_language">Språk</string>
+  <string name="settings_language_system">Systemstandard</string>
+  <string name="settings_language_system_description">Språket på enheten din</string>
+  <string name="settings_language_info">Oversettelsene lages med KI og kontrolleres av frivillige. Hvis noe høres feil ut eller språket ditt mangler, kan du hjelpe til.</string>
+  <string name="settings_theme">Tema</string>
+  <string name="settings_theme_description">Farger og lysstyrke i appen</string>
+  <string name="settings_theme_dynamic">Dynamisk</string>
+  <string name="settings_theme_static">Statisk</string>
+  <string name="settings_theme_hue">Fargetone</string>
+  <string name="settings_theme_auto">Auto</string>
+  <string name="settings_theme_light">Lyst</string>
+  <string name="settings_theme_dark">Mørkt</string>
+  <string name="settings_contrast">Kontrast</string>
+  <string name="settings_contrast_description">Høyere kontrast gjør tekst og kontroller lettere å se</string>
+  <string name="settings_contrast_dynamic">Dynamiske farger bruker kontrasten fra systeminnstillingene</string>
+  <string name="settings_contrast_dynamic_unsupported">Dynamiske farger støtter kontrastnivåer fra og med Android 14</string>
+  <string name="settings_contrast_standard">Standard</string>
+  <string name="settings_contrast_medium">Middels</string>
+  <string name="settings_contrast_high">Høy</string>
+  <string name="log_empty">Ingen feil logget</string>
+  <string name="log_report_crash">Hvis appen krasjet eller noe gikk galt, kan du kopiere loggen og sende den med tilbakemeldingen din, slik at feilen kan rettes.</string>
+</resources>
