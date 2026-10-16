@@ -12,7 +12,9 @@ fun EntryProviderScope<NavKey>.aboutEntries(
 ) {
     entry<AboutRoute> {
         AboutScreen(
-            viewModel = viewModel { AboutViewModel(dependencies.unlockRepository) },
+            viewModel = viewModel {
+                AboutViewModel(dependencies.unlockRepository, dependencies.updateRepository)
+            },
             versionName = dependencies.versionName,
             onBackClick = navigator::goBack,
         )

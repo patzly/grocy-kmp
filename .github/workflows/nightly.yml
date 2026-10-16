@@ -94,7 +94,11 @@ jobs:
       - uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
 
       - name: Build web app
-        run: ./gradlew :apps:web:wasmJsBrowserDistribution
+        # A build id per deployment, so installed web apps notice the update
+        run: >
+          ./gradlew :apps:web:wasmJsBrowserDistribution
+          -Pgrocy.webBuildId="$GITHUB_SHA"
+          -Pgrocy.webVersionSuffix="-nightly+${GITHUB_SHA::7}"
 
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0

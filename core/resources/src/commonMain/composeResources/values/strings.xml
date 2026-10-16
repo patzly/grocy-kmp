@@ -27,6 +27,8 @@
   <string name="action_more_options">More options</string>
   <string name="action_cancel">Cancel</string>
   <string name="action_close">Close</string>
+  <string name="action_update">Update</string>
+  <string name="action_later">Later</string>
   <string name="action_learn_more">Learn more</string>
   <string name="action_open_play_store">Open Google Play</string>
   <string name="action_recommend">Recommend</string>
@@ -114,6 +116,8 @@
 
   <!-- About -->
   <string name="about_version">Version</string>
+  <string name="about_update">Check for updates</string>
+  <string name="about_update_description">Look for a newer version</string>
   <string name="about_changelog">Changelog</string>
   <string name="about_changelog_description">New in this version</string>
   <string name="about_developer">Developer</string>
@@ -141,4 +145,12 @@
   <string name="license_material_icons" translatable="false">Material Symbols</string>
   <string name="license_material_icons_link" translatable="false">https://github.com/google/material-design-icons</string>
 
+  <!-- Updates -->
+  <string name="update_available">Update available</string>
+  <string name="update_available_version">Grocy %1$s is available. Update now?</string>
+  <string name="update_available_unknown">A new version of Grocy is available. Update now?</string>
+  <string name="update_none">Up to date</string>
+  <string name="update_none_description">Grocy %1$s is the latest version.</string>
+  <string name="update_failed">Update check failed</string>
+  <string name="update_failed_description">Could not check for updates. Check your internet connection and try again.</string>
 </resources>

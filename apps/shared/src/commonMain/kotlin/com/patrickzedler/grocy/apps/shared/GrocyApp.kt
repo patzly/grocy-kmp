@@ -9,17 +9,20 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.data.auth.AuthState
+import com.patrickzedler.grocy.core.data.update.UpdateRepository
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.rememberThemeFontsReady
 import com.patrickzedler.grocy.core.navigation.GrocyNavDisplay
 import com.patrickzedler.grocy.core.navigation.rememberNavigator
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.core.scanner.LocalBarcodeDecoderFactory
+import com.patrickzedler.grocy.core.ui.dialog.UpdateAvailableDialog
 import com.patrickzedler.grocy.feature.about.api.aboutRouteSerializers
 import com.patrickzedler.grocy.feature.about.impl.aboutEntries
 import com.patrickzedler.grocy.feature.login.api.LoginChoiceRoute
@@ -28,6 +31,7 @@ import com.patrickzedler.grocy.feature.login.impl.loginEntries
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import com.patrickzedler.grocy.feature.start.api.startRouteSerializers
 import com.patrickzedler.grocy.feature.start.impl.startEntry
+import kotlinx.coroutines.launch
 import kotlinx.serialization.modules.plus
 
 internal val routeSerializers =
@@ -64,6 +68,7 @@ fun GrocyApp(
                     LaunchedEffect(fontsReady) {
                         if (fontsReady) onContentReady()
                     }
+                    UpdateOffer(graph.updateRepository)
                 }
             }
         }
@@ -94,5 +99,26 @@ private fun GrocyNavigation(
         loginEntries(graph.loginDependencies, navigator)
         startEntry(navigator)
         aboutEntries(graph.aboutDependencies, navigator)
+    }
+}
+
+/**
+ * Automatic update checks where the platform allows them (the web app) and the dialog for an
+ * update they find, over whatever screen is open. Elsewhere updates are only checked in About.
+ */
+@Composable
+private fun UpdateOffer(updateRepository: UpdateRepository) {
+    LaunchedEffect(updateRepository) {
+        updateRepository.runAutomaticChecks()
+    }
+    val pendingUpdate by updateRepository.pendingUpdate.collectAsStateWithLifecycle()
+    val scope = rememberCoroutineScope()
+
+    pendingUpdate?.let { update ->
+        UpdateAvailableDialog(
+            update = update,
+            onUpdate = { scope.launch { updateRepository.install() } },
+            onLater = { updateRepository.postpone(update) },
+        )
     }
 }

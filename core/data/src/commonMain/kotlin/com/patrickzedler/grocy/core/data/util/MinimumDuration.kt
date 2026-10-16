@@ -1,4 +1,4 @@
-package com.patrickzedler.grocy.feature.login.impl
+package com.patrickzedler.grocy.core.data.util
 
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -6,13 +6,13 @@ import kotlin.time.TimeSource
 import kotlinx.coroutines.delay
 
 /** Long enough for the eye to register a loading indicator, short enough not to feel slow. */
-internal val MINIMUM_LOADING_DURATION = 500.milliseconds
+val MINIMUM_LOADING_DURATION = 500.milliseconds
 
 /**
  * Runs [block] and suspends until at least [minimum] has passed, whether [block] succeeds or
  * throws. Cancellation is not delayed.
  */
-internal suspend inline fun <T> withMinimumDuration(
+suspend inline fun <T> withMinimumDuration(
     minimum: Duration,
     timeSource: TimeSource = TimeSource.Monotonic,
     block: () -> T,

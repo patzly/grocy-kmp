@@ -2,8 +2,10 @@ package com.patrickzedler.grocy.apps.shared
 
 import com.patrickzedler.grocy.core.data.credentials.CredentialStore
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
+import com.patrickzedler.grocy.core.data.update.AppUpdater
 import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 
 /**
@@ -22,4 +24,10 @@ interface PlatformDependencies {
 
     /** Barcode engines of this platform; ZXing exists everywhere, ML Kit only in the Play app. */
     val barcodeDecoders: Map<ScannerEngine, BarcodeDecoderFactory>
+
+    /**
+     * How this build updates: Google Play in the Play app, GitHub releases ([gitHubReleases])
+     * for every other Android build, its service worker on the web.
+     */
+    fun createAppUpdater(gitHubReleases: GitHubReleases): AppUpdater
 }

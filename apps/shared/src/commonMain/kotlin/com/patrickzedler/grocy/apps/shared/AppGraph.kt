@@ -3,6 +3,8 @@ package com.patrickzedler.grocy.apps.shared
 import com.patrickzedler.grocy.core.data.auth.AuthRepository
 import com.patrickzedler.grocy.core.data.scanner.ScannerRepository
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
+import com.patrickzedler.grocy.core.data.update.UpdateRepository
+import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.createGrocyHttpClient
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
@@ -38,6 +40,12 @@ class AppGraph(
         )
     }
 
+    private val gitHubReleases by lazy { GitHubReleases(httpClient, GITHUB_REPOSITORY) }
+
+    internal val updateRepository by lazy {
+        UpdateRepository(platform.createAppUpdater(gitHubReleases))
+    }
+
     /** Decoders of the engine that scans right now, provided to every scanner by GrocyApp. */
     internal val barcodeDecoderFactory: Flow<BarcodeDecoderFactory> by lazy {
         scannerRepository.activeEngine.map {
@@ -53,7 +61,12 @@ class AppGraph(
     internal val aboutDependencies: AboutDependencies = object : AboutDependencies {
         override val unlockRepository: UnlockRepository
             get() = this@AppGraph.unlockRepository
+        override val updateRepository: UpdateRepository
+            get() = this@AppGraph.updateRepository
         override val versionName: String
             get() = platform.versionName
     }
 }
+
+/** Where the app's releases are published, also for update checks outside Google Play. */
+private const val GITHUB_REPOSITORY = "patzly/grocy-kmp"

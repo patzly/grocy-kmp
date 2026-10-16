@@ -3,13 +3,13 @@ package com.patrickzedler.grocy.feature.login.impl.scan
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.auth.AuthRepository
+import com.patrickzedler.grocy.core.data.util.MINIMUM_LOADING_DURATION
+import com.patrickzedler.grocy.core.data.util.withMinimumDuration
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import com.patrickzedler.grocy.core.scanner.Barcode
 import com.patrickzedler.grocy.feature.login.impl.LoginError
-import com.patrickzedler.grocy.feature.login.impl.MINIMUM_LOADING_DURATION
 import com.patrickzedler.grocy.feature.login.impl.toLoginError
-import com.patrickzedler.grocy.feature.login.impl.withMinimumDuration
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

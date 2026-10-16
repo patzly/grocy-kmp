@@ -1,4 +1,4 @@
-package com.patrickzedler.grocy.feature.login.impl
+package com.patrickzedler.grocy.core.data.util
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

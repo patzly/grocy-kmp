@@ -1,6 +1,9 @@
 package com.patrickzedler.grocy.feature.about.impl
 
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
+import com.patrickzedler.grocy.core.data.update.UpdateRepository
+import com.patrickzedler.grocy.core.model.UpdateCheck
+import com.patrickzedler.grocy.core.testing.FakeAppUpdater
 import com.patrickzedler.grocy.core.testing.FakeSettingsStore
 import com.patrickzedler.grocy.core.testing.FakeUnlockChecker
 import kotlin.test.AfterTest
@@ -14,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -24,6 +28,8 @@ class AboutViewModelTest {
     private val dispatcher = StandardTestDispatcher()
     private val settingsStore = FakeSettingsStore()
     private val checker = FakeUnlockChecker()
+    private val updater = FakeAppUpdater()
+    private val updateRepository = UpdateRepository(updater)
 
     @BeforeTest
     fun setUp() {
@@ -42,7 +48,7 @@ class AboutViewModelTest {
             settingsStore = settingsStore,
             checkDispatcher = dispatcher,
         )
-        return AboutViewModel(repository).also { viewModel ->
+        return AboutViewModel(repository, updateRepository).also { viewModel ->
             backgroundScope.launch { viewModel.unlockState.collect {} }
             advanceUntilIdle()
         }
@@ -110,5 +116,69 @@ class AboutViewModelTest {
         advanceUntilIdle()
 
         assertTrue(settingsStore.checkUnlockKey.value)
+    }
+
+    @Test
+    fun updateCheckShowsItsResult() = runTest {
+        updater.result = UpdateCheck.Available("1.2.0")
+        val viewModel = viewModel()
+
+        viewModel.checkForUpdate()
+        assertTrue(viewModel.isCheckingForUpdate)
+        advanceUntilIdle()
+
+        assertFalse(viewModel.isCheckingForUpdate)
+        assertEquals(UpdateCheck.Available("1.2.0"), viewModel.updateCheck)
+    }
+
+    @Test
+    fun upToDateIsShownToo() = runTest {
+        val viewModel = viewModel()
+
+        viewModel.checkForUpdate()
+        advanceUntilIdle()
+
+        assertEquals(UpdateCheck.UpToDate, viewModel.updateCheck)
+    }
+
+    @Test
+    fun secondTapWhileCheckingStartsNoSecondCheck() = runTest {
+        val viewModel = viewModel()
+
+        viewModel.checkForUpdate()
+        viewModel.checkForUpdate()
+        advanceUntilIdle()
+
+        assertEquals(1, updater.checks)
+    }
+
+    @Test
+    fun dismissingAFoundUpdatePostponesIt() = runTest {
+        updater.result = UpdateCheck.Available("1.2.0")
+        updater.checksAutomatically = true
+        val viewModel = viewModel()
+        viewModel.checkForUpdate()
+        advanceUntilIdle()
+
+        viewModel.dismissUpdateCheck()
+        backgroundScope.launch { updateRepository.runAutomaticChecks() }
+        advanceTimeBy(1)
+
+        assertNull(viewModel.updateCheck)
+        assertNull(updateRepository.pendingUpdate.value)
+    }
+
+    @Test
+    fun updateInstallsAndClosesTheDialog() = runTest {
+        updater.result = UpdateCheck.Available("1.2.0")
+        val viewModel = viewModel()
+        viewModel.checkForUpdate()
+        advanceUntilIdle()
+
+        viewModel.installUpdate()
+        advanceUntilIdle()
+
+        assertNull(viewModel.updateCheck)
+        assertEquals(1, updater.installs)
     }
 }

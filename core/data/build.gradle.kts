@@ -16,6 +16,7 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(projects.core.testing)
+            implementation(libs.ktor.client.mock)
         }
     }
 }

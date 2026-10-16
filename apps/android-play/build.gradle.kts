@@ -6,4 +6,5 @@ dependencies {
     implementation(projects.apps.shared)
     // Closed source, which is why only this app may use it
     implementation(projects.core.scannerMlkit)
+    implementation(projects.core.updatePlay)
 }

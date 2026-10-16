@@ -15,7 +15,9 @@ private const val VIEWPORT_CONTAINER_ID = "composeApp"
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-    val graph = AppGraph(WebPlatformDependencies(versionName = APP_VERSION_NAME))
+    val graph = AppGraph(
+        WebPlatformDependencies(versionName = APP_VERSION_NAME, buildId = APP_BUILD_ID),
+    )
     observeBrowserKeyboard(VIEWPORT_CONTAINER_ID)
     ComposeViewport(viewportContainerId = VIEWPORT_CONTAINER_ID) {
         CompositionLocalProvider(LocalHapticFeedback provides NoHapticFeedback) {

@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.about.impl
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
@@ -9,6 +10,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MenuAnchorPosition
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SegmentedListItem
@@ -50,6 +52,8 @@ import com.patrickzedler.grocy.core.resources.about_key_description_installed
 import com.patrickzedler.grocy.core.resources.about_key_description_not_installed
 import com.patrickzedler.grocy.core.resources.about_privacy
 import com.patrickzedler.grocy.core.resources.about_privacy_description
+import com.patrickzedler.grocy.core.resources.about_update
+import com.patrickzedler.grocy.core.resources.about_update_description
 import com.patrickzedler.grocy.core.resources.about_translation
 import com.patrickzedler.grocy.core.resources.about_translation_description
 import com.patrickzedler.grocy.core.resources.about_vending
@@ -75,6 +79,7 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_person
 import com.patrickzedler.grocy.core.resources.ic_rounded_policy
 import com.patrickzedler.grocy.core.resources.ic_rounded_shop
 import com.patrickzedler.grocy.core.resources.ic_rounded_translate
+import com.patrickzedler.grocy.core.resources.ic_rounded_update
 import com.patrickzedler.grocy.core.resources.license_author_google
 import com.patrickzedler.grocy.core.resources.license_google_sans_flex
 import com.patrickzedler.grocy.core.resources.license_material_icons
@@ -83,6 +88,7 @@ import com.patrickzedler.grocy.core.resources.title_help
 import com.patrickzedler.grocy.core.resources.title_licenses
 import com.patrickzedler.grocy.core.ui.AppDialog
 import com.patrickzedler.grocy.core.ui.AppDialogHost
+import com.patrickzedler.grocy.core.ui.dialog.UpdateCheckDialog
 import com.patrickzedler.grocy.core.ui.rememberRecommendAction
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
@@ -111,15 +117,25 @@ internal fun AboutScreen(
         unlockState = unlockState,
         onDialogChange = { activeDialog = it },
     )
+    viewModel.updateCheck?.let { result ->
+        UpdateCheckDialog(
+            result = result,
+            versionName = versionName,
+            onUpdate = viewModel::installUpdate,
+            onDismissRequest = viewModel::dismissUpdateCheck,
+        )
+    }
 
     AboutContent(
         versionName = versionName,
         unlockState = unlockState,
+        isCheckingForUpdate = viewModel.isCheckingForUpdate,
         modifier = modifier,
         onBackClick = onBackClick,
         onHelpClick = { activeDialog = AppDialog.HELP },
         onRecommendClick = recommend,
         onFeedbackClick = { activeDialog = AppDialog.FEEDBACK },
+        onUpdateClick = viewModel::checkForUpdate,
         onChangelogClick = { activeDialog = AppDialog.CHANGELOG },
         onKeyClick = {
             if (unlockState?.isKeyInstalled == true) {
@@ -134,15 +150,18 @@ internal fun AboutScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun AboutContent(
     versionName: String,
     unlockState: UnlockState?,
     modifier: Modifier = Modifier,
+    isCheckingForUpdate: Boolean = false,
     onBackClick: () -> Unit = {},
     onHelpClick: () -> Unit = {},
     onRecommendClick: () -> Unit = {},
     onFeedbackClick: () -> Unit = {},
+    onUpdateClick: () -> Unit = {},
     onChangelogClick: () -> Unit = {},
     onKeyClick: () -> Unit = {},
     onKeyLongClick: () -> Unit = {},
@@ -170,12 +189,27 @@ private fun AboutContent(
     ) {
         segmentedGroup {
             val colors = SegmentedListDefaults.colors()
-            VersionItem(versionName = versionName, colors = colors)
+            VersionItem(versionName = versionName, colors = colors, count = 5)
+            AboutItem(
+                title = stringResource(Res.string.about_update),
+                icon = Res.drawable.ic_rounded_update,
+                index = 1,
+                count = 5,
+                colors = colors,
+                // A second check would only repeat the running one
+                onClick = { if (!isCheckingForUpdate) onUpdateClick() },
+                supporting = stringResource(Res.string.about_update_description),
+                trailing = if (isCheckingForUpdate) {
+                    { LoadingIndicator(modifier = Modifier.size(40.dp)) }
+                } else {
+                    null
+                },
+            )
             AboutItem(
                 title = stringResource(Res.string.about_changelog),
                 icon = Res.drawable.ic_rounded_history,
-                index = 1,
-                count = 4,
+                index = 2,
+                count = 5,
                 colors = colors,
                 onClick = onChangelogClick,
                 supporting = stringResource(Res.string.about_changelog_description),
@@ -183,8 +217,8 @@ private fun AboutContent(
             AboutItem(
                 title = stringResource(Res.string.app_developer),
                 icon = Res.drawable.ic_rounded_person,
-                index = 2,
-                count = 4,
+                index = 3,
+                count = 5,
                 colors = colors,
                 onClick = { uriHandler.tryOpenUri(appWebsite) },
                 overline = stringResource(Res.string.about_developer),
@@ -192,8 +226,8 @@ private fun AboutContent(
             AboutItem(
                 title = stringResource(Res.string.about_vending),
                 icon = Res.drawable.ic_rounded_shop,
-                index = 3,
-                count = 4,
+                index = 4,
+                count = 5,
                 colors = colors,
                 onClick = { uriHandler.tryOpenUri(appVendingDev) },
                 supporting = stringResource(Res.string.about_vending_description),
@@ -355,13 +389,14 @@ private fun AboutMenuItem(
 private fun VersionItem(
     versionName: String,
     colors: ListItemColors,
+    count: Int,
     modifier: Modifier = Modifier,
 ) {
     ListItem(
         modifier = modifier.fillMaxWidth(),
         overlineContent = { Text(stringResource(Res.string.about_version)) },
         leadingContent = { AboutItemIcon(Res.drawable.ic_rounded_info) },
-        shapes = ListItemDefaults.segmentedShapes(index = 0, count = 4),
+        shapes = ListItemDefaults.segmentedShapes(index = 0, count = count),
         colors = colors,
         content = { Text(versionName) },
     )
@@ -379,6 +414,7 @@ private fun AboutItem(
     modifier: Modifier = Modifier,
     overline: String? = null,
     supporting: String? = null,
+    trailing: (@Composable () -> Unit)? = null,
     onLongClick: (() -> Unit)? = null,
 ) {
     val haptic = LocalHapticFeedback.current
@@ -394,6 +430,7 @@ private fun AboutItem(
         overlineContent = overline?.let { { Text(it) } },
         supportingContent = supporting?.let { { Text(it) } },
         leadingContent = { AboutItemIcon(icon) },
+        trailingContent = trailing,
         onLongClick = onLongClick,
         content = { Text(title) },
     )
@@ -446,6 +483,18 @@ private fun AboutFossPreview() {
         AboutContent(
             versionName = "1.0.0",
             unlockState = null,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun AboutCheckingForUpdatePreview() {
+    GrocyTheme {
+        AboutContent(
+            versionName = "1.0.0",
+            unlockState = null,
+            isCheckingForUpdate = true,
         )
     }
 }

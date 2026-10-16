@@ -87,6 +87,7 @@ include(":core:navigation")
 include(":core:ui")
 include(":core:scanner")
 include(":core:scanner-mlkit")
+include(":core:update-play")
 include(":core:testing")
 
 // Feature Modules
