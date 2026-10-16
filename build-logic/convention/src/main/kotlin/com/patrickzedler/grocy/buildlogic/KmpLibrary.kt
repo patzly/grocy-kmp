@@ -16,6 +16,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 internal fun Project.configureKmpLibrary(runWasmTests: Boolean) {
     pluginManager.apply(libs.pluginId("kotlin-multiplatform"))
     pluginManager.apply(libs.pluginId("android-kmp-library"))
+    useDeclaredWasmToolingRepositories()
 
     val moduleNamespace = derivedNamespace
     val compileSdkLevel = libs.intVersion("android-compileSdk")

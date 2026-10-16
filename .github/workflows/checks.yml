@@ -29,6 +29,14 @@ jobs:
       - name: Run tests on JVM and Wasm
         run: ./gradlew allTests --continue
 
+      - name: Show outdated yarn.lock
+        if: failure()
+        run: |
+          ./gradlew kotlinWasmUpgradeYarnLock
+          if ! git diff --exit-code kotlin-js-store; then
+            echo "::error file=kotlin-js-store/wasm/yarn.lock::yarn.lock is outdated. Any local Gradle build updates it; commit the diff above."
+          fi
+
       - name: Upload test reports
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

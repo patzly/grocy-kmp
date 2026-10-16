@@ -14,6 +14,7 @@ class WebApplicationConventionPlugin : Plugin<Project> {
         pluginManager.apply(libs.pluginId("kotlin-multiplatform"))
         pluginManager.apply(libs.pluginId("compose-multiplatform"))
         pluginManager.apply(libs.pluginId("compose-compiler"))
+        useDeclaredWasmToolingRepositories()
 
         extensions.configure<KotlinMultiplatformExtension> {
             @OptIn(ExperimentalWasmDsl::class)

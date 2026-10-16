@@ -25,9 +25,14 @@ class KmpComposeConventionPlugin : Plugin<Project> {
             }
         }
 
-        // These modules run no Wasm tests, so their test binaries are neither compiled nor linked
-        tasks.matching { it.name.contains("WasmJs", ignoreCase = true) && it.name.contains("Test") }
-            .configureEach { enabled = false }
+        // These modules run no Wasm tests, so their test binaries are neither compiled nor linked.
+        // The package.json tasks keep running: their files are part of the shared yarn workspace,
+        // and stale ones would make the local yarn.lock differ from the one CI computes.
+        tasks.matching {
+            it.name.contains("WasmJs", ignoreCase = true) &&
+                it.name.contains("Test") &&
+                !it.name.contains("PackageJson")
+        }.configureEach { enabled = false }
 
         // Compose previews in Android Studio, kept out of the compile classpath
         val uiTooling = libs.library("compose-ui-tooling")
