@@ -6,6 +6,8 @@ import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.language.WebAppLanguageStore
 import com.patrickzedler.grocy.core.data.log.BrowserErrorLog
 import com.patrickzedler.grocy.core.data.log.LogReader
+import com.patrickzedler.grocy.core.database.GrocyDatabase
+import com.patrickzedler.grocy.core.database.createGrocyDatabase
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.settings.WebSettingsStore
 import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
@@ -26,6 +28,8 @@ class WebPlatformDependencies(
     override val settingsStore: SettingsStore by lazy { WebSettingsStore() }
 
     override val appLanguageStore: AppLanguageStore by lazy { WebAppLanguageStore() }
+
+    override val database: GrocyDatabase by lazy { createGrocyDatabase() }
 
     // Created with the app, so it records from the start
     override val logReader: LogReader = BrowserErrorLog().apply { install() }

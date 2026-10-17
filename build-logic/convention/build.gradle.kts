@@ -7,6 +7,8 @@ group = "com.patrickzedler.grocy.buildlogic"
 dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
+    compileOnly(libs.ksp.gradlePlugin)
+    compileOnly(libs.room3.gradlePlugin)
 }
 
 gradlePlugin {
@@ -22,6 +24,14 @@ gradlePlugin {
         register("androidApplication") {
             id = libs.plugins.grocy.android.application.get().pluginId
             implementationClass = "com.patrickzedler.grocy.buildlogic.AndroidApplicationConventionPlugin"
+        }
+        register("room") {
+            id = libs.plugins.grocy.room.get().pluginId
+            implementationClass = "com.patrickzedler.grocy.buildlogic.RoomConventionPlugin"
+        }
+        register("sqliteHostTests") {
+            id = libs.plugins.grocy.sqlite.host.tests.get().pluginId
+            implementationClass = "com.patrickzedler.grocy.buildlogic.SqliteHostTestsConventionPlugin"
         }
         register("webApplication") {
             id = libs.plugins.grocy.web.application.get().pluginId

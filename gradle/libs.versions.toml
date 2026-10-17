@@ -32,6 +32,13 @@ ktor = "3.6.0"
 
 # Storage (Android only, credentials)
 androidx-datastore = "1.2.1"
+# Local database of the Grocy data, Android and web (3.0.x stable, not the 3.1 alphas)
+androidx-room3 = "3.0.3"
+androidx-sqlite = "2.7.1"
+# Not tied to the Kotlin version since KSP 2.3
+ksp = "2.3.12"
+# npm package of the web database worker, used via npm() in Gradle
+npm-sqlite-wasm = "3.53.4-build2"
 
 # Android runner entry point
 androidx-activity = "1.13.0"
@@ -89,6 +96,12 @@ ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
 
 # Storage
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
+androidx-room3-runtime = { module = "androidx.room3:room3-runtime", version.ref = "androidx-room3" }
+androidx-room3-compiler = { module = "androidx.room3:room3-compiler", version.ref = "androidx-room3" }
+androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "androidx-sqlite" }
+# Desktop builds of the bundled SQLite, only its native libraries for JVM host tests
+androidx-sqlite-bundled-jvm = { module = "androidx.sqlite:sqlite-bundled-jvm", version.ref = "androidx-sqlite" }
+androidx-sqlite-web = { module = "androidx.sqlite:sqlite-web", version.ref = "androidx-sqlite" }
 
 # Android application host dependencies
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
@@ -118,6 +131,8 @@ turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 # Build logic (convention plugins)
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+ksp-gradlePlugin = { module = "com.google.devtools.ksp:symbol-processing-gradle-plugin", version.ref = "ksp" }
+room3-gradlePlugin = { module = "androidx.room3:room3-gradle-plugin", version.ref = "androidx-room3" }
 
 # Wear OS UI
 androidx-wear-compose-foundation = { module = "androidx.wear.compose:compose-foundation", version.ref = "androidx-wear-compose" }
@@ -131,9 +146,13 @@ kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref 
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+room3 = { id = "androidx.room3", version.ref = "androidx-room3" }
 
 # Convention plugins (build-logic)
 grocy-kmp-library = { id = "grocy.kmp.library" }
 grocy-kmp-compose = { id = "grocy.kmp.compose" }
 grocy-android-application = { id = "grocy.android.application" }
 grocy-web-application = { id = "grocy.web.application" }
+grocy-room = { id = "grocy.room" }
+grocy-sqlite-host-tests = { id = "grocy.sqlite.host.tests" }

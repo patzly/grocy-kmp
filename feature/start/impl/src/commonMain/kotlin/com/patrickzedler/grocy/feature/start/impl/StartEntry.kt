@@ -4,6 +4,7 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.patrickzedler.grocy.core.navigation.Navigator
 import com.patrickzedler.grocy.feature.about.api.AboutRoute
+import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 
@@ -12,6 +13,7 @@ fun EntryProviderScope<NavKey>.startEntry(
 ) {
     entry<StartRoute> {
         StartScreen(
+            onMasterDataClick = { navigator.navigate(MasterDataRoute) },
             onSettingsClick = { navigator.navigate(SettingsRoute) },
             onAboutClick = { navigator.navigate(AboutRoute) },
         )

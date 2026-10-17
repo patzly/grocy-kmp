@@ -3,6 +3,7 @@ package com.patrickzedler.grocy.apps.shared
 import com.patrickzedler.grocy.core.data.auth.AuthRepository
 import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.log.LogReader
+import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.scanner.ScannerRepository
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
@@ -14,11 +15,13 @@ import com.patrickzedler.grocy.core.network.createGrocyHttpClient
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.feature.about.impl.AboutDependencies
 import com.patrickzedler.grocy.feature.login.impl.LoginDependencies
+import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataDependencies
 import com.patrickzedler.grocy.feature.settings.impl.SettingsDependencies
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 /**
@@ -37,7 +40,17 @@ class AppGraph(
 
     private val grocyApi by lazy { GrocyApi(httpClient) }
 
-    internal val authRepository by lazy { AuthRepository(platform.credentialStore, grocyApi) }
+    internal val authRepository by lazy {
+        AuthRepository(platform.credentialStore, grocyApi) { masterDataRepository.clear() }
+    }
+
+    private val masterDataRepository by lazy {
+        MasterDataRepository(
+            api = grocyApi,
+            database = platform.database,
+            connection = { platform.credentialStore.connection.first() },
+        )
+    }
 
     private val unlockRepository by lazy {
         UnlockRepository(platform.unlockChecker, platform.settingsStore, appScope)
@@ -87,6 +100,11 @@ class AppGraph(
             get() = this@AppGraph.unlockRepository
         override val logReader: LogReader
             get() = platform.logReader
+    }
+
+    internal val masterDataDependencies: MasterDataDependencies = object : MasterDataDependencies {
+        override val masterDataRepository: MasterDataRepository
+            get() = this@AppGraph.masterDataRepository
     }
 
     internal val aboutDependencies: AboutDependencies = object : AboutDependencies {

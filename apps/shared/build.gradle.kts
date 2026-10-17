@@ -11,6 +11,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.data)
+            implementation(projects.core.database)
             implementation(projects.core.design)
             implementation(projects.core.navigation)
             implementation(projects.core.network)
@@ -20,6 +21,8 @@ kotlin {
             api(projects.core.model)
             implementation(projects.feature.login.api)
             implementation(projects.feature.login.impl)
+            implementation(projects.feature.masterdata.api)
+            implementation(projects.feature.masterdata.impl)
             implementation(projects.feature.start.api)
             implementation(projects.feature.start.impl)
             implementation(projects.feature.about.api)

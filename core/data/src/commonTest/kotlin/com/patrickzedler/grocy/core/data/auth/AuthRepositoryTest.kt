@@ -16,7 +16,8 @@ class AuthRepositoryTest {
 
     private val credentialStore = FakeCredentialStore()
     private val server = FakeGrocyServer()
-    private val repository = AuthRepository(credentialStore, server.api)
+    private var localDataClears = 0
+    private val repository = AuthRepository(credentialStore, server.api) { localDataClears++ }
 
     private val connection = ServerConnection.ApiKey("https://grocy.example.com", "secret")
 
@@ -31,6 +32,16 @@ class AuthRepositoryTest {
             repository.logout()
             assertEquals(AuthState.LoggedOut, awaitItem())
         }
+    }
+
+    @Test
+    fun loginAndLogoutForgetTheLocalDataOfTheServer() = runTest {
+        repository.saveLogin(connection)
+        assertEquals(1, localDataClears)
+
+        repository.logout()
+
+        assertEquals(2, localDataClears)
     }
 
     @Test

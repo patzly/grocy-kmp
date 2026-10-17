@@ -7,9 +7,14 @@ import com.patrickzedler.grocy.core.network.GrocyApiException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+/**
+ * @param clearLocalData forgets the data of the previous server (local database), called before
+ *   a login and on logout, so no screen ever shows another server's data.
+ */
 class AuthRepository(
     private val credentialStore: CredentialStore,
     private val grocyApi: GrocyApi,
+    private val clearLocalData: suspend () -> Unit = {},
 ) {
 
     val authState: Flow<AuthState> = credentialStore.connection.map { connection ->
@@ -33,10 +38,12 @@ class AuthRepository(
      * already verified elsewhere.
      */
     suspend fun saveLogin(connection: ServerConnection) {
+        clearLocalData()
         credentialStore.save(connection)
     }
 
     suspend fun logout() {
         credentialStore.clear()
+        clearLocalData()
     }
 }

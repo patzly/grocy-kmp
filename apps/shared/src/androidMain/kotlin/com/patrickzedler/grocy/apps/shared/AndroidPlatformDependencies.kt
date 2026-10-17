@@ -8,6 +8,8 @@ import com.patrickzedler.grocy.core.data.credentials.AndroidCredentialStore
 import com.patrickzedler.grocy.core.data.credentials.CredentialStore
 import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.log.LogReader
+import com.patrickzedler.grocy.core.database.GrocyDatabase
+import com.patrickzedler.grocy.core.database.createGrocyDatabase
 import com.patrickzedler.grocy.core.data.settings.AndroidSettingsStore
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
@@ -36,6 +38,8 @@ class AndroidPlatformDependencies(
     override val settingsStore: SettingsStore by lazy { AndroidSettingsStore(appContext) }
 
     override val appLanguageStore: AppLanguageStore by lazy { AndroidAppLanguageStore(appContext) }
+
+    override val database: GrocyDatabase by lazy { createGrocyDatabase(appContext) }
 
     override val logReader: LogReader = LogcatReader()
 

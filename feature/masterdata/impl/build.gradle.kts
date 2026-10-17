@@ -1,0 +1,24 @@
+plugins {
+    alias(libs.plugins.grocy.kmp.compose)
+    alias(libs.plugins.grocy.sqlite.host.tests)
+}
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            // MasterDataDependencies lists the repository of core:data
+            api(projects.core.data)
+            implementation(projects.core.design)
+            implementation(projects.core.resources)
+            implementation(projects.core.scanner)
+            implementation(projects.core.ui)
+            implementation(projects.feature.masterdata.api)
+            implementation(libs.jetbrains.lifecycle.runtime.compose)
+            implementation(libs.jetbrains.lifecycle.viewmodel.compose)
+            implementation(libs.kotlinx.serialization.json)
+        }
+        commonTest.dependencies {
+            implementation(projects.core.testing)
+        }
+    }
+}

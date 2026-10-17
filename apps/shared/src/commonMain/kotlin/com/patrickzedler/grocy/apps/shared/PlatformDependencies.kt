@@ -6,6 +6,7 @@ import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.update.AppUpdater
 import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
+import com.patrickzedler.grocy.core.database.GrocyDatabase
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
@@ -19,6 +20,9 @@ interface PlatformDependencies {
     val credentialStore: CredentialStore
     val settingsStore: SettingsStore
     val appLanguageStore: AppLanguageStore
+
+    /** The local copy of the server's data, created once on first use. */
+    val database: GrocyDatabase
 
     val logReader: LogReader
 

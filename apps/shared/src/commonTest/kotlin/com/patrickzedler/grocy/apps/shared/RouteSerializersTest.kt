@@ -5,6 +5,9 @@ import com.patrickzedler.grocy.feature.about.api.AboutRoute
 import com.patrickzedler.grocy.feature.login.api.LoginChoiceRoute
 import com.patrickzedler.grocy.feature.login.api.LoginManualRoute
 import com.patrickzedler.grocy.feature.login.api.LoginScanRoute
+import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
+import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute
+import com.patrickzedler.grocy.feature.masterdata.api.ProductsRoute
 import com.patrickzedler.grocy.feature.settings.api.GeneralSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.LogRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
@@ -32,6 +35,10 @@ class RouteSerializersTest {
         SettingsRoute,
         GeneralSettingsRoute,
         LogRoute,
+        MasterDataRoute,
+        ProductsRoute,
+        ProductRoute(),
+        ProductRoute(productId = 7),
     )
 
     private val json = Json { serializersModule = routeSerializers }
@@ -57,7 +64,12 @@ class RouteSerializersTest {
         paths.forEach { path ->
             assertTrue(urlPath.matches(path), "$path is no URL path, add a @SerialName")
         }
-        assertEquals(paths.size, paths.toSet().size, "URL paths must be unique: $paths")
+        // A route with arguments appears once per value, its path once
+        assertEquals(
+            paths.toSet().size,
+            allRoutes.map { it::class }.toSet().size,
+            "URL paths must be unique: $paths",
+        )
     }
 
     private companion object {

@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <full-backup-content>
   <exclude domain="file" path="datastore/credentials.preferences_pb" />
+  <!-- A copy of the server's data, downloaded again after a restore -->
+  <exclude domain="database" path="grocy.db" />
+  <exclude domain="database" path="grocy.db-wal" />
+  <exclude domain="database" path="grocy.db-shm" />
 </full-backup-content>

@@ -7,10 +7,20 @@
   resolved "https://registry.yarnpkg.com/@js-joda/core/-/core-3.2.0.tgz#3e61e21b7b2b8a6be746df1335cf91d70db2a273"
   integrity sha512-PMqgJ0sw5B7FKb2d5bWYIoxjri+QlW/Pys7+Rw82jSH0QN3rB05jZ/VrrsUdh1w4+i2kw9JOejXGq/KhDOX7Kg==
 
+"@sqlite.org/sqlite-wasm@3.53.4-build2":
+  version "3.53.4-build2"
+  resolved "https://registry.yarnpkg.com/@sqlite.org/sqlite-wasm/-/sqlite-wasm-3.53.4-build2.tgz#b006b7c7788eae4db71ec82d19dbb5b42287a6d9"
+  integrity sha512-kQVArGJA4z7s56Dm8t+eTBXad4LiohuVj9pfgDNOcxa+Ic5xMrWlLPTq6cT0hw5S4MIvtpsraW+B0wD+IPvC7A==
+
 "@types/emscripten@^1.41.6":
   version "1.41.6"
   resolved "https://registry.yarnpkg.com/@types/emscripten/-/emscripten-1.41.6.tgz#0d852a4c29fc2c035ed9232f00135717f1a920f1"
   integrity sha512-uN+9i8bFT5CUcZfyIEYDrSueACEyKGbUs5kC/72DGlZZoinh84sJfVV0i8UOJD1asdzkvLPBRrKs41kZ8MdEXg==
+
+"grocy-sqlite-worker@file:../../core/database/web-worker":
+  version "1.0.0"
+  dependencies:
+    "@sqlite.org/sqlite-wasm" "3.53.4-build2"
 
 tagged-tag@^1.0.0:
   version "1.0.0"

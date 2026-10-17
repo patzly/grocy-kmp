@@ -9,5 +9,9 @@ kotlin {
             implementation(projects.core.design)
             implementation(projects.core.resources)
         }
+        androidMain.dependencies {
+            // The photo picker of rememberImagePicker
+            implementation(libs.androidx.activity.compose)
+        }
     }
 }

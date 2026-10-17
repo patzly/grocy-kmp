@@ -9,6 +9,7 @@ import io.ktor.client.engine.mock.MockEngineConfig
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.request.HttpRequestData
 import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import kotlinx.coroutines.CoroutineDispatcher
@@ -30,6 +31,7 @@ class FakeGrocyServer(
     requestDispatcher: CoroutineDispatcher? = null,
 ) {
 
+    // By "METHOD path" for method specific answers, by path for all methods
     private val responses = mutableMapOf<String, Pair<HttpStatusCode, String>>()
 
     /** Every request the server received, in order. */
@@ -55,7 +57,13 @@ class FakeGrocyServer(
             if (unreachable || request.url.protocol.name in unreachableSchemes) {
                 throw IOException("Simulated network failure")
             }
-            val (status, body) = responses[request.url.encodedPath.removePrefix(INGRESS_PATH)]
+            val path = request.url.encodedPath.removePrefix(INGRESS_PATH)
+            val (status, body) = responses["${request.method.value} $path"]
+                ?: responses[path]
+                // Like Grocy, writes without a configured answer succeed without content
+                ?: (HttpStatusCode.NoContent to "").takeIf {
+                    request.method == HttpMethod.Put || request.method == HttpMethod.Delete
+                }
                 ?: (HttpStatusCode.NotFound to """{"error_message":"Not found"}""")
             respond(
                 content = body,
@@ -80,19 +88,34 @@ class FakeGrocyServer(
     init {
         respond(SYSTEM_INFO_PATH, body = SYSTEM_INFO_JSON)
         respond(USER_PATH, body = USER_JSON)
+        MasterDataJson.defaults.forEach { (path, body) -> respond(path, body = body) }
+        respond(
+            path = PRODUCTS_PATH,
+            body = """{"created_object_id":${MasterDataJson.CREATED_ID}}""",
+            method = HttpMethod.Post,
+        )
+        respond("$PRODUCTS_PATH/${MasterDataJson.CREATED_ID}", body = MasterDataJson.CREATED_PRODUCT)
     }
 
+    /** Answers requests to [path], only those with [method] if given. */
     fun respond(
         path: String,
         status: HttpStatusCode = HttpStatusCode.OK,
         body: String = "",
+        method: HttpMethod? = null,
     ) {
-        responses[path] = status to body
+        responses[if (method == null) path else "${method.value} $path"] = status to body
+    }
+
+    /** Requests with [method] to [path], e.g. the PUTs of a saved product. */
+    fun requestsTo(path: String, method: HttpMethod): List<HttpRequestData> = requests.filter {
+        it.method == method && it.url.encodedPath.removePrefix(INGRESS_PATH) == path
     }
 
     companion object {
         const val SYSTEM_INFO_PATH = "/api/system/info"
         const val USER_PATH = "/api/user"
+        const val PRODUCTS_PATH = "/api/objects/products"
         const val INGRESS_PATH = "/api/hassio_ingress/fake-token"
 
         const val SYSTEM_INFO_JSON =

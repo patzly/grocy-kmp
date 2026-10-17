@@ -16,7 +16,14 @@ sealed class GrocyApiException(
     class NotGrocyServer(cause: Throwable? = null) :
         GrocyApiException("Response is not from a Grocy server", cause)
 
-    class HttpError(val statusCode: Int) : GrocyApiException("Unexpected HTTP status $statusCode")
+    /**
+     * The server rejected the request; [serverMessage] is Grocy's explanation, e.g. a database
+     * constraint, shown to the user as technical detail.
+     */
+    class HttpError(
+        val statusCode: Int,
+        val serverMessage: String? = null,
+    ) : GrocyApiException("Unexpected HTTP status $statusCode")
 
     /** Home Assistant rejected the access token. */
     class HomeAssistantTokenRejected : GrocyApiException("Access token was rejected")
