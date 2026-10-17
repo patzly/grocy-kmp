@@ -15,6 +15,8 @@ import kotlinx.serialization.modules.SerializersModule
 @Stable
 class Navigator internal constructor(
     internal val backStack: NavBackStack<NavKey>,
+    /** Writes the back stack into the browser history; null in tests. */
+    internal val backStackCodec: BackStackCodec? = null,
 ) {
 
     fun navigate(route: Route) {
@@ -28,7 +30,8 @@ class Navigator internal constructor(
     }
 
     /**
-     * Makes [route] the only entry, e.g. after login or logout, so back never crosses that boundary.
+     * Makes [route] the only entry, e.g. after login or logout, so back never crosses that
+     * boundary.
      */
     fun replaceAll(route: Route) {
         // Add first: the back stack must never be empty, NavDisplay cannot show nothing
@@ -40,6 +43,9 @@ class Navigator internal constructor(
 /**
  * [routeSerializers] must register every route under NavKey, because Web has no reflection for
  * state saving.
+ *
+ * On the web a reload restores the back stack the browser history kept, if it starts with
+ * [startRoute]; otherwise, e.g. after a logout in another tab, the app starts on [startRoute].
  */
 @Composable
 fun rememberNavigator(
@@ -49,6 +55,13 @@ fun rememberNavigator(
     val configuration = remember(routeSerializers) {
         SavedStateConfiguration { serializersModule = routeSerializers }
     }
-    val backStack = rememberNavBackStack(configuration, startRoute)
-    return remember(backStack) { Navigator(backStack) }
+    val codec = remember(routeSerializers) { BackStackCodec(routeSerializers) }
+    val initialBackStack = remember(codec, startRoute) {
+        restoredBackStack(codec)?.takeIf { it.first() == startRoute } ?: listOf(startRoute)
+    }
+    val backStack = rememberNavBackStack(configuration, *initialBackStack.toTypedArray())
+    return remember(backStack, codec) { Navigator(backStack, codec) }
 }
+
+/** The back stack the browser history kept for the current page, null on Android. */
+internal expect fun restoredBackStack(codec: BackStackCodec): List<NavKey>?

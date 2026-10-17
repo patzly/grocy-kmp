@@ -58,7 +58,7 @@ fun GrocyNavDisplay(
 
     // A back the browser animated already (its back gesture preview) must not animate twice
     var skipPopTransition by remember { mutableStateOf(false) }
-    BrowserBackIntegration(onUserAgentTransition = { skipPopTransition = true })
+    BrowserBackIntegration(navigator, onUserAgentTransition = { skipPopTransition = true })
     LaunchedEffect(skipPopTransition) {
         if (skipPopTransition) {
             // The pop starts in the next frame, afterwards transitions animate again

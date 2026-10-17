@@ -20,7 +20,10 @@ internal data class PopState(
     val hasUserAgentTransition: Boolean,
 )
 
-/** The browser's history API as far as [BrowserHistoryInput] needs it. */
+/**
+ * The browser's history API as far as [BrowserHistoryInput] needs it. Entries written by
+ * [pushState] and [replaceState] also get the app's current back stack and its URL.
+ */
 internal interface BrowserHistory {
 
     /** Index stored with the current entry, null if [BrowserHistoryInput] did not create it. */
@@ -43,12 +46,15 @@ internal interface BrowserHistory {
  * Every screen gets one entry storing its index. A dialog or popup on top gets one more entry,
  * so back closes it first. [isScreen] tells screens from such overlays.
  *
+ * @param initialIndex index of the app's screen when it starts, above 0 when a reload restored
+ *   the back stack from the browser history.
  * @param awaitFrame waits for the next frame; overlay changes are applied after it, because
  *   screens being replaced briefly look like overlays.
  * @param onUserAgentTransition called before a back the browser has animated already.
  */
 internal class BrowserHistoryInput(
     private val history: BrowserHistory,
+    private val initialIndex: Int,
     private val scope: CoroutineScope,
     private val awaitFrame: suspend () -> Unit,
     private val isScreen: (NavigationEventInfo) -> Boolean,
@@ -73,14 +79,15 @@ internal class BrowserHistoryInput(
             history.popStates.collect(::onPopState)
         }
         val restoredIndex = history.currentIndex
-        if (restoredIndex != null && restoredIndex > 0) {
-            // After a reload the app starts on its first screen, the browser returns to its entry
-            expectArrival(0)
-            history.go(-restoredIndex)
+        if (restoredIndex != null && restoredIndex > initialIndex) {
+            // A reload on a dialog's entry, or one the app could not restore: back to the screen
+            expectArrival(initialIndex)
+            history.go(initialIndex - restoredIndex)
         } else {
-            history.replaceState(0)
+            history.replaceState(initialIndex)
         }
-        browserIndex = 0
+        browserIndex = initialIndex
+        targetIndex = initialIndex
     }
 
     override fun onRemoved() {
@@ -101,6 +108,18 @@ internal class BrowserHistoryInput(
         } else {
             targetIndex = appIndex + 1
             scheduleSync()
+        }
+    }
+
+    /**
+     * Rewrites the current entry when the back stack changed without a move, e.g. the login
+     * replacing its screen by the start screen. On the first screen no handler is enabled, so
+     * [onHistoryChanged] does not tell. Only when [lastIndex] of the back stack is the entry's
+     * index, so a half-done navigation never writes its back stack into the previous entry.
+     */
+    fun onBackStackChanged(lastIndex: Int) {
+        if (lastIndex == targetIndex && targetIndex == browserIndex && pendingArrivals.isEmpty()) {
+            history.replaceState(targetIndex)
         }
     }
 
@@ -150,6 +169,9 @@ internal class BrowserHistoryInput(
                 history.go(target - browserIndex)
                 browserIndex = target
             }
+
+            // Same index, maybe another screen (e.g. after replacing the back stack)
+            else -> history.replaceState(target)
         }
     }
 
