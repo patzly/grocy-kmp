@@ -60,7 +60,8 @@ class MasterDataRepository(
     val productBarcodes: Flow<List<ProductBarcode>> =
         dao.observeProductBarcodes().map { list -> list.map { it.toModel() } }
 
-    val stock: Flow<List<StockAmount>> = dao.observeStock().map { list -> list.map { it.toModel() } }
+    val stock: Flow<List<StockAmount>> =
+        dao.observeStock().map { list -> list.map { it.toModel() } }
 
     /** Grocy's defaults until the server's configuration was downloaded once. */
     val serverConfig: Flow<ServerConfig> =
@@ -117,7 +118,9 @@ class MasterDataRepository(
             dao.deleteUserfields(PRODUCTS)
             dao.insertUserfields(download.userfields.map { it.toEntity() })
             dao.upsertServerValue(value(SERVER_CONFIG, ServerConfig.serializer(), download.config))
-            dao.upsertServerValue(value(USER_SETTINGS, UserSettings.serializer(), download.settings))
+            dao.upsertServerValue(
+                value(USER_SETTINGS, UserSettings.serializer(), download.settings),
+            )
         }
     }
 

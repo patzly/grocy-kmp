@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">Про застосунок</string>
   <string name="title_feedback">Відгук</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">Питання-заповнювач</string>
   <string name="help_placeholder_answer">Відповідь-заповнювач.</string>
 
+
   <!-- Updates -->
   <string name="update_available">Доступне оновлення</string>
   <string name="update_available_version">Доступна версія Grocy %1$s. Оновити зараз?</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">Стандартний</string>
   <string name="settings_contrast_medium">Середній</string>
   <string name="settings_contrast_high">Високий</string>
+  <!-- Common data -->
+  <string name="action_add">Додати</string>
+  <string name="action_search">Пошук</string>
+  <string name="action_clear">Очистити</string>
+  <string name="action_save">Зберегти</string>
+  <string name="action_retry">Спробувати ще</string>
+  <string name="action_scroll_to_top">Прокрутити вгору</string>
+  <string name="action_show_choices">Показати варіанти</string>
+  <string name="action_scan_barcode">Сканувати штрихкод</string>
+  <string name="action_close_scanner">Закрити сканер</string>
+  <string name="data_none">Нічого</string>
+  <string name="data_all">Усі</string>
+  <string name="data_offline">Не вдалося підключитися до сервера. Показано збережені дані.</string>
+  <string name="data_load_failed">Не вдалося завантажити дані.</string>
+  <string name="data_save_offline">Для збереження потрібне з’єднання з сервером.</string>
+  <string name="data_save_failed">Помилка при збереженні, схоже що цей об’єкт вже існує</string>
+  <string name="data_save_failed_details">Повідомлення сервера: %1$s</string>
+  <string name="data_saved">Збережено</string>
+  <string name="data_number_invalid">Значення не може бути меншим за %1$s і має бути дійсним числом з не більше ніж %2$s знаками після коми</string>
+  <string name="data_date_invalid">Введіть дату у форматі YYYY-MM-DD</string>
+  <string name="data_datetime_invalid">Введіть дату й час у форматі YYYY-MM-DD HH:MM:SS</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">Основні дані</string>
+  <string name="masterdata_products">Продукти</string>
+  <string name="masterdata_locations">Місця</string>
+  <string name="masterdata_stores">Магазини</string>
+  <string name="masterdata_quantity_units">Одиниці виміру</string>
+  <string name="masterdata_product_groups">Групи продуктів</string>
+  <string name="masterdata_chores">Завдання</string>
+  <string name="masterdata_batteries">Акумулятори</string>
+  <string name="masterdata_task_categories">Категорії завдань</string>
+  <string name="masterdata_userfields">Користувацькі поля</string>
+  <string name="masterdata_userentities">Користувацькі сутності</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">Налаштувати користувацькі поля</string>
+  <string name="products_presets">Налаштування для нових продуктів</string>
+  <string name="products_filter_clear">Очистити фільтр</string>
+  <string name="products_filter_product_group">Група продуктів</string>
+  <string name="products_filter_status">Статус</string>
+  <string name="products_filter_in_stock">Продукти в наявності</string>
+  <string name="products_filter_out_of_stock">Продукти, яких немає в наявності</string>
+  <string name="products_filter_show_disabled">Відобразити вимкнені</string>
+  <string name="products_sort">Сортування</string>
+  <string name="products_sort_ascending">За зростанням</string>
+  <string name="products_sort_descending">За спаданням</string>
+  <string name="products_sort_name">Назва</string>
+  <string name="products_sort_location">Місце</string>
+  <string name="products_sort_min_stock_amount">Мінімальна наявна кількість</string>
+  <string name="products_sort_product_group">Група продуктів</string>
+  <string name="products_sort_qu_stock">Кількість у наявності</string>
+  <string name="products_sort_store">Магазин за замовчуванням</string>
+  <string name="products_disabled">Вимкнено</string>
+  <string name="products_has_picture">Цей продукт має зображення</string>
+  <string name="products_min_stock_amount">Мінімальна наявна кількість: %1$s %2$s</string>
+  <string name="products_empty">Продуктів ще немає</string>
+  <string name="products_empty_filtered">Немає продуктів, що відповідають фільтру</string>
+
+  <!-- Product form -->
+  <string name="product_create">Створити продукт</string>
+  <string name="product_edit">Редагувати продукт</string>
+  <string name="product_stock_entries">Інвертарні записи</string>
+  <string name="product_stock_journal">Журнал продуктів</string>
+  <string name="product_group_location">Місце</string>
+  <string name="product_group_stock">Наявність</string>
+  <string name="product_group_due_date">Термін придатності</string>
+  <string name="product_group_quantity_units">Одиниці виміру</string>
+  <string name="product_group_tare_weight">Вага тари</string>
+  <string name="product_group_more">Більше</string>
+  <string name="product_group_related">Пов’язані дані</string>
+  <string name="product_name">Назва</string>
+  <string name="product_name_required">Назва є обов’язковою</string>
+  <string name="product_active">Активні</string>
+  <string name="product_parent">Базовий продукт</string>
+  <string name="product_parent_disabled">Не можливо, так як цей продукт вже є базовим продуктом для іншого продукту</string>
+  <string name="product_parent_not_found">Немає продукту з цим штрихкодом</string>
+  <string name="product_parent_not_allowed">Цей продукт не може бути базовим продуктом</string>
+  <string name="product_description">Опис</string>
+  <string name="product_location">Місце за замовчуванням</string>
+  <string name="product_location_required">Місце є обов’язковим</string>
+  <string name="product_consume_location">Місце вживання за замовчуванням</string>
+  <string name="product_consume_location_hint">Продукти з цього місця будуть вжиті першими</string>
+  <string name="product_move_on_open">Перемістити у відкрите</string>
+  <string name="product_move_on_open_hint">Якщо увімкнено, при відмічанні цього товару відкритим, він буде перенесений у місце вживання за замовчуванням</string>
+  <string name="product_store">Магазин за замовчуванням</string>
+  <string name="product_min_stock_amount">Мінімальна кількість у наявності</string>
+  <string name="product_cumulate_min_stock">Сумувати мінімальну кількість підпродуктів</string>
+  <string name="product_cumulate_min_stock_hint">Якщо увімкнено, мінімальна наявна кількість підпродуктів сумуватиметься в цьому продукті, тобто підпродукт ніколи не вважатиметься відсутнім, лише цей продукт</string>
+  <string name="product_treat_opened_as_out_of_stock">Прирівняти відкритий продукт до витраченого</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">Якщо увімкнено, відкриті продукти вважатимуться відсутніми під час перевірки, чи цей продукт нижче мінімальної наявної кількості</string>
+  <string name="product_due_type">Тип терміну</string>
+  <string name="product_due_type_hint">Залежно від обраного типу, підсвітка на сторінці інвентаря буде іншою</string>
+  <string name="product_due_type_best_before">Краще вжити до</string>
+  <string name="product_due_type_best_before_hint">Означає, що продукт може ще бути безпечним для вживання після вичерпання строку придатності</string>
+  <string name="product_due_type_expiration">Термін придатності</string>
+  <string name="product_due_type_expiration_hint">Означає, що вживати продукт після вичерпання строку придатності може бути небезпечно!</string>
+  <string name="product_due_days">Термін придатності за замовчуванням</string>
+  <string name="product_due_days_hint">Під час покупок ця кількість днів додаватиметься до сьогоднішньої дати для пропозиції терміну придатності (-1 означає, що цей продукт ніколи не прострочиться)</string>
+  <string name="product_due_days_after_open">Термін придатності після відкривання</string>
+  <string name="product_due_days_after_open_hint">Коли продукт буде відмічено відкритим, термін придатності стане поточною датою + ця кількість днів. Але тільки в тому разі, якщо ця дата не пізніше ніж початковий термін придатності (поставле 0, щоб вимкнути це)</string>
+  <string name="product_due_days_after_freezing">Термін придатності після заморозки за замовчуванням</string>
+  <string name="product_due_days_after_freezing_hint">Під час переміщення цього продукту до морозильного місця (тобто під час заморожування) термін придатності буде замінено на сьогодні + цю кількість днів (-1 означає, що цей продукт ніколи не прострочиться)</string>
+  <string name="product_due_days_after_thawing">Днів після розморозки за замовчуванням</string>
+  <string name="product_due_days_after_thawing_hint">Під час переміщення цього продукту з морозильного місця (тобто під час розморожування) термін придатності буде замінено на сьогодні + цю кількість днів</string>
+  <string name="product_should_not_be_frozen">Не варто заморожувати</string>
+  <string name="product_should_not_be_frozen_hint">Якщо увімкнено, під час переміщення цього продукту до морозильного місця (тобто під час заморожування) буде показано попередження</string>
+  <string name="product_product_group">Група продуктів</string>
+  <string name="product_qu_stock">Кількість у наявності</string>
+  <string name="product_qu_stock_hint">Якщо цей продукт уже був у наявності, а потрібну одиницю виміру тут вибрати не можна, спершу створіть відповідну конверсію одиниць</string>
+  <string name="product_qu_purchase">Одиниці вимірювання за замовчуванням</string>
+  <string name="product_qu_purchase_hint">Це одиниця виміру за замовчуванням під час покупки та додавання цього продукту до списку покупок</string>
+  <string name="product_qu_consume">Одиниця виміру вживання за замовчуванням</string>
+  <string name="product_qu_consume_hint">Це одиниця виміру за замовчуванням під час вживання цього продукту</string>
+  <string name="product_qu_price">Одиниця виміру для цін</string>
+  <string name="product_qu_price_hint">Ціни цього продукту відображатимуться відносно цієї одиниці виміру</string>
+  <string name="product_qu_required">Одиниця вимірювання є обов’язковою</string>
+  <string name="product_tare_weight_handling">Задіяти використання постійної тари</string>
+  <string name="product_tare_weight_handling_hint">Це може бути корисним, наприклад, для борошна у банках - про покупці/вживанні/інвентаризації ви завжди зважуєте усю банку. Кількість продукту буде автоматично обчислена виходячи з того, яка кількість є у наявності та вагу самої тари</string>
+  <string name="product_tare_weight">Вага тари</string>
+  <string name="product_not_check_stock_fulfillment">Вимкнути перевірку наявності для цього інгрідієнту</string>
+  <string name="product_not_check_stock_fulfillment_hint">Це буде налаштуванням за замовчуванням при додаванні цього продукту як інгрідієнта до рецептів</string>
+  <string name="product_energy">Енергетична цінність</string>
+  <string name="product_energy_hint">На одиницю виміру наявності</string>
+  <string name="product_quick_consume_amount">Кількість для швидкого вживання</string>
+  <string name="product_quick_consume_amount_hint">Ця кількість використовується для "кнопки швидкого вживання" на сторінці інвентарю (в одиниці виміру наявності)</string>
+  <string name="product_quick_open_amount">Кількість для швидкого відкривання</string>
+  <string name="product_quick_open_amount_hint">Ця кількість використовується для "кнопки швидкого відкривання" на сторінці інвентарю (в одиниці виміру наявності)</string>
+  <string name="product_stock_label">Етикетка інвентарного запису за замовчуванням</string>
+  <string name="product_stock_label_hint">Це значення за замовчуванням, яке буде заповнено під час покупки</string>
+  <string name="product_stock_label_none">Без етикетки</string>
+  <string name="product_stock_label_single">Одна етикетка</string>
+  <string name="product_stock_label_per_unit">Етикетка на одиницю</string>
+  <string name="product_auto_reprint_label">Автоматично передруковувати етикетку запису</string>
+  <string name="product_auto_reprint_label_hint">Якщо увімкнено, автоматична зміна терміну придатності інвентарного запису (через відкривання/заморожування/розморожування за встановлених відповідних днів за замовчуванням) передруковуватиме його етикетку</string>
+  <string name="product_price_type">Тип ціни покупки за замовчуванням</string>
+  <string name="product_price_type_hint">Використовуватиметься як тип ціни за замовчуванням під час покупки</string>
+  <string name="product_price_type_unspecified">Не вказано</string>
+  <string name="product_price_type_unit">Вартість за одиницю</string>
+  <string name="product_price_type_total">Загальна вартість</string>
+  <string name="product_disable_open">Не можна відкрити</string>
+  <string name="product_hide_on_stock_overview">Ніколи не відображати у інвентарі</string>
+  <string name="product_hide_on_stock_overview_hint">Сторінка інвентарю показує всі продукти, які зараз є в наявності або нижче мінімальної наявної кількості - увімкніть, щоб ніколи не показувати там цей продукт</string>
+  <string name="product_no_own_stock">Вимкнути власну наявність</string>
+  <string name="product_no_own_stock_hint">Якщо увімкнено, цей продукт не матиме власного параметру кількості і його не можна буде обрати при покупці (Для базових продуктів, чия кількість буде обчислена як сума кількості похідних продуктів)</string>
+  <string name="product_userfields">Користувацькі поля</string>
+  <string name="product_userfield_required">Обов’язкове користувацьке поле</string>
+  <string name="product_userfield_title">Назва</string>
+  <string name="product_userfield_link">Посилання</string>
+  <string name="product_userfield_file">Файли можна додати у вебінтерфейсі Grocy</string>
+  <string name="product_barcodes">Штрихкоди</string>
+  <string name="product_qu_conversions">Конверсії одиниць виміру для цього продукту</string>
+  <string name="product_picture">Зображення</string>
+  <string name="product_picture_none">Зображення недоступне</string>
+  <string name="product_picture_choose">Вибрати зображення</string>
+  <string name="product_picture_delete">Видалити зображення</string>
+  <string name="product_picture_will_delete">Поточне зображення буде видалено при збереженні</string>
+  <string name="product_picture_will_upload">Нове зображення буде завантажено під час збереження</string>
+  <string name="product_picture_load_failed">Не вдалося завантажити зображення</string>
+  <string name="product_save_hint">Збережіть, щоб додати штрихкоди та конверсії одиниць виміру</string>
   <string name="log_empty">Помилок не зареєстровано</string>
   <string name="log_report_crash">Якщо застосунок аварійно завершив роботу або щось пішло не так, скопіюйте журнал і надішліть його разом із відгуком, щоб помилку можна було виправити.</string>
 </resources>

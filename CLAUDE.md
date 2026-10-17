@@ -6,8 +6,34 @@ Compose Multiplatform. Targets: Android (phone, Wear OS) and Web (Kotlin/Wasm). 
 
 Current state: login (demo server, QR code of Grocy's API key page, manual Grocy URL + API key,
 Home Assistant ingress on Android), the reusable barcode scanner (`core:scanner`), update checks
-on every platform, a placeholder start screen, an About screen and the Settings overview
-(`feature:settings`, reached from the start screen).
+on every platform, the start screen (Master data item, Settings and About actions), an About
+screen, the Settings overview (`feature:settings`) and the first master data
+(`feature:masterdata`): the overview of Grocy's master data categories, the product list and
+the product form. Only Products opens a screen so far; Barcodes, QU conversions, Stock entries,
+Stock journal, "Configure userfields" and "Presets for new products" are placeholders without
+action.
+
+Master data (`feature:masterdata`), built after Grocy's web frontend:
+- `MasterDataScreen` lists the categories of Grocy's "Manage master data" menu in its order and
+  hides the ones whose feature flag is off (`MasterDataCategory.isAvailable`).
+- `ProductsScreen`: one segmented item per product (`itemSpacing = SegmentedGap`), a filter row
+  as first item (`ProductFilterBar`, Material 3 chips, one per filter: product group and status
+  as dropdown filter chips that are selected and show the value while not "All", "Show
+  disabled" as toggle chip, a sort chip, and "Clear filter" as input chip while anything is
+  filtered)
+  and a floating toolbar (Add as FAB, Search, Configure userfields, Presets for new products,
+  Scroll to top). Filtering, sorting and the fuzzy search are the pure `buildProductList`:
+  in stock means `amount_aggregated > 0` of an active product, like Grocy's `stock_current`.
+- `ProductScreen` edits or creates (`ProductRoute(productId = null)`) a product with every field
+  of Grocy's form, in its order, grouped, fields of disabled features hidden
+  (`ProductFormFeatures`). The logic is pure and tested: `ProductFormValues.validate` (Grocy's
+  required fields and number ranges), `toProduct` (hidden fields keep their values, an
+  unchanged description keeps its HTML), `newProductValues` (presets), `linkedQuantityUnit`
+  (the other units follow the stock unit). Saving is online only: an edited product closes the
+  form like "Save & return", a created one turns the form into its edit form. Userfields are
+  edited by type (`UserfieldInput`, only changed ones are sent; files and images read only),
+  the picture through `ProductPictureDialog` (`rememberImagePicker` of `core:ui`), the parent
+  product can also be scanned (barcode or grocycode `grcy:p:<id>`).
 
 Settings plan: the overview lists the categories General (language, theme, contrast), Server
 (server URL, Grocy version, reload configuration, logout), User settings (loaded from the
@@ -141,7 +167,6 @@ for `SegmentedListItem`s, and `AppBarIconButton` for app bar actions.
 - Always prefer the project's own components from `core:design` (`ScrollableAlertDialog`,
   `InsetLazyColumn`, `RoundedTextField`, `ConnectedButtonGroup`, `NavigateBackButton`,
   `HapticTooltipBox`, `LeadingContentWrapper`, ...) over raw Material components when they fit.
-- Not yet following these rules (adapt when it gets real content): the placeholder `StartScreen`.
 
 ### Adaptive layouts and platforms
 
@@ -261,7 +286,10 @@ apps/
 core/
   model/         plain models: ServerConnection, User, SystemInfo, UnlockState, theme enums
   network/       Ktor client, GrocyApi, GrocyApiException, ServerUrl.normalize, DTOs
-  data/          AuthRepository, UnlockRepository, CredentialStore, SettingsStore (+ platform impls)
+  data/          AuthRepository, UnlockRepository, CredentialStore, SettingsStore (+ platform impls),
+                 MasterDataRepository
+  database/      Room 3 GrocyDatabase (copy of the server's data), DAOs, entity mappings,
+                 web-worker/ with the SQLite worker of the browser
   resources/     Compose Resources: strings, drawables, fonts, text files; public Res class
   design/        GrocyTheme (Material 3 Expressive, MaterialKolor), typography, shapes, components
   navigation/    Navigator, Route, GrocyNavDisplay (Navigation 3)
@@ -399,6 +427,31 @@ both modules to `apps/shared/build.gradle.kts`, and add the new routes to `allRo
 - Android allows cleartext HTTP and user CAs on purpose (self-hosted servers), see
   `network_security_config.xml`.
 
+### Local database (`core:database`, Room 3)
+
+- Offline first: screens read `GrocyDatabase` through repositories (`MasterDataRepository` in
+  `core:data`), `refresh()` downloads everything a screen shows in parallel and replaces the
+  tables in one `withWriteTransaction`, so readers never see half an update. Changes are online
+  only (`saveProduct`, `deleteProduct`) and store what the server returns afterwards.
+- `AuthRepository` clears the database before a login and on logout (`clearLocalData`), so no
+  screen shows the data of another server. The database file is excluded from backups.
+- Server configuration and user settings live as JSON in `server_values`; only the known feature
+  flags are kept (`ServerConfig`), the rest of `/system/config` (e.g. webhooks) never is stored.
+- Room 3.0.x via the `grocy.room` convention plugin (KSP per target, schemas exported to
+  `core/database/schemas`). Every schema change needs a new version and a migration; check it
+  against the exported schema.
+- Android: `BundledSQLiteDriver`, file `grocy.db`. Web: `WebWorkerSQLiteDriver` with the worker
+  `core/database/web-worker/worker.js` (npm package `grocy-sqlite-worker` on top of
+  `@sqlite.org/sqlite-wasm`, androidx's message protocol). It stores the database in OPFS with
+  the "opfs-sahpool" VFS, which needs no COOP/COEP headers (GitHub Pages); a second tab or a
+  browser without OPFS gets an in-memory database that the app fills from the server again.
+  Webpack bundles worker and `sqlite3.wasm`, `precache.json` lists them for offline use.
+- Grocy sends numbers as numbers or strings depending on version: DTOs use `FlexInt`,
+  `FlexDouble`, `FlexBoolean`, `FlexString`. Writes send JSON with exactly `application/json`
+  (Grocy compares the header as string and rejects a charset) and get `GrocyApiException.
+  HttpError.serverMessage` from Grocy's `error_message`. Browsers can write too: the preflight
+  carries the API key in the query and Grocy answers it.
+
 ### Storage
 
 - `CredentialStore`: Android uses DataStore with values AES-GCM encrypted by an Android Keystore
@@ -507,8 +560,11 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
 - Reuse components from `core:design` (`SegmentedListScreen`, `segmentedGroup`,
   `SegmentedContainer`, `AppBarIconButton`, `InsetLazyColumn` + `insetItem` with max width
   640.dp, `RoundedTextField`, `ConnectedButtonGroup`, `NavigateBackButton`, `HapticTooltipBox`,
-  `TextDialog`, `FormattedText`). Clicks trigger `haptic.confirm()`. `HapticTooltipBox` puts its
-  modifier on an outer `Box`, because Material's `TooltipBox` loses parent data such as `align`.
+  `TextDialog`, `FormattedText`, `FloatingToolbarWithFab` + `FloatingToolbarIconButton` for the
+  floatingToolbar slot of `SegmentedListScreen`, `SegmentedSwitchItem`,
+  `SearchableDropdownField` for every choice of objects: fuzzy search while typing, no free
+  text, optional fields offer "None"). Clicks trigger `haptic.confirm()`. `HapticTooltipBox`
+  puts its modifier on an outer `Box`, because Material's `TooltipBox` loses parent data such as `align`.
   Tooltips show on long press, mouse hover and keyboard focus, never after a plain tap or click:
   Compose on the web focuses a clicked button, so `TooltipPressTracker` tells a pointer focus
   (`TooltipTrigger.PointerFocus`) from keyboard focus and long press.
@@ -595,6 +651,17 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
     the same responses below `INGRESS_PATH`. It sends the key as header on every platform.
   - `FakeCredentialStore`, `FakeSettingsStore`, `FakeUnlockChecker`, `FakeAppUpdater`,
     `FakeAppLanguageStore`.
+  - `FakeGrocyServer` also serves the master data of `MasterDataJson` (Milk, Bread, a disabled
+    product, a sub product, units, barcode, stock, userfield, config, settings), answers
+    `respond(..., method = HttpMethod.Post)` per method, accepts PUT and DELETE with 204 and lists
+    them with `requestsTo(path, method)`.
+- Room needs a real SQLite: tests with a database live in `androidHostTest` (Node has no web
+  worker) and use `createInMemoryGrocyDatabase(queryContext = testDispatcher)`; modules running
+  them apply `grocy.sqlite.host.tests`, which loads the desktop SQLite library for the JVM.
+- `snapshotFlow` over a `TextFieldState` in a ViewModel needs `Snapshot.sendApplyNotifications()`
+  in tests, which the frame clock does in the app.
+- Fuzzy search (`FuzzySearch`) and number formatting (`formatDecimal`, `parseDecimal`,
+  `platformDecimalSeparator`) live in `core:model`, so they are tested on JVM and Wasm.
 - Network code is tested against `MockEngine` via `createGrocyHttpClient(engine)`, which uses the
   same configuration as production.
 - Coroutines: wrap tests in `runTest`. Inject dispatchers (`UnlockRepository(checkDispatcher)`)

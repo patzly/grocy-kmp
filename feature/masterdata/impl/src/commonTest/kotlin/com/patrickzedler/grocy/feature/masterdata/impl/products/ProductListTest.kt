@@ -126,7 +126,14 @@ class ProductListTest {
     @Test
     fun locationIsHiddenWithoutLocationTracking() {
         val item = buildProductList(
-            data, ProductFilter(), ProductSort(), "", 4, '.', showLocation = false, showStore = true,
+            data,
+            ProductFilter(),
+            ProductSort(),
+            query = "",
+            decimalPlaces = 4,
+            decimalSeparator = '.',
+            showLocation = false,
+            showStore = true,
         ).first { it.name == "Milk" }
 
         assertNull(item.locationName)

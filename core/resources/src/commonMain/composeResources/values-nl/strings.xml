@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">Over</string>
   <string name="title_feedback">Feedback</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">Voorbeeldvraag</string>
   <string name="help_placeholder_answer">Voorbeeldantwoord.</string>
 
+
   <!-- Updates -->
   <string name="update_available">Update beschikbaar</string>
   <string name="update_available_version">Grocy %1$s is beschikbaar. Nu bijwerken?</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">Standaard</string>
   <string name="settings_contrast_medium">Gemiddeld</string>
   <string name="settings_contrast_high">Hoog</string>
+  <!-- Common data -->
+  <string name="action_add">Toevoegen</string>
+  <string name="action_search">Zoeken</string>
+  <string name="action_clear">Wis</string>
+  <string name="action_save">Opslaan</string>
+  <string name="action_retry">Opnieuw proberen</string>
+  <string name="action_scroll_to_top">Naar boven scrollen</string>
+  <string name="action_show_choices">Keuzes tonen</string>
+  <string name="action_scan_barcode">Streepjescode scannen</string>
+  <string name="action_close_scanner">Scanner sluiten</string>
+  <string name="data_none">Geen</string>
+  <string name="data_all">Alle</string>
+  <string name="data_offline">De server is niet bereikbaar. De opgeslagen gegevens worden getoond.</string>
+  <string name="data_load_failed">De gegevens konden niet worden geladen.</string>
+  <string name="data_save_offline">Opslaan vereist een verbinding met de server.</string>
+  <string name="data_save_failed">Error bij opslaan, waarschijnlijk bestaat dit item al</string>
+  <string name="data_save_failed_details">Melding van de server: %1$s</string>
+  <string name="data_saved">Opgeslagen</string>
+  <string name="data_number_invalid">Dit mag niet minder zijn dan %1$s en moet een getal zijn met max. %2$s decimalen</string>
+  <string name="data_date_invalid">Voer een datum in als YYYY-MM-DD</string>
+  <string name="data_datetime_invalid">Voer een datum en tijd in als YYYY-MM-DD HH:MM:SS</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">Masterdata</string>
+  <string name="masterdata_products">Producten</string>
+  <string name="masterdata_locations">Locaties</string>
+  <string name="masterdata_stores">Winkels</string>
+  <string name="masterdata_quantity_units">Hoeveelheidseenheden</string>
+  <string name="masterdata_product_groups">Productcategorieën</string>
+  <string name="masterdata_chores">Klusjes</string>
+  <string name="masterdata_batteries">Batterijen</string>
+  <string name="masterdata_task_categories">Taakcategorieën</string>
+  <string name="masterdata_userfields">Gebruikersvelden</string>
+  <string name="masterdata_userentities">Gebruikersentiteit</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">Configureer gebruikersvelden</string>
+  <string name="products_presets">Vooraf ingesteld voor nieuwe producten</string>
+  <string name="products_filter_clear">Wis filter</string>
+  <string name="products_filter_product_group">Productcategorie</string>
+  <string name="products_filter_status">Status</string>
+  <string name="products_filter_in_stock">Producten op voorraad</string>
+  <string name="products_filter_out_of_stock">Producten niet op voorraad</string>
+  <string name="products_filter_show_disabled">Toon uitgeschakeld</string>
+  <string name="products_sort">Sorteren</string>
+  <string name="products_sort_ascending">Oplopend</string>
+  <string name="products_sort_descending">Aflopend</string>
+  <string name="products_sort_name">Naam</string>
+  <string name="products_sort_location">Locatie</string>
+  <string name="products_sort_min_stock_amount">Min. voorraadhoeveelheid</string>
+  <string name="products_sort_product_group">Productcategorie</string>
+  <string name="products_sort_qu_stock">Voorraadeenheid</string>
+  <string name="products_sort_store">Standaardwinkel</string>
+  <string name="products_disabled">Uitgeschakeld</string>
+  <string name="products_has_picture">Dit product heeft een afbeelding</string>
+  <string name="products_min_stock_amount">Min. voorraadhoeveelheid: %1$s %2$s</string>
+  <string name="products_empty">Nog geen producten</string>
+  <string name="products_empty_filtered">Geen producten komen overeen met het filter</string>
+
+  <!-- Product form -->
+  <string name="product_create">Maak een product</string>
+  <string name="product_edit">Bewerk product</string>
+  <string name="product_stock_entries">Voorraad items</string>
+  <string name="product_stock_journal">Voorraad dagboek</string>
+  <string name="product_group_location">Locatie</string>
+  <string name="product_group_stock">Voorraad</string>
+  <string name="product_group_due_date">Vervaldatum</string>
+  <string name="product_group_quantity_units">Hoeveelheidseenheden</string>
+  <string name="product_group_tare_weight">Tarragewicht</string>
+  <string name="product_group_more">Meer</string>
+  <string name="product_group_related">Gerelateerde gegevens</string>
+  <string name="product_name">Naam</string>
+  <string name="product_name_required">Een naam is vereist</string>
+  <string name="product_active">Actief</string>
+  <string name="product_parent">Parent product</string>
+  <string name="product_parent_disabled">Niet mogelijk, omdat het product al wordt gebruikt als parent product in een ander product.</string>
+  <string name="product_parent_not_found">Geen product met deze streepjescode</string>
+  <string name="product_parent_not_allowed">Dit product kan geen parent product zijn</string>
+  <string name="product_description">Omschrijving</string>
+  <string name="product_location">Standaardlocatie</string>
+  <string name="product_location_required">Een locatie is vereist</string>
+  <string name="product_consume_location">Standaard verbruikslocatie</string>
+  <string name="product_consume_location_hint">Voorraad op deze locatie wordt als eerste verbruikt</string>
+  <string name="product_move_on_open">Verplaats na openen</string>
+  <string name="product_move_on_open_hint">Indien ingeschakeld, wordt bij het markeren van dit product als geopend de overeenkomstige hoeveelheid verplaatst naar de standaard verbruikslocatie</string>
+  <string name="product_store">Standaardwinkel</string>
+  <string name="product_min_stock_amount">Minimale voorraadhoeveelheid</string>
+  <string name="product_cumulate_min_stock">Verzamel minimale voorraad sub producten</string>
+  <string name="product_cumulate_min_stock_hint">Indien ingeschakeld zal de minimale voorraad van subproducten worden verzameld in dit product. Dat wil zeggen: het subproduct zal nooit "ontbreken", alleen dit product</string>
+  <string name="product_treat_opened_as_out_of_stock">Behandel als geopend wanneer niet op voorraad</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">Indien ingeschakeld, worden geopende artikelen als ontbrekend geteld voor de berekening als dit product minder dan de minimale voorraad heeft</string>
+  <string name="product_due_type">Vervaldatum soort</string>
+  <string name="product_due_type_hint">Gebaseerd op het geselecteerde type, zal de markering op de overzichtspagina afwijken</string>
+  <string name="product_due_type_best_before">Tenminste houdbaar tot</string>
+  <string name="product_due_type_best_before_hint">Betekent dat het product misschien nog veilig is om te gebruiken na de houdbaarheidsdatum</string>
+  <string name="product_due_type_expiration">Houdbaarheidsdatum</string>
+  <string name="product_due_type_expiration_hint">Betekent dat het product niet meer gebruikt kan worden na de houdbaarheidsdatum</string>
+  <string name="product_due_days">Standaard houdbaarheidsdatum</string>
+  <string name="product_due_days_hint">De volgende uitvoeringsdatum zal worden aangeraden op zoveel dagen na vandaag (-1 betekent dat dit product nooit achterstallig zal zijn)</string>
+  <string name="product_due_days_after_open">Standaard houdbaarheidsdatum na openen</string>
+  <string name="product_due_days_after_open_hint">Toen dit product als geopend werd gemarkeerd, wordt de vervaldatum vervangen door vandaag + dit aantal dagen, maar alleen als de resulterende datum niet na de originele vervaldatum valt (een waarde van 0 schakelt dit uit)</string>
+  <string name="product_due_days_after_freezing">Standaard houdbaarheidsdatum na invriezen</string>
+  <string name="product_due_days_after_freezing_hint">Wanneer dit product naar een diepvrieslocatie wordt verplaatst (dus bij invriezen), zal de THT datum vervangen worden door vandaag + dit aantal dagen (-1 betekent dat dit product nooit achterstallig zal zijn)</string>
+  <string name="product_due_days_after_thawing">Standaard houdbaarheidsdatum na ontdooien</string>
+  <string name="product_due_days_after_thawing_hint">Wanneer dit product uit een diepvrieslocatie wordt gehaald (dus bij ontdooien), zal de THT-datum vervangen worden door vandaag + dit aantal dagen</string>
+  <string name="product_should_not_be_frozen">Mag niet worden ingevroren</string>
+  <string name="product_should_not_be_frozen_hint">Indien ingeschakeld, wordt bij het verplaatsen van dit product naar een vriezer locatie (dus bij het invriezen) een waarschuwing weergegeven</string>
+  <string name="product_product_group">Productcategorie</string>
+  <string name="product_qu_stock">Voorraadeenheid</string>
+  <string name="product_qu_stock_hint">Als dit product eenmaal op voorraad is geweest en de gewenste hoeveelheidseenheid hier niet kan worden gekozen, maak dan eerst een bijbehorende eenheidsconversie aan</string>
+  <string name="product_qu_purchase">Standaard aankoopeenheid</string>
+  <string name="product_qu_purchase_hint">Dit is de standaardhoeveelheid die wordt gebruikt bij aankoop en bij het toevoegen van dit product aan de boodschappenlijst</string>
+  <string name="product_qu_consume">Standaard verbruikte hoeveelheidseenheid</string>
+  <string name="product_qu_consume_hint">Dit is de standaardhoeveelheidseenheid die wordt gebruikt bij het consumeren van dit product</string>
+  <string name="product_qu_price">Hoeveelheidseenheid voor prijzen</string>
+  <string name="product_qu_price_hint">Bij het tonen van prijzen voor dit product, worden deze gerelateerd aan deze hoeveelheidseenheid</string>
+  <string name="product_qu_required">Een hoeveelheidseenheid is vereist</string>
+  <string name="product_tare_weight_handling">Gebruik van tarragewicht afhandelen</string>
+  <string name="product_tare_weight_handling_hint">Dit is nuttig voor b.v. meel in potten - bij aankoop/consumptie/inventaris weeg je altijd de hele pot, de te boeken hoeveelheid wordt dan automatisch berekend op basis van wat op voorraad is en het tarragewicht hieronder gedefinieerd</string>
+  <string name="product_tare_weight">Tarragewicht</string>
+  <string name="product_not_check_stock_fulfillment">Schakel voorraadcontrole voor dit ingrediënt uit</string>
+  <string name="product_not_check_stock_fulfillment_hint">Dit wordt gebruikt als de standaardinstelling bij het toevoegen van dit product als receptingrediënt</string>
+  <string name="product_energy">Energie</string>
+  <string name="product_energy_hint">Voorraadhoeveelheidseenheid</string>
+  <string name="product_quick_consume_amount">Snel deze hoeveelheid gebruiken</string>
+  <string name="product_quick_consume_amount_hint">Deze hoeveelheid wordt gebruikt voor de "snel verbruiken knop" op de voorraadoverzichtspagina (gerelateerd aan hoeveelheidsvoorraad)</string>
+  <string name="product_quick_open_amount">Snel deze hoeveelheid openen</string>
+  <string name="product_quick_open_amount_hint">Deze hoeveelheid wordt gebruikt voor de "snel openen knop" op de voorraadoverzichtspagina (gerelateerd aan hoeveelheidsvoorraad)</string>
+  <string name="product_stock_label">Standaard voorraad invoer label</string>
+  <string name="product_stock_label_hint">Dit is de standaardinstelling die bij aankoop wordt ingevuld</string>
+  <string name="product_stock_label_none">Geen label</string>
+  <string name="product_stock_label_single">Enkel label</string>
+  <string name="product_stock_label_per_unit">Label per eenheid</string>
+  <string name="product_auto_reprint_label">Voorraadinvoerlabel automatisch opnieuw afdrukken</string>
+  <string name="product_auto_reprint_label_hint">Indien ingeschakeld, zal het automatisch wijzigen van de vervaldatum van een voorraaditem (door openen/bevriezen/ontdooien en het instellen van de bijbehorende standaard vervaldagen) het label opnieuw afdrukken</string>
+  <string name="product_price_type">Standaard aankoop prijs type</string>
+  <string name="product_price_type_hint">Dit zal gebruikt worden als de standaard prijs type keuze bij aankoop</string>
+  <string name="product_price_type_unspecified">Niet gespecificeerd</string>
+  <string name="product_price_type_unit">Prijs per eenheid</string>
+  <string name="product_price_type_total">Totale prijs</string>
+  <string name="product_disable_open">Kan niet geopend worden</string>
+  <string name="product_hide_on_stock_overview">Niet weergeven op voorraadoverzicht</string>
+  <string name="product_hide_on_stock_overview_hint">Op de voorraadoverzichtspagina staan alle producten die momenteel op voorraad zijn of onder hun min. voorraadhoeveelheid - schakel dit in om dit product daar altijd te verbergen</string>
+  <string name="product_no_own_stock">Eigen voorraad uitschakelen</string>
+  <string name="product_no_own_stock_hint">Wanneer ingeschakeld, kan dit product geen eigen voorraad hebben, wat betekent dat het niet selecteerbaar is bij aankoop (handig voor overkoepelende producten die alleen worden gebruikt als samenvatting/totaaloverzicht van de deelproducten)</string>
+  <string name="product_userfields">Gebruikersvelden</string>
+  <string name="product_userfield_required">Verplicht Invoerveld</string>
+  <string name="product_userfield_title">Titel</string>
+  <string name="product_userfield_link">Link</string>
+  <string name="product_userfield_file">Bestanden kunnen worden toegevoegd in de webinterface van Grocy</string>
+  <string name="product_barcodes">Streepjescodes</string>
+  <string name="product_qu_conversions">Product-specifieke hoeveelheidseenheid conversies</string>
+  <string name="product_picture">Afbeelding</string>
+  <string name="product_picture_none">Geen afbeelding beschikbaar</string>
+  <string name="product_picture_choose">Afbeelding kiezen</string>
+  <string name="product_picture_delete">Afbeelding verwijderen</string>
+  <string name="product_picture_will_delete">De huidige afbeelding zal worden verwijderd wanneer je het recept opslaat.</string>
+  <string name="product_picture_will_upload">De nieuwe afbeelding wordt geüpload bij het opslaan</string>
+  <string name="product_picture_load_failed">De afbeelding kon niet worden geladen</string>
+  <string name="product_save_hint">Sla op om streepjescodes en hoeveelheidseenheidsconversies toe te voegen</string>
   <string name="log_empty">Geen fouten gelogd</string>
   <string name="log_report_crash">Is de app gecrasht of ging er iets mis, kopieer dan het log en stuur het mee met je feedback, zodat de fout kan worden opgelost.</string>
 </resources>

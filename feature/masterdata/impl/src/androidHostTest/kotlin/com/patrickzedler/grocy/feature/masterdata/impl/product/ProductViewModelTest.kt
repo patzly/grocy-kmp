@@ -86,7 +86,8 @@ class ProductViewModelTest {
         advanceUntilIdle()
 
         assertEquals(FieldError.Required, viewModel.errors[ProductField.NAME])
-        assertTrue(environment.server.requestsTo("/api/objects/products", HttpMethod.Post).isEmpty())
+        val posts = environment.server.requestsTo("/api/objects/products", HttpMethod.Post)
+        assertTrue(posts.isEmpty())
     }
 
     @Test
@@ -120,7 +121,8 @@ class ProductViewModelTest {
 
             assertEquals(ProductEvent.Saved, awaitItem())
         }
-        assertEquals(1, environment.server.requestsTo("/api/objects/products/1", HttpMethod.Put).size)
+        val puts = environment.server.requestsTo("/api/objects/products/1", HttpMethod.Put)
+        assertEquals(1, puts.size)
     }
 
     @Test

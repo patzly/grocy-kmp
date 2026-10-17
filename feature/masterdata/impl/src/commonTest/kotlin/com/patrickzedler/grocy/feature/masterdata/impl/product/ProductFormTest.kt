@@ -162,7 +162,9 @@ class ProductFormTest {
     fun htmlIsShownAsPlainText() {
         assertEquals(
             "Fresh\nmilk\n\n• one\n\n• two\n\n1 < 2 & 3",
-            htmlToPlainText("<p>Fresh<br>milk</p><ul><li>one</li><li>two</li></ul>1 &lt; 2 &amp; 3"),
+            htmlToPlainText(
+                "<p>Fresh<br>milk</p><ul><li>one</li><li>two</li></ul>1 &lt; 2 &amp; 3",
+            ),
         )
     }
 

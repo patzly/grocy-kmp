@@ -58,9 +58,11 @@ class GrocyApiMasterDataTest {
     fun productsAcceptNumbersAsStringsAndEmptyStringsAsNull() = runTest {
         val api = api {
             json(
-                """[{"id":"3","name":"Milk","active":"1","location_id":"2","min_stock_amount":"1.5",""" +
+                """[{"id":"3","name":"Milk","active":"1","location_id":"2",""" +
+                    """"min_stock_amount":"1.5",""" +
                     """"due_type":2,"parent_product_id":"","calories":null,"qu_id_stock":4,""" +
-                    """"treat_opened_as_out_of_stock":0,"userfields":{"brand":"Acme","note":null}}]""",
+                    """"treat_opened_as_out_of_stock":0,""" +
+                    """"userfields":{"brand":"Acme","note":null}}]""",
             )
         }
 
@@ -137,7 +139,8 @@ class GrocyApiMasterDataTest {
         val api = api {
             json(
                 """{"FEATURE_FLAG_STOCK_LOCATION_TRACKING":false,""" +
-                    """"FEATURE_FLAG_STOCK_PRICE_TRACKING":"0","FEATURE_FLAG_LABEL_PRINTER":"1",""" +
+                    """"FEATURE_FLAG_STOCK_PRICE_TRACKING":"0",""" +
+                    """"FEATURE_FLAG_LABEL_PRINTER":"1",""" +
                     """"FEATURE_FLAG_DISABLE_BROWSER_BARCODE_CAMERA_SCANNING":true,""" +
                     """"ENERGY_UNIT":"kJ","LABEL_PRINTER_WEBHOOK":"https://secret.example"}""",
             )
@@ -183,7 +186,8 @@ class GrocyApiMasterDataTest {
         val api = api {
             json(
                 """[{"id":1,"entity":"products","name":"origin","caption":"Origin",""" +
-                    """"type":"preset-list","config":"DE\nCH\n\nAT","show_as_column_in_tables":"1"}]""",
+                    """"type":"preset-list","config":"DE\nCH\n\nAT",""" +
+                    """"show_as_column_in_tables":"1"}]""",
             )
         }
 

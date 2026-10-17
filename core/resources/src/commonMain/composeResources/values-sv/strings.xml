@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">Om</string>
   <string name="title_feedback">Feedback</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">Platshållarfråga</string>
   <string name="help_placeholder_answer">Platshållarsvar.</string>
 
+
   <!-- Updates -->
   <string name="update_available">Uppdatering tillgänglig</string>
   <string name="update_available_version">Grocy %1$s är tillgänglig. Uppdatera nu?</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">Standard</string>
   <string name="settings_contrast_medium">Medel</string>
   <string name="settings_contrast_high">Hög</string>
+  <!-- Common data -->
+  <string name="action_add">Lägg till</string>
+  <string name="action_search">Sök</string>
+  <string name="action_clear">Töm</string>
+  <string name="action_save">Spara</string>
+  <string name="action_retry">Försök igen</string>
+  <string name="action_scroll_to_top">Rulla till toppen</string>
+  <string name="action_show_choices">Visa alternativ</string>
+  <string name="action_scan_barcode">Skanna streckkod</string>
+  <string name="action_close_scanner">Stäng skannern</string>
+  <string name="data_none">Ingen</string>
+  <string name="data_all">Alla</string>
+  <string name="data_offline">Servern kunde inte nås. Sparade data visas.</string>
+  <string name="data_load_failed">Data kunde inte läsas in.</string>
+  <string name="data_save_offline">Det krävs en anslutning till servern för att spara.</string>
+  <string name="data_save_failed">Ett fel uppstod när posten sparades, den finns förmodligen redan</string>
+  <string name="data_save_failed_details">Meddelande från servern: %1$s</string>
+  <string name="data_saved">Sparat</string>
+  <string name="data_number_invalid">Detta får inte vara mindre än %1$s och måste vara ett giltigt tal med högst %2$s decimaler</string>
+  <string name="data_date_invalid">Ange ett datum som YYYY-MM-DD</string>
+  <string name="data_datetime_invalid">Ange datum och tid som YYYY-MM-DD HH:MM:SS</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">Grunddata</string>
+  <string name="masterdata_products">Produkter</string>
+  <string name="masterdata_locations">Platser</string>
+  <string name="masterdata_stores">Affärer</string>
+  <string name="masterdata_quantity_units">Mängdenheter</string>
+  <string name="masterdata_product_groups">Produktgrupper</string>
+  <string name="masterdata_chores">Sysslor</string>
+  <string name="masterdata_batteries">Batterier</string>
+  <string name="masterdata_task_categories">Uppgiftskategorier</string>
+  <string name="masterdata_userfields">Användarfält</string>
+  <string name="masterdata_userentities">Användarposter</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">Konfigurera användarfält</string>
+  <string name="products_presets">Förinställningar för nya produkter</string>
+  <string name="products_filter_clear">Rensa filter</string>
+  <string name="products_filter_product_group">Produktgrupp</string>
+  <string name="products_filter_status">Status</string>
+  <string name="products_filter_in_stock">Produkter i lager</string>
+  <string name="products_filter_out_of_stock">Produkter som är slut i lager</string>
+  <string name="products_filter_show_disabled">Visa inaktiverade</string>
+  <string name="products_sort">Sortera</string>
+  <string name="products_sort_ascending">Stigande</string>
+  <string name="products_sort_descending">Fallande</string>
+  <string name="products_sort_name">Namn</string>
+  <string name="products_sort_location">Plats</string>
+  <string name="products_sort_min_stock_amount">Minsta lagersaldo</string>
+  <string name="products_sort_product_group">Produktgrupp</string>
+  <string name="products_sort_qu_stock">Lagrets mängdenhet</string>
+  <string name="products_sort_store">Standardaffär</string>
+  <string name="products_disabled">Inaktiverad</string>
+  <string name="products_has_picture">Denna produkt har en bild</string>
+  <string name="products_min_stock_amount">Minsta lagersaldo: %1$s %2$s</string>
+  <string name="products_empty">Inga produkter ännu</string>
+  <string name="products_empty_filtered">Inga produkter matchar filtret</string>
+
+  <!-- Product form -->
+  <string name="product_create">Skapa produkt</string>
+  <string name="product_edit">Redigera produkt</string>
+  <string name="product_stock_entries">Lagerposter</string>
+  <string name="product_stock_journal">Lagerlogg</string>
+  <string name="product_group_location">Plats</string>
+  <string name="product_group_stock">Lager</string>
+  <string name="product_group_due_date">Förfallodatum</string>
+  <string name="product_group_quantity_units">Mängdenheter</string>
+  <string name="product_group_tare_weight">Taravikt</string>
+  <string name="product_group_more">Mer</string>
+  <string name="product_group_related">Relaterade data</string>
+  <string name="product_name">Namn</string>
+  <string name="product_name_required">Ett namn krävs</string>
+  <string name="product_active">Aktiv</string>
+  <string name="product_parent">Överordnad produkt</string>
+  <string name="product_parent_disabled">Detta är inte möjligt eftersom produkten redan används som överordnad produkt för en annan produkt</string>
+  <string name="product_parent_not_found">Ingen produkt med denna streckkod</string>
+  <string name="product_parent_not_allowed">Denna produkt kan inte vara en överordnad produkt</string>
+  <string name="product_description">Beskrivning</string>
+  <string name="product_location">Standardplats</string>
+  <string name="product_location_required">En plats krävs</string>
+  <string name="product_consume_location">Standardplats för förbrukning</string>
+  <string name="product_consume_location_hint">Lagerposter på denna plats kommer att förbrukas först</string>
+  <string name="product_move_on_open">Flytta vid öppning</string>
+  <string name="product_move_on_open_hint">När detta är aktiverat flyttas motsvarande mängd till standardplatsen för förbrukning när produkten markeras som öppnad</string>
+  <string name="product_store">Standardaffär</string>
+  <string name="product_min_stock_amount">Minsta lagersaldo</string>
+  <string name="product_cumulate_min_stock">Räkna in underprodukternas minsta lagersaldo</string>
+  <string name="product_cumulate_min_stock_hint">Om detta aktiveras räknas underprodukternas minsta lagersaldo in i den här produkten. Det innebär att underprodukten aldrig räknas som saknad, utan endast den här produkten</string>
+  <string name="product_treat_opened_as_out_of_stock">Behandla öppnade poster som slut i lager</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">När detta är aktiverat räknas öppnade poster som saknade när det beräknas om produkten understiger sitt minsta lagersaldo</string>
+  <string name="product_due_type">Typ av datummärkning</string>
+  <string name="product_due_type_hint">Markeringen på lageröversikten varierar beroende på vald typ</string>
+  <string name="product_due_type_best_before">Bäst före-datum</string>
+  <string name="product_due_type_best_before_hint">Betyder att produkten kan vara säker att äta efter bäst-före-datumet</string>
+  <string name="product_due_type_expiration">Sista förbrukningsdag</string>
+  <string name="product_due_type_expiration_hint">Betyder att produkten inte är säker att äta efter sista förbrukningsdag</string>
+  <string name="product_due_days">Standardantal dagar till förfallodatum</string>
+  <string name="product_due_days_hint">Vid inköp läggs detta antal dagar till dagens datum för att föreslå ett förfallodatum (-1 betyder att denna produkt aldrig löper ut)</string>
+  <string name="product_due_days_after_open">Standardantal dagar till förfallodatum efter öppning</string>
+  <string name="product_due_days_after_open_hint">När produkten markeras som öppnad ersätts förfallodatumet med dagens datum + detta antal dagar, men endast om det nya datumet inte infaller efter det ursprungliga förfallodatumet (värdet 0 inaktiverar detta)</string>
+  <string name="product_due_days_after_freezing">Standardantal dagar till förfallodatum efter infrysning</string>
+  <string name="product_due_days_after_freezing_hint">När produkten flyttas till en frysplats (det vill säga när den fryses in) ersätts förfallodatumet med dagens datum + detta antal dagar (-1 betyder att denna produkt aldrig löper ut)</string>
+  <string name="product_due_days_after_thawing">Standardantal dagar till förfallodatum efter upptining</string>
+  <string name="product_due_days_after_thawing_hint">När produkten flyttas från en frysplats (det vill säga när den tinas) ersätts förfallodatumet med dagens datum + detta antal dagar</string>
+  <string name="product_should_not_be_frozen">Bör inte frysas</string>
+  <string name="product_should_not_be_frozen_hint">När detta är aktiverat visas en varning om produkten flyttas till en frysplats (det vill säga när den fryses in)</string>
+  <string name="product_product_group">Produktgrupp</string>
+  <string name="product_qu_stock">Lagrets mängdenhet</string>
+  <string name="product_qu_stock_hint">När produkten väl har funnits i lager och den önskade mängdenheten inte kan väljas här måste du först skapa en motsvarande omvandling mellan mängdenheter</string>
+  <string name="product_qu_purchase">Standardmängdenhet för inköp</string>
+  <string name="product_qu_purchase_hint">Detta är standardmängdenheten som används vid inköp och när produkten läggs till på inköpslistan</string>
+  <string name="product_qu_consume">Standardmängdenhet för förbrukning</string>
+  <string name="product_qu_consume_hint">Detta är standardmängdenheten som används när produkten förbrukas</string>
+  <string name="product_qu_price">Mängdenhet för prisvisning</string>
+  <string name="product_qu_price_hint">När priser visas för den här produkten anges de per denna mängdenhet</string>
+  <string name="product_qu_required">En mängdenhet krävs</string>
+  <string name="product_tare_weight_handling">Aktivera hantering av taravikt</string>
+  <string name="product_tare_weight_handling_hint">Det här är användbart till exempel för mjöl i burkar. Vid inköp, förbrukning och inventering väger du hela burken. Mängden som ska registreras beräknas automatiskt utifrån lagersaldot och taravikten nedan.</string>
+  <string name="product_tare_weight">Taravikt</string>
+  <string name="product_not_check_stock_fulfillment">Inaktivera kontroll av lagertillgång för den här ingrediensen</string>
+  <string name="product_not_check_stock_fulfillment_hint">Detta kommer att användas som standardinställning när du lägger till denna produkt som receptingrediens</string>
+  <string name="product_energy">Energi</string>
+  <string name="product_energy_hint">Per mängdenhet i lager</string>
+  <string name="product_quick_consume_amount">Snabbförbrukningsmängd</string>
+  <string name="product_quick_consume_amount_hint">Den här mängden används av knappen för snabbförbrukning på lageröversikten (avser lagrets mängdenhet)</string>
+  <string name="product_quick_open_amount">Snabböppningsmängd</string>
+  <string name="product_quick_open_amount_hint">Den här mängden används av knappen för snabböppning på lageröversikten (avser lagrets mängdenhet)</string>
+  <string name="product_stock_label">Standardetikett för lagerposter</string>
+  <string name="product_stock_label_hint">Detta är standardvärdet som förifylls vid inköp</string>
+  <string name="product_stock_label_none">Ingen etikett</string>
+  <string name="product_stock_label_single">En etikett</string>
+  <string name="product_stock_label_per_unit">Etikett per enhet</string>
+  <string name="product_auto_reprint_label">Skriv automatiskt ut etiketten för lagerposten igen</string>
+  <string name="product_auto_reprint_label_hint">När detta är aktiverat skrivs etiketten ut igen om lagerpostens förfallodatum ändras automatiskt (vid öppning, infrysning eller upptining och när motsvarande standardantal dagar till förfallodatum har angetts)</string>
+  <string name="product_price_type">Standardpristyp för inköp</string>
+  <string name="product_price_type_hint">Detta används som förvald pristyp vid inköp</string>
+  <string name="product_price_type_unspecified">Ospecificerad</string>
+  <string name="product_price_type_unit">Enhetspris</string>
+  <string name="product_price_type_total">Totalpris</string>
+  <string name="product_disable_open">Kan inte öppnas</string>
+  <string name="product_hide_on_stock_overview">Visa aldrig i lageröversikten</string>
+  <string name="product_hide_on_stock_overview_hint">Lageröversikten visar alla produkter som finns i lager eller understiger sitt minsta lagersaldo. Aktivera detta för att alltid dölja den här produkten där</string>
+  <string name="product_no_own_stock">Inaktivera eget lagersaldo</string>
+  <string name="product_no_own_stock_hint">När detta är aktiverat kan produkten inte ha ett eget lagersaldo, vilket innebär att den inte kan väljas vid inköp (användbart för överordnade produkter som endast används som sammanfattning eller totalvy av underprodukterna)</string>
+  <string name="product_userfields">Användarfält</string>
+  <string name="product_userfield_required">Obligatoriskt användarfält</string>
+  <string name="product_userfield_title">Titel</string>
+  <string name="product_userfield_link">Länk</string>
+  <string name="product_userfield_file">Filer kan läggas till i Grocys webbgränssnitt</string>
+  <string name="product_barcodes">Streckkoder</string>
+  <string name="product_qu_conversions">Produktspecifika omvandlingar mellan mängdenheter</string>
+  <string name="product_picture">Bild</string>
+  <string name="product_picture_none">Ingen bild tillgänglig</string>
+  <string name="product_picture_choose">Välj bild</string>
+  <string name="product_picture_delete">Radera bild</string>
+  <string name="product_picture_will_delete">Den aktuella bilden raderas när du sparar</string>
+  <string name="product_picture_will_upload">Den nya bilden laddas upp när du sparar</string>
+  <string name="product_picture_load_failed">Bilden kunde inte läsas in</string>
+  <string name="product_save_hint">Spara för att lägga till streckkoder och omvandlingar mellan mängdenheter</string>
   <string name="log_empty">Inga fel loggade</string>
   <string name="log_report_crash">Om appen kraschade eller något gick fel kan du kopiera loggen och skicka den med din feedback, så att felet kan åtgärdas.</string>
 </resources>

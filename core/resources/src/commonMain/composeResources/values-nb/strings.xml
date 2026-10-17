@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">Om</string>
   <string name="title_feedback">Tilbakemelding</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">Plassholderspørsmål</string>
   <string name="help_placeholder_answer">Plassholdersvar.</string>
 
+
   <!-- Updates -->
   <string name="update_available">Oppdatering tilgjengelig</string>
   <string name="update_available_version">Grocy %1$s er tilgjengelig. Vil du oppdatere nå?</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">Standard</string>
   <string name="settings_contrast_medium">Middels</string>
   <string name="settings_contrast_high">Høy</string>
+  <!-- Common data -->
+  <string name="action_add">Legg til</string>
+  <string name="action_search">Søk</string>
+  <string name="action_clear">Slett</string>
+  <string name="action_save">Lagre</string>
+  <string name="action_retry">Prøv igjen</string>
+  <string name="action_scroll_to_top">Rull til toppen</string>
+  <string name="action_show_choices">Vis valg</string>
+  <string name="action_scan_barcode">Skann strekkode</string>
+  <string name="action_close_scanner">Lukk skanneren</string>
+  <string name="data_none">Ingen</string>
+  <string name="data_all">Alle</string>
+  <string name="data_offline">Serveren kunne ikke nås. De lagrede dataene vises.</string>
+  <string name="data_load_failed">Dataene kunne ikke lastes inn.</string>
+  <string name="data_save_offline">Lagring krever tilkobling til serveren.</string>
+  <string name="data_save_failed">Kunne ikke lagre, produkt er lagt til fra før</string>
+  <string name="data_save_failed_details">Melding fra serveren: %1$s</string>
+  <string name="data_saved">Lagret</string>
+  <string name="data_number_invalid">Dette kan ikke være lavere enn %1$s og må være et gyldig tall med maks %2$s desimaler</string>
+  <string name="data_date_invalid">Skriv inn en dato som YYYY-MM-DD</string>
+  <string name="data_datetime_invalid">Skriv inn dato og klokkeslett som YYYY-MM-DD HH:MM:SS</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">Masterdata</string>
+  <string name="masterdata_products">Produkter</string>
+  <string name="masterdata_locations">Lokasjoner</string>
+  <string name="masterdata_stores">Butikker</string>
+  <string name="masterdata_quantity_units">Forpakning</string>
+  <string name="masterdata_product_groups">Produktgrupper</string>
+  <string name="masterdata_chores">Husarbeid</string>
+  <string name="masterdata_batteries">Batterier</string>
+  <string name="masterdata_task_categories">Oppgavekategorier</string>
+  <string name="masterdata_userfields">Kolonner</string>
+  <string name="masterdata_userentities">Egendefinerte linjer</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">Sett opp egendefinerte kolonner</string>
+  <string name="products_presets">Forhåndsatt for nye produkter</string>
+  <string name="products_filter_clear">Tøm filter</string>
+  <string name="products_filter_product_group">Produktgruppe</string>
+  <string name="products_filter_status">Status</string>
+  <string name="products_filter_in_stock">Produkter i beholdning</string>
+  <string name="products_filter_out_of_stock">Produkter ikke i beholdning</string>
+  <string name="products_filter_show_disabled">Vis avslåtte</string>
+  <string name="products_sort">Sorter</string>
+  <string name="products_sort_ascending">Stigende</string>
+  <string name="products_sort_descending">Synkende</string>
+  <string name="products_sort_name">Navn</string>
+  <string name="products_sort_location">Lokasjon</string>
+  <string name="products_sort_min_stock_amount">Min. beholdning</string>
+  <string name="products_sort_product_group">Produktgruppe</string>
+  <string name="products_sort_qu_stock">Forpakning beholdning</string>
+  <string name="products_sort_store">Standard butikk</string>
+  <string name="products_disabled">Avslått</string>
+  <string name="products_has_picture">Dette produktet har et bilde</string>
+  <string name="products_min_stock_amount">Min. beholdning: %1$s %2$s</string>
+  <string name="products_empty">Ingen produkter ennå</string>
+  <string name="products_empty_filtered">Ingen produkter samsvarer med filteret</string>
+
+  <!-- Product form -->
+  <string name="product_create">Opprett produkt</string>
+  <string name="product_edit">Endre produkt</string>
+  <string name="product_stock_entries">Beholdningsoppføringer</string>
+  <string name="product_stock_journal">Beholdningslogg</string>
+  <string name="product_group_location">Lokasjon</string>
+  <string name="product_group_stock">Beholdning</string>
+  <string name="product_group_due_date">Forfallsdato</string>
+  <string name="product_group_quantity_units">Forpakning</string>
+  <string name="product_group_tare_weight">Tara vekt</string>
+  <string name="product_group_more">Mer</string>
+  <string name="product_group_related">Tilknyttede data</string>
+  <string name="product_name">Navn</string>
+  <string name="product_name_required">Vennligst fyll inn et navn</string>
+  <string name="product_active">Aktiv</string>
+  <string name="product_parent">Hovedprodukt</string>
+  <string name="product_parent_disabled">Ikke mulig da dette produktet brukes som hovedprodukt av et annet produkt</string>
+  <string name="product_parent_not_found">Ingen produkter med denne strekkoden</string>
+  <string name="product_parent_not_allowed">Dette produktet kan ikke være et hovedprodukt</string>
+  <string name="product_description">Beskrivelse</string>
+  <string name="product_location">Standard lokasjon</string>
+  <string name="product_location_required">En lokasjon kreves</string>
+  <string name="product_consume_location">Bruk først fra</string>
+  <string name="product_consume_location_hint">Beholdningen på denne lokasjonen blir brukt først</string>
+  <string name="product_move_on_open">Flytt ved åpning</string>
+  <string name="product_move_on_open_hint">Når denne er aktivert vil produktet bli flytte til standard lokasjonen automatisk når det blir markert som åpnet.</string>
+  <string name="product_store">Standard butikk</string>
+  <string name="product_min_stock_amount">Minimumsbeholdning</string>
+  <string name="product_cumulate_min_stock">Akkumuler underordnede produkter i minimum beholdningsnivå</string>
+  <string name="product_cumulate_min_stock_hint">Hvis aktivert vil minimum beholdningsnivå av underordnede produkter bli akkumulert inn i dette produktet. Dette betyr at det underordnede produktet aldri vil "mangle", kunne dette produktet.</string>
+  <string name="product_treat_opened_as_out_of_stock">Åpnet pakning telles ikke med beholdning</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">Åpnede pakninger blir ikke telt med i beholdningen når det blir kalkulert om produktet er under minimum beholdning.</string>
+  <string name="product_due_type">Forfallsdatotype</string>
+  <string name="product_due_type_hint">Basert på valgt type vil uthevingen på beholdningsoversikten være annerledes</string>
+  <string name="product_due_type_best_before">Best før dato</string>
+  <string name="product_due_type_best_before_hint">Betyr at produktet fremdeles er trygt å konsumere etter at forfallsdato</string>
+  <string name="product_due_type_expiration">Utløpsdato</string>
+  <string name="product_due_type_expiration_hint">Betyr at produktet ikke er trygt å konsumere etter at utløpsdato</string>
+  <string name="product_due_days">Standard forfallsdager</string>
+  <string name="product_due_days_hint">For kjøp blir dette antall dager lagt til i dag for forslaget på forfallsdato (-1 betyr at dette produktet aldri forfaller)</string>
+  <string name="product_due_days_after_open">Standard forfallsdager etter åpning</string>
+  <string name="product_due_days_after_open_hint">Når dette produktet blir merket som åpnet, vil utløpsdato bli erstattet med dagens dato + dette antall dager, men bare dersom datoen ikke ender etter original utløpsdato (sett verdien til 0 for å deaktivere dette)</string>
+  <string name="product_due_days_after_freezing">Standard forfallsdager etter frysing</string>
+  <string name="product_due_days_after_freezing_hint">Når du flytter dette produktet til en fryser (når du fryser det), vil forfallsdatoen erstattes av i dag + dette antall dager (-1 betyr at dette produktet aldri forfaller)</string>
+  <string name="product_due_days_after_thawing">Standard forfallsdager etter tining</string>
+  <string name="product_due_days_after_thawing_hint">Når du flytter dette produktet fra en fryser (når du tiner det), vil forfallsdatoen erstattes med i dag + dette antall dager</string>
+  <string name="product_should_not_be_frozen">Bør ikke fryses</string>
+  <string name="product_should_not_be_frozen_hint">Når aktivert, vises en advarsel når du flytter dette produktet til en fryserlokasjon (når du fryser det)</string>
+  <string name="product_product_group">Produktgruppe</string>
+  <string name="product_qu_stock">Forpakning beholdning</string>
+  <string name="product_qu_stock_hint">Når dette produktet har vært i beholdning en gang og ønsket forpakning ikke kan velges her, må du først opprette en tilsvarende forpakningskonvertering</string>
+  <string name="product_qu_purchase">Standard forpakning kjøpt</string>
+  <string name="product_qu_purchase_hint">Dette er standard enhet brukt på produkter du legger til på handlelisten</string>
+  <string name="product_qu_consume">Standard forpakning forbruk</string>
+  <string name="product_qu_consume_hint">Dette er standard forpakning som brukes når dette produktet forbrukes</string>
+  <string name="product_qu_price">Forpakning for priser</string>
+  <string name="product_qu_price_hint">Priser for dette produktet vises i forhold til denne forpakningen</string>
+  <string name="product_qu_required">Forpakning mengde/størrelse kreves</string>
+  <string name="product_tare_weight_handling">Aktiver tara vekt funksjon</string>
+  <string name="product_tare_weight_handling_hint">Dette er nyttig f.eks med mel i en beholder. Ved innkjøp/ forbruk/ endring av beholdning veier du alltid hele beholderen. Gjenværende mengde vil så bli kalkulert i forhold til hva som er i beholdningen og tara vekten definert under</string>
+  <string name="product_tare_weight">Tara vekt</string>
+  <string name="product_not_check_stock_fulfillment">Ikke bruk beholdningsjekk for denne ingrediensen</string>
+  <string name="product_not_check_stock_fulfillment_hint">Dette vil bli brukt som forhåndsinnstilling når dette produktet blir brukt som ingrediens i en oppskrift</string>
+  <string name="product_energy">Energi</string>
+  <string name="product_energy_hint">Beholdnings forpakningstype</string>
+  <string name="product_quick_consume_amount">Hurtigkonsumer</string>
+  <string name="product_quick_consume_amount_hint">Dette antallet blir brukt av "hurtigkonsumere / åpne-knappene" på beholdningsoversikten (relatert til antall enheter på lager)</string>
+  <string name="product_quick_open_amount">Hurtigåpne</string>
+  <string name="product_quick_open_amount_hint">Dette antallet er brukt for "quick open button" på lagerbeholdningsiden (relatert til antall enheter på lager)</string>
+  <string name="product_stock_label">Standard lageroppføringsetikett</string>
+  <string name="product_stock_label_hint">Dette blir forhåndsutfylt ved innkjøp</string>
+  <string name="product_stock_label_none">Ingen etikett</string>
+  <string name="product_stock_label_single">Enkelt etikett</string>
+  <string name="product_stock_label_per_unit">Etikett per enhet</string>
+  <string name="product_auto_reprint_label">Skriv ut lageroppføringsetikett automatisk på nytt</string>
+  <string name="product_auto_reprint_label_hint">Når aktivert, skrives etiketten ut på nytt når forfallsdatoen til en lageroppføring endres automatisk (ved åpning/frysing/tining med tilsvarende standard forfallsdager satt)</string>
+  <string name="product_price_type">Standard innkjøpspristype</string>
+  <string name="product_price_type_hint">Dette brukes som forhåndsvalgt pristype ved innkjøp</string>
+  <string name="product_price_type_unspecified">Ikke spesifisert</string>
+  <string name="product_price_type_unit">Enhetspris</string>
+  <string name="product_price_type_total">Totalpris</string>
+  <string name="product_disable_open">Kan ikke åpnes</string>
+  <string name="product_hide_on_stock_overview">Vis aldri på beholdningsoversikt</string>
+  <string name="product_hide_on_stock_overview_hint">Lagerbeholdningssiden lister alle produkter som er på lager nå, eller har lavere beholdning enn minimumsnivået - skru på dette for å alltid skjule produktet</string>
+  <string name="product_no_own_stock">Deaktiver egen beholdning</string>
+  <string name="product_no_own_stock_hint">Når dette er aktivert vil ikke produktet ha sin egen beholdning, som igjen betyr at det ikke kan kjøpes (nyttig for mor-produkter som bare er brukt for å summere under-produkter)</string>
+  <string name="product_userfields">Kolonner</string>
+  <string name="product_userfield_required">Påkrevd brukerfelt</string>
+  <string name="product_userfield_title">Tittel</string>
+  <string name="product_userfield_link">Link</string>
+  <string name="product_userfield_file">Filer kan legges til i Grocys nettgrensesnitt</string>
+  <string name="product_barcodes">Strekkoder</string>
+  <string name="product_qu_conversions">Produktspesifikke forpakningskonverteringer</string>
+  <string name="product_picture">Bilde</string>
+  <string name="product_picture_none">Ingen bilde tilgjengelig</string>
+  <string name="product_picture_choose">Velg bilde</string>
+  <string name="product_picture_delete">Slett bilde</string>
+  <string name="product_picture_will_delete">Nåværende produktbilde vil bli slettet når du lagrer</string>
+  <string name="product_picture_will_upload">Det nye bildet lastes opp når du lagrer</string>
+  <string name="product_picture_load_failed">Bildet kunne ikke lastes inn</string>
+  <string name="product_save_hint">Lagre for å legge til strekkoder og forpakningskonverteringer</string>
   <string name="log_empty">Ingen feil logget</string>
   <string name="log_report_crash">Hvis appen krasjet eller noe gikk galt, kan du kopiere loggen og sende den med tilbakemeldingen din, slik at feilen kan rettes.</string>
 </resources>

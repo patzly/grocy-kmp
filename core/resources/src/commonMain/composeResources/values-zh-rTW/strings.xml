@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">關於</string>
   <string name="title_feedback">意見回饋</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">預留問題</string>
   <string name="help_placeholder_answer">預留答案。</string>
 
+
   <!-- Updates -->
   <string name="update_available">有可用的更新</string>
   <string name="update_available_version">Grocy %1$s 已推出。要立即更新嗎？</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">標準</string>
   <string name="settings_contrast_medium">中</string>
   <string name="settings_contrast_high">高</string>
+  <!-- Common data -->
+  <string name="action_add">新增</string>
+  <string name="action_search">搜尋</string>
+  <string name="action_clear">清除</string>
+  <string name="action_save">儲存</string>
+  <string name="action_retry">重試</string>
+  <string name="action_scroll_to_top">捲動至頂端</string>
+  <string name="action_show_choices">顯示選項</string>
+  <string name="action_scan_barcode">掃描條碼</string>
+  <string name="action_close_scanner">關閉掃描器</string>
+  <string name="data_none">無</string>
+  <string name="data_all">全部</string>
+  <string name="data_offline">無法連線到伺服器。目前顯示已儲存的資料。</string>
+  <string name="data_load_failed">無法載入資料。</string>
+  <string name="data_save_offline">儲存需要連線到伺服器。</string>
+  <string name="data_save_failed">儲存時發生錯誤，此項目可能已經存在。</string>
+  <string name="data_save_failed_details">伺服器訊息：%1$s</string>
+  <string name="data_saved">已儲存</string>
+  <string name="data_number_invalid">此須為 %2$s 位小數的有效數字且不能小於 %1$s</string>
+  <string name="data_date_invalid">請以 YYYY-MM-DD 格式輸入日期</string>
+  <string name="data_datetime_invalid">請以 YYYY-MM-DD HH:MM:SS 格式輸入日期和時間</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">主資料</string>
+  <string name="masterdata_products">物品</string>
+  <string name="masterdata_locations">位置</string>
+  <string name="masterdata_stores">店家</string>
+  <string name="masterdata_quantity_units">數量單位</string>
+  <string name="masterdata_product_groups">物品分類</string>
+  <string name="masterdata_chores">家務</string>
+  <string name="masterdata_batteries">電池</string>
+  <string name="masterdata_task_categories">任務分類</string>
+  <string name="masterdata_userfields">自定義欄位</string>
+  <string name="masterdata_userentities">自定義實體</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">設定自定義欄位</string>
+  <string name="products_presets">新物品預設設定</string>
+  <string name="products_filter_clear">清除過濾條件</string>
+  <string name="products_filter_product_group">物品分類</string>
+  <string name="products_filter_status">狀態</string>
+  <string name="products_filter_in_stock">有庫存的物品</string>
+  <string name="products_filter_out_of_stock">無庫存的物品</string>
+  <string name="products_filter_show_disabled">顯示已停用</string>
+  <string name="products_sort">排序</string>
+  <string name="products_sort_ascending">遞增</string>
+  <string name="products_sort_descending">遞減</string>
+  <string name="products_sort_name">名稱</string>
+  <string name="products_sort_location">位置</string>
+  <string name="products_sort_min_stock_amount">最低庫存數量</string>
+  <string name="products_sort_product_group">物品分類</string>
+  <string name="products_sort_qu_stock">庫存數量單位</string>
+  <string name="products_sort_store">預設店家</string>
+  <string name="products_disabled">已停用</string>
+  <string name="products_has_picture">此物品有圖片</string>
+  <string name="products_min_stock_amount">最低庫存數量：%1$s %2$s</string>
+  <string name="products_empty">尚無物品</string>
+  <string name="products_empty_filtered">沒有符合過濾條件的物品</string>
+
+  <!-- Product form -->
+  <string name="product_create">新增物品</string>
+  <string name="product_edit">編輯物品</string>
+  <string name="product_stock_entries">庫存條目</string>
+  <string name="product_stock_journal">庫存日誌</string>
+  <string name="product_group_location">位置</string>
+  <string name="product_group_stock">庫存</string>
+  <string name="product_group_due_date">到期日</string>
+  <string name="product_group_quantity_units">數量單位</string>
+  <string name="product_group_tare_weight">皮重</string>
+  <string name="product_group_more">更多</string>
+  <string name="product_group_related">相關資料</string>
+  <string name="product_name">名稱</string>
+  <string name="product_name_required">名稱為必填項目</string>
+  <string name="product_active">啟用</string>
+  <string name="product_parent">母物品</string>
+  <string name="product_parent_disabled">已為另一物品的母物品，故無法完成。</string>
+  <string name="product_parent_not_found">沒有使用此條碼的物品</string>
+  <string name="product_parent_not_allowed">此物品不能作為母物品</string>
+  <string name="product_description">說明</string>
+  <string name="product_location">預設位置</string>
+  <string name="product_location_required">位置為必填項目</string>
+  <string name="product_consume_location">預設消耗位置</string>
+  <string name="product_consume_location_hint">在以下位置的庫存將會先被消耗</string>
+  <string name="product_move_on_open">開封時移動</string>
+  <string name="product_move_on_open_hint">啟用後，當此物品被標記為已開封，對應數量的物品將被移動到預設消耗位置</string>
+  <string name="product_store">預設店家</string>
+  <string name="product_min_stock_amount">最低庫存數量</string>
+  <string name="product_cumulate_min_stock">累計子物品的最小庫存數量</string>
+  <string name="product_cumulate_min_stock_hint">啟用後，子物品的最小庫存數量將累計到該物品中，這代表子物品將永遠不會「不足」</string>
+  <string name="product_treat_opened_as_out_of_stock">一開封即從庫存中扣除</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">啟用後，已開封的物品將在計算庫存數量時被排除</string>
+  <string name="product_due_type">到期日期類型</string>
+  <string name="product_due_type_hint">庫存總覽頁面會標記出不同的所選類型</string>
+  <string name="product_due_type_best_before">賞味期限</string>
+  <string name="product_due_type_best_before_hint">代表逾期後物品可能仍可正常使用</string>
+  <string name="product_due_type_expiration">有效期限</string>
+  <string name="product_due_type_expiration_hint">代表逾期後物品無法正常使用</string>
+  <string name="product_due_days">預設到期天數</string>
+  <string name="product_due_days_hint">所購買物品的建議到期日期為今天的日期加上此天數 (-1表示此物品永不逾期)</string>
+  <string name="product_due_days_after_open">預設開封後到期天數</string>
+  <string name="product_due_days_after_open_hint">當此物品被標記為已開封時，到期日期將由今天加上此天數代替(0表示停用此功能)，新到期日期和舊到期日期以先到者為準</string>
+  <string name="product_due_days_after_freezing">預設冷凍後到期天數</string>
+  <string name="product_due_days_after_freezing_hint">將此物品移至冷凍庫時（將其冷凍時），到期日期將由今天加上此天數代替 (-1表示此物品永不逾期)</string>
+  <string name="product_due_days_after_thawing">預設解凍後到期天數</string>
+  <string name="product_due_days_after_thawing_hint">將此物品移出冷凍庫時（將其解凍時），到期日期將由今天加上此天數代替</string>
+  <string name="product_should_not_be_frozen">不可冷凍</string>
+  <string name="product_should_not_be_frozen_hint">啟用後，將此物品移至冷凍庫時（將其冷凍時），將顯示警告</string>
+  <string name="product_product_group">物品分類</string>
+  <string name="product_qu_stock">庫存數量單位</string>
+  <string name="product_qu_stock_hint">此物品曾有庫存後，若此處無法選擇所需的數量單位，請先建立對應的單位轉換</string>
+  <string name="product_qu_purchase">預設購買數量單位</string>
+  <string name="product_qu_purchase_hint">這是購買此物品及將其加入購物清單時使用的預設數量單位</string>
+  <string name="product_qu_consume">預設消耗數量單位</string>
+  <string name="product_qu_consume_hint">這是消耗此物品時使用的預設數量單位</string>
+  <string name="product_qu_price">價格數量單位</string>
+  <string name="product_qu_price_hint">顯示此物品的價格時，將以此數量單位為準</string>
+  <string name="product_qu_required">數量單位為必填項目</string>
+  <string name="product_tare_weight_handling">啟用皮重處理</string>
+  <string name="product_tare_weight_handling_hint">這很有用。例如：罐中的麵粉在購買/消耗/調整庫存時可整罐秤重，該差值將按庫存及空罐重自動算出。</string>
+  <string name="product_tare_weight">皮重</string>
+  <string name="product_not_check_stock_fulfillment">停用此食材的需求庫存檢查</string>
+  <string name="product_not_check_stock_fulfillment_hint">此為將物品設定為食譜食材時的預設設定</string>
+  <string name="product_energy">能量</string>
+  <string name="product_energy_hint">每庫存數量單位</string>
+  <string name="product_quick_consume_amount">快速消耗數量</string>
+  <string name="product_quick_consume_amount_hint">此數量用於庫存總覽頁面上的「快速消耗按鈕」（以庫存數量單位計）</string>
+  <string name="product_quick_open_amount">快速開封數量</string>
+  <string name="product_quick_open_amount_hint">此數量用於庫存總覽頁面上的「快速開封按鈕」（以庫存數量單位計）</string>
+  <string name="product_stock_label">預設庫存條目標籤</string>
+  <string name="product_stock_label_hint">這是在購買時會填入的預設值</string>
+  <string name="product_stock_label_none">無標籤</string>
+  <string name="product_stock_label_single">單一標籤</string>
+  <string name="product_stock_label_per_unit">單位標籤</string>
+  <string name="product_auto_reprint_label">自動重新列印庫存條目標籤</string>
+  <string name="product_auto_reprint_label_hint">啟用後，當庫存條目的到期日自動變更時（因開封/冷凍/解凍且已設定對應的預設到期天數），將重新列印其標籤</string>
+  <string name="product_price_type">預設購買價格類型</string>
+  <string name="product_price_type_hint">購買時將預設選取此價格類型</string>
+  <string name="product_price_type_unspecified">未指定</string>
+  <string name="product_price_type_unit">單價</string>
+  <string name="product_price_type_total">總價</string>
+  <string name="product_disable_open">無法開封</string>
+  <string name="product_hide_on_stock_overview">永不顯示在庫存總覽</string>
+  <string name="product_hide_on_stock_overview_hint">庫存總覽頁面會列出目前有庫存或低於最低庫存數量的所有物品 - 啟用此項可讓此物品永不顯示在該處</string>
+  <string name="product_no_own_stock">停用獨立庫存</string>
+  <string name="product_no_own_stock_hint">啟用後，此物品將不會有獨立的庫存，在購買時也無法被選取(適用於僅作為子物品概覽的母物品)</string>
+  <string name="product_userfields">自定義欄位</string>
+  <string name="product_userfield_required">此欄位為必填項目</string>
+  <string name="product_userfield_title">標題</string>
+  <string name="product_userfield_link">連結</string>
+  <string name="product_userfield_file">可以在 Grocy 網頁介面新增檔案</string>
+  <string name="product_barcodes">條碼</string>
+  <string name="product_qu_conversions">物品專屬的數量單位轉換</string>
+  <string name="product_picture">圖片</string>
+  <string name="product_picture_none">沒有可用圖片</string>
+  <string name="product_picture_choose">選擇圖片</string>
+  <string name="product_picture_delete">刪除圖片</string>
+  <string name="product_picture_will_delete">現有圖片將會在存檔時被刪除</string>
+  <string name="product_picture_will_upload">新圖片將在儲存時上傳</string>
+  <string name="product_picture_load_failed">無法載入圖片</string>
+  <string name="product_save_hint">儲存後即可新增條碼和數量單位轉換</string>
   <string name="log_empty">未記錄任何錯誤</string>
   <string name="log_report_crash">如果應用程式當機或發生問題，請複製記錄檔並隨意見回饋一起傳送，以便修正錯誤。</string>
 </resources>

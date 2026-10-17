@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">אודות</string>
   <string name="title_feedback">משוב</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">שאלה לדוגמה</string>
   <string name="help_placeholder_answer">תשובה לדוגמה.</string>
 
+
   <!-- Updates -->
   <string name="update_available">יש עדכון זמין</string>
   <string name="update_available_version">גרסה %1$s של Grocy זמינה. לעדכן עכשיו?</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">רגילה</string>
   <string name="settings_contrast_medium">בינונית</string>
   <string name="settings_contrast_high">גבוהה</string>
+  <!-- Common data -->
+  <string name="action_add">הוספה</string>
+  <string name="action_search">חיפוש</string>
+  <string name="action_clear">לרוקן</string>
+  <string name="action_save">שמירה</string>
+  <string name="action_retry">ניסיון חוזר</string>
+  <string name="action_scroll_to_top">גלילה למעלה</string>
+  <string name="action_show_choices">הצגת אפשרויות</string>
+  <string name="action_scan_barcode">סריקת ברקוד</string>
+  <string name="action_close_scanner">סגירת הסורק</string>
+  <string name="data_none">בלי</string>
+  <string name="data_all">הכול</string>
+  <string name="data_offline">לא ניתן להתחבר לשרת. מוצגים הנתונים השמורים.</string>
+  <string name="data_load_failed">לא ניתן היה לטעון את הנתונים.</string>
+  <string name="data_save_offline">לשמירה נדרש חיבור לשרת.</string>
+  <string name="data_save_failed">שגיאה בשמירה, כנראה שהפריט הזה כבר קיים</string>
+  <string name="data_save_failed_details">הודעת השרת: %1$s</string>
+  <string name="data_saved">נשמר</string>
+  <string name="data_number_invalid">לא יכול להיות קטן מ־%1$s ועליו להיות מספר תקין עם %2$s מקומות עשרוניים לכל היותר</string>
+  <string name="data_date_invalid">יש להזין תאריך בתבנית YYYY-MM-DD</string>
+  <string name="data_datetime_invalid">יש להזין תאריך ושעה בתבנית YYYY-MM-DD HH:MM:SS</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">נתוני על</string>
+  <string name="masterdata_products">מוצרים</string>
+  <string name="masterdata_locations">מיקומים</string>
+  <string name="masterdata_stores">חנויות</string>
+  <string name="masterdata_quantity_units">יחידות כמות</string>
+  <string name="masterdata_product_groups">קבוצות מוצרים</string>
+  <string name="masterdata_chores">מטלות</string>
+  <string name="masterdata_batteries">סוללות</string>
+  <string name="masterdata_task_categories">קטגוריות משימות</string>
+  <string name="masterdata_userfields">שדות משתמשים</string>
+  <string name="masterdata_userentities">יישויות משתמש</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">הגדרת שדות משתמש</string>
+  <string name="products_presets">ערכות מוגדרות למוצרים חדשים</string>
+  <string name="products_filter_clear">לבטל את הסינון</string>
+  <string name="products_filter_product_group">קבוצת מוצרים</string>
+  <string name="products_filter_status">מצב</string>
+  <string name="products_filter_in_stock">מוצרים במלאי</string>
+  <string name="products_filter_out_of_stock">מוצרים שנגמרו במלאי</string>
+  <string name="products_filter_show_disabled">הצגת מושבתים</string>
+  <string name="products_sort">מיון</string>
+  <string name="products_sort_ascending">סדר עולה</string>
+  <string name="products_sort_descending">סדר יורד</string>
+  <string name="products_sort_name">שם</string>
+  <string name="products_sort_location">מיקום</string>
+  <string name="products_sort_min_stock_amount">כמות מזערית במלאי</string>
+  <string name="products_sort_product_group">קבוצת מוצרים</string>
+  <string name="products_sort_qu_stock">יחידת כמות למלאי</string>
+  <string name="products_sort_store">חנות בררת מחדל</string>
+  <string name="products_disabled">מושבת</string>
+  <string name="products_has_picture">למוצר הזה יש תמונה</string>
+  <string name="products_min_stock_amount">כמות מזערית במלאי: %1$s %2$s</string>
+  <string name="products_empty">אין מוצרים עדיין</string>
+  <string name="products_empty_filtered">אין מוצרים שתואמים לסינון</string>
+
+  <!-- Product form -->
+  <string name="product_create">יצירת מוצר</string>
+  <string name="product_edit">עריכת מוצר</string>
+  <string name="product_stock_entries">רשומות מלאי</string>
+  <string name="product_stock_journal">יומן מלאי</string>
+  <string name="product_group_location">מיקום</string>
+  <string name="product_group_stock">מלאי</string>
+  <string name="product_group_due_date">תאריך סיום התוקף</string>
+  <string name="product_group_quantity_units">יחידות כמות</string>
+  <string name="product_group_tare_weight">משקל טרה</string>
+  <string name="product_group_more">עוד</string>
+  <string name="product_group_related">נתונים קשורים</string>
+  <string name="product_name">שם</string>
+  <string name="product_name_required">צריך למלא שם</string>
+  <string name="product_active">פעיל</string>
+  <string name="product_parent">מוצר הורה</string>
+  <string name="product_parent_disabled">בלתי אפשרי כיוון שהמוצר הזה כבר משמש כמוצר הורה למוצר אחר</string>
+  <string name="product_parent_not_found">אין מוצר עם הברקוד הזה</string>
+  <string name="product_parent_not_allowed">המוצר הזה לא יכול להיות מוצר הורה</string>
+  <string name="product_description">תיאור</string>
+  <string name="product_location">מיקום בררת מחדל</string>
+  <string name="product_location_required">נדרש מיקום</string>
+  <string name="product_consume_location">מיקום ברירת המחדל לצריכה</string>
+  <string name="product_consume_location_hint">רשומות המלאי במיקום זה תיצרכנה תחילה</string>
+  <string name="product_move_on_open">העברה עם הפתיחה</string>
+  <string name="product_move_on_open_hint">כשהאפשרות מופעלת, בעת סימון פתיחת מוצר, הכמות המתאימה תועבר למיקום הצריכה כברירת מחדל</string>
+  <string name="product_store">חנות בררת מחדל</string>
+  <string name="product_min_stock_amount">כמות מזערית במלאי</string>
+  <string name="product_cumulate_min_stock">צבירת תת־מוצרים עם כמות מלאי מזערית</string>
+  <string name="product_cumulate_min_stock_hint">אם האפשרות פעילה, הכמות המזערית במלאי של תת־מוצרים תצטבר לכדי המוצר הזה, משמעות הדבר היא שתת־המוצר הזה אף פעם לא יחסר, רק המוצר הזה</string>
+  <string name="product_treat_opened_as_out_of_stock">להתייחס למוצרים פתוחים כמחוץ למלאי</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">כאשר האפשרות בפעילה, פריטים שנפתחו ייחשבו לחסרים לחישוב המוצר הזה מתחת לכמות המלאי המזערית</string>
+  <string name="product_due_type">סוג תאריך בתוקף עד</string>
+  <string name="product_due_type_hint">בהתאם לסוג הנבחר, ההדגשה על עמוד סקירת המלאי תשתנה</string>
+  <string name="product_due_type_best_before">מועד בתוקף עד</string>
+  <string name="product_due_type_best_before_hint">המשמעות היא שהמוצר עשוי להיות בטוח לצריכה לאחר שמועד סיום התוקף שלו חלף</string>
+  <string name="product_due_type_expiration">תאריך תפוגת התוקף</string>
+  <string name="product_due_type_expiration_hint">המשמעות היא שהמוצר לא בטוח לצריכה לאחר שמועד סיום התוקף שלו חלף</string>
+  <string name="product_due_days">ימים בתוקף עד כבררת מחדל</string>
+  <string name="product_due_days_hint">לרכישות תתווסף כמות הימים הזאת ליום הנוכחי להצעת תאריך תפוגת התוקף המיטבי (‎-1 משמעו שתוקף המוצר הזה לא יפוג לעולם)</string>
+  <string name="product_due_days_after_open">ימים לתום התוקף לאחר הפתיחה כבררת מחדל</string>
+  <string name="product_due_days_after_open_hint">כאשר המוצר הזה מסומן כפתוח, תאריך התפוגה יוחלף ביום הנוכחי + כמות כזאת של ימים, אך רק אם התאריך שמתקבל אינו מאוחר מתאריך התפוגה המקורי (0 ישבית את זה)</string>
+  <string name="product_due_days_after_freezing">ימים לתום התוקף לאחר ההקפאה כבררת מחדל</string>
+  <string name="product_due_days_after_freezing_hint">בהעברת מוצר להקפאה, מועד התוקף יוחלף ביום הנוכחי + כמות זו של ימים (‎-1 משמעו שתוקף המוצר הזה לא יפוג לעולם)</string>
+  <string name="product_due_days_after_thawing">ימי תוקף כבררת מחדל לאחר הפשרה</string>
+  <string name="product_due_days_after_thawing_hint">בהוצאת מוצר מהקפאה (הפשרה), מועד התוקף יוחלף ביום הנוכחי + כמות זו של ימים</string>
+  <string name="product_should_not_be_frozen">לא אמור להיות קפוא</string>
+  <string name="product_should_not_be_frozen_hint">כאשר פעיל, בהעברת המוצר הזה להקפאה, תופיע אזהרה</string>
+  <string name="product_product_group">קבוצת מוצרים</string>
+  <string name="product_qu_stock">יחידת כמות למלאי</string>
+  <string name="product_qu_stock_hint">לאחר שהמוצר הזה היה במלאי לפחות פעם אחת וכאשר לא ניתן לבחור כאן את יחידת הכמות הרצויה, יש ליצור את המרת היחידות התואמת תחילה.</string>
+  <string name="product_qu_purchase">יחידת כמות בררת מחדל לרכישה</string>
+  <string name="product_qu_purchase_hint">זאת כמות ברירת המחדל שמשמשת לרכישה ובעת הוספת המוצר הזה לרשימת הקניות</string>
+  <string name="product_qu_consume">יחידת כמות צריכה כברירת מחדל</string>
+  <string name="product_qu_consume_hint">זאת יחידת הכמות כברירת המחדל שתשמש בצריכת המוצר הזה</string>
+  <string name="product_qu_price">יחידת כמות למחירים</string>
+  <string name="product_qu_price_hint">בעת הצגת מחירים למוצר הזה, הם יהיו קשורים ליחידת כמות זו</string>
+  <string name="product_qu_required">נדרשת יחידת כמות</string>
+  <string name="product_tare_weight_handling">לאפשר טיפול במשקל טרה</string>
+  <string name="product_tare_weight_handling_hint">שימושי למשל לקמחים בצנצנצות - בעת רכישה/צריכה/אחסון תמיד שוקלים את הצנצנת כולה, הכמות לפרסום מחושבת אוטומטית לפי מה שבמלאי בתוספת משקל הטרה שמוגדר להלן</string>
+  <string name="product_tare_weight">משקל טרה</string>
+  <string name="product_not_check_stock_fulfillment">השבתת בדיקת אספקת מלאי עבור רכיב זה</string>
+  <string name="product_not_check_stock_fulfillment_hint">תשמש כהגדרת בררת המחדל בעת הוספת המוצר הזה כרכיב במתכון</string>
+  <string name="product_energy">אנרגיה</string>
+  <string name="product_energy_hint">יחידת כמות לפי מלאי</string>
+  <string name="product_quick_consume_amount">כמות לצריכה מהירה</string>
+  <string name="product_quick_consume_amount_hint">הכמות הזאת משמשת ל„כפתור צריכה מהירה” בעמוד סקירת המלאי (קשורה ליחידת כמות במלאי)</string>
+  <string name="product_quick_open_amount">כמות לפתיחה מהירה</string>
+  <string name="product_quick_open_amount_hint">הכמות הזאת משמשת ל„כפתור פתיחה מהירה” בעמוד סקירת המלאי (קשורה ליחידת כמות במלאי)</string>
+  <string name="product_stock_label">תווית רשומת מלאי כבררת מחדל</string>
+  <string name="product_stock_label_hint">זו בררת המחדש שתמולא מראש בעת הרכישה</string>
+  <string name="product_stock_label_none">ללא תווית</string>
+  <string name="product_stock_label_single">תווית בודדה</string>
+  <string name="product_stock_label_per_unit">תווית לכל יחידה</string>
+  <string name="product_auto_reprint_label">הדפסה אוטומטית מחדש של תווית הכנסה למלאי</string>
+  <string name="product_auto_reprint_label_hint">כשהאפשרות פעילה, שינוי אוטומטי של תאריך התוקף של רשומת מלאי (על ידי פתיחה/הקפאה/הפשרה וימים מוגדרים עד סוף תקופת התפוגה) ידפיס את התווית שלו מחדש</string>
+  <string name="product_price_type">סוג מחיר רכישה כברירת מחדל</string>
+  <string name="product_price_type_hint">זה ישמש כבחירת סוג המחיר כברירת המחדל בעת רכישה</string>
+  <string name="product_price_type_unspecified">לא צוין</string>
+  <string name="product_price_type_unit">מחיר ליחידה</string>
+  <string name="product_price_type_total">מחיר כולל</string>
+  <string name="product_disable_open">לא ניתן לפתוח</string>
+  <string name="product_hide_on_stock_overview">לא להציג בסקירת המלאי</string>
+  <string name="product_hide_on_stock_overview_hint">עמוד סקירת המלאי מציג את כל המוצרים שנמצאים כרגע במלאי או מתחת לכמות המזערית במלאי - יש להפעיל זאת כדי להסתיר את המוצר הזה שם תמיד</string>
+  <string name="product_no_own_stock">השבתת המלאי העצמי</string>
+  <string name="product_no_own_stock_hint">כאשר האפשרות פעילה, למוצר זה לא יכול להיות מלאי משלו, המשמעות היא שאי אפשר יהיה לבחור אותו ברכישה (שימוש למוצרי אב שמשמשים לתצוגת תקציר/סך הכול של המוצרים הצאצאים)</string>
+  <string name="product_userfields">שדות משתמשים</string>
+  <string name="product_userfield_required">שדה משתמש חובה</string>
+  <string name="product_userfield_title">כותרת</string>
+  <string name="product_userfield_link">קישור</string>
+  <string name="product_userfield_file">אפשר להוסיף קבצים בממשק האינטרנט של Grocy</string>
+  <string name="product_barcodes">ברקודים</string>
+  <string name="product_qu_conversions">המרת יחידות כמות נקודתיות למוצר</string>
+  <string name="product_picture">צילום</string>
+  <string name="product_picture_none">אין תמונה זמינה</string>
+  <string name="product_picture_choose">בחירת תמונה</string>
+  <string name="product_picture_delete">מחיקת תמונה</string>
+  <string name="product_picture_will_delete">התמונה הנוכחית תימחק עם השמירה</string>
+  <string name="product_picture_will_upload">התמונה החדשה תועלה עם השמירה</string>
+  <string name="product_picture_load_failed">לא ניתן היה לטעון את התמונה</string>
+  <string name="product_save_hint">יש לשמור כדי להוסיף ברקודים והמרות יחידות כמות</string>
   <string name="log_empty">לא נרשמו שגיאות</string>
   <string name="log_report_crash">אם האפליקציה קרסה או שמשהו השתבש, אפשר להעתיק את היומן ולשלוח אותו עם המשוב כדי שניתן יהיה לתקן את השגיאה.</string>
 </resources>

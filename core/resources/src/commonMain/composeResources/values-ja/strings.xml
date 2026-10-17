@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">アプリについて</string>
   <string name="title_feedback">フィードバック</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">仮の質問</string>
   <string name="help_placeholder_answer">仮の回答です。</string>
 
+
   <!-- Updates -->
   <string name="update_available">アップデートがあります</string>
   <string name="update_available_version">Grocy %1$sが利用可能です。今すぐアップデートしますか？</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">標準</string>
   <string name="settings_contrast_medium">中</string>
   <string name="settings_contrast_high">高</string>
+  <!-- Common data -->
+  <string name="action_add">追加</string>
+  <string name="action_search">検索</string>
+  <string name="action_clear">消去</string>
+  <string name="action_save">保存</string>
+  <string name="action_retry">再試行</string>
+  <string name="action_scroll_to_top">先頭までスクロール</string>
+  <string name="action_show_choices">選択肢を表示</string>
+  <string name="action_scan_barcode">バーコードをスキャン</string>
+  <string name="action_close_scanner">スキャナーを閉じる</string>
+  <string name="data_none">なし</string>
+  <string name="data_all">すべて</string>
+  <string name="data_offline">サーバーに接続できませんでした。保存済みのデータを表示しています。</string>
+  <string name="data_load_failed">データを読み込めませんでした。</string>
+  <string name="data_save_offline">保存するにはサーバーへの接続が必要です。</string>
+  <string name="data_save_failed">データ保存エラー、この項目は既に存在している可能性があります</string>
+  <string name="data_save_failed_details">サーバーのメッセージ: %1$s</string>
+  <string name="data_saved">保存しました</string>
+  <string name="data_number_invalid">%1$s未満の値は入力できません。小数点以下%2$s桁までの値が有効です</string>
+  <string name="data_date_invalid">日付を YYYY-MM-DD の形式で入力してください</string>
+  <string name="data_datetime_invalid">日時を YYYY-MM-DD HH:MM:SS の形式で入力してください</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">マスターデータ</string>
+  <string name="masterdata_products">物品</string>
+  <string name="masterdata_locations">保管場所</string>
+  <string name="masterdata_stores">購入店</string>
+  <string name="masterdata_quantity_units">単位</string>
+  <string name="masterdata_product_groups">物品グループ</string>
+  <string name="masterdata_chores">家事</string>
+  <string name="masterdata_batteries">電池</string>
+  <string name="masterdata_task_categories">タスク分類</string>
+  <string name="masterdata_userfields">ユーザーフィールド</string>
+  <string name="masterdata_userentities">ユーザーエンティティ</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">ユーザーフィールドを設定</string>
+  <string name="products_presets">既定の新規物品</string>
+  <string name="products_filter_clear">フィルター解除</string>
+  <string name="products_filter_product_group">物品グループ</string>
+  <string name="products_filter_status">状態</string>
+  <string name="products_filter_in_stock">ストックあり</string>
+  <string name="products_filter_out_of_stock">ストックなし</string>
+  <string name="products_filter_show_disabled">非表示項目を表示</string>
+  <string name="products_sort">並べ替え</string>
+  <string name="products_sort_ascending">昇順</string>
+  <string name="products_sort_descending">降順</string>
+  <string name="products_sort_name">名前</string>
+  <string name="products_sort_location">保管場所</string>
+  <string name="products_sort_min_stock_amount">最低ストック数量</string>
+  <string name="products_sort_product_group">物品グループ</string>
+  <string name="products_sort_qu_stock">ストック単位</string>
+  <string name="products_sort_store">既定の購入店</string>
+  <string name="products_disabled">非表示</string>
+  <string name="products_has_picture">この物品には画像があります</string>
+  <string name="products_min_stock_amount">最低ストック数量: %1$s %2$s</string>
+  <string name="products_empty">まだ物品がありません</string>
+  <string name="products_empty_filtered">フィルターに一致する物品はありません</string>
+
+  <!-- Product form -->
+  <string name="product_create">新規作成/物品</string>
+  <string name="product_edit">物品を編集</string>
+  <string name="product_stock_entries">ストック追加履歴</string>
+  <string name="product_stock_journal">ストック履歴</string>
+  <string name="product_group_location">保管場所</string>
+  <string name="product_group_stock">ストック</string>
+  <string name="product_group_due_date">期限</string>
+  <string name="product_group_quantity_units">単位</string>
+  <string name="product_group_tare_weight">容器重量</string>
+  <string name="product_group_more">その他</string>
+  <string name="product_group_related">関連データ</string>
+  <string name="product_name">名前</string>
+  <string name="product_name_required">名前は必須項目です</string>
+  <string name="product_active">表示</string>
+  <string name="product_parent">上位物品</string>
+  <string name="product_parent_disabled">この物品は既に別の物品の上位物品に指定されています</string>
+  <string name="product_parent_not_found">このバーコードの物品はありません</string>
+  <string name="product_parent_not_allowed">この物品は上位物品にできません</string>
+  <string name="product_description">説明</string>
+  <string name="product_location">既定の保管場所</string>
+  <string name="product_location_required">保管場所は必須項目です</string>
+  <string name="product_consume_location">既定の優先消費保管場所</string>
+  <string name="product_consume_location_hint">設定した保管場所のストックを優先的に消費します</string>
+  <string name="product_move_on_open">開封時に移動</string>
+  <string name="product_move_on_open_hint">チェックを入れると、この物品を開封済みとしてマークしたとき既定の数量を既定の保管場所に移動します</string>
+  <string name="product_store">既定の購入店</string>
+  <string name="product_min_stock_amount">最低ストック数量</string>
+  <string name="product_cumulate_min_stock">下位物品を合算して最低ストック数量を算出</string>
+  <string name="product_cumulate_min_stock_hint">チェックを入れると、下位物品の最低ストック数量をこの物品に合算し、下位物品ではなくこの物品の不足が表示されるようになります</string>
+  <string name="product_treat_opened_as_out_of_stock">開封時にストックから減らす</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">チェックを入れると、この物品が最低ストック数量未満の場合に開封済みの物品がストックとして扱われません</string>
+  <string name="product_due_type">期限タイプ</string>
+  <string name="product_due_type_hint">選択したタイプによって、ストック一覧ページでのハイライト表示が変化します</string>
+  <string name="product_due_type_best_before">賞味期限</string>
+  <string name="product_due_type_best_before_hint">期限が過ぎても安全に摂取できる可能性がある物品です</string>
+  <string name="product_due_type_expiration">消費期限</string>
+  <string name="product_due_type_expiration_hint">期限を過ぎると安全に摂取できない物品です</string>
+  <string name="product_due_days">既定の期限日数</string>
+  <string name="product_due_days_hint">購入日にこの日数を足した日が期限として提案されます (-1を入力すると、期限がない物品として登録されます)</string>
+  <string name="product_due_days_after_open">既定の開封後期限日数</string>
+  <string name="product_due_days_after_open_hint">この物品が開封済みになると、開封日にこの日数を足した日が期限になります。元の期限より長くなる場合は期限は変更されません(値が0の場合は無効化されます)</string>
+  <string name="product_due_days_after_freezing">既定の冷凍後期限日数</string>
+  <string name="product_due_days_after_freezing_hint">この物品の保管場所を冷凍庫に移動する(冷凍する)と、冷凍日にこの日数を足した日が期限になります (-1を入力すると、期限がない物品として登録されます)</string>
+  <string name="product_due_days_after_thawing">既定の解凍後期限日数</string>
+  <string name="product_due_days_after_thawing_hint">この物品の保管場所を冷凍庫から移動する(解凍する)と、解凍日にこの日数を足した日が期限になります</string>
+  <string name="product_should_not_be_frozen">冷凍禁止</string>
+  <string name="product_should_not_be_frozen_hint">チェックを入れると、この物品を冷凍庫に移動(冷凍)する前に警告が表示されます</string>
+  <string name="product_product_group">物品グループ</string>
+  <string name="product_qu_stock">ストック単位</string>
+  <string name="product_qu_stock_hint">この物品がストックありとなった後、ここで希望の数量単位を選択できない場合、まず対応する単位変換を作成してください</string>
+  <string name="product_qu_purchase">既定の購入単位</string>
+  <string name="product_qu_purchase_hint">この物品の購入時および買い物リスト追加時に使用する既定の単位です</string>
+  <string name="product_qu_consume">既定の消費単位</string>
+  <string name="product_qu_consume_hint">この物品の消費時に使用する既定の単位です</string>
+  <string name="product_qu_price">既定の価格単位</string>
+  <string name="product_qu_price_hint">この物品の価格表示に使用する単位です</string>
+  <string name="product_qu_required">単位は必須項目です</string>
+  <string name="product_tare_weight_handling">容器重量処理を有効化</string>
+  <string name="product_tare_weight_handling_hint">例えば瓶に入った小麦粉などを扱う場合にチェックを入れておくと、購入/消費/ストック編集時には物品の重量を容器に入ったまま計測し、ストックと以下に定義された容器重量に基づいて実際の重量を自動計算します</string>
+  <string name="product_tare_weight">容器重量</string>
+  <string name="product_not_check_stock_fulfillment">この材料のストック数量を確認しない</string>
+  <string name="product_not_check_stock_fulfillment_hint">この物品をレシピの材料として追加する際の既定設定です</string>
+  <string name="product_energy">エネルギー</string>
+  <string name="product_energy_hint">ストック単位あたり</string>
+  <string name="product_quick_consume_amount">クイック消費数量</string>
+  <string name="product_quick_consume_amount_hint">ストック一覧ページの「クイック消費ボタン」で使用する数量です(ストック単位)</string>
+  <string name="product_quick_open_amount">クイック開封数量</string>
+  <string name="product_quick_open_amount_hint">ストック一覧ページの「クイック開封ボタン」で使用する数量です(ストック単位)</string>
+  <string name="product_stock_label">既定のストックラベル</string>
+  <string name="product_stock_label_hint">購入時にあらかじめ入力される既定の項目です</string>
+  <string name="product_stock_label_none">ラベルなし</string>
+  <string name="product_stock_label_single">単一ラベル</string>
+  <string name="product_stock_label_per_unit">ユニット毎のラベル</string>
+  <string name="product_auto_reprint_label">ストックラベルを自動再印刷</string>
+  <string name="product_auto_reprint_label_hint">チェックを入れると、(開封/冷凍/解凍などの処理によって)ストックの期限日数が自動変更された際にラベルを再印刷します</string>
+  <string name="product_price_type">既定の購入価格タイプ</string>
+  <string name="product_price_type_hint">購入時の既定の価格タイプです</string>
+  <string name="product_price_type_unspecified">未指定</string>
+  <string name="product_price_type_unit">単価</string>
+  <string name="product_price_type_total">合計価格</string>
+  <string name="product_disable_open">開封なし</string>
+  <string name="product_hide_on_stock_overview">ストック一覧に表示しない</string>
+  <string name="product_hide_on_stock_overview_hint">ストック一覧ページにはストックがある物品と最低数量未満の物品が一覧表示されますが、この項目にチェックを入れた物品は常に表示されなくなります。</string>
+  <string name="product_no_own_stock">個別ストック無効化</string>
+  <string name="product_no_own_stock_hint">チェックを入れると、この物品は個別でストック編集や購入ができなくなります(下位物品の概要や合算として表示したい上位物品で有効化すると役立ちます)</string>
+  <string name="product_userfields">ユーザーフィールド</string>
+  <string name="product_userfield_required">必須ユーザーフィールド</string>
+  <string name="product_userfield_title">タイトル</string>
+  <string name="product_userfield_link">リンク</string>
+  <string name="product_userfield_file">ファイルは Grocy のウェブ画面で追加できます</string>
+  <string name="product_barcodes">バーコード</string>
+  <string name="product_qu_conversions">物品固有の単位変換</string>
+  <string name="product_picture">画像</string>
+  <string name="product_picture_none">利用できる画像はありません</string>
+  <string name="product_picture_choose">画像を選択</string>
+  <string name="product_picture_delete">画像を削除</string>
+  <string name="product_picture_will_delete">現在の画像は保存時に削除されます</string>
+  <string name="product_picture_will_upload">新しい画像は保存時にアップロードされます</string>
+  <string name="product_picture_load_failed">画像を読み込めませんでした</string>
+  <string name="product_save_hint">バーコードと単位変換を追加するには保存してください</string>
   <string name="log_empty">エラーは記録されていません</string>
   <string name="log_report_crash">アプリがクラッシュしたり問題が発生したりした場合は、ログをコピーしてフィードバックと一緒に送信してください。エラーの修正に役立ちます。</string>
 </resources>

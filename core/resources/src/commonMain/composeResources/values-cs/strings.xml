@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">O aplikaci</string>
   <string name="title_feedback">Zpětná vazba</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">Zástupná otázka</string>
   <string name="help_placeholder_answer">Zástupná odpověď.</string>
 
+
   <!-- Updates -->
   <string name="update_available">Je dostupná aktualizace</string>
   <string name="update_available_version">Grocy %1$s je k dispozici. Aktualizovat nyní?</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">Standardní</string>
   <string name="settings_contrast_medium">Střední</string>
   <string name="settings_contrast_high">Vysoký</string>
+  <!-- Common data -->
+  <string name="action_add">Přidat</string>
+  <string name="action_search">Hledat</string>
+  <string name="action_clear">Vymazat</string>
+  <string name="action_save">Uložit</string>
+  <string name="action_retry">Zkusit znovu</string>
+  <string name="action_scroll_to_top">Posunout nahoru</string>
+  <string name="action_show_choices">Zobrazit možnosti</string>
+  <string name="action_scan_barcode">Naskenovat čárový kód</string>
+  <string name="action_close_scanner">Zavřít skener</string>
+  <string name="data_none">Žádného</string>
+  <string name="data_all">Vše</string>
+  <string name="data_offline">Server není dostupný. Zobrazují se uložená data.</string>
+  <string name="data_load_failed">Data se nepodařilo načíst.</string>
+  <string name="data_save_offline">Ukládání vyžaduje připojení k serveru.</string>
+  <string name="data_save_failed">Chyba během ukládání, položka již patrně existuje.</string>
+  <string name="data_save_failed_details">Zpráva serveru: %1$s</string>
+  <string name="data_saved">Uloženo</string>
+  <string name="data_number_invalid">Hodnota nesmí být menší než %1$s a smí mít max. %2$s desetinná místa</string>
+  <string name="data_date_invalid">Zadejte datum ve formátu YYYY-MM-DD</string>
+  <string name="data_datetime_invalid">Zadejte datum a čas ve formátu YYYY-MM-DD HH:MM:SS</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">Základní data</string>
+  <string name="masterdata_products">Produkty</string>
+  <string name="masterdata_locations">Umístění produktů</string>
+  <string name="masterdata_stores">Obchody</string>
+  <string name="masterdata_quantity_units">Měrné jednotky</string>
+  <string name="masterdata_product_groups">Skupiny produktů</string>
+  <string name="masterdata_chores">Povinnosti</string>
+  <string name="masterdata_batteries">Baterie</string>
+  <string name="masterdata_task_categories">Kategorie úkolů</string>
+  <string name="masterdata_userfields">Vlastní sloupce tabulky</string>
+  <string name="masterdata_userentities">Uživatelské tabulky</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">Upravit sloupce tabulky</string>
+  <string name="products_presets">Výchozí hodnoty pro nové produkty</string>
+  <string name="products_filter_clear">Smazat filtr</string>
+  <string name="products_filter_product_group">Skupina produktů</string>
+  <string name="products_filter_status">Stav</string>
+  <string name="products_filter_in_stock">produkty se zásobou</string>
+  <string name="products_filter_out_of_stock">Produkty bez zásoby</string>
+  <string name="products_filter_show_disabled">Zobrazit vyřazené</string>
+  <string name="products_sort">Seřadit</string>
+  <string name="products_sort_ascending">Vzestupně</string>
+  <string name="products_sort_descending">Sestupně</string>
+  <string name="products_sort_name">Název</string>
+  <string name="products_sort_location">Umístění</string>
+  <string name="products_sort_min_stock_amount">Min. zásoba</string>
+  <string name="products_sort_product_group">Skupina produktů</string>
+  <string name="products_sort_qu_stock">Měrná jednotka zásoby</string>
+  <string name="products_sort_store">Obvyklý obchod</string>
+  <string name="products_disabled">Vyřazeno</string>
+  <string name="products_has_picture">Tento produkt má obrázek</string>
+  <string name="products_min_stock_amount">Min. zásoba: %1$s %2$s</string>
+  <string name="products_empty">Zatím žádné produkty</string>
+  <string name="products_empty_filtered">Filtru neodpovídají žádné produkty</string>
+
+  <!-- Product form -->
+  <string name="product_create">Vytvořit produkt</string>
+  <string name="product_edit">Upravit produkt</string>
+  <string name="product_stock_entries">Seznam zásob</string>
+  <string name="product_stock_journal">Deník zásob</string>
+  <string name="product_group_location">Umístění</string>
+  <string name="product_group_stock">Zásoby</string>
+  <string name="product_group_due_date">Datum min. trvanlivosti</string>
+  <string name="product_group_quantity_units">Měrné jednotky</string>
+  <string name="product_group_tare_weight">Tára</string>
+  <string name="product_group_more">Další</string>
+  <string name="product_group_related">Související data</string>
+  <string name="product_name">Název</string>
+  <string name="product_name_required">Jméno je povinný údaj</string>
+  <string name="product_active">Aktivní</string>
+  <string name="product_parent">Nadřazený produkt</string>
+  <string name="product_parent_disabled">Tento produkt je již použitý jako nadřazený u jiného produktu</string>
+  <string name="product_parent_not_found">Žádný produkt s tímto čárovým kódem</string>
+  <string name="product_parent_not_allowed">Tento produkt nemůže být nadřazeným produktem</string>
+  <string name="product_description">Popis</string>
+  <string name="product_location">Obvyklé umístění</string>
+  <string name="product_location_required">Umístění je povinný údaj</string>
+  <string name="product_consume_location">Spotřebovávat z umístění</string>
+  <string name="product_consume_location_hint">Produkty budou spotřebovávány nejprve z tohoto umístění, (nebude-li při spotřebě zadáno jiné umístění)</string>
+  <string name="product_move_on_open">Přesunout „otevřený” produkt</string>
+  <string name="product_move_on_open_hint">Označíte-li produkt jako otevřený, automaticky se přesune z Obvyklého umístění do Spotřebovávat z umístění. Abyste mohli funkci použít, musíte pro obě umístění vybrat různá místa.</string>
+  <string name="product_store">Obvyklý obchod</string>
+  <string name="product_min_stock_amount">Minimální zásoba</string>
+  <string name="product_cumulate_min_stock">Sčítat minimální počet skladových zásob podřízených produktů</string>
+  <string name="product_cumulate_min_stock_hint">Pokud je zaškrtnuto, minimální množství zásob podřízených produktů bude přičteno do tohoto produktu. To znamená že podřízené produkty nikdy nebudou chybět, ale pouze tento produkt.</string>
+  <string name="product_treat_opened_as_out_of_stock">Považovat otevřené balení jako spotřebované</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">Otevřená balení tedy nebudou započítána do zásob. To lze využít pro plánování nákupů.</string>
+  <string name="product_due_type">Typ trvanlivosti produktu</string>
+  <string name="product_due_type_hint">Podle vybraného typu trvanlivosti bude produkt po datu min. trvanlivosti či použitelnosti v Přehledu zásob zvýrazněn různými barvami.</string>
+  <string name="product_due_type_best_before">Datum min. trvanlivosti</string>
+  <string name="product_due_type_best_before_hint">Produkt lze konzumovat i po vypršení doby min. trvanlivosti</string>
+  <string name="product_due_type_expiration">Datum použitelnosti</string>
+  <string name="product_due_type_expiration_hint">Po vypršení doby použitelnosti není vhodné produkt konzumovat</string>
+  <string name="product_due_days">Výchozí počet dní min. trvanlivosti</string>
+  <string name="product_due_days_hint">Tento počet dní bude přidán k dnešnímu datu jako návrh data minimální trvanlivosti (zadáním -1 bude mít produkt neomezenou trvanlivost)</string>
+  <string name="product_due_days_after_open">Výchozí počet dní min. trvanlivosti po otevření</string>
+  <string name="product_due_days_after_open_hint">Při označení jako Otevřený, bude nastavené datum min. trvanlivosti: dnes + tento počet dní. Ale jen pokud nové datum spotřeby nebude později, než původní. Hodnota 0 datum min. trvanlivosti (spotřeby) nemění.</string>
+  <string name="product_due_days_after_freezing">Výchozí počet dní min. trvanlivosti po zamražení</string>
+  <string name="product_due_days_after_freezing_hint">Přesunete-li tento produkt do mrazničky, bude datum min. trvanlivosti vypočítáno jako součet dnešního data a počtu zde uvedených dní. (zadáním -1 bude mít produkt neomezenou trvanlivost)</string>
+  <string name="product_due_days_after_thawing">Výchozí počet dní min. trvanlivosti po rozmrazení</string>
+  <string name="product_due_days_after_thawing_hint">Při přesunutí produktu z mrazničky (produkt rozmražen) se datum min. trvanlivosti vypočítá jako dnešní datum + zadaný počet dní</string>
+  <string name="product_should_not_be_frozen">Není určeno ke zmražení</string>
+  <string name="product_should_not_be_frozen_hint">Při pokusu přesunout takto označený produkt do mrazničky se zobrazí varování</string>
+  <string name="product_product_group">Skupina produktů</string>
+  <string name="product_qu_stock">Měrná jednotka zásoby</string>
+  <string name="product_qu_stock_hint">Pokud byl tento produkt alespoň jednou v zásobě a není na výběr jednotka množství, kterou byste potřebovali, vytvořte si vhodnou konverzi stávající množstevní jednotky.</string>
+  <string name="product_qu_purchase">Výchozí měrná jednotka pro nákup</string>
+  <string name="product_qu_purchase_hint">Výchozí množstevní jednotka pro akci Nakoupit a pro vkládání produktu do nákupního seznamu</string>
+  <string name="product_qu_consume">Výchozí měrná jednotka pro spotřebu</string>
+  <string name="product_qu_consume_hint">Měrná jednotka produktu při kliknutí na tlačítko Spotřebovat</string>
+  <string name="product_qu_price">Měrná jednotka pro ceny</string>
+  <string name="product_qu_price_hint">Zobrazované ceny produktu budou odpovídat této měrné jednotce</string>
+  <string name="product_qu_required">Měrná jednotka je povinný údaj</string>
+  <string name="product_tare_weight_handling">Použít táru</string>
+  <string name="product_tare_weight_handling_hint">Hodí se například pro produkty v nádobách, které se zváží včetně ní. Tára je tedy hmotnost nádoby, která se automaticky odečte.</string>
+  <string name="product_tare_weight">Tára</string>
+  <string name="product_not_check_stock_fulfillment">Vypnout kontrolu stavu zásob pro tuto ingredienci</string>
+  <string name="product_not_check_stock_fulfillment_hint">Výchozí nastavení pro přidání tohoto produktu jako ingredience do receptu.</string>
+  <string name="product_energy">Energetická hodnota</string>
+  <string name="product_energy_hint">Na jednotku množství zásob</string>
+  <string name="product_quick_consume_amount">Množství pro tlačítko Spotřebovat</string>
+  <string name="product_quick_consume_amount_hint">Hodnota množství pro zelené tlačítko Spotřebovat v Přehledu zásob. Vztahuje se k měrné jednotce zásob.</string>
+  <string name="product_quick_open_amount">Množství pro tlačítko Otevřít</string>
+  <string name="product_quick_open_amount_hint">Hodnota množství pro červené tlačítko Otevřít v Přehledu zásob. Vztahuje se k měrné jednotce zásob.</string>
+  <string name="product_stock_label">Jak se změna množství produktu projeví v Seznamu zásob – výchozí nastavení</string>
+  <string name="product_stock_label_hint">Určuje, jak se změna množství balení produktu – funkce Nakoupit a Inventura – zapíše do Seznamu zásob a zda se k této změně vytisknou nálepky na produkt</string>
+  <string name="product_stock_label_none">Všechna balení produktu budou jeden řádek, nálepka se nevytiskne</string>
+  <string name="product_stock_label_single">Všechna balení produktu budou jeden řádek, vytiskne se 1 nálepka</string>
+  <string name="product_stock_label_per_unit">Každé balení produktu bude mít svůj řádek a vytisknutou nálepku</string>
+  <string name="product_auto_reprint_label">Vytisknout nálepky pro produkt při změně</string>
+  <string name="product_auto_reprint_label_hint">Pokud se změní datum min. trvanlivosti/použitelnosti změnou jeho stavu (otevřením, zmražením, rozmrazením) a pokud jsou pro tyto změny stavu uloženy doby min. trvanlivosti, nálepka produktu se znovu vytiskne.</string>
+  <string name="product_price_type">Výchozí druh ceny</string>
+  <string name="product_price_type_hint">Toto bude použito jako výchozí druh ceny při nákupu</string>
+  <string name="product_price_type_unspecified">Neurčené</string>
+  <string name="product_price_type_unit">Cena za jednotku</string>
+  <string name="product_price_type_total">Celková cena</string>
+  <string name="product_disable_open">Tento produkt nelze „otevřít“.</string>
+  <string name="product_hide_on_stock_overview">Nezobrazovat v Přehledu zásob</string>
+  <string name="product_hide_on_stock_overview_hint">Stránka Přehledu zásob zobrazuje všechny produkty, které jsou v zásobě nebo pod jejich minimálním stavem. Zaškrtnutím se v něm produkt nikdy neobjeví.</string>
+  <string name="product_no_own_stock">Produkt nemá vlastní zásobu</string>
+  <string name="product_no_own_stock_hint">Tento produkt nebude možné vybrat při nákupu. To je vhodné pro nadřazené produkty, které používáte jen jako sumář řady podřízených produktů.</string>
+  <string name="product_userfields">Vlastní sloupce tabulky</string>
+  <string name="product_userfield_required">Povinný uživatelský údaj</string>
+  <string name="product_userfield_title">Nadpis</string>
+  <string name="product_userfield_link">Odkaz</string>
+  <string name="product_userfield_file">Soubory lze přidat ve webovém rozhraní Grocy</string>
+  <string name="product_barcodes">Čárové kódy</string>
+  <string name="product_qu_conversions">Převody měrných jednotek pro tento produkt</string>
+  <string name="product_picture">Obrázek</string>
+  <string name="product_picture_none">Obrázek není k dispozici</string>
+  <string name="product_picture_choose">Vybrat obrázek</string>
+  <string name="product_picture_delete">Smazat obrázek</string>
+  <string name="product_picture_will_delete">Obrázek se smaže až po kliknutí na jedno z tlačítek Uložit</string>
+  <string name="product_picture_will_upload">Nový obrázek se nahraje při uložení</string>
+  <string name="product_picture_load_failed">Obrázek se nepodařilo načíst</string>
+  <string name="product_save_hint">Uložte produkt, abyste mohli přidat čárové kódy a převody měrných jednotek</string>
   <string name="log_empty">Nebyly zaznamenány žádné chyby</string>
   <string name="log_report_crash">Pokud aplikace spadla nebo se něco pokazilo, zkopírujte log a pošlete ho se zpětnou vazbou, aby bylo možné chybu opravit.</string>
 </resources>

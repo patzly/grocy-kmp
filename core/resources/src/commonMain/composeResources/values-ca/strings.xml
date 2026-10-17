@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">Quant a</string>
   <string name="title_feedback">Comentaris</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">Pregunta d’exemple</string>
   <string name="help_placeholder_answer">Resposta d’exemple.</string>
 
+
   <!-- Updates -->
   <string name="update_available">Actualització disponible</string>
   <string name="update_available_version">Grocy %1$s està disponible. Vols actualitzar ara?</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">Estàndard</string>
   <string name="settings_contrast_medium">Mitjà</string>
   <string name="settings_contrast_high">Alt</string>
+  <!-- Common data -->
+  <string name="action_add">Afegir</string>
+  <string name="action_search">Cercar</string>
+  <string name="action_clear">Neteja</string>
+  <string name="action_save">Desar</string>
+  <string name="action_retry">Tornar-ho a provar</string>
+  <string name="action_scroll_to_top">Tornar a dalt</string>
+  <string name="action_show_choices">Mostrar opcions</string>
+  <string name="action_scan_barcode">Escanejar codi de barres</string>
+  <string name="action_close_scanner">Tancar l’escàner</string>
+  <string name="data_none">Ca</string>
+  <string name="data_all">Tot</string>
+  <string name="data_offline">No s’ha pogut accedir al servidor. Es mostren les dades desades.</string>
+  <string name="data_load_failed">No s’han pogut carregar les dades.</string>
+  <string name="data_save_offline">Per desar cal una connexió amb el servidor.</string>
+  <string name="data_save_failed">Error al desar, probablement aquest ítem ja existeix</string>
+  <string name="data_save_failed_details">Missatge del servidor: %1$s</string>
+  <string name="data_saved">Desat</string>
+  <string name="data_number_invalid">Això no pot ser més baix que %1$s i ha de ser un nombre vàlid amb un màxim de %2$s decimals</string>
+  <string name="data_date_invalid">Introdueix una data com a YYYY-MM-DD</string>
+  <string name="data_datetime_invalid">Introdueix una data i hora com a YYYY-MM-DD HH:MM:SS</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">Dades mestres</string>
+  <string name="masterdata_products">Productes</string>
+  <string name="masterdata_locations">Ubicacions</string>
+  <string name="masterdata_stores">Botigues</string>
+  <string name="masterdata_quantity_units">Unitats</string>
+  <string name="masterdata_product_groups">Grups de productes</string>
+  <string name="masterdata_chores">Feines de casa</string>
+  <string name="masterdata_batteries">Bateries</string>
+  <string name="masterdata_task_categories">Categories de tasca</string>
+  <string name="masterdata_userfields">Camp d’usuari</string>
+  <string name="masterdata_userentities">Entitat d’usuari</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">Configurar camps d’usuari</string>
+  <string name="products_presets">Paràmetres per defecte per a nous productes</string>
+  <string name="products_filter_clear">Buidar filtre</string>
+  <string name="products_filter_product_group">Grup de productes</string>
+  <string name="products_filter_status">Estat</string>
+  <string name="products_filter_in_stock">Productes en existència</string>
+  <string name="products_filter_out_of_stock">Productes esgotats</string>
+  <string name="products_filter_show_disabled">Mostra desactivats</string>
+  <string name="products_sort">Ordenar</string>
+  <string name="products_sort_ascending">Ascendent</string>
+  <string name="products_sort_descending">Descendent</string>
+  <string name="products_sort_name">Nom</string>
+  <string name="products_sort_location">Ubicació</string>
+  <string name="products_sort_min_stock_amount">Quantitat mínima d’existències</string>
+  <string name="products_sort_product_group">Grup de productes</string>
+  <string name="products_sort_qu_stock">Unitat d’existències</string>
+  <string name="products_sort_store">Botiga per defecte</string>
+  <string name="products_disabled">Desactivat</string>
+  <string name="products_has_picture">Aquest producte té imatge</string>
+  <string name="products_min_stock_amount">Quantitat mínima d’existències: %1$s %2$s</string>
+  <string name="products_empty">Encara no hi ha productes</string>
+  <string name="products_empty_filtered">Cap producte coincideix amb el filtre</string>
+
+  <!-- Product form -->
+  <string name="product_create">Afegir producte</string>
+  <string name="product_edit">Editar producte</string>
+  <string name="product_stock_entries">Entrades d’existències</string>
+  <string name="product_stock_journal">Diari d’existències</string>
+  <string name="product_group_location">Ubicació</string>
+  <string name="product_group_stock">Existències</string>
+  <string name="product_group_due_date">Data de consum preferent</string>
+  <string name="product_group_quantity_units">Unitats</string>
+  <string name="product_group_tare_weight">Tara</string>
+  <string name="product_group_more">Més</string>
+  <string name="product_group_related">Dades relacionades</string>
+  <string name="product_name">Nom</string>
+  <string name="product_name_required">Es requereix un nom</string>
+  <string name="product_active">Actiu</string>
+  <string name="product_parent">Producte pare</string>
+  <string name="product_parent_disabled">No és possible degut a que aquest producte ja s’ha utilitzat com a producte pare en un altre producte</string>
+  <string name="product_parent_not_found">Cap producte amb aquest codi de barres</string>
+  <string name="product_parent_not_allowed">Aquest producte no pot ser un producte pare</string>
+  <string name="product_description">Descripció</string>
+  <string name="product_location">Ubicació per defecte</string>
+  <string name="product_location_required">Es requereix una ubicaci</string>
+  <string name="product_consume_location">Ubicació de consum predeterminada</string>
+  <string name="product_consume_location_hint">Les existències en aquesta ubicació es consumiran primer</string>
+  <string name="product_move_on_open">Mou quan s’obri</string>
+  <string name="product_move_on_open_hint">Si s’activa, en marcar aquest producte com a obert, la quantitat corresponent es mourà a la ubicació de consum predeterminada</string>
+  <string name="product_store">Botiga per defecte</string>
+  <string name="product_min_stock_amount">Quantitat mínima d’existències</string>
+  <string name="product_cumulate_min_stock">Acumular existències min. de subproductes</string>
+  <string name="product_cumulate_min_stock_hint">Si s’activa, el mínim d’existències dels subproductes seran acumulats en aquest producte, volent dir que el subproducte mai podrà faltar, només aquest producte.</string>
+  <string name="product_treat_opened_as_out_of_stock">Tracta obert com a esgotat</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">Quan s’activa, els elements oberts seran comptats com a absents per calcular si aquest producte es troba per sota els mínims d’existències.</string>
+  <string name="product_due_type">Tipus de data de caducitat</string>
+  <string name="product_due_type_hint">Basat en el tipus seleccionat, el destacat en la pàgina de revisió d’existències serà diferent</string>
+  <string name="product_due_type_best_before">Consum preferent</string>
+  <string name="product_due_type_best_before_hint">Significa que el producte probablement encara sigui segur per al consum després de la data</string>
+  <string name="product_due_type_expiration">Data de caducitat</string>
+  <string name="product_due_type_expiration_hint">Significa que el producte no és segur per al consum després de la data de caducitat</string>
+  <string name="product_due_days">Dies per al consum per defecte</string>
+  <string name="product_due_days_hint">Per a compres, aquesta quantitat de dies serà afegida a la data d’avui per a la suggerència de data de consum (-1 significa que aquest producte no caducarà mai)</string>
+  <string name="product_due_days_after_open">Dies per al consum després d’obrir per defecte</string>
+  <string name="product_due_days_after_open_hint">Quan aquest producte es marqui com a obert, la data de consum serà substituida per la data del dia + aquesta quantitat de dies, pero només si la data resultant no és més tard de la data de consum original (el valor 0 desactiva aquesta opció)</string>
+  <string name="product_due_days_after_freezing">Dies per al consum després de congelar per defecte</string>
+  <string name="product_due_days_after_freezing_hint">Quan es mou aquest producte a una ubicació congelador (és a dir, quan es congela), la data de consum serà substituïda per avui + aquesta quantitat de dies (-1 significa que aquest producte no caducarà mai)</string>
+  <string name="product_due_days_after_thawing">Dies per al consum després de descongelar per defecte</string>
+  <string name="product_due_days_after_thawing_hint">Quan es mou aquest producte des d’una ubicació congelador (és a dir, quan es descongela), la data de consum serà substituïda per avui + aquesta quantitat de dies</string>
+  <string name="product_should_not_be_frozen">No es pot congelar</string>
+  <string name="product_should_not_be_frozen_hint">Quan s’activa, al moure aquest producte a una ubicació congelador (és a dir, quan es congela), es mostra una alerta</string>
+  <string name="product_product_group">Grup de productes</string>
+  <string name="product_qu_stock">Unitat d’existències</string>
+  <string name="product_qu_stock_hint">Quan aquest producte ja hagi estat en existència i la unitat desitjada no es pugui seleccionar aquí, crea primer una conversió d’unitats corresponent</string>
+  <string name="product_qu_purchase">Unitat predeterminada</string>
+  <string name="product_qu_purchase_hint">Aquesta és la unitat per defecte que es farà servir en comprar i quan s’afegeix el producte a la llista de la compra</string>
+  <string name="product_qu_consume">Unitat de consum predeterminada</string>
+  <string name="product_qu_consume_hint">Aquesta és la unitat per defecte que es farà servir en consumir aquest producte</string>
+  <string name="product_qu_price">Unitat per als preus</string>
+  <string name="product_qu_price_hint">Quan es mostrin els preus per aquest producte, seran referits a aquesta unitat</string>
+  <string name="product_qu_required">Es requereix una unitat</string>
+  <string name="product_tare_weight_handling">Habilitar el maneig de la tara</string>
+  <string name="product_tare_weight_handling_hint">Això serà útil per exemple per a farina en pots - quan es compra/consumeix/inventaria, sempre es pesa el pot sencer, la quantitat final és calculada automàticament basat en la quantitat en existències i la tara definida a continuació.</string>
+  <string name="product_tare_weight">Tara</string>
+  <string name="product_not_check_stock_fulfillment">Deshabilitar la comprovació d’existències per aquest ingredient</string>
+  <string name="product_not_check_stock_fulfillment_hint">Serà utilitzat com a configuració per defecte quan s’afegeixi aquest producte com a ingredient de recepta</string>
+  <string name="product_energy">Energia</string>
+  <string name="product_energy_hint">Per unitat d’existències</string>
+  <string name="product_quick_consume_amount">Consumir ràpidament</string>
+  <string name="product_quick_consume_amount_hint">Aquesta quantitat és utilitzada pel botó de "consumir ràpidament" en la pàgina d’existències (en unitats d’existències)</string>
+  <string name="product_quick_open_amount">Obrir ràpidament</string>
+  <string name="product_quick_open_amount_hint">Aquesta quantitat és utilitzada pel botó de "obrir ràpidament" en la pàgina d’existències (en unitats d’existències)</string>
+  <string name="product_stock_label">Etiqueta d’existències per defecte</string>
+  <string name="product_stock_label_hint">Aquest és el valor per defecte que s’emplenarà en comprar</string>
+  <string name="product_stock_label_none">Sense etiqueta</string>
+  <string name="product_stock_label_single">Etiqueta simple</string>
+  <string name="product_stock_label_per_unit">Etiqueta per unitat</string>
+  <string name="product_auto_reprint_label">Reimprimir automàticament l’etiqueta d’existències</string>
+  <string name="product_auto_reprint_label_hint">Si s’activa, en canviar automàticament la data de consum preferent d’una entrada d’existències (en obrir/congelar/descongelar i tenir definits els dies per defecte corresponents) se’n reimprimirà l’etiqueta</string>
+  <string name="product_price_type">Tipus de preu de compra per defecte</string>
+  <string name="product_price_type_hint">S’utilitzarà com a tipus de preu seleccionat per defecte en comprar</string>
+  <string name="product_price_type_unspecified">Sense especificar</string>
+  <string name="product_price_type_unit">Preu unitari</string>
+  <string name="product_price_type_total">Preu total</string>
+  <string name="product_disable_open">No es pot obrir</string>
+  <string name="product_hide_on_stock_overview">No mostrar mai a la revisió d’existències</string>
+  <string name="product_hide_on_stock_overview_hint">El resum d’existències mostra tots els productes que hi ha en existència o per sota de la quantitat mínima d’existències - activa-ho per amagar sempre aquest producte allà</string>
+  <string name="product_no_own_stock">Deshabilitar inventari propi</string>
+  <string name="product_no_own_stock_hint">Quan s’habilita, aquest producte no pot tenir quantitat d’existències pròpies, això vol dir que no es podrà seleccionar per comprar (útil per productes para que són una vista resum/total dels subproductes)</string>
+  <string name="product_userfields">Camp d’usuari</string>
+  <string name="product_userfield_required">Camp d’usuari obligatori</string>
+  <string name="product_userfield_title">Títol</string>
+  <string name="product_userfield_link">Enllaç</string>
+  <string name="product_userfield_file">Els fitxers es poden afegir a la interfície web de Grocy</string>
+  <string name="product_barcodes">Codis de barres</string>
+  <string name="product_qu_conversions">Conversions QU específiques de producte</string>
+  <string name="product_picture">Imatge</string>
+  <string name="product_picture_none">Imatge no disponible</string>
+  <string name="product_picture_choose">Triar imatge</string>
+  <string name="product_picture_delete">Eliminar imatge</string>
+  <string name="product_picture_will_delete">La imathe actual serà eliminada al guardar</string>
+  <string name="product_picture_will_upload">La nova imatge es pujarà en desar</string>
+  <string name="product_picture_load_failed">No s’ha pogut carregar la imatge</string>
+  <string name="product_save_hint">Desa per afegir codis de barres i conversions d’unitats</string>
   <string name="log_empty">No s’ha registrat cap error</string>
   <string name="log_report_crash">Si l’aplicació s’ha bloquejat o alguna cosa ha anat malament, copia el registre i envia’l amb els teus comentaris perquè es pugui corregir l’error.</string>
 </resources>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">Σχετικά</string>
   <string name="title_feedback">Σχόλια</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">Ερώτηση κράτησης θέσης</string>
   <string name="help_placeholder_answer">Απάντηση κράτησης θέσης.</string>
 
+
   <!-- Updates -->
   <string name="update_available">Διαθέσιμη ενημέρωση</string>
   <string name="update_available_version">Το Grocy %1$s είναι διαθέσιμο. Ενημέρωση τώρα;</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">Τυπική</string>
   <string name="settings_contrast_medium">Μέτρια</string>
   <string name="settings_contrast_high">Υψηλή</string>
+  <!-- Common data -->
+  <string name="action_add">Προσθήκη</string>
+  <string name="action_search">Αναζήτηση</string>
+  <string name="action_clear">Σαφή</string>
+  <string name="action_save">Αποθηκεύσετε</string>
+  <string name="action_retry">Δοκιμάστε ξανά</string>
+  <string name="action_scroll_to_top">Κύλιση στην αρχή</string>
+  <string name="action_show_choices">Εμφάνιση επιλογών</string>
+  <string name="action_scan_barcode">Σάρωση barcode</string>
+  <string name="action_close_scanner">Κλείσιμο σαρωτή</string>
+  <string name="data_none">Κανένα</string>
+  <string name="data_all">Ολα</string>
+  <string name="data_offline">Δεν ήταν δυνατή η πρόσβαση στον διακομιστή. Εμφανίζονται τα αποθηκευμένα δεδομένα.</string>
+  <string name="data_load_failed">Δεν ήταν δυνατή η φόρτωση των δεδομένων.</string>
+  <string name="data_save_offline">Η αποθήκευση απαιτεί σύνδεση με τον διακομιστή.</string>
+  <string name="data_save_failed">Σφάλμα κατά την αποθήκευση, πιθανώς αυτό το στοιχείο υπάρχει ήδη</string>
+  <string name="data_save_failed_details">Μήνυμα διακομιστή: %1$s</string>
+  <string name="data_saved">Αποθηκεύτηκε</string>
+  <string name="data_number_invalid">Η τιμή δεν μπορεί να είναι μικρότερη από %1$s και πρέπει να είναι έγκυρος αριθμός με έως %2$s δεκαδικά ψηφία</string>
+  <string name="data_date_invalid">Εισαγάγετε ημερομηνία ως YYYY-MM-DD</string>
+  <string name="data_datetime_invalid">Εισαγάγετε ημερομηνία και ώρα ως YYYY-MM-DD HH:MM:SS</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">Βασικά δεδομένα</string>
+  <string name="masterdata_products">Προϊόντα</string>
+  <string name="masterdata_locations">Τοποθεσίες</string>
+  <string name="masterdata_stores">Προμήθεια</string>
+  <string name="masterdata_quantity_units">Μονάδες ποσότητας</string>
+  <string name="masterdata_product_groups">Ομάδες προϊόντων</string>
+  <string name="masterdata_chores">Μικροδουλειές</string>
+  <string name="masterdata_batteries">Μπαταρίες</string>
+  <string name="masterdata_task_categories">Κατηγορίες εργασιών</string>
+  <string name="masterdata_userfields">Πεδία χρηστών</string>
+  <string name="masterdata_userentities">Χρήστες</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">Διαμόρφωση πεδίων χρήστη</string>
+  <string name="products_presets">Προεπιλογές για νέα προϊόντα</string>
+  <string name="products_filter_clear">Απόθεμα μονάδας ποσότητας</string>
+  <string name="products_filter_product_group">Ομάδα προϊόντων</string>
+  <string name="products_filter_status">Κατάσταση</string>
+  <string name="products_filter_in_stock">Προϊόντα σε απόθεμα</string>
+  <string name="products_filter_out_of_stock">Προϊόντα εκτός αποθέματος</string>
+  <string name="products_filter_show_disabled">Εμφάνιση απενεργοποιημένων</string>
+  <string name="products_sort">Ταξινόμηση</string>
+  <string name="products_sort_ascending">Αύξουσα</string>
+  <string name="products_sort_descending">Φθίνουσα</string>
+  <string name="products_sort_name">Ονομα</string>
+  <string name="products_sort_location">Τοποθεσία</string>
+  <string name="products_sort_min_stock_amount">Ελάχ. ποσό αποθέματος</string>
+  <string name="products_sort_product_group">Ομάδα προϊόντων</string>
+  <string name="products_sort_qu_stock">Απόθεμα μονάδας ποσότητας</string>
+  <string name="products_sort_store">Προεπιλεγμένο κατάστημα</string>
+  <string name="products_disabled">Απενεργοποιημένο</string>
+  <string name="products_has_picture">Αυτό το προϊόν έχει φωτογραφία</string>
+  <string name="products_min_stock_amount">Ελάχ. ποσό αποθέματος: %1$s %2$s</string>
+  <string name="products_empty">Δεν υπάρχουν ακόμη προϊόντα</string>
+  <string name="products_empty_filtered">Κανένα προϊόν δεν ταιριάζει με το φίλτρο</string>
+
+  <!-- Product form -->
+  <string name="product_create">Δημιουργία προϊόντος</string>
+  <string name="product_edit">Επεξεργασία προϊόντος</string>
+  <string name="product_stock_entries">Καταχωρήσεις αποθεμάτων</string>
+  <string name="product_stock_journal">Περιοδικό αποθεμάτων</string>
+  <string name="product_group_location">Τοποθεσία</string>
+  <string name="product_group_stock">Απόθεμα</string>
+  <string name="product_group_due_date">Ημερομηνία λήξης</string>
+  <string name="product_group_quantity_units">Μονάδες ποσότητας</string>
+  <string name="product_group_tare_weight">απόβαρο</string>
+  <string name="product_group_more">Περισσότερα</string>
+  <string name="product_group_related">Σχετικά δεδομένα</string>
+  <string name="product_name">Ονομα</string>
+  <string name="product_name_required">Απαιτείται όνομα</string>
+  <string name="product_active">Ενεργός</string>
+  <string name="product_parent">Γονικό προϊόν</string>
+  <string name="product_parent_disabled">Μονάδα ποσότητας αποθεμάτωνΔεν είναι δυνατό επειδή αυτό το προϊόν χρησιμοποιείται ήδη ως μητρικό προϊόν σε άλλο προϊόν</string>
+  <string name="product_parent_not_found">Δεν υπάρχει προϊόν με αυτό το barcode</string>
+  <string name="product_parent_not_allowed">Αυτό το προϊόν δεν μπορεί να είναι γονικό προϊόν</string>
+  <string name="product_description">Περιγραφή</string>
+  <string name="product_location">Προεπιλεγμένη τοποθεσία</string>
+  <string name="product_location_required">Απαιτείται τοποθεσία</string>
+  <string name="product_consume_location">Προεπιλεγμένη τοποθεσία κατανάλωσης</string>
+  <string name="product_consume_location_hint">Οι καταχωρήσεις αποθεμάτων σε αυτή την τοποθεσία θα καταναλώνονται πρώτες</string>
+  <string name="product_move_on_open">Μετακίνηση κατά το άνοιγμα</string>
+  <string name="product_move_on_open_hint">Όταν είναι ενεργό, κατά την επισήμανση αυτού του προϊόντος ως ανοιγμένου, η αντίστοιχη ποσότητα θα μετακινείται στην προεπιλεγμένη τοποθεσία κατανάλωσης</string>
+  <string name="product_store">Προεπιλεγμένο κατάστημα</string>
+  <string name="product_min_stock_amount">Ελάχιστο ποσό αποθέματος</string>
+  <string name="product_cumulate_min_stock">Συσσώρευση υποπροϊόντων ελάχ. ποσό αποθέματος</string>
+  <string name="product_cumulate_min_stock_hint">Όταν είναι ενεργό, το ελάχιστο ποσό αποθέματος των υποπροϊόντων θα αθροίζεται σε αυτό το προϊόν, δηλαδή το υποπροϊόν δεν θα λείπει ποτέ, μόνο αυτό το προϊόν</string>
+  <string name="product_treat_opened_as_out_of_stock">Τα ανοιγμένα να θεωρούνται εκτός αποθέματος</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">Όταν είναι ενεργό, τα ανοιγμένα είδη θα υπολογίζονται ως ελλείποντα για τον έλεγχο αν αυτό το προϊόν είναι κάτω από το ελάχιστο ποσό αποθέματος</string>
+  <string name="product_due_type">Τύπος ημερομηνίας λήξης</string>
+  <string name="product_due_type_hint">Ανάλογα με τον επιλεγμένο τύπο, η επισήμανση στη σελίδα επισκόπησης αποθεμάτων θα είναι διαφορετική</string>
+  <string name="product_due_type_best_before">Καλύτερο πριν από την ημερομηνία</string>
+  <string name="product_due_type_best_before_hint">Σημαίνει ότι το προϊόν μπορεί να είναι ακόμη ασφαλές για κατανάλωση μετά την ημερομηνία λήξης του</string>
+  <string name="product_due_type_expiration">Ημερομηνία λήξης</string>
+  <string name="product_due_type_expiration_hint">Το προϊόν δεν είναι ασφαλές να καταναλωθεί αφού παρέλθει η ημερομηνία λήξης του</string>
+  <string name="product_due_days">Προεπιλεγμένες ημέρες λήξης</string>
+  <string name="product_due_days_hint">Κατά τις αγορές, αυτός ο αριθμός ημερών θα προστίθεται στη σημερινή ημερομηνία για την προτεινόμενη ημερομηνία λήξης (-1 σημαίνει ότι αυτό το προϊόν δεν θα λήξει ποτέ)</string>
+  <string name="product_due_days_after_open">Προεπιλεγμένες ημέρες λήξης μετά το άνοιγμα</string>
+  <string name="product_due_days_after_open_hint">Όταν αυτό το προϊόν επισημανθεί ως ανοιγμένο, η ημερομηνία λήξης θα αντικατασταθεί από τη σημερινή + αυτόν τον αριθμό ημερών, αλλά μόνο αν η νέα ημερομηνία δεν είναι μετά την αρχική ημερομηνία λήξης (η τιμή 0 το απενεργοποιεί)</string>
+  <string name="product_due_days_after_freezing">Προεπιλεγμένες ημέρες λήξης μετά την κατάψυξη</string>
+  <string name="product_due_days_after_freezing_hint">Κατά τη μετακίνηση αυτού του προϊόντος σε τοποθεσία καταψύκτη (δηλαδή κατά την κατάψυξη), η ημερομηνία λήξης θα αντικατασταθεί από τη σημερινή + αυτόν τον αριθμό ημερών (-1 σημαίνει ότι αυτό το προϊόν δεν θα λήξει ποτέ)</string>
+  <string name="product_due_days_after_thawing">Προεπιλεγμένες ημέρες λήξης μετά την απόψυξη</string>
+  <string name="product_due_days_after_thawing_hint">Κατά τη μετακίνηση αυτού του προϊόντος από τοποθεσία καταψύκτη (δηλαδή κατά την απόψυξη), η ημερομηνία λήξης θα αντικατασταθεί από τη σημερινή + αυτόν τον αριθμό ημερών</string>
+  <string name="product_should_not_be_frozen">Δεν πρέπει να καταψύχεται</string>
+  <string name="product_should_not_be_frozen_hint">Όταν είναι ενεργό, κατά τη μετακίνηση αυτού του προϊόντος σε τοποθεσία καταψύκτη (δηλαδή κατά την κατάψυξη), θα εμφανίζεται προειδοποίηση</string>
+  <string name="product_product_group">Ομάδα προϊόντων</string>
+  <string name="product_qu_stock">Απόθεμα μονάδας ποσότητας</string>
+  <string name="product_qu_stock_hint">Αφού αυτό το προϊόν βρεθεί μία φορά σε απόθεμα και η επιθυμητή μονάδα ποσότητας δεν μπορεί να επιλεγεί εδώ, δημιουργήστε πρώτα μια αντίστοιχη μετατροπή μονάδας</string>
+  <string name="product_qu_purchase">Προεπιλεγμένη μονάδα ποσότητας αγοράς</string>
+  <string name="product_qu_purchase_hint">Αυτή είναι η προεπιλεγμένη μονάδα ποσότητας κατά την αγορά και κατά την προσθήκη αυτού του προϊόντος στη λίστα αγορών</string>
+  <string name="product_qu_consume">Προεπιλεγμένη μονάδα ποσότητας κατανάλωσης</string>
+  <string name="product_qu_consume_hint">Αυτή είναι η προεπιλεγμένη μονάδα ποσότητας κατά την κατανάλωση αυτού του προϊόντος</string>
+  <string name="product_qu_price">Μονάδα ποσότητας για τιμές</string>
+  <string name="product_qu_price_hint">Οι τιμές αυτού του προϊόντος θα εμφανίζονται ως προς αυτή τη μονάδα ποσότητας</string>
+  <string name="product_qu_required">Απαιτείται μονάδα ποσότητας</string>
+  <string name="product_tare_weight_handling">Ενεργοποίηση χειρισμού απόβαρου βάρους</string>
+  <string name="product_tare_weight_handling_hint">ΑγγαρείαΑυτό είναι χρήσιμο π.χ. για αλεύρι σε βάζα - κατά την αγορά / κατανάλωση / απόθεμα ζυγίζετε πάντα ολόκληρο το βάζο, το ποσό που θα δημοσιευτεί υπολογίζεται αυτόματα αυτόματα με βάση το απόθεμα και το απόβαρο που ορίζεται παρακάτω</string>
+  <string name="product_tare_weight">απόβαρο</string>
+  <string name="product_not_check_stock_fulfillment">Λίστα με τα ψώνιαΑπενεργοποιήστε τον έλεγχο εκπλήρωσης αποθεμάτων για αυτό το συστατικό</string>
+  <string name="product_not_check_stock_fulfillment_hint">ΜπαταρίαΑυτό θα χρησιμοποιηθεί ως η προεπιλεγμένη ρύθμιση κατά την προσθήκη αυτού του προϊόντος ως συστατικού συνταγής</string>
+  <string name="product_energy">Ενέργεια</string>
+  <string name="product_energy_hint">Ανά μονάδα ποσότητας αποθεμάτων</string>
+  <string name="product_quick_consume_amount">Ποσότητα γρήγορης κατανάλωσης</string>
+  <string name="product_quick_consume_amount_hint">Αυτή η ποσότητα χρησιμοποιείται για το "κουμπί γρήγορης κατανάλωσης" στη σελίδα επισκόπησης αποθεμάτων (ως προς τη μονάδα ποσότητας αποθέματος)</string>
+  <string name="product_quick_open_amount">Ποσότητα γρήγορου ανοίγματος</string>
+  <string name="product_quick_open_amount_hint">Αυτή η ποσότητα χρησιμοποιείται για το "κουμπί γρήγορου ανοίγματος" στη σελίδα επισκόπησης αποθεμάτων (ως προς τη μονάδα ποσότητας αποθέματος)</string>
+  <string name="product_stock_label">Προεπιλεγμένη ετικέτα καταχώρησης αποθέματος</string>
+  <string name="product_stock_label_hint">Αυτή είναι η προεπιλογή που θα συμπληρώνεται κατά την αγορά</string>
+  <string name="product_stock_label_none">Χωρίς ετικέτα</string>
+  <string name="product_stock_label_single">Μία ετικέτα</string>
+  <string name="product_stock_label_per_unit">Ετικέτα ανά μονάδα</string>
+  <string name="product_auto_reprint_label">Αυτόματη επανεκτύπωση ετικέτας καταχώρησης αποθέματος</string>
+  <string name="product_auto_reprint_label_hint">Όταν είναι ενεργό, η αυτόματη αλλαγή της ημερομηνίας λήξης μιας καταχώρησης αποθέματος (με άνοιγμα/κατάψυξη/απόψυξη και ορισμένες τις αντίστοιχες προεπιλεγμένες ημέρες λήξης) θα επανεκτυπώνει την ετικέτα της</string>
+  <string name="product_price_type">Προεπιλεγμένος τύπος τιμής αγοράς</string>
+  <string name="product_price_type_hint">Θα χρησιμοποιείται ως προεπιλεγμένος τύπος τιμής κατά την αγορά</string>
+  <string name="product_price_type_unspecified">Δεν καθορίστηκε</string>
+  <string name="product_price_type_unit">Τιμή μονάδας</string>
+  <string name="product_price_type_total">Συνολικό ποσό</string>
+  <string name="product_disable_open">Δεν μπορεί να ανοιχτεί</string>
+  <string name="product_hide_on_stock_overview">Να μην εμφανίζεται ποτέ στην επισκόπηση αποθεμάτων</string>
+  <string name="product_hide_on_stock_overview_hint">Η σελίδα επισκόπησης αποθεμάτων εμφανίζει όλα τα προϊόντα που βρίσκονται σε απόθεμα ή κάτω από το ελάχιστο ποσό αποθέματος - ενεργοποιήστε το για να μην εμφανίζεται ποτέ εκεί αυτό το προϊόν</string>
+  <string name="product_no_own_stock">Απενεργοποίηση δικού αποθέματος</string>
+  <string name="product_no_own_stock_hint">Όταν είναι ενεργό, αυτό το προϊόν δεν μπορεί να έχει δικό του απόθεμα, δηλαδή δεν θα μπορεί να επιλεγεί κατά την αγορά (χρήσιμο για γονικά προϊόντα που χρησιμοποιούνται μόνο ως συνολική προβολή των θυγατρικών προϊόντων)</string>
+  <string name="product_userfields">Πεδία χρηστών</string>
+  <string name="product_userfield_required">Υποχρεωτικό πεδίο χρήστη</string>
+  <string name="product_userfield_title">Τίτλος</string>
+  <string name="product_userfield_link">Σύνδεση</string>
+  <string name="product_userfield_file">Μπορείτε να προσθέσετε αρχεία στο web περιβάλλον του Grocy</string>
+  <string name="product_barcodes">Barcodes</string>
+  <string name="product_qu_conversions">Μετατροπές QU ειδικά για το προϊόν</string>
+  <string name="product_picture">Εικόνα</string>
+  <string name="product_picture_none">Δεν υπάρχει διαθέσιμη εικόνα</string>
+  <string name="product_picture_choose">Επιλογή εικόνας</string>
+  <string name="product_picture_delete">Διαγραφή εικόνας</string>
+  <string name="product_picture_will_delete">Η τρέχουσα εικόνα θα διαγραφεί κατά την αποθήκευση</string>
+  <string name="product_picture_will_upload">Η νέα εικόνα θα ανέβει κατά την αποθήκευση</string>
+  <string name="product_picture_load_failed">Δεν ήταν δυνατή η φόρτωση της εικόνας</string>
+  <string name="product_save_hint">Αποθηκεύστε για να προσθέσετε barcodes και μετατροπές μονάδων ποσότητας</string>
   <string name="log_empty">Δεν έχουν καταγραφεί σφάλματα</string>
   <string name="log_report_crash">Αν η εφαρμογή κατέρρευσε ή κάτι πήγε στραβά, αντιγράψτε το αρχείο καταγραφής και στείλτε το μαζί με τα σχόλιά σας, ώστε να διορθωθεί το σφάλμα.</string>
 </resources>

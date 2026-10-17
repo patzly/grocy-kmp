@@ -11,8 +11,8 @@ import kotlin.test.assertTrue
 
 class UserfieldValuesTest {
 
-    private fun field(type: UserfieldType, required: Boolean = false, options: List<String> = emptyList()) =
-        Userfield(1, "products", "field", "Field", type, inputRequired = required, options = options)
+    private fun field(type: UserfieldType, required: Boolean = false) =
+        Userfield(1, "products", "field", "Field", type, inputRequired = required)
 
     @Test
     fun requiredFieldsNeedAValue() {

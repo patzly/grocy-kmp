@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">À propos</string>
   <string name="title_feedback">Commentaires</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">Question fictive</string>
   <string name="help_placeholder_answer">Réponse fictive.</string>
 
+
   <!-- Updates -->
   <string name="update_available">Mise à jour disponible</string>
   <string name="update_available_version">Grocy %1$s est disponible. Mettre à jour maintenant ?</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">Standard</string>
   <string name="settings_contrast_medium">Moyen</string>
   <string name="settings_contrast_high">Élevé</string>
+  <!-- Common data -->
+  <string name="action_add">Ajouter</string>
+  <string name="action_search">Recherche</string>
+  <string name="action_clear">Vider</string>
+  <string name="action_save">Sauvegarder</string>
+  <string name="action_retry">Réessayer</string>
+  <string name="action_scroll_to_top">Revenir en haut</string>
+  <string name="action_show_choices">Afficher les choix</string>
+  <string name="action_scan_barcode">Scanner un code-barres</string>
+  <string name="action_close_scanner">Fermer le scanner</string>
+  <string name="data_none">Aucun</string>
+  <string name="data_all">Tout</string>
+  <string name="data_offline">Le serveur est injoignable. Les données enregistrées sont affichées.</string>
+  <string name="data_load_failed">Impossible de charger les données.</string>
+  <string name="data_save_offline">L’enregistrement nécessite une connexion au serveur.</string>
+  <string name="data_save_failed">Erreur à l’enregistrement, ce produit existe déjà</string>
+  <string name="data_save_failed_details">Message du serveur : %1$s</string>
+  <string name="data_saved">Enregistré</string>
+  <string name="data_number_invalid">Ce nombre ne peut être plus petit que %1$s et peut contenir au maximum %2$s décimaux</string>
+  <string name="data_date_invalid">Saisissez une date au format YYYY-MM-DD</string>
+  <string name="data_datetime_invalid">Saisissez une date et une heure au format YYYY-MM-DD HH:MM:SS</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">Données de base</string>
+  <string name="masterdata_products">Produits</string>
+  <string name="masterdata_locations">Emplacements</string>
+  <string name="masterdata_stores">Magasins</string>
+  <string name="masterdata_quantity_units">Unités</string>
+  <string name="masterdata_product_groups">Groupes de produit</string>
+  <string name="masterdata_chores">Corvées</string>
+  <string name="masterdata_batteries">Piles</string>
+  <string name="masterdata_task_categories">Catégories de tâche</string>
+  <string name="masterdata_userfields">Attributs personalisés</string>
+  <string name="masterdata_userentities">Entités utilisateur</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">Configurer les attributs personnalisés</string>
+  <string name="products_presets">Modèle pour les nouveaux produits</string>
+  <string name="products_filter_clear">Enlever le filtre</string>
+  <string name="products_filter_product_group">Groupe de produit</string>
+  <string name="products_filter_status">Status</string>
+  <string name="products_filter_in_stock">Produits en stock</string>
+  <string name="products_filter_out_of_stock">Produits en rupture de stock</string>
+  <string name="products_filter_show_disabled">Montrer désactivés</string>
+  <string name="products_sort">Trier</string>
+  <string name="products_sort_ascending">Croissant</string>
+  <string name="products_sort_descending">Décroissant</string>
+  <string name="products_sort_name">Nom</string>
+  <string name="products_sort_location">Emplacement</string>
+  <string name="products_sort_min_stock_amount">Quantité minimum en stock</string>
+  <string name="products_sort_product_group">Groupe de produit</string>
+  <string name="products_sort_qu_stock">Unité de stockage</string>
+  <string name="products_sort_store">Magasin par défaut</string>
+  <string name="products_disabled">Désactivé</string>
+  <string name="products_has_picture">Ce produit à une photo</string>
+  <string name="products_min_stock_amount">Quantité minimum en stock : %1$s %2$s</string>
+  <string name="products_empty">Aucun produit pour l’instant</string>
+  <string name="products_empty_filtered">Aucun produit ne correspond au filtre</string>
+
+  <!-- Product form -->
+  <string name="product_create">Créer un produit</string>
+  <string name="product_edit">Modifier le produit</string>
+  <string name="product_stock_entries">Entrées du stock</string>
+  <string name="product_stock_journal">Journal du stock</string>
+  <string name="product_group_location">Emplacement</string>
+  <string name="product_group_stock">Stock</string>
+  <string name="product_group_due_date">Date de péremption</string>
+  <string name="product_group_quantity_units">Unités</string>
+  <string name="product_group_tare_weight">Tare</string>
+  <string name="product_group_more">Plus</string>
+  <string name="product_group_related">Données associées</string>
+  <string name="product_name">Nom</string>
+  <string name="product_name_required">Un nom est requis</string>
+  <string name="product_active">actif</string>
+  <string name="product_parent">Produit parent</string>
+  <string name="product_parent_disabled">Impossible, ce produit est déjà assigné comme parent sur un autre produit</string>
+  <string name="product_parent_not_found">Aucun produit avec ce code-barres</string>
+  <string name="product_parent_not_allowed">Ce produit ne peut pas être un produit parent</string>
+  <string name="product_description">Description</string>
+  <string name="product_location">Emplacement par défaut</string>
+  <string name="product_location_required">Un emplacement est requis</string>
+  <string name="product_consume_location">Emplacement de consommation par défaut</string>
+  <string name="product_consume_location_hint">Les entrées de stock à cet emplacement seront consommées en premier</string>
+  <string name="product_move_on_open">Déplacer à l’ouverture</string>
+  <string name="product_move_on_open_hint">Lorsque activé, en marquant ce produit comme ouvert, le montant correspondant sera déplacé vers l’emplacement de consommation par défaut</string>
+  <string name="product_store">Magasin par défaut</string>
+  <string name="product_min_stock_amount">Quantité minimum en stock</string>
+  <string name="product_cumulate_min_stock">Accumuler le stock minimal des sous produits</string>
+  <string name="product_cumulate_min_stock_hint">Si l’option est activée, le stock minimum des sous-produits sera accumulé dans ce produit, ce qui signifie que les sous-produits ne seront jamais manquants, seulement ce produit.</string>
+  <string name="product_treat_opened_as_out_of_stock">Considérer ouvert comme ne faisant plus partie du stock</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">Lorsque activé, les articles ouverts seront comptés comme manquants pour définir si ce produit est en dessous de son stock minimum</string>
+  <string name="product_due_type">Type d’échéance</string>
+  <string name="product_due_type_hint">Basé sur le type sélectionné, le surlignement dans la page de vue d’ensemble du stock va être différente</string>
+  <string name="product_due_type_best_before">A consommer de préférence avant le</string>
+  <string name="product_due_type_best_before_hint">Signifie que ce produit peut encore être consommé après la date de péremption</string>
+  <string name="product_due_type_expiration">Date de péremption</string>
+  <string name="product_due_type_expiration_hint">Signifie que ce produit ne peut être consommé après la date de péremption</string>
+  <string name="product_due_days">Date de péremption par défaut</string>
+  <string name="product_due_days_hint">A l’achat, ce nombre de jours sera ajouté à la date de péremption suggérée (-1 signifie que le produit ne sera jamais périmé)</string>
+  <string name="product_due_days_after_open">Date de péremption après ouverture par défaut</string>
+  <string name="product_due_days_after_open_hint">Quand ce produit est marqué comme ouvert, la date d’échéance sera remplacée par la date d’aujourd’hui plus ce nombre de jour, mais seulement si la nouvelle date ne se trouve pas après la date d’échéance originale (une valeur de 0 désactive ce comportement)</string>
+  <string name="product_due_days_after_freezing">Date de péremption par défaut après congélation</string>
+  <string name="product_due_days_after_freezing_hint">Lorsque ce produit est placé dans le congélateur (congélation), la date de durabilité minimale sera remplacée par la date du jour + ce nombre de jours (-1 signifie que le produit ne sera jamais périmé)</string>
+  <string name="product_due_days_after_thawing">Date de péremption par défaut après décongélation en jours</string>
+  <string name="product_due_days_after_thawing_hint">Lorsque ce produit est sorti du congélateur (décongélation), la date de durabilité minimale sera remplacée par la date du jour + ce nombre de jours</string>
+  <string name="product_should_not_be_frozen">Ne doit pas être congelé</string>
+  <string name="product_should_not_be_frozen_hint">Lorsque activé, une alerte sera émise lorsque ce produit sera placé dans le congélateur</string>
+  <string name="product_product_group">Groupe de produit</string>
+  <string name="product_qu_stock">Unité de stockage</string>
+  <string name="product_qu_stock_hint">Une fois ce produit en stock, si l’unité souhaitée ne peut pas être sélectionnée ici, créez d’abord une conversion d’unité correspondante</string>
+  <string name="product_qu_purchase">Unité à l’achat par défaut</string>
+  <string name="product_qu_purchase_hint">Il s’agit de l’unité de quantité par défaut utilisée lors de l’achat et lors de l’ajout de ce produit à la liste d’achats</string>
+  <string name="product_qu_consume">Quantité consommée par défaut</string>
+  <string name="product_qu_consume_hint">Il s’agit de la quantité par défaut utilisée lors de la consommation de ce produit</string>
+  <string name="product_qu_price">Unité de quantité pour les prix</string>
+  <string name="product_qu_price_hint">Lors de l’affichage des prix de ce produit, ils seront liés à cette unité de quantité</string>
+  <string name="product_qu_required">Une unité est requise</string>
+  <string name="product_tare_weight_handling">Activer la pesée</string>
+  <string name="product_tare_weight_handling_hint">Lors de l’utilisation d’un récipient hermétique, vous pouvez définir ici la "tare" ou "poids à vide". Le calcul du "poids net" s’effectuera automatiquement à partir du "poids brut" que vous aurez constaté.</string>
+  <string name="product_tare_weight">Tare</string>
+  <string name="product_not_check_stock_fulfillment">Désactiver la vérification du stock pour cet ingrédient</string>
+  <string name="product_not_check_stock_fulfillment_hint">Ce paramétrage sera utilisé par défaut quand ce produit sera ajouté en tant qu’ingrédient dans une recette</string>
+  <string name="product_energy">Énergie</string>
+  <string name="product_energy_hint">Par unité de stockage</string>
+  <string name="product_quick_consume_amount">Quantité consommée par défaut</string>
+  <string name="product_quick_consume_amount_hint">Cette quantité est utilisée pour le "bouton de consommation rapide" sur la page d’aperçu du stock (lié à l’unité de quantité du stock)</string>
+  <string name="product_quick_open_amount">Quantité ouverture rapide</string>
+  <string name="product_quick_open_amount_hint">Cette quantité est utilisée pour le "bouton d’ouverture rapide" sur la page d’aperçu du stock (lié à l’unité de quantité du stock)</string>
+  <string name="product_stock_label">Étiquette d’entrée en stock par défaut</string>
+  <string name="product_stock_label_hint">Ceci est la valeur par défaut, qui va être préremplie à l’achat</string>
+  <string name="product_stock_label_none">Pas d’étiquette</string>
+  <string name="product_stock_label_single">Étiquette unique</string>
+  <string name="product_stock_label_per_unit">Étiquette par unité</string>
+  <string name="product_auto_reprint_label">Réimpression automatique de l’étiquette d’entrée en stock</string>
+  <string name="product_auto_reprint_label_hint">Lorsqu’elle est activée, la modification automatique de la date de péremption d’une entrée de stock (en ouvrant/congelant/décongelant et en ayant les durées de consommation par défaut définies) réimprimera son étiquette</string>
+  <string name="product_price_type">Type de prix d’achat par défaut</string>
+  <string name="product_price_type_hint">Cette option sera utilisée en tant que type de prix par défaut lors d’un achat</string>
+  <string name="product_price_type_unspecified">Non spécifié</string>
+  <string name="product_price_type_unit">Prix unitaire</string>
+  <string name="product_price_type_total">Prix total</string>
+  <string name="product_disable_open">Ne peut pas être ouvert</string>
+  <string name="product_hide_on_stock_overview">Ne jamais afficher dans l’aperçu du stock</string>
+  <string name="product_hide_on_stock_overview_hint">L’aperçu du stock liste tous les produits actuellement en stock ou en-deça de leur stock mini - cette option désactive l’affichage de ce produit dans tous les cas</string>
+  <string name="product_no_own_stock">Désactiver le stock propre</string>
+  <string name="product_no_own_stock_hint">Lorsque activé, ce produit ne peut pas avoir son propre stock, ce qui signifie qu’il ne sera pas sélectionnable à l’achat (utile pour les produits parents qui ne sont utilisés que comme vue récapitulative/totale des produits enfants)</string>
+  <string name="product_userfields">Attributs personalisés</string>
+  <string name="product_userfield_required">Champ utilisateur requis</string>
+  <string name="product_userfield_title">Titre</string>
+  <string name="product_userfield_link">Lien</string>
+  <string name="product_userfield_file">Les fichiers peuvent être ajoutés dans l’interface web de Grocy</string>
+  <string name="product_barcodes">Code-barres</string>
+  <string name="product_qu_conversions">Conversions UQ spécifiques au produit</string>
+  <string name="product_picture">Photo</string>
+  <string name="product_picture_none">Aucune photo disponible</string>
+  <string name="product_picture_choose">Choisir une photo</string>
+  <string name="product_picture_delete">Supprimer la photo</string>
+  <string name="product_picture_will_delete">L’image courante sera supprimée lors de la sauvegarde</string>
+  <string name="product_picture_will_upload">La nouvelle photo sera envoyée lors de l’enregistrement</string>
+  <string name="product_picture_load_failed">Impossible de charger la photo</string>
+  <string name="product_save_hint">Enregistrez pour ajouter des codes-barres et des conversions d’UQ</string>
   <string name="log_empty">Aucune erreur enregistrée</string>
   <string name="log_report_crash">Si l’application a planté ou si quelque chose s’est mal passé, copiez le journal et envoyez-le avec vos commentaires, afin que l’erreur puisse être corrigée.</string>
 </resources>

@@ -16,4 +16,9 @@ fun createGrocyDatabase(): GrocyDatabase =
 // webpack bundles the worker and its sqlite3.wasm from the npm package
 @OptIn(ExperimentalWasmJsInterop::class)
 private fun createDatabaseWorker(): Worker =
-    js("""new Worker(new URL("grocy-sqlite-worker/worker.js", import.meta.url), { type: "module" })""")
+    js(
+        """new Worker(
+            new URL("grocy-sqlite-worker/worker.js", import.meta.url),
+            { type: "module" },
+        )""",
+    )

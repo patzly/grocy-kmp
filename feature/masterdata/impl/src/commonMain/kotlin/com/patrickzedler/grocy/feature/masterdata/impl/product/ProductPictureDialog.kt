@@ -54,6 +54,7 @@ import com.patrickzedler.grocy.core.resources.product_picture_will_upload
 import com.patrickzedler.grocy.core.ui.rememberImagePicker
 import kotlin.coroutines.cancellation.CancellationException
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.decodeToImageBitmap
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -92,7 +93,8 @@ internal fun ProductPictureDialog(
             change.bytes.toImageBitmapOrNull()?.let { PictureLoad.Loaded(it) } ?: PictureLoad.Failed
         }
     }
-    val hasPicture = shown is PictureLoad.Loaded || (change == PictureChange.Keep && savedFileName != null)
+    val hasPicture = shown is PictureLoad.Loaded ||
+        (change == PictureChange.Keep && savedFileName != null)
 
     ScrollableAlertDialog(onDismissRequest = onDismissRequest) {
         ScrollableAlertDialogContent(
@@ -123,7 +125,12 @@ internal fun ProductPictureDialog(
                     val count = if (hasPicture) 2 else 1
                     ActionItem(
                         text = stringResource(Res.string.product_picture_choose),
-                        icon = { Icon(painterResource(Res.drawable.ic_rounded_add_photo_alternate), null) },
+                        icon = {
+                            Icon(
+                                painterResource(Res.drawable.ic_rounded_add_photo_alternate),
+                                contentDescription = null,
+                            )
+                        },
                         index = 0,
                         count = count,
                         onClick = {
@@ -139,9 +146,13 @@ internal fun ProductPictureDialog(
                             count = count,
                             onClick = {
                                 haptic.confirm()
-                                onChange(
-                                    if (savedFileName != null) PictureChange.Delete else PictureChange.Keep,
-                                )
+                                // A picture chosen but not saved yet is only discarded
+                                val change = if (savedFileName != null) {
+                                    PictureChange.Delete
+                                } else {
+                                    PictureChange.Keep
+                                }
+                                onChange(change)
                             },
                         )
                     }
@@ -202,7 +213,7 @@ private fun PicturePreview(load: PictureLoad) {
 }
 
 @Composable
-private fun StatusText(text: org.jetbrains.compose.resources.StringResource) {
+private fun StatusText(text: StringResource) {
     Text(
         text = stringResource(text),
         style = MaterialTheme.typography.bodyMedium,

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">O aplikacji</string>
   <string name="title_feedback">Opinia</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">Przykładowe pytanie</string>
   <string name="help_placeholder_answer">Przykładowa odpowiedź.</string>
 
+
   <!-- Updates -->
   <string name="update_available">Dostępna aktualizacja</string>
   <string name="update_available_version">Grocy %1$s jest już dostępny. Zaktualizować teraz?</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">Standardowy</string>
   <string name="settings_contrast_medium">Średni</string>
   <string name="settings_contrast_high">Wysoki</string>
+  <!-- Common data -->
+  <string name="action_add">Dodaj</string>
+  <string name="action_search">Szukaj</string>
+  <string name="action_clear">Wyczyść</string>
+  <string name="action_save">Zapisz</string>
+  <string name="action_retry">Spróbuj ponownie</string>
+  <string name="action_scroll_to_top">Przewiń na górę</string>
+  <string name="action_show_choices">Pokaż opcje</string>
+  <string name="action_scan_barcode">Skanuj kod kreskowy</string>
+  <string name="action_close_scanner">Zamknij skaner</string>
+  <string name="data_none">Brak</string>
+  <string name="data_all">Wszystko</string>
+  <string name="data_offline">Nie można połączyć się z serwerem. Wyświetlane są zapisane dane.</string>
+  <string name="data_load_failed">Nie udało się wczytać danych.</string>
+  <string name="data_save_offline">Zapisywanie wymaga połączenia z serwerem.</string>
+  <string name="data_save_failed">Błąd podczas zapisywania, najprawdopodobniej przedmiot już istnieje</string>
+  <string name="data_save_failed_details">Komunikat serwera: %1$s</string>
+  <string name="data_saved">Zapisano</string>
+  <string name="data_number_invalid">Nie może być niższe niż %1$s i musi być poprawną liczbą z maksymalnie %2$smiejscami dziesiętnymi</string>
+  <string name="data_date_invalid">Wpisz datę w formacie YYYY-MM-DD</string>
+  <string name="data_datetime_invalid">Wpisz datę i godzinę w formacie YYYY-MM-DD HH:MM:SS</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">Dane podstawowe</string>
+  <string name="masterdata_products">Produkty</string>
+  <string name="masterdata_locations">Miejsca</string>
+  <string name="masterdata_stores">Sklepy</string>
+  <string name="masterdata_quantity_units">Jednostki ilości</string>
+  <string name="masterdata_product_groups">Grupy produktów</string>
+  <string name="masterdata_chores">Obowiązki</string>
+  <string name="masterdata_batteries">Baterie</string>
+  <string name="masterdata_task_categories">Kategorie zadań</string>
+  <string name="masterdata_userfields">Pola użytkownika</string>
+  <string name="masterdata_userentities">Podmioty użytkownika</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">Konfiguracja pól użytkownika</string>
+  <string name="products_presets">Ustawienia wstępne dla nowych produktów</string>
+  <string name="products_filter_clear">Wyczyść filtr</string>
+  <string name="products_filter_product_group">Grupa produktów</string>
+  <string name="products_filter_status">Status</string>
+  <string name="products_filter_in_stock">Produkty na stanie</string>
+  <string name="products_filter_out_of_stock">Braki w inwentarzu</string>
+  <string name="products_filter_show_disabled">Pokaż wyłączone</string>
+  <string name="products_sort">Sortuj</string>
+  <string name="products_sort_ascending">Rosnąco</string>
+  <string name="products_sort_descending">Malejąco</string>
+  <string name="products_sort_name">Nazwa</string>
+  <string name="products_sort_location">Miejsce</string>
+  <string name="products_sort_min_stock_amount">Min. ilość</string>
+  <string name="products_sort_product_group">Grupa produktów</string>
+  <string name="products_sort_qu_stock">Jednostka ilości zapasów</string>
+  <string name="products_sort_store">Sklep domyślny</string>
+  <string name="products_disabled">Wyłączone</string>
+  <string name="products_has_picture">Ten produkt ma obraz</string>
+  <string name="products_min_stock_amount">Min. ilość: %1$s %2$s</string>
+  <string name="products_empty">Brak produktów</string>
+  <string name="products_empty_filtered">Żaden produkt nie pasuje do filtra</string>
+
+  <!-- Product form -->
+  <string name="product_create">Dodaj produkt</string>
+  <string name="product_edit">Edytuj produkt</string>
+  <string name="product_stock_entries">Pozycje zapasu</string>
+  <string name="product_stock_journal">Dziennik zapasów</string>
+  <string name="product_group_location">Miejsce</string>
+  <string name="product_group_stock">Zapasy</string>
+  <string name="product_group_due_date">Termin ważności</string>
+  <string name="product_group_quantity_units">Jednostki ilości</string>
+  <string name="product_group_tare_weight">Waga opakowania</string>
+  <string name="product_group_more">Więcej</string>
+  <string name="product_group_related">Powiązane dane</string>
+  <string name="product_name">Nazwa</string>
+  <string name="product_name_required">Nazwa jest wymagana</string>
+  <string name="product_active">Aktywny</string>
+  <string name="product_parent">Produkt nadrzędny</string>
+  <string name="product_parent_disabled">Nie jest to możliwe, ponieważ ten produkt jest już użyty jako produkt nadrzędny w innym produkcie</string>
+  <string name="product_parent_not_found">Brak produktu z tym kodem kreskowym</string>
+  <string name="product_parent_not_allowed">Ten produkt nie może być produktem nadrzędnym</string>
+  <string name="product_description">Opis</string>
+  <string name="product_location">Domyślne miejsce</string>
+  <string name="product_location_required">Lokalizacja jest wymagana</string>
+  <string name="product_consume_location">Domyślna lokalizacja pobierania zasobu</string>
+  <string name="product_consume_location_hint">Pozycje zapasu z tej lokalizacji będą zużyte jako pierwsze.</string>
+  <string name="product_move_on_open">Przenieś po otwarciu</string>
+  <string name="product_move_on_open_hint">Po włączeniu tej opcji, w momencie oznaczenia produktu jako otwarty, odpowiednia ilość zostanie przeniesiona do domyślnego miejsca przechowywania w czasie zużywania.</string>
+  <string name="product_store">Sklep domyślny</string>
+  <string name="product_min_stock_amount">Minimalna ilość</string>
+  <string name="product_cumulate_min_stock">Sumuj min. ilość dla produktów podrzędnych</string>
+  <string name="product_cumulate_min_stock_hint">Jeśli włączone, minimalna ilość zapasów podproduktów będzie skumulowana w tym produkcie, co oznacza, że podproduktu nigdy nie zabraknie, tylko tego produktu</string>
+  <string name="product_treat_opened_as_out_of_stock">Traktuj otwarte jako brak na stanie</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">Gdy włączone, otwarte przedmioty będą liczone jako brakujące do obliczeń, czy minimalna ilość artykułu jest dostępna</string>
+  <string name="product_due_type">Typ daty wykonania</string>
+  <string name="product_due_type_hint">W oparciu o wybrany typ, podświetlanie na stronie przeglądu zapasów będzie inne</string>
+  <string name="product_due_type_best_before">Data minimalnej trwałości</string>
+  <string name="product_due_type_best_before_hint">Oznacza, że ten produkt może być nadal bezpieczny do spożycia, po przekroczeniu jego terminu ważności</string>
+  <string name="product_due_type_expiration">Data ważności</string>
+  <string name="product_due_type_expiration_hint">Oznacza, że ten produkt nie jest bezpieczny do spożycia, po przekroczeniu jego terminu ważności</string>
+  <string name="product_due_days">Domyślna liczba dni ważności</string>
+  <string name="product_due_days_hint">Dla zakupów ta liczba dni zostanie dodana do dzisiejszej daty jako sugestia terminu ważności (-1 oznacza, że ten produkt nigdy się nie przeterminuje)</string>
+  <string name="product_due_days_after_open">Domyślny termin ważności po otwarciu</string>
+  <string name="product_due_days_after_open_hint">Gdy ten produkt zostanie oznaczony jako otwarty, data ważności zostanie zastąpiona dzisiejszą datą + ilością dni, o ile wynikowa data nie przekracza oryginalnego terminu przydatności (0 - opcja nieaktywna)</string>
+  <string name="product_due_days_after_freezing">Domyślna ilość dni ważności po zamrożeniu</string>
+  <string name="product_due_days_after_freezing_hint">Kiedy przenosimy produkt do zamrażarki (a więc mrozimy go), data przydatności do spożycia będzie zamieniona na dzisiejszą + ilość dni (-1 oznacza, że ten produkt nigdy się nie przeterminuje)</string>
+  <string name="product_due_days_after_thawing">Domyślna ilość dni ważności po rozmrożeniu</string>
+  <string name="product_due_days_after_thawing_hint">Kiedy przenosimy produkt z zamrażarki (a więc rozmrażamy go), data przydatności do spożycia będzie zamieniona na dzisiejszą + ilość dni</string>
+  <string name="product_should_not_be_frozen">Nie powinien być mrożony</string>
+  <string name="product_should_not_be_frozen_hint">Gdy włączone, podczas przenoszenia tego produktu do zamrażarki (a więc podczas zamrażania), zostanie pokazane ostrzeżenie</string>
+  <string name="product_product_group">Grupa produktów</string>
+  <string name="product_qu_stock">Jednostka ilości zapasów</string>
+  <string name="product_qu_stock_hint">Jeśli ten produkt był już raz na stanie, a żądanej jednostki ilości nie można tu wybrać, najpierw utwórz odpowiednią konwersję jednostek</string>
+  <string name="product_qu_purchase">Domyślna jednostka zakupu</string>
+  <string name="product_qu_purchase_hint">Jest to domyślna jednostka ilości używana przy zakupie i dodawaniu tego produktu do listy zakupów</string>
+  <string name="product_qu_consume">Domyślnie zużywana ilość</string>
+  <string name="product_qu_consume_hint">Domyślna ilość zużywana podczas wykorzystywania tego produktu</string>
+  <string name="product_qu_price">Jednostka ilości dla cen</string>
+  <string name="product_qu_price_hint">Wyświetlając ceny tego produktu, będą one odniesione do jednostki ilości</string>
+  <string name="product_qu_required">Jednostka ilości jest wymagana</string>
+  <string name="product_tare_weight_handling">Włącz obsługę masy tary</string>
+  <string name="product_tare_weight_handling_hint">Jest to przydatne np. w przypadku mąki w słoikach - przy zakupie / spożyciu/ zapasie zawsze waży się cały słoik, kwota jest następnie automatycznie obliczana na podstawie tego, co znajduje się w magazynie i masy tary zdefiniowanej poniżej</string>
+  <string name="product_tare_weight">Waga opakowania</string>
+  <string name="product_not_check_stock_fulfillment">Wyłącz sprawdzanie stanu zapasów dla tego składnika</string>
+  <string name="product_not_check_stock_fulfillment_hint">Będzie to użyte jako domyślne ustawienie podczas dodawania tego produktu jako składnika receptury</string>
+  <string name="product_energy">Energia</string>
+  <string name="product_energy_hint">Na jednostkę ilości zakupów</string>
+  <string name="product_quick_consume_amount">Ilość szybkiego spożycia</string>
+  <string name="product_quick_consume_amount_hint">Kwota ta jest wykorzystana w przypadku użycia przycisku „szybkiego zużycia” na stronie przeglądu zapasów</string>
+  <string name="product_quick_open_amount">Ilość szybkiego otwarcia</string>
+  <string name="product_quick_open_amount_hint">Ta ilość jest używana dla "przycisku szybkiego otwarcia" na stronie przeglądu zapasów (w jednostce ilości zapasów)</string>
+  <string name="product_stock_label">Domyślna etykieta pozycji zapasu</string>
+  <string name="product_stock_label_hint">To jest domyślne wartość, która zostanie wstępnie uzupełniona przy zakupie</string>
+  <string name="product_stock_label_none">Brak etykiety</string>
+  <string name="product_stock_label_single">Pojedyncza etykieta</string>
+  <string name="product_stock_label_per_unit">Etykieta na jednostkę</string>
+  <string name="product_auto_reprint_label">Automatycznie przedrukuj etykietę pozycji zapasu</string>
+  <string name="product_auto_reprint_label_hint">Gdy włączone, automatyczna zmiana terminu ważności pozycji zapasu (przez otwarcie/zamrożenie/rozmrożenie przy ustawionej odpowiedniej domyślnej liczbie dni ważności) spowoduje ponowne wydrukowanie jej etykiety</string>
+  <string name="product_price_type">Domyślny typ ceny zakupu</string>
+  <string name="product_price_type_hint">Będzie używany jako domyślnie wybrany typ ceny przy zakupie</string>
+  <string name="product_price_type_unspecified">Nieokreślony</string>
+  <string name="product_price_type_unit">Cena jednostkowa</string>
+  <string name="product_price_type_total">Cena całości</string>
+  <string name="product_disable_open">Nie może zostać otwarte</string>
+  <string name="product_hide_on_stock_overview">Nigdy nie pokazuj na przeglądzie magazynowym</string>
+  <string name="product_hide_on_stock_overview_hint">Strona przeglądu zapasów pokazuje wszystkie produkty, które są obecnie na stanie lub poniżej minimalnej ilości - włącz to, aby zawsze ukrywać tam ten produkt</string>
+  <string name="product_no_own_stock">Wyłącz własne zapasy</string>
+  <string name="product_no_own_stock_hint">Gdy włączone, ten produkt nie może mieć własnych zapasów, oznacza to, że nie będzie można go wybrać przy zakupie (przydatne dla produktów nadrzędnych, które są używane jako podsumowanie/łączna liczba produktów podrzędnych)</string>
+  <string name="product_userfields">Pola użytkownika</string>
+  <string name="product_userfield_required">Obowiązkowe pole użytkownika</string>
+  <string name="product_userfield_title">Tytuł</string>
+  <string name="product_userfield_link">Link</string>
+  <string name="product_userfield_file">Pliki można dodawać w interfejsie webowym Grocy</string>
+  <string name="product_barcodes">Kody kreskowe</string>
+  <string name="product_qu_conversions">Konwersje jednostek specyficzne dla produktu</string>
+  <string name="product_picture">Zdjęcie</string>
+  <string name="product_picture_none">Brak zdjęcia</string>
+  <string name="product_picture_choose">Wybierz zdjęcie</string>
+  <string name="product_picture_delete">Usuń zdjęcie</string>
+  <string name="product_picture_will_delete">Aktualne zdjęcie zostanie usunięte podczas zapisu</string>
+  <string name="product_picture_will_upload">Nowe zdjęcie zostanie przesłane przy zapisie</string>
+  <string name="product_picture_load_failed">Nie udało się wczytać zdjęcia</string>
+  <string name="product_save_hint">Zapisz, aby dodać kody kreskowe i konwersje jednostek ilości</string>
   <string name="log_empty">Brak zarejestrowanych błędów</string>
   <string name="log_report_crash">Jeśli aplikacja uległa awarii lub coś poszło nie tak, skopiuj log i wyślij go razem z opinią, aby można było naprawić błąd.</string>
 </resources>

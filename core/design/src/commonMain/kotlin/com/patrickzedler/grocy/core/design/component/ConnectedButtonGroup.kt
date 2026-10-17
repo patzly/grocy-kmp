@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.core.design.component
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroup
@@ -45,49 +46,53 @@ fun <T> ConnectedButtonGroup(
     if (options.isEmpty()) return
     val haptic = LocalHapticFeedback.current
 
-    ButtonGroup(
-        overflowIndicator = { menuState ->
-            OverflowIndicator(menuState = menuState, enabled = enabled)
-        },
-        modifier = modifier,
-        expandedRatio = 0f,
-        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
-    ) {
-        options.fastForEachIndexed { index, option ->
-            val isSelected = option == checked
+    // A minimum width (e.g. from fillMaxWidth) breaks the group's overflow measuring once the
+    // buttons do not fit, so the group only ever gets a maximum width
+    Box(modifier = modifier) {
+        ButtonGroup(
+            overflowIndicator = { menuState ->
+                OverflowIndicator(menuState = menuState, enabled = enabled)
+            },
+            expandedRatio = 0f,
+            horizontalArrangement =
+                Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+        ) {
+            options.fastForEachIndexed { index, option ->
+                val isSelected = option == checked
 
-            customItem(
-                buttonGroupContent = {
-                    ToggleButton(
-                        checked = isSelected,
-                        onCheckedChange = {
-                            haptic.confirm()
-                            if (!isSelected) onCheckedChange(option)
-                        },
-                        enabled = enabled,
-                        shapes = connectedShapes(index = index, count = options.size),
-                    ) {
-                        Text(
-                            text = label(option),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
+                customItem(
+                    buttonGroupContent = {
+                        ToggleButton(
+                            checked = isSelected,
+                            onCheckedChange = {
+                                haptic.confirm()
+                                if (!isSelected) onCheckedChange(option)
+                            },
+                            enabled = enabled,
+                            shapes = connectedShapes(index = index, count = options.size),
+                        ) {
+                            Text(
+                                text = label(option),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
+                    },
+                    menuContent = { menuState ->
+                        SelectableDropdownMenuItem(
+                            selected = isSelected,
+                            onClick = {
+                                haptic.confirm()
+                                if (!isSelected) onCheckedChange(option)
+                                menuState.dismiss()
+                            },
+                            text = { Text(label(option)) },
+                            shapes = MenuDefaults.itemShape(index, options.size),
+                            enabled = enabled,
                         )
-                    }
-                },
-                menuContent = { menuState ->
-                    SelectableDropdownMenuItem(
-                        selected = isSelected,
-                        onClick = {
-                            haptic.confirm()
-                            if (!isSelected) onCheckedChange(option)
-                            menuState.dismiss()
-                        },
-                        text = { Text(label(option)) },
-                        shapes = MenuDefaults.itemShape(index, options.size),
-                        enabled = enabled,
-                    )
-                },
-            )
+                    },
+                )
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">Sobre</string>
   <string name="title_feedback">Feedback</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">Pergunta de exemplo</string>
   <string name="help_placeholder_answer">Resposta de exemplo.</string>
 
+
   <!-- Updates -->
   <string name="update_available">Atualização disponível</string>
   <string name="update_available_version">O Grocy %1$s está disponível. Atualizar agora?</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">Padrão</string>
   <string name="settings_contrast_medium">Médio</string>
   <string name="settings_contrast_high">Alto</string>
+  <!-- Common data -->
+  <string name="action_add">Adicionar</string>
+  <string name="action_search">Procurar</string>
+  <string name="action_clear">Limpar</string>
+  <string name="action_save">Salvar</string>
+  <string name="action_retry">Tentar novamente</string>
+  <string name="action_scroll_to_top">Rolar para o topo</string>
+  <string name="action_show_choices">Mostrar opções</string>
+  <string name="action_scan_barcode">Escanear código de barras</string>
+  <string name="action_close_scanner">Fechar leitor</string>
+  <string name="data_none">Nenhum</string>
+  <string name="data_all">Todos</string>
+  <string name="data_offline">Não foi possível acessar o servidor. Os dados salvos são exibidos.</string>
+  <string name="data_load_failed">Não foi possível carregar os dados.</string>
+  <string name="data_save_offline">Para salvar é necessária uma conexão com o servidor.</string>
+  <string name="data_save_failed">Erro ao salvar, provavelmente este item já existe</string>
+  <string name="data_save_failed_details">Mensagem do servidor: %1$s</string>
+  <string name="data_saved">Salvo</string>
+  <string name="data_number_invalid">Não pode ser inferior %1$s e seja um número válido com máx. de %2$s casas decimais.</string>
+  <string name="data_date_invalid">Insira uma data como YYYY-MM-DD</string>
+  <string name="data_datetime_invalid">Insira data e hora como YYYY-MM-DD HH:MM:SS</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">Dados mestres</string>
+  <string name="masterdata_products">Produtos</string>
+  <string name="masterdata_locations">Localizações</string>
+  <string name="masterdata_stores">Estabelecimentos</string>
+  <string name="masterdata_quantity_units">Unidades de medida</string>
+  <string name="masterdata_product_groups">Grupos</string>
+  <string name="masterdata_chores">Tarefas Domésticas</string>
+  <string name="masterdata_batteries">Baterias</string>
+  <string name="masterdata_task_categories">Categorias de atividade</string>
+  <string name="masterdata_userfields">Campos de usuário</string>
+  <string name="masterdata_userentities">Entidade de usuário</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">Configurar campos de usuário</string>
+  <string name="products_presets">Configurações para novos produtos</string>
+  <string name="products_filter_clear">Limpar filtro</string>
+  <string name="products_filter_product_group">Grupo</string>
+  <string name="products_filter_status">Situação</string>
+  <string name="products_filter_in_stock">Em estoque</string>
+  <string name="products_filter_out_of_stock">Produtos fora de estoque</string>
+  <string name="products_filter_show_disabled">Mostrar inativos</string>
+  <string name="products_sort">Ordenar</string>
+  <string name="products_sort_ascending">Crescente</string>
+  <string name="products_sort_descending">Decrescente</string>
+  <string name="products_sort_name">Nome</string>
+  <string name="products_sort_location">Localização</string>
+  <string name="products_sort_min_stock_amount">Quant mínima</string>
+  <string name="products_sort_product_group">Grupo</string>
+  <string name="products_sort_qu_stock">Unidade de medida</string>
+  <string name="products_sort_store">Estabelecimento padrão</string>
+  <string name="products_disabled">Desativado</string>
+  <string name="products_has_picture">Este produto tem uma imagem</string>
+  <string name="products_min_stock_amount">Quantidade mínima: %1$s %2$s</string>
+  <string name="products_empty">Nenhum produto ainda</string>
+  <string name="products_empty_filtered">Nenhum produto corresponde ao filtro</string>
+
+  <!-- Product form -->
+  <string name="product_create">Criar produto</string>
+  <string name="product_edit">Editar produto</string>
+  <string name="product_stock_entries">Itens em estoque</string>
+  <string name="product_stock_journal">Diário</string>
+  <string name="product_group_location">Localização</string>
+  <string name="product_group_stock">Estoque</string>
+  <string name="product_group_due_date">Validade</string>
+  <string name="product_group_quantity_units">Unidades de medida</string>
+  <string name="product_group_tare_weight">Peso da tara</string>
+  <string name="product_group_more">Mais</string>
+  <string name="product_group_related">Dados relacionados</string>
+  <string name="product_name">Nome</string>
+  <string name="product_name_required">O nome interno do campo é obrigatório</string>
+  <string name="product_active">Ativo</string>
+  <string name="product_parent">Produto-pai</string>
+  <string name="product_parent_disabled">Não foi possível, pois este produto já está sendo usado como produto-pai em outro</string>
+  <string name="product_parent_not_found">Nenhum produto com este código de barras</string>
+  <string name="product_parent_not_allowed">Este produto não pode ser um produto-pai</string>
+  <string name="product_description">Descrição</string>
+  <string name="product_location">Localização padrão</string>
+  <string name="product_location_required">A localização é obrigatória</string>
+  <string name="product_consume_location">Localização padrão para consumo</string>
+  <string name="product_consume_location_hint">Entradas de estoque nesta localização serão consumidas primeiro</string>
+  <string name="product_move_on_open">Mover quando aberto</string>
+  <string name="product_move_on_open_hint">Quando habilitado, ao marcar este produto como aberto, a quantidade correspondente será movida para a localização pré-definida de consumo</string>
+  <string name="product_store">Estabelecimento padrão</string>
+  <string name="product_min_stock_amount">Total mínimo</string>
+  <string name="product_cumulate_min_stock">Acumula a quant mínima do estoque dos subprodutos</string>
+  <string name="product_cumulate_min_stock_hint">Se ativado, a quantidade mínima de estoque de subprodutos será acumulada neste produto, significa que o subproduto nunca faltará, apenas este produto</string>
+  <string name="product_treat_opened_as_out_of_stock">Se ’aberto’, remover do estoque</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">Quando ativado, os itens abertos serão contados como ausentes para calcular se este produto está abaixo do estoque mínimo</string>
+  <string name="product_due_type">Tipo de Validade</string>
+  <string name="product_due_type_hint">Baseado no tipo selecionado, o destaque da ’Visão Geral’ de estoque será diferente</string>
+  <string name="product_due_type_best_before">Consumir antes de</string>
+  <string name="product_due_type_best_before_hint">Significa que talvez ainda seja seguro consumir o produto após seu prazo de validade</string>
+  <string name="product_due_type_expiration">Data de validade</string>
+  <string name="product_due_type_expiration_hint">Significa que o produto não é seguro para ser consumido após seu prazo de validade</string>
+  <string name="product_due_days">Dias de validade (padrão)</string>
+  <string name="product_due_days_hint">Para compras, essa quantidade de dias será adicionada à data atual para a sugestão de data de validade (-1 significa que este produto possui validade indeterminada)</string>
+  <string name="product_due_days_after_open">Dias de validade depois de aberto (padrão)</string>
+  <string name="product_due_days_after_open_hint">Quando o produto for marcado como aberto, a validade será substituída por hoje + esta quantidade de dias, mas apenas se a data resultante não for posterior à validade original (o valor 0 desativa isto)</string>
+  <string name="product_due_days_after_freezing">Dias de validade após colocar no congelador (padrão)</string>
+  <string name="product_due_days_after_freezing_hint">Ao mover este produto para um local de congelamento (portanto, ao congelá-lo), a data de validade será substituída por hoje + esta quantidade de dias (-1 significa que este produto possui validade indeterminada)</string>
+  <string name="product_due_days_after_thawing">Dias de validade após descongelar (padrão)</string>
+  <string name="product_due_days_after_thawing_hint">Ao retirar este produto de um local de congelamento (portanto, ao descongelá-lo), a data de validade  será substituída por hoje + esta quantidade de dias</string>
+  <string name="product_should_not_be_frozen">Não deve ser congelado</string>
+  <string name="product_should_not_be_frozen_hint">Quando ativado, ao mover este produto para um local de congelamento (portanto, ao congelá-lo), um aviso será exibido</string>
+  <string name="product_product_group">Grupo</string>
+  <string name="product_qu_stock">Unidade de medida</string>
+  <string name="product_qu_stock_hint">Após este produto estar em estoque e caso a unidade de quantidade desejada não possa ser selecionada aqui, primeiro crie uma conversão de unidade correspondente.</string>
+  <string name="product_qu_purchase">Unidade de medida (compra)</string>
+  <string name="product_qu_purchase_hint">Esta é a unidade padrão usada na compra e quando adicionar este produto à lista de compras</string>
+  <string name="product_qu_consume">Unidade padrão de consumo</string>
+  <string name="product_qu_consume_hint">Esta é a unidade padrão usada ao consumir este produto</string>
+  <string name="product_qu_price">Unidade para preços</string>
+  <string name="product_qu_price_hint">Ao exibir os preços deste produto, eles serão relacionados a esta unidade de quantidade</string>
+  <string name="product_qu_required">A unidade é obrigatória</string>
+  <string name="product_tare_weight_handling">Ativar configuração de peso de tara</string>
+  <string name="product_tare_weight_handling_hint">Isso é útil, por exemplo para farinha em frascos - na compra/consumo/inventário, você sempre pesa todo o frasco, o valor a ser lançado é calculado automaticamente com base no que está em estoque e no peso da tara definido abaixo</string>
+  <string name="product_tare_weight">Peso da tara</string>
+  <string name="product_not_check_stock_fulfillment">Desabilitar verificação de estoque para este ingrediente</string>
+  <string name="product_not_check_stock_fulfillment_hint">Isto será usado como configuração padrão quando este produto for adicionado como ingrediente de uma receita</string>
+  <string name="product_energy">Energia</string>
+  <string name="product_energy_hint">Unidade por estoque</string>
+  <string name="product_quick_consume_amount">Quantidade de consumo rápido</string>
+  <string name="product_quick_consume_amount_hint">Esse valor é usado para o "botão de consumo rápido" na página de ’Visão Geral’ de estoque (relacionado à quantidade de estoque da unidade)</string>
+  <string name="product_quick_open_amount">Valor de abertura rápida</string>
+  <string name="product_quick_open_amount_hint">Esse valor é usado para o "botão de abertura rápida" na página de ’Visão Geral’ de estoque (relacionado à quantidade de estoque da unidade)</string>
+  <string name="product_stock_label">Etiqueta de entrada de estoque padrão</string>
+  <string name="product_stock_label_hint">Este é o padrão que será pré-preenchido na compra</string>
+  <string name="product_stock_label_none">Sem Etiqueta</string>
+  <string name="product_stock_label_single">Etiqueta simples</string>
+  <string name="product_stock_label_per_unit">Etiqueta por unidade</string>
+  <string name="product_auto_reprint_label">Reimpressão automática de etiqueta de entrada de estoque</string>
+  <string name="product_auto_reprint_label_hint">Quando ativado, a alteração automática da data de validade de uma entrada de estoque (abrindo/congelando/descongelando e estando o campo ’Dias de validade (padrão)’ definido) reimprimirá sua etiqueta</string>
+  <string name="product_price_type">Preço padrão de compra</string>
+  <string name="product_price_type_hint">Isso será usado como a seleção de tipo de preço padrão na compra</string>
+  <string name="product_price_type_unspecified">Não especificado</string>
+  <string name="product_price_type_unit">Valor unitário</string>
+  <string name="product_price_type_total">Valor total</string>
+  <string name="product_disable_open">Não pode ser aberto</string>
+  <string name="product_hide_on_stock_overview">Nunca mostrar na ’Visão Geral’ de estoque</string>
+  <string name="product_hide_on_stock_overview_hint">A página de ’Visão Geral’ de estoque lista todos os produtos que estão atualmente ’em estoque’ ou ’abaixo de sua quantidade mínima’. Esta opção ocultará este produto daquela relação</string>
+  <string name="product_no_own_stock">Desativar estoque próprio</string>
+  <string name="product_no_own_stock_hint">Quando ativado, este produto não pode ter estoque próprio. Significa que não será selecionável nas ’Compras’ (Isso é útil para produtos-pai que são usados ​​apenas como um resumo/visão total dos produtos filhos)</string>
+  <string name="product_userfields">Campos de usuário</string>
+  <string name="product_userfield_required">Campo obrigatório</string>
+  <string name="product_userfield_title">Título</string>
+  <string name="product_userfield_link">Link</string>
+  <string name="product_userfield_file">Arquivos podem ser adicionados na interface web do Grocy</string>
+  <string name="product_barcodes">Códigos de barras</string>
+  <string name="product_qu_conversions">Conversões de medida de produtos específicos</string>
+  <string name="product_picture">Imagem</string>
+  <string name="product_picture_none">Nenhuma imagem disponível</string>
+  <string name="product_picture_choose">Escolher imagem</string>
+  <string name="product_picture_delete">Excluir imagem</string>
+  <string name="product_picture_will_delete">A imagem atual será removida ao salvar</string>
+  <string name="product_picture_will_upload">A nova imagem será enviada ao salvar</string>
+  <string name="product_picture_load_failed">Não foi possível carregar a imagem</string>
+  <string name="product_save_hint">Salve para adicionar códigos de barras e conversões de medidas</string>
   <string name="log_empty">Nenhum erro registrado</string>
   <string name="log_report_crash">Se o app travou ou algo deu errado, copie o log e envie-o com seu feedback para que o erro possa ser corrigido.</string>
 </resources>

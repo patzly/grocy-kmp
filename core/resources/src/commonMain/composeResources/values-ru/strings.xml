@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">О приложении</string>
   <string name="title_feedback">Отзыв</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">Вопрос-заглушка</string>
   <string name="help_placeholder_answer">Ответ-заглушка.</string>
 
+
   <!-- Updates -->
   <string name="update_available">Доступно обновление</string>
   <string name="update_available_version">Доступна версия Grocy %1$s. Обновить сейчас?</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">Стандартный</string>
   <string name="settings_contrast_medium">Средний</string>
   <string name="settings_contrast_high">Высокий</string>
+  <!-- Common data -->
+  <string name="action_add">Добавить</string>
+  <string name="action_search">Поиск</string>
+  <string name="action_clear">Очистить</string>
+  <string name="action_save">Сохранить</string>
+  <string name="action_retry">Повторить</string>
+  <string name="action_scroll_to_top">Прокрутить наверх</string>
+  <string name="action_show_choices">Показать варианты</string>
+  <string name="action_scan_barcode">Сканировать штрихкод</string>
+  <string name="action_close_scanner">Закрыть сканер</string>
+  <string name="data_none">Ничего</string>
+  <string name="data_all">Все</string>
+  <string name="data_offline">Не удалось подключиться к серверу. Показаны сохранённые данные.</string>
+  <string name="data_load_failed">Не удалось загрузить данные.</string>
+  <string name="data_save_offline">Для сохранения нужно подключение к серверу.</string>
+  <string name="data_save_failed">Ошибка при сохранении, вероятно, данный элемент уже существует</string>
+  <string name="data_save_failed_details">Сообщение сервера: %1$s</string>
+  <string name="data_saved">Сохранено</string>
+  <string name="data_number_invalid">Не может быть меньше %1$s и должно быть число с максимум %2$s знаками после запятой</string>
+  <string name="data_date_invalid">Введите дату в формате YYYY-MM-DD</string>
+  <string name="data_datetime_invalid">Введите дату и время в формате YYYY-MM-DD HH:MM:SS</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">Основные данные</string>
+  <string name="masterdata_products">Продукты</string>
+  <string name="masterdata_locations">Места хранения</string>
+  <string name="masterdata_stores">Магазины</string>
+  <string name="masterdata_quantity_units">Единицы измерения</string>
+  <string name="masterdata_product_groups">Группы продуктов</string>
+  <string name="masterdata_chores">Работы</string>
+  <string name="masterdata_batteries">Батарейки</string>
+  <string name="masterdata_task_categories">Категории задач</string>
+  <string name="masterdata_userfields">Поля пользователя</string>
+  <string name="masterdata_userentities">Пользовательские сущности</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">Настроить поля пользователя</string>
+  <string name="products_presets">Настройки по умолчанию для новых продуктов</string>
+  <string name="products_filter_clear">Очистить фильтр</string>
+  <string name="products_filter_product_group">Группа продуктов</string>
+  <string name="products_filter_status">Статус</string>
+  <string name="products_filter_in_stock">Продукты в запасе</string>
+  <string name="products_filter_out_of_stock">Продукты, которых нет в запасе</string>
+  <string name="products_filter_show_disabled">Показать неактивные</string>
+  <string name="products_sort">Сортировка</string>
+  <string name="products_sort_ascending">По возрастанию</string>
+  <string name="products_sort_descending">По убыванию</string>
+  <string name="products_sort_name">Имя</string>
+  <string name="products_sort_location">Место хранения</string>
+  <string name="products_sort_min_stock_amount">Мин. кол-во в запасе</string>
+  <string name="products_sort_product_group">Группа продуктов</string>
+  <string name="products_sort_qu_stock">Единица измерения в запасе</string>
+  <string name="products_sort_store">Магазин по умолчанию</string>
+  <string name="products_disabled">Отключено</string>
+  <string name="products_has_picture">Продукт с изображением</string>
+  <string name="products_min_stock_amount">Мин. кол-во в запасе: %1$s %2$s</string>
+  <string name="products_empty">Продуктов пока нет</string>
+  <string name="products_empty_filtered">Нет продуктов, соответствующих фильтру</string>
+
+  <!-- Product form -->
+  <string name="product_create">Создать продукт</string>
+  <string name="product_edit">Изменить продукт</string>
+  <string name="product_stock_entries">Запасы</string>
+  <string name="product_stock_journal">Журнал запасов</string>
+  <string name="product_group_location">Место хранения</string>
+  <string name="product_group_stock">Запас</string>
+  <string name="product_group_due_date">Срок годности</string>
+  <string name="product_group_quantity_units">Единицы измерения</string>
+  <string name="product_group_tare_weight">Вес тары</string>
+  <string name="product_group_more">Ещё</string>
+  <string name="product_group_related">Связанные данные</string>
+  <string name="product_name">Имя</string>
+  <string name="product_name_required">Имя необходимо</string>
+  <string name="product_active">Активный</string>
+  <string name="product_parent">Родительский продукт</string>
+  <string name="product_parent_disabled">Невозможно, так как этот продукт уже является родительским продуктом у другого продукта</string>
+  <string name="product_parent_not_found">Нет продукта с этим штрихкодом</string>
+  <string name="product_parent_not_allowed">Этот продукт не может быть родительским</string>
+  <string name="product_description">Описание</string>
+  <string name="product_location">Место хранения по умолчанию</string>
+  <string name="product_location_required">Место хранения необходимо</string>
+  <string name="product_consume_location">По умолчанию использовать из места хранения</string>
+  <string name="product_consume_location_hint">Запасы из этого места хранения употребляются первыми</string>
+  <string name="product_move_on_open">Перемещать открытое сюда</string>
+  <string name="product_move_on_open_hint">Если включено, заданное количество продукта помеченное открытым будет перемещено в это место хранения</string>
+  <string name="product_store">Магазин по умолчанию</string>
+  <string name="product_min_stock_amount">Минимальное количество в запасе</string>
+  <string name="product_cumulate_min_stock">Накапливать мин. заданное количество субпродуктов</string>
+  <string name="product_cumulate_min_stock_hint">Если включено, мин. количество запасов субпродуктов будет накапливаться в этом продукте, это означает, что субпродукт никогда не будет «отсутствовать», в отличии от этого продукта.</string>
+  <string name="product_treat_opened_as_out_of_stock">Открытое не учитывается в запасах</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">Если включено, открытый продукт не учитывается в запасах и при расчёте минимальных остатков этого продукта.</string>
+  <string name="product_due_type">Тип срока годности</string>
+  <string name="product_due_type_hint">На основе выбранного типа, подсветка на странице обзора запасов будет отличаться.</string>
+  <string name="product_due_type_best_before">Годен до</string>
+  <string name="product_due_type_best_before_hint">Означает, что просроченный продукт возможно употреблять</string>
+  <string name="product_due_type_expiration">Окончание срока годности</string>
+  <string name="product_due_type_expiration_hint">Означает, что просроченный продукт употреблять опасно</string>
+  <string name="product_due_days">Срок годности по умолчанию</string>
+  <string name="product_due_days_hint">Данное количество дней будет добавлено к предлагаемому сроку годности при покупке (-1 означает, что у данного продукта бесконечный срок годности)</string>
+  <string name="product_due_days_after_open">Срок годности в днях по умолчанию после открытия</string>
+  <string name="product_due_days_after_open_hint">Когда продукт помечается как открытый, срок годности будет изменён на это количество дней, начиная с сегодняшнего, но только если срок годности на упаковке наступает не раньше (значение 0 отключает этот функционал)</string>
+  <string name="product_due_days_after_freezing">Срок годности по умолчанию после заморозки</string>
+  <string name="product_due_days_after_freezing_hint">При перемещении данного продукта в морозильную камеру (т. е. при его заморозке), срок годности заменится по формуле: сегодня + это количество дней (-1 означает, что у данного продукта бесконечный срок годности)</string>
+  <string name="product_due_days_after_thawing">Срок годности по умолчанию после разморозки</string>
+  <string name="product_due_days_after_thawing_hint">При перемещении данного продукта из морозильной камеры (т. е. при его разморозке), срок годности заменится по формуле: сегодня + это количество дней</string>
+  <string name="product_should_not_be_frozen">Не замораживать</string>
+  <string name="product_should_not_be_frozen_hint">При выполнении перемещения в морозильную камеру (т. е. при замораживании) будет отображаться предупреждение</string>
+  <string name="product_product_group">Группа продуктов</string>
+  <string name="product_qu_stock">Единица измерения в запасе</string>
+  <string name="product_qu_stock_hint">Если продукт уже был в запасе, а нужную единицу измерения нельзя выбрать здесь, сначала создайте соответствующее преобразование единиц</string>
+  <string name="product_qu_purchase">Единица измерения для покупок по умолчанию</string>
+  <string name="product_qu_purchase_hint">Это единица количества по умолчанию, используемая при покупке и добавлении этого продукта в список покупок.</string>
+  <string name="product_qu_consume">Единица измерения потребления по умолчанию</string>
+  <string name="product_qu_consume_hint">Это единица измерения по умолчанию, используемая при потреблении этого продукта.</string>
+  <string name="product_qu_price">Единица измерения для цен</string>
+  <string name="product_qu_price_hint">При отображении цен на этот продукт они будут относиться к этой единице измерения</string>
+  <string name="product_qu_required">Необходима единица измерения</string>
+  <string name="product_tare_weight_handling">Включить расчёт с учётом тары</string>
+  <string name="product_tare_weight_handling_hint">Это удобно, например, для хранения муки в контейнере - при покупке/потреблении/ревизии взвесьте весь контейнер, а настоящее количество будет автоматически рассчитано на основе объёма в запасе и веса тары ниже</string>
+  <string name="product_tare_weight">Вес тары</string>
+  <string name="product_not_check_stock_fulfillment">Отключить проверки наличия в запасе для данного ингредиента</string>
+  <string name="product_not_check_stock_fulfillment_hint">Это будет использоваться в качестве настройки по умолчанию при добавлении данного продукта как ингредиента в рецепт</string>
+  <string name="product_energy">Энергетическая ценность</string>
+  <string name="product_energy_hint">На единицу измерения в запасе</string>
+  <string name="product_quick_consume_amount">Кол-во быстрого употребления</string>
+  <string name="product_quick_consume_amount_hint">Это количество используется для кнопки "быстрого потребления" на странице обзора запасов (связано с единицей измерения продукта).</string>
+  <string name="product_quick_open_amount">Кол-во быстрого открытия</string>
+  <string name="product_quick_open_amount_hint">Это количество используется для кнопки "быстрого открытия" на странице обзора запасов (связано с единицей измерения продукта).</string>
+  <string name="product_stock_label">Этикетка запаса по умолчанию</string>
+  <string name="product_stock_label_hint">Значение, которое будет изначально заполнено при внесении покупки</string>
+  <string name="product_stock_label_none">Нет этикетки</string>
+  <string name="product_stock_label_single">Одна этикетка</string>
+  <string name="product_stock_label_per_unit">Этикетка на единицу измерения</string>
+  <string name="product_auto_reprint_label">Автоматическая печать этикетки запаса</string>
+  <string name="product_auto_reprint_label_hint">Когда включено, автоматическое изменение срока годности запаса (путем открытия/замораживания/размораживания и установки соответствующего срока годности по умолчанию) приведет к повторной печати ее метки</string>
+  <string name="product_price_type">Тип цены покупки по умолчанию</string>
+  <string name="product_price_type_hint">Будет использоваться как тип цены по умолчанию при покупке</string>
+  <string name="product_price_type_unspecified">Не указано</string>
+  <string name="product_price_type_unit">Цена за единицу</string>
+  <string name="product_price_type_total">Общая цена</string>
+  <string name="product_disable_open">Не может быть открыто</string>
+  <string name="product_hide_on_stock_overview">Никогда не показывать в обзоре запасов</string>
+  <string name="product_hide_on_stock_overview_hint">Страница обзора запасов показывает все продукты, которые сейчас есть в запасе или ниже минимального количества - включите, чтобы никогда не показывать там этот продукт</string>
+  <string name="product_no_own_stock">Не добавлять в запасы</string>
+  <string name="product_no_own_stock_hint">Если включено, продукт не может иметь собственного запаса и такой продукт нельзя купить (используется для родительских продуктов, которые используются для обобщения запасов продуктов одного типа)</string>
+  <string name="product_userfields">Поля пользователя</string>
+  <string name="product_userfield_required">Обязательное поле</string>
+  <string name="product_userfield_title">Заголовок</string>
+  <string name="product_userfield_link">Ссылка</string>
+  <string name="product_userfield_file">Файлы можно добавить в веб-интерфейсе Grocy</string>
+  <string name="product_barcodes">Штрихкоды</string>
+  <string name="product_qu_conversions">Преобразования ЕИ, специфичные для продукта</string>
+  <string name="product_picture">Изображение</string>
+  <string name="product_picture_none">Нет доступного изображения</string>
+  <string name="product_picture_choose">Выбрать изображение</string>
+  <string name="product_picture_delete">Удалить изображение</string>
+  <string name="product_picture_will_delete">Текущая картинка будет удалена при сохранении</string>
+  <string name="product_picture_will_upload">Новое изображение будет загружено при сохранении</string>
+  <string name="product_picture_load_failed">Не удалось загрузить изображение</string>
+  <string name="product_save_hint">Сохраните, чтобы добавить штрихкоды и преобразования ЕИ</string>
   <string name="log_empty">Ошибок не зарегистрировано</string>
   <string name="log_report_crash">Если приложение аварийно завершилось или что-то пошло не так, скопируйте журнал и отправьте его вместе с отзывом, чтобы ошибку можно было исправить.</string>
 </resources>

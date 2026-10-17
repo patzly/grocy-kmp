@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">Névjegy</string>
   <string name="title_feedback">Visszajelzés</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">Helyőrző kérdés</string>
   <string name="help_placeholder_answer">Helyőrző válasz.</string>
 
+
   <!-- Updates -->
   <string name="update_available">Frissítés érhető el</string>
   <string name="update_available_version">Elérhető a Grocy %1$s. Frissítesz most?</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">Normál</string>
   <string name="settings_contrast_medium">Közepes</string>
   <string name="settings_contrast_high">Magas</string>
+  <!-- Common data -->
+  <string name="action_add">Hozzáadás</string>
+  <string name="action_search">Keresés</string>
+  <string name="action_clear">Törlés</string>
+  <string name="action_save">Mentés</string>
+  <string name="action_retry">Újrapróbálás</string>
+  <string name="action_scroll_to_top">Görgetés a tetejére</string>
+  <string name="action_show_choices">Lehetőségek megjelenítése</string>
+  <string name="action_scan_barcode">Vonalkód beolvasása</string>
+  <string name="action_close_scanner">Beolvasó bezárása</string>
+  <string name="data_none">Nincs</string>
+  <string name="data_all">Összes</string>
+  <string name="data_offline">A szerver nem érhető el. A mentett adatok láthatók.</string>
+  <string name="data_load_failed">Az adatokat nem sikerült betölteni.</string>
+  <string name="data_save_offline">A mentéshez kapcsolat szükséges a szerverrel.</string>
+  <string name="data_save_failed">Hiba mentés közben, valószínűleg ez a tétel már létezik</string>
+  <string name="data_save_failed_details">A szerver üzenete: %1$s</string>
+  <string name="data_saved">Mentve</string>
+  <string name="data_number_invalid">Nem lehet kevesebb, mint %1$s és érvényes számnak kell lennie max. %2$s tizedesjegyel</string>
+  <string name="data_date_invalid">Adj meg egy dátumot YYYY-MM-DD formában</string>
+  <string name="data_datetime_invalid">Adj meg dátumot és időt YYYY-MM-DD HH:MM:SS formában</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">Törzsadatok</string>
+  <string name="masterdata_products">Termékek</string>
+  <string name="masterdata_locations">Helyek</string>
+  <string name="masterdata_stores">Áruházak</string>
+  <string name="masterdata_quantity_units">Mennyiségi egységek</string>
+  <string name="masterdata_product_groups">Termékcsoportok</string>
+  <string name="masterdata_chores">Házimunkák</string>
+  <string name="masterdata_batteries">Elemek</string>
+  <string name="masterdata_task_categories">Feladat kategóriák</string>
+  <string name="masterdata_userfields">Egyéni mezők</string>
+  <string name="masterdata_userentities">Egyéni objektumok</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">Egyéni mezők testreszabása</string>
+  <string name="products_presets">Új termék alapértelmezett tulajdonságok</string>
+  <string name="products_filter_clear">Szűrő törlése</string>
+  <string name="products_filter_product_group">Termékcsoport</string>
+  <string name="products_filter_status">Állapot</string>
+  <string name="products_filter_in_stock">Készleten lévő termékek</string>
+  <string name="products_filter_out_of_stock">Készleten nem lévő termékek</string>
+  <string name="products_filter_show_disabled">Inaktív mutatása</string>
+  <string name="products_sort">Rendezés</string>
+  <string name="products_sort_ascending">Növekvő</string>
+  <string name="products_sort_descending">Csökkenő</string>
+  <string name="products_sort_name">Név</string>
+  <string name="products_sort_location">Hely</string>
+  <string name="products_sort_min_stock_amount">Min. készlet mennyiség</string>
+  <string name="products_sort_product_group">Termékcsoport</string>
+  <string name="products_sort_qu_stock">Készletegység</string>
+  <string name="products_sort_store">Alapértelmezett áruház</string>
+  <string name="products_disabled">Inaktív</string>
+  <string name="products_has_picture">Ez a termék rendelkezik képpel</string>
+  <string name="products_min_stock_amount">Min. készlet mennyiség: %1$s %2$s</string>
+  <string name="products_empty">Még nincsenek termékek</string>
+  <string name="products_empty_filtered">Egy termék sem felel meg a szűrőnek</string>
+
+  <!-- Product form -->
+  <string name="product_create">Termék létrehozása</string>
+  <string name="product_edit">Termék szerkesztése</string>
+  <string name="product_stock_entries">Készlet bejegyzések</string>
+  <string name="product_stock_journal">Készlet napló</string>
+  <string name="product_group_location">Hely</string>
+  <string name="product_group_stock">Készlet</string>
+  <string name="product_group_due_date">Lejárati idő</string>
+  <string name="product_group_quantity_units">Mennyiségi egységek</string>
+  <string name="product_group_tare_weight">Tára súly</string>
+  <string name="product_group_more">Továbbiak</string>
+  <string name="product_group_related">Kapcsolódó adatok</string>
+  <string name="product_name">Név</string>
+  <string name="product_name_required">A név megadása kötelező</string>
+  <string name="product_active">Aktív</string>
+  <string name="product_parent">Szülő termék</string>
+  <string name="product_parent_disabled">Nem lehetséges, mert ez a termék egy másik termék szülő termékeként már felhasználásra került</string>
+  <string name="product_parent_not_found">Nincs termék ezzel a vonalkóddal</string>
+  <string name="product_parent_not_allowed">Ez a termék nem lehet szülő termék</string>
+  <string name="product_description">Leírás</string>
+  <string name="product_location">Alapértelmezett hely</string>
+  <string name="product_location_required">A hely megadása kötelező</string>
+  <string name="product_consume_location">Alapértelmezett felhasználási hely</string>
+  <string name="product_consume_location_hint">Az ezen a helyen elérhető termékek kerülnek először felhasználásra</string>
+  <string name="product_move_on_open">Felbontáskor áthelyezés</string>
+  <string name="product_move_on_open_hint">Bekapcsolva áthelyezi az épp felbontott készletet az alapértelmezett felhasználási helyre</string>
+  <string name="product_store">Alapértelmezett áruház</string>
+  <string name="product_min_stock_amount">Minimális készlet mennyiség</string>
+  <string name="product_cumulate_min_stock">Al-termékek minimális készlet mennyiségének halmozása</string>
+  <string name="product_cumulate_min_stock_hint">Összeszámolja az altermékeket, így ebből a szülőtermékből keletkezik hiány az egyes altermékek helyett</string>
+  <string name="product_treat_opened_as_out_of_stock">Kezelje a felbontott termékeket hiányzóként</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">Bekapcsolva a felbontott termékek nem számítanak bele az elérhető készlet mennyiségbe a minimum készlet meghatározásánál</string>
+  <string name="product_due_type">Lejárati idő típusa</string>
+  <string name="product_due_type_hint">A választástól függő kiemelést kap a készlet áttekintő képernyőn</string>
+  <string name="product_due_type_best_before">Minőségmegőrzési dátum</string>
+  <string name="product_due_type_best_before_hint">Azt jelenti, hogy a termék még talán biztonságosan fogyasztható a lejárati dátum után</string>
+  <string name="product_due_type_expiration">Fogyaszthatósági dátum</string>
+  <string name="product_due_type_expiration_hint">Azt jelenti, hogy a termék már nem fogyasztható biztonságosan a lejárati dátum után</string>
+  <string name="product_due_days">Alapértelmezett lejárati idő</string>
+  <string name="product_due_days_hint">Vásárlás esetén mától számítva ennyi nap adódik hozzá a felkínált lejárati idő javaslathoz (-1 esetén a termék soha nem jár le)</string>
+  <string name="product_due_days_after_open">Alapértelmezett fogyaszthatósági idő felbontás után</string>
+  <string name="product_due_days_after_open_hint">Felbontáskor a lejárati időt kicseréli a mai nap + a megadott napok összegére, azonban csak akkor, ha a számolt dátum az eredetinél nincs később (a 0 érték kikapcsolja a funkciót)</string>
+  <string name="product_due_days_after_freezing">Alapértelmezett lejárati idő fagyasztás után</string>
+  <string name="product_due_days_after_freezing_hint">A termék fagyasztóba való mozgatása után (azaz fagyasztás után) a lejárati időt a mai nap + az itt beállított napok összegére cseréljük (-1 esetén a termék soha nem jár le)</string>
+  <string name="product_due_days_after_thawing">Alapértelmezett lejárati idő kiolvasztás után</string>
+  <string name="product_due_days_after_thawing_hint">A termék fagyasztóból való kivétele után (azaz kiolvasztás után) a lejárati időt a mai nap + az itt beállított napok összegére cseréljük</string>
+  <string name="product_should_not_be_frozen">Nem szabad lefagyasztani</string>
+  <string name="product_should_not_be_frozen_hint">Megjelenít egy figyelmeztetést, amikor ez a termék fagyasztóba (fagyasztóként megjelölt helyre) kerül</string>
+  <string name="product_product_group">Termékcsoport</string>
+  <string name="product_qu_stock">Készletegység</string>
+  <string name="product_qu_stock_hint">Ha ez a termék egyszer már készleten volt, és a kívánt mennyiségi egység itt nem választható ki, először hozz létre egy megfelelő egység átváltást</string>
+  <string name="product_qu_purchase">Alapértelmezett vásárlási mennyiségi egység</string>
+  <string name="product_qu_purchase_hint">Ez a vásárláskor és a termék bevásárlólistára való felvételekor használt alapértelmezett mennyiségi egység</string>
+  <string name="product_qu_consume">Alapértelmezett felhasználási mennyiségi egység</string>
+  <string name="product_qu_consume_hint">Ez az alapértelmezett mennyiségi egység, amivel a terméket felhasználjuk</string>
+  <string name="product_qu_price">Mennyiségi egység az árakhoz</string>
+  <string name="product_qu_price_hint">A termék árainak megjelenítésekor ehhez a mennyiségi egységhez kapcsolódnak</string>
+  <string name="product_qu_required">A mennyiségi egység megadása kötelező</string>
+  <string name="product_tare_weight_handling">Tára súly kezelés engedélyezése</string>
+  <string name="product_tare_weight_handling_hint">Ez akkor hasznos pl. lisztnél - ha vásárláskor/felhasználáskor/leltárazáskor mindig az egész tárolót méred meg. Ilyenkor a helyes mennyiség automatán számolódik a leltár és a lentebb definiált tára mennyiség alapján.</string>
+  <string name="product_tare_weight">Tára súly</string>
+  <string name="product_not_check_stock_fulfillment">Készlet rendelkezésre állás ellenőrzés kikapcsolása ehhez a hozzávalóhoz</string>
+  <string name="product_not_check_stock_fulfillment_hint">Ezt használja alapértelmezettként, ha a terméket hozzávalóként recepthez adjuk</string>
+  <string name="product_energy">Energia</string>
+  <string name="product_energy_hint">Készletegységenként</string>
+  <string name="product_quick_consume_amount">Gyors felhasználási mennyiség</string>
+  <string name="product_quick_consume_amount_hint">A készlet áttekintésnél lévő "gyors felhasználás" gomb ennyi mennyiséget használ el (készletegységben)</string>
+  <string name="product_quick_open_amount">Gyors felbontási mennyiség</string>
+  <string name="product_quick_open_amount_hint">A készlet áttekintésnél lévő "gyors nyitás" gomb ennyi mennyiséget használ el (készletegységben)</string>
+  <string name="product_stock_label">Alapértelmezett készletbejegyzés címke</string>
+  <string name="product_stock_label_hint">Alapértelmezett érték, ami vásárláskor automatikusan kitöltődik</string>
+  <string name="product_stock_label_none">Nincs címke</string>
+  <string name="product_stock_label_single">Egy címke</string>
+  <string name="product_stock_label_per_unit">Mennyiségenkénti címke</string>
+  <string name="product_auto_reprint_label">Készletbejegyzés címke újranyomtatása automatán</string>
+  <string name="product_auto_reprint_label_hint">Bekapcsolva a lejárati idő automatikus változtatásakor (felbontás/fagyasztás/kiolvasztás és beállított alapértelmezett lejárat idők esetén) automatán újranyomtatja a címkét</string>
+  <string name="product_price_type">Alapértelmezett vásárlási ártípus</string>
+  <string name="product_price_type_hint">Vásárláskor ez lesz az alapértelmezetten kiválasztott ártípus</string>
+  <string name="product_price_type_unspecified">Nincs megadva</string>
+  <string name="product_price_type_unit">Egységár</string>
+  <string name="product_price_type_total">Teljes ár</string>
+  <string name="product_disable_open">Nem bontható fel</string>
+  <string name="product_hide_on_stock_overview">Ne mutassa a készlet áttekintésnél</string>
+  <string name="product_hide_on_stock_overview_hint">A készlet áttekintése oldal minden terméket mutat, amely jelenleg készleten van vagy a minimális készlet mennyisége alatt van - kapcsold be, hogy ez a termék ott soha ne jelenjen meg</string>
+  <string name="product_no_own_stock">Saját készlet kikapcsolása</string>
+  <string name="product_no_own_stock_hint">Bekapcsolva a terméknek nem lehet saját készlete, így vásárláskor sem lehet kiválasztani (akkor hasznos, ha az adott terméket csak az al-termékek összesítésére használjuk)</string>
+  <string name="product_userfields">Egyéni mezők</string>
+  <string name="product_userfield_required">Kötelező egyéni mező</string>
+  <string name="product_userfield_title">Cím</string>
+  <string name="product_userfield_link">Hivatkozás</string>
+  <string name="product_userfield_file">Fájlokat a Grocy webes felületén lehet hozzáadni</string>
+  <string name="product_barcodes">Vonalkódok</string>
+  <string name="product_qu_conversions">Termékspecifikus mennyiségi egység átváltások</string>
+  <string name="product_picture">Kép</string>
+  <string name="product_picture_none">Nincs kép megadva</string>
+  <string name="product_picture_choose">Kép kiválasztása</string>
+  <string name="product_picture_delete">Kép törlése</string>
+  <string name="product_picture_will_delete">Az aktuális kép törlődik mentéskor</string>
+  <string name="product_picture_will_upload">Az új kép mentéskor feltöltődik</string>
+  <string name="product_picture_load_failed">A képet nem sikerült betölteni</string>
+  <string name="product_save_hint">Mentsd el a vonalkódok és mennyiségi egység átváltások hozzáadásához</string>
   <string name="log_empty">Nincs naplózott hiba</string>
   <string name="log_report_crash">Ha az alkalmazás összeomlott, vagy valami hiba történt, másold ki a naplót, és küldd el a visszajelzéseddel, hogy a hibát ki lehessen javítani.</string>
 </resources>

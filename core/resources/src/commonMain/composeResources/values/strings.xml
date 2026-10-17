@@ -230,7 +230,6 @@
   <!-- Products -->
   <string name="products_configure_userfields">Configure userfields</string>
   <string name="products_presets">Presets for new products</string>
-  <string name="products_filter">Filter</string>
   <string name="products_filter_clear">Clear filter</string>
   <string name="products_filter_product_group">Product group</string>
   <string name="products_filter_status">Status</string>

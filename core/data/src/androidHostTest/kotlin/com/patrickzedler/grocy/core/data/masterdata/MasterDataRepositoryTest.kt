@@ -84,7 +84,9 @@ class MasterDataRepositoryTest {
 
     @Test
     fun newProductIsCreatedAndStoredAsTheServerSavedIt() = runTest {
-        val id = repository.saveProduct(Product(id = MasterDataRepository.NEW_PRODUCT_ID, name = "X"))
+        val product = Product(id = MasterDataRepository.NEW_PRODUCT_ID, name = "X")
+
+        val id = repository.saveProduct(product)
 
         assertEquals(MasterDataJson.CREATED_ID, id)
         assertEquals(1, server.requestsTo("/api/objects/products", HttpMethod.Post).size)
@@ -116,7 +118,9 @@ class MasterDataRepositoryTest {
         server.respond("/api/objects/products/2", body = productJson(id = 2, name = "Bread"))
         val product = Product(id = 2, name = "Bread", pictureFileName = "x1bread.jpg")
 
-        repository.saveProduct(product, picture = PictureChange.Replace(byteArrayOf(1), "Brot ä.JPG"))
+        val picture = PictureChange.Replace(byteArrayOf(1), "Brot ä.JPG")
+
+        repository.saveProduct(product, picture = picture)
 
         val put = server.requestsTo("/api/objects/products/2", HttpMethod.Put).single()
         val newName = put.jsonBody["picture_file_name"]!!.jsonPrimitive.content

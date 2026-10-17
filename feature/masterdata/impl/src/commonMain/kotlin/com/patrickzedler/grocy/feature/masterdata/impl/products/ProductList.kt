@@ -25,7 +25,14 @@ internal data class ProductFilter(
 
 internal enum class StockStatusFilter { ALL, IN_STOCK, OUT_OF_STOCK }
 
-internal enum class ProductSortField { NAME, LOCATION, MIN_STOCK_AMOUNT, PRODUCT_GROUP, QU_STOCK, STORE }
+internal enum class ProductSortField {
+    NAME,
+    LOCATION,
+    MIN_STOCK_AMOUNT,
+    PRODUCT_GROUP,
+    QU_STOCK,
+    STORE,
+}
 
 @Immutable
 internal data class ProductSort(
@@ -133,7 +140,8 @@ private fun search(
     val textMatches = FuzzySearch.filter(items, query) { item ->
         listOfNotNull(item.name, item.productGroupName, item.locationName, item.storeName)
     }
-    return items.filter { it.id in barcodeMatches } + textMatches.filter { it.id !in barcodeMatches }
+    return items.filter { it.id in barcodeMatches } +
+        textMatches.filter { it.id !in barcodeMatches }
 }
 
 private fun comparator(sort: ProductSort, data: ProductListData): Comparator<ProductListItem> {

@@ -3,9 +3,11 @@ package com.patrickzedler.grocy.feature.masterdata.impl.product
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -69,15 +71,11 @@ internal fun TextItem(
             enabled = enabled,
             label = { Text(label) },
             trailingIcon = suffix?.let { { Text(it) } },
-            supportingText = (error ?: hint)?.let { text ->
+            supportingText = error?.let { text ->
                 {
                     Text(
                         text = text,
-                        modifier = if (error != null) {
-                            Modifier.semantics { liveRegion = LiveRegionMode.Polite }
-                        } else {
-                            Modifier
-                        },
+                        modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
                     )
                 }
             },
@@ -91,13 +89,27 @@ internal fun TextItem(
                 keyboardType = keyboardType,
                 imeAction = if (multiLine) ImeAction.Default else ImeAction.Next,
             ),
+            // Multi-line fields start as high as the others and grow with their paragraphs
             lineLimits = if (multiLine) {
-                TextFieldLineLimits.MultiLine(minHeightInLines = 3)
+                TextFieldLineLimits.MultiLine(minHeightInLines = 1)
             } else {
                 TextFieldLineLimits.SingleLine
             },
         )
+        HintText(hint)
     }
+}
+
+/** Explanation below a field, styled like the supporting text of a list item. */
+@Composable
+private fun HintText(hint: String?) {
+    if (hint == null) return
+    Text(
+        text = hint,
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(top = 8.dp),
+    )
 }
 
 @Composable
@@ -123,10 +135,11 @@ internal fun DropdownItem(
             onSelectedIdChange = onSelectedIdChange,
             enabled = enabled,
             isError = error != null,
-            supportingText = error ?: hint,
+            supportingText = error,
             noneLabel = if (optional) stringResource(Res.string.data_none) else null,
             trailingAction = trailingAction,
         )
+        HintText(hint)
     }
 }
 

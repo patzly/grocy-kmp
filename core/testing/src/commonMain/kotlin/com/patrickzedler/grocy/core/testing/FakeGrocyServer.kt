@@ -94,7 +94,10 @@ class FakeGrocyServer(
             body = """{"created_object_id":${MasterDataJson.CREATED_ID}}""",
             method = HttpMethod.Post,
         )
-        respond("$PRODUCTS_PATH/${MasterDataJson.CREATED_ID}", body = MasterDataJson.CREATED_PRODUCT)
+        respond(
+            path = "$PRODUCTS_PATH/${MasterDataJson.CREATED_ID}",
+            body = MasterDataJson.CREATED_PRODUCT,
+        )
     }
 
     /** Answers requests to [path], only those with [method] if given. */

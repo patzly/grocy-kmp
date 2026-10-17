@@ -158,9 +158,10 @@ private fun ProductsContent(
         snackbarHostState = snackbarHostState,
         // Every product is an item of one large group, the group spacing follows the filters
         itemSpacing = ListItemDefaults.SegmentedGap,
-        floatingToolbar = { scrollBehavior ->
+        floatingToolbar = { scrollBehavior, toolbarModifier ->
             FloatingToolbarWithFab(
                 scrollBehavior = scrollBehavior,
+                modifier = toolbarModifier,
                 fabPainter = painterResource(Res.drawable.ic_rounded_add),
                 fabDescription = stringResource(Res.string.action_add),
                 onFabClick = onAddClick,
@@ -416,4 +417,5 @@ private fun MessageItem(
 private const val DisabledAlpha = 0.6f
 
 // The list puts the segmented gap between items, this adds up to the gap between groups
-private val GroupSpacingAfterGap = SegmentedListDefaults.GroupSpacing - ListItemDefaults.SegmentedGap
+private val GroupSpacingAfterGap =
+    SegmentedListDefaults.GroupSpacing - ListItemDefaults.SegmentedGap

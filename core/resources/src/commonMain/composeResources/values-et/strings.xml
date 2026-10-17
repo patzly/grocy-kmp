@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">Teave</string>
   <string name="title_feedback">Tagasiside</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">Kohatäitjaküsimus</string>
   <string name="help_placeholder_answer">Kohatäitjavastus.</string>
 
+
   <!-- Updates -->
   <string name="update_available">Uuendus on saadaval</string>
   <string name="update_available_version">Grocy %1$s on saadaval. Kas uuendada kohe?</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">Standardne</string>
   <string name="settings_contrast_medium">Keskmine</string>
   <string name="settings_contrast_high">Kõrge</string>
+  <!-- Common data -->
+  <string name="action_add">Lisa</string>
+  <string name="action_search">Otsi</string>
+  <string name="action_clear">Puhasta</string>
+  <string name="action_save">Salvesta</string>
+  <string name="action_retry">Proovi uuesti</string>
+  <string name="action_scroll_to_top">Keri üles</string>
+  <string name="action_show_choices">Näita valikuid</string>
+  <string name="action_scan_barcode">Skanni triipkood</string>
+  <string name="action_close_scanner">Sulge skanner</string>
+  <string name="data_none">Puudub</string>
+  <string name="data_all">Kõik</string>
+  <string name="data_offline">Serveriga ei saadud ühendust. Kuvatakse salvestatud andmed.</string>
+  <string name="data_load_failed">Andmeid ei õnnestunud laadida.</string>
+  <string name="data_save_offline">Salvestamiseks on vaja ühendust serveriga.</string>
+  <string name="data_save_failed">Salvestamise viga, ese võib juba eksisteerida</string>
+  <string name="data_save_failed_details">Serveri teade: %1$s</string>
+  <string name="data_saved">Salvestatud</string>
+  <string name="data_number_invalid">See ei saa olla väiksem kui %1$s ja peab olema number maksimaalselt %2$s komakohaga</string>
+  <string name="data_date_invalid">Sisesta kuupäev kujul YYYY-MM-DD</string>
+  <string name="data_datetime_invalid">Sisesta kuupäev ja kellaaeg kujul YYYY-MM-DD HH:MM:SS</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">Põhiandmed</string>
+  <string name="masterdata_products">Tooted</string>
+  <string name="masterdata_locations">Asukohad</string>
+  <string name="masterdata_stores">Poed</string>
+  <string name="masterdata_quantity_units">Koguseühikud</string>
+  <string name="masterdata_product_groups">Tootegrupid</string>
+  <string name="masterdata_chores">Majapidamistööd</string>
+  <string name="masterdata_batteries">Patareid</string>
+  <string name="masterdata_task_categories">Ülesannete kategooriad</string>
+  <string name="masterdata_userfields">Kasutajaväljad</string>
+  <string name="masterdata_userentities">Kasutajaolemid</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">Kasutajaväljade seaded</string>
+  <string name="products_presets">Vaikesätted uutele toodetele</string>
+  <string name="products_filter_clear">Puhasta filter</string>
+  <string name="products_filter_product_group">Tootegrupp</string>
+  <string name="products_filter_status">Staatus</string>
+  <string name="products_filter_in_stock">Varudes olevad tooted</string>
+  <string name="products_filter_out_of_stock">Varudest otsas tooted</string>
+  <string name="products_filter_show_disabled">Näitamine keelatud</string>
+  <string name="products_sort">Sorteeri</string>
+  <string name="products_sort_ascending">Kasvav</string>
+  <string name="products_sort_descending">Kahanev</string>
+  <string name="products_sort_name">Nimi</string>
+  <string name="products_sort_location">Asukoht</string>
+  <string name="products_sort_min_stock_amount">Minimaalne varude kogus</string>
+  <string name="products_sort_product_group">Tootegrupp</string>
+  <string name="products_sort_qu_stock">Koguseühik varudes</string>
+  <string name="products_sort_store">Vaikimisi pood</string>
+  <string name="products_disabled">Keelatud</string>
+  <string name="products_has_picture">Sellel tootel on pilt</string>
+  <string name="products_min_stock_amount">Minimaalne varude kogus: %1$s %2$s</string>
+  <string name="products_empty">Tooteid veel pole</string>
+  <string name="products_empty_filtered">Filtrile ei vasta ükski toode</string>
+
+  <!-- Product form -->
+  <string name="product_create">Loo toode</string>
+  <string name="product_edit">Muuda toodet</string>
+  <string name="product_stock_entries">Tooted</string>
+  <string name="product_stock_journal">Varude päevik</string>
+  <string name="product_group_location">Asukoht</string>
+  <string name="product_group_stock">Varud</string>
+  <string name="product_group_due_date">Tähtaeg</string>
+  <string name="product_group_quantity_units">Koguseühikud</string>
+  <string name="product_group_tare_weight">Taara raskus</string>
+  <string name="product_group_more">Veel</string>
+  <string name="product_group_related">Seotud andmed</string>
+  <string name="product_name">Nimi</string>
+  <string name="product_name_required">Nimi on nõutud</string>
+  <string name="product_active">Aktiivne</string>
+  <string name="product_parent">Peatoode</string>
+  <string name="product_parent_disabled">Pole võimalik, kuna seda toodet kasutatakse juba teises tootes peatootena</string>
+  <string name="product_parent_not_found">Selle triipkoodiga toodet pole</string>
+  <string name="product_parent_not_allowed">See toode ei saa olla peatoode</string>
+  <string name="product_description">Kirjeldus</string>
+  <string name="product_location">Vaikimisi asukoht</string>
+  <string name="product_location_required">Asukoht on nõutud</string>
+  <string name="product_consume_location">Vaikimisi tarbimisasukoht</string>
+  <string name="product_consume_location_hint">Tooted selles asukohas tarbitakse esmajärgus</string>
+  <string name="product_move_on_open">Liiguta avamisel</string>
+  <string name="product_move_on_open_hint">Kui see on lubatud, teisaldatakse selle toote avatuks märkimisel vastav kogus vaikimisi tarbimise asukohta</string>
+  <string name="product_store">Vaikimisi pood</string>
+  <string name="product_min_stock_amount">Minimaalne kogus varudes</string>
+  <string name="product_cumulate_min_stock">Kogu alamtoodete minimaalne varude kogus</string>
+  <string name="product_cumulate_min_stock_hint">Kui see on lubatud, siis minimaalne kogus alamtoodet kogutakse kokku selle toote alla, mis tähendab, et alamtoode ei kao kunagi, vaid ainult see toode</string>
+  <string name="product_treat_opened_as_out_of_stock">Määra avatud tooted kui ostas</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">Kui see on lubatud, loetakse avatud kaubad puuduvateks, et arvutada, kas see toode on alla selle minimaalse varude koguse</string>
+  <string name="product_due_type">Tähtaja tüüp</string>
+  <string name="product_due_type_hint">Sõltuvalt valitud tüübist on varude ülevaate lehel esiletõstmine erinev</string>
+  <string name="product_due_type_best_before">Parim enne kuupäev</string>
+  <string name="product_due_type_best_before_hint">Tähendab, et toode on võib-olla siiski ohutu tarbimiseks pärast selle tähtpäeva saabumist</string>
+  <string name="product_due_type_expiration">Kõlblik kuni</string>
+  <string name="product_due_type_expiration_hint">Tähendab, et toodet ei ole pärast selle tähtpäeva saabumist ohutu tarbida</string>
+  <string name="product_due_days">Vaikimisi tähtaja päevi</string>
+  <string name="product_due_days_hint">Ostude puhul lisatakse tähtpäeva soovituse jaoks see päevade arv tänasele päevale (-1 tähendab, et see toode ei rikne)</string>
+  <string name="product_due_days_after_open">Vaikimisi tähtaeg pärast avamist</string>
+  <string name="product_due_days_after_open_hint">Kui see toode märgitakse avatuks, asendatakse tähtaeg tänasega + selle päevade arvuga, kuid ainult siis, kui tulemuseks olev kuupäev ei ole hilisem kui algne tähtaeg (väärtus 0 keelab selle)</string>
+  <string name="product_due_days_after_freezing">Vaikimisi maksetähtaeg päeva pärast külmutamist</string>
+  <string name="product_due_days_after_freezing_hint">Selle toote sügavkülmikusse teisaldamisel (seega selle külmutamisel) asendatakse tähtaeg tänasega + see arv päevi (-1 tähendab, et see toode ei rikne)</string>
+  <string name="product_due_days_after_thawing">Vaikimisi tähtaeg pärast sulatamist</string>
+  <string name="product_due_days_after_thawing_hint">Selle toote sügavkülmast teisaldamisel (seega selle sulatamisel) asendatakse tähtaeg tänasega + selle päevade arvuga</string>
+  <string name="product_should_not_be_frozen">Ei peaks olema sügavkülmutatud</string>
+  <string name="product_should_not_be_frozen_hint">Kui see on lubatud, kuvatakse selle toote sügavkülmikusse viimisel (seega selle külmutamisel) hoiatus</string>
+  <string name="product_product_group">Tootegrupp</string>
+  <string name="product_qu_stock">Koguseühik varudes</string>
+  <string name="product_qu_stock_hint">Kui see toode on kord varudes olnud ja soovitud koguseühikut ei saa siin valida, loo esmalt vastav ühiku teisendus</string>
+  <string name="product_qu_purchase">Vaikimisi koguseühik ostmisel</string>
+  <string name="product_qu_purchase_hint">See on vaikekoguse ühik, mida kasutatakse ostmisel ja selle toote ostunimekirja lisamisel</string>
+  <string name="product_qu_consume">Vaikimisi tarbitav kogusühik</string>
+  <string name="product_qu_consume_hint">See on selle toote tarbimisel kasutatav vaikimisi koguseühik</string>
+  <string name="product_qu_price">Kogusühik hinna jaoks</string>
+  <string name="product_qu_price_hint">Selle toote hindade kuvamisel on need seotud selle koguseühikuga</string>
+  <string name="product_qu_required">Kogusühik on nõutud</string>
+  <string name="product_tare_weight_handling">Luba taara raskuse arvestamine</string>
+  <string name="product_tare_weight_handling_hint">See on kasulik nt. purkides oleva jahu puhul - ostmisel/tarbimisel/inventuuril kaalud alati kogu purgi, postitatav kogus arvutatakse siis automaatselt laos oleva ja allpool määratletud taara kaalu järgi.</string>
+  <string name="product_tare_weight">Taara raskus</string>
+  <string name="product_not_check_stock_fulfillment">Lülita välja varude olemasolu kontroll selle koostisosa jaoks</string>
+  <string name="product_not_check_stock_fulfillment_hint">Seda kasutatakse vaikesättena, kui seda toodet kasutatakse retseptis</string>
+  <string name="product_energy">Energia</string>
+  <string name="product_energy_hint">Varude koguseühiku kohta</string>
+  <string name="product_quick_consume_amount">Kiirtarbimise kogus</string>
+  <string name="product_quick_consume_amount_hint">Seda summat kasutatakse varude ülevaate lehel "kiirtarbimise nupu" jaoks (seoses koguseühiku laoseisuga)</string>
+  <string name="product_quick_open_amount">Kiiravamise kogus</string>
+  <string name="product_quick_open_amount_hint">Seda summat kasutatakse varude ülevaate lehel oleva "kiiravamise nupu" jaoks (seoses koguseühiku laoseisuga)</string>
+  <string name="product_stock_label">Vaikimisi toote silt</string>
+  <string name="product_stock_label_hint">See on vaikeseade, mis eeltäidetakse ostmisel</string>
+  <string name="product_stock_label_none">Silt puutub</string>
+  <string name="product_stock_label_single">Üks etikett</string>
+  <string name="product_stock_label_per_unit">Etikett ühiku kohta</string>
+  <string name="product_auto_reprint_label">Automaatselt prindi uuesti toote etikett</string>
+  <string name="product_auto_reprint_label_hint">Kui see on lubatud, prindib sissekande tähtpäeva automaatne muutmine (avades/külmutades/sulatades ja määrates vastavad vaiketähtpäevad) selle etiketti uuesti</string>
+  <string name="product_price_type">Vaikimisi ostuhinna tüüp</string>
+  <string name="product_price_type_hint">Seda kasutatakse ostmisel vaikimisi valitud hinnatüübina</string>
+  <string name="product_price_type_unspecified">Määramata</string>
+  <string name="product_price_type_unit">Ühiku hind</string>
+  <string name="product_price_type_total">Koguhind</string>
+  <string name="product_disable_open">Ei saa avada</string>
+  <string name="product_hide_on_stock_overview">Ärge kunagi kuvage varude ülevaates</string>
+  <string name="product_hide_on_stock_overview_hint">Varude ülevaate leht näitab kõiki tooteid, mis on hetkel varudes või alla minimaalse varude koguse - lülita see sisse, et seda toodet seal kunagi ei näidataks</string>
+  <string name="product_no_own_stock">Lülita toote varude seis välja</string>
+  <string name="product_no_own_stock_hint">Kui see on lubatud, ei saa sellel tootel olla oma laoseisu, mis tähendab, et seda ei saa ostmisel valida (kasulik põhitoodete puhul, mida kasutatakse ainult alamtoodete kokkuvõtte/koguvaatena)</string>
+  <string name="product_userfields">Kasutajaväljad</string>
+  <string name="product_userfield_required">Kohustuslik Kasutajaväli</string>
+  <string name="product_userfield_title">Pealkiri</string>
+  <string name="product_userfield_link">Link</string>
+  <string name="product_userfield_file">Faile saab lisada Grocy veebiliideses</string>
+  <string name="product_barcodes">Triipkoodid</string>
+  <string name="product_qu_conversions">Tootespetsiifilised koguseühiku teisendused</string>
+  <string name="product_picture">Pilt</string>
+  <string name="product_picture_none">Pilti pole saadaval</string>
+  <string name="product_picture_choose">Vali pilt</string>
+  <string name="product_picture_delete">Kustuta pilt</string>
+  <string name="product_picture_will_delete">Praegune pilt kustutatakse salvestamisel</string>
+  <string name="product_picture_will_upload">Uus pilt laaditakse üles salvestamisel</string>
+  <string name="product_picture_load_failed">Pilti ei õnnestunud laadida</string>
+  <string name="product_save_hint">Salvesta, et lisada triipkoode ja koguseühiku teisendusi</string>
   <string name="log_empty">Vigu pole logitud</string>
   <string name="log_report_crash">Kui rakendus jooksis kokku või midagi läks valesti, kopeeri logi ja saada see koos tagasisidega, et viga saaks parandada.</string>
 </resources>

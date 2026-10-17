@@ -54,8 +54,10 @@ import com.patrickzedler.grocy.core.design.StatusBarColorEffect
  *
  * [navigationIcon] is usually a [NavigateBackButton], [actions] are [AppBarIconButton]s.
  * [floatingToolbar] (a [FloatingToolbarWithFab]) floats above the bottom edge and hides while
- * the list scrolls down; the list ends above it. [itemSpacing] is the space between list items,
- * the segmented gap for long lists whose items are one group each.
+ * the list scrolls down; the list ends above it. It must apply the given modifier itself: the
+ * scroll behavior measures how far to move it within the screen high box it is placed in.
+ * [itemSpacing] is the space between list items, the segmented gap for long lists whose items
+ * are one group each.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,7 +68,7 @@ fun SegmentedListScreen(
     actions: @Composable RowScope.() -> Unit = {},
     listState: LazyListState = rememberLazyListState(),
     snackbarHostState: SnackbarHostState? = null,
-    floatingToolbar: (@Composable (FloatingToolbarScrollBehavior) -> Unit)? = null,
+    floatingToolbar: (@Composable (FloatingToolbarScrollBehavior, Modifier) -> Unit)? = null,
     itemSpacing: Dp = SegmentedListDefaults.GroupSpacing,
     content: LazyListScope.() -> Unit,
 ) {
@@ -134,16 +136,16 @@ fun SegmentedListScreen(
         val topPadding = padding.calculateTopPadding() + SegmentedListDefaults.GroupSpacing
         Box(Modifier.fillMaxSize()) {
             if (floatingToolbar != null) {
-                // First for the accessibility order, so its actions are reached without the list
-                Box(
-                    modifier = Modifier
+                // First for the accessibility order, so its actions are reached without the list.
+                // A direct child of this box: hiding moves it below the screen's bottom edge.
+                floatingToolbar(
+                    toolbarScrollBehavior,
+                    Modifier
                         .align(Alignment.BottomCenter)
                         .windowInsetsPadding(WindowInsets.navigationBars)
                         .offset(y = -FloatingToolbarDefaults.ScreenOffset)
                         .zIndex(1f),
-                ) {
-                    floatingToolbar(toolbarScrollBehavior)
-                }
+                )
             }
             InsetLazyColumn(
                 modifier = Modifier

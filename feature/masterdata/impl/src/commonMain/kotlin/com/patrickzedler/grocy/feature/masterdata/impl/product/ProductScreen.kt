@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -31,6 +32,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -52,9 +54,12 @@ import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.model.masterdata.DueType
+import com.patrickzedler.grocy.core.model.masterdata.Location
+import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.PurchasePriceType
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.StockLabelType
+import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.masterdata.UserfieldType
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_close_scanner
@@ -175,6 +180,7 @@ import com.patrickzedler.grocy.core.resources.product_userfield_title
 import com.patrickzedler.grocy.core.resources.product_userfields
 import com.patrickzedler.grocy.core.scanner.BarcodeScanner
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -193,7 +199,8 @@ internal fun ProductScreen(
         viewModel.events.collect { event ->
             when (event) {
                 ProductEvent.Saved -> onBackClick()
-                ProductEvent.Created -> snackbarHostState.showSnackbar(getString(Res.string.data_saved))
+                ProductEvent.Created ->
+                    snackbarHostState.showSnackbar(getString(Res.string.data_saved))
                 ProductEvent.Offline ->
                     snackbarHostState.showSnackbar(getString(Res.string.data_save_offline))
                 is ProductEvent.Failed -> snackbarHostState.showSnackbar(
@@ -215,9 +222,10 @@ internal fun ProductScreen(
         modifier = modifier,
         navigationIcon = { NavigateBackButton(onClick = onBackClick) },
         snackbarHostState = snackbarHostState,
-        floatingToolbar = { scrollBehavior ->
+        floatingToolbar = { scrollBehavior, toolbarModifier ->
             FloatingToolbarWithFab(
                 scrollBehavior = scrollBehavior,
+                modifier = toolbarModifier,
                 fabPainter = painterResource(Res.drawable.ic_rounded_save),
                 fabDescription = stringResource(Res.string.action_save),
                 onFabClick = viewModel::save,
@@ -715,37 +723,56 @@ private fun DueDateItems(
         },
         if (features.dueDates) {
             { index, count ->
-                DaysItem(form.defaultDueDays, Res.string.product_due_days,
-                    Res.string.product_due_days_hint, errors[ProductField.DUE_DAYS], index, count)
+                DaysItem(
+                    state = form.defaultDueDays,
+                    label = Res.string.product_due_days,
+                    hint = Res.string.product_due_days_hint,
+                    error = errors[ProductField.DUE_DAYS],
+                    index = index,
+                    count = count,
+                )
             }
         } else {
             null
         },
         if (features.dueDates && features.opening) {
             { index, count ->
-                DaysItem(form.defaultDueDaysAfterOpen, Res.string.product_due_days_after_open,
-                    Res.string.product_due_days_after_open_hint,
-                    errors[ProductField.DUE_DAYS_AFTER_OPEN], index, count)
+                DaysItem(
+                    state = form.defaultDueDaysAfterOpen,
+                    label = Res.string.product_due_days_after_open,
+                    hint = Res.string.product_due_days_after_open_hint,
+                    error = errors[ProductField.DUE_DAYS_AFTER_OPEN],
+                    index = index,
+                    count = count,
+                )
             }
         } else {
             null
         },
         if (features.freezing) {
             { index, count ->
-                DaysItem(form.defaultDueDaysAfterFreezing,
-                    Res.string.product_due_days_after_freezing,
-                    Res.string.product_due_days_after_freezing_hint,
-                    errors[ProductField.DUE_DAYS_AFTER_FREEZING], index, count)
+                DaysItem(
+                    state = form.defaultDueDaysAfterFreezing,
+                    label = Res.string.product_due_days_after_freezing,
+                    hint = Res.string.product_due_days_after_freezing_hint,
+                    error = errors[ProductField.DUE_DAYS_AFTER_FREEZING],
+                    index = index,
+                    count = count,
+                )
             }
         } else {
             null
         },
         if (features.freezing) {
             { index, count ->
-                DaysItem(form.defaultDueDaysAfterThawing,
-                    Res.string.product_due_days_after_thawing,
-                    Res.string.product_due_days_after_thawing_hint,
-                    errors[ProductField.DUE_DAYS_AFTER_THAWING], index, count)
+                DaysItem(
+                    state = form.defaultDueDaysAfterThawing,
+                    label = Res.string.product_due_days_after_thawing,
+                    hint = Res.string.product_due_days_after_thawing_hint,
+                    error = errors[ProductField.DUE_DAYS_AFTER_THAWING],
+                    index = index,
+                    count = count,
+                )
             }
         } else {
             null
@@ -769,9 +796,9 @@ private fun DueDateItems(
 
 @Composable
 private fun DaysItem(
-    state: androidx.compose.foundation.text.input.TextFieldState,
-    label: org.jetbrains.compose.resources.StringResource,
-    hint: org.jetbrains.compose.resources.StringResource,
+    state: TextFieldState,
+    label: StringResource,
+    hint: StringResource,
     error: FieldError?,
     index: Int,
     count: Int,
@@ -1059,7 +1086,7 @@ private fun UserfieldItem(
 private fun NavigationItem(
     text: String,
     supporting: String?,
-    iconPainter: androidx.compose.ui.graphics.painter.Painter,
+    iconPainter: Painter,
     index: Int,
     count: Int,
     onClick: () -> Unit,
@@ -1102,10 +1129,10 @@ private fun <T> List<T>.toOptions(
 ): List<DropdownOption> = mapNotNull { item ->
     val (id, name) = idAndName(item)
     val active = when (item) {
-        is com.patrickzedler.grocy.core.model.masterdata.Location -> item.active
-        is com.patrickzedler.grocy.core.model.masterdata.Store -> item.active
+        is Location -> item.active
+        is Store -> item.active
         is QuantityUnit -> item.active
-        is com.patrickzedler.grocy.core.model.masterdata.Product -> item.active
+        is Product -> item.active
         else -> true
     }
     if (active || id in chosen) DropdownOption(id, name) else null

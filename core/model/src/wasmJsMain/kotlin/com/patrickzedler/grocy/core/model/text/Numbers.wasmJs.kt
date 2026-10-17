@@ -1,7 +1,8 @@
 package com.patrickzedler.grocy.core.model.text
 
 // navigator.language is the app language (index.html sets it)
-actual fun platformDecimalSeparator(): Char = decimalSeparatorOfBrowserLanguage().firstOrNull() ?: '.'
+actual fun platformDecimalSeparator(): Char =
+    decimalSeparatorOfBrowserLanguage().firstOrNull() ?: '.'
 
 @OptIn(ExperimentalWasmJsInterop::class)
 @JsFun(

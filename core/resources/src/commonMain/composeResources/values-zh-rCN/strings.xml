@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">关于</string>
   <string name="title_feedback">反馈</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">占位问题</string>
   <string name="help_placeholder_answer">占位答案。</string>
 
+
   <!-- Updates -->
   <string name="update_available">有可用更新</string>
   <string name="update_available_version">Grocy %1$s 已发布。要立即更新吗？</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">标准</string>
   <string name="settings_contrast_medium">中</string>
   <string name="settings_contrast_high">高</string>
+  <!-- Common data -->
+  <string name="action_add">添加</string>
+  <string name="action_search">搜索</string>
+  <string name="action_clear">清除</string>
+  <string name="action_save">保存</string>
+  <string name="action_retry">重试</string>
+  <string name="action_scroll_to_top">滚动到顶部</string>
+  <string name="action_show_choices">显示选项</string>
+  <string name="action_scan_barcode">扫描条码</string>
+  <string name="action_close_scanner">关闭扫描器</string>
+  <string name="data_none">无</string>
+  <string name="data_all">全部</string>
+  <string name="data_offline">无法连接到服务器。正在显示已保存的数据。</string>
+  <string name="data_load_failed">无法加载数据。</string>
+  <string name="data_save_offline">保存需要连接到服务器。</string>
+  <string name="data_save_failed">保存时发生错误，可能此条目已经存在</string>
+  <string name="data_save_failed_details">服务器消息：%1$s</string>
+  <string name="data_saved">已保存</string>
+  <string name="data_number_invalid">此数值不能小于%1$s，并且最多%2$s位小数位</string>
+  <string name="data_date_invalid">请按 YYYY-MM-DD 格式输入日期</string>
+  <string name="data_datetime_invalid">请按 YYYY-MM-DD HH:MM:SS 格式输入日期和时间</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">主数据</string>
+  <string name="masterdata_products">产品</string>
+  <string name="masterdata_locations">位置</string>
+  <string name="masterdata_stores">商店</string>
+  <string name="masterdata_quantity_units">数量单位</string>
+  <string name="masterdata_product_groups">产品组</string>
+  <string name="masterdata_chores">家务</string>
+  <string name="masterdata_batteries">电池</string>
+  <string name="masterdata_task_categories">任务分类</string>
+  <string name="masterdata_userfields">自定义字段</string>
+  <string name="masterdata_userentities">自定义项目</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">配置自定义字段</string>
+  <string name="products_presets">新产品预设</string>
+  <string name="products_filter_clear">清除筛选</string>
+  <string name="products_filter_product_group">产品组</string>
+  <string name="products_filter_status">状态</string>
+  <string name="products_filter_in_stock">有库存的产品</string>
+  <string name="products_filter_out_of_stock">缺货的产品</string>
+  <string name="products_filter_show_disabled">显示已禁用的</string>
+  <string name="products_sort">排序</string>
+  <string name="products_sort_ascending">升序</string>
+  <string name="products_sort_descending">降序</string>
+  <string name="products_sort_name">名称</string>
+  <string name="products_sort_location">位置</string>
+  <string name="products_sort_min_stock_amount">安全库存</string>
+  <string name="products_sort_product_group">产品组</string>
+  <string name="products_sort_qu_stock">库存数量单位</string>
+  <string name="products_sort_store">默认商店</string>
+  <string name="products_disabled">禁用</string>
+  <string name="products_has_picture">该产品有图片</string>
+  <string name="products_min_stock_amount">安全库存：%1$s %2$s</string>
+  <string name="products_empty">还没有产品</string>
+  <string name="products_empty_filtered">没有符合筛选条件的产品</string>
+
+  <!-- Product form -->
+  <string name="product_create">新建产品</string>
+  <string name="product_edit">编辑产品</string>
+  <string name="product_stock_entries">库存条目</string>
+  <string name="product_stock_journal">库存日志</string>
+  <string name="product_group_location">位置</string>
+  <string name="product_group_stock">库存</string>
+  <string name="product_group_due_date">到期日期</string>
+  <string name="product_group_quantity_units">数量单位</string>
+  <string name="product_group_tare_weight">皮重</string>
+  <string name="product_group_more">更多</string>
+  <string name="product_group_related">相关数据</string>
+  <string name="product_name">名称</string>
+  <string name="product_name_required">请填写名称</string>
+  <string name="product_active">启用</string>
+  <string name="product_parent">父产品</string>
+  <string name="product_parent_disabled">无法进行，因为此产品已经用作其他产品的父产品</string>
+  <string name="product_parent_not_found">没有使用此条码的产品</string>
+  <string name="product_parent_not_allowed">此产品不能作为父产品</string>
+  <string name="product_description">描述</string>
+  <string name="product_location">默认位置</string>
+  <string name="product_location_required">请填写位置</string>
+  <string name="product_consume_location">默认消耗位置</string>
+  <string name="product_consume_location_hint">优先消耗此位置的库存</string>
+  <string name="product_move_on_open">开封后转移</string>
+  <string name="product_move_on_open_hint">启用后，当此产品被标记为开封时，相应数量的产品将转移到默认消耗位置</string>
+  <string name="product_store">默认商店</string>
+  <string name="product_min_stock_amount">安全库存</string>
+  <string name="product_cumulate_min_stock">累计子产品的安全库存</string>
+  <string name="product_cumulate_min_stock_hint">启用后，子产品的安全库存将累计到此产品，代表子产品安全库存永远满足，仅对此产品有效</string>
+  <string name="product_treat_opened_as_out_of_stock">开封后视为缺货</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">启用后，如果此产品低于安全库存，则产品开封后被视为缺货</string>
+  <string name="product_due_type">到期日期类型</string>
+  <string name="product_due_type_hint">库存总览页面上的高亮显示内容根据所选类型会有所不同</string>
+  <string name="product_due_type_best_before">保鲜期</string>
+  <string name="product_due_type_best_before_hint">指产品过期后仍然可以安全食用</string>
+  <string name="product_due_type_expiration">保质期</string>
+  <string name="product_due_type_expiration_hint">指产品过期后食用不安全</string>
+  <string name="product_due_days">默认到期天数</string>
+  <string name="product_due_days_hint">建议的到期日期，是从采购之日起加上此天数。 (-1表示此产品永不到期)</string>
+  <string name="product_due_days_after_open">开封后默认到期天数</string>
+  <string name="product_due_days_after_open_hint">本产品开封后，到期日期替换为开封日期加上此天数，但前提是新生成的日期不在原到期日期之后（值0将禁用此功能）</string>
+  <string name="product_due_days_after_freezing">冷冻后默认到期天数</string>
+  <string name="product_due_days_after_freezing_hint">本产品放入冷冻室时（即冷冻时），到期日期替换为冷冻日期加上此天数 (-1表示此产品永不到期)</string>
+  <string name="product_due_days_after_thawing">解冻后默认到期天数</string>
+  <string name="product_due_days_after_thawing_hint">本产品从冷冻室取出时（即解冻时），到期日期替换为解冻日期加上此天数</string>
+  <string name="product_should_not_be_frozen">‎不应冷冻‎</string>
+  <string name="product_should_not_be_frozen_hint">‎启用后，将本‎‎产品‎‎移至冷冻室位置（冷冻时），将显示警告‎</string>
+  <string name="product_product_group">产品组</string>
+  <string name="product_qu_stock">库存数量单位</string>
+  <string name="product_qu_stock_hint">此产品曾经入库后，如果此处无法选择所需的数量单位，请先创建相应的单位转换</string>
+  <string name="product_qu_purchase">默认采购数量单位</string>
+  <string name="product_qu_purchase_hint">这是采购此产品和将此产品加入购物清单时所使用的默认数量单位</string>
+  <string name="product_qu_consume">默认消耗数量单位</string>
+  <string name="product_qu_consume_hint">这是消耗此产品时使用的默认数量单位</string>
+  <string name="product_qu_price">价格数量单位</string>
+  <string name="product_qu_price_hint">显示此产品价格时，将此产品数量单位做为产品价格的计算单位</string>
+  <string name="product_qu_required">请填写数量单位</string>
+  <string name="product_tare_weight_handling">启用去皮功能</string>
+  <string name="product_tare_weight_handling_hint">此功能很实用。例如：罐装面粉在购买、消耗、调整库存时可以整罐称重，系统会根据下方皮重自动计算出净重，并调整库存数量</string>
+  <string name="product_tare_weight">皮重</string>
+  <string name="product_not_check_stock_fulfillment">禁用此食材的库存需求检查</string>
+  <string name="product_not_check_stock_fulfillment_hint">当添加此产品作为菜谱的食材时，这将作为默认设置</string>
+  <string name="product_energy">能量</string>
+  <string name="product_energy_hint">每库存数量单位</string>
+  <string name="product_quick_consume_amount">快速消耗数量</string>
+  <string name="product_quick_consume_amount_hint">此数量用于库存总览页面上的“快速消耗”按钮（使用库存数量单位）</string>
+  <string name="product_quick_open_amount">快速开封数量</string>
+  <string name="product_quick_open_amount_hint">此数量用于库存总览页面上的“快速打开”按钮（使用库存数量单位）</string>
+  <string name="product_stock_label">默认的库存条目标签</string>
+  <string name="product_stock_label_hint">在采购页面预先填入的默认值</string>
+  <string name="product_stock_label_none">无标签</string>
+  <string name="product_stock_label_single">单个标签</string>
+  <string name="product_stock_label_per_unit">每单位一个标签</string>
+  <string name="product_auto_reprint_label">自动重新打印库存条目的标签</string>
+  <string name="product_auto_reprint_label_hint">开启后，自动更改库存条目的到期日期并重新打印此条目的标签（在开封/冷冻/解冻并存在相应的默认到期天数设置时）</string>
+  <string name="product_price_type">默认采购价格类型</string>
+  <string name="product_price_type_hint">采购时将默认选择此价格类型</string>
+  <string name="product_price_type_unspecified">未指定</string>
+  <string name="product_price_type_unit">单价</string>
+  <string name="product_price_type_total">总价</string>
+  <string name="product_disable_open">不可开封</string>
+  <string name="product_hide_on_stock_overview">不在库存总览显示</string>
+  <string name="product_hide_on_stock_overview_hint">库存总览页面会列出当前有库存或低于安全库存的所有产品 - 启用此项可使此产品始终不在那里显示</string>
+  <string name="product_no_own_stock">禁用自有库存</string>
+  <string name="product_no_own_stock_hint">启用后，此产品不进行库存管理，在采购页面不可选（适用于仅用作子产品摘要视图/汇总视图的父产品）</string>
+  <string name="product_userfields">自定义字段</string>
+  <string name="product_userfield_required">‎必填自定义字段‎</string>
+  <string name="product_userfield_title">标题</string>
+  <string name="product_userfield_link">链接</string>
+  <string name="product_userfield_file">可以在 Grocy 网页端添加文件</string>
+  <string name="product_barcodes">条码</string>
+  <string name="product_qu_conversions">产品特有的数量单位转换</string>
+  <string name="product_picture">图片</string>
+  <string name="product_picture_none">没有可用图片</string>
+  <string name="product_picture_choose">选择图片</string>
+  <string name="product_picture_delete">删除图片</string>
+  <string name="product_picture_will_delete">当前图片将在保存时被删除</string>
+  <string name="product_picture_will_upload">新图片将在保存时上传</string>
+  <string name="product_picture_load_failed">无法加载图片</string>
+  <string name="product_save_hint">保存后即可添加条码和数量单位转换</string>
   <string name="log_empty">未记录任何错误</string>
   <string name="log_report_crash">如果应用崩溃或出现问题，请复制日志并随反馈一起发送，以便修复错误。</string>
 </resources>

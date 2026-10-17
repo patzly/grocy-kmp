@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">Hakkında</string>
   <string name="title_feedback">Geri bildirim</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">Yer tutucu soru</string>
   <string name="help_placeholder_answer">Yer tutucu yanıt.</string>
 
+
   <!-- Updates -->
   <string name="update_available">Güncelleme mevcut</string>
   <string name="update_available_version">Grocy %1$s kullanıma sunuldu. Şimdi güncellensin mi?</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">Standart</string>
   <string name="settings_contrast_medium">Orta</string>
   <string name="settings_contrast_high">Yüksek</string>
+  <!-- Common data -->
+  <string name="action_add">Ekle</string>
+  <string name="action_search">Ara</string>
+  <string name="action_clear">Temizle</string>
+  <string name="action_save">Kaydet</string>
+  <string name="action_retry">Tekrar dene</string>
+  <string name="action_scroll_to_top">En üste kaydır</string>
+  <string name="action_show_choices">Seçenekleri göster</string>
+  <string name="action_scan_barcode">Barkod tara</string>
+  <string name="action_close_scanner">Tarayıcıyı kapat</string>
+  <string name="data_none">Hiç</string>
+  <string name="data_all">Hepsi</string>
+  <string name="data_offline">Sunucuya ulaşılamadı. Kaydedilen veriler gösteriliyor.</string>
+  <string name="data_load_failed">Veriler yüklenemedi.</string>
+  <string name="data_save_offline">Kaydetmek için sunucu bağlantısı gerekir.</string>
+  <string name="data_save_failed">Kaydederken problem oldu, bu ürün muhtemelen zaten kayıtlı</string>
+  <string name="data_save_failed_details">Sunucu mesajı: %1$s</string>
+  <string name="data_saved">Kaydedildi</string>
+  <string name="data_number_invalid">Bu, %1$s’ten küçük olamaz ve maksimum %2$s ondalık basamağa sahip geçerli bir sayı olması gerekir</string>
+  <string name="data_date_invalid">Tarihi YYYY-MM-DD biçiminde girin</string>
+  <string name="data_datetime_invalid">Tarih ve saati YYYY-MM-DD HH:MM:SS biçiminde girin</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">Ana veri</string>
+  <string name="masterdata_products">Ürünler</string>
+  <string name="masterdata_locations">Lokasyonlar</string>
+  <string name="masterdata_stores">Market</string>
+  <string name="masterdata_quantity_units">Miktar birimleri</string>
+  <string name="masterdata_product_groups">Ürün grupları</string>
+  <string name="masterdata_chores">Ev işleri</string>
+  <string name="masterdata_batteries">Pil</string>
+  <string name="masterdata_task_categories">Görev kategorileri</string>
+  <string name="masterdata_userfields">Kullanıcı alanları</string>
+  <string name="masterdata_userentities">Kullanici</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">Kullanıcı alanlarını ayarla</string>
+  <string name="products_presets">Yeni ürünler için ön tanımlar</string>
+  <string name="products_filter_clear">Filtreyi temizle</string>
+  <string name="products_filter_product_group">Ürün grubu</string>
+  <string name="products_filter_status">Durum</string>
+  <string name="products_filter_in_stock">Stoktaki ürünler</string>
+  <string name="products_filter_out_of_stock">Stokta olmayan ürünler</string>
+  <string name="products_filter_show_disabled">Devre dışı olanı göster</string>
+  <string name="products_sort">Sırala</string>
+  <string name="products_sort_ascending">Artan</string>
+  <string name="products_sort_descending">Azalan</string>
+  <string name="products_sort_name">İsim</string>
+  <string name="products_sort_location">Lokasyon</string>
+  <string name="products_sort_min_stock_amount">Min. stok miktarı</string>
+  <string name="products_sort_product_group">Ürün grubu</string>
+  <string name="products_sort_qu_stock">Miktar birim stoğu</string>
+  <string name="products_sort_store">Varsayılan market</string>
+  <string name="products_disabled">Devre dışı</string>
+  <string name="products_has_picture">Bu ürünün resmi var</string>
+  <string name="products_min_stock_amount">Min. stok miktarı: %1$s %2$s</string>
+  <string name="products_empty">Henüz ürün yok</string>
+  <string name="products_empty_filtered">Filtreye uyan ürün yok</string>
+
+  <!-- Product form -->
+  <string name="product_create">Ürün oluştur</string>
+  <string name="product_edit">Ürünü düzenle</string>
+  <string name="product_stock_entries">Stok girişleri</string>
+  <string name="product_stock_journal">Stok günlüğü</string>
+  <string name="product_group_location">Lokasyon</string>
+  <string name="product_group_stock">Stok</string>
+  <string name="product_group_due_date">Bitiş tarihi</string>
+  <string name="product_group_quantity_units">Miktar birimleri</string>
+  <string name="product_group_tare_weight">Dara ağırlığı</string>
+  <string name="product_group_more">Diğer</string>
+  <string name="product_group_related">İlgili veriler</string>
+  <string name="product_name">İsim</string>
+  <string name="product_name_required">Bir isim zorunlu</string>
+  <string name="product_active">Aktif</string>
+  <string name="product_parent">Üst ürün</string>
+  <string name="product_parent_disabled">Bu ürün zaten başka bir üründe üst ürün olarak kullanıldığından mümkün değil</string>
+  <string name="product_parent_not_found">Bu barkoda sahip ürün yok</string>
+  <string name="product_parent_not_allowed">Bu ürün üst ürün olamaz</string>
+  <string name="product_description">Açıklama</string>
+  <string name="product_location">Varsayılan yer</string>
+  <string name="product_location_required">Bir lokasyon zorunlu</string>
+  <string name="product_consume_location">Varsayılan tüketim konumu</string>
+  <string name="product_consume_location_hint">Bu konumdaki stok girişleri ilk önce tüketilecek</string>
+  <string name="product_move_on_open">Açıktan hareket et</string>
+  <string name="product_move_on_open_hint">Etkinleştirildiğinde, bu ürün açılmış olarak işaretlendiğinde karşılık gelen miktar varsayılan tüketim konumuna taşınacaktır.</string>
+  <string name="product_store">Varsayılan market</string>
+  <string name="product_min_stock_amount">Minimum stok miktarı</string>
+  <string name="product_cumulate_min_stock">Alt ürünün minimum stok miktarını biriktir</string>
+  <string name="product_cumulate_min_stock_hint">Etkinleştirilirse min. Alt ürünlerin stok miktarı bu ürüne birikecek, yani hiçbir zaman alt ürün eksik kalmayacak, sadece bu ürün olacak</string>
+  <string name="product_treat_opened_as_out_of_stock">Stokta yok diye açıldı</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">Etkinleştirildiğinde, bu ürünün minimum stok miktarının altında olup olmadığı hesaplanırken açılan ürünler eksik sayılacaktır.</string>
+  <string name="product_due_type">Son tarih türü</string>
+  <string name="product_due_type_hint">Seçilen türe bağlı olarak stok genel bakış sayfasındaki vurgulama farklı olacaktır</string>
+  <string name="product_due_type_best_before">Son kullanma tarihi</string>
+  <string name="product_due_type_best_before_hint">Ürünün son kullanma tarihi geçse de belki hala tüketilebilir olduğu anlamına gelir</string>
+  <string name="product_due_type_expiration">Son kullanma tarihi</string>
+  <string name="product_due_type_expiration_hint">Ürünün son kullanma tarihi geçince tüketilemez olduğu anlamına gelir</string>
+  <string name="product_due_days">Varsayılan vade günleri</string>
+  <string name="product_due_days_hint">Satın alma işlemlerinde son tarih önerisi için bu gün sayısı bugüne eklenecektir (-1, bu ürünün hiçbir zaman vadesinin geçmeyeceği anlamına gelir)</string>
+  <string name="product_due_days_after_open">Açıldıktan sonra varsayılan bekleme günü</string>
+  <string name="product_due_days_after_open_hint">Bu ürün açılmış olarak işaretlendiğinde, son tarih; bugün + buradaki gün miktarıyla değiştirilecektir, ancak yalnızca sonuç tarihin orijinal son tarihten sonra olmaması durumunda (0 değeri bunu devre dışı bırakır)</string>
+  <string name="product_due_days_after_freezing">Döndürdüktan sonra varsayılan bekleme günü</string>
+  <string name="product_due_days_after_freezing_hint">Bu ürün dondurucuya taşındığında (yani dondurulduğunda), son tarih bugün + buradaki gün sayısı olarak değiştirilecektir (-1, bu ürünün hiçbir zaman vadesinin geçmeyeceği anlamına gelir)</string>
+  <string name="product_due_days_after_thawing">Çözdürdükten sonra varsayılan bekleme günü</string>
+  <string name="product_due_days_after_thawing_hint">Bu ürün dondurucu bir yerden taşındığında (yani çözdürüldüğünde), son tarih bugün + buradaki gün sayısı olarak değiştirilecektir</string>
+  <string name="product_should_not_be_frozen">Dondurulmamalı</string>
+  <string name="product_should_not_be_frozen_hint">Etkinleştirildiğinde, bu ürün dondurucuya taşınırken (yani dondurulurken) bir uyarı gösterilecektir.</string>
+  <string name="product_product_group">Ürün grubu</string>
+  <string name="product_qu_stock">Miktar birim stoğu</string>
+  <string name="product_qu_stock_hint">Bu ürün bir kez stokta bulunduktan sonra istenen miktar birimi burada seçilemiyorsa önce ilgili bir birim dönüşümü oluşturun</string>
+  <string name="product_qu_purchase">Varsayılan birim satın alma miktarı</string>
+  <string name="product_qu_purchase_hint">Bu, satın alma sırasında ve bu ürünü alışveriş listesine eklerken kullanılan varsayılan miktar birimidir</string>
+  <string name="product_qu_consume">Varsayılan miktar birimi tüketimi</string>
+  <string name="product_qu_consume_hint">Bu, bu ürünü tüketirken kullanılan varsayılan miktar birimidir</string>
+  <string name="product_qu_price">Fiyatlar için miktar birimi</string>
+  <string name="product_qu_price_hint">Bu ürünün fiyatları görüntülenirken bu miktar birimiyle ilişkili olacaktır</string>
+  <string name="product_qu_required">Miktar birim zorunlu</string>
+  <string name="product_tare_weight_handling">Dara ağırlığı yönetimini aktif et</string>
+  <string name="product_tare_weight_handling_hint">Örnek: Kavanozlardaki unu satın alım/harcama/envanter işlemlerinde kavanozun tamamını tartıyorsunuz, sonrasında kaydedilecek olan miktar otomatik olarak stoklarda olanlar ve aşağıda tanımlanmış olan dara ağırlığı üzerinden hesaplanıyor</string>
+  <string name="product_tare_weight">Dara ağırlığı</string>
+  <string name="product_not_check_stock_fulfillment">Bu malzeme için stok yenilemeyi kapat</string>
+  <string name="product_not_check_stock_fulfillment_hint">Varsayılan olarak bu ürünü tarif malzemesi olarak eklediğinizde bu ayar kullanılacak</string>
+  <string name="product_energy">Enerji</string>
+  <string name="product_energy_hint">Stok miktarı birimi başına</string>
+  <string name="product_quick_consume_amount">Hızlı tüketim miktarı</string>
+  <string name="product_quick_consume_amount_hint">Bu miktar, stok genel bakış sayfasındaki "hızlı tüket düğmesi" için kullanılır (miktar birim stokla ilgili)</string>
+  <string name="product_quick_open_amount">Hızlı açılış miktarı</string>
+  <string name="product_quick_open_amount_hint">Bu tutar, stok genel bakış sayfasındaki "hızlı açma düğmesi" için kullanılır (miktar birim stokla ilgili)</string>
+  <string name="product_stock_label">Varsayılan stok girişi etiketi</string>
+  <string name="product_stock_label_hint">Bu, satın alma sırasında önceden doldurulacak olan varsayılan değerdir</string>
+  <string name="product_stock_label_none">Etiket yok</string>
+  <string name="product_stock_label_single">Tek etiket</string>
+  <string name="product_stock_label_per_unit">Birim başına etiket</string>
+  <string name="product_auto_reprint_label">Stok giriş etiketini otomatik olarak yeniden yazdırın</string>
+  <string name="product_auto_reprint_label_hint">Etkinleştirildiğinde, bir stok girişinin vade tarihinin otomatik olarak değiştirilmesi (açma/dondurma/çözme ve karşılık gelen varsayılan vade günlerini ayarlama yoluyla), etiketini yeniden yazdıracaktır.</string>
+  <string name="product_price_type">Varsayılan satın alma fiyatı türü</string>
+  <string name="product_price_type_hint">Satın alırken varsayılan fiyat türü olarak bu seçilir</string>
+  <string name="product_price_type_unspecified">Belirtilmemiş</string>
+  <string name="product_price_type_unit">Birim fiyat</string>
+  <string name="product_price_type_total">Toplam fiyat</string>
+  <string name="product_disable_open">Açılamaz</string>
+  <string name="product_hide_on_stock_overview">Stok genel görünümünde hiçbir zaman gösterme</string>
+  <string name="product_hide_on_stock_overview_hint">Stoklara genel bakış sayfası, şu anda stokta olan veya minimum stok miktarının altındaki tüm ürünleri listeler - bu ürünü orada her zaman gizlemek için bunu etkinleştirin</string>
+  <string name="product_no_own_stock">Kendi stokunu devre dışı bırak</string>
+  <string name="product_no_own_stock_hint">Etkinleştirildiğinde, bu ürünün kendi stoğu olamaz, bu da satın alma sırasında seçilemeyeceği anlamına gelir (yalnızca alt ürünlerin özeti/toplam görünümü olarak kullanılan ana ürünler için kullanışlıdır)</string>
+  <string name="product_userfields">Kullanıcı alanları</string>
+  <string name="product_userfield_required">Zorunlu Kullanıcı Alanı</string>
+  <string name="product_userfield_title">Başlık</string>
+  <string name="product_userfield_link">Bağlantı</string>
+  <string name="product_userfield_file">Dosyalar Grocy web arayüzünde eklenebilir</string>
+  <string name="product_barcodes">Barkod</string>
+  <string name="product_qu_conversions">Ürüne özel QU dönüşümleri</string>
+  <string name="product_picture">Resim</string>
+  <string name="product_picture_none">Görsel mevcut değil</string>
+  <string name="product_picture_choose">Resim seç</string>
+  <string name="product_picture_delete">Resmi sil</string>
+  <string name="product_picture_will_delete">Kayıt ettiğinizde mevcut resim silinecek</string>
+  <string name="product_picture_will_upload">Yeni resim kaydederken yüklenecek</string>
+  <string name="product_picture_load_failed">Resim yüklenemedi</string>
+  <string name="product_save_hint">Barkod ve birim dönüşümü eklemek için kaydedin</string>
   <string name="log_empty">Kaydedilmiş hata yok</string>
   <string name="log_report_crash">Uygulama çöktüyse veya bir şeyler ters gittiyse, hatanın düzeltilebilmesi için günlüğü kopyalayın ve geri bildiriminizle birlikte gönderin.</string>
 </resources>

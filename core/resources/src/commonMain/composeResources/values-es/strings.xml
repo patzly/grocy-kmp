@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
   <!-- Titles -->
   <string name="title_about">Acerca de</string>
   <string name="title_feedback">Comentarios</string>
@@ -131,6 +132,7 @@
   <string name="help_placeholder">Pregunta de ejemplo</string>
   <string name="help_placeholder_answer">Respuesta de ejemplo.</string>
 
+
   <!-- Updates -->
   <string name="update_available">Actualización disponible</string>
   <string name="update_available_version">Grocy %1$s está disponible. ¿Actualizar ahora?</string>
@@ -171,6 +173,166 @@
   <string name="settings_contrast_standard">Estándar</string>
   <string name="settings_contrast_medium">Medio</string>
   <string name="settings_contrast_high">Alto</string>
+  <!-- Common data -->
+  <string name="action_add">Añadir</string>
+  <string name="action_search">Buscar</string>
+  <string name="action_clear">Borrar</string>
+  <string name="action_save">Guardar</string>
+  <string name="action_retry">Reintentar</string>
+  <string name="action_scroll_to_top">Volver arriba</string>
+  <string name="action_show_choices">Mostrar opciones</string>
+  <string name="action_scan_barcode">Escanear código de barras</string>
+  <string name="action_close_scanner">Cerrar escáner</string>
+  <string name="data_none">Ninguno</string>
+  <string name="data_all">Todo</string>
+  <string name="data_offline">No se pudo acceder al servidor. Se muestran los datos guardados.</string>
+  <string name="data_load_failed">No se pudieron cargar los datos.</string>
+  <string name="data_save_offline">Para guardar se necesita una conexión con el servidor.</string>
+  <string name="data_save_failed">Error al guardar, probablemente este artículo ya existe</string>
+  <string name="data_save_failed_details">Mensaje del servidor: %1$s</string>
+  <string name="data_saved">Guardado</string>
+  <string name="data_number_invalid">Esto no puede ser menor que %1$s y tiene que ser un número válido con un máximo de %2$s cifras decimales</string>
+  <string name="data_date_invalid">Introduzca una fecha como YYYY-MM-DD</string>
+  <string name="data_datetime_invalid">Introduzca una fecha y hora como YYYY-MM-DD HH:MM:SS</string>
+
+  <!-- Master data -->
+  <string name="masterdata_title">Datos maestros</string>
+  <string name="masterdata_products">Productos</string>
+  <string name="masterdata_locations">Ubicaciones</string>
+  <string name="masterdata_stores">Tiendas</string>
+  <string name="masterdata_quantity_units">Unidades</string>
+  <string name="masterdata_product_groups">Grupos de producto</string>
+  <string name="masterdata_chores">Tareas del hogar</string>
+  <string name="masterdata_batteries">Baterías</string>
+  <string name="masterdata_task_categories">Categorías de tareas</string>
+  <string name="masterdata_userfields">Campos personalizados</string>
+  <string name="masterdata_userentities">Entidades personalizadas</string>
+
+  <!-- Products -->
+  <string name="products_configure_userfields">Configurar campos personalizados</string>
+  <string name="products_presets">Configuración predeterminada para productos nuevos</string>
+  <string name="products_filter_clear">Limpiar filtro</string>
+  <string name="products_filter_product_group">Grupo de productos</string>
+  <string name="products_filter_status">Estado</string>
+  <string name="products_filter_in_stock">Productos en inventario</string>
+  <string name="products_filter_out_of_stock">Productos agotados</string>
+  <string name="products_filter_show_disabled">Mostrar desactivados</string>
+  <string name="products_sort">Ordenar</string>
+  <string name="products_sort_ascending">Ascendente</string>
+  <string name="products_sort_descending">Descendente</string>
+  <string name="products_sort_name">Nombre</string>
+  <string name="products_sort_location">Ubicación</string>
+  <string name="products_sort_min_stock_amount">Mínimo de existencias</string>
+  <string name="products_sort_product_group">Grupo de productos</string>
+  <string name="products_sort_qu_stock">Unidad de inventario</string>
+  <string name="products_sort_store">Tienda predeterminada</string>
+  <string name="products_disabled">Desactivado</string>
+  <string name="products_has_picture">Este producto tiene una imagen</string>
+  <string name="products_min_stock_amount">Mínimo de existencias: %1$s %2$s</string>
+  <string name="products_empty">Todavía no hay productos</string>
+  <string name="products_empty_filtered">Ningún producto coincide con el filtro</string>
+
+  <!-- Product form -->
+  <string name="product_create">Crear producto</string>
+  <string name="product_edit">Modificar producto</string>
+  <string name="product_stock_entries">Entradas de inventario</string>
+  <string name="product_stock_journal">Diario de inventario</string>
+  <string name="product_group_location">Ubicación</string>
+  <string name="product_group_stock">Existencias</string>
+  <string name="product_group_due_date">Fecha límite</string>
+  <string name="product_group_quantity_units">Unidades</string>
+  <string name="product_group_tare_weight">Peso de contenedor</string>
+  <string name="product_group_more">Más</string>
+  <string name="product_group_related">Datos relacionados</string>
+  <string name="product_name">Nombre</string>
+  <string name="product_name_required">Es necesario un nombre</string>
+  <string name="product_active">Activo</string>
+  <string name="product_parent">Producto padre</string>
+  <string name="product_parent_disabled">No es posible porque este producto ya es producto padre de otro producto</string>
+  <string name="product_parent_not_found">Ningún producto con este código de barras</string>
+  <string name="product_parent_not_allowed">Este producto no puede ser un producto padre</string>
+  <string name="product_description">Descripción</string>
+  <string name="product_location">Ubicación predeterminada</string>
+  <string name="product_location_required">Es necesaria una ubicación</string>
+  <string name="product_consume_location">Ubicación de consumo predeterminada</string>
+  <string name="product_consume_location_hint">Las entradas de stock en esta ubicación se consumirán primero</string>
+  <string name="product_move_on_open">Mover al abrir</string>
+  <string name="product_move_on_open_hint">Cuando está habilitado, al marcar este producto como abierto, la cantidad correspondiente se moverá a la ubicación de consumo predeterminada</string>
+  <string name="product_store">Tienda predeterminada</string>
+  <string name="product_min_stock_amount">Mínimo de existencias</string>
+  <string name="product_cumulate_min_stock">Acumular mínimos de existencias de subproductos</string>
+  <string name="product_cumulate_min_stock_hint">Si está activado, los mínimos de existencias de los subproductos se acumularán en este producto. Los subproductos nunca faltarán, solo este producto</string>
+  <string name="product_treat_opened_as_out_of_stock">Tratar apertura como fuera de stock</string>
+  <string name="product_treat_opened_as_out_of_stock_hint">Si esta opción está activada, los artículos abiertos se contarán como no existentes para calcular si este producto está por debajo de su cantidad mínima de stock.</string>
+  <string name="product_due_type">Tipo de fecha límite</string>
+  <string name="product_due_type_hint">Según el tipo seleccionado, lo destacado en la página de resumen de inventario será diferente</string>
+  <string name="product_due_type_best_before">Fecha de consumo preferente</string>
+  <string name="product_due_type_best_before_hint">Significa que puede seguir siendo seguro consumir el producto después de su fecha límite</string>
+  <string name="product_due_type_expiration">Fecha de caducidad</string>
+  <string name="product_due_type_expiration_hint">Significa que no es seguro consumir el producto después de su fecha límite</string>
+  <string name="product_due_days">Número predeterminado de días hasta la fecha límite</string>
+  <string name="product_due_days_hint">Este número de días será añadido a la fecha de hoy para la sugerencia de fecha límite de la compra (-1 significa que este producto no tiene fecha límite)</string>
+  <string name="product_due_days_after_open">Número predeterminado de días hasta la fecha límite después de abierto</string>
+  <string name="product_due_days_after_open_hint">Cuando este producto se marque como abierto, la fecha límite será reemplazada por la fecha de hoy más este número de días, pero solo si la fecha resultante no está después de la fecha límite original (un valor de 0 desactiva esto)</string>
+  <string name="product_due_days_after_freezing">Número predeterminado de días hasta la fecha límite después de congelado</string>
+  <string name="product_due_days_after_freezing_hint">Al mover este producto a una ubicación congelador (al congelarlo), la fecha límite será reemplazada por la fecha de hoy más este número de días (-1 significa que este producto no tiene fecha límite)</string>
+  <string name="product_due_days_after_thawing">Número predeterminado de días hasta la fecha límite después de descongelado</string>
+  <string name="product_due_days_after_thawing_hint">Al mover este producto desde una ubicación congelador (al descongelarlo), la fecha límite será reemplazada por la fecha de hoy más este número de días</string>
+  <string name="product_should_not_be_frozen">No debe congelarse</string>
+  <string name="product_should_not_be_frozen_hint">Cuando esté activado, al mover este producto a una ubicación de congelador (o sea, al congelarlo), se mostrará una advertencia</string>
+  <string name="product_product_group">Grupo de productos</string>
+  <string name="product_qu_stock">Unidad de inventario</string>
+  <string name="product_qu_stock_hint">Cuando este producto ya haya estado en inventario y la unidad deseada no se pueda seleccionar aquí, cree primero una conversión de unidades correspondiente</string>
+  <string name="product_qu_purchase">Unidad de compra predeterminada</string>
+  <string name="product_qu_purchase_hint">Esta es la unidad de cantidad predeterminada al comprar y al añadir este producto a la lista de la compra</string>
+  <string name="product_qu_consume">Cantidad de unidades de consumo por defecto</string>
+  <string name="product_qu_consume_hint">Esta es la unidad de cantidad por defecto utilizada al consumir este producto</string>
+  <string name="product_qu_price">Unidad para los precios</string>
+  <string name="product_qu_price_hint">Cuando se muestren los precios para este producto, se mostrarán en términos de esta unidad de cantidad</string>
+  <string name="product_qu_required">Es necesaria una unidad</string>
+  <string name="product_tare_weight_handling">Activar peso de contenedor</string>
+  <string name="product_tare_weight_handling_hint">Esto es útil, por ejemplo, para harina en tarros: basta con pesar el tarro al comprar, consumir o inventariar. La nueva cantidad de existencias se calcula automáticamente en base a las existencias disponibles y el peso de contenedor definido aquí</string>
+  <string name="product_tare_weight">Peso de contenedor</string>
+  <string name="product_not_check_stock_fulfillment">Desactivar comprobación de existencias para este ingrediente</string>
+  <string name="product_not_check_stock_fulfillment_hint">Esto se usará como configuración predeterminada cuando añadas este producto como ingrediente de una receta</string>
+  <string name="product_energy">Energía</string>
+  <string name="product_energy_hint">Por unidad por inventario</string>
+  <string name="product_quick_consume_amount">Cantidad de consumo rápido</string>
+  <string name="product_quick_consume_amount_hint">Esta cantidad se usa para el botón de "consumo rápido" en la página de resumen de inventario (medido en unidades de inventario)</string>
+  <string name="product_quick_open_amount">Cantidad de apertura rápida</string>
+  <string name="product_quick_open_amount_hint">Esta cantidad se usa para el botón de "apertura rápida" en la página de resumen de inventario (medido en unidades de inventario)</string>
+  <string name="product_stock_label">Etiqueta de entrada de inventario por defecto</string>
+  <string name="product_stock_label_hint">Esta es la opción por defecto que será prerellenada al comprar</string>
+  <string name="product_stock_label_none">Sin etiqueta</string>
+  <string name="product_stock_label_single">Etiqueta única</string>
+  <string name="product_stock_label_per_unit">Etiqueta por unidad</string>
+  <string name="product_auto_reprint_label">Reimprimir etiqueta de entrada de stock automáticamente</string>
+  <string name="product_auto_reprint_label_hint">Si está activada, la modificación automática de la fecha de vencimiento de una entrada de stock (por apertura/congelación/descongelación y con los correspondientes días de vencimiento predeterminados) reimprimirá su etiqueta.</string>
+  <string name="product_price_type">Tipo de precio de compra predeterminado</string>
+  <string name="product_price_type_hint">Se usará como tipo de precio seleccionado por defecto al comprar</string>
+  <string name="product_price_type_unspecified">Sin especificar</string>
+  <string name="product_price_type_unit">Precio unitario</string>
+  <string name="product_price_type_total">Precio total</string>
+  <string name="product_disable_open">No se puede abrir</string>
+  <string name="product_hide_on_stock_overview">Nunca mostrar en el resumen de inventario</string>
+  <string name="product_hide_on_stock_overview_hint">La página de resumen de existencias muestra todos los productos que están en inventario o por debajo de su mínimo de existencias - active esto para ocultar siempre este producto allí</string>
+  <string name="product_no_own_stock">Desactivar stock propio</string>
+  <string name="product_no_own_stock_hint">Cuando está activado, este producto no puede tener stock propio, lo que significa que no será seleccionable en la compra (útil para los productos primarios que solo se utilizan como un resumen / vista total de los subproductos)</string>
+  <string name="product_userfields">Campos personalizados</string>
+  <string name="product_userfield_required">Campo de usuario obligatorio</string>
+  <string name="product_userfield_title">Título</string>
+  <string name="product_userfield_link">Enlace</string>
+  <string name="product_userfield_file">Los archivos se pueden añadir en la interfaz web de Grocy</string>
+  <string name="product_barcodes">Códigos de barra</string>
+  <string name="product_qu_conversions">QU conversiones de producto específico</string>
+  <string name="product_picture">Imagen</string>
+  <string name="product_picture_none">No hay imagen disponible</string>
+  <string name="product_picture_choose">Elegir imagen</string>
+  <string name="product_picture_delete">Eliminar imagen</string>
+  <string name="product_picture_will_delete">La imagen actual será eliminada al guardar</string>
+  <string name="product_picture_will_upload">La nueva imagen se subirá al guardar</string>
+  <string name="product_picture_load_failed">No se pudo cargar la imagen</string>
+  <string name="product_save_hint">Guarde para añadir códigos de barras y conversiones de unidades</string>
   <string name="log_empty">No se registraron errores</string>
   <string name="log_report_crash">Si la aplicación se cerró inesperadamente o algo salió mal, copie el registro y envíelo con sus comentarios para que se pueda corregir el error.</string>
 </resources>

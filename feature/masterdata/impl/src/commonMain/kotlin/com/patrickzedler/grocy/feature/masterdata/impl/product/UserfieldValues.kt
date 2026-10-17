@@ -48,7 +48,8 @@ internal fun decodeLinkWithTitle(value: String?): Pair<String, String> {
     if (value.isNullOrBlank()) return "" to ""
     return try {
         val json = Json.parseToJsonElement(value).jsonObject
-        json["title"]?.jsonPrimitive?.content.orEmpty() to json["link"]?.jsonPrimitive?.content.orEmpty()
+        val title = json["title"]?.jsonPrimitive?.content.orEmpty()
+        title to json["link"]?.jsonPrimitive?.content.orEmpty()
     } catch (_: SerializationException) {
         "" to value
     } catch (_: IllegalArgumentException) {
