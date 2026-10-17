@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
+import com.patrickzedler.grocy.core.data.log.LogSource
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
@@ -20,32 +21,25 @@ import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_barcode_scanner
-import com.patrickzedler.grocy.core.resources.ic_rounded_dns
-import com.patrickzedler.grocy.core.resources.ic_rounded_manage_accounts
+import com.patrickzedler.grocy.core.resources.ic_rounded_cloud_sync
+import com.patrickzedler.grocy.core.resources.ic_rounded_design_services
+import com.patrickzedler.grocy.core.resources.ic_rounded_host
+import com.patrickzedler.grocy.core.resources.ic_rounded_network_manage
 import com.patrickzedler.grocy.core.resources.ic_rounded_notifications
 import com.patrickzedler.grocy.core.resources.ic_rounded_reset_settings
 import com.patrickzedler.grocy.core.resources.ic_rounded_settings_backup_restore
-import com.patrickzedler.grocy.core.resources.ic_rounded_touch_app
 import com.patrickzedler.grocy.core.resources.ic_rounded_tune
-import com.patrickzedler.grocy.core.resources.ic_rounded_wifi
 import com.patrickzedler.grocy.core.resources.settings_backup
 import com.patrickzedler.grocy.core.resources.settings_backup_description
 import com.patrickzedler.grocy.core.resources.settings_behavior
-import com.patrickzedler.grocy.core.resources.settings_behavior_description
 import com.patrickzedler.grocy.core.resources.settings_general
-import com.patrickzedler.grocy.core.resources.settings_general_description
 import com.patrickzedler.grocy.core.resources.settings_network
-import com.patrickzedler.grocy.core.resources.settings_network_description
 import com.patrickzedler.grocy.core.resources.settings_notifications
-import com.patrickzedler.grocy.core.resources.settings_notifications_description
 import com.patrickzedler.grocy.core.resources.settings_reset
 import com.patrickzedler.grocy.core.resources.settings_reset_description
 import com.patrickzedler.grocy.core.resources.settings_scanner
-import com.patrickzedler.grocy.core.resources.settings_scanner_description
 import com.patrickzedler.grocy.core.resources.settings_server
-import com.patrickzedler.grocy.core.resources.settings_server_description
 import com.patrickzedler.grocy.core.resources.settings_user
-import com.patrickzedler.grocy.core.resources.settings_user_description
 import com.patrickzedler.grocy.core.resources.title_settings
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
@@ -55,42 +49,34 @@ import org.jetbrains.compose.resources.stringResource
 /** The pages of the settings, in the order of the overview. */
 internal enum class SettingsCategory(
     val title: StringResource,
-    val description: StringResource,
     val icon: DrawableResource,
 ) {
     GENERAL(
         title = Res.string.settings_general,
-        description = Res.string.settings_general_description,
         icon = Res.drawable.ic_rounded_tune,
     ),
     SERVER(
         title = Res.string.settings_server,
-        description = Res.string.settings_server_description,
-        icon = Res.drawable.ic_rounded_dns,
+        icon = Res.drawable.ic_rounded_host,
     ),
     USER(
         title = Res.string.settings_user,
-        description = Res.string.settings_user_description,
-        icon = Res.drawable.ic_rounded_manage_accounts,
+        icon = Res.drawable.ic_rounded_cloud_sync,
     ),
     NETWORK(
         title = Res.string.settings_network,
-        description = Res.string.settings_network_description,
-        icon = Res.drawable.ic_rounded_wifi,
+        icon = Res.drawable.ic_rounded_network_manage,
     ),
     BEHAVIOR(
         title = Res.string.settings_behavior,
-        description = Res.string.settings_behavior_description,
-        icon = Res.drawable.ic_rounded_touch_app,
+        icon = Res.drawable.ic_rounded_design_services,
     ),
     SCANNER(
         title = Res.string.settings_scanner,
-        description = Res.string.settings_scanner_description,
         icon = Res.drawable.ic_rounded_barcode_scanner,
     ),
     NOTIFICATIONS(
         title = Res.string.settings_notifications,
-        description = Res.string.settings_notifications_description,
         icon = Res.drawable.ic_rounded_notifications,
     ),
 }
@@ -131,7 +117,7 @@ private fun LazyListScope.settingsOverview(
         categories.forEachIndexed { index, category ->
             SettingsItem(
                 title = stringResource(category.title),
-                description = stringResource(category.description),
+                description = null,
                 icon = category.icon,
                 index = index,
                 count = categories.size,
@@ -168,7 +154,7 @@ private fun LazyListScope.settingsOverview(
 @Composable
 private fun SettingsItem(
     title: String,
-    description: String,
+    description: String?,
     icon: DrawableResource,
     index: Int,
     count: Int,
@@ -192,7 +178,7 @@ private fun SettingsItem(
                 Icon(painter = painterResource(icon), contentDescription = null)
             }
         },
-        supportingContent = { Text(description) },
+        supportingContent = description?.let { { Text(it) } },
         content = { Text(title) },
     )
 }
@@ -203,7 +189,11 @@ private fun SettingsScreenPreview() {
     GrocyTheme {
         SettingsScaffoldContent(
             title = stringResource(Res.string.title_settings),
-            menuActions = SettingsMenuActions(onAboutClick = {}, onLogClick = {}),
+            menuActions = SettingsMenuActions(
+                onAboutClick = {},
+                onLogClick = {},
+                logSource = LogSource.LOGCAT,
+            ),
             onBackClick = {},
             onHelpClick = {},
             onFeedbackClick = {},

@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.apps.shared
 
 import com.patrickzedler.grocy.core.data.log.LogReader
+import com.patrickzedler.grocy.core.data.log.LogSource
 import java.io.IOException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -10,6 +11,8 @@ import kotlinx.coroutines.withContext
 internal class LogcatReader(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : LogReader {
+
+    override val source = LogSource.LOGCAT
 
     override suspend fun readErrors(): String = withContext(ioDispatcher) {
         try {

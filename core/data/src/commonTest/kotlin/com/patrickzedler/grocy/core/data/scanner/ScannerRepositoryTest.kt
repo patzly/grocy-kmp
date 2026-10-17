@@ -7,6 +7,7 @@ import com.patrickzedler.grocy.core.testing.FakeSettingsStore
 import com.patrickzedler.grocy.core.testing.FakeUnlockChecker
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -24,6 +25,7 @@ class ScannerRepositoryTest {
         unlockRepository = UnlockRepository(
             unlockChecker = checker.takeIf { hasUnlockApp },
             settingsStore = settingsStore,
+            scope = backgroundScope + UnconfinedTestDispatcher(testScheduler),
             checkDispatcher = UnconfinedTestDispatcher(testScheduler),
         ),
         availableEngines = availableEngines,

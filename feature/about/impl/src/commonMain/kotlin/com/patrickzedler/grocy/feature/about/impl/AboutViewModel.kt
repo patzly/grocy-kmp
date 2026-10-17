@@ -11,9 +11,7 @@ import com.patrickzedler.grocy.core.data.util.MINIMUM_LOADING_DURATION
 import com.patrickzedler.grocy.core.data.util.withMinimumDuration
 import com.patrickzedler.grocy.core.model.UnlockState
 import com.patrickzedler.grocy.core.model.UpdateCheck
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 private const val KEY_LONG_CLICKS_TO_IGNORE = 10
@@ -23,11 +21,8 @@ internal class AboutViewModel(
     private val updateRepository: UpdateRepository,
 ) : ViewModel() {
 
-    val unlockState: StateFlow<UnlockState?> = unlockRepository.unlockState.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-        initialValue = null,
-    )
+    /** Read at app start, so the unlock items are there in the first frame. */
+    val unlockState: StateFlow<UnlockState?> = unlockRepository.unlockState
 
     private var keyLongClickCount = 0
 

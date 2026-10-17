@@ -20,7 +20,8 @@ fun EntryProviderScope<NavKey>.settingsEntries(
 ) {
     val menuActions = SettingsMenuActions(
         onAboutClick = { navigator.navigate(AboutRoute) },
-        onLogClick = dependencies.logReader?.let { { navigator.navigate(LogRoute) } },
+        onLogClick = { navigator.navigate(LogRoute) },
+        logSource = dependencies.logReader.source,
     )
 
     entry<SettingsRoute> {
@@ -43,7 +44,10 @@ fun EntryProviderScope<NavKey>.settingsEntries(
     entry<GeneralSettingsRoute> {
         GeneralSettingsScreen(
             viewModel = viewModel {
-                GeneralSettingsViewModel(dependencies.settingsStore, dependencies.appLanguageStore)
+                GeneralSettingsViewModel(
+                    dependencies.appearanceRepository,
+                    dependencies.appLanguageStore,
+                )
             },
             menuViewModel = settingsMenuViewModel(dependencies),
             menuActions = menuActions,
@@ -51,14 +55,12 @@ fun EntryProviderScope<NavKey>.settingsEntries(
         )
     }
 
-    dependencies.logReader?.let { logReader ->
-        entry<LogRoute> {
-            LogScreen(
-                viewModel = viewModel { LogViewModel(logReader) },
-                menuViewModel = settingsMenuViewModel(dependencies),
-                onBackClick = navigator::goBack,
-            )
-        }
+    entry<LogRoute> {
+        LogScreen(
+            viewModel = viewModel { LogViewModel(dependencies.logReader) },
+            menuViewModel = settingsMenuViewModel(dependencies),
+            onBackClick = navigator::goBack,
+        )
     }
 }
 

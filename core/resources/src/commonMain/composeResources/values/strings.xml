@@ -19,6 +19,7 @@
   <string name="title_help">Help</string>
   <string name="title_licenses">Open source licenses</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">Log</string>
   <string name="title_settings">Settings</string>
 
   <!-- Dialogs -->
@@ -45,6 +46,7 @@
   <string name="action_issue_description">Report bugs or request a feature</string>
   <string name="action_send_feedback">Send feedback</string>
   <string name="action_show_logcat">Show logcat</string>
+  <string name="action_show_log">Show log</string>
   <string name="action_reload">Reload</string>
   <string name="action_copy_to_clipboard">Copy to clipboard</string>
 
@@ -161,19 +163,12 @@
 
   <!-- Settings -->
   <string name="settings_general">General</string>
-  <string name="settings_general_description">How the app looks and speaks</string>
   <string name="settings_server">Server</string>
-  <string name="settings_server_description">Your Grocy server and login</string>
   <string name="settings_user">User settings</string>
-  <string name="settings_user_description">Your preferences stored on the server</string>
   <string name="settings_network">Network</string>
-  <string name="settings_network_description">How the app reaches your server</string>
   <string name="settings_behavior">Behavior</string>
-  <string name="settings_behavior_description">How the app responds while you work</string>
   <string name="settings_scanner">Scanner</string>
-  <string name="settings_scanner_description">How barcodes are scanned</string>
   <string name="settings_notifications">Notifications</string>
-  <string name="settings_notifications_description">Reminders about your stock and chores</string>
   <string name="settings_backup">Backup and restore</string>
   <string name="settings_backup_description">Save your settings to a file or restore them</string>
   <string name="settings_reset">Reset all</string>

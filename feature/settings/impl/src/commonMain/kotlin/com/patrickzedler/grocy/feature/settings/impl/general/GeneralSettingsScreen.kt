@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.patrickzedler.grocy.core.data.log.LogSource
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.ConnectedButtonGroup
 import com.patrickzedler.grocy.core.design.component.HueSlider
@@ -301,7 +302,11 @@ private fun GeneralSettingsPreview() {
     GrocyTheme {
         SettingsScaffoldContent(
             title = stringResource(Res.string.settings_general),
-            menuActions = SettingsMenuActions(onAboutClick = {}, onLogClick = {}),
+            menuActions = SettingsMenuActions(
+                onAboutClick = {},
+                onLogClick = {},
+                logSource = LogSource.LOGCAT,
+            ),
             onBackClick = {},
             onHelpClick = {},
             onFeedbackClick = {},

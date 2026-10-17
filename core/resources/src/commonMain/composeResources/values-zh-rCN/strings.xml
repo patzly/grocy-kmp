@@ -7,6 +7,7 @@
   <string name="title_help">帮助</string>
   <string name="title_licenses">开源许可</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">日志</string>
   <string name="title_settings">设置</string>
 
   <!-- Dialogs -->
@@ -33,6 +34,7 @@
   <string name="action_issue_description">报告错误或请求新功能</string>
   <string name="action_send_feedback">发送反馈</string>
   <string name="action_show_logcat">显示 Logcat</string>
+  <string name="action_show_log">显示日志</string>
   <string name="action_reload">重新加载</string>
   <string name="action_copy_to_clipboard">复制到剪贴板</string>
 
@@ -140,19 +142,12 @@
 
   <!-- Settings -->
   <string name="settings_general">常规</string>
-  <string name="settings_general_description">应用的外观和语言</string>
   <string name="settings_server">服务器</string>
-  <string name="settings_server_description">您的 Grocy 服务器和登录信息</string>
   <string name="settings_user">用户设置</string>
-  <string name="settings_user_description">保存在服务器上的个人偏好</string>
   <string name="settings_network">网络</string>
-  <string name="settings_network_description">应用如何连接您的服务器</string>
   <string name="settings_behavior">行为</string>
-  <string name="settings_behavior_description">应用在您操作时如何响应</string>
   <string name="settings_scanner">扫描器</string>
-  <string name="settings_scanner_description">条码的扫描方式</string>
   <string name="settings_notifications">通知</string>
-  <string name="settings_notifications_description">关于库存和家务的提醒</string>
   <string name="settings_backup">备份和恢复</string>
   <string name="settings_backup_description">将设置保存到文件或从文件恢复</string>
   <string name="settings_reset">全部重置</string>

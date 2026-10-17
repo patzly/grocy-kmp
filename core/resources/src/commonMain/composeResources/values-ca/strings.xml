@@ -7,6 +7,7 @@
   <string name="title_help">Ajuda</string>
   <string name="title_licenses">Llicències de codi obert</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">Registre</string>
   <string name="title_settings">Configuració</string>
 
   <!-- Dialogs -->
@@ -33,8 +34,9 @@
   <string name="action_issue_description">Informa d’errors o demana una funció</string>
   <string name="action_send_feedback">Enviar comentaris</string>
   <string name="action_show_logcat">Mostrar Logcat</string>
+  <string name="action_show_log">Mostra el registre</string>
   <string name="action_reload">Tornar a carregar</string>
-  <string name="action_copy_to_clipboard">Copiar al porta-retalls</string>
+  <string name="action_copy_to_clipboard">Copia</string>
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy gestiona la compra i la llar al teu propi servidor Grocy: %1$s</string>
@@ -140,19 +142,12 @@
 
   <!-- Settings -->
   <string name="settings_general">General</string>
-  <string name="settings_general_description">Aspecte i idioma de l’aplicació</string>
   <string name="settings_server">Servidor</string>
-  <string name="settings_server_description">El teu servidor Grocy i l’inici de sessió</string>
   <string name="settings_user">Configuració d’usuari</string>
-  <string name="settings_user_description">Les teves preferències desades al servidor</string>
   <string name="settings_network">Xarxa</string>
-  <string name="settings_network_description">Com arriba l’aplicació al teu servidor</string>
   <string name="settings_behavior">Comportament</string>
-  <string name="settings_behavior_description">Com respon l’aplicació mentre treballes</string>
   <string name="settings_scanner">Escàner</string>
-  <string name="settings_scanner_description">Com s’escanegen els codis de barres</string>
   <string name="settings_notifications">Notificacions</string>
-  <string name="settings_notifications_description">Recordatoris sobre les existències i les feines de casa</string>
   <string name="settings_backup">Còpia de seguretat i restauració</string>
   <string name="settings_backup_description">Desa la configuració en un fitxer o restaura-la</string>
   <string name="settings_reset">Restablir-ho tot</string>

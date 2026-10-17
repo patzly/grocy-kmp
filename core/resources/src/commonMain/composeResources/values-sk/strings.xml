@@ -7,6 +7,7 @@
   <string name="title_help">Pomocník</string>
   <string name="title_licenses">Licencie open source</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">Protokol</string>
   <string name="title_settings">Nastavenia</string>
 
   <!-- Dialogs -->
@@ -33,8 +34,9 @@
   <string name="action_issue_description">Nahláste chyby alebo navrhnite funkciu</string>
   <string name="action_send_feedback">Odoslať spätnú väzbu</string>
   <string name="action_show_logcat">Zobraziť logcat</string>
+  <string name="action_show_log">Zobraziť protokol</string>
   <string name="action_reload">Znova načítať</string>
-  <string name="action_copy_to_clipboard">Skopírovať do schránky</string>
+  <string name="action_copy_to_clipboard">Kopírovať</string>
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy spravuje potraviny a domácnosť na vašom vlastnom serveri Grocy: %1$s</string>
@@ -140,19 +142,12 @@
 
   <!-- Settings -->
   <string name="settings_general">Všeobecné</string>
-  <string name="settings_general_description">Vzhľad a jazyk aplikácie</string>
   <string name="settings_server">Server</string>
-  <string name="settings_server_description">Váš server Grocy a prihlásenie</string>
   <string name="settings_user">Nastavenia používateľa</string>
-  <string name="settings_user_description">Vaše predvoľby uložené na serveri</string>
   <string name="settings_network">Sieť</string>
-  <string name="settings_network_description">Ako sa aplikácia pripája k vášmu serveru</string>
   <string name="settings_behavior">Správanie</string>
-  <string name="settings_behavior_description">Ako aplikácia reaguje pri práci</string>
   <string name="settings_scanner">Skener</string>
-  <string name="settings_scanner_description">Ako sa skenujú čiarové kódy</string>
   <string name="settings_notifications">Upozornenia</string>
-  <string name="settings_notifications_description">Pripomienky k zásobám a povinnostiam</string>
   <string name="settings_backup">Zálohovanie a obnovenie</string>
   <string name="settings_backup_description">Uložte nastavenia do súboru alebo ich obnovte</string>
   <string name="settings_reset">Resetovať všetko</string>

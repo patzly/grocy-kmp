@@ -48,6 +48,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.patrickzedler.grocy.core.data.log.LogSource
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.AppBarIconButton
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
@@ -66,6 +67,7 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_more_vert
 import com.patrickzedler.grocy.core.resources.ic_rounded_refresh
 import com.patrickzedler.grocy.core.resources.log_empty
 import com.patrickzedler.grocy.core.resources.log_report_crash
+import com.patrickzedler.grocy.core.resources.title_log
 import com.patrickzedler.grocy.core.resources.title_logcat
 import com.patrickzedler.grocy.core.ui.AppDialog
 import com.patrickzedler.grocy.core.ui.AppDialogHost
@@ -94,6 +96,7 @@ internal fun LogScreen(
     )
 
     LogContent(
+        source = viewModel.source,
         log = viewModel.log,
         onBackClick = onBackClick,
         onReloadClick = viewModel::reload,
@@ -107,6 +110,7 @@ internal fun LogScreen(
 
 @Composable
 private fun LogContent(
+    source: LogSource,
     log: String?,
     onBackClick: () -> Unit,
     onReloadClick: () -> Unit,
@@ -115,7 +119,12 @@ private fun LogContent(
     modifier: Modifier = Modifier,
 ) {
     SegmentedListScreen(
-        title = stringResource(Res.string.title_logcat),
+        title = stringResource(
+            when (source) {
+                LogSource.LOGCAT -> Res.string.title_logcat
+                LogSource.BROWSER -> Res.string.title_log
+            },
+        ),
         modifier = modifier,
         navigationIcon = { NavigateBackButton(onClick = onBackClick) },
         actions = {
@@ -333,6 +342,7 @@ private fun LogText(log: String?) {
 private fun LogScreenPreview() {
     GrocyTheme {
         LogContent(
+            source = LogSource.LOGCAT,
             log = "E/AndroidRuntime: FATAL EXCEPTION: main\n" +
                 "E/AndroidRuntime: java.lang.IllegalStateException: Preview",
             onBackClick = {},

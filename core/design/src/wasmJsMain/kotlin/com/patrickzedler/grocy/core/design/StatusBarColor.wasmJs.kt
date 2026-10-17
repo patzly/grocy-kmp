@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.graphics.Color
 import com.patrickzedler.grocy.core.design.extensions.toCssHex
@@ -14,12 +15,14 @@ internal val statusBarColors = StatusBarColorRequests { setThemeColor(it.toCssHe
 @Composable
 internal actual fun StatusBarColorEffect(color: () -> Color) {
     val request = remember { StatusBarColorRequest() }
+    // A new theme brings a new lambda with other colors, the running flow must read it
+    val currentColor = rememberUpdatedState(color)
     DisposableEffect(request) {
         statusBarColors.add(request)
         onDispose { statusBarColors.remove(request) }
     }
     LaunchedEffect(request) {
-        snapshotFlow(color).collect { statusBarColors.setColor(request, it) }
+        snapshotFlow { currentColor.value() }.collect { statusBarColors.setColor(request, it) }
     }
 }
 

@@ -7,6 +7,7 @@
   <string name="title_help">Help</string>
   <string name="title_licenses">Opensourcelicenties</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">Logboek</string>
   <string name="title_settings">Instellingen</string>
 
   <!-- Dialogs -->
@@ -33,8 +34,9 @@
   <string name="action_issue_description">Meld bugs of vraag een functie aan</string>
   <string name="action_send_feedback">Feedback sturen</string>
   <string name="action_show_logcat">Logcat tonen</string>
+  <string name="action_show_log">Logboek tonen</string>
   <string name="action_reload">Opnieuw laden</string>
-  <string name="action_copy_to_clipboard">Naar klembord kopiëren</string>
+  <string name="action_copy_to_clipboard">Kopiëren</string>
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy houdt boodschappen en huishouden bij op je eigen Grocy-server: %1$s</string>
@@ -140,19 +142,12 @@
 
   <!-- Settings -->
   <string name="settings_general">Algemeen</string>
-  <string name="settings_general_description">Hoe de app eruitziet en spreekt</string>
   <string name="settings_server">Server</string>
-  <string name="settings_server_description">Je Grocy-server en login</string>
   <string name="settings_user">Gebruikersinstellingen</string>
-  <string name="settings_user_description">Je voorkeuren, opgeslagen op de server</string>
   <string name="settings_network">Netwerk</string>
-  <string name="settings_network_description">Hoe de app je server bereikt</string>
   <string name="settings_behavior">Gedrag</string>
-  <string name="settings_behavior_description">Hoe de app reageert terwijl je werkt</string>
   <string name="settings_scanner">Scanner</string>
-  <string name="settings_scanner_description">Hoe streepjescodes worden gescand</string>
   <string name="settings_notifications">Meldingen</string>
-  <string name="settings_notifications_description">Herinneringen over je voorraad en klusjes</string>
   <string name="settings_backup">Back-up en herstel</string>
   <string name="settings_backup_description">Sla je instellingen op in een bestand of zet ze terug</string>
   <string name="settings_reset">Alles resetten</string>

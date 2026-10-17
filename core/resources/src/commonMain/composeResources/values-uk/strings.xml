@@ -7,6 +7,7 @@
   <string name="title_help">Довідка</string>
   <string name="title_licenses">Ліцензії відкритого ПЗ</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">Журнал</string>
   <string name="title_settings">Налаштування</string>
 
   <!-- Dialogs -->
@@ -33,8 +34,9 @@
   <string name="action_issue_description">Повідомте про помилку або запропонуйте функцію</string>
   <string name="action_send_feedback">Надіслати відгук</string>
   <string name="action_show_logcat">Показати logcat</string>
+  <string name="action_show_log">Показати журнал</string>
   <string name="action_reload">Перезавантажити</string>
-  <string name="action_copy_to_clipboard">Копіювати в буфер обміну</string>
+  <string name="action_copy_to_clipboard">Копіювати</string>
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy веде облік продуктів і домашнього господарства на вашому власному сервері Grocy: %1$s</string>
@@ -140,19 +142,12 @@
 
   <!-- Settings -->
   <string name="settings_general">Загальні</string>
-  <string name="settings_general_description">Вигляд і мова застосунку</string>
   <string name="settings_server">Сервер</string>
-  <string name="settings_server_description">Ваш сервер Grocy і вхід</string>
   <string name="settings_user">Налаштування користувача</string>
-  <string name="settings_user_description">Ваші вподобання, збережені на сервері</string>
   <string name="settings_network">Мережа</string>
-  <string name="settings_network_description">Як застосунок підключається до сервера</string>
   <string name="settings_behavior">Поведінка</string>
-  <string name="settings_behavior_description">Як застосунок реагує під час роботи</string>
   <string name="settings_scanner">Сканер</string>
-  <string name="settings_scanner_description">Як скануються штрихкоди</string>
   <string name="settings_notifications">Сповіщення</string>
-  <string name="settings_notifications_description">Нагадування про інвентар і завдання</string>
   <string name="settings_backup">Резервне копіювання та відновлення</string>
   <string name="settings_backup_description">Збережіть налаштування у файл або відновіть їх</string>
   <string name="settings_reset">Скинути все</string>

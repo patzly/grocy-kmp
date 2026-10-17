@@ -36,6 +36,10 @@ internal actual fun BrowserBackIntegration(onUserAgentTransition: () -> Unit) {
 @OptIn(ExperimentalWasmJsInterop::class)
 private object WindowBrowserHistory : BrowserHistory {
 
+    init {
+        trackPageLeave()
+    }
+
     override val currentIndex: Int?
         get() = historyStateIndex().takeIf { it >= 0 }
 
@@ -46,15 +50,37 @@ private object WindowBrowserHistory : BrowserHistory {
         awaitClose { removePopStateListener(listener) }
     }
 
-    override fun pushState(index: Int) = historyPushState(index)
+    // A move while the page is being left, e.g. closing the dialog of a language change that
+    // reloads, would cancel that navigation
 
-    override fun replaceState(index: Int) = historyReplaceState(index)
+    override fun pushState(index: Int) {
+        if (!isLeavingPage()) historyPushState(index)
+    }
+
+    override fun replaceState(index: Int) {
+        if (!isLeavingPage()) historyReplaceState(index)
+    }
 
     override fun go(delta: Int) {
         // go(0) would reload the page
-        if (delta != 0) historyGo(delta)
+        if (delta != 0 && !isLeavingPage()) historyGo(delta)
     }
 }
+
+/** Marks the page as being left from beforeunload until it shows again (back-forward cache). */
+@OptIn(ExperimentalWasmJsInterop::class)
+@JsFun(
+    """() => {
+        window.grocyLeavingPage = false;
+        window.addEventListener('beforeunload', () => { window.grocyLeavingPage = true; });
+        window.addEventListener('pageshow', () => { window.grocyLeavingPage = false; });
+    }""",
+)
+private external fun trackPageLeave()
+
+@OptIn(ExperimentalWasmJsInterop::class)
+@JsFun("() => window.grocyLeavingPage === true")
+private external fun isLeavingPage(): Boolean
 
 /** Index stored in the current history entry, -1 if it holds something else. */
 @OptIn(ExperimentalWasmJsInterop::class)

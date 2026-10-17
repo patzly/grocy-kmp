@@ -7,6 +7,7 @@
   <string name="title_help">Aide</string>
   <string name="title_licenses">Licences open source</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">Journal</string>
   <string name="title_settings">Paramètres</string>
 
   <!-- Dialogs -->
@@ -33,8 +34,9 @@
   <string name="action_issue_description">Signalez un bug ou demandez une fonctionnalité</string>
   <string name="action_send_feedback">Envoyer des commentaires</string>
   <string name="action_show_logcat">Afficher Logcat</string>
+  <string name="action_show_log">Afficher le journal</string>
   <string name="action_reload">Recharger</string>
-  <string name="action_copy_to_clipboard">Copier dans le presse-papiers</string>
+  <string name="action_copy_to_clipboard">Copier</string>
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy gère les courses et le foyer sur votre propre serveur Grocy : %1$s</string>
@@ -140,19 +142,12 @@
 
   <!-- Settings -->
   <string name="settings_general">Général</string>
-  <string name="settings_general_description">Apparence et langue de l’application</string>
   <string name="settings_server">Serveur</string>
-  <string name="settings_server_description">Votre serveur Grocy et votre connexion</string>
   <string name="settings_user">Paramètres utilisateur</string>
-  <string name="settings_user_description">Vos préférences enregistrées sur le serveur</string>
   <string name="settings_network">Réseau</string>
-  <string name="settings_network_description">Comment l’application joint votre serveur</string>
   <string name="settings_behavior">Comportement</string>
-  <string name="settings_behavior_description">Comment l’application réagit pendant que vous travaillez</string>
   <string name="settings_scanner">Scanner</string>
-  <string name="settings_scanner_description">Comment les codes-barres sont scannés</string>
   <string name="settings_notifications">Notifications</string>
-  <string name="settings_notifications_description">Rappels concernant votre stock et vos corvées</string>
   <string name="settings_backup">Sauvegarde et restauration</string>
   <string name="settings_backup_description">Enregistrez vos paramètres dans un fichier ou restaurez-les</string>
   <string name="settings_reset">Tout réinitialiser</string>

@@ -7,6 +7,7 @@
   <string name="title_help">Βοήθεια</string>
   <string name="title_licenses">Άδειες ανοιχτού κώδικα</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">Αρχείο καταγραφής</string>
   <string name="title_settings">Ρυθμίσεις</string>
 
   <!-- Dialogs -->
@@ -33,8 +34,9 @@
   <string name="action_issue_description">Αναφέρετε σφάλματα ή ζητήστε μια λειτουργία</string>
   <string name="action_send_feedback">Αποστολή σχολίων</string>
   <string name="action_show_logcat">Εμφάνιση logcat</string>
+  <string name="action_show_log">Εμφάνιση αρχείου καταγραφής</string>
   <string name="action_reload">Επαναφόρτωση</string>
-  <string name="action_copy_to_clipboard">Αντιγραφή στο πρόχειρο</string>
+  <string name="action_copy_to_clipboard">Αντιγραφή</string>
 
   <!-- Messages -->
   <string name="msg_recommend">Το Grocy παρακολουθεί τα τρόφιμα και το νοικοκυριό στον δικό σας διακομιστή Grocy: %1$s</string>
@@ -140,19 +142,12 @@
 
   <!-- Settings -->
   <string name="settings_general">Γενικά</string>
-  <string name="settings_general_description">Πώς φαίνεται και μιλά η εφαρμογή</string>
   <string name="settings_server">Διακομιστής</string>
-  <string name="settings_server_description">Ο διακομιστής Grocy σας και η σύνδεσή σας</string>
   <string name="settings_user">Ρυθμίσεις χρήστη</string>
-  <string name="settings_user_description">Οι προτιμήσεις σας, αποθηκευμένες στον διακομιστή</string>
   <string name="settings_network">Δίκτυο</string>
-  <string name="settings_network_description">Πώς η εφαρμογή φτάνει στον διακομιστή σας</string>
   <string name="settings_behavior">Συμπεριφορά</string>
-  <string name="settings_behavior_description">Πώς αντιδρά η εφαρμογή ενώ εργάζεστε</string>
   <string name="settings_scanner">Σαρωτής</string>
-  <string name="settings_scanner_description">Πώς σαρώνονται οι γραμμωτοί κώδικες</string>
   <string name="settings_notifications">Ειδοποιήσεις</string>
-  <string name="settings_notifications_description">Υπενθυμίσεις για τα αποθέματα και τις μικροδουλειές σας</string>
   <string name="settings_backup">Αντίγραφα ασφαλείας και επαναφορά</string>
   <string name="settings_backup_description">Αποθηκεύστε τις ρυθμίσεις σας σε ένα αρχείο ή επαναφέρετέ τες</string>
   <string name="settings_reset">Επαναφορά όλων</string>

@@ -7,6 +7,7 @@
   <string name="title_help">עזרה</string>
   <string name="title_licenses">רישיונות קוד פתוח</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">יומן</string>
   <string name="title_settings">הגדרות</string>
 
   <!-- Dialogs -->
@@ -33,6 +34,7 @@
   <string name="action_issue_description">דיווח על באגים או בקשת תכונה</string>
   <string name="action_send_feedback">שליחת משוב</string>
   <string name="action_show_logcat">הצגת Logcat</string>
+  <string name="action_show_log">הצגת היומן</string>
   <string name="action_reload">טעינה מחדש</string>
   <string name="action_copy_to_clipboard">העתקה ללוח</string>
 
@@ -140,19 +142,12 @@
 
   <!-- Settings -->
   <string name="settings_general">כללי</string>
-  <string name="settings_general_description">המראה והשפה של האפליקציה</string>
   <string name="settings_server">שרת</string>
-  <string name="settings_server_description">שרת Grocy שלך והכניסה אליו</string>
   <string name="settings_user">הגדרות המשתמש</string>
-  <string name="settings_user_description">ההעדפות שלך שנשמרות בשרת</string>
   <string name="settings_network">רשת</string>
-  <string name="settings_network_description">איך האפליקציה מגיעה לשרת שלך</string>
   <string name="settings_behavior">התנהגות</string>
-  <string name="settings_behavior_description">איך האפליקציה מגיבה בזמן העבודה</string>
   <string name="settings_scanner">סורק</string>
-  <string name="settings_scanner_description">איך ברקודים נסרקים</string>
   <string name="settings_notifications">התראות</string>
-  <string name="settings_notifications_description">תזכורות על המלאי והמטלות</string>
   <string name="settings_backup">גיבוי ושחזור</string>
   <string name="settings_backup_description">שמירת ההגדרות בקובץ או שחזור שלהן</string>
   <string name="settings_reset">איפוס הכול</string>

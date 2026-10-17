@@ -11,6 +11,8 @@ internal external interface Storage : JsAny {
 
 internal external val localStorage: Storage
 
+internal external val sessionStorage: Storage
+
 /** String storage of the web stores, an interface so tests can replace the browser. */
 internal interface KeyValueStorage {
     fun get(key: String): String?
@@ -21,18 +23,24 @@ internal interface KeyValueStorage {
 }
 
 /**
- * The browser's localStorage. Browsers throw when storage is blocked or full (e.g. blocked site
+ * A storage of the browser. Browsers throw when storage is blocked or full (e.g. blocked site
  * data, private mode); the app then keeps working for the session instead of crashing.
  */
-internal object BrowserLocalStorage : KeyValueStorage {
+internal open class BrowserStorage(private val storage: () -> Storage) : KeyValueStorage {
 
-    override fun get(key: String): String? = runCatching { localStorage.getItem(key) }.getOrNull()
+    override fun get(key: String): String? = runCatching { storage().getItem(key) }.getOrNull()
 
     override fun set(key: String, value: String) {
-        runCatching { localStorage.setItem(key, value) }
+        runCatching { storage().setItem(key, value) }
     }
 
     override fun remove(key: String) {
-        runCatching { localStorage.removeItem(key) }
+        runCatching { storage().removeItem(key) }
     }
 }
+
+/** Kept until the site data is cleared. */
+internal object BrowserLocalStorage : BrowserStorage({ localStorage })
+
+/** Kept per tab (or installed app window) across reloads, gone once it closes. */
+internal object BrowserSessionStorage : BrowserStorage({ sessionStorage })

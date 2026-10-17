@@ -7,6 +7,7 @@
   <string name="title_help">ヘルプ</string>
   <string name="title_licenses">オープンソースライセンス</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">ログ</string>
   <string name="title_settings">設定</string>
 
   <!-- Dialogs -->
@@ -33,6 +34,7 @@
   <string name="action_issue_description">バグの報告や機能のリクエスト</string>
   <string name="action_send_feedback">フィードバックを送信</string>
   <string name="action_show_logcat">Logcatを表示</string>
+  <string name="action_show_log">ログを表示</string>
   <string name="action_reload">再読み込み</string>
   <string name="action_copy_to_clipboard">クリップボードにコピー</string>
 
@@ -140,19 +142,12 @@
 
   <!-- Settings -->
   <string name="settings_general">全般</string>
-  <string name="settings_general_description">アプリの表示と言語</string>
   <string name="settings_server">サーバー</string>
-  <string name="settings_server_description">Grocyサーバーとログイン</string>
   <string name="settings_user">ユーザー設定</string>
-  <string name="settings_user_description">サーバーに保存される個人設定</string>
   <string name="settings_network">ネットワーク</string>
-  <string name="settings_network_description">アプリがサーバーに接続する方法</string>
   <string name="settings_behavior">動作</string>
-  <string name="settings_behavior_description">操作中のアプリの反応</string>
   <string name="settings_scanner">スキャナー</string>
-  <string name="settings_scanner_description">バーコードのスキャン方法</string>
   <string name="settings_notifications">通知</string>
-  <string name="settings_notifications_description">ストックと家事のリマインダー</string>
   <string name="settings_backup">バックアップと復元</string>
   <string name="settings_backup_description">設定をファイルに保存、またはファイルから復元</string>
   <string name="settings_reset">すべてリセット</string>

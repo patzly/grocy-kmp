@@ -7,6 +7,7 @@
   <string name="title_help">Yardım</string>
   <string name="title_licenses">Açık kaynak lisansları</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">Günlük</string>
   <string name="title_settings">Ayarlar</string>
 
   <!-- Dialogs -->
@@ -33,6 +34,7 @@
   <string name="action_issue_description">Hata bildirin veya özellik isteyin</string>
   <string name="action_send_feedback">Geri bildirim gönder</string>
   <string name="action_show_logcat">Logcat’i göster</string>
+  <string name="action_show_log">Günlüğü göster</string>
   <string name="action_reload">Yeniden yükle</string>
   <string name="action_copy_to_clipboard">Panoya kopyala</string>
 
@@ -140,19 +142,12 @@
 
   <!-- Settings -->
   <string name="settings_general">Genel</string>
-  <string name="settings_general_description">Uygulamanın görünümü ve dili</string>
   <string name="settings_server">Sunucu</string>
-  <string name="settings_server_description">Grocy sunucunuz ve girişiniz</string>
   <string name="settings_user">Kullanıcı ayarları</string>
-  <string name="settings_user_description">Sunucuda saklanan tercihleriniz</string>
   <string name="settings_network">Ağ</string>
-  <string name="settings_network_description">Uygulamanın sunucunuza nasıl ulaştığı</string>
   <string name="settings_behavior">Davranış</string>
-  <string name="settings_behavior_description">Siz çalışırken uygulamanın nasıl tepki verdiği</string>
   <string name="settings_scanner">Barkod okuyucu</string>
-  <string name="settings_scanner_description">Barkodların nasıl okutulduğu</string>
   <string name="settings_notifications">Bildirimler</string>
-  <string name="settings_notifications_description">Stok ve ev işleriyle ilgili hatırlatıcılar</string>
   <string name="settings_backup">Yedekleme ve geri yükleme</string>
   <string name="settings_backup_description">Ayarlarınızı bir dosyaya kaydedin veya geri yükleyin</string>
   <string name="settings_reset">Tümünü sıfırla</string>

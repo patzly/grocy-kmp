@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.feature.settings.impl.general
 
+import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.model.AppColor
 import com.patrickzedler.grocy.core.model.AppContrast
 import com.patrickzedler.grocy.core.model.AppTheme
@@ -12,9 +13,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -38,15 +40,18 @@ class GeneralSettingsViewModelTest {
         Dispatchers.resetMain()
     }
 
-    /** Creates the ViewModel and keeps its state collected, as the screen does. */
-    private fun TestScope.viewModel() =
-        GeneralSettingsViewModel(settingsStore, languageStore).also { viewModel ->
-            backgroundScope.launch { viewModel.appearance.collect {} }
-            advanceUntilIdle()
-        }
+    /** Like at app start, the stored appearance is read before the screen exists. */
+    private fun TestScope.viewModel() = GeneralSettingsViewModel(
+        AppearanceRepository(
+            settingsStore,
+            backgroundScope + UnconfinedTestDispatcher(testScheduler),
+        ),
+        languageStore,
+    )
 
     @Test
-    fun appearanceIsTheStoredOne() = runTest {
+    fun appearanceIsThereWithoutWaiting() = runTest {
+        // No advance: a value that arrives later would let the controls jump
         assertEquals(AppearanceSettings(hue = 100f), viewModel().appearance.value)
     }
 

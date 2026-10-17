@@ -4,10 +4,10 @@ import com.patrickzedler.grocy.core.data.auth.AuthRepository
 import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.scanner.ScannerRepository
+import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
 import com.patrickzedler.grocy.core.data.update.UpdateRepository
-import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.createGrocyHttpClient
@@ -15,6 +15,9 @@ import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.feature.about.impl.AboutDependencies
 import com.patrickzedler.grocy.feature.login.impl.LoginDependencies
 import com.patrickzedler.grocy.feature.settings.impl.SettingsDependencies
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -27,6 +30,9 @@ import kotlinx.coroutines.flow.map
 class AppGraph(
     private val platform: PlatformDependencies,
 ) {
+    // Lives as long as the process, for state the whole app shares
+    private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
     private val httpClient by lazy { createGrocyHttpClient() }
 
     private val grocyApi by lazy { GrocyApi(httpClient) }
@@ -34,7 +40,7 @@ class AppGraph(
     internal val authRepository by lazy { AuthRepository(platform.credentialStore, grocyApi) }
 
     private val unlockRepository by lazy {
-        UnlockRepository(platform.unlockChecker, platform.settingsStore)
+        UnlockRepository(platform.unlockChecker, platform.settingsStore, appScope)
     }
 
     private val scannerRepository by lazy {
@@ -55,9 +61,8 @@ class AppGraph(
     internal val appLanguageStore: AppLanguageStore
         get() = platform.appLanguageStore
 
-    /** How the app looks, from the general settings. */
-    internal val appearance: Flow<AppearanceSettings>
-        get() = platform.settingsStore.appearance
+    /** How the app looks, from the general settings; read right at app start. */
+    internal val appearanceRepository = AppearanceRepository(platform.settingsStore, appScope)
 
     /** Decoders of the engine that scans right now, provided to every scanner by GrocyApp. */
     internal val barcodeDecoderFactory: Flow<BarcodeDecoderFactory> by lazy {
@@ -74,11 +79,13 @@ class AppGraph(
     internal val settingsDependencies: SettingsDependencies = object : SettingsDependencies {
         override val settingsStore: SettingsStore
             get() = platform.settingsStore
+        override val appearanceRepository: AppearanceRepository
+            get() = this@AppGraph.appearanceRepository
         override val appLanguageStore: AppLanguageStore
             get() = platform.appLanguageStore
         override val unlockRepository: UnlockRepository
             get() = this@AppGraph.unlockRepository
-        override val logReader: LogReader?
+        override val logReader: LogReader
             get() = platform.logReader
     }
 

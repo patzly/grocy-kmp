@@ -7,6 +7,7 @@
   <string name="title_help">Hjelp</string>
   <string name="title_licenses">Lisenser for åpen kildekode</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">Logg</string>
   <string name="title_settings">Innstillinger</string>
 
   <!-- Dialogs -->
@@ -33,8 +34,9 @@
   <string name="action_issue_description">Rapporter feil eller ønsk deg en funksjon</string>
   <string name="action_send_feedback">Send tilbakemelding</string>
   <string name="action_show_logcat">Vis logcat</string>
+  <string name="action_show_log">Vis logg</string>
   <string name="action_reload">Last inn på nytt</string>
-  <string name="action_copy_to_clipboard">Kopier til utklippstavlen</string>
+  <string name="action_copy_to_clipboard">Kopier</string>
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy holder oversikt over dagligvarer og husholdning på din egen Grocy-server: %1$s</string>
@@ -140,19 +142,12 @@
 
   <!-- Settings -->
   <string name="settings_general">Generelt</string>
-  <string name="settings_general_description">Hvordan appen ser ut og snakker</string>
   <string name="settings_server">Server</string>
-  <string name="settings_server_description">Grocy-serveren din og innloggingen</string>
   <string name="settings_user">Brukerinnstillinger</string>
-  <string name="settings_user_description">Preferansene dine, lagret på serveren</string>
   <string name="settings_network">Nettverk</string>
-  <string name="settings_network_description">Hvordan appen når serveren din</string>
   <string name="settings_behavior">Atferd</string>
-  <string name="settings_behavior_description">Hvordan appen reagerer mens du jobber</string>
   <string name="settings_scanner">Skanner</string>
-  <string name="settings_scanner_description">Hvordan strekkoder skannes</string>
   <string name="settings_notifications">Varsler</string>
-  <string name="settings_notifications_description">Påminnelser om beholdning og husarbeid</string>
   <string name="settings_backup">Sikkerhetskopiering og gjenoppretting</string>
   <string name="settings_backup_description">Lagre innstillingene dine i en fil eller gjenopprett dem</string>
   <string name="settings_reset">Tilbakestill alt</string>

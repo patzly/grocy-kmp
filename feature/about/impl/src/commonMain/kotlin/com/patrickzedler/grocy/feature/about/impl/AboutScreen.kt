@@ -70,6 +70,7 @@ import com.patrickzedler.grocy.core.resources.app_vending_dev
 import com.patrickzedler.grocy.core.resources.app_vending_key
 import com.patrickzedler.grocy.core.resources.app_website
 import com.patrickzedler.grocy.core.resources.ic_rounded_code
+import com.patrickzedler.grocy.core.resources.ic_rounded_autorenew
 import com.patrickzedler.grocy.core.resources.ic_rounded_copyright
 import com.patrickzedler.grocy.core.resources.ic_rounded_history
 import com.patrickzedler.grocy.core.resources.ic_rounded_info
@@ -79,7 +80,6 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_person
 import com.patrickzedler.grocy.core.resources.ic_rounded_policy
 import com.patrickzedler.grocy.core.resources.ic_rounded_shop
 import com.patrickzedler.grocy.core.resources.ic_rounded_translate
-import com.patrickzedler.grocy.core.resources.ic_rounded_update
 import com.patrickzedler.grocy.core.resources.license_author_google
 import com.patrickzedler.grocy.core.resources.license_google_sans_flex
 import com.patrickzedler.grocy.core.resources.license_material_icons
@@ -192,7 +192,7 @@ private fun AboutContent(
             VersionItem(versionName = versionName, colors = colors, count = 5)
             AboutItem(
                 title = stringResource(Res.string.about_update),
-                icon = Res.drawable.ic_rounded_update,
+                icon = Res.drawable.ic_rounded_autorenew,
                 index = 1,
                 count = 5,
                 colors = colors,

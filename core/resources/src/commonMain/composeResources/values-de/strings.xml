@@ -7,6 +7,7 @@
   <string name="title_help">Hilfe</string>
   <string name="title_licenses">Open-Source-Lizenzen</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">Log</string>
   <string name="title_settings">Einstellungen</string>
 
   <!-- Dialogs -->
@@ -33,8 +34,9 @@
   <string name="action_issue_description">Fehler melden oder Funktion wünschen</string>
   <string name="action_send_feedback">Feedback senden</string>
   <string name="action_show_logcat">Logcat anzeigen</string>
+  <string name="action_show_log">Log anzeigen</string>
   <string name="action_reload">Neu laden</string>
-  <string name="action_copy_to_clipboard">In die Zwischenablage kopieren</string>
+  <string name="action_copy_to_clipboard">Kopieren</string>
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy verwaltet Lebensmittel und Haushalt auf deinem eigenen Grocy-Server: %1$s</string>
@@ -140,19 +142,12 @@
 
   <!-- Settings -->
   <string name="settings_general">Allgemein</string>
-  <string name="settings_general_description">Wie die App aussieht und spricht</string>
   <string name="settings_server">Server</string>
-  <string name="settings_server_description">Dein Grocy-Server und deine Anmeldung</string>
   <string name="settings_user">Benutzereinstellungen</string>
-  <string name="settings_user_description">Deine Vorlieben, gespeichert auf dem Server</string>
   <string name="settings_network">Netzwerk</string>
-  <string name="settings_network_description">Wie die App deinen Server erreicht</string>
   <string name="settings_behavior">Verhalten</string>
-  <string name="settings_behavior_description">Wie die App bei der Arbeit reagiert</string>
   <string name="settings_scanner">Scanner</string>
-  <string name="settings_scanner_description">Wie Barcodes gescannt werden</string>
   <string name="settings_notifications">Benachrichtigungen</string>
-  <string name="settings_notifications_description">Erinnerungen an Bestand und Hausarbeiten</string>
   <string name="settings_backup">Sichern und wiederherstellen</string>
   <string name="settings_backup_description">Speichere deine Einstellungen in einer Datei oder stelle sie wieder her</string>
   <string name="settings_reset">Alles zurücksetzen</string>

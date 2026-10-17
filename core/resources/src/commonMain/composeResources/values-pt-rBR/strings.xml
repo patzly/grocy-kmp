@@ -7,6 +7,7 @@
   <string name="title_help">Ajuda</string>
   <string name="title_licenses">Licenças de código aberto</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">Registro</string>
   <string name="title_settings">Configurações</string>
 
   <!-- Dialogs -->
@@ -33,8 +34,9 @@
   <string name="action_issue_description">Relate bugs ou peça um recurso</string>
   <string name="action_send_feedback">Enviar feedback</string>
   <string name="action_show_logcat">Mostrar Logcat</string>
+  <string name="action_show_log">Mostrar registro</string>
   <string name="action_reload">Recarregar</string>
-  <string name="action_copy_to_clipboard">Copiar para a área de transferência</string>
+  <string name="action_copy_to_clipboard">Copiar</string>
 
   <!-- Messages -->
   <string name="msg_recommend">O Grocy organiza as compras e a casa no seu próprio servidor Grocy: %1$s</string>
@@ -140,19 +142,12 @@
 
   <!-- Settings -->
   <string name="settings_general">Geral</string>
-  <string name="settings_general_description">Aparência e idioma do app</string>
   <string name="settings_server">Servidor</string>
-  <string name="settings_server_description">Seu servidor Grocy e seu login</string>
   <string name="settings_user">Configurações de usuário</string>
-  <string name="settings_user_description">Suas preferências salvas no servidor</string>
   <string name="settings_network">Rede</string>
-  <string name="settings_network_description">Como o app acessa seu servidor</string>
   <string name="settings_behavior">Comportamento</string>
-  <string name="settings_behavior_description">Como o app reage enquanto você trabalha</string>
   <string name="settings_scanner">Scanner</string>
-  <string name="settings_scanner_description">Como os códigos de barras são lidos</string>
   <string name="settings_notifications">Notificações</string>
-  <string name="settings_notifications_description">Lembretes sobre seu estoque e suas tarefas domésticas</string>
   <string name="settings_backup">Backup e restauração</string>
   <string name="settings_backup_description">Salve suas configurações em um arquivo ou restaure-as</string>
   <string name="settings_reset">Redefinir tudo</string>

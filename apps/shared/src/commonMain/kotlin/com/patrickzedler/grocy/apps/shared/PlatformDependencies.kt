@@ -20,8 +20,7 @@ interface PlatformDependencies {
     val settingsStore: SettingsStore
     val appLanguageStore: AppLanguageStore
 
-    /** Null where the platform has no log to show (the web app). */
-    val logReader: LogReader?
+    val logReader: LogReader
 
     /** Null where no unlock app exists, which hides everything related to it. */
     val unlockChecker: UnlockChecker?

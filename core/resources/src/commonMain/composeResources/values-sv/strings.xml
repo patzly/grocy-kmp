@@ -7,6 +7,7 @@
   <string name="title_help">Hjälp</string>
   <string name="title_licenses">Licenser för öppen källkod</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">Logg</string>
   <string name="title_settings">Inställningar</string>
 
   <!-- Dialogs -->
@@ -33,8 +34,9 @@
   <string name="action_issue_description">Rapportera buggar eller önska en funktion</string>
   <string name="action_send_feedback">Skicka feedback</string>
   <string name="action_show_logcat">Visa logcat</string>
+  <string name="action_show_log">Visa logg</string>
   <string name="action_reload">Ladda om</string>
-  <string name="action_copy_to_clipboard">Kopiera till urklipp</string>
+  <string name="action_copy_to_clipboard">Kopiera</string>
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy håller koll på matvaror och hushåll på din egen Grocy-server: %1$s</string>
@@ -140,19 +142,12 @@
 
   <!-- Settings -->
   <string name="settings_general">Allmänt</string>
-  <string name="settings_general_description">Hur appen ser ut och talar</string>
   <string name="settings_server">Server</string>
-  <string name="settings_server_description">Din Grocy-server och inloggning</string>
   <string name="settings_user">Användarinställningar</string>
-  <string name="settings_user_description">Dina preferenser, sparade på servern</string>
   <string name="settings_network">Nätverk</string>
-  <string name="settings_network_description">Hur appen når din server</string>
   <string name="settings_behavior">Beteende</string>
-  <string name="settings_behavior_description">Hur appen reagerar medan du arbetar</string>
   <string name="settings_scanner">Skanner</string>
-  <string name="settings_scanner_description">Hur streckkoder skannas</string>
   <string name="settings_notifications">Aviseringar</string>
-  <string name="settings_notifications_description">Påminnelser om ditt lager och dina sysslor</string>
   <string name="settings_backup">Säkerhetskopiering och återställning</string>
   <string name="settings_backup_description">Spara dina inställningar i en fil eller återställ dem</string>
   <string name="settings_reset">Nollställ allt</string>

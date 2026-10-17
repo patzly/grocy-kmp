@@ -8,6 +8,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -22,13 +23,11 @@ class UnlockRepositoryTest {
         val repository = UnlockRepository(
             unlockChecker = null,
             settingsStore = settingsStore,
+            scope = backgroundScope,
             checkDispatcher = UnconfinedTestDispatcher(testScheduler),
         )
 
-        repository.unlockState.test {
-            assertNull(awaitItem())
-            awaitComplete()
-        }
+        assertNull(repository.unlockState.value)
     }
 
     @Test
@@ -80,6 +79,15 @@ class UnlockRepositoryTest {
     private fun TestScope.repository() = UnlockRepository(
         unlockChecker = checker,
         settingsStore = settingsStore,
+        // Unconfined, so the state is read right away like at app start
+        scope = backgroundScope + UnconfinedTestDispatcher(testScheduler),
         checkDispatcher = UnconfinedTestDispatcher(testScheduler),
     )
+
+    @Test
+    fun stateIsReadBeforeAnyScreenAsksForIt() = runTest {
+        checker.keyInstalled = true
+
+        assertEquals(true, repository().unlockState.value?.isKeyInstalled)
+    }
 }

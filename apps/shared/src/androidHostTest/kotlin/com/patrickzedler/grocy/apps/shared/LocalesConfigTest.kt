@@ -4,6 +4,7 @@ import com.patrickzedler.grocy.core.model.AppLanguages
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 /** The language lists of the app, Android's system settings and the translations must match. */
 class LocalesConfigTest {
@@ -22,6 +23,19 @@ class LocalesConfigTest {
             .toList()
 
         assertEquals(AppLanguages.sorted(), configTags.sorted())
+    }
+
+    @Test
+    fun phoneAppsDeclareTheLocalesConfig() {
+        // The manifest merger rejects android:localeConfig from libraries like this module
+        listOf("android-foss", "android-play").forEach { app ->
+            val manifest = File("../$app/src/main/AndroidManifest.xml").readText()
+
+            assertTrue(
+                """android:localeConfig="@xml/locales_config"""" in manifest,
+                "$app must declare the locales config for the system language settings",
+            )
+        }
     }
 
     @Test

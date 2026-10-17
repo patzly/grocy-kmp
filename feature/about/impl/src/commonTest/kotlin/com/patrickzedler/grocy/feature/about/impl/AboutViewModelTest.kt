@@ -15,8 +15,10 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -41,17 +43,15 @@ class AboutViewModelTest {
         Dispatchers.resetMain()
     }
 
-    /** Creates the ViewModel and keeps its state collected, as the screen does. */
+    /** Like at app start, the unlock state is read before the screen exists. */
     private fun TestScope.viewModel(hasUnlockApp: Boolean = true): AboutViewModel {
         val repository = UnlockRepository(
             unlockChecker = checker.takeIf { hasUnlockApp },
             settingsStore = settingsStore,
-            checkDispatcher = dispatcher,
+            scope = backgroundScope + UnconfinedTestDispatcher(testScheduler),
+            checkDispatcher = UnconfinedTestDispatcher(testScheduler),
         )
-        return AboutViewModel(repository, updateRepository).also { viewModel ->
-            backgroundScope.launch { viewModel.unlockState.collect {} }
-            advanceUntilIdle()
-        }
+        return AboutViewModel(repository, updateRepository)
     }
 
     private fun AboutViewModel.longClickKey(times: Int) = repeat(times) { onKeyLongClick() }

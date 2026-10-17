@@ -9,5 +9,6 @@
   <application
     android:name=".PlayApplication"
     android:icon="${appIcon}"
-    android:label="${appLabel}" />
+    android:label="${appLabel}"
+    android:localeConfig="@xml/locales_config" />
 </manifest>

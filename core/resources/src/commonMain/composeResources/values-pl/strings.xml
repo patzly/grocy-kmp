@@ -7,6 +7,7 @@
   <string name="title_help">Pomoc</string>
   <string name="title_licenses">Licencje open source</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">Dziennik</string>
   <string name="title_settings">Ustawienia</string>
 
   <!-- Dialogs -->
@@ -33,8 +34,9 @@
   <string name="action_issue_description">Zgłoś błąd lub zaproponuj funkcję</string>
   <string name="action_send_feedback">Wyślij opinię</string>
   <string name="action_show_logcat">Pokaż logcat</string>
+  <string name="action_show_log">Pokaż dziennik</string>
   <string name="action_reload">Załaduj ponownie</string>
-  <string name="action_copy_to_clipboard">Kopiuj do schowka</string>
+  <string name="action_copy_to_clipboard">Kopiuj</string>
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy zarządza zakupami spożywczymi i domem na Twoim własnym serwerze Grocy: %1$s</string>
@@ -140,19 +142,12 @@
 
   <!-- Settings -->
   <string name="settings_general">Ogólne</string>
-  <string name="settings_general_description">Wygląd i język aplikacji</string>
   <string name="settings_server">Serwer</string>
-  <string name="settings_server_description">Twój serwer Grocy i logowanie</string>
   <string name="settings_user">Ustawienia użytkownika</string>
-  <string name="settings_user_description">Twoje preferencje zapisane na serwerze</string>
   <string name="settings_network">Sieć</string>
-  <string name="settings_network_description">Jak aplikacja łączy się z Twoim serwerem</string>
   <string name="settings_behavior">Zachowanie</string>
-  <string name="settings_behavior_description">Jak aplikacja reaguje podczas pracy</string>
   <string name="settings_scanner">Skaner</string>
-  <string name="settings_scanner_description">Jak skanowane są kody kreskowe</string>
   <string name="settings_notifications">Powiadomienia</string>
-  <string name="settings_notifications_description">Przypomnienia o zapasach i obowiązkach</string>
   <string name="settings_backup">Kopia zapasowa i przywracanie</string>
   <string name="settings_backup_description">Zapisz ustawienia w pliku lub je przywróć</string>
   <string name="settings_reset">Zresetuj wszystko</string>

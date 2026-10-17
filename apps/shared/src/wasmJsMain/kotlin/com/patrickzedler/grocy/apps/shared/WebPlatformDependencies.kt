@@ -4,6 +4,7 @@ import com.patrickzedler.grocy.core.data.credentials.CredentialStore
 import com.patrickzedler.grocy.core.data.credentials.WebCredentialStore
 import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.language.WebAppLanguageStore
+import com.patrickzedler.grocy.core.data.log.BrowserErrorLog
 import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.settings.WebSettingsStore
@@ -26,8 +27,8 @@ class WebPlatformDependencies(
 
     override val appLanguageStore: AppLanguageStore by lazy { WebAppLanguageStore() }
 
-    // Browsers keep their console to themselves
-    override val logReader: LogReader? = null
+    // Created with the app, so it records from the start
+    override val logReader: LogReader = BrowserErrorLog().apply { install() }
 
     override val unlockChecker: UnlockChecker? = null
 

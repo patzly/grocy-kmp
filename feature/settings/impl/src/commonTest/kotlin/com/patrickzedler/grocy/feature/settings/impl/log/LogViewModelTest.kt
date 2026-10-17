@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.settings.impl.log
 
 import com.patrickzedler.grocy.core.data.log.LogReader
+import com.patrickzedler.grocy.core.data.log.LogSource
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -18,9 +19,13 @@ class LogViewModelTest {
     private val dispatcher = StandardTestDispatcher()
     private var reads = 0
     private var log = "E/Grocy: first"
-    private val reader = LogReader {
-        reads++
-        log
+    private val reader = object : LogReader {
+        override val source = LogSource.LOGCAT
+
+        override suspend fun readErrors(): String {
+            reads++
+            return log
+        }
     }
 
     @BeforeTest

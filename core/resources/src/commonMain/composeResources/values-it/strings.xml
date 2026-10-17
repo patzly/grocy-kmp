@@ -7,6 +7,7 @@
   <string name="title_help">Guida</string>
   <string name="title_licenses">Licenze open source</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">Registro</string>
   <string name="title_settings">Impostazioni</string>
 
   <!-- Dialogs -->
@@ -33,8 +34,9 @@
   <string name="action_issue_description">Segnala bug o richiedi una funzione</string>
   <string name="action_send_feedback">Invia feedback</string>
   <string name="action_show_logcat">Mostra Logcat</string>
+  <string name="action_show_log">Mostra registro</string>
   <string name="action_reload">Ricarica</string>
-  <string name="action_copy_to_clipboard">Copia negli appunti</string>
+  <string name="action_copy_to_clipboard">Copia</string>
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy tiene traccia della spesa e della casa sul tuo server Grocy: %1$s</string>
@@ -140,19 +142,12 @@
 
   <!-- Settings -->
   <string name="settings_general">Generali</string>
-  <string name="settings_general_description">Aspetto e lingua dell’app</string>
   <string name="settings_server">Server</string>
-  <string name="settings_server_description">Il tuo server Grocy e il tuo accesso</string>
   <string name="settings_user">Impostazioni utente</string>
-  <string name="settings_user_description">Le tue preferenze salvate sul server</string>
   <string name="settings_network">Rete</string>
-  <string name="settings_network_description">Come l’app raggiunge il tuo server</string>
   <string name="settings_behavior">Comportamento</string>
-  <string name="settings_behavior_description">Come risponde l’app mentre lavori</string>
   <string name="settings_scanner">Scanner</string>
-  <string name="settings_scanner_description">Come vengono scansionati i codici a barre</string>
   <string name="settings_notifications">Notifiche</string>
-  <string name="settings_notifications_description">Promemoria su dispensa e faccende</string>
   <string name="settings_backup">Backup e ripristino</string>
   <string name="settings_backup_description">Salva le impostazioni in un file o ripristinale</string>
   <string name="settings_reset">Ripristina tutto</string>

@@ -52,7 +52,7 @@ fun GrocyApp(
     onContentReady: () -> Unit = {},
 ) {
     // Nothing until the stored appearance is read, the splash or loading screen covers it
-    val appearance = graph.appearance.collectAsStateWithLifecycle(initialValue = null).value
+    val appearance = graph.appearanceRepository.appearance.collectAsStateWithLifecycle().value
         ?: return
 
     GrocyTheme(appearance = appearance) {

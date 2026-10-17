@@ -7,6 +7,7 @@
   <string name="title_help">Abi</string>
   <string name="title_licenses">Avatud lähtekoodi litsentsid</string>
   <string name="title_logcat">Logcat</string>
+  <string name="title_log">Logi</string>
   <string name="title_settings">Seaded</string>
 
   <!-- Dialogs -->
@@ -33,8 +34,9 @@
   <string name="action_issue_description">Teata vigadest või soovi uut funktsiooni</string>
   <string name="action_send_feedback">Saada tagasisidet</string>
   <string name="action_show_logcat">Näita logcati</string>
+  <string name="action_show_log">Näita logi</string>
   <string name="action_reload">Laadi uuesti</string>
-  <string name="action_copy_to_clipboard">Kopeeri lõikelauale</string>
+  <string name="action_copy_to_clipboard">Kopeeri</string>
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy peab arvet toidukaupade ja majapidamise üle sinu enda Grocy serveris: %1$s</string>
@@ -140,19 +142,12 @@
 
   <!-- Settings -->
   <string name="settings_general">Üldine</string>
-  <string name="settings_general_description">Kuidas rakendus välja näeb ja räägib</string>
   <string name="settings_server">Server</string>
-  <string name="settings_server_description">Sinu Grocy server ja sisselogimine</string>
   <string name="settings_user">Kasutajaseaded</string>
-  <string name="settings_user_description">Sinu eelistused, salvestatud serverisse</string>
   <string name="settings_network">Võrk</string>
-  <string name="settings_network_description">Kuidas rakendus sinu serverini jõuab</string>
   <string name="settings_behavior">Käitumine</string>
-  <string name="settings_behavior_description">Kuidas rakendus töö ajal reageerib</string>
   <string name="settings_scanner">Skänner</string>
-  <string name="settings_scanner_description">Kuidas triipkoode skännitakse</string>
   <string name="settings_notifications">Teavitused</string>
-  <string name="settings_notifications_description">Meeldetuletused varude ja majapidamistööde kohta</string>
   <string name="settings_backup">Varundamine ja taastamine</string>
   <string name="settings_backup_description">Salvesta oma seaded faili või taasta need</string>
   <string name="settings_reset">Nulli kõik</string>

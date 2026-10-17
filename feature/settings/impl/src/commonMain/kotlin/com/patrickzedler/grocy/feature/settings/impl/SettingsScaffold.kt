@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
+import com.patrickzedler.grocy.core.data.log.LogSource
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
 import com.patrickzedler.grocy.core.design.component.AppBarIconButton
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
@@ -31,32 +31,28 @@ import com.patrickzedler.grocy.core.model.UnlockState
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_more_options
 import com.patrickzedler.grocy.core.resources.action_send_feedback
+import com.patrickzedler.grocy.core.resources.action_show_log
 import com.patrickzedler.grocy.core.resources.action_show_logcat
 import com.patrickzedler.grocy.core.resources.ic_rounded_more_vert
 import com.patrickzedler.grocy.core.resources.title_about
 import com.patrickzedler.grocy.core.resources.title_help
 import com.patrickzedler.grocy.core.ui.AppDialog
 import com.patrickzedler.grocy.core.ui.AppDialogHost
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /** Unlock state for the feedback dialog of the settings menu. */
 internal class SettingsMenuViewModel(unlockRepository: UnlockRepository) : ViewModel() {
-    val unlockState: StateFlow<UnlockState?> = unlockRepository.unlockState.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-        initialValue = null,
-    )
+    val unlockState: StateFlow<UnlockState?> = unlockRepository.unlockState
 }
 
 /** What the overflow menu of every settings screen leads to. */
 internal class SettingsMenuActions(
     val onAboutClick: () -> Unit,
-    /** Null where there is no log screen (the web app). */
-    val onLogClick: (() -> Unit)?,
+    val onLogClick: () -> Unit,
+    /** Names the log entry: logcat on Android, the app's own log in browsers. */
+    val logSource: LogSource,
 )
 
 /**
@@ -141,10 +137,9 @@ private fun SettingsMenu(
             offset = DpOffset(x = (-8).dp, y = 0.dp),
         ),
     ) {
-        val onLogClick = menuActions.onLogClick
-        val groupCount = if (onLogClick != null) 2 else 1
+        val groupCount = 2
         // With a second group the ripples of the first one only look connected to it like this
-        val firstGroupItemCount = if (onLogClick != null) 4 else 3
+        val firstGroupItemCount = 4
 
         DropdownMenuGroup(shapes = MenuDefaults.groupShape(index = 0, count = groupCount)) {
             SettingsMenuItem(
@@ -176,21 +171,24 @@ private fun SettingsMenu(
             )
         }
 
-        if (onLogClick != null) {
-            Spacer(Modifier.height(MenuDefaults.GroupSpacing))
+        Spacer(Modifier.height(MenuDefaults.GroupSpacing))
 
-            DropdownMenuGroup(shapes = MenuDefaults.groupShape(index = 1, count = groupCount)) {
-                SettingsMenuItem(
-                    text = stringResource(Res.string.action_show_logcat),
-                    // Index and count as the last item of the group, for the ripple shape
-                    index = 1,
-                    count = 2,
-                    onClick = {
-                        showMenu = false
-                        onLogClick()
+        DropdownMenuGroup(shapes = MenuDefaults.groupShape(index = 1, count = groupCount)) {
+            SettingsMenuItem(
+                text = stringResource(
+                    when (menuActions.logSource) {
+                        LogSource.LOGCAT -> Res.string.action_show_logcat
+                        LogSource.BROWSER -> Res.string.action_show_log
                     },
-                )
-            }
+                ),
+                // Index and count as the last item of the group, for the ripple shape
+                index = 1,
+                count = 2,
+                onClick = {
+                    showMenu = false
+                    menuActions.onLogClick()
+                },
+            )
         }
     }
 }
