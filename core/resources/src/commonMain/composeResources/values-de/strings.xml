@@ -207,6 +207,10 @@
   <string name="masterdata_task_categories">Aufgabenkategorien</string>
   <string name="masterdata_userfields">Benutzerfelder</string>
   <string name="masterdata_userentities">Benutzerentitäten</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="one">%1$d Produkt</item>
+    <item quantity="other">%1$d Produkte</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">Benutzerfelder konfigurieren</string>

@@ -207,6 +207,11 @@
   <string name="masterdata_task_categories">Catégories de tâche</string>
   <string name="masterdata_userfields">Attributs personalisés</string>
   <string name="masterdata_userentities">Entités utilisateur</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="one">%1$d produit</item>
+    <item quantity="many">%1$d produits</item>
+    <item quantity="other">%1$d produits</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">Configurer les attributs personnalisés</string>

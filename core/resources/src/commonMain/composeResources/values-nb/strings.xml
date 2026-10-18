@@ -207,6 +207,10 @@
   <string name="masterdata_task_categories">Oppgavekategorier</string>
   <string name="masterdata_userfields">Kolonner</string>
   <string name="masterdata_userentities">Egendefinerte linjer</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="one">%1$d produkt</item>
+    <item quantity="other">%1$d produkter</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">Sett opp egendefinerte kolonner</string>

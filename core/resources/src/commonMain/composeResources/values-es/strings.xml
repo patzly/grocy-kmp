@@ -207,6 +207,11 @@
   <string name="masterdata_task_categories">Categorías de tareas</string>
   <string name="masterdata_userfields">Campos personalizados</string>
   <string name="masterdata_userentities">Entidades personalizadas</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="one">%1$d producto</item>
+    <item quantity="many">%1$d productos</item>
+    <item quantity="other">%1$d productos</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">Configurar campos personalizados</string>

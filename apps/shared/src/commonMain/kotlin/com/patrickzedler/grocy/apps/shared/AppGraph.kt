@@ -17,6 +17,7 @@ import com.patrickzedler.grocy.feature.about.impl.AboutDependencies
 import com.patrickzedler.grocy.feature.login.impl.LoginDependencies
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataDependencies
 import com.patrickzedler.grocy.feature.settings.impl.SettingsDependencies
+import com.patrickzedler.grocy.feature.start.impl.StartDependencies
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -100,6 +101,11 @@ class AppGraph(
             get() = this@AppGraph.unlockRepository
         override val logReader: LogReader
             get() = platform.logReader
+    }
+
+    internal val startDependencies: StartDependencies = object : StartDependencies {
+        override val masterDataRepository: MasterDataRepository
+            get() = this@AppGraph.masterDataRepository
     }
 
     internal val masterDataDependencies: MasterDataDependencies = object : MasterDataDependencies {

@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.GrocyTheme
-import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
+import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
@@ -235,7 +235,7 @@ private fun FeedbackItem(
         colors = colors,
         modifier = modifier.fillMaxWidth(),
         leadingContent = {
-            LeadingContentWrapper {
+            LeadingTrailingContentWrapper {
                 Icon(
                     painter = painterResource(icon),
                     contentDescription = null,

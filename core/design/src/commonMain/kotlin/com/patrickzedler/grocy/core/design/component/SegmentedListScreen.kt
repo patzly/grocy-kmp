@@ -33,6 +33,9 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.minimumInteractiveComponentSize
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -46,6 +49,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.patrickzedler.grocy.core.design.StatusBarColorEffect
+import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.resources.action_reload
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * The standard screen: surfaceContainer background, a large top app bar that turns
@@ -57,9 +63,11 @@ import com.patrickzedler.grocy.core.design.StatusBarColorEffect
  * the list scrolls down; the list ends above it. It must apply the given modifier itself: the
  * scroll behavior measures how far to move it within the screen high box it is placed in.
  * [itemSpacing] is the space between list items, the segmented gap for long lists whose items
- * are one group each.
+ * are one group each. With [onRefresh] the list can be pulled down to download its data again
+ * (Material's contained loading indicator) or through "Reload" in the app bar's overflow menu,
+ * which keyboards and screen readers reach.
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SegmentedListScreen(
     title: String,
@@ -70,6 +78,8 @@ fun SegmentedListScreen(
     snackbarHostState: SnackbarHostState? = null,
     floatingToolbar: (@Composable (FloatingToolbarScrollBehavior, Modifier) -> Unit)? = null,
     itemSpacing: Dp = SegmentedListDefaults.GroupSpacing,
+    isRefreshing: Boolean = false,
+    onRefresh: (() -> Unit)? = null,
     content: LazyListScope.() -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -114,7 +124,14 @@ fun SegmentedListScreen(
                     )
                 },
                 navigationIcon = navigationIcon,
-                actions = actions,
+                actions = {
+                    actions()
+                    // Pulling is a gesture; the menu refreshes for keyboards and screen readers
+                    if (onRefresh != null) {
+                        val reload = stringResource(Res.string.action_reload)
+                        AppBarOverflowMenu(listOf(AppBarMenuItem(reload, onRefresh)))
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = containerColor,
                     scrolledContainerColor = scrolledContainerColor,
@@ -134,36 +151,54 @@ fun SegmentedListScreen(
             .exclude(WindowInsets.keyboard)
             .asPaddingValues()
         val topPadding = padding.calculateTopPadding() + SegmentedListDefaults.GroupSpacing
-        Box(Modifier.fillMaxSize()) {
-            if (floatingToolbar != null) {
-                // First for the accessibility order, so its actions are reached without the list.
-                // A direct child of this box: hiding moves it below the screen's bottom edge.
-                floatingToolbar(
-                    toolbarScrollBehavior,
-                    Modifier
-                        .align(Alignment.BottomCenter)
-                        .windowInsetsPadding(WindowInsets.navigationBars)
-                        .offset(y = -FloatingToolbarDefaults.ScreenOffset)
-                        .zIndex(1f),
+        val pullToRefreshState = rememberPullToRefreshState()
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = { onRefresh?.invoke() },
+            modifier = Modifier.fillMaxSize(),
+            state = pullToRefreshState,
+            enabled = onRefresh != null,
+            indicator = {
+                PullToRefreshDefaults.LoadingIndicator(
+                    state = pullToRefreshState,
+                    isRefreshing = isRefreshing,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = padding.calculateTopPadding()),
+                )
+            },
+        ) {
+            Box(Modifier.fillMaxSize()) {
+                if (floatingToolbar != null) {
+                    // First for the accessibility order, so its actions are reached without the
+                    // list. A direct child of this box: hiding moves it below the bottom edge.
+                    floatingToolbar(
+                        toolbarScrollBehavior,
+                        Modifier
+                            .align(Alignment.BottomCenter)
+                            .windowInsetsPadding(WindowInsets.navigationBars)
+                            .offset(y = -FloatingToolbarDefaults.ScreenOffset)
+                            .zIndex(1f),
+                    )
+                }
+                InsetLazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        // Before consuming the scaffold padding: the list ends above the keyboard
+                        .windowInsetsPadding(WindowInsets.keyboard)
+                        .consumeWindowInsets(padding),
+                    state = listState,
+                    contentPadding = remember(topPadding, bottomInsets, toolbarSpace) {
+                        ScreenContentPadding(
+                            top = topPadding,
+                            bottomInsets = bottomInsets,
+                            spacing = SegmentedListDefaults.GroupSpacing + toolbarSpace,
+                        )
+                    },
+                    verticalArrangement = Arrangement.spacedBy(itemSpacing),
+                    content = content,
                 )
             }
-            InsetLazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    // Before consuming the scaffold padding, so the list ends above the keyboard
-                    .windowInsetsPadding(WindowInsets.keyboard)
-                    .consumeWindowInsets(padding),
-                state = listState,
-                contentPadding = remember(topPadding, bottomInsets, toolbarSpace) {
-                    ScreenContentPadding(
-                        top = topPadding,
-                        bottomInsets = bottomInsets,
-                        spacing = SegmentedListDefaults.GroupSpacing + toolbarSpace,
-                    )
-                },
-                verticalArrangement = Arrangement.spacedBy(itemSpacing),
-                content = content,
-            )
         }
     }
 }

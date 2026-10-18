@@ -106,7 +106,7 @@ private fun GrocyNavigation(
 
     GrocyNavDisplay(navigator) {
         loginEntries(graph.loginDependencies, navigator)
-        startEntry(navigator)
+        startEntry(graph.startDependencies, navigator)
         aboutEntries(graph.aboutDependencies, navigator)
         settingsEntries(graph.settingsDependencies, navigator)
         masterDataEntries(graph.masterDataDependencies, navigator)

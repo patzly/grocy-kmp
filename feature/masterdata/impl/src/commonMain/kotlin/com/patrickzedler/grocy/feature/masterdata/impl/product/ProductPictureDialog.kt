@@ -34,7 +34,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.data.masterdata.PictureChange
-import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
+import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
@@ -235,7 +235,7 @@ private fun ActionItem(
         onClick = onClick,
         shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         colors = SegmentedListDefaults.colors(),
-        leadingContent = { LeadingContentWrapper { icon() } },
+        leadingContent = { LeadingTrailingContentWrapper { icon() } },
     ) {
         Text(text)
     }

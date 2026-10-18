@@ -23,7 +23,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.GrocyTheme
-import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
+import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
@@ -163,7 +163,7 @@ private fun LanguageItem(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         leadingContent = {
-            LeadingContentWrapper {
+            LeadingTrailingContentWrapper {
                 // The item handles the click, the radio button only shows the choice
                 RadioButton(selected = selected, onClick = null)
             }

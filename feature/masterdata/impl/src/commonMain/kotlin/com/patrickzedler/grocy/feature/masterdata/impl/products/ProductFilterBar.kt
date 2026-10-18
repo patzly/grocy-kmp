@@ -17,7 +17,6 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.InputChip
-import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
@@ -118,7 +117,6 @@ internal fun ProductFilterBar(
                 onFilterChange { it.copy(showDisabled = !it.showDisabled) }
             },
             label = { Text(stringResource(Res.string.products_filter_show_disabled)) },
-            shapes = FilterChipDefaults.shapes(),
             leadingIcon = if (filter.showDisabled) {
                 { ChipIcon(Res.drawable.ic_rounded_check) }
             } else {
@@ -134,7 +132,6 @@ internal fun ProductFilterBar(
                     onClearClick()
                 },
                 label = { Text(stringResource(Res.string.products_filter_clear)) },
-                shapes = InputChipDefaults.shapes(),
                 trailingIcon = { ChipIcon(Res.drawable.ic_rounded_close) },
             )
         }
@@ -171,7 +168,6 @@ private fun <T> DropdownFilterChip(
                 role = Role.Button
                 if (active) stateDescription = label
             },
-            shapes = FilterChipDefaults.shapes(),
             trailingIcon = { ChipIcon(Res.drawable.ic_rounded_arrow_drop_down) },
         )
         DropdownMenuPopup(expanded = expanded, onDismissRequest = { expanded = false }) {
@@ -238,7 +234,6 @@ private fun SortChipWithMenu(
                 role = Role.Button
                 stateDescription = sortDescription
             },
-            shapes = FilterChipDefaults.shapes(),
             leadingIcon = { ChipIcon(directionIcon) },
             trailingIcon = { ChipIcon(Res.drawable.ic_rounded_arrow_drop_down) },
         )

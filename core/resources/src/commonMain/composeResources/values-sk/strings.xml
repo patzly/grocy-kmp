@@ -207,6 +207,12 @@
   <string name="masterdata_task_categories">Kategórie úloh</string>
   <string name="masterdata_userfields">Používateľské polia</string>
   <string name="masterdata_userentities">Používateľské entity</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="one">%1$d výrobok</item>
+    <item quantity="few">%1$d výrobky</item>
+    <item quantity="many">%1$d výrobku</item>
+    <item quantity="other">%1$d výrobkov</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">Nastaviť používateľské polia</string>

@@ -26,7 +26,7 @@ import com.patrickzedler.grocy.core.data.log.LogSource
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.ConnectedButtonGroup
 import com.patrickzedler.grocy.core.design.component.HueSlider
-import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
+import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
 import com.patrickzedler.grocy.core.design.component.confirm
@@ -291,7 +291,7 @@ private fun ControlItem(
 
 @Composable
 private fun SettingIcon(icon: DrawableResource) {
-    LeadingContentWrapper {
+    LeadingTrailingContentWrapper {
         Icon(painter = painterResource(icon), contentDescription = null)
     }
 }

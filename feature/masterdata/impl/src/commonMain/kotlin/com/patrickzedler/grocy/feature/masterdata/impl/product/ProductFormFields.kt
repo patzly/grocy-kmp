@@ -70,7 +70,7 @@ internal fun TextItem(
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             label = { Text(label) },
-            trailingIcon = suffix?.let { { Text(it) } },
+            suffix = suffix?.let { { Text(it) } },
             supportingText = error?.let { text ->
                 {
                     Text(

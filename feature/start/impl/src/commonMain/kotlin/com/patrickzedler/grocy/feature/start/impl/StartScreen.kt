@@ -5,15 +5,19 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.SegmentedListItem
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.AppBarIconButton
-import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
+import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.confirm
@@ -26,12 +30,45 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_settings
 import com.patrickzedler.grocy.core.resources.masterdata_title
 import com.patrickzedler.grocy.core.resources.title_about
 import com.patrickzedler.grocy.core.resources.title_settings
+import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /** The first screen after login; grows with the app's sections, master data so far. */
 @Composable
 internal fun StartScreen(
+    viewModel: StartViewModel,
+    onMasterDataClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onAboutClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val refresh by viewModel.refresh.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    RefreshErrorEffect(
+        error = refresh.error,
+        hasData = true,
+        snackbarHostState = snackbarHostState,
+        onErrorShown = viewModel::onErrorShown,
+    )
+
+    StartContent(
+        isRefreshing = refresh.isRefreshing,
+        snackbarHostState = snackbarHostState,
+        onRefresh = viewModel::refresh,
+        onMasterDataClick = onMasterDataClick,
+        onSettingsClick = onSettingsClick,
+        onAboutClick = onAboutClick,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun StartContent(
+    isRefreshing: Boolean,
+    snackbarHostState: SnackbarHostState,
+    onRefresh: () -> Unit,
     onMasterDataClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onAboutClick: () -> Unit,
@@ -40,6 +77,9 @@ internal fun StartScreen(
     SegmentedListScreen(
         title = stringResource(Res.string.app_name),
         modifier = modifier,
+        snackbarHostState = snackbarHostState,
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
         actions = {
             AppBarIconButton(
                 painter = painterResource(Res.drawable.ic_rounded_settings),
@@ -80,7 +120,7 @@ private fun SectionItem(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         leadingContent = {
-            LeadingContentWrapper {
+            LeadingTrailingContentWrapper {
                 Icon(painterResource(Res.drawable.ic_rounded_database), contentDescription = null)
             }
         },
@@ -93,6 +133,13 @@ private fun SectionItem(
 @Composable
 private fun StartScreenPreview() {
     GrocyTheme {
-        StartScreen(onMasterDataClick = {}, onSettingsClick = {}, onAboutClick = {})
+        StartContent(
+            isRefreshing = false,
+            snackbarHostState = remember { SnackbarHostState() },
+            onRefresh = {},
+            onMasterDataClick = {},
+            onSettingsClick = {},
+            onAboutClick = {},
+        )
     }
 }

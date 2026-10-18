@@ -207,6 +207,11 @@
   <string name="masterdata_task_categories">Categories de tasca</string>
   <string name="masterdata_userfields">Camp d’usuari</string>
   <string name="masterdata_userentities">Entitat d’usuari</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="one">%1$d producte</item>
+    <item quantity="many">%1$d productes</item>
+    <item quantity="other">%1$d productes</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">Configurar camps d’usuari</string>

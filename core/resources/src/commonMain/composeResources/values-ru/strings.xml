@@ -207,6 +207,12 @@
   <string name="masterdata_task_categories">Категории задач</string>
   <string name="masterdata_userfields">Поля пользователя</string>
   <string name="masterdata_userentities">Пользовательские сущности</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="one">%1$d продукт</item>
+    <item quantity="few">%1$d продукта</item>
+    <item quantity="many">%1$d продуктов</item>
+    <item quantity="other">%1$d продукта</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">Настроить поля пользователя</string>

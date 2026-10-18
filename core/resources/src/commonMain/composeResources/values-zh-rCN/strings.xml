@@ -207,6 +207,9 @@
   <string name="masterdata_task_categories">任务分类</string>
   <string name="masterdata_userfields">自定义字段</string>
   <string name="masterdata_userentities">自定义项目</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="other">%1$d 个产品</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">配置自定义字段</string>

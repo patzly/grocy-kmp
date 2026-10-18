@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.ConnectedButtonGroup
-import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
+import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.RoundedSecureTextField
 import com.patrickzedler.grocy.core.design.component.RoundedTextField
@@ -366,7 +366,7 @@ private fun LinkItem(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         leadingContent = {
-            LeadingContentWrapper {
+            LeadingTrailingContentWrapper {
                 Icon(painter = painterResource(icon), contentDescription = null)
             }
         },

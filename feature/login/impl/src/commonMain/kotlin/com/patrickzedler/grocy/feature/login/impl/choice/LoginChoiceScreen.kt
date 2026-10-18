@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.InsetLazyColumn
-import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
+import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.insetItem
@@ -186,12 +186,16 @@ private fun ChoiceItem(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         leadingContent = {
-            LeadingContentWrapper {
+            LeadingTrailingContentWrapper {
                 Icon(painter = painterResource(icon), contentDescription = null)
             }
         },
         trailingContent = if (isLoading) {
-            { LoadingIndicator(modifier = Modifier.size(40.dp)) }
+            {
+                LeadingTrailingContentWrapper {
+                    LoadingIndicator(modifier = Modifier.size(40.dp))
+                }
+            }
         } else {
             null
         },

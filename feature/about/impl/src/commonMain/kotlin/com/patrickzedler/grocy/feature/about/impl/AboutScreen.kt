@@ -32,7 +32,7 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.AppBarIconButton
-import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
+import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
@@ -430,7 +430,7 @@ private fun AboutItem(
         overlineContent = overline?.let { { Text(it) } },
         supportingContent = supporting?.let { { Text(it) } },
         leadingContent = { AboutItemIcon(icon) },
-        trailingContent = trailing,
+        trailingContent = trailing?.let { { LeadingTrailingContentWrapper { it() } } },
         onLongClick = onLongClick,
         content = { Text(title) },
     )
@@ -438,7 +438,7 @@ private fun AboutItem(
 
 @Composable
 private fun AboutItemIcon(icon: DrawableResource) {
-    LeadingContentWrapper {
+    LeadingTrailingContentWrapper {
         Icon(
             painter = painterResource(icon),
             contentDescription = null,

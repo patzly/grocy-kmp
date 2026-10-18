@@ -207,6 +207,10 @@
   <string name="masterdata_task_categories">Feladat kategóriák</string>
   <string name="masterdata_userfields">Egyéni mezők</string>
   <string name="masterdata_userentities">Egyéni objektumok</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="one">%1$d termék</item>
+    <item quantity="other">%1$d termék</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">Egyéni mezők testreszabása</string>

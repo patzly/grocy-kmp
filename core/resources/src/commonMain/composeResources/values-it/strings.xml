@@ -207,6 +207,11 @@
   <string name="masterdata_task_categories">Categorie compito</string>
   <string name="masterdata_userfields">Campi definiti dall’utente</string>
   <string name="masterdata_userentities">Entità utente</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="one">%1$d prodotto</item>
+    <item quantity="many">%1$d prodotti</item>
+    <item quantity="other">%1$d prodotti</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">Configura campi utente</string>

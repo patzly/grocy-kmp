@@ -207,6 +207,9 @@
   <string name="masterdata_task_categories">任務分類</string>
   <string name="masterdata_userfields">自定義欄位</string>
   <string name="masterdata_userentities">自定義實體</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="other">%1$d 個物品</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">設定自定義欄位</string>

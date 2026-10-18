@@ -9,8 +9,8 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
-import com.patrickzedler.grocy.core.data.util.MINIMUM_LOADING_DURATION
-import com.patrickzedler.grocy.core.data.util.withMinimumDuration
+import com.patrickzedler.grocy.core.data.util.RefreshController
+import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
@@ -19,22 +19,18 @@ import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
-import com.patrickzedler.grocy.core.network.GrocyApiException
-import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 /** What the product list shows; built from the database, never waits for the server. */
 internal data class ProductsUiState(
@@ -47,13 +43,6 @@ internal data class ProductsUiState(
     val hasProducts: Boolean,
     val showLocation: Boolean,
     val showStore: Boolean,
-)
-
-internal enum class RefreshError { OFFLINE, FAILED }
-
-internal data class RefreshState(
-    val isRefreshing: Boolean = false,
-    val error: RefreshError? = null,
 )
 
 /**
@@ -75,8 +64,8 @@ internal class ProductsViewModel(
     private val filter = MutableStateFlow(ProductFilter())
     private val sort = MutableStateFlow(ProductSort())
 
-    private val refreshState = MutableStateFlow(RefreshState())
-    val refresh: StateFlow<RefreshState> = refreshState.asStateFlow()
+    private val refreshController = RefreshController(viewModelScope) { repository.refresh() }
+    val refresh: StateFlow<RefreshState> = refreshController.state
 
     private val data = combine(
         repository.products,
@@ -148,27 +137,9 @@ internal class ProductsViewModel(
         refresh()
     }
 
-    fun refresh() {
-        if (refreshState.value.isRefreshing) return
-        refreshState.value = RefreshState(isRefreshing = true)
-        viewModelScope.launch {
-            val error = try {
-                withMinimumDuration(MINIMUM_LOADING_DURATION) { repository.refresh() }
-                null
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: GrocyApiException.Unreachable) {
-                RefreshError.OFFLINE
-            } catch (e: GrocyApiException) {
-                RefreshError.FAILED
-            }
-            refreshState.value = RefreshState(error = error)
-        }
-    }
+    fun refresh() = refreshController.refresh()
 
-    fun onErrorShown() {
-        refreshState.update { it.copy(error = null) }
-    }
+    fun onErrorShown() = refreshController.onErrorShown()
 
     fun setFilter(update: (ProductFilter) -> ProductFilter) {
         filter.update(update)

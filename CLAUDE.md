@@ -15,12 +15,21 @@ action.
 
 Master data (`feature:masterdata`), built after Grocy's web frontend:
 - `MasterDataScreen` lists the categories of Grocy's "Manage master data" menu in its order and
-  hides the ones whose feature flag is off (`MasterDataCategory.isAvailable`).
+  hides the ones whose feature flag is off (`MasterDataCategory.isAvailable`); Products shows
+  the number of products once it is known (stored products or a finished download).
+- Every list screen (start, master data, products) has pull to refresh through
+  `SegmentedListScreen(isRefreshing, onRefresh)`: Material's contained loading indicator, and
+  "Reload" in the app bar's overflow menu (`AppBarOverflowMenu`, narrow three dots button) for
+  keyboards and screen readers. ViewModels run downloads through
+  `RefreshController` (`core:data`: one at a time, offline/failed errors, `loadedOnce`);
+  `RefreshErrorEffect` (`core:ui`) shows a failed download as snackbar.
 - `ProductsScreen`: one segmented item per product (`itemSpacing = SegmentedGap`), a filter row
   as first item (`ProductFilterBar`, Material 3 chips, one per filter: product group and status
   as dropdown filter chips that are selected and show the value while not "All", "Show
   disabled" as toggle chip, a sort chip, and "Clear filter" as input chip while anything is
-  filtered)
+  filtered; chips use the standard overloads with Material's 8.dp rounded rectangle, not the
+  morphing `shapes` overloads whose tokens are full round). Back closes an open search first
+  (`NavigationBackHandler`, also the browser's back) and stays on the list
   and a floating toolbar (Add as FAB, Search, Configure userfields, Presets for new products,
   Scroll to top). Filtering, sorting and the fuzzy search are the pure `buildProductList`:
   in stock means `amount_aggregated > 0` of an active product, like Grocy's `stock_current`.
@@ -563,7 +572,10 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   `TextDialog`, `FormattedText`, `FloatingToolbarWithFab` + `FloatingToolbarIconButton` for the
   floatingToolbar slot of `SegmentedListScreen`, `SegmentedSwitchItem`,
   `SearchableDropdownField` for every choice of objects: fuzzy search while typing, no free
-  text, optional fields offer "None"). Clicks trigger `haptic.confirm()`. `HapticTooltipBox`
+  text, optional fields offer "None"; the menu opens through its arrow or while typing, a tap
+  on the field or its trailing action (scan) only focuses), units of text fields go in the
+  `suffix` slot of `RoundedTextField`. `SegmentedSwitchItem` is Material's checkable segmented item: while on it takes the selected
+  shape of the segmented defaults and `primaryContainer` (`SegmentedSwitchItemDefaults`). Clicks trigger `haptic.confirm()`. `HapticTooltipBox`
   puts its modifier on an outer `Box`, because Material's `TooltipBox` loses parent data such as `align`.
   Tooltips show on long press, mouse hover and keyboard focus, never after a plain tap or click:
   Compose on the web focuses a clicked button, so `TooltipPressTracker` tells a pointer focus

@@ -207,6 +207,10 @@
   <string name="masterdata_task_categories">Taakcategorieën</string>
   <string name="masterdata_userfields">Gebruikersvelden</string>
   <string name="masterdata_userentities">Gebruikersentiteit</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="one">%1$d product</item>
+    <item quantity="other">%1$d producten</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">Configureer gebruikersvelden</string>

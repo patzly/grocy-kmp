@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.feature.masterdata.impl.products
 
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.snapshots.Snapshot
+import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest

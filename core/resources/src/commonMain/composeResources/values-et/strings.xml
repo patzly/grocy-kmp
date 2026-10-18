@@ -207,6 +207,10 @@
   <string name="masterdata_task_categories">Ülesannete kategooriad</string>
   <string name="masterdata_userfields">Kasutajaväljad</string>
   <string name="masterdata_userentities">Kasutajaolemid</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="one">%1$d toode</item>
+    <item quantity="other">%1$d toodet</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">Kasutajaväljade seaded</string>

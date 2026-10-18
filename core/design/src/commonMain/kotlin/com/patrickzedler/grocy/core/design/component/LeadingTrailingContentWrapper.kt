@@ -7,11 +7,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 /**
- * Keeps the leading content of a SegmentedListItem from sticking to the top edge when the item
- * switches to top alignment for multiple lines.
+ * Keeps the leading or trailing content of a SegmentedListItem (icon, switch, picture) from
+ * sticking to the top edge when the item switches to top alignment for multiple lines.
  */
 @Composable
-fun LeadingContentWrapper(
+fun LeadingTrailingContentWrapper(
     content: @Composable () -> Unit,
 ) {
     Box(Modifier.padding(vertical = 11.dp)) {

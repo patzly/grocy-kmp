@@ -207,6 +207,10 @@
   <string name="masterdata_task_categories">Görev kategorileri</string>
   <string name="masterdata_userfields">Kullanıcı alanları</string>
   <string name="masterdata_userentities">Kullanici</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="one">%1$d ürün</item>
+    <item quantity="other">%1$d ürün</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">Kullanıcı alanlarını ayarla</string>

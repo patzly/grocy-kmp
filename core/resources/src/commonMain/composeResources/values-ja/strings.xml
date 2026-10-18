@@ -207,6 +207,9 @@
   <string name="masterdata_task_categories">タスク分類</string>
   <string name="masterdata_userfields">ユーザーフィールド</string>
   <string name="masterdata_userentities">ユーザーエンティティ</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="other">%1$d 件の物品</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">ユーザーフィールドを設定</string>

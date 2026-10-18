@@ -42,9 +42,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
+import com.patrickzedler.grocy.core.data.util.RefreshError
+import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
-import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
+import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.RoundedTextField
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
@@ -76,8 +81,8 @@ import com.patrickzedler.grocy.core.resources.products_empty_filtered
 import com.patrickzedler.grocy.core.resources.products_has_picture
 import com.patrickzedler.grocy.core.resources.products_min_stock_amount
 import com.patrickzedler.grocy.core.resources.products_presets
+import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -94,21 +99,18 @@ internal fun ProductsScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     // With saved data a failed download is only a note, without it the list explains itself
-    LaunchedEffect(refresh.error, state?.hasProducts) {
-        val error = refresh.error ?: return@LaunchedEffect
-        if (state?.hasProducts == true) {
-            snackbarHostState.showSnackbar(
-                getString(
-                    if (error == RefreshError.OFFLINE) {
-                        Res.string.data_offline
-                    } else {
-                        Res.string.data_load_failed
-                    },
-                ),
-            )
-            viewModel.onErrorShown()
-        }
-    }
+    RefreshErrorEffect(
+        error = refresh.error,
+        hasData = state?.hasProducts == true,
+        snackbarHostState = snackbarHostState,
+        onErrorShown = viewModel::onErrorShown,
+    )
+    // Back closes the search first and stays on the list
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = viewModel.isSearchVisible,
+        onBackCompleted = viewModel::hideSearch,
+    )
 
     ProductsContent(
         state = state,
@@ -156,6 +158,9 @@ private fun ProductsContent(
         navigationIcon = { NavigateBackButton(onClick = onBackClick) },
         listState = listState,
         snackbarHostState = snackbarHostState,
+        // The first download shows its own indicator in the empty list
+        isRefreshing = refresh.isRefreshing && state?.hasProducts == true,
+        onRefresh = onRetryClick,
         // Every product is an item of one large group, the group spacing follows the filters
         itemSpacing = ListItemDefaults.SegmentedGap,
         floatingToolbar = { scrollBehavior, toolbarModifier ->
@@ -367,11 +372,13 @@ private fun ProductItem(
         },
         trailingContent = if (item.hasPicture) {
             {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_rounded_image),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                LeadingTrailingContentWrapper {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_rounded_image),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
         } else {
             null

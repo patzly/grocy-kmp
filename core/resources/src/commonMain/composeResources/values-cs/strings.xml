@@ -207,6 +207,12 @@
   <string name="masterdata_task_categories">Kategorie úkolů</string>
   <string name="masterdata_userfields">Vlastní sloupce tabulky</string>
   <string name="masterdata_userentities">Uživatelské tabulky</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="one">%1$d produkt</item>
+    <item quantity="few">%1$d produkty</item>
+    <item quantity="many">%1$d produktu</item>
+    <item quantity="other">%1$d produktů</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">Upravit sloupce tabulky</string>

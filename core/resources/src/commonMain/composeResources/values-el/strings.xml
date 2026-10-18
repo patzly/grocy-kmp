@@ -207,6 +207,10 @@
   <string name="masterdata_task_categories">Κατηγορίες εργασιών</string>
   <string name="masterdata_userfields">Πεδία χρηστών</string>
   <string name="masterdata_userentities">Χρήστες</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="one">%1$d προϊόν</item>
+    <item quantity="other">%1$d προϊόντα</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">Διαμόρφωση πεδίων χρήστη</string>

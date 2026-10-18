@@ -207,6 +207,12 @@
   <string name="masterdata_task_categories">Категорії завдань</string>
   <string name="masterdata_userfields">Користувацькі поля</string>
   <string name="masterdata_userentities">Користувацькі сутності</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="one">%1$d продукт</item>
+    <item quantity="few">%1$d продукти</item>
+    <item quantity="many">%1$d продуктів</item>
+    <item quantity="other">%1$d продукту</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">Налаштувати користувацькі поля</string>

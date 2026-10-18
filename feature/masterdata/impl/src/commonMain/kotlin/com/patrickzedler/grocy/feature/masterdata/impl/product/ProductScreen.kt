@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItemDefaults
@@ -42,7 +41,7 @@ import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
-import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
+import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.RoundedTextField
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
@@ -1031,7 +1030,6 @@ private fun UserfieldItem(
                             }
                         },
                         label = { Text(option) },
-                        shapes = FilterChipDefaults.shapes(),
                     )
                 }
             }
@@ -1101,14 +1099,18 @@ private fun NavigationItem(
         shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         colors = SegmentedListDefaults.colors(),
         enabled = enabled,
-        leadingContent = { LeadingContentWrapper { Icon(iconPainter, contentDescription = null) } },
+        leadingContent = {
+            LeadingTrailingContentWrapper { Icon(iconPainter, contentDescription = null) }
+        },
         supportingContent = supporting?.let { { Text(it) } },
         trailingContent = {
-            Icon(
-                painter = painterResource(Res.drawable.ic_rounded_arrow_right),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            LeadingTrailingContentWrapper {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_rounded_arrow_right),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         },
     ) {
         Text(text)

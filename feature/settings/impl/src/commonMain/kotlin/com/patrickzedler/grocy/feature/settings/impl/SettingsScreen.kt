@@ -15,7 +15,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import com.patrickzedler.grocy.core.data.log.LogSource
 import com.patrickzedler.grocy.core.design.GrocyTheme
-import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
+import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
@@ -174,7 +174,7 @@ private fun SettingsItem(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         leadingContent = {
-            LeadingContentWrapper {
+            LeadingTrailingContentWrapper {
                 Icon(painter = painterResource(icon), contentDescription = null)
             }
         },

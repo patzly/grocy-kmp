@@ -52,8 +52,8 @@ data class DropdownOption(
 
 /**
  * A text field that picks one of [options]: typing filters them and forgives small typos, the
- * dropdown arrow shows all of them. Like Grocy's pickers it accepts no free text; leaving the
- * field shows the chosen option again.
+ * dropdown arrow shows all of them. Tapping the field itself only focuses it for typing. Like
+ * Grocy's pickers it accepts no free text; leaving the field shows the chosen option again.
  *
  * @param noneLabel makes the choice optional: shown as first option, and clearing the text
  *   chooses nothing.
@@ -111,7 +111,9 @@ fun SearchableDropdownField(
 
     ExposedDropdownMenuBox(
         expanded = expanded && enabled,
-        onExpandedChange = { expanded = it },
+        // Taps on the field (and its scan button) only close the menu; it opens through the
+        // arrow or while typing, so the keyboard and the other field actions stay usable
+        onExpandedChange = { if (!it) expanded = false },
         modifier = modifier,
     ) {
         RoundedTextField(

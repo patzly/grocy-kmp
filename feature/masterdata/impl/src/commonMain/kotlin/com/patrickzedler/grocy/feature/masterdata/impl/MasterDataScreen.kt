@@ -5,9 +5,11 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.SegmentedListItem
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -15,7 +17,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
-import com.patrickzedler.grocy.core.design.component.LeadingContentWrapper
+import com.patrickzedler.grocy.core.data.util.RefreshController
+import com.patrickzedler.grocy.core.data.util.RefreshState
+import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
@@ -34,6 +38,7 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_stacks
 import com.patrickzedler.grocy.core.resources.ic_rounded_storefront
 import com.patrickzedler.grocy.core.resources.ic_rounded_straighten
 import com.patrickzedler.grocy.core.resources.masterdata_batteries
+import com.patrickzedler.grocy.core.resources.masterdata_products_count
 import com.patrickzedler.grocy.core.resources.masterdata_chores
 import com.patrickzedler.grocy.core.resources.masterdata_locations
 import com.patrickzedler.grocy.core.resources.masterdata_product_groups
@@ -46,11 +51,13 @@ import com.patrickzedler.grocy.core.resources.masterdata_userentities
 import com.patrickzedler.grocy.core.resources.masterdata_userfields
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
+import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 /** The entries of Grocy's "Manage master data" menu, in its order. */
@@ -88,11 +95,39 @@ internal enum class MasterDataCategory(
     USERENTITIES(Res.string.masterdata_userentities, Res.drawable.ic_rounded_dataset),
 }
 
-/** The categories the server's features allow, read from the database at once. */
+internal data class MasterDataUiState(
+    val categories: List<MasterDataCategory>,
+    /** Number of products, null until it is known (stored products or a finished download). */
+    val productCount: Int?,
+)
+
+/**
+ * The categories the server's features allow and the number of products, from the database;
+ * pull to refresh downloads them again.
+ */
 internal class MasterDataViewModel(repository: MasterDataRepository) : ViewModel() {
-    val categories: StateFlow<List<MasterDataCategory>?> = repository.serverConfig
-        .map { config -> MasterDataCategory.entries.filter { it.isAvailable(config) } }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    private val refreshController = RefreshController(viewModelScope) { repository.refresh() }
+    val refresh: StateFlow<RefreshState> = refreshController.state
+
+    val state: StateFlow<MasterDataUiState?> = combine(
+        repository.serverConfig,
+        repository.products,
+        refreshController.state,
+    ) { config, products, refresh ->
+        MasterDataUiState(
+            categories = MasterDataCategory.entries.filter { it.isAvailable(config) },
+            productCount = products.size.takeIf { it > 0 || refresh.loadedOnce },
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    init {
+        refresh()
+    }
+
+    fun refresh() = refreshController.refresh()
+
+    fun onErrorShown() = refreshController.onErrorShown()
 }
 
 @Composable
@@ -102,20 +137,39 @@ internal fun MasterDataScreen(
     onCategoryClick: (MasterDataCategory) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val categories by viewModel.categories.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val refresh by viewModel.refresh.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    RefreshErrorEffect(
+        error = refresh.error,
+        hasData = true,
+        snackbarHostState = snackbarHostState,
+        onErrorShown = viewModel::onErrorShown,
+    )
 
     SegmentedListScreen(
         title = stringResource(Res.string.masterdata_title),
         modifier = modifier,
         navigationIcon = { NavigateBackButton(onClick = onBackClick) },
+        snackbarHostState = snackbarHostState,
+        isRefreshing = refresh.isRefreshing,
+        onRefresh = viewModel::refresh,
     ) {
-        val shown = categories ?: return@SegmentedListScreen
+        val shown = state ?: return@SegmentedListScreen
         segmentedGroup(key = "categories") {
-            shown.forEachIndexed { index, category ->
+            shown.categories.forEachIndexed { index, category ->
                 CategoryItem(
                     category = category,
+                    supporting = if (category == MasterDataCategory.PRODUCTS) {
+                        shown.productCount?.let {
+                            pluralStringResource(Res.plurals.masterdata_products_count, it, it)
+                        }
+                    } else {
+                        null
+                    },
                     index = index,
-                    count = shown.size,
+                    count = shown.categories.size,
                     onClick = { onCategoryClick(category) },
                 )
             }
@@ -127,6 +181,7 @@ internal fun MasterDataScreen(
 @Composable
 private fun CategoryItem(
     category: MasterDataCategory,
+    supporting: String?,
     index: Int,
     count: Int,
     onClick: () -> Unit,
@@ -142,8 +197,9 @@ private fun CategoryItem(
         colors = SegmentedListDefaults.colors(),
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
+        supportingContent = supporting?.let { { Text(it) } },
         leadingContent = {
-            LeadingContentWrapper {
+            LeadingTrailingContentWrapper {
                 Icon(painter = painterResource(category.icon), contentDescription = null)
             }
         },

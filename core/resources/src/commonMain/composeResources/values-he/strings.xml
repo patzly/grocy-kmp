@@ -207,6 +207,11 @@
   <string name="masterdata_task_categories">קטגוריות משימות</string>
   <string name="masterdata_userfields">שדות משתמשים</string>
   <string name="masterdata_userentities">יישויות משתמש</string>
+  <plurals name="masterdata_products_count">
+    <item quantity="one">%1$d מוצר</item>
+    <item quantity="two">%1$d מוצרים</item>
+    <item quantity="other">%1$d מוצרים</item>
+  </plurals>
 
   <!-- Products -->
   <string name="products_configure_userfields">הגדרת שדות משתמש</string>
