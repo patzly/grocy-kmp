@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
@@ -96,6 +97,8 @@ internal fun scannerHeight(width: Dp, windowHeight: Dp): Dp {
  *
  * @param formats formats to look for; fewer formats scan faster and avoid wrong matches.
  * @param paused stops decoding while the camera keeps running, e.g. while a scan is processed.
+ * @param containerColor behind the permission and error states; a scanner inside an item with
+ *   other content takes the color of text fields, so its rectangle stands out.
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -105,6 +108,7 @@ fun BarcodeScanner(
     formats: Set<BarcodeFormat> = BarcodeFormat.Products,
     shape: Shape = MaterialTheme.shapes.large,
     paused: Boolean = false,
+    containerColor: Color = SegmentedListDefaults.containerColor,
 ) {
     val decoderFactory = LocalBarcodeDecoderFactory.current
     val access = rememberCameraAccess()
@@ -129,7 +133,7 @@ fun BarcodeScanner(
                 layout(width, height) { placeable.place(0, 0) }
             }
             .clip(shape)
-            .background(SegmentedListDefaults.containerColor),
+            .background(containerColor),
         contentAlignment = Alignment.Center,
     ) {
         when (access.permission) {

@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.core.design.component
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
@@ -34,9 +36,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,6 +59,8 @@ import org.jetbrains.compose.resources.stringResource
 /**
  * The standard screen: surfaceContainer background, a large top app bar that turns
  * surfaceContainerHighest when scrolled, and an [InsetLazyColumn] for [segmentedGroup]s.
+ * Screens with [onRefresh] get a small centered app bar that stays in place and only changes
+ * its color: collapsing it would fight with pulling to refresh.
  * The list shrinks with the keyboard, so a focused text field always stays above it.
  *
  * [navigationIcon] is usually a [NavigateBackButton], [actions] are [AppBarIconButton]s.
@@ -82,19 +87,36 @@ fun SegmentedListScreen(
     onRefresh: (() -> Unit)? = null,
     content: LazyListScope.() -> Unit,
 ) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val isRefreshable = onRefresh != null
+    val scrollBehavior = if (isRefreshable) {
+        TopAppBarDefaults.pinnedScrollBehavior(listState)
+    } else {
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    }
     val toolbarScrollBehavior = FloatingToolbarDefaults.exitAlwaysScrollBehavior(
         exitDirection = FloatingToolbarExitDirection.Bottom,
     )
     val containerColor = MaterialTheme.colorScheme.surfaceContainer
     val scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
-    // The same color the large app bar computes from its collapsed fraction
+    // The small bar switches its color once content lies below it, animated like the bar does
+    val isOverlapped by remember(scrollBehavior) {
+        derivedStateOf { scrollBehavior.state.overlappedFraction > OVERLAP_THRESHOLD }
+    }
+    val pinnedBarColor by animateColorAsState(
+        targetValue = if (isOverlapped) scrolledContainerColor else containerColor,
+        animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
+    )
     StatusBarColorEffect {
-        lerp(
-            containerColor,
-            scrolledContainerColor,
-            FastOutLinearInEasing.transform(scrollBehavior.state.collapsedFraction),
-        )
+        if (isRefreshable) {
+            pinnedBarColor
+        } else {
+            // The same color the large app bar computes from its collapsed fraction
+            lerp(
+                containerColor,
+                scrolledContainerColor,
+                FastOutLinearInEasing.transform(scrollBehavior.state.collapsedFraction),
+            )
+        }
     }
 
     // The last item can scroll above the toolbar, snackbars appear above it
@@ -115,29 +137,42 @@ fun SegmentedListScreen(
                 },
             ),
         topBar = {
-            LargeTopAppBar(
-                title = {
-                    Text(
-                        text = title,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-                navigationIcon = navigationIcon,
-                actions = {
-                    actions()
-                    // Pulling is a gesture; the menu refreshes for keyboards and screen readers
-                    if (onRefresh != null) {
-                        val reload = stringResource(Res.string.action_reload)
-                        AppBarOverflowMenu(listOf(AppBarMenuItem(reload, onRefresh)))
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = containerColor,
-                    scrolledContainerColor = scrolledContainerColor,
-                ),
-                scrollBehavior = scrollBehavior,
+            val titleContent: @Composable () -> Unit = {
+                Text(
+                    text = title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            val allActions: @Composable RowScope.() -> Unit = {
+                actions()
+                // Pulling is a gesture; the menu refreshes for keyboards and screen readers
+                if (onRefresh != null) {
+                    val reload = stringResource(Res.string.action_reload)
+                    AppBarOverflowMenu(listOf(AppBarMenuItem(reload, onRefresh)))
+                }
+            }
+            val colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = containerColor,
+                scrolledContainerColor = scrolledContainerColor,
             )
+            if (isRefreshable) {
+                CenterAlignedTopAppBar(
+                    title = titleContent,
+                    navigationIcon = navigationIcon,
+                    actions = allActions,
+                    colors = colors,
+                    scrollBehavior = scrollBehavior,
+                )
+            } else {
+                LargeTopAppBar(
+                    title = titleContent,
+                    navigationIcon = navigationIcon,
+                    actions = allActions,
+                    colors = colors,
+                    scrollBehavior = scrollBehavior,
+                )
+            }
         },
         snackbarHost = {
             snackbarHostState?.let {
@@ -159,7 +194,7 @@ fun SegmentedListScreen(
             state = pullToRefreshState,
             enabled = onRefresh != null,
             indicator = {
-                PullToRefreshDefaults.LoadingIndicator(
+                ScalingPullToRefreshIndicator(
                     state = pullToRefreshState,
                     isRefreshing = isRefreshing,
                     modifier = Modifier
@@ -252,3 +287,6 @@ fun AppBarIconButton(
         }
     }
 }
+
+// Material switches the small app bar's color once content scrolled below it
+private const val OVERLAP_THRESHOLD = 0.01f

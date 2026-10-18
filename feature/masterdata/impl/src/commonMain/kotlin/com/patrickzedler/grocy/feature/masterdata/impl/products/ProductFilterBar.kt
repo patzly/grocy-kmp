@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -16,7 +17,8 @@ import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.InputChip
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
@@ -40,7 +42,7 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_arrow_downward
 import com.patrickzedler.grocy.core.resources.ic_rounded_arrow_drop_down
 import com.patrickzedler.grocy.core.resources.ic_rounded_arrow_upward
 import com.patrickzedler.grocy.core.resources.ic_rounded_check
-import com.patrickzedler.grocy.core.resources.ic_rounded_close
+import com.patrickzedler.grocy.core.resources.ic_rounded_filter_list_off
 import com.patrickzedler.grocy.core.resources.products_filter_clear
 import com.patrickzedler.grocy.core.resources.products_filter_in_stock
 import com.patrickzedler.grocy.core.resources.products_filter_out_of_stock
@@ -84,7 +86,9 @@ internal fun ProductFilterBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .horizontalScroll(rememberScrollState()),
+            .horizontalScroll(rememberScrollState())
+            // Inside the scrolling, so chips scroll up to the item's edge instead of a margin
+            .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         DropdownFilterChip(
@@ -125,14 +129,20 @@ internal fun ProductFilterBar(
         )
         SortChipWithMenu(sort, showLocationSort, showStoreSort, onSortChange)
         if (showClear) {
-            InputChip(
-                selected = false,
+            // An action, not an input to remove: assist chip with the reset icon at its start
+            AssistChip(
                 onClick = {
                     haptic.confirm()
                     onClearClick()
                 },
                 label = { Text(stringResource(Res.string.products_filter_clear)) },
-                trailingIcon = { ChipIcon(Res.drawable.ic_rounded_close) },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_rounded_filter_list_off),
+                        contentDescription = null,
+                        modifier = Modifier.size(AssistChipDefaults.IconSize),
+                    )
+                },
             )
         }
     }

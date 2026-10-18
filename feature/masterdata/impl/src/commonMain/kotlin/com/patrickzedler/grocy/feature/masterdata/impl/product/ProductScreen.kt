@@ -603,6 +603,29 @@ private fun GeneralItems(
                 enabled = !hasSubProducts,
                 index = index,
                 count = count,
+                below = if (showScanner && !hasSubProducts) {
+                    {
+                        BarcodeScanner(
+                            onBarcodeScanned = { barcode ->
+                                val product = viewModel.productForCode(options, barcode.value)
+                                when {
+                                    product == null ->
+                                        scope.launch { snackbarHostState.showSnackbar(notFound) }
+                                    candidates.none { it.id == product.id } ->
+                                        scope.launch { snackbarHostState.showSnackbar(notAllowed) }
+                                    else -> {
+                                        form.parentProductId = product.id
+                                        showScanner = false
+                                    }
+                                }
+                            },
+                            shape = MaterialTheme.shapes.small,
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                        )
+                    }
+                } else {
+                    null
+                },
                 trailingAction = {
                     val description = stringResource(
                         if (showScanner) {
@@ -633,28 +656,6 @@ private fun GeneralItems(
                     }
                 },
             )
-        },
-        if (showScanner && !hasSubProducts) {
-            { index, count ->
-                BarcodeScanner(
-                    onBarcodeScanned = { barcode ->
-                        val product = viewModel.productForCode(options, barcode.value)
-                        when {
-                            product == null ->
-                                scope.launch { snackbarHostState.showSnackbar(notFound) }
-                            candidates.none { it.id == product.id } ->
-                                scope.launch { snackbarHostState.showSnackbar(notAllowed) }
-                            else -> {
-                                form.parentProductId = product.id
-                                showScanner = false
-                            }
-                        }
-                    },
-                    shape = SegmentedListDefaults.shape(index = index, count = count),
-                )
-            }
-        } else {
-            null
         },
         { index, count ->
             TextItem(

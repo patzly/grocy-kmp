@@ -100,11 +100,7 @@ private fun LanguageDialogContent(
         },
         isScrollableControlledByContent = true,
     ) {
-        val colors = ListItemDefaults.segmentedColors(
-            containerColor = SegmentedListDefaults.containerColor,
-            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-            selectedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        )
+        val colors = SegmentedListDefaults.colors()
         val count = languages.size + 1
         val namedLanguages = remember(languages) {
             languages.map { it to languageName(it) }.sortedBy { (_, name) -> name }

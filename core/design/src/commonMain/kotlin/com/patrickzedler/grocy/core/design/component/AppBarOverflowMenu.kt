@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.core.design.component
 
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
@@ -12,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -57,9 +59,23 @@ fun AppBarOverflowMenu(items: List<AppBarMenuItem>) {
                         showMenu = false
                         item.onClick()
                     },
-                    shape = MenuDefaults.itemShape(index = index, count = items.size).shape,
+                    shape = menuItemShape(index = index, count = items.size),
                 )
             }
         }
     }
+}
+
+/**
+ * Shape of the item at [index] of [count] items in a menu group. Material's shape for a single
+ * item is the one of middle items with small corners; a single item gets the top corners of a
+ * leading and the bottom corners of a trailing item instead, so its ripple fills the group.
+ */
+@Composable
+fun menuItemShape(index: Int, count: Int): Shape {
+    if (count != 1) return MenuDefaults.itemShape(index = index, count = count).shape
+    val leading = MenuDefaults.itemShape(index = 0, count = 2).shape
+    val trailing = MenuDefaults.itemShape(index = 1, count = 2).shape
+    if (leading !is CornerBasedShape || trailing !is CornerBasedShape) return leading
+    return leading.copy(bottomStart = trailing.bottomStart, bottomEnd = trailing.bottomEnd)
 }

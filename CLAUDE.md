@@ -18,20 +18,27 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   hides the ones whose feature flag is off (`MasterDataCategory.isAvailable`); Products shows
   the number of products once it is known (stored products or a finished download).
 - Every list screen (start, master data, products) has pull to refresh through
-  `SegmentedListScreen(isRefreshing, onRefresh)`: Material's contained loading indicator, and
-  "Reload" in the app bar's overflow menu (`AppBarOverflowMenu`, narrow three dots button) for
-  keyboards and screen readers. ViewModels run downloads through
+  `SegmentedListScreen(isRefreshing, onRefresh)`: `ScalingPullToRefreshIndicator` (Material's
+  contained loading indicator, starting below the app bar and growing with the pull, because
+  Material's own slides out of the app bar, which has the screen's color), and "Reload" in the
+  app bar's overflow menu (`AppBarOverflowMenu`, narrow three dots button) for keyboards and
+  screen readers. These screens use the small centered app bar with `pinnedScrollBehavior`
+  (same colors, no collapsing, which would fight with pulling); the others keep the large one.
+  Single items of a menu group use `menuItemShape(0, 1)`: Material's standalone item shape has
+  the small corners of middle items, so its ripple would not fill the rounded group. ViewModels run downloads through
   `RefreshController` (`core:data`: one at a time, offline/failed errors, `loadedOnce`);
   `RefreshErrorEffect` (`core:ui`) shows a failed download as snackbar.
-- `ProductsScreen`: one segmented item per product (`itemSpacing = SegmentedGap`), a filter row
-  as first item (`ProductFilterBar`, Material 3 chips, one per filter: product group and status
+- `ProductsScreen`: one segmented item per product (`itemSpacing = SegmentedGap`), a first group
+  with the filter row (its own item without horizontal padding: the 16.dp scroll with the chips)
+  and, while open, the search below it (search icon as the item's leading content).
+  `ProductFilterBar` has Material 3 chips, one per filter: product group and status
   as dropdown filter chips that are selected and show the value while not "All", "Show
-  disabled" as toggle chip, a sort chip, and "Clear filter" as input chip while anything is
-  filtered; chips use the standard overloads with Material's 8.dp rounded rectangle, not the
+  disabled" as toggle chip, a sort chip, and "Clear filter" as assist chip with a reset icon
+  at its start while a filter (not the search) is active; chips use the standard overloads with Material's 8.dp rounded rectangle, not the
   morphing `shapes` overloads whose tokens are full round). Back closes an open search first
   (`NavigationBackHandler`, also the browser's back) and stays on the list
-  and a floating toolbar (Add as FAB, Search, Configure userfields, Presets for new products,
-  Scroll to top). Filtering, sorting and the fuzzy search are the pure `buildProductList`:
+  and a floating toolbar (Add as FAB, Configure userfields, Presets for new products, Scroll to
+  top, Search last). Filtering, sorting and the fuzzy search are the pure `buildProductList`:
   in stock means `amount_aggregated > 0` of an active product, like Grocy's `stock_current`.
 - `ProductScreen` edits or creates (`ProductRoute(productId = null)`) a product with every field
   of Grocy's form, in its order, grouped, fields of disabled features hidden
@@ -42,7 +49,8 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   form like "Save & return", a created one turns the form into its edit form. Userfields are
   edited by type (`UserfieldInput`, only changed ones are sent; files and images read only),
   the picture through `ProductPictureDialog` (`rememberImagePicker` of `core:ui`), the parent
-  product can also be scanned (barcode or grocycode `grcy:p:<id>`).
+  product can also be scanned (barcode or grocycode `grcy:p:<id>`): the scanner opens inside the
+  field's item below it (`DropdownItem(below)`, small corners, text field color).
 
 Settings plan: the overview lists the categories General (language, theme, contrast), Server
 (server URL, Grocy version, reload configuration, logout), User settings (loaded from the
@@ -573,9 +581,11 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   floatingToolbar slot of `SegmentedListScreen`, `SegmentedSwitchItem`,
   `SearchableDropdownField` for every choice of objects: fuzzy search while typing, no free
   text, optional fields offer "None"; the menu opens through its arrow or while typing, a tap
-  on the field or its trailing action (scan) only focuses), units of text fields go in the
+  on the field or its trailing action (scan) only focuses; its menu is one expressive menu
+  group in a `DropdownMenuPopup`, not `ExposedDropdownMenu`, whose old menu padding sits outside
+  the scrolling and cuts the items off), units of text fields go in the
   `suffix` slot of `RoundedTextField`. `SegmentedSwitchItem` is Material's checkable segmented item: while on it takes the selected
-  shape of the segmented defaults and `primaryContainer` (`SegmentedSwitchItemDefaults`). Clicks trigger `haptic.confirm()`. `HapticTooltipBox`
+  shape and color (`secondaryContainer`) of the segmented defaults. Clicks trigger `haptic.confirm()`. `HapticTooltipBox`
   puts its modifier on an outer `Box`, because Material's `TooltipBox` loses parent data such as `align`.
   Tooltips show on long press, mouse hover and keyboard focus, never after a plain tap or click:
   Compose on the web focuses a clicked button, so `TooltipPressTracker` tells a pointer focus

@@ -126,6 +126,7 @@ internal fun DropdownItem(
     optional: Boolean = false,
     enabled: Boolean = true,
     trailingAction: (@Composable () -> Unit)? = null,
+    below: (@Composable () -> Unit)? = null,
 ) {
     SegmentedContainer(index = index, count = count, modifier = modifier) {
         SearchableDropdownField(
@@ -140,6 +141,11 @@ internal fun DropdownItem(
             trailingAction = trailingAction,
         )
         HintText(hint)
+        // Belongs to the field, e.g. the scanner of its scan action
+        if (below != null) {
+            Spacer(Modifier.height(16.dp))
+            below()
+        }
     }
 }
 

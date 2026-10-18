@@ -5,6 +5,8 @@ package com.patrickzedler.grocy.feature.masterdata.impl.products
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
@@ -53,6 +55,7 @@ import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapp
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.RoundedTextField
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
+import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.confirm
@@ -171,14 +174,6 @@ private fun ProductsContent(
                 fabDescription = stringResource(Res.string.action_add),
                 onFabClick = onAddClick,
             ) {
-                FloatingToolbarIconButton(
-                    painter = painterResource(Res.drawable.ic_rounded_search),
-                    contentDescription = stringResource(Res.string.action_search),
-                    onClick = {
-                        onSearchClick()
-                        scope.launch { listState.animateScrollToItem(0) }
-                    },
-                )
                 // Not available in the app yet, like the web frontend they lead elsewhere
                 FloatingToolbarIconButton(
                     painter = painterResource(Res.drawable.ic_rounded_edit_attributes),
@@ -196,31 +191,48 @@ private fun ProductsContent(
                     onClick = { scope.launch { listState.animateScrollToItem(0) } },
                     enabled = listState.canScrollBackward,
                 )
+                FloatingToolbarIconButton(
+                    painter = painterResource(Res.drawable.ic_rounded_search),
+                    contentDescription = stringResource(Res.string.action_search),
+                    onClick = {
+                        onSearchClick()
+                        scope.launch { listState.animateScrollToItem(0) }
+                    },
+                )
             }
         },
     ) {
         if (state == null) return@SegmentedListScreen
         insetItem(key = "filters") {
-            ProductFilterBar(
-                modifier = Modifier.padding(bottom = GroupSpacingAfterGap),
-                filter = state.filter,
-                sort = state.sort,
-                productGroups = state.productGroups,
-                showClear = state.filter.isActive || isSearchVisible,
-                showLocationSort = state.showLocation,
-                showStoreSort = state.showStore,
-                onFilterChange = onFilterChange,
-                onSortChange = onSortChange,
-                onClearClick = onClearFilterClick,
-            )
-        }
-        if (isSearchVisible) {
-            insetItem(key = "search") {
-                SearchField(
-                    state = searchState,
-                    onCloseClick = onCloseSearchClick,
-                    modifier = Modifier.padding(bottom = GroupSpacingAfterGap),
-                )
+            // Filters and the search are one group, the products follow as the next one
+            SegmentedGroup(modifier = Modifier.padding(bottom = GroupSpacingAfterGap)) {
+                val count = if (isSearchVisible) 2 else 1
+                SegmentedContainer(
+                    index = 0,
+                    count = count,
+                    // The chip row pads itself inside its scrolling
+                    contentPadding = PaddingValues(vertical = 8.dp),
+                ) {
+                    ProductFilterBar(
+                        filter = state.filter,
+                        sort = state.sort,
+                        productGroups = state.productGroups,
+                        showClear = state.filter.isActive,
+                        showLocationSort = state.showLocation,
+                        showStoreSort = state.showStore,
+                        onFilterChange = onFilterChange,
+                        onSortChange = onSortChange,
+                        onClearClick = onClearFilterClick,
+                    )
+                }
+                if (isSearchVisible) {
+                    SearchField(
+                        state = searchState,
+                        onCloseClick = onCloseSearchClick,
+                        index = 1,
+                        count = count,
+                    )
+                }
             }
         }
         productItems(
@@ -290,37 +302,46 @@ private fun LazyListScope.productItems(
 private fun SearchField(
     state: TextFieldState,
     onCloseClick: () -> Unit,
-    modifier: Modifier = Modifier,
+    index: Int,
+    count: Int,
 ) {
     val haptic = LocalHapticFeedback.current
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(focusRequester) { focusRequester.requestFocus() }
 
-    SegmentedContainer(index = 0, count = 1, modifier = modifier) {
-        RoundedTextField(
-            state = state,
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(focusRequester),
-            label = { Text(stringResource(Res.string.action_search)) },
-            leadingIcon = {
-                Icon(painterResource(Res.drawable.ic_rounded_search), contentDescription = null)
-            },
-            trailingIcon = {
-                IconButton(
-                    onClick = {
-                        haptic.confirm()
-                        onCloseClick()
-                    },
-                ) {
-                    Icon(
-                        painter = painterResource(Res.drawable.ic_rounded_close),
-                        contentDescription = stringResource(Res.string.action_clear),
-                    )
-                }
-            },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        )
+    SegmentedContainer(index = index, count = count) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            // The item's leading content, like the icons of list items
+            Icon(
+                painter = painterResource(Res.drawable.ic_rounded_search),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            RoundedTextField(
+                state = state,
+                modifier = Modifier
+                    .weight(1f)
+                    .focusRequester(focusRequester),
+                label = { Text(stringResource(Res.string.action_search)) },
+                trailingIcon = {
+                    IconButton(
+                        onClick = {
+                            haptic.confirm()
+                            onCloseClick()
+                        },
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_rounded_close),
+                            contentDescription = stringResource(Res.string.action_clear),
+                        )
+                    }
+                },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            )
+        }
     }
 }
 
