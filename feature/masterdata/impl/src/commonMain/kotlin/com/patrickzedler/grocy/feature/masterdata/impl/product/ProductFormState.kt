@@ -11,6 +11,19 @@ import com.patrickzedler.grocy.core.model.masterdata.StockLabelType
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
 import com.patrickzedler.grocy.core.model.masterdata.UserfieldType
 
+/** The pickers of the product form. */
+internal enum class ProductChoice {
+    PARENT,
+    LOCATION,
+    CONSUME_LOCATION,
+    STORE,
+    PRODUCT_GROUP,
+    QU_STOCK,
+    QU_PURCHASE,
+    QU_CONSUME,
+    QU_PRICE,
+}
+
 /** Editable state of the product form, starting from [initial]. */
 @Stable
 internal class ProductFormState(initial: ProductFormValues) {
@@ -55,6 +68,14 @@ internal class ProductFormState(initial: ProductFormValues) {
     var disableOpen by mutableStateOf(initial.disableOpen)
     var hideOnStockOverview by mutableStateOf(initial.hideOnStockOverview)
     var noOwnStock by mutableStateOf(initial.noOwnStock)
+
+    /** Pickers whose text names none of their options; the form is not saved while any do. */
+    var unmatchedChoices by mutableStateOf(emptySet<ProductChoice>())
+        private set
+
+    fun setUnmatched(choice: ProductChoice, unmatched: Boolean) {
+        unmatchedChoices = if (unmatched) unmatchedChoices + choice else unmatchedChoices - choice
+    }
 
     /** The other units follow the stock unit unless the user chose them, like in Grocy. */
     fun changeStockUnit(id: Int?) {
@@ -114,6 +135,9 @@ internal class UserfieldInput(val userfield: Userfield, private val initial: Str
     var checked by mutableStateOf(initial == "1")
     var selectedOption by mutableStateOf(initial?.takeIf { it.isNotBlank() })
     var checklist by mutableStateOf(decodeChecklist(initial))
+
+    /** True while the text of a preset list names none of its options. */
+    var isUnmatched by mutableStateOf(false)
 
     val value: String?
         get() = when (userfield.type) {

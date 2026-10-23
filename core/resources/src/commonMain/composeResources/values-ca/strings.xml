@@ -340,4 +340,8 @@
   <string name="product_save_hint">Desa per afegir codis de barres i conversions d’unitats</string>
   <string name="log_empty">No s’ha registrat cap error</string>
   <string name="log_report_crash">Si l’aplicació s’ha bloquejat o alguna cosa ha anat malament, copia el registre i envia’l amb els teus comentaris perquè es pugui corregir l’error.</string>
+  <string name="action_discard">Descarta</string>
+  <string name="msg_choose_from_list">Tria una entrada de la llista</string>
+  <string name="msg_unsaved_changes">Canvis no desats</string>
+  <string name="msg_unsaved_changes_description">Vols desar els canvis abans de sortir o descartar-los?</string>
 </resources>

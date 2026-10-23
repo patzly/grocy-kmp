@@ -340,4 +340,8 @@
   <string name="product_save_hint">Guarde para añadir códigos de barras y conversiones de unidades</string>
   <string name="log_empty">No se registraron errores</string>
   <string name="log_report_crash">Si la aplicación se cerró inesperadamente o algo salió mal, copie el registro y envíelo con sus comentarios para que se pueda corregir el error.</string>
+  <string name="action_discard">Descartar</string>
+  <string name="msg_choose_from_list">Elige una entrada de la lista</string>
+  <string name="msg_unsaved_changes">Cambios sin guardar</string>
+  <string name="msg_unsaved_changes_description">¿Guardar los cambios antes de salir o descartarlos?</string>
 </resources>

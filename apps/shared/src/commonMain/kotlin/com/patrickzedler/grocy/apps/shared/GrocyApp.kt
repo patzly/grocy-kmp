@@ -17,7 +17,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.data.auth.AuthState
 import com.patrickzedler.grocy.core.data.update.UpdateRepository
 import com.patrickzedler.grocy.core.design.GrocyTheme
-import com.patrickzedler.grocy.core.design.rememberThemeFontsReady
+import com.patrickzedler.grocy.core.design.LocalPointerKind
+import com.patrickzedler.grocy.core.design.rememberPointerKindState
+import com.patrickzedler.grocy.core.design.rememberResourcesReady
+import com.patrickzedler.grocy.core.design.trackPointerKind
 import com.patrickzedler.grocy.core.navigation.GrocyNavDisplay
 import com.patrickzedler.grocy.core.navigation.rememberNavigator
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
@@ -60,22 +63,28 @@ fun GrocyApp(
     GrocyTheme(appearance = appearance) {
         val authState by graph.authRepository.authState
             .collectAsStateWithLifecycle(initialValue = null)
-        val fontsReady = rememberThemeFontsReady()
+        val resourcesReady = rememberResourcesReady()
         val barcodeDecoderFactory by graph.barcodeDecoderFactory
             .collectAsStateWithLifecycle(initialValue = BarcodeDecoderFactory.Zxing)
 
-        CompositionLocalProvider(LocalBarcodeDecoderFactory provides barcodeDecoderFactory) {
+        val pointerKind = rememberPointerKindState()
+
+        CompositionLocalProvider(
+            LocalBarcodeDecoderFactory provides barcodeDecoderFactory,
+            LocalPointerKind provides pointerKind,
+        ) {
             // Screen transitions fade, this keeps the window or page behind them out of sight
             Box(
                 modifier = Modifier
                     .fillMaxSize()
+                    .trackPointerKind(pointerKind)
                     .background(MaterialTheme.colorScheme.surfaceContainer),
             ) {
                 // Null only for the moment until the stored login has been read
                 authState?.let {
                     GrocyNavigation(graph, it)
-                    LaunchedEffect(fontsReady) {
-                        if (fontsReady) onContentReady()
+                    LaunchedEffect(resourcesReady) {
+                        if (resourcesReady) onContentReady()
                     }
                     UpdateOffer(graph.updateRepository)
                 }

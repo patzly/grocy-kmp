@@ -341,4 +341,8 @@
   <string name="product_save_hint">Uložte, aby ste mohli pridať čiarové kódy a prevody množstevných jednotiek</string>
   <string name="log_empty">Neboli zaznamenané žiadne chyby</string>
   <string name="log_report_crash">Ak aplikácia spadla alebo sa niečo pokazilo, skopírujte log a pošlite ho so spätnou väzbou, aby sa chyba dala opraviť.</string>
+  <string name="action_discard">Zahodiť</string>
+  <string name="msg_choose_from_list">Vyberte položku zo zoznamu</string>
+  <string name="msg_unsaved_changes">Neuložené zmeny</string>
+  <string name="msg_unsaved_changes_description">Uložiť zmeny pred odchodom, alebo ich zahodiť?</string>
 </resources>

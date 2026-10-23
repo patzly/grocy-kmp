@@ -59,12 +59,16 @@ private const val FEEDBACK_SUBJECT = "Grocy%20feedback"
 internal fun FeedbackDialog(
     unlockState: UnlockState?,
     onSupportClick: () -> Unit,
+    onShareUnavailable: () -> Unit,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val haptic = LocalHapticFeedback.current
     val uriHandler = LocalUriHandler.current
-    val recommend = rememberRecommendAction(isPlayVariant = unlockState != null)
+    val recommend = rememberRecommendAction(
+        isPlayVariant = unlockState != null,
+        onShareUnavailable = onShareUnavailable,
+    )
 
     val appVendingApp = stringResource(Res.string.app_vending_app)
     val appGithub = stringResource(Res.string.app_github)
@@ -91,8 +95,9 @@ internal fun FeedbackDialog(
             },
             onRecommendClick = {
                 haptic.confirm()
-                recommend()
+                // Closed first: without a share sheet the recommendation dialog replaces it
                 onDismissRequest()
+                recommend()
             },
             onIssueClick = {
                 haptic.confirm()

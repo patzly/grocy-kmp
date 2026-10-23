@@ -3,22 +3,23 @@ package com.patrickzedler.grocy.feature.masterdata.impl.products
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuPopup
-import androidx.compose.material3.FilterChip
+import androidx.compose.material3.ElevatedAssistChip
+import androidx.compose.material3.ElevatedFilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
@@ -65,7 +66,8 @@ import org.jetbrains.compose.resources.stringResource
 /**
  * Grocy's filter row as Material 3 chips, one per filter: product group and stock status as
  * dropdown chips, "Show disabled" as toggle chip, the sort order, and "Clear filter" while
- * anything is filtered. Scrolls sideways on narrow screens.
+ * anything is filtered. Scrolls sideways on narrow screens; [contentPadding] scrolls along.
+ * Elevated chips, which have a container of their own: the row lies on the screen's background.
  */
 @Composable
 internal fun ProductFilterBar(
@@ -79,6 +81,7 @@ internal fun ProductFilterBar(
     onSortChange: (ProductSort) -> Unit,
     onClearClick: () -> Unit,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
     val haptic = LocalHapticFeedback.current
     val all = stringResource(Res.string.data_all)
@@ -87,8 +90,8 @@ internal fun ProductFilterBar(
         modifier = modifier
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState())
-            // Inside the scrolling, so chips scroll up to the item's edge instead of a margin
-            .padding(horizontal = 16.dp),
+            // Inside the scrolling, so chips scroll up to the screen's edge instead of a margin
+            .padding(contentPadding),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         DropdownFilterChip(
@@ -114,7 +117,7 @@ internal fun ProductFilterBar(
             },
             onSelect = { status -> onFilterChange { it.copy(stockStatus = status) } },
         )
-        FilterChip(
+        ElevatedFilterChip(
             selected = filter.showDisabled,
             onClick = {
                 haptic.confirm()
@@ -130,7 +133,7 @@ internal fun ProductFilterBar(
         SortChipWithMenu(sort, showLocationSort, showStoreSort, onSortChange)
         if (showClear) {
             // An action, not an input to remove: assist chip with the reset icon at its start
-            AssistChip(
+            ElevatedAssistChip(
                 onClick = {
                     haptic.confirm()
                     onClearClick()
@@ -166,7 +169,7 @@ private fun <T> DropdownFilterChip(
     val active = !isDefault(selected)
 
     Box {
-        FilterChip(
+        ElevatedFilterChip(
             selected = active,
             onClick = {
                 haptic.confirm()
@@ -233,7 +236,7 @@ private fun SortChipWithMenu(
     }
 
     Box {
-        FilterChip(
+        ElevatedFilterChip(
             selected = sort != ProductSort(),
             onClick = {
                 haptic.confirm()

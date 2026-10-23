@@ -339,4 +339,8 @@
   <string name="product_save_hint">Mentsd el a vonalkódok és mennyiségi egység átváltások hozzáadásához</string>
   <string name="log_empty">Nincs naplózott hiba</string>
   <string name="log_report_crash">Ha az alkalmazás összeomlott, vagy valami hiba történt, másold ki a naplót, és küldd el a visszajelzéseddel, hogy a hibát ki lehessen javítani.</string>
+  <string name="action_discard">Elvetés</string>
+  <string name="msg_choose_from_list">Válassz egy elemet a listából</string>
+  <string name="msg_unsaved_changes">Nem mentett módosítások</string>
+  <string name="msg_unsaved_changes_description">Mented a módosításokat kilépés előtt, vagy elveted őket?</string>
 </resources>

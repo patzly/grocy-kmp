@@ -341,4 +341,8 @@
   <string name="product_save_hint">Zapisz, aby dodać kody kreskowe i konwersje jednostek ilości</string>
   <string name="log_empty">Brak zarejestrowanych błędów</string>
   <string name="log_report_crash">Jeśli aplikacja uległa awarii lub coś poszło nie tak, skopiuj log i wyślij go razem z opinią, aby można było naprawić błąd.</string>
+  <string name="action_discard">Odrzuć</string>
+  <string name="msg_choose_from_list">Wybierz pozycję z listy</string>
+  <string name="msg_unsaved_changes">Niezapisane zmiany</string>
+  <string name="msg_unsaved_changes_description">Zapisać zmiany przed wyjściem czy je odrzucić?</string>
 </resources>

@@ -46,7 +46,8 @@ internal data class ProductListItem(
     val id: Int,
     val name: String,
     val active: Boolean,
-    val hasPicture: Boolean,
+    /** Grocy's file name of the picture, null without one. */
+    val pictureFileName: String?,
     val locationName: String?,
     val productGroupName: String?,
     /** Formatted, null when it is 0. */
@@ -106,7 +107,7 @@ internal fun buildProductList(
             id = product.id,
             name = product.name,
             active = product.active,
-            hasPicture = !product.pictureFileName.isNullOrBlank(),
+            pictureFileName = product.pictureFileName?.takeIf { it.isNotBlank() },
             locationName = product.locationId?.let { locations[it]?.name }.takeIf { showLocation },
             // Grocy only names active groups in the list
             productGroupName = product.productGroupId

@@ -339,4 +339,8 @@
   <string name="product_save_hint">Barkod ve birim dönüşümü eklemek için kaydedin</string>
   <string name="log_empty">Kaydedilmiş hata yok</string>
   <string name="log_report_crash">Uygulama çöktüyse veya bir şeyler ters gittiyse, hatanın düzeltilebilmesi için günlüğü kopyalayın ve geri bildiriminizle birlikte gönderin.</string>
+  <string name="action_discard">Vazgeç</string>
+  <string name="msg_choose_from_list">Listeden bir giriş seçin</string>
+  <string name="msg_unsaved_changes">Kaydedilmemiş değişiklikler</string>
+  <string name="msg_unsaved_changes_description">Çıkmadan önce değişiklikler kaydedilsin mi, yoksa silinsin mi?</string>
 </resources>

@@ -4,6 +4,7 @@ import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.snapshots.Snapshot
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
+import io.ktor.util.encodeBase64
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -50,6 +51,27 @@ class ProductsViewModelTest {
         assertEquals(listOf("Bread", "Milk", "Yoghurt"), names)
         assertFalse(viewModel.refresh.value.isRefreshing)
         assertNull(viewModel.refresh.value.error)
+    }
+
+    @Test
+    fun thumbnailIsDownloadedOnce() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        val path = "/api/files/productpictures/${"x1bread.jpg".encodeBase64()}"
+        environment.server.respond(path, body = "jpeg")
+
+        viewModel.thumbnail("x1bread.jpg", maxWidth = 168)
+        val thumbnail = viewModel.thumbnail("x1bread.jpg", maxWidth = 168)
+
+        assertEquals("jpeg", thumbnail?.decodeToString())
+        assertEquals(1, environment.server.requestedPaths.count { it == path })
+    }
+
+    @Test
+    fun thumbnailOfflineIsNull() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        environment.server.unreachable = true
+
+        assertNull(viewModel.thumbnail("x1bread.jpg", maxWidth = 168))
     }
 
     @Test

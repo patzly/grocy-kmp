@@ -339,4 +339,8 @@
   <string name="product_save_hint">Lagre for å legge til strekkoder og forpakningskonverteringer</string>
   <string name="log_empty">Ingen feil logget</string>
   <string name="log_report_crash">Hvis appen krasjet eller noe gikk galt, kan du kopiere loggen og sende den med tilbakemeldingen din, slik at feilen kan rettes.</string>
+  <string name="action_discard">Forkast</string>
+  <string name="msg_choose_from_list">Velg en oppføring fra listen</string>
+  <string name="msg_unsaved_changes">Ulagrede endringer</string>
+  <string name="msg_unsaved_changes_description">Vil du lagre endringene før du går, eller forkaste dem?</string>
 </resources>

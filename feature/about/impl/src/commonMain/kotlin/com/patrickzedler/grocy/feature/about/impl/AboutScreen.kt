@@ -52,10 +52,10 @@ import com.patrickzedler.grocy.core.resources.about_key_description_installed
 import com.patrickzedler.grocy.core.resources.about_key_description_not_installed
 import com.patrickzedler.grocy.core.resources.about_privacy
 import com.patrickzedler.grocy.core.resources.about_privacy_description
-import com.patrickzedler.grocy.core.resources.about_update
-import com.patrickzedler.grocy.core.resources.about_update_description
 import com.patrickzedler.grocy.core.resources.about_translation
 import com.patrickzedler.grocy.core.resources.about_translation_description
+import com.patrickzedler.grocy.core.resources.about_update
+import com.patrickzedler.grocy.core.resources.about_update_description
 import com.patrickzedler.grocy.core.resources.about_vending
 import com.patrickzedler.grocy.core.resources.about_vending_description
 import com.patrickzedler.grocy.core.resources.about_version
@@ -69,8 +69,8 @@ import com.patrickzedler.grocy.core.resources.app_translate
 import com.patrickzedler.grocy.core.resources.app_vending_dev
 import com.patrickzedler.grocy.core.resources.app_vending_key
 import com.patrickzedler.grocy.core.resources.app_website
-import com.patrickzedler.grocy.core.resources.ic_rounded_code
 import com.patrickzedler.grocy.core.resources.ic_rounded_autorenew
+import com.patrickzedler.grocy.core.resources.ic_rounded_code
 import com.patrickzedler.grocy.core.resources.ic_rounded_copyright
 import com.patrickzedler.grocy.core.resources.ic_rounded_history
 import com.patrickzedler.grocy.core.resources.ic_rounded_info
@@ -104,7 +104,10 @@ internal fun AboutScreen(
     val uriHandler = LocalUriHandler.current
     val unlockState by viewModel.unlockState.collectAsStateWithLifecycle()
     var activeDialog by rememberSaveable { mutableStateOf<AppDialog?>(null) }
-    val recommend = rememberRecommendAction(isPlayVariant = unlockState != null)
+    val recommend = rememberRecommendAction(
+        isPlayVariant = unlockState != null,
+        onShareUnavailable = { activeDialog = AppDialog.RECOMMEND },
+    )
     val appVendingKey = stringResource(Res.string.app_vending_key)
 
     LifecycleResumeEffect(viewModel) {

@@ -71,6 +71,7 @@ import com.patrickzedler.grocy.core.resources.title_log
 import com.patrickzedler.grocy.core.resources.title_logcat
 import com.patrickzedler.grocy.core.ui.AppDialog
 import com.patrickzedler.grocy.core.ui.AppDialogHost
+import com.patrickzedler.grocy.core.ui.plainTextClipEntry
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuViewModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -101,7 +102,7 @@ internal fun LogScreen(
         onBackClick = onBackClick,
         onReloadClick = viewModel::reload,
         onCopyClick = { text ->
-            scope.launch { clipboard.setClipEntry(plainTextClipEntry(text)) }
+            scope.launch { clipboard.setClipEntry(plainTextClipEntry(text, label = "logcat")) }
         },
         onFeedbackClick = { activeDialog = AppDialog.FEEDBACK },
         modifier = modifier,

@@ -339,4 +339,8 @@
   <string name="product_save_hint">Speichere, um Barcodes und ME-Umrechnungen hinzuzufügen</string>
   <string name="log_empty">Keine Fehler protokolliert</string>
   <string name="log_report_crash">Ist die App abgestürzt oder lief etwas schief, kopiere das Log und sende es mit deinem Feedback, damit der Fehler behoben werden kann.</string>
+  <string name="action_discard">Verwerfen</string>
+  <string name="msg_choose_from_list">Wähle einen Eintrag aus der Liste</string>
+  <string name="msg_unsaved_changes">Ungespeicherte Änderungen</string>
+  <string name="msg_unsaved_changes_description">Möchtest du deine Änderungen vor dem Verlassen speichern oder verwerfen?</string>
 </resources>

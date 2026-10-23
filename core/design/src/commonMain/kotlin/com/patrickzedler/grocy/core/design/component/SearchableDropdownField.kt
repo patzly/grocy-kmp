@@ -3,13 +3,13 @@ package com.patrickzedler.grocy.core.design.component
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DropdownMenuGroup
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -17,7 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MenuAnchorPosition
 import androidx.compose.material3.MenuDefaults
-import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -34,18 +33,18 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.window.PopupProperties
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.PopupProperties
 import com.patrickzedler.grocy.core.model.text.FuzzySearch
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_show_choices
 import com.patrickzedler.grocy.core.resources.ic_rounded_arrow_drop_down
-import com.patrickzedler.grocy.core.resources.ic_rounded_check
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
+import com.patrickzedler.grocy.core.resources.msg_choose_from_list
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 /** A choice of a [SearchableDropdownField]; [searchTexts] are found besides the [label]. */
 @Immutable
@@ -57,12 +56,14 @@ data class DropdownOption(
 )
 
 /**
- * A text field that picks one of [options]: typing filters them and forgives small typos, the
- * dropdown arrow shows all of them. Tapping the field itself only focuses it for typing. Like
- * Grocy's pickers it accepts no free text; leaving the field shows the chosen option again.
+ * A combobox like Grocy's pickers: the text in the field is the value. Text that names an
+ * option (ignoring case) chooses it, an empty field chooses nothing; other text chooses nothing
+ * either, keeps standing and shows an error once no suggestion is open, and [onUnmatchedChange]
+ * reports it, so a form can refuse to save. The menu only helps typing: it suggests the options
+ * that fit the text (forgiving small typos), the arrow shows all of them, and choosing one
+ * fills the field and closes it. Tapping the field itself only focuses it for typing.
  *
- * @param noneLabel makes the choice optional: shown as first option, and clearing the text
- *   chooses nothing.
+ * @param noneLabel makes the choice optional: offered as first suggestion, it clears the field.
  * @param trailingAction e.g. a scan button, placed before the dropdown arrow.
  */
 @Composable
@@ -72,6 +73,7 @@ fun SearchableDropdownField(
     selectedId: Int?,
     onSelectedIdChange: (Int?) -> Unit,
     modifier: Modifier = Modifier,
+    onUnmatchedChange: (Boolean) -> Unit = {},
     enabled: Boolean = true,
     isError: Boolean = false,
     supportingText: String? = null,
@@ -81,6 +83,9 @@ fun SearchableDropdownField(
     val haptic = LocalHapticFeedback.current
     val selectedLabel = options.firstOrNull { it.id == selectedId }?.label.orEmpty()
     val textState = rememberTextFieldState(selectedLabel)
+    val currentOptions by rememberUpdatedState(options)
+    val currentOnSelectedIdChange by rememberUpdatedState(onSelectedIdChange)
+    val currentOnUnmatchedChange by rememberUpdatedState(onUnmatchedChange)
     var expanded by remember { mutableStateOf(false) }
     var lastClose by remember { mutableStateOf<TimeMark?>(null) }
     fun close() {
@@ -88,38 +93,62 @@ fun SearchableDropdownField(
         expanded = false
     }
     var isFocused by remember { mutableStateOf(false) }
-    // True once the user typed, until a choice or leaving the field
-    var isSearching by remember { mutableStateOf(false) }
-    val currentSelectedLabel by rememberUpdatedState(selectedLabel)
+    // Text the field wrote itself, so it is not taken as typing
+    var writtenText by remember { mutableStateOf(selectedLabel) }
+    // True from typing until the text is replaced by a choice
+    var isTyped by remember { mutableStateOf(false) }
+    // The choice this field reported last; other changes come from outside (e.g. a scan)
+    var reportedId by remember { mutableStateOf(selectedId) }
+    val isUnmatched = isTyped && dropdownTextMatch(options, textState.text) == NoMatch
 
-    // Outside a search the field always shows the chosen option
-    LaunchedEffect(selectedLabel, isFocused, isSearching) {
-        if (!isSearching) textState.setTextAndPlaceCursorAtEnd(selectedLabel)
+    fun write(text: String) {
+        writtenText = text
+        isTyped = false
+        textState.setTextAndPlaceCursorAtEnd(text)
     }
+
+    // A choice from outside, or the options arriving, replace text the user did not type
+    LaunchedEffect(selectedId, selectedLabel) {
+        if (selectedId != reportedId || !isTyped) {
+            reportedId = selectedId
+            write(selectedLabel)
+        }
+    }
+    LaunchedEffect(isUnmatched) { currentOnUnmatchedChange(isUnmatched) }
     LaunchedEffect(textState) {
         snapshotFlow { textState.text.toString() }.collect { text ->
-            if (isFocused && text != currentSelectedLabel) {
-                isSearching = true
-                expanded = true
+            if (text == writtenText) return@collect
+            writtenText = text
+            isTyped = true
+            if (isFocused) expanded = true
+            val match = dropdownTextMatch(currentOptions, text)
+            val id = if (match == NoMatch) null else match
+            if (id != reportedId) {
+                reportedId = id
+                currentOnSelectedIdChange(id)
             }
         }
     }
 
-    val query = if (isSearching) textState.text.toString() else ""
+    val query = if (isTyped) textState.text.toString() else ""
     val matches = remember(options, query) {
         FuzzySearch.filter(options, query) { listOf(it.label) + it.searchTexts }
             .take(MAX_SHOWN_OPTIONS)
     }
-    val showNone = noneLabel != null && !isSearching
+    val showNone = noneLabel != null && query.isBlank()
 
     fun choose(id: Int?) {
         haptic.confirm()
+        close()
+        reportedId = id
         onSelectedIdChange(id)
-        isSearching = false
-        expanded = false
-        textState.setTextAndPlaceCursorAtEnd(options.firstOrNull { it.id == id }?.label.orEmpty())
+        write(options.firstOrNull { it.id == id }?.label.orEmpty())
     }
 
+    val unmatchedText = stringResource(Res.string.msg_choose_from_list)
+    val isMenuShown = expanded && enabled && (matches.isNotEmpty() || showNone)
+    // As soon as no suggestion is left: a tap beside the field does not take its focus away
+    val showUnmatched = isUnmatched && !isMenuShown
     ExposedDropdownMenuBox(
         expanded = expanded && enabled,
         // Taps on the field (and its scan button) only close the menu; it opens through the
@@ -133,10 +162,10 @@ fun SearchableDropdownField(
                 .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryEditable, enabled)
                 .fillMaxWidth()
                 .onFocusChanged { focus ->
-                    if (isFocused && !focus.isFocused && isSearching) {
-                        // Cleared optional fields choose nothing, other text is discarded
-                        if (noneLabel != null && textState.text.isBlank()) onSelectedIdChange(null)
-                        isSearching = false
+                    if (isFocused && !focus.isFocused) {
+                        close()
+                        // A matching text shows the option's own spelling
+                        if (isTyped && !isUnmatched) write(selectedLabel)
                     }
                     isFocused = focus.isFocused
                 },
@@ -145,9 +174,9 @@ fun SearchableDropdownField(
             trailingIcon = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     trailingAction?.invoke()
-                    // A button of its own, so the field keeps its label as accessible name
-                    val description = stringResource(Res.string.action_show_choices)
-                    IconButton(
+                    DropdownArrow(
+                        expanded = isMenuShown,
+                        enabled = enabled,
                         onClick = {
                             haptic.confirm()
                             // A tap on the arrow of an open menu closes it on touch down already
@@ -155,21 +184,15 @@ fun SearchableDropdownField(
                             val justClosed = lastClose?.elapsedNow()?.let { it < ReopenDelay }
                             expanded = !expanded && justClosed != true
                         },
-                        enabled = enabled,
-                    ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_rounded_arrow_drop_down),
-                            contentDescription = description,
-                            modifier = Modifier.rotate(if (expanded) 180f else 0f),
-                        )
-                    }
+                    )
                 }
             },
-            supportingText = supportingText?.let { { Text(it) } },
-            isError = isError,
+            supportingText = (if (showUnmatched) unmatchedText else supportingText)
+                ?.let { { Text(it) } },
+            isError = isError || showUnmatched,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             onKeyboardAction = {
-                // Enter takes the best match, like picking it from the list
+                // Enter takes the best suggestion, like picking it from the list
                 matches.firstOrNull()?.let { choose(it.id) }
             },
         )
@@ -177,7 +200,7 @@ fun SearchableDropdownField(
         // the padding of the old menus outside the scrolling, which cuts them off and breaks
         // the group's concentric corners. Not focusable, so the keyboard stays for typing.
         DropdownMenuPopup(
-            expanded = expanded && enabled && (matches.isNotEmpty() || showNone),
+            expanded = isMenuShown,
             onDismissRequest = { close() },
             modifier = Modifier.exposedDropdownSize(),
             popupPositionProvider = MenuDefaults.rememberDropdownMenuPopupPositionProvider(
@@ -192,45 +215,43 @@ fun SearchableDropdownField(
                     .heightIn(max = MenuMaxHeight)
                     .verticalScroll(rememberScrollState()),
             ) {
-                MenuOptions(
-                    matches = matches,
-                    selectedId = selectedId,
-                    noneLabel = noneLabel.takeIf { showNone },
-                    onChoose = ::choose,
-                )
+                val count = matches.size + if (showNone) 1 else 0
+                if (showNone && noneLabel != null) {
+                    OptionItem(
+                        text = noneLabel,
+                        supporting = null,
+                        index = 0,
+                        count = count,
+                        onClick = { choose(null) },
+                    )
+                }
+                val offset = if (showNone) 1 else 0
+                matches.forEachIndexed { index, option ->
+                    OptionItem(
+                        text = option.label,
+                        supporting = option.supporting,
+                        index = index + offset,
+                        count = count,
+                        onClick = { choose(option.id) },
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun MenuOptions(
-    matches: List<DropdownOption>,
-    selectedId: Int?,
-    noneLabel: String?,
-    onChoose: (Int?) -> Unit,
+private fun DropdownArrow(
+    expanded: Boolean,
+    enabled: Boolean,
+    onClick: () -> Unit,
 ) {
-    val showNone = noneLabel != null
-    val count = matches.size + if (showNone) 1 else 0
-    if (noneLabel != null) {
-        OptionItem(
-            text = noneLabel,
-            supporting = null,
-            selected = selectedId == null,
-            index = 0,
-            count = count,
-            onClick = { onChoose(null) },
-        )
-    }
-    val offset = if (showNone) 1 else 0
-    matches.forEachIndexed { index, option ->
-        OptionItem(
-            text = option.label,
-            supporting = option.supporting,
-            selected = option.id == selectedId,
-            index = index + offset,
-            count = count,
-            onClick = { onChoose(option.id) },
+    // A button of its own, so the field keeps its label as accessible name
+    IconButton(onClick = onClick, enabled = enabled) {
+        Icon(
+            painter = painterResource(Res.drawable.ic_rounded_arrow_drop_down),
+            contentDescription = stringResource(Res.string.action_show_choices),
+            modifier = Modifier.rotate(if (expanded) 180f else 0f),
         )
     }
 }
@@ -239,26 +260,31 @@ private fun MenuOptions(
 private fun OptionItem(
     text: String,
     supporting: String?,
-    selected: Boolean,
     index: Int,
     count: Int,
     onClick: () -> Unit,
 ) {
-    SelectableDropdownMenuItem(
-        selected = selected,
+    DropdownMenuItem(
         onClick = onClick,
         text = { Text(text) },
-        shapes = MenuDefaults.itemShape(index = index, count = count),
+        shape = menuItemShape(index = index, count = count),
         supportingText = supporting?.let { { Text(it) } },
-        selectedLeadingIcon = {
-            Icon(
-                painter = painterResource(Res.drawable.ic_rounded_check),
-                contentDescription = null,
-                modifier = Modifier.size(MenuDefaults.LeadingIconSize),
-            )
-        },
     )
 }
+
+/**
+ * What [text] chooses among [options]: the id of the option it names (ignoring case and
+ * surrounding spaces), null for an empty text, or [NoMatch].
+ */
+internal fun dropdownTextMatch(options: List<DropdownOption>, text: CharSequence): Int? {
+    val trimmed = text.trim()
+    if (trimmed.isEmpty()) return null
+    return options.firstOrNull { it.label.trim().equals(trimmed.toString(), ignoreCase = true) }
+        ?.id ?: NoMatch
+}
+
+/** Result of [dropdownTextMatch] for a text that names no option. */
+internal const val NoMatch = Int.MIN_VALUE
 
 // A list of thousands of products only shows the best matches, typing narrows them down
 private const val MAX_SHOWN_OPTIONS = 50

@@ -29,6 +29,7 @@
   <string name="action_back">Back</string>
   <string name="action_more_options">More options</string>
   <string name="action_cancel">Cancel</string>
+  <string name="action_discard">Discard</string>
   <string name="action_close">Close</string>
   <string name="action_update">Update</string>
   <string name="action_later">Later</string>
@@ -51,6 +52,9 @@
   <string name="action_copy_to_clipboard">Copy to clipboard</string>
 
   <!-- Messages -->
+  <string name="msg_choose_from_list">Choose an entry from the list</string>
+  <string name="msg_unsaved_changes">Unsaved changes</string>
+  <string name="msg_unsaved_changes_description">Save your changes before leaving, or discard them?</string>
   <string name="msg_recommend">Grocy keeps track of groceries and household on your own Grocy server: %1$s</string>
   <string name="msg_feedback">Do you have any wishes, questions or errors? Contact us and let us help!\nOtherwise we would be very happy about a nice review in the Play Store.</string>
   <string name="msg_unlock">Support the development</string>

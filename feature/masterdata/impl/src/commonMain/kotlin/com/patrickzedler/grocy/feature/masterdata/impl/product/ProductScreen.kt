@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,6 +37,9 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.patrickzedler.grocy.core.data.masterdata.PictureChange
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
@@ -193,13 +197,38 @@ internal fun ProductScreen(
     val options by viewModel.options.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     var showPictureDialog by rememberSaveable { mutableStateOf(false) }
+    // Saveable, so the question and the pending leave survive rotating the device
+    var showUnsavedDialog by rememberSaveable { mutableStateOf(false) }
+    var leaveAfterSave by rememberSaveable { mutableStateOf(false) }
+    val currentOnBackClick by rememberUpdatedState(onBackClick)
+    val requestBack = {
+        if (viewModel.hasUnsavedChanges) showUnsavedDialog = true else onBackClick()
+    }
+
+    // The back gesture and the browser's back ask too
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = viewModel.hasUnsavedChanges && !viewModel.isSaving,
+        onBackCompleted = { showUnsavedDialog = true },
+    )
+    if (showUnsavedDialog) {
+        UnsavedChangesDialog(
+            onSave = { leaveAfterSave = viewModel.save() },
+            onDiscard = onBackClick,
+            onDismissRequest = { showUnsavedDialog = false },
+        )
+    }
 
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
+            if (event !is ProductEvent.Created) leaveAfterSave = false
             when (event) {
-                ProductEvent.Saved -> onBackClick()
-                ProductEvent.Created ->
+                ProductEvent.Saved -> currentOnBackClick()
+                ProductEvent.Created -> if (leaveAfterSave) {
+                    currentOnBackClick()
+                } else {
                     snackbarHostState.showSnackbar(getString(Res.string.data_saved))
+                }
                 ProductEvent.Offline ->
                     snackbarHostState.showSnackbar(getString(Res.string.data_save_offline))
                 is ProductEvent.Failed -> snackbarHostState.showSnackbar(
@@ -219,7 +248,7 @@ internal fun ProductScreen(
             if (viewModel.isNew) Res.string.product_create else Res.string.product_edit,
         ),
         modifier = modifier,
-        navigationIcon = { NavigateBackButton(onClick = onBackClick) },
+        navigationIcon = { NavigateBackButton(onClick = requestBack) },
         snackbarHostState = snackbarHostState,
         floatingToolbar = { scrollBehavior, toolbarModifier ->
             FloatingToolbarWithFab(
@@ -227,7 +256,7 @@ internal fun ProductScreen(
                 modifier = toolbarModifier,
                 fabPainter = painterResource(Res.drawable.ic_rounded_save),
                 fabDescription = stringResource(Res.string.action_save),
-                onFabClick = viewModel::save,
+                onFabClick = { viewModel.save() },
             ) {
                 // Their screens follow, they exist once the product is saved
                 FloatingToolbarIconButton(
@@ -306,6 +335,7 @@ private fun LazyListScope.productForm(
                             options = locations,
                             selectedId = form.locationId,
                             onSelectedIdChange = { form.locationId = it },
+                            onUnmatchedChange = { form.setUnmatched(ProductChoice.LOCATION, it) },
                             error = fieldErrorText(
                                 errors[ProductField.LOCATION],
                                 Res.string.product_location_required,
@@ -324,6 +354,9 @@ private fun LazyListScope.productForm(
                             options = locations,
                             selectedId = form.defaultConsumeLocationId,
                             onSelectedIdChange = { form.defaultConsumeLocationId = it },
+                            onUnmatchedChange = {
+                                form.setUnmatched(ProductChoice.CONSUME_LOCATION, it)
+                            },
                             hint = stringResource(Res.string.product_consume_location_hint),
                             optional = true,
                             index = index,
@@ -354,6 +387,7 @@ private fun LazyListScope.productForm(
                             options = options.stores.toOptions(form.storeId) { it.id to it.name },
                             selectedId = form.storeId,
                             onSelectedIdChange = { form.storeId = it },
+                            onUnmatchedChange = { form.setUnmatched(ProductChoice.STORE, it) },
                             optional = true,
                             index = index,
                             count = count,
@@ -427,6 +461,7 @@ private fun LazyListScope.productForm(
                     options = unitOptions,
                     selectedId = form.quIdStock,
                     onSelectedIdChange = form::changeStockUnit,
+                    onUnmatchedChange = { form.setUnmatched(ProductChoice.QU_STOCK, it) },
                     hint = stringResource(Res.string.product_qu_stock_hint),
                     error = fieldErrorText(errors[ProductField.QU_STOCK], required),
                     index = index,
@@ -439,6 +474,7 @@ private fun LazyListScope.productForm(
                     options = unitOptions,
                     selectedId = form.quIdPurchase,
                     onSelectedIdChange = { form.quIdPurchase = it },
+                    onUnmatchedChange = { form.setUnmatched(ProductChoice.QU_PURCHASE, it) },
                     hint = stringResource(Res.string.product_qu_purchase_hint),
                     error = fieldErrorText(errors[ProductField.QU_PURCHASE], required),
                     index = index,
@@ -451,6 +487,7 @@ private fun LazyListScope.productForm(
                     options = unitOptions,
                     selectedId = form.quIdConsume,
                     onSelectedIdChange = { form.quIdConsume = it },
+                    onUnmatchedChange = { form.setUnmatched(ProductChoice.QU_CONSUME, it) },
                     hint = stringResource(Res.string.product_qu_consume_hint),
                     error = fieldErrorText(errors[ProductField.QU_CONSUME], required),
                     index = index,
@@ -463,6 +500,7 @@ private fun LazyListScope.productForm(
                     options = unitOptions,
                     selectedId = form.quIdPrice,
                     onSelectedIdChange = { form.quIdPrice = it },
+                    onUnmatchedChange = { form.setUnmatched(ProductChoice.QU_PRICE, it) },
                     hint = stringResource(Res.string.product_qu_price_hint),
                     error = fieldErrorText(errors[ProductField.QU_PRICE], required),
                     index = index,
@@ -543,8 +581,12 @@ private fun LazyListScope.productForm(
             supporting = when (viewModel.pictureChange) {
                 PictureChange.Delete -> stringResource(Res.string.product_picture_will_delete)
                 is PictureChange.Replace -> stringResource(Res.string.product_picture_will_upload)
-                PictureChange.Keep -> viewModel.pictureFileName?.let { null }
-                    ?: stringResource(Res.string.product_picture_none)
+                // A saved picture needs no note, the dialog shows it
+                PictureChange.Keep -> if (viewModel.pictureFileName == null) {
+                    stringResource(Res.string.product_picture_none)
+                } else {
+                    null
+                }
             },
             iconPainter = painterResource(Res.drawable.ic_rounded_image),
             index = 2,
@@ -598,6 +640,7 @@ private fun GeneralItems(
                 options = candidates.toOptions(form.parentProductId) { it.id to it.name },
                 selectedId = form.parentProductId,
                 onSelectedIdChange = { form.parentProductId = it },
+                onUnmatchedChange = { form.setUnmatched(ProductChoice.PARENT, it) },
                 hint = stringResource(Res.string.product_parent_disabled).takeIf { hasSubProducts },
                 optional = true,
                 enabled = !hasSubProducts,
@@ -674,6 +717,7 @@ private fun GeneralItems(
                     .map { DropdownOption(it.id, it.name) },
                 selectedId = form.productGroupId,
                 onSelectedIdChange = { form.productGroupId = it },
+                onUnmatchedChange = { form.setUnmatched(ProductChoice.PRODUCT_GROUP, it) },
                 optional = true,
                 index = index,
                 count = count,
@@ -1008,6 +1052,7 @@ private fun UserfieldItem(
             },
             selectedId = field.options.indexOf(input.selectedOption).takeIf { it >= 0 },
             onSelectedIdChange = { id -> input.selectedOption = id?.let { field.options[it] } },
+            onUnmatchedChange = { input.isUnmatched = it },
             error = errorText,
             optional = true,
             index = index,

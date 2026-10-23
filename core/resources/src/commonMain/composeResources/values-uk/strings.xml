@@ -341,4 +341,8 @@
   <string name="product_save_hint">Збережіть, щоб додати штрихкоди та конверсії одиниць виміру</string>
   <string name="log_empty">Помилок не зареєстровано</string>
   <string name="log_report_crash">Якщо застосунок аварійно завершив роботу або щось пішло не так, скопіюйте журнал і надішліть його разом із відгуком, щоб помилку можна було виправити.</string>
+  <string name="action_discard">Скасувати</string>
+  <string name="msg_choose_from_list">Виберіть запис зі списку</string>
+  <string name="msg_unsaved_changes">Незбережені зміни</string>
+  <string name="msg_unsaved_changes_description">Зберегти зміни перед виходом чи скасувати їх?</string>
 </resources>

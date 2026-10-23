@@ -339,4 +339,8 @@
   <string name="product_save_hint">Sla op om streepjescodes en hoeveelheidseenheidsconversies toe te voegen</string>
   <string name="log_empty">Geen fouten gelogd</string>
   <string name="log_report_crash">Is de app gecrasht of ging er iets mis, kopieer dan het log en stuur het mee met je feedback, zodat de fout kan worden opgelost.</string>
+  <string name="action_discard">Verwerpen</string>
+  <string name="msg_choose_from_list">Kies een item uit de lijst</string>
+  <string name="msg_unsaved_changes">Niet-opgeslagen wijzigingen</string>
+  <string name="msg_unsaved_changes_description">Wijzigingen opslaan voordat je weggaat, of ze verwerpen?</string>
 </resources>

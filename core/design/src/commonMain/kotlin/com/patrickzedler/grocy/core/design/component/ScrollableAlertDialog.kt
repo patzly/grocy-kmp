@@ -77,11 +77,12 @@ fun ScrollableAlertDialog(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = onDismissRequest
-                )
+                // A tap beside the dialog closes it. No clickable: that would merge the dialog's
+                // semantics into one node, and its pane title cannot be merged (the web throws).
+                // Back and Escape close it for keyboards and screen readers.
+                .pointerInput(onDismissRequest) {
+                    detectTapGestures { onDismissRequest() }
+                }
                 // Android's safeDrawing contains the keyboard already, the web adds it here
                 .windowInsetsPadding(
                     WindowInsets.safeDrawing
@@ -216,7 +217,8 @@ fun ScrollableAlertDialogContent(
                         val applyContentPadding = isScrollable && !isScrollableControlledByContent
                         Box(
                             modifier = Modifier.padding(
-                                start = scrollableContentPadding.calculateStartPadding(layoutDirection),
+                                start = scrollableContentPadding
+                                    .calculateStartPadding(layoutDirection),
                                 top = if (applyContentPadding) {
                                     scrollableContentPadding.calculateTopPadding()
                                 } else {

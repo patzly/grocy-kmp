@@ -338,4 +338,8 @@
   <string name="product_save_hint">保存后即可添加条码和数量单位转换</string>
   <string name="log_empty">未记录任何错误</string>
   <string name="log_report_crash">如果应用崩溃或出现问题，请复制日志并随反馈一起发送，以便修复错误。</string>
+  <string name="action_discard">舍弃</string>
+  <string name="msg_choose_from_list">请从列表中选择一项</string>
+  <string name="msg_unsaved_changes">未保存的更改</string>
+  <string name="msg_unsaved_changes_description">离开前保存更改，还是舍弃更改？</string>
 </resources>

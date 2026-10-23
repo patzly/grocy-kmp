@@ -340,4 +340,8 @@
   <string name="product_save_hint">Salve para adicionar códigos de barras e conversões de medidas</string>
   <string name="log_empty">Nenhum erro registrado</string>
   <string name="log_report_crash">Se o app travou ou algo deu errado, copie o log e envie-o com seu feedback para que o erro possa ser corrigido.</string>
+  <string name="action_discard">Descartar</string>
+  <string name="msg_choose_from_list">Escolha um item da lista</string>
+  <string name="msg_unsaved_changes">Alterações não salvas</string>
+  <string name="msg_unsaved_changes_description">Salvar as alterações antes de sair ou descartá-las?</string>
 </resources>

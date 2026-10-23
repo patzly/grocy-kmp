@@ -339,4 +339,8 @@
   <string name="product_save_hint">Spara för att lägga till streckkoder och omvandlingar mellan mängdenheter</string>
   <string name="log_empty">Inga fel loggade</string>
   <string name="log_report_crash">Om appen kraschade eller något gick fel kan du kopiera loggen och skicka den med din feedback, så att felet kan åtgärdas.</string>
+  <string name="action_discard">Ignorera</string>
+  <string name="msg_choose_from_list">Välj en post i listan</string>
+  <string name="msg_unsaved_changes">Osparade ändringar</string>
+  <string name="msg_unsaved_changes_description">Vill du spara ändringarna innan du lämnar, eller ignorera dem?</string>
 </resources>

@@ -18,20 +18,28 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   hides the ones whose feature flag is off (`MasterDataCategory.isAvailable`); Products shows
   the number of products once it is known (stored products or a finished download).
 - Every list screen (start, master data, products) has pull to refresh through
-  `SegmentedListScreen(isRefreshing, onRefresh)`: `ScalingPullToRefreshIndicator` (Material's
-  contained loading indicator, starting below the app bar and growing with the pull, because
-  Material's own slides out of the app bar, which has the screen's color), and "Reload" in the
-  app bar's overflow menu (`AppBarOverflowMenu`, narrow three dots button) for keyboards and
-  screen readers. These screens use the small centered app bar with `pinnedScrollBehavior`
-  (same colors, no collapsing, which would fight with pulling); the others keep the large one.
+  `SegmentedListScreen(isRefreshing, onRefresh)`: Material's own
+  `PullToRefreshDefaults.LoadingIndicator`, sliding out from below the app bar, and "Reload" in
+  the app bar's overflow menu (`AppBarOverflowMenu`, narrow three dots button) for keyboards and
+  screen readers. With a mouse or trackpad (`LocalPointerKind`, below) pulling is off (a wheel
+  only showed the indicator without refreshing) and "Reload" is a narrow icon button of the bar
+  instead. These screens use the small centered app bar with `pinnedScrollBehavior` (no
+  collapsing, which would fight with pulling), always in its scrolled color
+  (`surfaceContainerHighest`), so the indicator visibly comes from below it; the others keep
+  the large one.
   Single items of a menu group use `menuItemShape(0, 1)`: Material's standalone item shape has
   the small corners of middle items, so its ripple would not fill the rounded group. ViewModels run downloads through
   `RefreshController` (`core:data`: one at a time, offline/failed errors, `loadedOnce`);
   `RefreshErrorEffect` (`core:ui`) shows a failed download as snackbar.
-- `ProductsScreen`: one segmented item per product (`itemSpacing = SegmentedGap`), a first group
-  with the filter row (its own item without horizontal padding: the 16.dp scroll with the chips)
-  and, while open, the search below it (search icon as the item's leading content).
-  `ProductFilterBar` has Material 3 chips, one per filter: product group and status
+- `ProductsScreen`: one segmented item per product (`itemSpacing = SegmentedGap`, a product with
+  picture shows it at the item's end, `ProductThumbnail`, 56.dp with small corners, kept by the
+  ViewModel while the list is open), first the filter row directly on the background
+  (`edgeToEdgeItem` of `InsetLazyColumn`: it scrolls sideways up to the screen's edges, the
+  padding that lines it up with the items scrolls along) and, while open, the search as its own
+  segmented item below it (full width, opens with Material's spatial spring, focused once open,
+  since focusing scrolls it into view and would fight the opening).
+  `ProductFilterBar` has Material 3 elevated chips (their `surfaceContainerLow` container stands
+  out from the background), one per filter: product group and status
   as dropdown filter chips that are selected and show the value while not "All", "Show
   disabled" as toggle chip, a sort chip, and "Clear filter" as assist chip with a reset icon
   at its start while a filter (not the search) is active; chips use the standard overloads with Material's 8.dp rounded rectangle, not the
@@ -50,7 +58,12 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   edited by type (`UserfieldInput`, only changed ones are sent; files and images read only),
   the picture through `ProductPictureDialog` (`rememberImagePicker` of `core:ui`), the parent
   product can also be scanned (barcode or grocycode `grcy:p:<id>`): the scanner opens inside the
-  field's item below it (`DropdownItem(below)`, small corners, text field color).
+  field's item below it (`DropdownItem(below)`, small corners, text field color). Pickers whose
+  text names no option (`ProductFormState.unmatchedChoices`, `UserfieldInput.isUnmatched`) block
+  saving. Leaving with unsaved changes (`ProductViewModel.hasUnsavedChanges`: form values,
+  userfields, picture or unmatched text differ from the loaded or last saved state; back button,
+  back gesture and browser back) asks in `UnsavedChangesDialog` (saveable, survives rotation):
+  save (and leave once saved), discard, or cancel.
 
 Settings plan: the overview lists the categories General (language, theme, contrast), Server
 (server URL, Grocy version, reload configuration, logout), User settings (loaded from the
@@ -152,6 +165,10 @@ text fields, buttons, text or a scanner), `SegmentedListDefaults.colors()`/`.sha
 for `SegmentedListItem`s, and `AppBarIconButton` for app bar actions.
 
 - Screen background is always `surfaceContainer` (`Scaffold(containerColor = ...)`).
+- Top app bar: `LargeFlexibleTopAppBar` (Material 3 Expressive) with the expanded title at the
+  start and the collapsed one centered. Compose aligns both rows alike, so `SegmentedListScreen`
+  centers them and lets the expanded row's title fill its width (text at its start), which puts
+  it exactly where a start aligned title would be; the row is told apart by its text style.
 - Top app bar: `surfaceContainer` while not scrolled, `surfaceContainerHighest` when scrolled
   (`TopAppBarDefaults.topAppBarColors(containerColor = surfaceContainer,
   scrolledContainerColor = surfaceContainerHighest)` plus a scroll behavior connected via
@@ -531,7 +548,8 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
 
 - One component for the whole app: `BarcodeScanner(onBarcodeScanned, formats, shape, paused)`.
   Pass the segmented item shape (`SegmentedListDefaults.shape(index, count)`) and place it as an
-  item of a group, never directly on the background. It is a landscape rectangle (16:10) and
+  item of a group, never directly on the background. It is a landscape rectangle (16:10, at most
+  240.dp high, so wide windows such as desktop browsers get a strip) and
   draws its own `surface` background and permission/error states inside. The torch button sits
   in the bottom end corner with 12.dp margin.
 - Engines implement `BarcodeDecoder` (`decode(CameraFrame, formats): List<Barcode>`):
@@ -572,16 +590,19 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   (kept out of public APIs: `HapticTooltipBox` takes its own `TooltipPosition`). Compose 1.13
   needs compileSdk 37.1 or newer (`android-compileSdkMinor`).
 - Font is Google Sans Flex from Compose Resources. On web fonts load async;
-  `rememberThemeFontsReady()` gates `onContentReady`, which removes the Android splash / the HTML
+  `rememberResourcesReady()` (also every string and icon: browsers load them asynchronously, so a new screen would fill in its texts while sliding in) gates `onContentReady`, which removes the Android splash / the HTML
   `#loading` element.
 - Reuse components from `core:design` (`SegmentedListScreen`, `segmentedGroup`,
   `SegmentedContainer`, `AppBarIconButton`, `InsetLazyColumn` + `insetItem` with max width
   640.dp, `RoundedTextField`, `ConnectedButtonGroup`, `NavigateBackButton`, `HapticTooltipBox`,
   `TextDialog`, `FormattedText`, `FloatingToolbarWithFab` + `FloatingToolbarIconButton` for the
   floatingToolbar slot of `SegmentedListScreen`, `SegmentedSwitchItem`,
-  `SearchableDropdownField` for every choice of objects: fuzzy search while typing, no free
-  text, optional fields offer "None"; the menu opens through its arrow or while typing, a tap
-  on the field or its trailing action (scan) only focuses; its menu is one expressive menu
+  `SearchableDropdownField` for every choice of objects, a combobox like Grocy's pickers: the
+  text is the value (a text naming an option chooses it, an empty one chooses nothing, other
+  text shows "Choose an entry from the list" once no suggestion is open and is reported through
+  `onUnmatchedChange`, so forms refuse to save); the menu only suggests (fuzzy, no check marks,
+  optional fields offer "None"), opens through its arrow or while typing and closes on a choice;
+  a tap on the field or its trailing action (scan) only focuses; its menu is one expressive menu
   group in a `DropdownMenuPopup`, not `ExposedDropdownMenu`, whose old menu padding sits outside
   the scrolling and cuts the items off), units of text fields go in the
   `suffix` slot of `RoundedTextField`. `SegmentedSwitchItem` is Material's checkable segmented item: while on it takes the selected
@@ -590,6 +611,15 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   Tooltips show on long press, mouse hover and keyboard focus, never after a plain tap or click:
   Compose on the web focuses a clicked button, so `TooltipPressTracker` tells a pointer focus
   (`TooltipTrigger.PointerFocus`) from keyboard focus and long press.
+- `LocalPointerKind` (`core:design`, provided and tracked by `GrocyApp` with
+  `trackPointerKind`): whether the user works with a mouse or trackpad right now. It starts with
+  the device (`(pointer: fine)` in browsers, `FEATURE_PC` on Android) and follows the pointer of
+  the last press or wheel turn; hover moves do not count, browsers emulate them after a tap.
+- `ScrollableAlertDialog` closes on a tap beside it through `detectTapGestures`, not
+  `clickable`, which would merge the dialog's pane title into one node (the web throws).
+- "Recommend" (`rememberRecommendAction`) opens the system share sheet; where there is none
+  (desktop browsers on Linux, `isTextSharingAvailable`) it shows `AppDialog.RECOMMEND` with the
+  text and "Copy to clipboard" (`plainTextClipEntry` of `core:ui`).
 - `GrocyApp` draws a `surfaceContainer` background below all screens, so fading transitions never
   show the window or page behind them. On the web `SystemBarAppearance` also sets the page
   background to `surfaceContainer`.

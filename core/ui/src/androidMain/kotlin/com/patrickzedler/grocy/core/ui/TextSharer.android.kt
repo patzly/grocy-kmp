@@ -22,3 +22,6 @@ internal actual fun rememberTextSharer(): (String) -> Unit {
         }
     }
 }
+
+// Android always has the share sheet
+internal actual fun isTextSharingAvailable(): Boolean = true

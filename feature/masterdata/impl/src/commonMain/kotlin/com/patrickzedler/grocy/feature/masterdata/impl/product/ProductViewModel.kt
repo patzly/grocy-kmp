@@ -96,6 +96,10 @@ internal class ProductViewModel(
     private var original: Product? = null
     private var originalDescriptionText = ""
 
+    // What the form showed when it was loaded or last saved, to tell unsaved changes
+    private var savedValues by mutableStateOf<ProductFormValues?>(null)
+    private var savedUserfields by mutableStateOf<Map<String, String?>>(emptyMap())
+
     private val eventChannel = Channel<ProductEvent>(Channel.BUFFERED)
     val events: Flow<ProductEvent> = eventChannel.receiveAsFlow()
 
@@ -122,6 +126,18 @@ internal class ProductViewModel(
 
     val isNew: Boolean
         get() = productId == MasterDataRepository.NEW_PRODUCT_ID
+
+    /** True when the form differs from the saved product (or the presets of a new one). */
+    val hasUnsavedChanges: Boolean
+        get() {
+            val state = loadState as? ProductLoadState.Ready ?: return false
+            return state.form.values() != savedValues ||
+                state.form.unmatchedChoices.isNotEmpty() ||
+                state.userfields.any {
+                    it.isUnmatched || savedUserfields[it.userfield.name] != it.value
+                } ||
+                pictureChange != PictureChange.Keep
+        }
 
     /** The saved picture, null without one or until it is saved. */
     val pictureFileName: String?
@@ -164,6 +180,8 @@ internal class ProductViewModel(
             }
             UserfieldInput(field, value)
         }
+        savedValues = values
+        savedUserfields = userfields.associate { it.userfield.name to it.value }
         loadState = ProductLoadState.Ready(
             form = ProductFormState(values),
             userfields = userfields,
@@ -197,10 +215,11 @@ internal class ProductViewModel(
         return options.products.firstOrNull { it.id == id }
     }
 
-    fun save() {
-        val state = loadState as? ProductLoadState.Ready ?: return
-        val options = options.value ?: return
-        if (isSaving) return
+    /** Saves the form; false when nothing is sent because the input is invalid. */
+    fun save(): Boolean {
+        val state = loadState as? ProductLoadState.Ready ?: return false
+        val options = options.value ?: return false
+        if (isSaving) return true
         val values = state.form.values()
         errors = values.validate(
             features = state.features,
@@ -210,7 +229,12 @@ internal class ProductViewModel(
         userfieldErrors = state.userfields.mapNotNull { input ->
             validateUserfield(input.userfield, input.value)?.let { input.userfield.name to it }
         }.toMap()
-        if (errors.isNotEmpty() || userfieldErrors.isNotEmpty()) return
+        // Pickers with text that names no option show their own error
+        val hasUnmatchedChoices = state.form.unmatchedChoices.isNotEmpty() ||
+            state.userfields.any { it.isUnmatched }
+        if (errors.isNotEmpty() || userfieldErrors.isNotEmpty() || hasUnmatchedChoices) {
+            return false
+        }
 
         val product = values.toProduct(productId, original, originalDescriptionText, state.features)
         val changedUserfields = state.userfields.filter { it.isChanged }
@@ -226,6 +250,8 @@ internal class ProductViewModel(
                     original = saved
                     originalDescriptionText = values.description
                     pictureChange = PictureChange.Keep
+                    savedValues = values
+                    savedUserfields = state.userfields.associate { it.userfield.name to it.value }
                     ProductEvent.Created
                 } else {
                     ProductEvent.Saved
@@ -242,6 +268,7 @@ internal class ProductViewModel(
             isSaving = false
             eventChannel.send(event)
         }
+        return true
     }
 
     /** The saved picture as image bytes, scaled by the server; null without one. */

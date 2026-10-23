@@ -340,4 +340,8 @@
   <string name="product_save_hint">Salva per aggiungere codici a barre e conversioni di unità</string>
   <string name="log_empty">Nessun errore registrato</string>
   <string name="log_report_crash">Se l’app si è arrestata in modo anomalo o qualcosa è andato storto, copia il log e invialo con il tuo feedback, così l’errore potrà essere corretto.</string>
+  <string name="action_discard">Scarta</string>
+  <string name="msg_choose_from_list">Scegli una voce dall’elenco</string>
+  <string name="msg_unsaved_changes">Modifiche non salvate</string>
+  <string name="msg_unsaved_changes_description">Salvare le modifiche prima di uscire o scartarle?</string>
 </resources>

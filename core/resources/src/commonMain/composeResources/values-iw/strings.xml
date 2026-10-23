@@ -340,4 +340,8 @@
   <string name="product_save_hint">יש לשמור כדי להוסיף ברקודים והמרות יחידות כמות</string>
   <string name="log_empty">לא נרשמו שגיאות</string>
   <string name="log_report_crash">אם האפליקציה קרסה או שמשהו השתבש, אפשר להעתיק את היומן ולשלוח אותו עם המשוב כדי שניתן יהיה לתקן את השגיאה.</string>
+  <string name="action_discard">ביטול שינויים</string>
+  <string name="msg_choose_from_list">יש לבחור פריט מהרשימה</string>
+  <string name="msg_unsaved_changes">שינויים שלא נשמרו</string>
+  <string name="msg_unsaved_changes_description">לשמור את השינויים לפני היציאה או לבטל אותם?</string>
 </resources>

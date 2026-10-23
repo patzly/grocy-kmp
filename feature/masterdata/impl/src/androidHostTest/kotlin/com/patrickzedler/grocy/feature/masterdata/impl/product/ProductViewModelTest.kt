@@ -3,6 +3,7 @@ package com.patrickzedler.grocy.feature.masterdata.impl.product
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import app.cash.turbine.test
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.masterdata.PictureChange
 import com.patrickzedler.grocy.core.testing.MasterDataJson
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
 import io.ktor.http.HttpMethod
@@ -88,6 +89,92 @@ class ProductViewModelTest {
         assertEquals(FieldError.Required, viewModel.errors[ProductField.NAME])
         val posts = environment.server.requestsTo("/api/objects/products", HttpMethod.Post)
         assertTrue(posts.isEmpty())
+    }
+
+    @Test
+    fun loadedProductHasNoUnsavedChanges() = runTest(dispatcher) {
+        val viewModel = viewModel(productId = 1)
+
+        assertFalse(viewModel.hasUnsavedChanges)
+    }
+
+    @Test
+    fun editedFieldIsAnUnsavedChange() = runTest(dispatcher) {
+        val viewModel = viewModel(productId = 1)
+
+        viewModel.ready.form.active = false
+
+        assertTrue(viewModel.hasUnsavedChanges)
+    }
+
+    @Test
+    fun editedUserfieldIsAnUnsavedChange() = runTest(dispatcher) {
+        val viewModel = viewModel(productId = 1)
+
+        viewModel.ready.userfields.single().text.setTextAndPlaceCursorAtEnd("Other")
+
+        assertTrue(viewModel.hasUnsavedChanges)
+    }
+
+    @Test
+    fun pickerTextThatNamesNoOptionIsAnUnsavedChange() = runTest(dispatcher) {
+        val viewModel = viewModel(productId = 1)
+
+        viewModel.ready.form.setUnmatched(ProductChoice.STORE, unmatched = true)
+
+        assertTrue(viewModel.hasUnsavedChanges)
+    }
+
+    @Test
+    fun changedPictureIsAnUnsavedChange() = runTest(dispatcher) {
+        val viewModel = viewModel(productId = 1)
+
+        viewModel.pictureChange = PictureChange.Delete
+
+        assertTrue(viewModel.hasUnsavedChanges)
+    }
+
+    @Test
+    fun createdProductHasNoUnsavedChanges() = runTest(dispatcher) {
+        val viewModel = viewModel(productId = null)
+        viewModel.ready.form.name.setTextAndPlaceCursorAtEnd("Created")
+
+        viewModel.save()
+        advanceUntilIdle()
+
+        assertFalse(viewModel.hasUnsavedChanges)
+    }
+
+    @Test
+    fun invalidInputReportsThatNothingIsSaved() = runTest(dispatcher) {
+        val viewModel = viewModel(productId = null)
+
+        assertFalse(viewModel.save())
+    }
+
+    @Test
+    fun pickerTextThatNamesNoOptionIsNotSent() = runTest(dispatcher) {
+        val viewModel = viewModel(productId = 1)
+        viewModel.ready.form.setUnmatched(ProductChoice.PARENT, unmatched = true)
+
+        viewModel.save()
+        advanceUntilIdle()
+
+        val puts = environment.server.requestsTo("/api/objects/products/1", HttpMethod.Put)
+        assertTrue(puts.isEmpty())
+    }
+
+    @Test
+    fun pickerTextThatMatchesAgainIsSent() = runTest(dispatcher) {
+        val viewModel = viewModel(productId = 1)
+        viewModel.ready.form.setUnmatched(ProductChoice.PARENT, unmatched = true)
+        viewModel.ready.form.setUnmatched(ProductChoice.PARENT, unmatched = false)
+
+        viewModel.save()
+        advanceUntilIdle()
+
+        val puts = environment.server.requestsTo("/api/objects/products/1", HttpMethod.Put)
+        assertEquals(1, puts.size)
     }
 
     @Test

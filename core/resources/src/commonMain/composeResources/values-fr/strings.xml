@@ -340,4 +340,8 @@
   <string name="product_save_hint">Enregistrez pour ajouter des codes-barres et des conversions d’UQ</string>
   <string name="log_empty">Aucune erreur enregistrée</string>
   <string name="log_report_crash">Si l’application a planté ou si quelque chose s’est mal passé, copiez le journal et envoyez-le avec vos commentaires, afin que l’erreur puisse être corrigée.</string>
+  <string name="action_discard">Ignorer</string>
+  <string name="msg_choose_from_list">Choisissez une entrée de la liste</string>
+  <string name="msg_unsaved_changes">Modifications non enregistrées</string>
+  <string name="msg_unsaved_changes_description">Enregistrer vos modifications avant de quitter, ou les ignorer ?</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.patrickzedler.grocy.core.design.component
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -27,7 +27,8 @@ import androidx.compose.material3.FloatingToolbarExitDirection
 import androidx.compose.material3.FloatingToolbarScrollBehavior
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -36,9 +37,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -51,16 +52,20 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.patrickzedler.grocy.core.design.LocalPointerKind
 import com.patrickzedler.grocy.core.design.StatusBarColorEffect
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_reload
+import com.patrickzedler.grocy.core.resources.ic_rounded_refresh
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
  * The standard screen: surfaceContainer background, a large top app bar that turns
  * surfaceContainerHighest when scrolled, and an [InsetLazyColumn] for [segmentedGroup]s.
- * Screens with [onRefresh] get a small centered app bar that stays in place and only changes
- * its color: collapsing it would fight with pulling to refresh.
+ * Screens with [onRefresh] get a small centered app bar that stays in place: collapsing it would
+ * fight with pulling to refresh. It always has its scrolled color, so the loading indicator
+ * visibly comes out from below it.
  * The list shrinks with the keyboard, so a focused text field always stays above it.
  *
  * [navigationIcon] is usually a [NavigateBackButton], [actions] are [AppBarIconButton]s.
@@ -69,8 +74,9 @@ import org.jetbrains.compose.resources.stringResource
  * scroll behavior measures how far to move it within the screen high box it is placed in.
  * [itemSpacing] is the space between list items, the segmented gap for long lists whose items
  * are one group each. With [onRefresh] the list can be pulled down to download its data again
- * (Material's contained loading indicator) or through "Reload" in the app bar's overflow menu,
- * which keyboards and screen readers reach.
+ * (Material's contained loading indicator), or through "Reload" in the app bar's overflow menu
+ * for keyboards and screen readers. With a mouse, which cannot pull (its wheel would only show
+ * the indicator), pulling is off and "Reload" is a button of the app bar.
  */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -96,19 +102,16 @@ fun SegmentedListScreen(
     val toolbarScrollBehavior = FloatingToolbarDefaults.exitAlwaysScrollBehavior(
         exitDirection = FloatingToolbarExitDirection.Bottom,
     )
-    val containerColor = MaterialTheme.colorScheme.surfaceContainer
     val scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
-    // The small bar switches its color once content lies below it, animated like the bar does
-    val isOverlapped by remember(scrollBehavior) {
-        derivedStateOf { scrollBehavior.state.overlappedFraction > OVERLAP_THRESHOLD }
+    val containerColor = if (isRefreshable) {
+        scrolledContainerColor
+    } else {
+        MaterialTheme.colorScheme.surfaceContainer
     }
-    val pinnedBarColor by animateColorAsState(
-        targetValue = if (isOverlapped) scrolledContainerColor else containerColor,
-        animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
-    )
+    val usesMouse = LocalPointerKind.current.usesMouse
     StatusBarColorEffect {
         if (isRefreshable) {
-            pinnedBarColor
+            scrolledContainerColor
         } else {
             // The same color the large app bar computes from its collapsed fraction
             lerp(
@@ -144,12 +147,35 @@ fun SegmentedListScreen(
                     overflow = TextOverflow.Ellipsis,
                 )
             }
+            // Material 3 Expressive: the expanded title starts at the edge, the collapsed one is
+            // centered. Compose aligns both rows alike, so the bar centers its titles and the
+            // expanded row's title fills its width with the text at its start, which places it
+            // exactly where a start aligned title would be.
+            val collapsedTitleStyle = MaterialTheme.typography.titleLarge
+            val largeTitleContent: @Composable () -> Unit = {
+                val isExpandedRow = LocalTextStyle.current.fontSize != collapsedTitleStyle.fontSize
+                Text(
+                    text = title,
+                    modifier = if (isExpandedRow) Modifier.fillMaxWidth() else Modifier,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
             val allActions: @Composable RowScope.() -> Unit = {
                 actions()
-                // Pulling is a gesture; the menu refreshes for keyboards and screen readers
                 if (onRefresh != null) {
                     val reload = stringResource(Res.string.action_reload)
-                    AppBarOverflowMenu(listOf(AppBarMenuItem(reload, onRefresh)))
+                    if (usesMouse) {
+                        AppBarIconButton(
+                            painter = painterResource(Res.drawable.ic_rounded_refresh),
+                            contentDescription = reload,
+                            onClick = onRefresh,
+                            narrow = true,
+                        )
+                    } else {
+                        // Pulling is a gesture; the menu refreshes for keyboards and screen readers
+                        AppBarOverflowMenu(listOf(AppBarMenuItem(reload, onRefresh)))
+                    }
                 }
             }
             val colors = TopAppBarDefaults.topAppBarColors(
@@ -165,8 +191,9 @@ fun SegmentedListScreen(
                     scrollBehavior = scrollBehavior,
                 )
             } else {
-                LargeTopAppBar(
-                    title = titleContent,
+                LargeFlexibleTopAppBar(
+                    title = largeTitleContent,
+                    titleHorizontalAlignment = Alignment.CenterHorizontally,
                     navigationIcon = navigationIcon,
                     actions = allActions,
                     colors = colors,
@@ -192,9 +219,10 @@ fun SegmentedListScreen(
             onRefresh = { onRefresh?.invoke() },
             modifier = Modifier.fillMaxSize(),
             state = pullToRefreshState,
-            enabled = onRefresh != null,
+            enabled = onRefresh != null && !usesMouse,
             indicator = {
-                ScalingPullToRefreshIndicator(
+                // Slides out from below the app bar
+                PullToRefreshDefaults.LoadingIndicator(
                     state = pullToRefreshState,
                     isRefreshing = isRefreshing,
                     modifier = Modifier
@@ -287,6 +315,3 @@ fun AppBarIconButton(
         }
     }
 }
-
-// Material switches the small app bar's color once content scrolled below it
-private const val OVERLAP_THRESHOLD = 0.01f

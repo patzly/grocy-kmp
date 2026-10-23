@@ -19,6 +19,8 @@ import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
+import com.patrickzedler.grocy.core.network.GrocyApiException
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -57,6 +59,9 @@ internal class ProductsViewModel(
 ) : ViewModel() {
 
     val searchState = TextFieldState()
+
+    // Pictures of the list, so scrolling back does not download them again
+    private val thumbnails = mutableMapOf<String, ByteArray>()
 
     var isSearchVisible by mutableStateOf(false)
         private set
@@ -154,6 +159,21 @@ internal class ProductsViewModel(
         filter.value = ProductFilter()
         searchState.clearText()
         isSearchVisible = false
+    }
+
+    /**
+     * A product's picture, scaled by the server to [maxWidth] pixels and kept while the list is
+     * open; null when it cannot be downloaded, e.g. offline.
+     */
+    suspend fun thumbnail(fileName: String, maxWidth: Int): ByteArray? {
+        thumbnails[fileName]?.let { return it }
+        return try {
+            repository.productPicture(fileName, maxWidth).also { thumbnails[fileName] = it }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: GrocyApiException) {
+            null
+        }
     }
 
     fun showSearch() {

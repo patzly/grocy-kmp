@@ -76,13 +76,18 @@ private const val MAX_WINDOW_HEIGHT_FRACTION = 0.45f
 /** Below this a code no longer fits comfortably into the preview. */
 private val MIN_SCANNER_HEIGHT = 140.dp
 
+/** Wide windows (tablets, desktop browsers) get a strip instead of a huge preview. */
+private val MAX_SCANNER_HEIGHT = 240.dp
+
 /**
  * Height of a scanner [width] wide in a window [windowHeight] high: 16:10 where the window has
- * room for it, otherwise a wider strip, so the scanner never fills the screen. Linear codes are
+ * room for it, otherwise a wider strip, so the scanner never fills the screen; at most 240.dp, so
+ * a wide window shows a strip too. Linear codes are
  * wide anyway and the preview is cropped, never distorted.
  */
 internal fun scannerHeight(width: Dp, windowHeight: Dp): Dp {
-    val maxHeight = (windowHeight * MAX_WINDOW_HEIGHT_FRACTION).coerceAtLeast(MIN_SCANNER_HEIGHT)
+    val maxHeight = (windowHeight * MAX_WINDOW_HEIGHT_FRACTION)
+        .coerceIn(MIN_SCANNER_HEIGHT, MAX_SCANNER_HEIGHT)
     return minOf(width / SCANNER_ASPECT_RATIO, maxHeight)
 }
 

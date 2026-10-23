@@ -25,8 +25,8 @@ import com.patrickzedler.grocy.core.design.component.SearchableDropdownField
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
 import com.patrickzedler.grocy.core.resources.Res
-import com.patrickzedler.grocy.core.resources.data_number_invalid
 import com.patrickzedler.grocy.core.resources.data_none
+import com.patrickzedler.grocy.core.resources.data_number_invalid
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -118,6 +118,7 @@ internal fun DropdownItem(
     options: List<DropdownOption>,
     selectedId: Int?,
     onSelectedIdChange: (Int?) -> Unit,
+    onUnmatchedChange: (Boolean) -> Unit,
     index: Int,
     count: Int,
     modifier: Modifier = Modifier,
@@ -134,6 +135,7 @@ internal fun DropdownItem(
             options = options,
             selectedId = selectedId,
             onSelectedIdChange = onSelectedIdChange,
+            onUnmatchedChange = onUnmatchedChange,
             enabled = enabled,
             isError = error != null,
             supportingText = error,

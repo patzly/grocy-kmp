@@ -339,4 +339,8 @@
   <string name="product_save_hint">Salvesta, et lisada triipkoode ja koguseühiku teisendusi</string>
   <string name="log_empty">Vigu pole logitud</string>
   <string name="log_report_crash">Kui rakendus jooksis kokku või midagi läks valesti, kopeeri logi ja saada see koos tagasisidega, et viga saaks parandada.</string>
+  <string name="action_discard">Loobu</string>
+  <string name="msg_choose_from_list">Vali loendist kirje</string>
+  <string name="msg_unsaved_changes">Salvestamata muudatused</string>
+  <string name="msg_unsaved_changes_description">Kas salvestada muudatused enne lahkumist või neist loobuda?</string>
 </resources>

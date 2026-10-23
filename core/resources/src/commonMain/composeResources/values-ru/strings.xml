@@ -341,4 +341,8 @@
   <string name="product_save_hint">Сохраните, чтобы добавить штрихкоды и преобразования ЕИ</string>
   <string name="log_empty">Ошибок не зарегистрировано</string>
   <string name="log_report_crash">Если приложение аварийно завершилось или что-то пошло не так, скопируйте журнал и отправьте его вместе с отзывом, чтобы ошибку можно было исправить.</string>
+  <string name="action_discard">Отменить</string>
+  <string name="msg_choose_from_list">Выберите элемент из списка</string>
+  <string name="msg_unsaved_changes">Несохранённые изменения</string>
+  <string name="msg_unsaved_changes_description">Сохранить изменения перед выходом или отменить их?</string>
 </resources>

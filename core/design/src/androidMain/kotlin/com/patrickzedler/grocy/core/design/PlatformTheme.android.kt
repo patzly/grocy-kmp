@@ -46,7 +46,7 @@ internal actual fun SystemBarAppearance(isDark: Boolean, backgroundColor: Compos
 
 // Fonts are packaged in the APK and load synchronously
 @Composable
-actual fun rememberThemeFontsReady(): Boolean = true
+actual fun rememberResourcesReady(): Boolean = true
 
 
 private fun Context.findActivity(): ComponentActivity? {

@@ -18,6 +18,12 @@ class ScannerHeightTest {
     }
 
     @Test
+    fun wideWindowGetsAStrip() {
+        // 576.dp would be 360.dp high, most of a laptop's browser window
+        assertEquals(240.dp, scannerHeight(width = 576.dp, windowHeight = 1000.dp))
+    }
+
+    @Test
     fun tinyWindowKeepsAUsableHeight() {
         assertEquals(140.dp, scannerHeight(width = 640.dp, windowHeight = 200.dp))
     }

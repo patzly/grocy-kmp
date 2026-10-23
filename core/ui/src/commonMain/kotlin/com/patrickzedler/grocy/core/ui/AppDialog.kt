@@ -17,6 +17,7 @@ enum class AppDialog(
     FEEDBACK,
     HELP,
     UNLOCK,
+    RECOMMEND,
     CHANGELOG(
         title = Res.string.about_changelog,
         textFile = "files/changelog.txt",

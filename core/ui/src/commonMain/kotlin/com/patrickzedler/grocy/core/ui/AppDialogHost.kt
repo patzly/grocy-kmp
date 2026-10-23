@@ -10,6 +10,7 @@ import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.app_vending_key
 import com.patrickzedler.grocy.core.ui.dialog.FeedbackDialog
 import com.patrickzedler.grocy.core.ui.dialog.HelpDialog
+import com.patrickzedler.grocy.core.ui.dialog.RecommendDialog
 import com.patrickzedler.grocy.core.ui.dialog.UnlockDialog
 import org.jetbrains.compose.resources.stringResource
 
@@ -26,10 +27,16 @@ fun AppDialogHost(
         AppDialog.FEEDBACK -> FeedbackDialog(
             unlockState = unlockState,
             onSupportClick = { onDialogChange(AppDialog.UNLOCK) },
+            onShareUnavailable = { onDialogChange(AppDialog.RECOMMEND) },
             onDismissRequest = onDismissRequest,
         )
 
         AppDialog.HELP -> HelpDialog(onDismissRequest = onDismissRequest)
+
+        AppDialog.RECOMMEND -> RecommendDialog(
+            isPlayVariant = unlockState != null,
+            onDismissRequest = onDismissRequest,
+        )
 
         AppDialog.UNLOCK -> {
             val uriHandler = LocalUriHandler.current

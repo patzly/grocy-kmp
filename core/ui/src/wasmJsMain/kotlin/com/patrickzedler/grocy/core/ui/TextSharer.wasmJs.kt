@@ -7,15 +7,13 @@ private val ShareText: (String) -> Unit = { shareText(it) }
 @Composable
 internal actual fun rememberTextSharer(): (String) -> Unit = ShareText
 
-/** Web Share API where available, otherwise the clipboard. */
+internal actual fun isTextSharingAvailable(): Boolean = hasWebShare()
+
+/** Web Share API; the user closing the share sheet is no error. */
 @OptIn(ExperimentalWasmJsInterop::class)
-@JsFun(
-    """(text) => {
-        if (navigator.share) {
-            navigator.share({ text: text }).catch(() => {});
-        } else if (navigator.clipboard) {
-            navigator.clipboard.writeText(text).catch(() => {});
-        }
-    }""",
-)
+@JsFun("(text) => { navigator.share({ text: text }).catch(() => {}); }")
 private external fun shareText(text: String)
+
+@OptIn(ExperimentalWasmJsInterop::class)
+@JsFun("() => typeof navigator.share === 'function'")
+private external fun hasWebShare(): Boolean

@@ -339,4 +339,8 @@
   <string name="product_save_hint">Αποθηκεύστε για να προσθέσετε barcodes και μετατροπές μονάδων ποσότητας</string>
   <string name="log_empty">Δεν έχουν καταγραφεί σφάλματα</string>
   <string name="log_report_crash">Αν η εφαρμογή κατέρρευσε ή κάτι πήγε στραβά, αντιγράψτε το αρχείο καταγραφής και στείλτε το μαζί με τα σχόλιά σας, ώστε να διορθωθεί το σφάλμα.</string>
+  <string name="action_discard">Απόρριψη</string>
+  <string name="msg_choose_from_list">Επιλέξτε μια καταχώριση από τη λίστα</string>
+  <string name="msg_unsaved_changes">Μη αποθηκευμένες αλλαγές</string>
+  <string name="msg_unsaved_changes_description">Αποθήκευση των αλλαγών πριν την έξοδο ή απόρριψή τους;</string>
 </resources>

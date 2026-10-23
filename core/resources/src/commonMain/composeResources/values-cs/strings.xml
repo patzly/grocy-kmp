@@ -341,4 +341,8 @@
   <string name="product_save_hint">Uložte produkt, abyste mohli přidat čárové kódy a převody měrných jednotek</string>
   <string name="log_empty">Nebyly zaznamenány žádné chyby</string>
   <string name="log_report_crash">Pokud aplikace spadla nebo se něco pokazilo, zkopírujte log a pošlete ho se zpětnou vazbou, aby bylo možné chybu opravit.</string>
+  <string name="action_discard">Zahodit</string>
+  <string name="msg_choose_from_list">Vyberte položku ze seznamu</string>
+  <string name="msg_unsaved_changes">Neuložené změny</string>
+  <string name="msg_unsaved_changes_description">Uložit změny před odchodem, nebo je zahodit?</string>
 </resources>

@@ -2,6 +2,12 @@
 
 package com.patrickzedler.grocy.feature.masterdata.impl.products
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterExitState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -59,6 +65,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.edgeToEdgeItem
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.insetItems
 import com.patrickzedler.grocy.core.resources.Res
@@ -130,6 +137,7 @@ internal fun ProductsScreen(
         onSortChange = viewModel::setSort,
         onClearFilterClick = viewModel::clearFilter,
         onRetryClick = viewModel::refresh,
+        loadThumbnail = viewModel::thumbnail,
         modifier = modifier,
     )
 }
@@ -150,6 +158,7 @@ private fun ProductsContent(
     onSortChange: (ProductSort) -> Unit,
     onClearFilterClick: () -> Unit,
     onRetryClick: () -> Unit,
+    loadThumbnail: suspend (fileName: String, maxWidth: Int) -> ByteArray?,
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
@@ -203,34 +212,41 @@ private fun ProductsContent(
         },
     ) {
         if (state == null) return@SegmentedListScreen
-        insetItem(key = "filters") {
-            // Filters and the search are one group, the products follow as the next one
-            SegmentedGroup(modifier = Modifier.padding(bottom = GroupSpacingAfterGap)) {
-                val count = if (isSearchVisible) 2 else 1
-                SegmentedContainer(
-                    index = 0,
-                    count = count,
-                    // The chip row pads itself inside its scrolling
-                    contentPadding = PaddingValues(vertical = 8.dp),
+        // The chips lie on the background and scroll sideways up to the screen's edges
+        edgeToEdgeItem(key = "filters") { contentPadding ->
+            ProductFilterBar(
+                filter = state.filter,
+                sort = state.sort,
+                productGroups = state.productGroups,
+                showClear = state.filter.isActive,
+                showLocationSort = state.showLocation,
+                showStoreSort = state.showStore,
+                onFilterChange = onFilterChange,
+                onSortChange = onSortChange,
+                onClearClick = onClearFilterClick,
+                contentPadding = contentPadding,
+            )
+        }
+        insetItem(key = "search") {
+            // Group spacing around the search, which springs open below the chips
+            Column(Modifier.padding(top = SearchSpacing)) {
+                val motionScheme = MaterialTheme.motionScheme
+                AnimatedVisibility(
+                    visible = isSearchVisible,
+                    enter = expandVertically(motionScheme.defaultSpatialSpec()) +
+                        fadeIn(motionScheme.defaultEffectsSpec()),
+                    exit = shrinkVertically(motionScheme.defaultSpatialSpec()) +
+                        fadeOut(motionScheme.defaultEffectsSpec()),
                 ) {
-                    ProductFilterBar(
-                        filter = state.filter,
-                        sort = state.sort,
-                        productGroups = state.productGroups,
-                        showClear = state.filter.isActive,
-                        showLocationSort = state.showLocation,
-                        showStoreSort = state.showStore,
-                        onFilterChange = onFilterChange,
-                        onSortChange = onSortChange,
-                        onClearClick = onClearFilterClick,
-                    )
-                }
-                if (isSearchVisible) {
                     SearchField(
                         state = searchState,
                         onCloseClick = onCloseSearchClick,
-                        index = 1,
-                        count = count,
+                        // Focusing scrolls the field into view, which would fight the opening
+                        isOpen = transition.currentState == EnterExitState.Visible,
+                        modifier = Modifier.padding(
+                            top = ListItemDefaults.SegmentedGap,
+                            bottom = SearchSpacing + ListItemDefaults.SegmentedGap,
+                        ),
                     )
                 }
             }
@@ -240,6 +256,7 @@ private fun ProductsContent(
             refresh = refresh,
             onProductClick = onProductClick,
             onRetryClick = onRetryClick,
+            loadThumbnail = loadThumbnail,
         )
     }
 }
@@ -249,6 +266,7 @@ private fun LazyListScope.productItems(
     refresh: RefreshState,
     onProductClick: (Int) -> Unit,
     onRetryClick: () -> Unit,
+    loadThumbnail: suspend (fileName: String, maxWidth: Int) -> ByteArray?,
 ) {
     when {
         state.items.isNotEmpty() -> insetItems(
@@ -261,6 +279,7 @@ private fun LazyListScope.productItems(
                 index = index,
                 count = state.items.size,
                 onClick = { onProductClick(item.id) },
+                loadThumbnail = loadThumbnail,
             )
         }
 
@@ -302,46 +321,35 @@ private fun LazyListScope.productItems(
 private fun SearchField(
     state: TextFieldState,
     onCloseClick: () -> Unit,
-    index: Int,
-    count: Int,
+    isOpen: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     val haptic = LocalHapticFeedback.current
     val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(focusRequester) { focusRequester.requestFocus() }
+    LaunchedEffect(isOpen) { if (isOpen) focusRequester.requestFocus() }
 
-    SegmentedContainer(index = index, count = count) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            // The item's leading content, like the icons of list items
-            Icon(
-                painter = painterResource(Res.drawable.ic_rounded_search),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            RoundedTextField(
-                state = state,
-                modifier = Modifier
-                    .weight(1f)
-                    .focusRequester(focusRequester),
-                label = { Text(stringResource(Res.string.action_search)) },
-                trailingIcon = {
-                    IconButton(
-                        onClick = {
-                            haptic.confirm()
-                            onCloseClick()
-                        },
-                    ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_rounded_close),
-                            contentDescription = stringResource(Res.string.action_clear),
-                        )
-                    }
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            )
-        }
+    SegmentedContainer(index = 0, count = 1, modifier = modifier) {
+        RoundedTextField(
+            state = state,
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester),
+            label = { Text(stringResource(Res.string.action_search)) },
+            trailingIcon = {
+                IconButton(
+                    onClick = {
+                        haptic.confirm()
+                        onCloseClick()
+                    },
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_rounded_close),
+                        contentDescription = stringResource(Res.string.action_clear),
+                    )
+                }
+            },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        )
     }
 }
 
@@ -351,6 +359,7 @@ private fun ProductItem(
     index: Int,
     count: Int,
     onClick: () -> Unit,
+    loadThumbnail: suspend (fileName: String, maxWidth: Int) -> ByteArray?,
 ) {
     val haptic = LocalHapticFeedback.current
     // Disabled products are greyed out like Grocy's muted rows
@@ -373,7 +382,7 @@ private fun ProductItem(
         // The picture hint belongs to the item, not to a node of its own
         modifier = Modifier
             .fillMaxWidth()
-            .semantics { if (item.hasPicture) stateDescription = pictureDescription },
+            .semantics { if (item.pictureFileName != null) stateDescription = pictureDescription },
         overlineContent = if (!item.active) {
             { Text(stringResource(Res.string.products_disabled)) }
         } else {
@@ -391,18 +400,12 @@ private fun ProductItem(
         } else {
             null
         },
-        trailingContent = if (item.hasPicture) {
+        trailingContent = item.pictureFileName?.let { fileName ->
             {
                 LeadingTrailingContentWrapper {
-                    Icon(
-                        painter = painterResource(Res.drawable.ic_rounded_image),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                    ProductThumbnail(fileName = fileName, load = loadThumbnail)
                 }
             }
-        } else {
-            null
         },
     ) {
         Text(item.name, modifier = Modifier.alpha(contentAlpha))
@@ -444,6 +447,6 @@ private fun MessageItem(
 
 private const val DisabledAlpha = 0.6f
 
-// The list puts the segmented gap between items, this adds up to the gap between groups
-private val GroupSpacingAfterGap =
-    SegmentedListDefaults.GroupSpacing - ListItemDefaults.SegmentedGap
+// The list puts the segmented gap between items: chips, gap, this, gap, products make a group gap
+private val SearchSpacing =
+    SegmentedListDefaults.GroupSpacing - ListItemDefaults.SegmentedGap * 2
