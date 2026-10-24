@@ -29,12 +29,14 @@ import com.patrickzedler.grocy.core.design.component.HueSlider
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.design.dynamicColorFollowsSystemContrast
 import com.patrickzedler.grocy.core.design.isDynamicColorAvailable
 import com.patrickzedler.grocy.core.model.AppColor
 import com.patrickzedler.grocy.core.model.AppContrast
+import com.patrickzedler.grocy.core.model.AppPaletteStyle
 import com.patrickzedler.grocy.core.model.AppTheme
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.resolveAppLanguage
@@ -52,6 +54,15 @@ import com.patrickzedler.grocy.core.resources.settings_contrast_standard
 import com.patrickzedler.grocy.core.resources.settings_general
 import com.patrickzedler.grocy.core.resources.settings_language
 import com.patrickzedler.grocy.core.resources.settings_language_system
+import com.patrickzedler.grocy.core.resources.settings_style_content
+import com.patrickzedler.grocy.core.resources.settings_style_expressive
+import com.patrickzedler.grocy.core.resources.settings_style_fidelity
+import com.patrickzedler.grocy.core.resources.settings_style_fruit_salad
+import com.patrickzedler.grocy.core.resources.settings_style_monochrome
+import com.patrickzedler.grocy.core.resources.settings_style_neutral
+import com.patrickzedler.grocy.core.resources.settings_style_rainbow
+import com.patrickzedler.grocy.core.resources.settings_style_tonal_spot
+import com.patrickzedler.grocy.core.resources.settings_style_vibrant
 import com.patrickzedler.grocy.core.resources.settings_theme
 import com.patrickzedler.grocy.core.resources.settings_theme_auto
 import com.patrickzedler.grocy.core.resources.settings_theme_dark
@@ -65,6 +76,7 @@ import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuViewModel
 import com.patrickzedler.grocy.feature.settings.impl.SettingsScaffold
 import com.patrickzedler.grocy.feature.settings.impl.SettingsScaffoldContent
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -153,7 +165,7 @@ private fun LanguageItem(
         },
         shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
         colors = SegmentedListDefaults.colors(),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().clickCursor(),
         verticalAlignment = Alignment.CenterVertically,
         leadingContent = { SettingIcon(Res.drawable.ic_rounded_language) },
         supportingContent = { Text(languageName) },
@@ -197,6 +209,15 @@ private fun ThemeItem(
             onHueChange = { hue -> onAppearanceChange { it.copy(hue = hue) } },
             contentDescription = stringResource(Res.string.settings_theme_hue),
             enabled = !usesDynamicColor,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        // How the scheme grows from the hue; the overflow menu holds the variants that do not fit
+        ConnectedButtonGroup(
+            options = AppPaletteStyle.entries,
+            checked = appearance.style,
+            onCheckedChange = { style -> onAppearanceChange { it.copy(style = style) } },
+            enabled = !usesDynamicColor,
+            label = { stringResource(it.label) },
             modifier = Modifier.fillMaxWidth(),
         )
         ConnectedButtonGroup(
@@ -320,3 +341,16 @@ private fun GeneralSettingsPreview() {
         }
     }
 }
+
+private val AppPaletteStyle.label: StringResource
+    get() = when (this) {
+        AppPaletteStyle.TONAL_SPOT -> Res.string.settings_style_tonal_spot
+        AppPaletteStyle.NEUTRAL -> Res.string.settings_style_neutral
+        AppPaletteStyle.VIBRANT -> Res.string.settings_style_vibrant
+        AppPaletteStyle.EXPRESSIVE -> Res.string.settings_style_expressive
+        AppPaletteStyle.RAINBOW -> Res.string.settings_style_rainbow
+        AppPaletteStyle.FRUIT_SALAD -> Res.string.settings_style_fruit_salad
+        AppPaletteStyle.MONOCHROME -> Res.string.settings_style_monochrome
+        AppPaletteStyle.FIDELITY -> Res.string.settings_style_fidelity
+        AppPaletteStyle.CONTENT -> Res.string.settings_style_content
+    }

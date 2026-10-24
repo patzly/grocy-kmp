@@ -13,13 +13,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuPopup
-import androidx.compose.material3.ElevatedAssistChip
-import androidx.compose.material3.ElevatedFilterChip
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
@@ -35,6 +36,7 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.model.masterdata.ProductGroup
 import com.patrickzedler.grocy.core.resources.Res
@@ -67,7 +69,8 @@ import org.jetbrains.compose.resources.stringResource
  * Grocy's filter row as Material 3 chips, one per filter: product group and stock status as
  * dropdown chips, "Show disabled" as toggle chip, the sort order, and "Clear filter" while
  * anything is filtered. Scrolls sideways on narrow screens; [contentPadding] scrolls along.
- * Elevated chips, which have a container of their own: the row lies on the screen's background.
+ * The row lies on the screen's background, so the outlined chips get a container color of their
+ * own and no elevation, not even on hover.
  */
 @Composable
 internal fun ProductFilterBar(
@@ -117,13 +120,16 @@ internal fun ProductFilterBar(
             },
             onSelect = { status -> onFilterChange { it.copy(stockStatus = status) } },
         )
-        ElevatedFilterChip(
+        FilterChip(
             selected = filter.showDisabled,
+            modifier = Modifier.clickCursor(),
             onClick = {
                 haptic.confirm()
                 onFilterChange { it.copy(showDisabled = !it.showDisabled) }
             },
             label = { Text(stringResource(Res.string.products_filter_show_disabled)) },
+            colors = filterChipColors(),
+            elevation = filterChipElevation(),
             leadingIcon = if (filter.showDisabled) {
                 { ChipIcon(Res.drawable.ic_rounded_check) }
             } else {
@@ -133,12 +139,24 @@ internal fun ProductFilterBar(
         SortChipWithMenu(sort, showLocationSort, showStoreSort, onSortChange)
         if (showClear) {
             // An action, not an input to remove: assist chip with the reset icon at its start
-            ElevatedAssistChip(
+            AssistChip(
                 onClick = {
                     haptic.confirm()
                     onClearClick()
                 },
+                modifier = Modifier.clickCursor(),
                 label = { Text(stringResource(Res.string.products_filter_clear)) },
+                colors = AssistChipDefaults.assistChipColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                ),
+                elevation = AssistChipDefaults.assistChipElevation(
+                    elevation = 0.dp,
+                    pressedElevation = 0.dp,
+                    focusedElevation = 0.dp,
+                    hoveredElevation = 0.dp,
+                    draggedElevation = 0.dp,
+                    disabledElevation = 0.dp,
+                ),
                 leadingIcon = {
                     Icon(
                         painter = painterResource(Res.drawable.ic_rounded_filter_list_off),
@@ -169,7 +187,7 @@ private fun <T> DropdownFilterChip(
     val active = !isDefault(selected)
 
     Box {
-        ElevatedFilterChip(
+        FilterChip(
             selected = active,
             onClick = {
                 haptic.confirm()
@@ -177,11 +195,15 @@ private fun <T> DropdownFilterChip(
             },
             label = { Text(if (active) optionLabel(selected) else label, maxLines = 1) },
             // It opens a menu, so it is announced as button with the filter's name
-            modifier = Modifier.semantics {
-                role = Role.Button
-                if (active) stateDescription = label
-            },
+            modifier = Modifier
+                .semantics {
+                    role = Role.Button
+                    if (active) stateDescription = label
+                }
+                .clickCursor(),
             trailingIcon = { ChipIcon(Res.drawable.ic_rounded_arrow_drop_down) },
+            colors = filterChipColors(),
+            elevation = filterChipElevation(),
         )
         DropdownMenuPopup(expanded = expanded, onDismissRequest = { expanded = false }) {
             DropdownMenuGroup(
@@ -194,6 +216,7 @@ private fun <T> DropdownFilterChip(
                 options.forEachIndexed { index, option ->
                     SelectableDropdownMenuItem(
                         selected = option == selected,
+                        modifier = Modifier.clickCursor(),
                         onClick = {
                             haptic.confirm()
                             expanded = false
@@ -236,7 +259,7 @@ private fun SortChipWithMenu(
     }
 
     Box {
-        ElevatedFilterChip(
+        FilterChip(
             selected = sort != ProductSort(),
             onClick = {
                 haptic.confirm()
@@ -246,15 +269,18 @@ private fun SortChipWithMenu(
             modifier = Modifier.semantics {
                 role = Role.Button
                 stateDescription = sortDescription
-            },
+            }.clickCursor(),
             leadingIcon = { ChipIcon(directionIcon) },
             trailingIcon = { ChipIcon(Res.drawable.ic_rounded_arrow_drop_down) },
+            colors = filterChipColors(),
+            elevation = filterChipElevation(),
         )
         DropdownMenuPopup(expanded = expanded, onDismissRequest = { expanded = false }) {
             DropdownMenuGroup(shapes = MenuDefaults.groupShape(index = 0, count = 2)) {
                 fields.forEachIndexed { index, field ->
                     SelectableDropdownMenuItem(
                         selected = field == sort.field,
+                        modifier = Modifier.clickCursor(),
                         onClick = {
                             haptic.confirm()
                             onSortChange(sort.copy(field = field))
@@ -271,6 +297,7 @@ private fun SortChipWithMenu(
                 listOf(true, false).forEachIndexed { index, ascending ->
                     SelectableDropdownMenuItem(
                         selected = sort.ascending == ascending,
+                        modifier = Modifier.clickCursor(),
                         onClick = {
                             haptic.confirm()
                             onSortChange(sort.copy(ascending = ascending))
@@ -313,6 +340,21 @@ private val ProductSortField.label: StringResource
         ProductSortField.QU_STOCK -> Res.string.products_sort_qu_stock
         ProductSortField.STORE -> Res.string.products_sort_store
     }
+
+@Composable
+private fun filterChipColors() = FilterChipDefaults.filterChipColors(
+    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+)
+
+@Composable
+private fun filterChipElevation() = FilterChipDefaults.filterChipElevation(
+    elevation = 0.dp,
+    pressedElevation = 0.dp,
+    focusedElevation = 0.dp,
+    hoveredElevation = 0.dp,
+    draggedElevation = 0.dp,
+    disabledElevation = 0.dp,
+)
 
 @Composable
 private fun ChipIcon(icon: DrawableResource) {

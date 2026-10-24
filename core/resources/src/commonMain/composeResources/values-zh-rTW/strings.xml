@@ -342,4 +342,13 @@
   <string name="msg_choose_from_list">請從清單中選擇一個項目</string>
   <string name="msg_unsaved_changes">未儲存的變更</string>
   <string name="msg_unsaved_changes_description">離開前要儲存變更，還是捨棄變更？</string>
+  <string name="settings_style_tonal_spot">色調點綴</string>
+  <string name="settings_style_neutral">中性</string>
+  <string name="settings_style_vibrant">鮮豔</string>
+  <string name="settings_style_expressive">富有表現力</string>
+  <string name="settings_style_rainbow">彩虹</string>
+  <string name="settings_style_fruit_salad">水果沙拉</string>
+  <string name="settings_style_monochrome">單色</string>
+  <string name="settings_style_fidelity">保真</string>
+  <string name="settings_style_content">內容</string>
 </resources>

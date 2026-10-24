@@ -1,5 +1,7 @@
 package com.patrickzedler.grocy.core.design.component
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
@@ -13,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.DpOffset
@@ -29,9 +32,14 @@ class AppBarMenuItem(
     val onClick: () -> Unit,
 )
 
-/** The narrow three dots button at the end of a top app bar and its menu of [items]. */
+/**
+ * The narrow three dots button at the end of a top app bar and its menu: one expressive menu
+ * group per entry of [groups], empty groups are left out.
+ */
 @Composable
-fun AppBarOverflowMenu(items: List<AppBarMenuItem>) {
+fun AppBarOverflowMenu(groups: List<List<AppBarMenuItem>>) {
+    val shownGroups = groups.filter { it.isNotEmpty() }
+    if (shownGroups.isEmpty()) return
     val haptic = LocalHapticFeedback.current
     var showMenu by remember { mutableStateOf(false) }
 
@@ -50,32 +58,50 @@ fun AppBarOverflowMenu(items: List<AppBarMenuItem>) {
             offset = DpOffset(x = (-8).dp, y = 0.dp),
         ),
     ) {
-        DropdownMenuGroup(shapes = MenuDefaults.groupShape(index = 0, count = 1)) {
-            items.forEachIndexed { index, item ->
-                DropdownMenuItem(
-                    text = { Text(item.text) },
-                    onClick = {
-                        haptic.confirm()
-                        showMenu = false
-                        item.onClick()
-                    },
-                    shape = menuItemShape(index = index, count = items.size),
-                )
+        shownGroups.forEachIndexed { groupIndex, items ->
+            if (groupIndex > 0) Spacer(Modifier.height(MenuDefaults.GroupSpacing))
+            DropdownMenuGroup(
+                shapes = MenuDefaults.groupShape(index = groupIndex, count = shownGroups.size),
+            ) {
+                items.forEachIndexed { index, item ->
+                    DropdownMenuItem(
+                        text = { Text(item.text) },
+                        modifier = Modifier.clickCursor(),
+                        onClick = {
+                            haptic.confirm()
+                            showMenu = false
+                            item.onClick()
+                        },
+                        shape = menuItemShape(
+                            index = index,
+                            count = items.size,
+                            groupIndex = groupIndex,
+                            groupCount = shownGroups.size,
+                        ),
+                    )
+                }
             }
         }
     }
 }
 
 /**
- * Shape of the item at [index] of [count] items in a menu group. Material's shape for a single
- * item is the one of middle items with small corners; a single item gets the top corners of a
- * leading and the bottom corners of a trailing item instead, so its ripple fills the group.
+ * Shape of the item at [index] of [count] items in group [groupIndex] of [groupCount] groups of
+ * a menu, so its ripple follows the group's corners: large corners only where the group has
+ * them (top of the first group, bottom of the last one), small ones elsewhere. Material's own
+ * shapes look at the group alone; its shape for a single item even has small corners all round.
  */
 @Composable
-fun menuItemShape(index: Int, count: Int): Shape {
-    if (count != 1) return MenuDefaults.itemShape(index = index, count = count).shape
+fun menuItemShape(index: Int, count: Int, groupIndex: Int = 0, groupCount: Int = 1): Shape {
     val leading = MenuDefaults.itemShape(index = 0, count = 2).shape
+    val middle = MenuDefaults.itemShape(index = 1, count = 3).shape
     val trailing = MenuDefaults.itemShape(index = 1, count = 2).shape
-    if (leading !is CornerBasedShape || trailing !is CornerBasedShape) return leading
-    return leading.copy(bottomStart = trailing.bottomStart, bottomEnd = trailing.bottomEnd)
+    if (leading !is CornerBasedShape || middle !is CornerBasedShape ||
+        trailing !is CornerBasedShape
+    ) {
+        return MenuDefaults.itemShape(index = index, count = count).shape
+    }
+    val top = if (index == 0 && groupIndex == 0) leading else middle
+    val bottom = if (index == count - 1 && groupIndex == groupCount - 1) trailing else middle
+    return top.copy(bottomStart = bottom.bottomStart, bottomEnd = bottom.bottomEnd)
 }

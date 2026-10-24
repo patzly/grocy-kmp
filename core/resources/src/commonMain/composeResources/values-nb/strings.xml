@@ -343,4 +343,13 @@
   <string name="msg_choose_from_list">Velg en oppføring fra listen</string>
   <string name="msg_unsaved_changes">Ulagrede endringer</string>
   <string name="msg_unsaved_changes_description">Vil du lagre endringene før du går, eller forkaste dem?</string>
+  <string name="settings_style_tonal_spot">Tonal</string>
+  <string name="settings_style_neutral">Nøytral</string>
+  <string name="settings_style_vibrant">Livlig</string>
+  <string name="settings_style_expressive">Uttrykksfull</string>
+  <string name="settings_style_rainbow">Regnbue</string>
+  <string name="settings_style_fruit_salad">Fruktsalat</string>
+  <string name="settings_style_monochrome">Monokrom</string>
+  <string name="settings_style_fidelity">Tro mot fargen</string>
+  <string name="settings_style_content">Innhold</string>
 </resources>

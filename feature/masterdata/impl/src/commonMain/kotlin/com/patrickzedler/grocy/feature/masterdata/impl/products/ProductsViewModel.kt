@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 /** What the product list shows; built from the database, never waits for the server. */
 internal data class ProductsUiState(
@@ -60,16 +61,17 @@ internal class ProductsViewModel(
 
     val searchState = TextFieldState()
 
-    // Pictures of the list, so scrolling back does not download them again
-    private val thumbnails = mutableMapOf<String, ByteArray>()
-
     var isSearchVisible by mutableStateOf(false)
         private set
 
     private val filter = MutableStateFlow(ProductFilter())
     private val sort = MutableStateFlow(ProductSort())
 
-    private val refreshController = RefreshController(viewModelScope) { repository.refresh() }
+    private val refreshController = RefreshController(viewModelScope) {
+        repository.refresh()
+        // In the background, so the list also shows its pictures offline later
+        viewModelScope.launch { ignoringServerErrors { repository.downloadMissingThumbnails() } }
+    }
     val refresh: StateFlow<RefreshState> = refreshController.state
 
     private val data = combine(
@@ -162,19 +164,11 @@ internal class ProductsViewModel(
     }
 
     /**
-     * A product's picture, scaled by the server to [maxWidth] pixels and kept while the list is
-     * open; null when it cannot be downloaded, e.g. offline.
+     * A product's picture for the list, stored for offline use; null when it is not stored and
+     * cannot be downloaded, e.g. offline.
      */
-    suspend fun thumbnail(fileName: String, maxWidth: Int): ByteArray? {
-        thumbnails[fileName]?.let { return it }
-        return try {
-            repository.productPicture(fileName, maxWidth).also { thumbnails[fileName] = it }
-        } catch (e: CancellationException) {
-            throw e
-        } catch (_: GrocyApiException) {
-            null
-        }
-    }
+    suspend fun thumbnail(fileName: String): ByteArray? =
+        ignoringServerErrors { repository.productThumbnail(fileName) }
 
     fun showSearch() {
         isSearchVisible = true
@@ -198,4 +192,12 @@ internal class ProductsViewModel(
         const val SEARCH_DELAY_MILLIS = 150L
         const val STOP_TIMEOUT_MILLIS = 5_000L
     }
+}
+
+private suspend fun <T> ignoringServerErrors(block: suspend () -> T): T? = try {
+    block()
+} catch (e: CancellationException) {
+    throw e
+} catch (_: GrocyApiException) {
+    null
 }

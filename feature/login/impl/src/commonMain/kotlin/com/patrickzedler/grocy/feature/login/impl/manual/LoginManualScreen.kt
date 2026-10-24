@@ -36,6 +36,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
@@ -363,7 +364,7 @@ private fun LinkItem(
         shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         colors = SegmentedListDefaults.colors(),
         enabled = enabled,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().clickCursor(enabled = enabled),
         verticalAlignment = Alignment.CenterVertically,
         leadingContent = {
             LeadingTrailingContentWrapper {
@@ -396,7 +397,8 @@ private fun ConnectButton(
         contentPadding = ButtonDefaults.contentPaddingFor(buttonHeight),
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = buttonHeight),
+            .heightIn(min = buttonHeight)
+            .clickCursor(enabled = enabled),
     ) {
         if (isLoggingIn) {
             LoadingIndicator(modifier = Modifier.size(32.dp))

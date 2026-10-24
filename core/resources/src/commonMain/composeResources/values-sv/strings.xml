@@ -343,4 +343,13 @@
   <string name="msg_choose_from_list">Välj en post i listan</string>
   <string name="msg_unsaved_changes">Osparade ändringar</string>
   <string name="msg_unsaved_changes_description">Vill du spara ändringarna innan du lämnar, eller ignorera dem?</string>
+  <string name="settings_style_tonal_spot">Tonal</string>
+  <string name="settings_style_neutral">Neutral</string>
+  <string name="settings_style_vibrant">Livfull</string>
+  <string name="settings_style_expressive">Uttrycksfull</string>
+  <string name="settings_style_rainbow">Regnbåge</string>
+  <string name="settings_style_fruit_salad">Fruktsallad</string>
+  <string name="settings_style_monochrome">Monokrom</string>
+  <string name="settings_style_fidelity">Trogen</string>
+  <string name="settings_style_content">Innehåll</string>
 </resources>

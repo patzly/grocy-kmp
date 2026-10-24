@@ -105,4 +105,24 @@ interface MasterDataDao {
 
     @Insert
     suspend fun insertUserfields(userfields: List<UserfieldEntity>)
+
+    @Query("SELECT bytes FROM product_thumbnails WHERE file_name = :fileName")
+    suspend fun thumbnail(fileName: String): ByteArray?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertThumbnail(thumbnail: ProductThumbnailEntity)
+
+    /** File names of product pictures that have no stored thumbnail yet. */
+    @Query(
+        "SELECT DISTINCT picture_file_name FROM products WHERE picture_file_name != '' AND " +
+            "picture_file_name NOT IN (SELECT file_name FROM product_thumbnails)",
+    )
+    suspend fun missingThumbnails(): List<String>
+
+    /** Removes thumbnails of pictures no product shows anymore. */
+    @Query(
+        "DELETE FROM product_thumbnails WHERE file_name NOT IN " +
+            "(SELECT picture_file_name FROM products WHERE picture_file_name IS NOT NULL)",
+    )
+    suspend fun deleteUnusedThumbnails()
 }

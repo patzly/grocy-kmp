@@ -39,6 +39,7 @@ import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_close
@@ -105,6 +106,7 @@ internal fun ProductPictureDialog(
                         haptic.confirm()
                         onDismissRequest()
                     },
+                    modifier = Modifier.clickCursor(),
                     shapes = ButtonDefaults.shapes(),
                 ) {
                     Text(stringResource(Res.string.action_close))
@@ -233,6 +235,7 @@ private fun ActionItem(
 ) {
     SegmentedListItem(
         onClick = onClick,
+        modifier = Modifier.clickCursor(),
         shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         colors = SegmentedListDefaults.colors(),
         leadingContent = { LeadingTrailingContentWrapper { icon() } },

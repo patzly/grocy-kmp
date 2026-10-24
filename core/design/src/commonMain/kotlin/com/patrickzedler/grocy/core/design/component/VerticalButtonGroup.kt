@@ -36,7 +36,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.IntrinsicMeasurable
 import androidx.compose.ui.layout.Layout
@@ -48,6 +47,7 @@ import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.node.ParentDataModifierNode
 import androidx.compose.ui.platform.InspectorInfo
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
@@ -159,7 +159,7 @@ object VerticalButtonGroupDefaults {
                     haptic.confirm()
                     if (menuState.isShowing) menuState.dismiss() else menuState.show()
                 },
-                modifier = modifier,
+                modifier = modifier.clickCursor(enabled = enabled),
                 enabled = enabled,
                 shape = shape,
                 colors = colors,
@@ -651,7 +651,7 @@ internal class ClickableVerticalButtonGroupItem(
                 haptic.confirm()
                 onClick()
             },
-            modifier = modifier,
+            modifier = modifier.clickCursor(enabled = enabled),
             interactionSource = interactionSource,
             enabled = enabled,
             contentPadding = contentPadding,
@@ -674,6 +674,7 @@ internal class ClickableVerticalButtonGroupItem(
         val haptic = LocalHapticFeedback.current
         DropdownMenuItem(
             enabled = enabled,
+            modifier = Modifier.clickCursor(enabled = enabled),
             leadingIcon = icon,
             text = { Text(label) },
             onClick = {

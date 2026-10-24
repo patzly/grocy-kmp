@@ -343,4 +343,13 @@
   <string name="msg_choose_from_list">Listeden bir giriş seçin</string>
   <string name="msg_unsaved_changes">Kaydedilmemiş değişiklikler</string>
   <string name="msg_unsaved_changes_description">Çıkmadan önce değişiklikler kaydedilsin mi, yoksa silinsin mi?</string>
+  <string name="settings_style_tonal_spot">Tonal</string>
+  <string name="settings_style_neutral">Nötr</string>
+  <string name="settings_style_vibrant">Canlı</string>
+  <string name="settings_style_expressive">Etkileyici</string>
+  <string name="settings_style_rainbow">Gökkuşağı</string>
+  <string name="settings_style_fruit_salad">Meyve salatası</string>
+  <string name="settings_style_monochrome">Tek renkli</string>
+  <string name="settings_style_fidelity">Sadık</string>
+  <string name="settings_style_content">İçerik</string>
 </resources>

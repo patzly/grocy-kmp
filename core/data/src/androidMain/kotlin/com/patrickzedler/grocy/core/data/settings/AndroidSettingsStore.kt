@@ -44,7 +44,7 @@ class AndroidSettingsStore(
     }
 
     override val appearance: Flow<AppearanceSettings> = preferences
-        .map { appearanceOf(it[THEME], it[COLOR], it[HUE], it[CONTRAST]) }
+        .map { appearanceOf(it[THEME], it[COLOR], it[HUE], it[CONTRAST], it[STYLE]) }
         .distinctUntilChanged()
 
     override suspend fun setAppearance(appearance: AppearanceSettings) {
@@ -53,6 +53,7 @@ class AndroidSettingsStore(
             it[COLOR] = appearance.color.name
             it[HUE] = appearance.hue
             it[CONTRAST] = appearance.contrast.name
+            it[STYLE] = appearance.style.name
         }
     }
 
@@ -64,5 +65,6 @@ class AndroidSettingsStore(
         val COLOR = stringPreferencesKey("color")
         val HUE = floatPreferencesKey("hue")
         val CONTRAST = stringPreferencesKey("contrast")
+        val STYLE = stringPreferencesKey("style")
     }
 }

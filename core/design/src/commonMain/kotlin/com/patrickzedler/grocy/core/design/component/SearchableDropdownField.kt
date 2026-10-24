@@ -60,8 +60,8 @@ data class DropdownOption(
  * option (ignoring case) chooses it, an empty field chooses nothing; other text chooses nothing
  * either, keeps standing and shows an error once no suggestion is open, and [onUnmatchedChange]
  * reports it, so a form can refuse to save. The menu only helps typing: it suggests the options
- * that fit the text (forgiving small typos), the arrow shows all of them, and choosing one
- * fills the field and closes it. Tapping the field itself only focuses it for typing.
+ * that fit the text (forgiving small typos), the arrow shows all of them, and choosing one or
+ * typing one completely closes it. Tapping the field itself only focuses it for typing.
  *
  * @param noneLabel makes the choice optional: offered as first suggestion, it clears the field.
  * @param trailingAction e.g. a scan button, placed before the dropdown arrow.
@@ -120,8 +120,9 @@ fun SearchableDropdownField(
             if (text == writtenText) return@collect
             writtenText = text
             isTyped = true
-            if (isFocused) expanded = true
             val match = dropdownTextMatch(currentOptions, text)
+            // A fully typed option needs no suggestions anymore, typing on shows them again
+            if (isFocused) expanded = match == null || match == NoMatch
             val id = if (match == NoMatch) null else match
             if (id != reportedId) {
                 reportedId = id
@@ -247,7 +248,11 @@ private fun DropdownArrow(
     onClick: () -> Unit,
 ) {
     // A button of its own, so the field keeps its label as accessible name
-    IconButton(onClick = onClick, enabled = enabled) {
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier.clickCursor(enabled = enabled),
+        enabled = enabled,
+    ) {
         Icon(
             painter = painterResource(Res.drawable.ic_rounded_arrow_drop_down),
             contentDescription = stringResource(Res.string.action_show_choices),
@@ -266,6 +271,7 @@ private fun OptionItem(
 ) {
     DropdownMenuItem(
         onClick = onClick,
+        modifier = Modifier.clickCursor(),
         text = { Text(text) },
         shape = menuItemShape(index = index, count = count),
         supportingText = supporting?.let { { Text(it) } },

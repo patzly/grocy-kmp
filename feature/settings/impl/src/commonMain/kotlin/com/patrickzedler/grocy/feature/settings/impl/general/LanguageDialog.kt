@@ -27,6 +27,7 @@ import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapp
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.tryOpenUri
 import com.patrickzedler.grocy.core.model.AppLanguages
@@ -89,12 +90,20 @@ private fun LanguageDialogContent(
         title = { Text(stringResource(Res.string.settings_language)) },
         subtitle = { Text(stringResource(Res.string.settings_language_info)) },
         confirmButton = {
-            TextButton(onClick = onCloseClick, shapes = ButtonDefaults.shapes()) {
+            TextButton(
+                onClick = onCloseClick,
+                modifier = Modifier.clickCursor(),
+                shapes = ButtonDefaults.shapes(),
+            ) {
                 Text(stringResource(Res.string.action_close))
             }
         },
         extraButton = {
-            TextButton(onClick = onLearnMoreClick, shapes = ButtonDefaults.shapes()) {
+            TextButton(
+                onClick = onLearnMoreClick,
+                modifier = Modifier.clickCursor(),
+                shapes = ButtonDefaults.shapes(),
+            ) {
                 Text(stringResource(Res.string.action_learn_more))
             }
         },
@@ -156,12 +165,12 @@ private fun LanguageItem(
         onClick = onClick,
         shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         colors = colors,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().clickCursor(),
         verticalAlignment = Alignment.CenterVertically,
         leadingContent = {
             LeadingTrailingContentWrapper {
                 // The item handles the click, the radio button only shows the choice
-                RadioButton(selected = selected, onClick = null)
+                RadioButton(selected = selected, modifier = Modifier.clickCursor(), onClick = null)
             }
         },
         supportingContent = description?.let { { Text(it) } },

@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_close
@@ -72,12 +73,20 @@ private fun RecommendDialogContent(
         modifier = modifier,
         title = { Text(stringResource(Res.string.action_recommend)) },
         confirmButton = {
-            TextButton(onClick = onCopyClick, shapes = ButtonDefaults.shapes()) {
+            TextButton(
+                onClick = onCopyClick,
+                modifier = Modifier.clickCursor(),
+                shapes = ButtonDefaults.shapes(),
+            ) {
                 Text(stringResource(Res.string.action_copy_to_clipboard))
             }
         },
         dismissButton = {
-            TextButton(onClick = onCloseClick, shapes = ButtonDefaults.shapes()) {
+            TextButton(
+                onClick = onCloseClick,
+                modifier = Modifier.clickCursor(),
+                shapes = ButtonDefaults.shapes(),
+            ) {
                 Text(stringResource(Res.string.action_close))
             }
         },

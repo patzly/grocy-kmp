@@ -344,4 +344,13 @@
   <string name="msg_choose_from_list">Tria una entrada de la llista</string>
   <string name="msg_unsaved_changes">Canvis no desats</string>
   <string name="msg_unsaved_changes_description">Vols desar els canvis abans de sortir o descartar-los?</string>
+  <string name="settings_style_tonal_spot">Tonal</string>
+  <string name="settings_style_neutral">Neutre</string>
+  <string name="settings_style_vibrant">Vibrant</string>
+  <string name="settings_style_expressive">Expressiu</string>
+  <string name="settings_style_rainbow">Arc de Sant Martí</string>
+  <string name="settings_style_fruit_salad">Macedònia</string>
+  <string name="settings_style_monochrome">Monocrom</string>
+  <string name="settings_style_fidelity">Fidel</string>
+  <string name="settings_style_content">Contingut</string>
 </resources>

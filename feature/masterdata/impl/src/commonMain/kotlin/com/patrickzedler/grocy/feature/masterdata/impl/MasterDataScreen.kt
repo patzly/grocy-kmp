@@ -19,10 +19,12 @@ import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.util.RefreshController
 import com.patrickzedler.grocy.core.data.util.RefreshState
+import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.model.server.ServerConfig
@@ -38,24 +40,24 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_stacks
 import com.patrickzedler.grocy.core.resources.ic_rounded_storefront
 import com.patrickzedler.grocy.core.resources.ic_rounded_straighten
 import com.patrickzedler.grocy.core.resources.masterdata_batteries
-import com.patrickzedler.grocy.core.resources.masterdata_products_count
 import com.patrickzedler.grocy.core.resources.masterdata_chores
 import com.patrickzedler.grocy.core.resources.masterdata_locations
 import com.patrickzedler.grocy.core.resources.masterdata_product_groups
 import com.patrickzedler.grocy.core.resources.masterdata_products
+import com.patrickzedler.grocy.core.resources.masterdata_products_count
 import com.patrickzedler.grocy.core.resources.masterdata_quantity_units
 import com.patrickzedler.grocy.core.resources.masterdata_stores
 import com.patrickzedler.grocy.core.resources.masterdata_task_categories
 import com.patrickzedler.grocy.core.resources.masterdata_title
 import com.patrickzedler.grocy.core.resources.masterdata_userentities
 import com.patrickzedler.grocy.core.resources.masterdata_userfields
+import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
-import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
@@ -132,6 +134,7 @@ internal class MasterDataViewModel(repository: MasterDataRepository) : ViewModel
 
 @Composable
 internal fun MasterDataScreen(
+    menuItems: List<AppBarMenuItem>,
     viewModel: MasterDataViewModel,
     onBackClick: () -> Unit,
     onCategoryClick: (MasterDataCategory) -> Unit,
@@ -152,6 +155,7 @@ internal fun MasterDataScreen(
         title = stringResource(Res.string.masterdata_title),
         modifier = modifier,
         navigationIcon = { NavigateBackButton(onClick = onBackClick) },
+        menuItems = menuItems,
         snackbarHostState = snackbarHostState,
         isRefreshing = refresh.isRefreshing,
         onRefresh = viewModel::refresh,
@@ -195,7 +199,7 @@ private fun CategoryItem(
         },
         shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         colors = SegmentedListDefaults.colors(),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().clickCursor(),
         verticalAlignment = Alignment.CenterVertically,
         supportingContent = supporting?.let { { Text(it) } },
         leadingContent = {

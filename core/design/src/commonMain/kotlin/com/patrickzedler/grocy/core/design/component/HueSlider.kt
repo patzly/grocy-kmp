@@ -63,6 +63,7 @@ fun HueSlider(
             // Only the rainbow below the thumb and the gaps around it, drawn as white mask
             Slider(
                 state = sliderState,
+                modifier = Modifier.clickCursor(),
                 onValueChange = {},
                 interactionSource = interactionSource,
                 track = { state ->
@@ -89,6 +90,7 @@ fun HueSlider(
         val disabledTick = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
         Slider(
             state = sliderState,
+            modifier = Modifier.clickCursor(enabled = enabled),
             enabled = enabled,
             onValueChange = {
                 if (it != hue) {

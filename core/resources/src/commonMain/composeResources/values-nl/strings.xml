@@ -343,4 +343,13 @@
   <string name="msg_choose_from_list">Kies een item uit de lijst</string>
   <string name="msg_unsaved_changes">Niet-opgeslagen wijzigingen</string>
   <string name="msg_unsaved_changes_description">Wijzigingen opslaan voordat je weggaat, of ze verwerpen?</string>
+  <string name="settings_style_tonal_spot">Tonaal</string>
+  <string name="settings_style_neutral">Neutraal</string>
+  <string name="settings_style_vibrant">Levendig</string>
+  <string name="settings_style_expressive">Expressief</string>
+  <string name="settings_style_rainbow">Regenboog</string>
+  <string name="settings_style_fruit_salad">Fruitsalade</string>
+  <string name="settings_style_monochrome">Monochroom</string>
+  <string name="settings_style_fidelity">Getrouw</string>
+  <string name="settings_style_content">Inhoud</string>
 </resources>

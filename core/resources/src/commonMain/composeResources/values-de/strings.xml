@@ -343,4 +343,13 @@
   <string name="msg_choose_from_list">Wähle einen Eintrag aus der Liste</string>
   <string name="msg_unsaved_changes">Ungespeicherte Änderungen</string>
   <string name="msg_unsaved_changes_description">Möchtest du deine Änderungen vor dem Verlassen speichern oder verwerfen?</string>
+  <string name="settings_style_tonal_spot">Tonaler Akzent</string>
+  <string name="settings_style_neutral">Neutral</string>
+  <string name="settings_style_vibrant">Lebhaft</string>
+  <string name="settings_style_expressive">Ausdrucksstark</string>
+  <string name="settings_style_rainbow">Regenbogen</string>
+  <string name="settings_style_fruit_salad">Obstsalat</string>
+  <string name="settings_style_monochrome">Monochrom</string>
+  <string name="settings_style_fidelity">Farbtreu</string>
+  <string name="settings_style_content">Inhaltsbasiert</string>
 </resources>

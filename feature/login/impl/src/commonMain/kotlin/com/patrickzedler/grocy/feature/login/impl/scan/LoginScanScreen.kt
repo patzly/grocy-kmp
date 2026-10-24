@@ -34,6 +34,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.resources.Res
@@ -113,7 +114,7 @@ private fun LoginScanContent(
                 shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
                 colors = SegmentedListDefaults.colors(),
                 enabled = !uiState.isLoggingIn,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().clickCursor(enabled = !uiState.isLoggingIn),
                 verticalAlignment = Alignment.CenterVertically,
                 leadingContent = {
                     LeadingTrailingContentWrapper {

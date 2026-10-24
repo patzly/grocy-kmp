@@ -342,4 +342,13 @@
   <string name="msg_choose_from_list">リストから項目を選択してください</string>
   <string name="msg_unsaved_changes">保存されていない変更</string>
   <string name="msg_unsaved_changes_description">移動する前に変更を保存しますか？それとも破棄しますか？</string>
+  <string name="settings_style_tonal_spot">トーナル</string>
+  <string name="settings_style_neutral">ニュートラル</string>
+  <string name="settings_style_vibrant">ビビッド</string>
+  <string name="settings_style_expressive">エクスプレッシブ</string>
+  <string name="settings_style_rainbow">レインボー</string>
+  <string name="settings_style_fruit_salad">フルーツサラダ</string>
+  <string name="settings_style_monochrome">モノクローム</string>
+  <string name="settings_style_fidelity">忠実</string>
+  <string name="settings_style_content">コンテンツ</string>
 </resources>

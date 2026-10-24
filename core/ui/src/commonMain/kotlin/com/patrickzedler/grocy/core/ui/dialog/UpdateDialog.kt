@@ -13,6 +13,7 @@ import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
 import com.patrickzedler.grocy.core.design.component.TextDialog
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.model.UpdateCheck
 import com.patrickzedler.grocy.core.resources.Res
@@ -101,6 +102,7 @@ private fun UpdateAvailableDialogContent(
         confirmButton = {
             TextButton(
                 onClick = onUpdateClick,
+                modifier = Modifier.clickCursor(),
                 shapes = ButtonDefaults.shapes(),
             ) {
                 Text(stringResource(Res.string.action_update))
@@ -109,6 +111,7 @@ private fun UpdateAvailableDialogContent(
         dismissButton = {
             TextButton(
                 onClick = onLaterClick,
+                modifier = Modifier.clickCursor(),
                 shapes = ButtonDefaults.shapes(),
             ) {
                 Text(stringResource(Res.string.action_later))

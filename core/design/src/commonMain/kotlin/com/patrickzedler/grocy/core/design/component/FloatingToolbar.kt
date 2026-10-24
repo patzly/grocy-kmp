@@ -38,6 +38,7 @@ fun FloatingToolbarWithFab(
                         haptic.confirm()
                         onFabClick()
                     },
+                    modifier = Modifier.clickCursor(),
                 ) {
                     Icon(painter = fabPainter, contentDescription = fabDescription)
                 }
@@ -67,6 +68,7 @@ fun FloatingToolbarIconButton(
                 haptic.confirm()
                 onClick()
             },
+            modifier = Modifier.clickCursor(enabled = enabled),
             enabled = enabled,
         ) {
             Icon(painter = painter, contentDescription = contentDescription)

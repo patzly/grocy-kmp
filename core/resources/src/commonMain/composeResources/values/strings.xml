@@ -185,6 +185,15 @@
   <string name="settings_theme_description">Colors and brightness of the app</string>
   <string name="settings_theme_dynamic">Dynamic</string>
   <string name="settings_theme_static">Static</string>
+  <string name="settings_style_tonal_spot">Tonal spot</string>
+  <string name="settings_style_neutral">Neutral</string>
+  <string name="settings_style_vibrant">Vibrant</string>
+  <string name="settings_style_expressive">Expressive</string>
+  <string name="settings_style_rainbow">Rainbow</string>
+  <string name="settings_style_fruit_salad">Fruit salad</string>
+  <string name="settings_style_monochrome">Monochrome</string>
+  <string name="settings_style_fidelity">Fidelity</string>
+  <string name="settings_style_content">Content</string>
   <string name="settings_theme_hue">Color hue</string>
   <string name="settings_theme_auto">Auto</string>
   <string name="settings_theme_light">Light</string>

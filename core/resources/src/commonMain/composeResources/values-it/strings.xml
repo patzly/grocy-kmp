@@ -344,4 +344,13 @@
   <string name="msg_choose_from_list">Scegli una voce dall’elenco</string>
   <string name="msg_unsaved_changes">Modifiche non salvate</string>
   <string name="msg_unsaved_changes_description">Salvare le modifiche prima di uscire o scartarle?</string>
+  <string name="settings_style_tonal_spot">Tonale</string>
+  <string name="settings_style_neutral">Neutro</string>
+  <string name="settings_style_vibrant">Vivace</string>
+  <string name="settings_style_expressive">Espressivo</string>
+  <string name="settings_style_rainbow">Arcobaleno</string>
+  <string name="settings_style_fruit_salad">Macedonia</string>
+  <string name="settings_style_monochrome">Monocromatico</string>
+  <string name="settings_style_fidelity">Fedele</string>
+  <string name="settings_style_content">Contenuto</string>
 </resources>

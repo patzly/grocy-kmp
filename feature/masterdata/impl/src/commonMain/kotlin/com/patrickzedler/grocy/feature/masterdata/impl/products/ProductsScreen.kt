@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
@@ -55,6 +56,7 @@ import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.core.data.util.RefreshState
+import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
@@ -64,6 +66,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.edgeToEdgeItem
 import com.patrickzedler.grocy.core.design.component.insetItem
@@ -98,6 +101,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun ProductsScreen(
+    menuItems: List<AppBarMenuItem>,
     viewModel: ProductsViewModel,
     onBackClick: () -> Unit,
     onProductClick: (Int) -> Unit,
@@ -138,6 +142,7 @@ internal fun ProductsScreen(
         onClearFilterClick = viewModel::clearFilter,
         onRetryClick = viewModel::refresh,
         loadThumbnail = viewModel::thumbnail,
+        menuItems = menuItems,
         modifier = modifier,
     )
 }
@@ -158,7 +163,8 @@ private fun ProductsContent(
     onSortChange: (ProductSort) -> Unit,
     onClearFilterClick: () -> Unit,
     onRetryClick: () -> Unit,
-    loadThumbnail: suspend (fileName: String, maxWidth: Int) -> ByteArray?,
+    loadThumbnail: suspend (fileName: String) -> ByteArray?,
+    menuItems: List<AppBarMenuItem>,
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
@@ -168,6 +174,7 @@ private fun ProductsContent(
         title = stringResource(Res.string.masterdata_products),
         modifier = modifier,
         navigationIcon = { NavigateBackButton(onClick = onBackClick) },
+        menuItems = menuItems,
         listState = listState,
         snackbarHostState = snackbarHostState,
         // The first download shows its own indicator in the empty list
@@ -233,16 +240,22 @@ private fun ProductsContent(
                 val motionScheme = MaterialTheme.motionScheme
                 AnimatedVisibility(
                     visible = isSearchVisible,
-                    enter = expandVertically(motionScheme.defaultSpatialSpec()) +
-                        fadeIn(motionScheme.defaultEffectsSpec()),
-                    exit = shrinkVertically(motionScheme.defaultSpatialSpec()) +
-                        fadeOut(motionScheme.defaultEffectsSpec()),
+                    // From the top: the focused field then lies in view while it grows, so
+                    // focusing it right away (keyboard included) does not scroll the list
+                    enter = expandVertically(
+                        animationSpec = motionScheme.defaultSpatialSpec(),
+                        expandFrom = Alignment.Top,
+                    ) + fadeIn(motionScheme.defaultEffectsSpec()),
+                    exit = shrinkVertically(
+                        animationSpec = motionScheme.defaultSpatialSpec(),
+                        shrinkTowards = Alignment.Top,
+                    ) + fadeOut(motionScheme.defaultEffectsSpec()),
                 ) {
                     SearchField(
                         state = searchState,
                         onCloseClick = onCloseSearchClick,
-                        // Focusing scrolls the field into view, which would fight the opening
-                        isOpen = transition.currentState == EnterExitState.Visible,
+                        // The keyboard closes with the start of the closing, not after it
+                        isClosing = transition.targetState != EnterExitState.Visible,
                         modifier = Modifier.padding(
                             top = ListItemDefaults.SegmentedGap,
                             bottom = SearchSpacing + ListItemDefaults.SegmentedGap,
@@ -266,7 +279,7 @@ private fun LazyListScope.productItems(
     refresh: RefreshState,
     onProductClick: (Int) -> Unit,
     onRetryClick: () -> Unit,
-    loadThumbnail: suspend (fileName: String, maxWidth: Int) -> ByteArray?,
+    loadThumbnail: suspend (fileName: String) -> ByteArray?,
 ) {
     when {
         state.items.isNotEmpty() -> insetItems(
@@ -321,12 +334,15 @@ private fun LazyListScope.productItems(
 private fun SearchField(
     state: TextFieldState,
     onCloseClick: () -> Unit,
-    isOpen: Boolean,
+    isClosing: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val haptic = LocalHapticFeedback.current
+    val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(isOpen) { if (isOpen) focusRequester.requestFocus() }
+    LaunchedEffect(isClosing) {
+        if (isClosing) focusManager.clearFocus() else focusRequester.requestFocus()
+    }
 
     SegmentedContainer(index = 0, count = 1, modifier = modifier) {
         RoundedTextField(
@@ -341,6 +357,7 @@ private fun SearchField(
                         haptic.confirm()
                         onCloseClick()
                     },
+                    modifier = Modifier.clickCursor(),
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_rounded_close),
@@ -359,7 +376,7 @@ private fun ProductItem(
     index: Int,
     count: Int,
     onClick: () -> Unit,
-    loadThumbnail: suspend (fileName: String, maxWidth: Int) -> ByteArray?,
+    loadThumbnail: suspend (fileName: String) -> ByteArray?,
 ) {
     val haptic = LocalHapticFeedback.current
     // Disabled products are greyed out like Grocy's muted rows
@@ -382,7 +399,8 @@ private fun ProductItem(
         // The picture hint belongs to the item, not to a node of its own
         modifier = Modifier
             .fillMaxWidth()
-            .semantics { if (item.pictureFileName != null) stateDescription = pictureDescription },
+            .semantics { if (item.pictureFileName != null) stateDescription = pictureDescription }
+            .clickCursor(),
         overlineContent = if (!item.active) {
             { Text(stringResource(Res.string.products_disabled)) }
         } else {
@@ -437,7 +455,8 @@ private fun MessageItem(
                 },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(top = 16.dp),
+                    .padding(top = 16.dp)
+                    .clickCursor(),
             ) {
                 Text(actionText)
             }

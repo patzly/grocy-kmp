@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.core.data.settings
 
+import com.patrickzedler.grocy.core.model.AppPaletteStyle
 import com.patrickzedler.grocy.core.model.AppTheme
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
@@ -30,6 +31,22 @@ class SettingValuesTest {
         assertEquals(
             AppearanceSettings(theme = AppTheme.DARK),
             appearanceOf(theme = "DARK", color = "RAINBOW", hue = 400f, contrast = "EXTREME"),
+        )
+    }
+
+    @Test
+    fun storedPaletteStyleIsRead() {
+        assertEquals(
+            AppPaletteStyle.FRUIT_SALAD,
+            appearanceOf(null, null, null, null, style = "FRUIT_SALAD").style,
+        )
+    }
+
+    @Test
+    fun unknownPaletteStyleIsTonalSpot() {
+        assertEquals(
+            AppPaletteStyle.TONAL_SPOT,
+            appearanceOf(null, null, null, null, style = "SPRINKLES").style,
         )
     }
 

@@ -25,6 +25,7 @@ import com.patrickzedler.grocy.core.navigation.GrocyNavDisplay
 import com.patrickzedler.grocy.core.navigation.rememberNavigator
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.core.scanner.LocalBarcodeDecoderFactory
+import com.patrickzedler.grocy.core.ui.LocalUnlockState
 import com.patrickzedler.grocy.core.ui.dialog.UpdateAvailableDialog
 import com.patrickzedler.grocy.feature.about.api.aboutRouteSerializers
 import com.patrickzedler.grocy.feature.about.impl.aboutEntries
@@ -68,10 +69,12 @@ fun GrocyApp(
             .collectAsStateWithLifecycle(initialValue = BarcodeDecoderFactory.Zxing)
 
         val pointerKind = rememberPointerKindState()
+        val unlockState by graph.unlockRepository.unlockState.collectAsStateWithLifecycle()
 
         CompositionLocalProvider(
             LocalBarcodeDecoderFactory provides barcodeDecoderFactory,
             LocalPointerKind provides pointerKind,
+            LocalUnlockState provides unlockState,
         ) {
             // Screen transitions fade, this keeps the window or page behind them out of sight
             Box(

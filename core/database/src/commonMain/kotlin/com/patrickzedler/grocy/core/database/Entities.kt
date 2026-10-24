@@ -124,3 +124,13 @@ data class ServerValueEntity(
     @PrimaryKey val key: String,
     val json: String,
 )
+
+/**
+ * A product's picture as the server scaled it for the product list, kept for offline use.
+ * Grocy gives every new picture a new file name, so a stored one never gets outdated.
+ */
+@Entity(tableName = "product_thumbnails")
+class ProductThumbnailEntity(
+    @PrimaryKey @ColumnInfo(name = "file_name") val fileName: String,
+    val bytes: ByteArray,
+)

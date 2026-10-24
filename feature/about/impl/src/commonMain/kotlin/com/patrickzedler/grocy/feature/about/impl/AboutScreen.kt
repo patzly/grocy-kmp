@@ -36,6 +36,7 @@ import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapp
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.design.component.tryOpenUri
@@ -379,6 +380,7 @@ private fun AboutMenuItem(
     val haptic = LocalHapticFeedback.current
     DropdownMenuItem(
         text = { Text(text) },
+        modifier = Modifier.clickCursor(),
         onClick = {
             haptic.confirm()
             onClick()
@@ -428,7 +430,7 @@ private fun AboutItem(
         },
         shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         colors = colors,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().clickCursor(),
         verticalAlignment = Alignment.CenterVertically,
         overlineContent = overline?.let { { Text(it) } },
         supportingContent = supporting?.let { { Text(it) } },

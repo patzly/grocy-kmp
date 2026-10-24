@@ -31,6 +31,7 @@ import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.InsetLazyColumn
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
@@ -183,7 +184,7 @@ private fun ChoiceItem(
         shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         colors = SegmentedListDefaults.colors(),
         enabled = enabled,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().clickCursor(enabled = enabled),
         verticalAlignment = Alignment.CenterVertically,
         leadingContent = {
             LeadingTrailingContentWrapper {

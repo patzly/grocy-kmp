@@ -343,4 +343,13 @@
   <string name="msg_choose_from_list">Válassz egy elemet a listából</string>
   <string name="msg_unsaved_changes">Nem mentett módosítások</string>
   <string name="msg_unsaved_changes_description">Mented a módosításokat kilépés előtt, vagy elveted őket?</string>
+  <string name="settings_style_tonal_spot">Tónusos</string>
+  <string name="settings_style_neutral">Semleges</string>
+  <string name="settings_style_vibrant">Élénk</string>
+  <string name="settings_style_expressive">Kifejező</string>
+  <string name="settings_style_rainbow">Szivárvány</string>
+  <string name="settings_style_fruit_salad">Gyümölcssaláta</string>
+  <string name="settings_style_monochrome">Monokróm</string>
+  <string name="settings_style_fidelity">Hű</string>
+  <string name="settings_style_content">Tartalom</string>
 </resources>

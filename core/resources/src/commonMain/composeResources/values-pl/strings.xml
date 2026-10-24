@@ -345,4 +345,13 @@
   <string name="msg_choose_from_list">Wybierz pozycję z listy</string>
   <string name="msg_unsaved_changes">Niezapisane zmiany</string>
   <string name="msg_unsaved_changes_description">Zapisać zmiany przed wyjściem czy je odrzucić?</string>
+  <string name="settings_style_tonal_spot">Tonalny</string>
+  <string name="settings_style_neutral">Neutralny</string>
+  <string name="settings_style_vibrant">Żywy</string>
+  <string name="settings_style_expressive">Ekspresyjny</string>
+  <string name="settings_style_rainbow">Tęcza</string>
+  <string name="settings_style_fruit_salad">Sałatka owocowa</string>
+  <string name="settings_style_monochrome">Monochromatyczny</string>
+  <string name="settings_style_fidelity">Wierny</string>
+  <string name="settings_style_content">Treść</string>
 </resources>

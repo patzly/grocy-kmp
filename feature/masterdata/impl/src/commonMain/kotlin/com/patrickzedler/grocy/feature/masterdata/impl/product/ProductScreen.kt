@@ -41,6 +41,7 @@ import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import com.patrickzedler.grocy.core.data.masterdata.PictureChange
+import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
@@ -53,6 +54,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
@@ -190,6 +192,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun ProductScreen(
+    menuItems: List<AppBarMenuItem>,
     viewModel: ProductViewModel,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -249,6 +252,7 @@ internal fun ProductScreen(
         ),
         modifier = modifier,
         navigationIcon = { NavigateBackButton(onClick = requestBack) },
+        menuItems = menuItems,
         snackbarHostState = snackbarHostState,
         floatingToolbar = { scrollBehavior, toolbarModifier ->
             FloatingToolbarWithFab(
@@ -683,6 +687,7 @@ private fun GeneralItems(
                                 haptic.confirm()
                                 showScanner = !showScanner
                             },
+                            modifier = Modifier.clickCursor(enabled = !hasSubProducts),
                             enabled = !hasSubProducts,
                         ) {
                             Icon(
@@ -1067,6 +1072,7 @@ private fun UserfieldItem(
                     val selected = option in input.checklist
                     FilterChip(
                         selected = selected,
+                        modifier = Modifier.clickCursor(),
                         onClick = {
                             haptic.confirm()
                             input.checklist = if (selected) {
@@ -1142,6 +1148,7 @@ private fun NavigationItem(
             haptic.confirm()
             onClick()
         },
+        modifier = Modifier.clickCursor(enabled = enabled),
         shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         colors = SegmentedListDefaults.colors(),
         enabled = enabled,

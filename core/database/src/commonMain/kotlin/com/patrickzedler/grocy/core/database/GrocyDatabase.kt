@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.core.database
 
+import androidx.room3.AutoMigration
 import androidx.room3.ConstructedBy
 import androidx.room3.Database
 import androidx.room3.RoomDatabase
@@ -21,8 +22,13 @@ import androidx.room3.RoomDatabaseConstructor
         StockEntity::class,
         UserfieldEntity::class,
         ServerValueEntity::class,
+        ProductThumbnailEntity::class,
     ],
-    version = 1,
+    version = 2,
+    autoMigrations = [
+        // 2 adds product_thumbnails
+        AutoMigration(from = 1, to = 2),
+    ],
 )
 @ConstructedBy(GrocyDatabaseConstructor::class)
 abstract class GrocyDatabase : RoomDatabase() {

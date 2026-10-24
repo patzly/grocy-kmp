@@ -344,4 +344,13 @@
   <string name="msg_choose_from_list">יש לבחור פריט מהרשימה</string>
   <string name="msg_unsaved_changes">שינויים שלא נשמרו</string>
   <string name="msg_unsaved_changes_description">לשמור את השינויים לפני היציאה או לבטל אותם?</string>
+  <string name="settings_style_tonal_spot">טונאלי</string>
+  <string name="settings_style_neutral">ניטרלי</string>
+  <string name="settings_style_vibrant">תוסס</string>
+  <string name="settings_style_expressive">אקספרסיבי</string>
+  <string name="settings_style_rainbow">קשת</string>
+  <string name="settings_style_fruit_salad">סלט פירות</string>
+  <string name="settings_style_monochrome">מונוכרום</string>
+  <string name="settings_style_fidelity">נאמן</string>
+  <string name="settings_style_content">תוכן</string>
 </resources>

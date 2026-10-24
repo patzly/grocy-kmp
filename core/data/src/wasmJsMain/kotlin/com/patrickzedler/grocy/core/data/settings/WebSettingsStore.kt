@@ -42,6 +42,7 @@ class WebSettingsStore internal constructor(
             color = storage.get(COLOR),
             hue = storage.get(HUE)?.toFloatOrNull(),
             contrast = storage.get(CONTRAST),
+            style = storage.get(STYLE),
         ),
     )
 
@@ -52,6 +53,7 @@ class WebSettingsStore internal constructor(
         storage.set(COLOR, appearance.color.name)
         storage.set(HUE, appearance.hue.toString())
         storage.set(CONTRAST, appearance.contrast.name)
+        storage.set(STYLE, appearance.style.name)
         appearanceState.value = appearance
     }
 
@@ -62,5 +64,6 @@ class WebSettingsStore internal constructor(
         const val COLOR = "grocy.color"
         const val HUE = "grocy.hue"
         const val CONTRAST = "grocy.contrast"
+        const val STYLE = "grocy.style"
     }
 }

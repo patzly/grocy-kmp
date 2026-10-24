@@ -6,7 +6,7 @@ Compose Multiplatform. Targets: Android (phone, Wear OS) and Web (Kotlin/Wasm). 
 
 Current state: login (demo server, QR code of Grocy's API key page, manual Grocy URL + API key,
 Home Assistant ingress on Android), the reusable barcode scanner (`core:scanner`), update checks
-on every platform, the start screen (Master data item, Settings and About actions), an About
+on every platform, the start screen (Master data item, the app menu), an About
 screen, the Settings overview (`feature:settings`) and the first master data
 (`feature:masterdata`): the overview of Grocy's master data categories, the product list and
 the product form. Only Products opens a screen so far; Barcodes, QU conversions, Stock entries,
@@ -17,6 +17,16 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
 - `MasterDataScreen` lists the categories of Grocy's "Manage master data" menu in its order and
   hides the ones whose feature flag is off (`MasterDataCategory.isAvailable`); Products shows
   the number of products once it is known (stored products or a finished download).
+- List pictures are stored for offline use: `MasterDataRepository.productThumbnail` keeps them
+  in `product_thumbnails` (Grocy gives every new picture a new file name, so they never get
+  outdated), the product list downloads the missing ones after each refresh
+  (`downloadMissingThumbnails`), and a refresh deletes those no product shows anymore.
+- Every screen except About and the settings has the app menu in its overflow menu: Settings,
+  About, Help and Send feedback (`rememberAppMenu` + `AppMenuDialogs` of `core:ui`, the items go
+  to `SegmentedListScreen(menuItems)`, which puts "Reload" as a group of its own before them).
+  The feedback dialog reads the unlock state from `LocalUnlockState`, provided by `GrocyApp`.
+  Ripples of grouped menus follow the group's corners through
+  `menuItemShape(index, count, groupIndex, groupCount)`.
 - Every list screen (start, master data, products) has pull to refresh through
   `SegmentedListScreen(isRefreshing, onRefresh)`: Material's own
   `PullToRefreshDefaults.LoadingIndicator`, sliding out from below the app bar, and "Reload" in
@@ -26,20 +36,22 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   instead. These screens use the small centered app bar with `pinnedScrollBehavior` (no
   collapsing, which would fight with pulling), always in its scrolled color
   (`surfaceContainerHighest`), so the indicator visibly comes from below it; the others keep
-  the large one.
+  the large one, except while a mouse is used: its wheel has no gesture end the large bar could
+  settle on, so every screen gets the small centered bar then, changing only its color.
   Single items of a menu group use `menuItemShape(0, 1)`: Material's standalone item shape has
   the small corners of middle items, so its ripple would not fill the rounded group. ViewModels run downloads through
   `RefreshController` (`core:data`: one at a time, offline/failed errors, `loadedOnce`);
   `RefreshErrorEffect` (`core:ui`) shows a failed download as snackbar.
 - `ProductsScreen`: one segmented item per product (`itemSpacing = SegmentedGap`, a product with
-  picture shows it at the item's end, `ProductThumbnail`, 56.dp with small corners, kept by the
-  ViewModel while the list is open), first the filter row directly on the background
+  picture shows it at the item's end, `ProductThumbnail`, 56.dp with small corners), first the
+  filter row directly on the background
   (`edgeToEdgeItem` of `InsetLazyColumn`: it scrolls sideways up to the screen's edges, the
   padding that lines it up with the items scrolls along) and, while open, the search as its own
-  segmented item below it (full width, opens with Material's spatial spring, focused once open,
-  since focusing scrolls it into view and would fight the opening).
-  `ProductFilterBar` has Material 3 elevated chips (their `surfaceContainerLow` container stands
-  out from the background), one per filter: product group and status
+  segmented item below it (full width, opens with Material's spatial spring from its top edge,
+  so it can be focused, keyboard included, right away without scrolling the list; closing
+  clears the focus at its start).
+  `ProductFilterBar` has outlined Material 3 chips with a `surfaceContainerLow` container (they
+  lie on the background) and no elevation in any state, one per filter: product group and status
   as dropdown filter chips that are selected and show the value while not "All", "Show
   disabled" as toggle chip, a sort chip, and "Clear filter" as assist chip with a reset icon
   at its start while a filter (not the search) is active; chips use the standard overloads with Material's 8.dp rounded rectangle, not the
@@ -87,15 +99,19 @@ backup and reset follow; `settingsEntries` wires their clicks to nothing until t
   (`MM-dd HH:mm:ss.SSS E ...`), the newest 300 lines in `sessionStorage` (survives a reload, not
   closing the tab or app). `redactSecrets` removes API keys (the web sends them in the URL),
   access tokens, Bearer tokens and ingress sessions before anything is stored.
-- Appearance (`AppearanceSettings`: theme, static/dynamic color, hue, contrast) lives in
-  `SettingsStore` (DataStore keys `theme`, `color`, `hue`, `contrast`; `grocy.theme` etc. on the
-  web), read once at app start by `AppearanceRepository` (eager `StateFlow` in the app scope of
+- Appearance (`AppearanceSettings`: theme, static/dynamic color, hue, palette style, contrast)
+  lives in `SettingsStore` (DataStore keys `theme`, `color`, `hue`, `style`, `contrast`;
+  `grocy.theme` etc. on the web), read once at app start by `AppearanceRepository` (eager `StateFlow` in the app scope of
   `AppGraph`), which `GrocyApp` passes to `GrocyTheme(appearance)` and the General screen shows;
   nothing is drawn until it is read, so no default flashes up. Dynamic color shows only where
   `isDynamicColorAvailable` (Android 12+); its contrast follows the system from Android 14 on
   (`dynamicColorFollowsSystemContrast`), so the contrast buttons are disabled with dynamic
   color. `HueSlider` (`core:design`) is the rainbow slider, colored with the same chroma and
-  tone as the theme's seed.
+  tone as the theme's seed. Below it a button group chooses MaterialKolor's `PaletteStyle`
+  (`AppPaletteStyle`: tonal spot, neutral, vibrant, ... content; the ones that do not fit go
+  into its overflow menu). Changing light/dark, color source, style or contrast fades the whole
+  app into the new colors (`animateColorScheme`: one animation blends every color of the
+  scheme); hue changes apply at once, so dragging the slider never piles up animations.
 - Language (`AppLanguageStore`, null = system language). The translations are the tags in
   `AppLanguages` (core:model, English first as the base in `values/`); `locales_config.xml` of
   apps:shared lists the same and the Android build reads its `localeFilters` from it;
@@ -601,7 +617,8 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   text is the value (a text naming an option chooses it, an empty one chooses nothing, other
   text shows "Choose an entry from the list" once no suggestion is open and is reported through
   `onUnmatchedChange`, so forms refuse to save); the menu only suggests (fuzzy, no check marks,
-  optional fields offer "None"), opens through its arrow or while typing and closes on a choice;
+  optional fields offer "None"), opens through its arrow or while typing and closes on a choice
+  or once the text names an option completely;
   a tap on the field or its trailing action (scan) only focuses; its menu is one expressive menu
   group in a `DropdownMenuPopup`, not `ExposedDropdownMenu`, whose old menu padding sits outside
   the scrolling and cuts the items off), units of text fields go in the
@@ -615,6 +632,10 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   `trackPointerKind`): whether the user works with a mouse or trackpad right now. It starts with
   the device (`(pointer: fine)` in browsers, `FEATURE_PC` on Android) and follows the pointer of
   the last press or wheel turn; hover moves do not count, browsers emulate them after a tap.
+- Web pages show the hand cursor over clickable things, Compose does not: every button, item,
+  chip, toggle, slider and link applies `Modifier.clickCursor(enabled)` (`core:design`, a no-op
+  on Android, whose convention, also with a mouse on ChromeOS, keeps the arrow on buttons).
+  New interactive components must apply it too.
 - `ScrollableAlertDialog` closes on a tap beside it through `detectTapGestures`, not
   `clickable`, which would merge the dialog's pane title into one node (the web throws).
 - "Recommend" (`rememberRecommendAction`) opens the system share sheet; where there is none

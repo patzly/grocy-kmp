@@ -57,6 +57,44 @@ class MasterDataRepositoryTest {
     }
 
     @Test
+    fun thumbnailIsStoredForOfflineUse() = runTest {
+        repository.refresh()
+        server.respond(breadPicture, body = "jpeg")
+        repository.productThumbnail("x1bread.jpg")
+        server.unreachable = true
+
+        val thumbnail = repository.productThumbnail("x1bread.jpg")
+
+        assertEquals("jpeg", thumbnail.decodeToString())
+    }
+
+    @Test
+    fun missingThumbnailsAreDownloaded() = runTest {
+        repository.refresh()
+        server.respond(breadPicture, body = "jpeg")
+
+        repository.downloadMissingThumbnails()
+        repository.downloadMissingThumbnails()
+
+        assertEquals(1, server.requestedPaths.count { it == breadPicture })
+    }
+
+    @Test
+    fun thumbnailOfARemovedPictureIsDeleted() = runTest {
+        repository.refresh()
+        server.respond(breadPicture, body = "jpeg")
+        repository.productThumbnail("x1bread.jpg")
+        server.respond("/api/objects/products", body = "[]")
+
+        repository.refresh()
+
+        server.unreachable = true
+        assertFailsWith<GrocyApiException.Unreachable> {
+            repository.productThumbnail("x1bread.jpg")
+        }
+    }
+
+    @Test
     fun configurationHasGrocysDefaultsBeforeTheFirstDownload() = runTest {
         assertTrue(repository.serverConfig.first().stockLocationTracking)
         assertEquals(4, repository.userSettings.first().stockDecimalPlacesAmounts)
@@ -200,6 +238,8 @@ class MasterDataRepositoryTest {
 
     @OptIn(kotlin.io.encoding.ExperimentalEncodingApi::class)
     private fun String.base64() = kotlin.io.encoding.Base64.encode(encodeToByteArray())
+
+    private val breadPicture = "/api/files/productpictures/${"x1bread.jpg".base64()}"
 
     private fun productJson(id: Int, name: String) =
         """{"id":$id,"name":"$name","active":1,"qu_id_stock":1}"""

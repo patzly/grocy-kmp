@@ -54,24 +54,23 @@ class ProductsViewModelTest {
     }
 
     @Test
-    fun thumbnailIsDownloadedOnce() = runTest(dispatcher) {
-        val viewModel = viewModel()
+    fun listPicturesAreStoredInTheBackground() = runTest(dispatcher) {
         val path = "/api/files/productpictures/${"x1bread.jpg".encodeBase64()}"
         environment.server.respond(path, body = "jpeg")
-
-        viewModel.thumbnail("x1bread.jpg", maxWidth = 168)
-        val thumbnail = viewModel.thumbnail("x1bread.jpg", maxWidth = 168)
-
-        assertEquals("jpeg", thumbnail?.decodeToString())
-        assertEquals(1, environment.server.requestedPaths.count { it == path })
-    }
-
-    @Test
-    fun thumbnailOfflineIsNull() = runTest(dispatcher) {
         val viewModel = viewModel()
         environment.server.unreachable = true
 
-        assertNull(viewModel.thumbnail("x1bread.jpg", maxWidth = 168))
+        val thumbnail = viewModel.thumbnail("x1bread.jpg")
+
+        assertEquals("jpeg", thumbnail?.decodeToString())
+    }
+
+    @Test
+    fun pictureThatIsNotStoredIsNullOffline() = runTest(dispatcher) {
+        environment.server.unreachable = true
+        val viewModel = viewModel()
+
+        assertNull(viewModel.thumbnail("x1bread.jpg"))
     }
 
     @Test

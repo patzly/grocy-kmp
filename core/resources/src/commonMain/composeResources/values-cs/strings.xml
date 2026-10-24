@@ -345,4 +345,13 @@
   <string name="msg_choose_from_list">Vyberte položku ze seznamu</string>
   <string name="msg_unsaved_changes">Neuložené změny</string>
   <string name="msg_unsaved_changes_description">Uložit změny před odchodem, nebo je zahodit?</string>
+  <string name="settings_style_tonal_spot">Tónový</string>
+  <string name="settings_style_neutral">Neutrální</string>
+  <string name="settings_style_vibrant">Živý</string>
+  <string name="settings_style_expressive">Výrazný</string>
+  <string name="settings_style_rainbow">Duha</string>
+  <string name="settings_style_fruit_salad">Ovocný salát</string>
+  <string name="settings_style_monochrome">Monochromatický</string>
+  <string name="settings_style_fidelity">Věrný</string>
+  <string name="settings_style_content">Obsah</string>
 </resources>

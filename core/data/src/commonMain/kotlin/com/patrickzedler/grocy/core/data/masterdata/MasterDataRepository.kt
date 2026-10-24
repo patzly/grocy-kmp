@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.data.masterdata
 
 import androidx.room3.withWriteTransaction
 import com.patrickzedler.grocy.core.database.GrocyDatabase
+import com.patrickzedler.grocy.core.database.ProductThumbnailEntity
 import com.patrickzedler.grocy.core.database.ServerValueEntity
 import com.patrickzedler.grocy.core.database.toEntity
 import com.patrickzedler.grocy.core.database.toModel
@@ -121,7 +122,24 @@ class MasterDataRepository(
             dao.upsertServerValue(
                 value(USER_SETTINGS, UserSettings.serializer(), download.settings),
             )
+            dao.deleteUnusedThumbnails()
         }
+    }
+
+    /**
+     * The picture [fileName] of a product, scaled for the product list: stored for offline use,
+     * downloaded once when missing.
+     */
+    suspend fun productThumbnail(fileName: String): ByteArray {
+        dao.thumbnail(fileName)?.let { return it }
+        val bytes = api.productPicture(requireConnection(), fileName, THUMBNAIL_WIDTH)
+        dao.upsertThumbnail(ProductThumbnailEntity(fileName, bytes))
+        return bytes
+    }
+
+    /** Downloads the list pictures not stored yet, so the list shows them offline too. */
+    suspend fun downloadMissingThumbnails() {
+        dao.missingThumbnails().forEach { productThumbnail(it) }
     }
 
     /**
@@ -224,6 +242,9 @@ class MasterDataRepository(
         const val NEW_PRODUCT_ID = 0
 
         const val PRODUCTS = "products"
+
+        /** Pixels of a list picture: the 56.dp of the list on screens of up to 3.5x density. */
+        const val THUMBNAIL_WIDTH = 196
         private const val SERVER_CONFIG = "server_config"
         private const val USER_SETTINGS = "user_settings"
     }

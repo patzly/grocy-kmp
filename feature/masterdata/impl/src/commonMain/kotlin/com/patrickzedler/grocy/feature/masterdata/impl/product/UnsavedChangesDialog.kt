@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_cancel
@@ -66,17 +67,29 @@ private fun UnsavedChangesDialogContent(
         modifier = modifier,
         title = { Text(stringResource(Res.string.msg_unsaved_changes)) },
         confirmButton = {
-            TextButton(onClick = onSaveClick, shapes = ButtonDefaults.shapes()) {
+            TextButton(
+                onClick = onSaveClick,
+                modifier = Modifier.clickCursor(),
+                shapes = ButtonDefaults.shapes(),
+            ) {
                 Text(stringResource(Res.string.action_save))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDiscardClick, shapes = ButtonDefaults.shapes()) {
+            TextButton(
+                onClick = onDiscardClick,
+                modifier = Modifier.clickCursor(),
+                shapes = ButtonDefaults.shapes(),
+            ) {
                 Text(stringResource(Res.string.action_discard))
             }
         },
         extraButton = {
-            TextButton(onClick = onCancelClick, shapes = ButtonDefaults.shapes()) {
+            TextButton(
+                onClick = onCancelClick,
+                modifier = Modifier.clickCursor(),
+                shapes = ButtonDefaults.shapes(),
+            ) {
                 Text(stringResource(Res.string.action_cancel))
             }
         },

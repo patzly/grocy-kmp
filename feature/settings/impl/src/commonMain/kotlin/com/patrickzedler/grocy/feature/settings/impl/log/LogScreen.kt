@@ -56,6 +56,7 @@ import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.resources.Res
@@ -215,7 +216,7 @@ private fun LogActions(
                     modifier = Modifier.animateWidth(
                         interactionSource = copyInteractionSource,
                         compressionLimit = contentPadding.calculateStartPadding(layoutDirection),
-                    ),
+                    ).clickCursor(enabled = canCopy),
                 ) {
                     ButtonText(text = copyText, contentPadding = contentPadding)
                 }
@@ -223,6 +224,7 @@ private fun LogActions(
             menuContent = { menuState ->
                 DropdownMenuItem(
                     text = { Text(copyText) },
+                    modifier = Modifier.clickCursor(enabled = canCopy),
                     enabled = canCopy,
                     onClick = {
                         menuState.dismiss()
@@ -244,7 +246,7 @@ private fun LogActions(
                     modifier = Modifier.animateWidth(
                         interactionSource = feedbackInteractionSource,
                         compressionLimit = contentPadding.calculateEndPadding(layoutDirection),
-                    ),
+                    ).clickCursor(),
                 ) {
                     ButtonText(text = feedbackText, contentPadding = contentPadding)
                 }
@@ -252,6 +254,7 @@ private fun LogActions(
             menuContent = { menuState ->
                 DropdownMenuItem(
                     text = { Text(feedbackText) },
+                    modifier = Modifier.clickCursor(),
                     onClick = {
                         menuState.dismiss()
                         onFeedback()
@@ -295,7 +298,8 @@ private fun OverflowIndicator(
             },
             modifier = Modifier
                 .minimumInteractiveComponentSize()
-                .size(IconButtonDefaults.smallContainerSize()),
+                .size(IconButtonDefaults.smallContainerSize())
+                .clickCursor(),
             colors = IconButtonDefaults.filledTonalIconButtonColors(),
             shapes = IconButtonDefaults.shapes(),
         ) {

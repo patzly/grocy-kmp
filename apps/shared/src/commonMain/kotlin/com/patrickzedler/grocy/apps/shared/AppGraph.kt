@@ -53,7 +53,7 @@ class AppGraph(
         )
     }
 
-    private val unlockRepository by lazy {
+    internal val unlockRepository by lazy {
         UnlockRepository(platform.unlockChecker, platform.settingsStore, appScope)
     }
 

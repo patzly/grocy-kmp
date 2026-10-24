@@ -64,6 +64,7 @@ fun <T> ConnectedButtonGroup(
                     buttonGroupContent = {
                         ToggleButton(
                             checked = isSelected,
+                            modifier = Modifier.clickCursor(enabled = enabled),
                             onCheckedChange = {
                                 haptic.confirm()
                                 if (!isSelected) onCheckedChange(option)
@@ -81,6 +82,7 @@ fun <T> ConnectedButtonGroup(
                     menuContent = { menuState ->
                         SelectableDropdownMenuItem(
                             selected = isSelected,
+                            modifier = Modifier.clickCursor(enabled = enabled),
                             onClick = {
                                 haptic.confirm()
                                 if (!isSelected) onCheckedChange(option)
@@ -124,7 +126,8 @@ private fun OverflowIndicator(
             enabled = enabled,
             modifier = Modifier
                 .minimumInteractiveComponentSize()
-                .size(IconButtonDefaults.smallContainerSize()),
+                .size(IconButtonDefaults.smallContainerSize())
+                .clickCursor(enabled = enabled),
             colors = IconButtonDefaults.filledIconButtonColors(
                 containerColor = MaterialTheme.colorScheme.surfaceContainer,
                 contentColor = MaterialTheme.colorScheme.onSurfaceVariant,

@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_error
@@ -260,6 +261,7 @@ private fun ScannerMessage(
                     haptic.confirm()
                     onAction()
                 },
+                modifier = Modifier.clickCursor(),
                 shapes = ButtonDefaults.shapes(),
             ) {
                 Text(actionLabel)

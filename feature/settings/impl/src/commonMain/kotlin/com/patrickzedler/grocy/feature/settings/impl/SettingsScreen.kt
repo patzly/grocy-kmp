@@ -17,6 +17,7 @@ import com.patrickzedler.grocy.core.data.log.LogSource
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.resources.Res
@@ -171,7 +172,7 @@ private fun SettingsItem(
         },
         shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         colors = colors,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().clickCursor(),
         verticalAlignment = Alignment.CenterVertically,
         leadingContent = {
             LeadingTrailingContentWrapper {

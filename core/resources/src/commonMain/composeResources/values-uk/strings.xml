@@ -345,4 +345,13 @@
   <string name="msg_choose_from_list">Виберіть запис зі списку</string>
   <string name="msg_unsaved_changes">Незбережені зміни</string>
   <string name="msg_unsaved_changes_description">Зберегти зміни перед виходом чи скасувати їх?</string>
+  <string name="settings_style_tonal_spot">Тональний</string>
+  <string name="settings_style_neutral">Нейтральний</string>
+  <string name="settings_style_vibrant">Яскравий</string>
+  <string name="settings_style_expressive">Виразний</string>
+  <string name="settings_style_rainbow">Веселка</string>
+  <string name="settings_style_fruit_salad">Фруктовий салат</string>
+  <string name="settings_style_monochrome">Монохромний</string>
+  <string name="settings_style_fidelity">Точний</string>
+  <string name="settings_style_content">Вміст</string>
 </resources>

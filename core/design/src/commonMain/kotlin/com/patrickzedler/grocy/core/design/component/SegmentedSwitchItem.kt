@@ -40,7 +40,9 @@ fun SegmentedSwitchItem(
         },
         shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         // Announced as switch, not as the checkbox of the checkable item
-        modifier = modifier.semantics { role = Role.Switch },
+        modifier = modifier
+            .semantics { role = Role.Switch }
+            .clickCursor(enabled = enabled),
         enabled = enabled,
         colors = SegmentedListDefaults.colors(),
         supportingContent = supporting?.let { { Text(it) } },

@@ -343,4 +343,13 @@
   <string name="msg_choose_from_list">Επιλέξτε μια καταχώριση από τη λίστα</string>
   <string name="msg_unsaved_changes">Μη αποθηκευμένες αλλαγές</string>
   <string name="msg_unsaved_changes_description">Αποθήκευση των αλλαγών πριν την έξοδο ή απόρριψή τους;</string>
+  <string name="settings_style_tonal_spot">Τονικό</string>
+  <string name="settings_style_neutral">Ουδέτερο</string>
+  <string name="settings_style_vibrant">Ζωντανό</string>
+  <string name="settings_style_expressive">Εκφραστικό</string>
+  <string name="settings_style_rainbow">Ουράνιο τόξο</string>
+  <string name="settings_style_fruit_salad">Φρουτοσαλάτα</string>
+  <string name="settings_style_monochrome">Μονόχρωμο</string>
+  <string name="settings_style_fidelity">Πιστό</string>
+  <string name="settings_style_content">Περιεχόμενο</string>
 </resources>

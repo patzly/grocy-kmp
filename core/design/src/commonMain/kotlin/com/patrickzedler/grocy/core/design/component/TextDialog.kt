@@ -64,6 +64,7 @@ private fun TextDialogContent(
         confirmButton = {
             TextButton(
                 onClick = onCloseClick,
+                modifier = Modifier.clickCursor(),
                 shapes = ButtonDefaults.shapes(),
             ) {
                 Text(stringResource(Res.string.action_close))
@@ -73,6 +74,7 @@ private fun TextDialogContent(
             {
                 TextButton(
                     onClick = onClick,
+                    modifier = Modifier.clickCursor(),
                     shapes = ButtonDefaults.shapes(),
                 ) {
                     Text(stringResource(Res.string.action_learn_more))

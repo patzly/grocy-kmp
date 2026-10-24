@@ -3,6 +3,7 @@ package com.patrickzedler.grocy.core.data.settings
 import com.patrickzedler.grocy.core.data.InMemoryStorage
 import com.patrickzedler.grocy.core.model.AppColor
 import com.patrickzedler.grocy.core.model.AppContrast
+import com.patrickzedler.grocy.core.model.AppPaletteStyle
 import com.patrickzedler.grocy.core.model.AppTheme
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
@@ -58,6 +59,7 @@ class WebSettingsStoreTest {
             theme = AppTheme.DARK,
             color = AppColor.DYNAMIC,
             hue = 42.5f,
+            style = AppPaletteStyle.VIBRANT,
             contrast = AppContrast.HIGH,
         )
 
@@ -76,7 +78,12 @@ class WebSettingsStoreTest {
         )
 
         assertEquals(
-            AppearanceSettings(AppTheme.LIGHT, AppColor.STATIC, 200f, AppContrast.MEDIUM),
+            AppearanceSettings(
+                theme = AppTheme.LIGHT,
+                color = AppColor.STATIC,
+                hue = 200f,
+                contrast = AppContrast.MEDIUM,
+            ),
             WebSettingsStore(storage).appearance.first(),
         )
     }

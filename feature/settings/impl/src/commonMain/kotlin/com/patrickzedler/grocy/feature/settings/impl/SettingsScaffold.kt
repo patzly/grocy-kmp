@@ -26,6 +26,7 @@ import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
 import com.patrickzedler.grocy.core.design.component.AppBarIconButton
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.model.UnlockState
 import com.patrickzedler.grocy.core.resources.Res
@@ -204,6 +205,7 @@ private fun SettingsMenuItem(
 
     DropdownMenuItem(
         text = { Text(text) },
+        modifier = Modifier.clickCursor(),
         onClick = {
             haptic.confirm()
             onClick()

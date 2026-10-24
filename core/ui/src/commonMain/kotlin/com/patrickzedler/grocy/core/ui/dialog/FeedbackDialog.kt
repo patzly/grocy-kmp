@@ -23,6 +23,7 @@ import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapp
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.tryOpenUri
 import com.patrickzedler.grocy.core.model.UnlockState
@@ -136,6 +137,7 @@ private fun FeedbackDialogContent(
         confirmButton = {
             TextButton(
                 onClick = onCloseClick,
+                modifier = Modifier.clickCursor(),
                 shapes = ButtonDefaults.shapes(),
             ) {
                 Text(stringResource(Res.string.action_close))
@@ -238,7 +240,7 @@ private fun FeedbackItem(
         onClick = onClick,
         shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         colors = colors,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().clickCursor(),
         leadingContent = {
             LeadingTrailingContentWrapper {
                 Icon(

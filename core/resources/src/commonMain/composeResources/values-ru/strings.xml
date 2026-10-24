@@ -345,4 +345,13 @@
   <string name="msg_choose_from_list">Выберите элемент из списка</string>
   <string name="msg_unsaved_changes">Несохранённые изменения</string>
   <string name="msg_unsaved_changes_description">Сохранить изменения перед выходом или отменить их?</string>
+  <string name="settings_style_tonal_spot">Тональный</string>
+  <string name="settings_style_neutral">Нейтральный</string>
+  <string name="settings_style_vibrant">Яркий</string>
+  <string name="settings_style_expressive">Выразительный</string>
+  <string name="settings_style_rainbow">Радуга</string>
+  <string name="settings_style_fruit_salad">Фруктовый салат</string>
+  <string name="settings_style_monochrome">Монохромный</string>
+  <string name="settings_style_fidelity">Точный</string>
+  <string name="settings_style_content">Контент</string>
 </resources>

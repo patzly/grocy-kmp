@@ -343,4 +343,13 @@
   <string name="msg_choose_from_list">Vali loendist kirje</string>
   <string name="msg_unsaved_changes">Salvestamata muudatused</string>
   <string name="msg_unsaved_changes_description">Kas salvestada muudatused enne lahkumist või neist loobuda?</string>
+  <string name="settings_style_tonal_spot">Toonitud</string>
+  <string name="settings_style_neutral">Neutraalne</string>
+  <string name="settings_style_vibrant">Erk</string>
+  <string name="settings_style_expressive">Väljendusrikas</string>
+  <string name="settings_style_rainbow">Vikerkaar</string>
+  <string name="settings_style_fruit_salad">Puuviljasalat</string>
+  <string name="settings_style_monochrome">Ühevärviline</string>
+  <string name="settings_style_fidelity">Truu</string>
+  <string name="settings_style_content">Sisu</string>
 </resources>

@@ -136,6 +136,7 @@ fun FormattedText(
                             .padding(bottom = 8.dp)
                             .minimumInteractiveComponentSize()
                             .clip(MaterialTheme.shapes.small)
+                            .clickCursor()
                             .clickable(role = Role.Button) {
                                 haptic.confirm()
                                 uriHandler.tryOpenUri(block.url)

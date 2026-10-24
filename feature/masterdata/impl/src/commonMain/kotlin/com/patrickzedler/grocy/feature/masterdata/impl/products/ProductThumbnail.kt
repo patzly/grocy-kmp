@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_image
@@ -23,17 +22,16 @@ import org.jetbrains.compose.resources.painterResource
 
 /**
  * A product's picture as square with small corners, the size of a list item's image. Shows the
- * picture icon while loading and when the picture cannot be downloaded (e.g. offline).
+ * picture icon while loading and when the picture is neither stored nor downloadable.
  */
 @Composable
 internal fun ProductThumbnail(
     fileName: String,
-    load: suspend (fileName: String, maxWidth: Int) -> ByteArray?,
+    load: suspend (fileName: String) -> ByteArray?,
     modifier: Modifier = Modifier,
 ) {
-    val sizePx = with(LocalDensity.current) { ThumbnailSize.roundToPx() }
-    val image by produceState<ImageBitmap?>(null, fileName, sizePx) {
-        value = load(fileName, sizePx)?.let { bytes ->
+    val image by produceState<ImageBitmap?>(null, fileName) {
+        value = load(fileName)?.let { bytes ->
             try {
                 bytes.decodeToImageBitmap()
             } catch (_: Exception) {

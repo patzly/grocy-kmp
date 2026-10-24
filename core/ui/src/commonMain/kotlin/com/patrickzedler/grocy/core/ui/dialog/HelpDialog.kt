@@ -31,6 +31,7 @@ import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_close
@@ -85,6 +86,7 @@ private fun HelpDialogContent(
         confirmButton = {
             TextButton(
                 onClick = onCloseClick,
+                modifier = Modifier.clickCursor(),
                 shapes = ButtonDefaults.shapes(),
             ) {
                 Text(stringResource(Res.string.action_close))
@@ -121,7 +123,8 @@ private fun HelpDialogContent(
                     colors = colors,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(min = 48.dp),
+                        .heightIn(min = 48.dp)
+                        .clickCursor(),
                     contentPadding = PaddingValues(16.dp),
                     supportingContent = {
                         AnimatedVisibility(
