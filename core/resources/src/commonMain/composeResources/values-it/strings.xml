@@ -254,6 +254,34 @@
   <string name="products_empty">Ancora nessun prodotto</string>
   <string name="products_empty_filtered">Nessun prodotto corrisponde al filtro</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">Riepilogo del prodotto</string>
+  <string name="product_overview_show">Mostra il riepilogo del prodotto</string>
+  <string name="product_overview_add_to_shopping_list">Aggiungi alla lista della spesa</string>
+  <string name="product_overview_stock_amount">Quantità dispensa</string>
+  <string name="product_overview_opened">%1$s aperto/i</string>
+  <string name="product_overview_with_sub_products">Con sottoprodotti: %1$s</string>
+  <string name="product_overview_stock_value">Valore della dispensa</string>
+  <string name="product_overview_last_purchased">Ultimo acquisto</string>
+  <string name="product_overview_last_used">Ultimo utilizzo</string>
+  <string name="product_overview_never">Mai</string>
+  <string name="product_overview_last_price">Ultimo prezzo</string>
+  <string name="product_overview_average_price">Prezzo medio</string>
+  <string name="product_overview_price_per_unit">%1$s per ogni %2$s</string>
+  <string name="product_overview_average_shelf_life">Durata di conservazione media</string>
+  <string name="product_overview_spoil_rate">Velocità di deterioramento</string>
+  <string name="product_overview_unknown">Sconosciuto</string>
+  <string name="product_overview_unlimited">Illimitato</string>
+  <string name="product_overview_show_more">Mostra di più</string>
+  <string name="product_overview_show_less">Mostra di meno</string>
+  <string name="product_overview_price_history">Cronologia prezzi</string>
+  <string name="product_overview_no_price_history">Cronologia prezzi non disponibile</string>
+  <string name="product_overview_unknown_store">Negozio sconosciuto</string>
+  <string name="product_overview_other_stores">Altri negozi</string>
+  <string name="product_overview_trend">Tendenza</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">Per caricare il riepilogo del prodotto serve una connessione al server.</string>
+
   <!-- Product form -->
   <string name="product_create">Aggiungi prodotto</string>
   <string name="product_edit">Modifica prodotto</string>

@@ -255,6 +255,34 @@
   <string name="products_empty">Продуктів ще немає</string>
   <string name="products_empty_filtered">Немає продуктів, що відповідають фільтру</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">Огляд продукту</string>
+  <string name="product_overview_show">Показати огляд продукту</string>
+  <string name="product_overview_add_to_shopping_list">Додати до списку покупок</string>
+  <string name="product_overview_stock_amount">Кількість в запасах</string>
+  <string name="product_overview_opened">%1$s відкрито</string>
+  <string name="product_overview_with_sub_products">З підпродуктами: %1$s</string>
+  <string name="product_overview_stock_value">Вартість запасів</string>
+  <string name="product_overview_last_purchased">Востаннє придбано</string>
+  <string name="product_overview_last_used">Востаннє використано</string>
+  <string name="product_overview_never">Ніколи</string>
+  <string name="product_overview_last_price">Остання ціна</string>
+  <string name="product_overview_average_price">Середня ціна</string>
+  <string name="product_overview_price_per_unit">%1$s за %2$s</string>
+  <string name="product_overview_average_shelf_life">Середній термін придатності</string>
+  <string name="product_overview_spoil_rate">Відсоток зіпсованого</string>
+  <string name="product_overview_unknown">Невідомо</string>
+  <string name="product_overview_unlimited">Необмежено</string>
+  <string name="product_overview_show_more">Показати більше</string>
+  <string name="product_overview_show_less">Показати менше</string>
+  <string name="product_overview_price_history">Історія цін</string>
+  <string name="product_overview_no_price_history">Історія цін недоступна</string>
+  <string name="product_overview_unknown_store">Невідомий магазин</string>
+  <string name="product_overview_other_stores">Інші магазини</string>
+  <string name="product_overview_trend">Тренд</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">Для завантаження огляду продукту потрібне з’єднання з сервером.</string>
+
   <!-- Product form -->
   <string name="product_create">Створити продукт</string>
   <string name="product_edit">Редагувати продукт</string>

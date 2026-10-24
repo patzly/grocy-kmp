@@ -2,7 +2,9 @@ package com.patrickzedler.grocy.core.network
 
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.masterdata.DueType
+import com.patrickzedler.grocy.core.model.masterdata.PriceHistoryEntry
 import com.patrickzedler.grocy.core.model.masterdata.Product
+import com.patrickzedler.grocy.core.model.masterdata.ProductOverview
 import com.patrickzedler.grocy.core.model.masterdata.UserfieldType
 import com.patrickzedler.grocy.core.model.server.ProductPresets
 import io.ktor.client.engine.mock.MockEngine
@@ -153,6 +155,7 @@ class GrocyApiMasterDataTest {
         assertTrue(config.labelPrinter)
         assertFalse(config.browserBarcodeCameraScanning)
         assertEquals("kJ", config.energyUnit)
+        assertEquals("USD", config.currency)
         // Missing flags keep Grocy's defaults
         assertTrue(config.stockProductFreezing)
     }
@@ -170,6 +173,8 @@ class GrocyApiMasterDataTest {
         val settings = api.userSettings(CONNECTION)
 
         assertEquals(2, settings.stockDecimalPlacesAmounts)
+        // Missing settings keep Grocy's defaults
+        assertEquals(2, settings.stockDecimalPlacesPricesDisplay)
         assertEquals(
             ProductPresets(
                 locationId = null,
@@ -230,6 +235,82 @@ class GrocyApiMasterDataTest {
 
         assertEquals(5, stock.productId)
         assertEquals(2.0, stock.amountAggregated)
+    }
+
+    @Test
+    fun currencyAndPriceDecimalsAreRead() = runTest {
+        val configApi = api { json("""{"CURRENCY":" chf "}""") }
+        val settingsApi = api { json("""{"stock_decimal_places_prices_display":"3"}""") }
+
+        assertEquals("CHF", configApi.serverConfig(CONNECTION).currency)
+        assertEquals(3, settingsApi.userSettings(CONNECTION).stockDecimalPlacesPricesDisplay)
+    }
+
+    @Test
+    fun invalidCurrencyFallsBackToGrocysDefault() = runTest {
+        val api = api { json("""{"CURRENCY":"Euro"}""") }
+
+        assertEquals("USD", api.serverConfig(CONNECTION).currency)
+    }
+
+    @Test
+    fun productOverviewCombinesDetailsAndPriceHistory() = runTest {
+        val api = api { request ->
+            if (request.url.encodedPath.endsWith("price-history")) {
+                json(
+                    """[{"date":"2026-10-01 00:00:00","price":"1.5",""" +
+                        """"shopping_location":{"id":1,"name":"Supermarket"}},""" +
+                        """{"date":"2026-09-01","price":1.2,"shopping_location":null},""" +
+                        """{"date":"","price":1}]""",
+                )
+            } else {
+                json(
+                    """{"product":{"id":7,"name":"Milk"},"last_purchased":"2026-10-01",""" +
+                        """"last_used":null,"stock_amount":"3","stock_amount_opened":"1",""" +
+                        """"stock_amount_aggregated":"5","is_aggregated_amount":"1",""" +
+                        """"stock_value":"4.5","last_price":"1.5","avg_price":null,""" +
+                        """"qu_conversion_factor_price_to_stock":"6",""" +
+                        """"average_shelf_life_days":"-1","spoil_rate_percent":"12.5"}""",
+                )
+            }
+        }
+
+        val overview = api.productOverview(CONNECTION, productId = 7, withPriceHistory = true)
+
+        assertEquals(
+            setOf("/api/stock/products/7", "/api/stock/products/7/price-history"),
+            requests.map { it.url.encodedPath }.toSet(),
+        )
+        assertEquals(
+            ProductOverview(
+                productId = 7,
+                stockAmount = 3.0,
+                stockAmountOpened = 1.0,
+                stockAmountAggregated = 5.0,
+                isAggregatedAmount = true,
+                stockValue = 4.5,
+                lastPurchased = "2026-10-01",
+                lastPrice = 1.5,
+                priceToStockFactor = 6.0,
+                spoilRatePercent = 12.5,
+                priceHistory = listOf(
+                    PriceHistoryEntry("2026-10-01", 1.5, storeId = 1),
+                    PriceHistoryEntry("2026-09-01", 1.2),
+                ),
+            ),
+            overview,
+        )
+    }
+
+    @Test
+    fun productOverviewWithoutPriceTrackingSkipsThePriceHistory() = runTest {
+        val api = api { json("""{"stock_amount":0}""") }
+
+        val overview = api.productOverview(CONNECTION, productId = 7, withPriceHistory = false)
+
+        assertEquals(listOf("/api/stock/products/7"), requests.map { it.url.encodedPath })
+        assertTrue(overview.priceHistory.isEmpty())
+        assertEquals(ProductOverview.UNKNOWN_SHELF_LIFE, overview.averageShelfLifeDays)
     }
 
     private companion object {

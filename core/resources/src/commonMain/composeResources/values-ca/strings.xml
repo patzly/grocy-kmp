@@ -254,6 +254,34 @@
   <string name="products_empty">Encara no hi ha productes</string>
   <string name="products_empty_filtered">Cap producte coincideix amb el filtre</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">Resum del producte</string>
+  <string name="product_overview_show">Mostra el resum del producte</string>
+  <string name="product_overview_add_to_shopping_list">Afegir a la llista de la compra</string>
+  <string name="product_overview_stock_amount">Existències</string>
+  <string name="product_overview_opened">%1$s obert</string>
+  <string name="product_overview_with_sub_products">Amb subproductes: %1$s</string>
+  <string name="product_overview_stock_value">Valor d’existències</string>
+  <string name="product_overview_last_purchased">Última compra</string>
+  <string name="product_overview_last_used">Últim ús</string>
+  <string name="product_overview_never">Mai</string>
+  <string name="product_overview_last_price">Últim preu</string>
+  <string name="product_overview_average_price">Preu mitjà</string>
+  <string name="product_overview_price_per_unit">%1$s per %2$s</string>
+  <string name="product_overview_average_shelf_life">Temps de vida mitjà de l’inventari</string>
+  <string name="product_overview_spoil_rate">Taxa de fet malbé</string>
+  <string name="product_overview_unknown">Desconegut</string>
+  <string name="product_overview_unlimited">Il·limitat</string>
+  <string name="product_overview_show_more">Mostra més</string>
+  <string name="product_overview_show_less">Mostra menys</string>
+  <string name="product_overview_price_history">Historial de preus</string>
+  <string name="product_overview_no_price_history">Historial de preus no disponible</string>
+  <string name="product_overview_unknown_store">Botiga desconeguda</string>
+  <string name="product_overview_other_stores">Altres botigues</string>
+  <string name="product_overview_trend">Tendència</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">Per carregar el resum del producte cal una connexió amb el servidor.</string>
+
   <!-- Product form -->
   <string name="product_create">Afegir producte</string>
   <string name="product_edit">Editar producte</string>

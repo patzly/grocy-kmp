@@ -253,6 +253,34 @@
   <string name="products_empty">Nog geen producten</string>
   <string name="products_empty_filtered">Geen producten komen overeen met het filter</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">Productoverzicht</string>
+  <string name="product_overview_show">Productoverzicht weergeven</string>
+  <string name="product_overview_add_to_shopping_list">Voeg toe aan boodschappenlijst</string>
+  <string name="product_overview_stock_amount">Voorraadhoeveelheid</string>
+  <string name="product_overview_opened">%1$s geopend</string>
+  <string name="product_overview_with_sub_products">Met subproducten: %1$s</string>
+  <string name="product_overview_stock_value">Voorraadwaarde</string>
+  <string name="product_overview_last_purchased">Laatst gekocht</string>
+  <string name="product_overview_last_used">Laatst gebruikt</string>
+  <string name="product_overview_never">Nooit</string>
+  <string name="product_overview_last_price">Laatste prijs</string>
+  <string name="product_overview_average_price">Gemiddelde prijs</string>
+  <string name="product_overview_price_per_unit">%1$s per %2$s</string>
+  <string name="product_overview_average_shelf_life">Gemiddelde houdbaarheid</string>
+  <string name="product_overview_spoil_rate">Bederfpercentage</string>
+  <string name="product_overview_unknown">Onbekend</string>
+  <string name="product_overview_unlimited">Onbegrensd</string>
+  <string name="product_overview_show_more">Laat meer zien</string>
+  <string name="product_overview_show_less">Laat minder zien</string>
+  <string name="product_overview_price_history">Prijsgeschiedenis</string>
+  <string name="product_overview_no_price_history">Geen prijsgeschiedenis beschikbaar</string>
+  <string name="product_overview_unknown_store">Onbekende winkel</string>
+  <string name="product_overview_other_stores">Andere winkels</string>
+  <string name="product_overview_trend">Trend</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">Voor het laden van het productoverzicht is een verbinding met de server nodig.</string>
+
   <!-- Product form -->
   <string name="product_create">Maak een product</string>
   <string name="product_edit">Bewerk product</string>

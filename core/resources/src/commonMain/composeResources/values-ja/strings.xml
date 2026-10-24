@@ -252,6 +252,34 @@
   <string name="products_empty">まだ物品がありません</string>
   <string name="products_empty_filtered">フィルターに一致する物品はありません</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">物品の概要</string>
+  <string name="product_overview_show">物品の概要を表示</string>
+  <string name="product_overview_add_to_shopping_list">買い物リストに追加</string>
+  <string name="product_overview_stock_amount">ストック数量</string>
+  <string name="product_overview_opened">開封済み %1$s</string>
+  <string name="product_overview_with_sub_products">サブ物品を含む: %1$s</string>
+  <string name="product_overview_stock_value">ストック価格</string>
+  <string name="product_overview_last_purchased">直近の購入</string>
+  <string name="product_overview_last_used">直近の消費</string>
+  <string name="product_overview_never">なし</string>
+  <string name="product_overview_last_price">直近の価格</string>
+  <string name="product_overview_average_price">平均価格</string>
+  <string name="product_overview_price_per_unit">1%2$sあたり%1$s</string>
+  <string name="product_overview_average_shelf_life">平均保管期間</string>
+  <string name="product_overview_spoil_rate">廃棄率</string>
+  <string name="product_overview_unknown">不明</string>
+  <string name="product_overview_unlimited">無制限</string>
+  <string name="product_overview_show_more">詳細を表示</string>
+  <string name="product_overview_show_less">詳細を非表示</string>
+  <string name="product_overview_price_history">価格変動</string>
+  <string name="product_overview_no_price_history">価格履歴を利用できません</string>
+  <string name="product_overview_unknown_store">不明な購入店</string>
+  <string name="product_overview_other_stores">その他の購入店</string>
+  <string name="product_overview_trend">傾向</string>
+  <string name="product_overview_price_point">%1$s、%2$s: %3$s</string>
+  <string name="product_overview_offline">物品の概要を読み込むにはサーバーへの接続が必要です。</string>
+
   <!-- Product form -->
   <string name="product_create">新規作成/物品</string>
   <string name="product_edit">物品を編集</string>

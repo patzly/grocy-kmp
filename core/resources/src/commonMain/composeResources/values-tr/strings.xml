@@ -253,6 +253,34 @@
   <string name="products_empty">Henüz ürün yok</string>
   <string name="products_empty_filtered">Filtreye uyan ürün yok</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">Ürün genel bakışı</string>
+  <string name="product_overview_show">Ürün genel bakışını göster</string>
+  <string name="product_overview_add_to_shopping_list">Alışveriş listesine ekle</string>
+  <string name="product_overview_stock_amount">Stok miktarı</string>
+  <string name="product_overview_opened">%1$s açıldı</string>
+  <string name="product_overview_with_sub_products">Alt ürünlerle: %1$s</string>
+  <string name="product_overview_stock_value">Stok değeri</string>
+  <string name="product_overview_last_purchased">Son satın alış</string>
+  <string name="product_overview_last_used">Son kullanış</string>
+  <string name="product_overview_never">Hiç</string>
+  <string name="product_overview_last_price">Son fiyat</string>
+  <string name="product_overview_average_price">Ortalama fiyat</string>
+  <string name="product_overview_price_per_unit">%2$s başına %1$s</string>
+  <string name="product_overview_average_shelf_life">Ortalama raf ömrü</string>
+  <string name="product_overview_spoil_rate">Bozulma oranı</string>
+  <string name="product_overview_unknown">Bilinmeyen</string>
+  <string name="product_overview_unlimited">Sınırsız</string>
+  <string name="product_overview_show_more">Devamını göster</string>
+  <string name="product_overview_show_less">Daha az göster</string>
+  <string name="product_overview_price_history">Fiyat tarihçesi</string>
+  <string name="product_overview_no_price_history">Fiyat tarihçesi yok</string>
+  <string name="product_overview_unknown_store">Bilinmeyen market</string>
+  <string name="product_overview_other_stores">Diğer marketler</string>
+  <string name="product_overview_trend">Eğilim</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">Ürün genel bakışını yüklemek için sunucu bağlantısı gerekir.</string>
+
   <!-- Product form -->
   <string name="product_create">Ürün oluştur</string>
   <string name="product_edit">Ürünü düzenle</string>

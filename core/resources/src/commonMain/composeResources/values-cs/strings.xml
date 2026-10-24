@@ -255,6 +255,34 @@
   <string name="products_empty">Zatím žádné produkty</string>
   <string name="products_empty_filtered">Filtru neodpovídají žádné produkty</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">Přehled dat k produktu</string>
+  <string name="product_overview_show">Zobrazit přehled dat k produktu</string>
+  <string name="product_overview_add_to_shopping_list">Přidat do nákupního seznamu</string>
+  <string name="product_overview_stock_amount">Množství v zásobě</string>
+  <string name="product_overview_opened">%1$s otevřeno</string>
+  <string name="product_overview_with_sub_products">Včetně podproduktů: %1$s</string>
+  <string name="product_overview_stock_value">Cena zásob</string>
+  <string name="product_overview_last_purchased">Naposledy nakoupeno</string>
+  <string name="product_overview_last_used">Naposledy použito</string>
+  <string name="product_overview_never">Nikdy</string>
+  <string name="product_overview_last_price">Poslední cena</string>
+  <string name="product_overview_average_price">Průměrná cena</string>
+  <string name="product_overview_price_per_unit">%1$s za %2$s</string>
+  <string name="product_overview_average_shelf_life">Průměrná doba uskladnění</string>
+  <string name="product_overview_spoil_rate">Kazivost</string>
+  <string name="product_overview_unknown">Neznámý</string>
+  <string name="product_overview_unlimited">Neomezeně</string>
+  <string name="product_overview_show_more">Zobrazit více</string>
+  <string name="product_overview_show_less">Zobrazit méně</string>
+  <string name="product_overview_price_history">Historie cen</string>
+  <string name="product_overview_no_price_history">Historie cen není k dispozici</string>
+  <string name="product_overview_unknown_store">Neznámý obchod</string>
+  <string name="product_overview_other_stores">Ostatní obchody</string>
+  <string name="product_overview_trend">Trend</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">Načtení přehledu produktu vyžaduje připojení k serveru.</string>
+
   <!-- Product form -->
   <string name="product_create">Vytvořit produkt</string>
   <string name="product_edit">Upravit produkt</string>

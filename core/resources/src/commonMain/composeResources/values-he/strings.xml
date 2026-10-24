@@ -254,6 +254,34 @@
   <string name="products_empty">אין מוצרים עדיין</string>
   <string name="products_empty_filtered">אין מוצרים שתואמים לסינון</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">סקירת מוצר</string>
+  <string name="product_overview_show">הצגת סקירת מוצר</string>
+  <string name="product_overview_add_to_shopping_list">הוספה לרשימת קניות</string>
+  <string name="product_overview_stock_amount">כמות במלאי</string>
+  <string name="product_overview_opened">%1$s נפתחו</string>
+  <string name="product_overview_with_sub_products">כולל מוצרי משנה: %1$s</string>
+  <string name="product_overview_stock_value">ערך מלאי</string>
+  <string name="product_overview_last_purchased">רכישה אחרונה</string>
+  <string name="product_overview_last_used">שימוש אחרון</string>
+  <string name="product_overview_never">אף פעם</string>
+  <string name="product_overview_last_price">מחיר אחרון</string>
+  <string name="product_overview_average_price">מחיר ממוצע</string>
+  <string name="product_overview_price_per_unit">%1$s ל%2$s</string>
+  <string name="product_overview_average_shelf_life">אורך חיי מדף ממוצע</string>
+  <string name="product_overview_spoil_rate">קצב קלקול</string>
+  <string name="product_overview_unknown">לא ידוע</string>
+  <string name="product_overview_unlimited">ללא הגבלה</string>
+  <string name="product_overview_show_more">להציג עוד</string>
+  <string name="product_overview_show_less">להציג פחות</string>
+  <string name="product_overview_price_history">היסטוריית מחירים</string>
+  <string name="product_overview_no_price_history">אין היסטוריית מחירים זמינה</string>
+  <string name="product_overview_unknown_store">חנות לא ידועה</string>
+  <string name="product_overview_other_stores">חנויות אחרות</string>
+  <string name="product_overview_trend">מגמה</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">טעינת סקירת המוצר דורשת חיבור לשרת.</string>
+
   <!-- Product form -->
   <string name="product_create">יצירת מוצר</string>
   <string name="product_edit">עריכת מוצר</string>

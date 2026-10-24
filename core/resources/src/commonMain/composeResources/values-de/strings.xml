@@ -253,6 +253,34 @@
   <string name="products_empty">Noch keine Produkte</string>
   <string name="products_empty_filtered">Keine Produkte entsprechen dem Filter</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">Produktübersicht</string>
+  <string name="product_overview_show">Produktübersicht anzeigen</string>
+  <string name="product_overview_add_to_shopping_list">Zum Einkaufszettel hinzufügen</string>
+  <string name="product_overview_stock_amount">Bestand</string>
+  <string name="product_overview_opened">%1$s geöffnet</string>
+  <string name="product_overview_with_sub_products">Mit Unterprodukten: %1$s</string>
+  <string name="product_overview_stock_value">Bestandswert</string>
+  <string name="product_overview_last_purchased">Zuletzt gekauft</string>
+  <string name="product_overview_last_used">Zuletzt verbraucht</string>
+  <string name="product_overview_never">Nie</string>
+  <string name="product_overview_last_price">Letzter Preis</string>
+  <string name="product_overview_average_price">Durchschnittlicher Preis</string>
+  <string name="product_overview_price_per_unit">%1$s pro %2$s</string>
+  <string name="product_overview_average_shelf_life">Durchschnittliche Haltbarkeit</string>
+  <string name="product_overview_spoil_rate">Verderblichkeitsrate</string>
+  <string name="product_overview_unknown">Unbekannt</string>
+  <string name="product_overview_unlimited">Unbegrenzt</string>
+  <string name="product_overview_show_more">Mehr anzeigen</string>
+  <string name="product_overview_show_less">Weniger anzeigen</string>
+  <string name="product_overview_price_history">Preisentwicklung</string>
+  <string name="product_overview_no_price_history">Keine Preisdaten verfügbar</string>
+  <string name="product_overview_unknown_store">Unbekanntes Geschäft</string>
+  <string name="product_overview_other_stores">Andere Geschäfte</string>
+  <string name="product_overview_trend">Trend</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">Zum Laden der Produktübersicht ist eine Verbindung zum Server nötig.</string>
+
   <!-- Product form -->
   <string name="product_create">Produkt erstellen</string>
   <string name="product_edit">Produkt bearbeiten</string>

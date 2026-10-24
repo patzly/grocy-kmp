@@ -253,6 +253,34 @@
   <string name="products_empty">Δεν υπάρχουν ακόμη προϊόντα</string>
   <string name="products_empty_filtered">Κανένα προϊόν δεν ταιριάζει με το φίλτρο</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">Επισκόπηση προϊόντος</string>
+  <string name="product_overview_show">Εμφάνιση επισκόπησης προϊόντος</string>
+  <string name="product_overview_add_to_shopping_list">Προσθήκη στη λίστα αγορών</string>
+  <string name="product_overview_stock_amount">Ποσό αποθέματος</string>
+  <string name="product_overview_opened">%1$s ανοιγμένα</string>
+  <string name="product_overview_with_sub_products">Με υποπροϊόντα: %1$s</string>
+  <string name="product_overview_stock_value">Αξία αποθέματος</string>
+  <string name="product_overview_last_purchased">Τελευταία αγορά</string>
+  <string name="product_overview_last_used">Τελευταία χρήση</string>
+  <string name="product_overview_never">Ποτέ</string>
+  <string name="product_overview_last_price">Τελευταία τιμή</string>
+  <string name="product_overview_average_price">Μέση τιμή</string>
+  <string name="product_overview_price_per_unit">%1$s ανά %2$s</string>
+  <string name="product_overview_average_shelf_life">Μέση διάρκεια ζωής</string>
+  <string name="product_overview_spoil_rate">Ποσοστό αλλοίωσης</string>
+  <string name="product_overview_unknown">Άγνωστο</string>
+  <string name="product_overview_unlimited">Απεριόριστο</string>
+  <string name="product_overview_show_more">Εμφάνιση περισσότερων</string>
+  <string name="product_overview_show_less">Εμφάνιση λιγότερων</string>
+  <string name="product_overview_price_history">Ιστορικό τιμών</string>
+  <string name="product_overview_no_price_history">Δεν υπάρχει διαθέσιμο ιστορικό τιμών</string>
+  <string name="product_overview_unknown_store">Άγνωστο κατάστημα</string>
+  <string name="product_overview_other_stores">Άλλα καταστήματα</string>
+  <string name="product_overview_trend">Τάση</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">Η φόρτωση της επισκόπησης προϊόντος απαιτεί σύνδεση με τον διακομιστή.</string>
+
   <!-- Product form -->
   <string name="product_create">Δημιουργία προϊόντος</string>
   <string name="product_edit">Επεξεργασία προϊόντος</string>

@@ -253,6 +253,34 @@
   <string name="products_empty">Ingen produkter ennå</string>
   <string name="products_empty_filtered">Ingen produkter samsvarer med filteret</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">Produktoversikt</string>
+  <string name="product_overview_show">Vis produktoversikt</string>
+  <string name="product_overview_add_to_shopping_list">Legg til i handlelisten</string>
+  <string name="product_overview_stock_amount">Beholdningsantall</string>
+  <string name="product_overview_opened">%1$s åpnet</string>
+  <string name="product_overview_with_sub_products">Med underprodukter: %1$s</string>
+  <string name="product_overview_stock_value">Beholdningsverdi</string>
+  <string name="product_overview_last_purchased">Sist kjøpt</string>
+  <string name="product_overview_last_used">Sist brukt</string>
+  <string name="product_overview_never">Aldri</string>
+  <string name="product_overview_last_price">Siste pris</string>
+  <string name="product_overview_average_price">Gjennomsnittlig pris</string>
+  <string name="product_overview_price_per_unit">%1$s per %2$s</string>
+  <string name="product_overview_average_shelf_life">Gjennomsnittlig holdbarhetstid</string>
+  <string name="product_overview_spoil_rate">Andel som har gått ut på dato</string>
+  <string name="product_overview_unknown">Ukjent</string>
+  <string name="product_overview_unlimited">Ubegrenset</string>
+  <string name="product_overview_show_more">Vis mer</string>
+  <string name="product_overview_show_less">Vis mindre</string>
+  <string name="product_overview_price_history">Prishistorikk</string>
+  <string name="product_overview_no_price_history">Ingen prishistorikk tilgjengelig</string>
+  <string name="product_overview_unknown_store">Ukjent butikk</string>
+  <string name="product_overview_other_stores">Andre butikker</string>
+  <string name="product_overview_trend">Trend</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">Lasting av produktoversikten krever tilkobling til serveren.</string>
+
   <!-- Product form -->
   <string name="product_create">Opprett produkt</string>
   <string name="product_edit">Endre produkt</string>

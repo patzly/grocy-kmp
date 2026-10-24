@@ -254,6 +254,34 @@
   <string name="products_empty">Ainda não há produtos</string>
   <string name="products_empty_filtered">Nenhum produto corresponde ao filtro</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">Visão geral do produto</string>
+  <string name="product_overview_show">Mostrar visão geral do produto</string>
+  <string name="product_overview_add_to_shopping_list">Adicionar à lista de compras</string>
+  <string name="product_overview_stock_amount">Quantidade em stock</string>
+  <string name="product_overview_opened">%1$s aberto</string>
+  <string name="product_overview_with_sub_products">Com subprodutos: %1$s</string>
+  <string name="product_overview_stock_value">Valor do stock</string>
+  <string name="product_overview_last_purchased">Comprado pela última vez em</string>
+  <string name="product_overview_last_used">Usado pela última vez em</string>
+  <string name="product_overview_never">Nunca</string>
+  <string name="product_overview_last_price">Último preço</string>
+  <string name="product_overview_average_price">Preço médio</string>
+  <string name="product_overview_price_per_unit">%1$s por %2$s</string>
+  <string name="product_overview_average_shelf_life">Tempo de vida médio na prateleira</string>
+  <string name="product_overview_spoil_rate">Taxa de desperdício</string>
+  <string name="product_overview_unknown">Desconhecido</string>
+  <string name="product_overview_unlimited">Ilimitado</string>
+  <string name="product_overview_show_more">Mostrar mais</string>
+  <string name="product_overview_show_less">Mostrar menos</string>
+  <string name="product_overview_price_history">Histórico de preços</string>
+  <string name="product_overview_no_price_history">Histórico de preços não está disponível</string>
+  <string name="product_overview_unknown_store">Loja desconhecida</string>
+  <string name="product_overview_other_stores">Outras lojas</string>
+  <string name="product_overview_trend">Tendência</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">Carregar a visão geral do produto requer ligação ao servidor.</string>
+
   <!-- Product form -->
   <string name="product_create">Criar produto</string>
   <string name="product_edit">Editar Produto</string>

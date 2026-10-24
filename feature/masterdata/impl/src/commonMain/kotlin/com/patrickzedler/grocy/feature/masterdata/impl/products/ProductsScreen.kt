@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -23,12 +24,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -57,13 +60,14 @@ import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
+import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.RoundedTextField
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
-import com.patrickzedler.grocy.core.design.component.SupportingLines
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
+import com.patrickzedler.grocy.core.design.component.SupportingLines
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.edgeToEdgeItem
@@ -81,6 +85,7 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_add
 import com.patrickzedler.grocy.core.resources.ic_rounded_close
 import com.patrickzedler.grocy.core.resources.ic_rounded_edit_attributes
 import com.patrickzedler.grocy.core.resources.ic_rounded_image
+import com.patrickzedler.grocy.core.resources.ic_rounded_info
 import com.patrickzedler.grocy.core.resources.ic_rounded_search
 import com.patrickzedler.grocy.core.resources.ic_rounded_settings_suggest
 import com.patrickzedler.grocy.core.resources.ic_rounded_vertical_align_top
@@ -91,8 +96,11 @@ import com.patrickzedler.grocy.core.resources.products_empty
 import com.patrickzedler.grocy.core.resources.products_empty_filtered
 import com.patrickzedler.grocy.core.resources.products_has_picture
 import com.patrickzedler.grocy.core.resources.products_min_stock_amount
+import com.patrickzedler.grocy.core.resources.product_overview_show
 import com.patrickzedler.grocy.core.resources.products_presets
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
+import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewDialog
+import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewViewModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -101,6 +109,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun ProductsScreen(
     menuItems: List<AppBarMenuItem>,
     viewModel: ProductsViewModel,
+    overviewViewModel: ProductOverviewViewModel,
     onBackClick: () -> Unit,
     onProductClick: (Int) -> Unit,
     onAddClick: () -> Unit,
@@ -108,6 +117,7 @@ internal fun ProductsScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val refresh by viewModel.refresh.collectAsStateWithLifecycle()
+    val overviewProductId by overviewViewModel.productId.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
     // With saved data a failed download is only a note, without it the list explains itself
@@ -132,6 +142,7 @@ internal fun ProductsScreen(
         snackbarHostState = snackbarHostState,
         onBackClick = onBackClick,
         onProductClick = onProductClick,
+        onOverviewClick = overviewViewModel::show,
         onAddClick = onAddClick,
         onSearchClick = viewModel::showSearch,
         onCloseSearchClick = viewModel::hideSearch,
@@ -143,6 +154,19 @@ internal fun ProductsScreen(
         menuItems = menuItems,
         modifier = modifier,
     )
+
+    overviewProductId?.let { productId ->
+        ProductOverviewDialog(
+            productId = productId,
+            name = state?.items?.find { it.id == productId }?.name.orEmpty(),
+            viewModel = overviewViewModel,
+            onEditClick = { id ->
+                overviewViewModel.hide()
+                onProductClick(id)
+            },
+            onDismissRequest = overviewViewModel::hide,
+        )
+    }
 }
 
 @Composable
@@ -154,6 +178,7 @@ private fun ProductsContent(
     snackbarHostState: SnackbarHostState,
     onBackClick: () -> Unit,
     onProductClick: (Int) -> Unit,
+    onOverviewClick: (Int) -> Unit,
     onAddClick: () -> Unit,
     onSearchClick: () -> Unit,
     onCloseSearchClick: () -> Unit,
@@ -266,6 +291,7 @@ private fun ProductsContent(
             state = state,
             refresh = refresh,
             onProductClick = onProductClick,
+            onOverviewClick = onOverviewClick,
             onRetryClick = onRetryClick,
             loadThumbnail = loadThumbnail,
         )
@@ -276,6 +302,7 @@ private fun LazyListScope.productItems(
     state: ProductsUiState,
     refresh: RefreshState,
     onProductClick: (Int) -> Unit,
+    onOverviewClick: (Int) -> Unit,
     onRetryClick: () -> Unit,
     loadThumbnail: suspend (fileName: String) -> ByteArray?,
 ) {
@@ -290,6 +317,7 @@ private fun LazyListScope.productItems(
                 index = index,
                 count = state.items.size,
                 onClick = { onProductClick(item.id) },
+                onOverviewClick = { onOverviewClick(item.id) },
                 loadThumbnail = loadThumbnail,
             )
         }
@@ -374,6 +402,7 @@ private fun ProductItem(
     index: Int,
     count: Int,
     onClick: () -> Unit,
+    onOverviewClick: () -> Unit,
     loadThumbnail: suspend (fileName: String) -> ByteArray?,
 ) {
     val haptic = LocalHapticFeedback.current
@@ -409,12 +438,54 @@ private fun ProductItem(
         } else {
             null
         },
-        // The picture brings enough space of its own, unlike icons and switches
-        trailingContent = item.pictureFileName?.let { fileName ->
-            { ProductThumbnail(fileName = fileName, load = loadThumbnail) }
+        // Button and picture bring enough space of their own, unlike icons and switches
+        trailingContent = if (item.active || item.pictureFileName != null) {
+            {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    // Grocy computes no overview for disabled products
+                    if (item.active) {
+                        OverviewButton(onClick = onOverviewClick)
+                    }
+                    item.pictureFileName?.let { fileName ->
+                        ProductThumbnail(fileName = fileName, load = loadThumbnail)
+                    }
+                }
+            }
+        } else {
+            null
         },
     ) {
         Text(item.name, modifier = Modifier.alpha(contentAlpha))
+    }
+}
+
+/** Opens Grocy's "Product overview", narrow so the item keeps its room for the name. */
+@Composable
+private fun OverviewButton(onClick: () -> Unit) {
+    val haptic = LocalHapticFeedback.current
+    val description = stringResource(Res.string.product_overview_show)
+
+    HapticTooltipBox(text = description) {
+        IconButton(
+            onClick = {
+                haptic.confirm()
+                onClick()
+            },
+            modifier = Modifier
+                .minimumInteractiveComponentSize()
+                .size(
+                    IconButtonDefaults.smallContainerSize(
+                        IconButtonDefaults.IconButtonWidthOption.Narrow,
+                    ),
+                )
+                .clickCursor(),
+            shapes = IconButtonDefaults.shapes(),
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_rounded_info),
+                contentDescription = description,
+            )
+        }
     }
 }
 

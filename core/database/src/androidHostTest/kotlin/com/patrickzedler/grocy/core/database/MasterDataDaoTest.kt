@@ -10,6 +10,7 @@ import androidx.room3.withWriteTransaction
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 
@@ -89,6 +90,18 @@ class MasterDataDaoTest {
 
         assertEquals(listOf("first", "alpha", "beta", "zeta"), fields.map { it.name })
         assertEquals(listOf("A", "B"), fields.first().options)
+    }
+
+    @Test
+    fun overviewsOfRemovedProductsAreDeleted() = runTest {
+        dao.insertProducts(listOf(Product(id = 1, name = "Milk").toEntity()))
+        dao.upsertProductOverview(ProductOverviewEntity(productId = 1, json = "{}"))
+        dao.upsertProductOverview(ProductOverviewEntity(productId = 2, json = "{}"))
+
+        dao.deleteUnusedProductOverviews()
+
+        assertEquals("{}", dao.observeProductOverview(1).first()?.json)
+        assertNull(dao.observeProductOverview(2).first())
     }
 
     private fun userfield(id: Int, name: String, sortNumber: Int?) = Userfield(

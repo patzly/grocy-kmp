@@ -134,3 +134,13 @@ class ProductThumbnailEntity(
     @PrimaryKey @ColumnInfo(name = "file_name") val fileName: String,
     val bytes: ByteArray,
 )
+
+/**
+ * The last downloaded "Product overview" of a product as JSON, so it opens offline too; computed
+ * by the server (averages, spoil rate, price history), so never derived from the other tables.
+ */
+@Entity(tableName = "product_overviews")
+data class ProductOverviewEntity(
+    @PrimaryKey @ColumnInfo(name = "product_id") val productId: Int,
+    val json: String,
+)

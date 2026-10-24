@@ -252,6 +252,34 @@
   <string name="products_empty">尚無物品</string>
   <string name="products_empty_filtered">沒有符合過濾條件的物品</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">物品總覽</string>
+  <string name="product_overview_show">顯示物品總覽</string>
+  <string name="product_overview_add_to_shopping_list">加入購物清單</string>
+  <string name="product_overview_stock_amount">庫存數量</string>
+  <string name="product_overview_opened">%1$s 已開封</string>
+  <string name="product_overview_with_sub_products">含子物品：%1$s</string>
+  <string name="product_overview_stock_value">庫存價值</string>
+  <string name="product_overview_last_purchased">上次購買</string>
+  <string name="product_overview_last_used">上次使用</string>
+  <string name="product_overview_never">從未</string>
+  <string name="product_overview_last_price">上次價格</string>
+  <string name="product_overview_average_price">平均價格</string>
+  <string name="product_overview_price_per_unit">每%2$s%1$s</string>
+  <string name="product_overview_average_shelf_life">平均庫存期</string>
+  <string name="product_overview_spoil_rate">報廢率</string>
+  <string name="product_overview_unknown">不明</string>
+  <string name="product_overview_unlimited">無上限</string>
+  <string name="product_overview_show_more">全部顯示</string>
+  <string name="product_overview_show_less">簡略顯示</string>
+  <string name="product_overview_price_history">價格歷史</string>
+  <string name="product_overview_no_price_history">沒有可用價格歷史</string>
+  <string name="product_overview_unknown_store">不明店家</string>
+  <string name="product_overview_other_stores">其他店家</string>
+  <string name="product_overview_trend">趨勢</string>
+  <string name="product_overview_price_point">%1$s，%2$s：%3$s</string>
+  <string name="product_overview_offline">載入物品總覽需要連線到伺服器。</string>
+
   <!-- Product form -->
   <string name="product_create">新增物品</string>
   <string name="product_edit">編輯物品</string>

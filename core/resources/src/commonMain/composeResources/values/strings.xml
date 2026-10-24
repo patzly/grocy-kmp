@@ -281,6 +281,34 @@
   <string name="products_empty">No products yet</string>
   <string name="products_empty_filtered">No products match the filter</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">Product overview</string>
+  <string name="product_overview_show">Show product overview</string>
+  <string name="product_overview_add_to_shopping_list">Add to shopping list</string>
+  <string name="product_overview_stock_amount">Stock amount</string>
+  <string name="product_overview_opened">%1$s opened</string>
+  <string name="product_overview_with_sub_products">With sub products: %1$s</string>
+  <string name="product_overview_stock_value">Stock value</string>
+  <string name="product_overview_last_purchased">Last purchased</string>
+  <string name="product_overview_last_used">Last used</string>
+  <string name="product_overview_never">Never</string>
+  <string name="product_overview_last_price">Last price</string>
+  <string name="product_overview_average_price">Average price</string>
+  <string name="product_overview_price_per_unit">%1$s per %2$s</string>
+  <string name="product_overview_average_shelf_life">Average shelf life</string>
+  <string name="product_overview_spoil_rate">Spoil rate</string>
+  <string name="product_overview_unknown">Unknown</string>
+  <string name="product_overview_unlimited">Unlimited</string>
+  <string name="product_overview_show_more">Show more</string>
+  <string name="product_overview_show_less">Show less</string>
+  <string name="product_overview_price_history">Price history</string>
+  <string name="product_overview_no_price_history">No price history available</string>
+  <string name="product_overview_unknown_store">Unknown store</string>
+  <string name="product_overview_other_stores">Other stores</string>
+  <string name="product_overview_trend">Trend</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">Loading the product overview needs a connection to the server.</string>
+
   <!-- Product form -->
   <string name="product_create">Create product</string>
   <string name="product_edit">Edit product</string>

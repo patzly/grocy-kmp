@@ -12,6 +12,7 @@ import com.patrickzedler.grocy.feature.about.api.AboutRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductsRoute
+import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.product.ProductScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.product.ProductViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.products.ProductsScreen
@@ -41,6 +42,9 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
         ProductsScreen(
             menuItems = appMenuItems(navigator),
             viewModel = viewModel { ProductsViewModel(dependencies.masterDataRepository) },
+            overviewViewModel = viewModel {
+                ProductOverviewViewModel(dependencies.masterDataRepository)
+            },
             onBackClick = navigator::goBack,
             onProductClick = { id -> navigator.navigate(ProductRoute(id)) },
             onAddClick = { navigator.navigate(ProductRoute()) },

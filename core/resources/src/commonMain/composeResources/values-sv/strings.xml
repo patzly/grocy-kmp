@@ -253,6 +253,34 @@
   <string name="products_empty">Inga produkter ännu</string>
   <string name="products_empty_filtered">Inga produkter matchar filtret</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">Produktöversikt</string>
+  <string name="product_overview_show">Visa produktöversikt</string>
+  <string name="product_overview_add_to_shopping_list">Lägg till på inköpslistan</string>
+  <string name="product_overview_stock_amount">Lagersaldo</string>
+  <string name="product_overview_opened">Öppnade: %1$s</string>
+  <string name="product_overview_with_sub_products">Med underprodukter: %1$s</string>
+  <string name="product_overview_stock_value">Lagervärde</string>
+  <string name="product_overview_last_purchased">Senast köpt</string>
+  <string name="product_overview_last_used">Senast använd</string>
+  <string name="product_overview_never">Aldrig</string>
+  <string name="product_overview_last_price">Senaste priset</string>
+  <string name="product_overview_average_price">Genomsnittligt pris</string>
+  <string name="product_overview_price_per_unit">%1$s per %2$s</string>
+  <string name="product_overview_average_shelf_life">Genomsnittlig hållbarhet</string>
+  <string name="product_overview_spoil_rate">Svinngrad</string>
+  <string name="product_overview_unknown">Okänd</string>
+  <string name="product_overview_unlimited">Obegränsat</string>
+  <string name="product_overview_show_more">Visa mer</string>
+  <string name="product_overview_show_less">Visa mindre</string>
+  <string name="product_overview_price_history">Prishistorik</string>
+  <string name="product_overview_no_price_history">Ingen prishistorik tillgänglig</string>
+  <string name="product_overview_unknown_store">Okänd affär</string>
+  <string name="product_overview_other_stores">Andra affärer</string>
+  <string name="product_overview_trend">Trend</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">Produktöversikten behöver en anslutning till servern för att laddas.</string>
+
   <!-- Product form -->
   <string name="product_create">Skapa produkt</string>
   <string name="product_edit">Redigera produkt</string>

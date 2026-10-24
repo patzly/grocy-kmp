@@ -255,6 +255,34 @@
   <string name="products_empty">Продуктов пока нет</string>
   <string name="products_empty_filtered">Нет продуктов, соответствующих фильтру</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">Обзор продукта</string>
+  <string name="product_overview_show">Показать обзор продукта</string>
+  <string name="product_overview_add_to_shopping_list">Добавить в список покупок</string>
+  <string name="product_overview_stock_amount">Количество в запасе</string>
+  <string name="product_overview_opened">%1$s открыто</string>
+  <string name="product_overview_with_sub_products">С подпродуктами: %1$s</string>
+  <string name="product_overview_stock_value">Стоимость запасов</string>
+  <string name="product_overview_last_purchased">Последняя покупка</string>
+  <string name="product_overview_last_used">Последний раз использовалось</string>
+  <string name="product_overview_never">Никогда</string>
+  <string name="product_overview_last_price">Последняя цена</string>
+  <string name="product_overview_average_price">Средняя цена</string>
+  <string name="product_overview_price_per_unit">%1$s за %2$s</string>
+  <string name="product_overview_average_shelf_life">Среднее время жизни на полке</string>
+  <string name="product_overview_spoil_rate">Скорость порчи</string>
+  <string name="product_overview_unknown">Неизвестно</string>
+  <string name="product_overview_unlimited">Неограниченно</string>
+  <string name="product_overview_show_more">Показать больше</string>
+  <string name="product_overview_show_less">Показать меньше</string>
+  <string name="product_overview_price_history">История цен</string>
+  <string name="product_overview_no_price_history">Нет истории цен для показа</string>
+  <string name="product_overview_unknown_store">Неизвестный магазин</string>
+  <string name="product_overview_other_stores">Другие магазины</string>
+  <string name="product_overview_trend">Тренд</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">Для загрузки обзора продукта нужно подключение к серверу.</string>
+
   <!-- Product form -->
   <string name="product_create">Создать продукт</string>
   <string name="product_edit">Изменить продукт</string>

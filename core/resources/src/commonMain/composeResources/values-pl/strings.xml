@@ -255,6 +255,34 @@
   <string name="products_empty">Brak produktów</string>
   <string name="products_empty_filtered">Żaden produkt nie pasuje do filtra</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">Przegląd produktu</string>
+  <string name="product_overview_show">Pokaż przegląd produktu</string>
+  <string name="product_overview_add_to_shopping_list">Dodaj do listy zakupów</string>
+  <string name="product_overview_stock_amount">Ilość zapasów</string>
+  <string name="product_overview_opened">Otwarto %1$s</string>
+  <string name="product_overview_with_sub_products">Z produktami podrzędnymi: %1$s</string>
+  <string name="product_overview_stock_value">Wartość zapasów</string>
+  <string name="product_overview_last_purchased">Ostatnio kupione</string>
+  <string name="product_overview_last_used">Ostatnio użyte</string>
+  <string name="product_overview_never">Nigdy</string>
+  <string name="product_overview_last_price">Ostatnia cena</string>
+  <string name="product_overview_average_price">Średnia cena</string>
+  <string name="product_overview_price_per_unit">%1$s na %2$s</string>
+  <string name="product_overview_average_shelf_life">Średni okres trwałości</string>
+  <string name="product_overview_spoil_rate">Wskaźnik zepsucia</string>
+  <string name="product_overview_unknown">Nieznany</string>
+  <string name="product_overview_unlimited">Nielimitowane</string>
+  <string name="product_overview_show_more">Pokaż więcej</string>
+  <string name="product_overview_show_less">Pokaż mniej</string>
+  <string name="product_overview_price_history">Historia cen</string>
+  <string name="product_overview_no_price_history">Historia cen jest niedostępna</string>
+  <string name="product_overview_unknown_store">Nieznany sklep</string>
+  <string name="product_overview_other_stores">Inne sklepy</string>
+  <string name="product_overview_trend">Trend</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">Wczytanie przeglądu produktu wymaga połączenia z serwerem.</string>
+
   <!-- Product form -->
   <string name="product_create">Dodaj produkt</string>
   <string name="product_edit">Edytuj produkt</string>

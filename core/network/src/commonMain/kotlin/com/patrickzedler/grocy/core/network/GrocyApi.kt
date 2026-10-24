@@ -7,6 +7,7 @@ import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.ProductGroup
+import com.patrickzedler.grocy.core.model.masterdata.ProductOverview
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.Store
@@ -16,6 +17,8 @@ import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.network.dto.CreatedObjectDto
 import com.patrickzedler.grocy.core.network.dto.ErrorDto
 import com.patrickzedler.grocy.core.network.dto.LocationDto
+import com.patrickzedler.grocy.core.network.dto.PriceHistoryDto
+import com.patrickzedler.grocy.core.network.dto.ProductDetailsDto
 import com.patrickzedler.grocy.core.network.dto.ProductBarcodeDto
 import com.patrickzedler.grocy.core.network.dto.ProductDto
 import com.patrickzedler.grocy.core.network.dto.ProductGroupDto
@@ -47,6 +50,8 @@ import io.ktor.http.content.TextContent
 import io.ktor.http.isSuccess
 import io.ktor.util.encodeBase64
 import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 
@@ -105,6 +110,28 @@ class GrocyApi(
     /** Current stock, one entry per product that is in stock. */
     suspend fun stock(connection: ServerConnection): List<StockAmount> =
         get<List<StockDto>>(connection, "stock").map { it.toModel() }
+
+    /**
+     * Grocy's "Product overview" of an active product (disabled ones are rejected with
+     * [GrocyApiException.HttpError]); [withPriceHistory] also downloads its purchase prices.
+     */
+    suspend fun productOverview(
+        connection: ServerConnection,
+        productId: Int,
+        withPriceHistory: Boolean,
+    ): ProductOverview = coroutineScope {
+        val id = productId.toString()
+        val priceHistory = if (withPriceHistory) {
+            async {
+                get<List<PriceHistoryDto>>(connection, "stock", PRODUCTS, id, "price-history")
+                    .mapNotNull { it.toModel() }
+            }
+        } else {
+            null
+        }
+        val details = get<ProductDetailsDto>(connection, "stock", PRODUCTS, id)
+        details.toModel(productId, priceHistory?.await().orEmpty())
+    }
 
     /** Definitions of the userfields of [entity], e.g. "products". */
     suspend fun userfields(connection: ServerConnection, entity: String): List<Userfield> =

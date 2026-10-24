@@ -254,6 +254,34 @@
   <string name="products_empty">Todavía no hay productos</string>
   <string name="products_empty_filtered">Ningún producto coincide con el filtro</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">Resumen de producto</string>
+  <string name="product_overview_show">Mostrar resumen de producto</string>
+  <string name="product_overview_add_to_shopping_list">Añadir a la lista de la compra</string>
+  <string name="product_overview_stock_amount">Existencias</string>
+  <string name="product_overview_opened">%1$s abierto</string>
+  <string name="product_overview_with_sub_products">Con subproductos: %1$s</string>
+  <string name="product_overview_stock_value">Valor del inventario</string>
+  <string name="product_overview_last_purchased">Última compra</string>
+  <string name="product_overview_last_used">Último uso</string>
+  <string name="product_overview_never">Nunca</string>
+  <string name="product_overview_last_price">Último precio</string>
+  <string name="product_overview_average_price">Precio promedio</string>
+  <string name="product_overview_price_per_unit">%1$s por %2$s</string>
+  <string name="product_overview_average_shelf_life">Tiempo de conservación promedio</string>
+  <string name="product_overview_spoil_rate">Ratio de desperdicio</string>
+  <string name="product_overview_unknown">Desconocido</string>
+  <string name="product_overview_unlimited">Ilimitado</string>
+  <string name="product_overview_show_more">Mostrar más</string>
+  <string name="product_overview_show_less">Mostrar menos</string>
+  <string name="product_overview_price_history">Histórico de precios</string>
+  <string name="product_overview_no_price_history">No hay histórico de precios disponible</string>
+  <string name="product_overview_unknown_store">Tienda desconocida</string>
+  <string name="product_overview_other_stores">Otras tiendas</string>
+  <string name="product_overview_trend">Tendencia</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">Para cargar el resumen de producto se necesita conexión con el servidor.</string>
+
   <!-- Product form -->
   <string name="product_create">Crear producto</string>
   <string name="product_edit">Modificar producto</string>

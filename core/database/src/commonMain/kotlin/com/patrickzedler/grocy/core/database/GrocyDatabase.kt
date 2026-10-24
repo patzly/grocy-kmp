@@ -23,11 +23,14 @@ import androidx.room3.RoomDatabaseConstructor
         UserfieldEntity::class,
         ServerValueEntity::class,
         ProductThumbnailEntity::class,
+        ProductOverviewEntity::class,
     ],
-    version = 2,
+    version = 3,
     autoMigrations = [
         // 2 adds product_thumbnails
         AutoMigration(from = 1, to = 2),
+        // 3 adds product_overviews
+        AutoMigration(from = 2, to = 3),
     ],
 )
 @ConstructedBy(GrocyDatabaseConstructor::class)

@@ -253,6 +253,34 @@
   <string name="products_empty">Tooteid veel pole</string>
   <string name="products_empty_filtered">Filtrile ei vasta ükski toode</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">Toote ülevaade</string>
+  <string name="product_overview_show">Näita toote ülevaadet</string>
+  <string name="product_overview_add_to_shopping_list">Lisa ostunimekirja</string>
+  <string name="product_overview_stock_amount">Kogus varudes</string>
+  <string name="product_overview_opened">%1$s avatud</string>
+  <string name="product_overview_with_sub_products">Koos alamtoodetega: %1$s</string>
+  <string name="product_overview_stock_value">Toote väärtus</string>
+  <string name="product_overview_last_purchased">Viimati ostetud</string>
+  <string name="product_overview_last_used">Viimati kasutatud</string>
+  <string name="product_overview_never">Mitte kunagi</string>
+  <string name="product_overview_last_price">Viimane hind</string>
+  <string name="product_overview_average_price">Keskmine hind</string>
+  <string name="product_overview_price_per_unit">%1$s %2$s kohta</string>
+  <string name="product_overview_average_shelf_life">Keskmine säilivusaeg</string>
+  <string name="product_overview_spoil_rate">Riknemismäär</string>
+  <string name="product_overview_unknown">Tundmatu</string>
+  <string name="product_overview_unlimited">Piiramatu</string>
+  <string name="product_overview_show_more">Näita rohkem</string>
+  <string name="product_overview_show_less">Näita vähem</string>
+  <string name="product_overview_price_history">Hinna ajalugu</string>
+  <string name="product_overview_no_price_history">Hinna ajalugu pole saadaval</string>
+  <string name="product_overview_unknown_store">Tundmatu pood</string>
+  <string name="product_overview_other_stores">Teised poed</string>
+  <string name="product_overview_trend">Trend</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">Toote ülevaate laadimiseks on vaja ühendust serveriga.</string>
+
   <!-- Product form -->
   <string name="product_create">Loo toode</string>
   <string name="product_edit">Muuda toodet</string>

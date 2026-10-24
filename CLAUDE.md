@@ -8,8 +8,8 @@ Current state: login (demo server, QR code of Grocy's API key page, manual Grocy
 Home Assistant ingress on Android), the reusable barcode scanner (`core:scanner`), update checks
 on every platform, the start screen (Master data item, the app menu), an About
 screen, the Settings overview (`feature:settings`) and the first master data
-(`feature:masterdata`): the overview of Grocy's master data categories, the product list and
-the product form. Only Products opens a screen so far; Barcodes, QU conversions, Stock entries,
+(`feature:masterdata`): the overview of Grocy's master data categories, the product list, the
+product overview dialog and the product form. Only Products opens a screen so far; Barcodes, QU conversions, Stock entries,
 Stock journal, "Configure userfields" and "Presets for new products" are placeholders without
 action.
 
@@ -61,6 +61,26 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   and a floating toolbar (Add as FAB, Configure userfields, Presets for new products, Scroll to
   top, Search last). Filtering, sorting and the fuzzy search are the pure `buildProductList`:
   in stock means `amount_aggregated > 0` of an active product, like Grocy's `stock_current`.
+- `ProductOverviewDialog` (`overview/`) is Grocy's "Product overview" card, opened by the narrow
+  info button at the end of each active product item (before its picture; Grocy computes no
+  overview for disabled products). Its icon buttons on top of the scrolling content are the
+  card header's: Stock entries, Stock journal, Add to shopping list (only with the shopping list
+  feature) and Edit product; only Edit leads somewhere so far. Then every value of the card in
+  its order, hidden like in Grocy by feature flag (prices: stock value, last/average price and
+  price history; location: default location; best before dates: average shelf life),
+  description (three lines, "Show more"), picture (1200 px, offline the stored list picture)
+  and the price history. `ProductOverviewViewModel` is one per product list (`show`/`hide`, kept
+  across rotations), every opening downloads `/stock/products/{id}` plus its price history
+  (`MasterDataRepository.refreshProductOverview`, stored as JSON in `product_overviews`, so the
+  last overview shows offline). The pure `buildProductOverview` resolves units (prices per price
+  unit, per stock unit too when they differ), stores and the chart series.
+- `PriceHistoryChart`: Canvas line chart after the dataviz rules: one 2.dp line per store with
+  surface-ringed points, Grocy's dotted least squares trend, y axis from zero in round steps
+  (`priceAxis`), first and last date below, legend from two series or with a trend. Colors come
+  from `chartColors` (`core:design`): a validated color blind safe categorical palette in fixed
+  order with light and dark steps, not derived from the theme; stores keep their color by id,
+  stores beyond eight are drawn together as "Other stores". Tap, sideways drag, mouse hover and
+  the arrow keys select a price (date, store, price as tooltip); screen readers get all prices.
 - `ProductScreen` edits or creates (`ProductRoute(productId = null)`) a product with every field
   of Grocy's form, in its order, grouped, fields of disabled features hidden
   (`ProductFormFeatures`). The logic is pure and tested: `ProductFormValues.validate` (Grocy's
@@ -501,6 +521,9 @@ both modules to `apps/shared/build.gradle.kts`, and add the new routes to `allRo
   screen shows the data of another server. The database file is excluded from backups.
 - Server configuration and user settings live as JSON in `server_values`; only the known feature
   flags are kept (`ServerConfig`), the rest of `/system/config` (e.g. webhooks) never is stored.
+- What only the server computes (product overviews: averages, spoil rate, price history) is
+  stored as the last downloaded JSON per object (`product_overviews`, version 3), never derived
+  from the other tables; a refresh deletes the ones of removed products.
 - Room 3.0.x via the `grocy.room` convention plugin (KSP per target, schemas exported to
   `core/database/schemas`). Every schema change needs a new version and a migration; check it
   against the exported schema.
@@ -741,7 +764,8 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   - `FakeCredentialStore`, `FakeSettingsStore`, `FakeUnlockChecker`, `FakeAppUpdater`,
     `FakeAppLanguageStore`.
   - `FakeGrocyServer` also serves the master data of `MasterDataJson` (Milk, Bread, a disabled
-    product, a sub product, units, barcode, stock, userfield, config, settings), answers
+    product, a sub product, units, barcode, stock, userfield, config, settings, the product
+    overview of Milk with two prices), answers
     `respond(..., method = HttpMethod.Post)` per method, accepts PUT and DELETE with 204 and lists
     them with `requestsTo(path, method)`.
 - Room needs a real SQLite: tests with a database live in `androidHostTest` (Node has no web
@@ -749,6 +773,13 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   them apply `grocy.sqlite.host.tests`, which loads the desktop SQLite library for the JVM.
 - `snapshotFlow` over a `TextFieldState` in a ViewModel needs `Snapshot.sendApplyNotifications()`
   in tests, which the frame clock does in the app.
+- Dates, durations, currencies and percents of the app language are formatted by the platform
+  in `core:model` `text` (`formatDate`, `formatRelativeTime`, `formatDuration`,
+  `formatCurrency`, `formatPercent`: ICU and `java.text` on Android, `Intl` in browsers); the
+  rounding (`timeSpanBetween`, `durationOf`, moment.js's thresholds like Grocy) and `epochDayOf`
+  are common code. Android's ICU is stubbed in JVM tests, so tests never call the relative and
+  duration formatters. Prices use the server's `CURRENCY` (`ServerConfig.currency`) and the
+  user setting `stock_decimal_places_prices_display`.
 - Fuzzy search (`FuzzySearch`) and number formatting (`formatDecimal`, `parseDecimal`,
   `platformDecimalSeparator`) live in `core:model`, so they are tested on JVM and Wasm.
 - Network code is tested against `MockEngine` via `createGrocyHttpClient(engine)`, which uses the

@@ -1,10 +1,12 @@
 package com.patrickzedler.grocy.core.data.masterdata
 
+import com.patrickzedler.grocy.core.database.ProductOverviewEntity
 import com.patrickzedler.grocy.core.database.ServerValueEntity
 import com.patrickzedler.grocy.core.database.createInMemoryGrocyDatabase
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.SystemInfo
 import com.patrickzedler.grocy.core.model.masterdata.Product
+import com.patrickzedler.grocy.core.model.masterdata.ProductOverview
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import com.patrickzedler.grocy.core.testing.FakeGrocyServer
 import com.patrickzedler.grocy.core.testing.MasterDataJson
@@ -277,6 +279,64 @@ class MasterDataRepositoryTest {
 
         assertNull(repository.product(2).first())
         assertEquals(1, server.requestsTo("/api/objects/products/2", HttpMethod.Delete).size)
+    }
+
+    @Test
+    fun productOverviewIsStoredForOfflineUse() = runTest {
+        repository.refreshProductOverview(1, withPriceHistory = true)
+        server.unreachable = true
+
+        assertFailsWith<GrocyApiException.Unreachable> {
+            repository.refreshProductOverview(1, withPriceHistory = true)
+        }
+
+        val overview = repository.productOverview(1).first()
+        assertEquals(3.0, overview?.stockAmount)
+        assertEquals(listOf(1, null), overview?.priceHistory?.map { it.storeId })
+    }
+
+    @Test
+    fun productOverviewIsUnknownBeforeTheFirstDownload() = runTest {
+        assertNull(repository.productOverview(1).first())
+    }
+
+    @Test
+    fun storedOverviewOfEarlierVersionsIsRead() = runTest {
+        // Persisted format: later fields must have defaults
+        database.masterDataDao().upsertProductOverview(
+            ProductOverviewEntity(1, """{"productId":1,"stockAmount":2.0,"unknown":true}"""),
+        )
+
+        val overview = repository.productOverview(1).first()
+
+        assertEquals(ProductOverview(productId = 1, stockAmount = 2.0), overview)
+    }
+
+    @Test
+    fun overviewOfARemovedProductIsDeletedOnRefresh() = runTest {
+        server.respond(
+            "/api/objects/products",
+            body = "[${productJson(1, "Milk")}]",
+        )
+        repository.refreshProductOverview(1, withPriceHistory = false)
+        database.masterDataDao().upsertProductOverview(ProductOverviewEntity(2, "{}"))
+
+        repository.refresh()
+
+        assertEquals(3.0, repository.productOverview(1).first()?.stockAmount)
+        assertNull(database.masterDataDao().observeProductOverview(2).first())
+    }
+
+    @Test
+    fun offlinePictureFallsBackToTheStoredThumbnail() = runTest {
+        repository.refresh()
+        server.respond(breadPicture, body = "small")
+        repository.productThumbnail("x1bread.jpg")
+        server.unreachable = true
+
+        val picture = repository.productPictureOrThumbnail("x1bread.jpg", maxWidth = 1000)
+
+        assertEquals("small", picture.decodeToString())
     }
 
     @Test

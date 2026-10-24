@@ -253,6 +253,34 @@
   <string name="products_empty">Még nincsenek termékek</string>
   <string name="products_empty_filtered">Egy termék sem felel meg a szűrőnek</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">Termék áttekintése</string>
+  <string name="product_overview_show">Termék áttekintésének megjelenítése</string>
+  <string name="product_overview_add_to_shopping_list">Hozzáadás bevásárlólistához</string>
+  <string name="product_overview_stock_amount">Készlet mennyiség</string>
+  <string name="product_overview_opened">%1$s felbontva</string>
+  <string name="product_overview_with_sub_products">Altermékekkel együtt: %1$s</string>
+  <string name="product_overview_stock_value">Készlet érték</string>
+  <string name="product_overview_last_purchased">Legutóbb vásárolva</string>
+  <string name="product_overview_last_used">Legutóbb felhasználva</string>
+  <string name="product_overview_never">Soha</string>
+  <string name="product_overview_last_price">Legutóbbi ár</string>
+  <string name="product_overview_average_price">Átlagár</string>
+  <string name="product_overview_price_per_unit">%1$s / %2$s</string>
+  <string name="product_overview_average_shelf_life">Átlagos tárolási idő</string>
+  <string name="product_overview_spoil_rate">Megromlási arány</string>
+  <string name="product_overview_unknown">Ismeretlen</string>
+  <string name="product_overview_unlimited">Korlátlan</string>
+  <string name="product_overview_show_more">Több mutatása</string>
+  <string name="product_overview_show_less">Kevesebb mutatása</string>
+  <string name="product_overview_price_history">Ár előzmények</string>
+  <string name="product_overview_no_price_history">Nincs elérhető ár előzmény</string>
+  <string name="product_overview_unknown_store">Ismeretlen áruház</string>
+  <string name="product_overview_other_stores">Egyéb áruházak</string>
+  <string name="product_overview_trend">Trend</string>
+  <string name="product_overview_price_point">%1$s, %2$s: %3$s</string>
+  <string name="product_overview_offline">A termék áttekintésének betöltéséhez kapcsolat szükséges a szerverrel.</string>
+
   <!-- Product form -->
   <string name="product_create">Termék létrehozása</string>
   <string name="product_edit">Termék szerkesztése</string>

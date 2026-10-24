@@ -28,6 +28,19 @@ interface MasterDataDao {
     @Query("DELETE FROM products WHERE id = :id")
     suspend fun deleteProduct(id: Int)
 
+    @Query("SELECT * FROM product_overviews WHERE product_id = :productId")
+    fun observeProductOverview(productId: Int): Flow<ProductOverviewEntity?>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertProductOverview(overview: ProductOverviewEntity)
+
+    @Query("DELETE FROM product_overviews WHERE product_id = :productId")
+    suspend fun deleteProductOverview(productId: Int)
+
+    /** Removes overviews of products the server no longer has. */
+    @Query("DELETE FROM product_overviews WHERE product_id NOT IN (SELECT id FROM products)")
+    suspend fun deleteUnusedProductOverviews()
+
     @Query("SELECT * FROM product_groups ORDER BY name COLLATE NOCASE")
     fun observeProductGroups(): Flow<List<ProductGroupEntity>>
 

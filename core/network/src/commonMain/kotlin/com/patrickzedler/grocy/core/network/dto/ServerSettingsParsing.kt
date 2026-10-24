@@ -40,6 +40,9 @@ internal fun JsonObject.toServerConfig(): ServerConfig {
             !flag("FEATURE_FLAG_DISABLE_BROWSER_BARCODE_CAMERA_SCANNING", false),
         energyUnit = primitive("ENERGY_UNIT")?.content?.takeIf { it.isNotBlank() }
             ?: defaults.energyUnit,
+        currency = primitive("CURRENCY")?.content?.trim()?.uppercase()
+            ?.takeIf { CURRENCY_CODE.matches(it) }
+            ?: defaults.currency,
     )
 }
 
@@ -54,6 +57,9 @@ internal fun JsonObject.toUserSettings(): UserSettings {
         stockDecimalPlacesAmounts = int("stock_decimal_places_amounts")
             ?.coerceIn(0, MAX_DECIMAL_PLACES)
             ?: defaults.stockDecimalPlacesAmounts,
+        stockDecimalPlacesPricesDisplay = int("stock_decimal_places_prices_display")
+            ?.coerceIn(0, MAX_DECIMAL_PLACES)
+            ?: defaults.stockDecimalPlacesPricesDisplay,
         productPresets = ProductPresets(
             locationId = id("product_presets_location_id"),
             productGroupId = id("product_presets_product_group_id"),
@@ -68,6 +74,9 @@ internal fun JsonObject.toUserSettings(): UserSettings {
 }
 
 private const val MAX_DECIMAL_PLACES = 10
+
+// Grocy takes any text, formatting prices needs an ISO 4217 code
+private val CURRENCY_CODE = Regex("[A-Z]{3}")
 
 private fun JsonObject.primitive(key: String): JsonPrimitive? =
     (get(key) as? JsonPrimitive)?.takeUnless { it is JsonNull }

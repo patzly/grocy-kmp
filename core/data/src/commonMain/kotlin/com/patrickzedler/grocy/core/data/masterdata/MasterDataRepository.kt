@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.data.masterdata
 
 import androidx.room3.withWriteTransaction
 import com.patrickzedler.grocy.core.database.GrocyDatabase
+import com.patrickzedler.grocy.core.database.ProductOverviewEntity
 import com.patrickzedler.grocy.core.database.ProductThumbnailEntity
 import com.patrickzedler.grocy.core.database.ServerValueEntity
 import com.patrickzedler.grocy.core.database.toEntity
@@ -12,6 +13,7 @@ import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.ProductGroup
+import com.patrickzedler.grocy.core.model.masterdata.ProductOverview
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.Store
@@ -79,6 +81,24 @@ class MasterDataRepository(
 
     fun product(id: Int): Flow<Product?> = dao.observeProduct(id).map { it?.toModel() }
 
+    /** The stored "Product overview" of a product, null until it was downloaded once. */
+    fun productOverview(productId: Int): Flow<ProductOverview?> =
+        dao.observeProductOverview(productId).map { entity ->
+            entity?.let { decodeOrNull(ProductOverview.serializer(), it.json) }
+        }
+
+    /**
+     * Downloads the "Product overview" of an active product and stores it for offline use.
+     *
+     * @param withPriceHistory false when the server does not track prices.
+     * @throws GrocyApiException e.g. [GrocyApiException.Unreachable] when offline.
+     */
+    suspend fun refreshProductOverview(productId: Int, withPriceHistory: Boolean) {
+        val overview = api.productOverview(requireConnection(), productId, withPriceHistory)
+        val json = Json.encodeToString(ProductOverview.serializer(), overview)
+        dao.upsertProductOverview(ProductOverviewEntity(productId, json))
+    }
+
     fun userfields(entity: String): Flow<List<Userfield>> =
         dao.observeUserfields(entity).map { list -> list.map { it.toModel() } }
 
@@ -127,6 +147,7 @@ class MasterDataRepository(
             dao.insertUserfields(download.userfields.map { it.toEntity() })
             storeConfiguration(download.config, download.settings, download.systemInfo)
             dao.deleteUnusedThumbnails()
+            dao.deleteUnusedProductOverviews()
         }
     }
 
@@ -225,6 +246,19 @@ class MasterDataRepository(
     suspend fun deleteProduct(id: Int) {
         api.deleteProduct(requireConnection(), id)
         dao.deleteProduct(id)
+        dao.deleteProductOverview(id)
+    }
+
+    /**
+     * The picture [fileName] of a product, scaled by the server to [maxWidth] pixels; offline
+     * the stored list picture, which is smaller.
+     *
+     * @throws GrocyApiException when it is neither stored nor downloadable.
+     */
+    suspend fun productPictureOrThumbnail(fileName: String, maxWidth: Int): ByteArray = try {
+        productPicture(fileName, maxWidth)
+    } catch (e: GrocyApiException) {
+        dao.thumbnail(fileName) ?: throw e
     }
 
     /** The picture [fileName] of a product, scaled by the server to [maxWidth] pixels. */

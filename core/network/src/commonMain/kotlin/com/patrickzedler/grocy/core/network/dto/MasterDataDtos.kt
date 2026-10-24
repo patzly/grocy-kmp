@@ -2,9 +2,11 @@ package com.patrickzedler.grocy.core.network.dto
 
 import com.patrickzedler.grocy.core.model.masterdata.DueType
 import com.patrickzedler.grocy.core.model.masterdata.Location
+import com.patrickzedler.grocy.core.model.masterdata.PriceHistoryEntry
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.ProductGroup
+import com.patrickzedler.grocy.core.model.masterdata.ProductOverview
 import com.patrickzedler.grocy.core.model.masterdata.PurchasePriceType
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
@@ -252,3 +254,60 @@ internal data class CreatedObjectDto(
 internal data class ErrorDto(
     @SerialName("error_message") val errorMessage: FlexString = null,
 )
+
+/** The computed part of Grocy's `/stock/products/{id}`, the rest the app has stored already. */
+@Serializable
+internal data class ProductDetailsDto(
+    @SerialName("last_purchased") val lastPurchased: FlexString = null,
+    @SerialName("last_used") val lastUsed: FlexString = null,
+    @SerialName("stock_amount") val stockAmount: FlexDouble = null,
+    @SerialName("stock_value") val stockValue: FlexDouble = null,
+    @SerialName("stock_amount_opened") val stockAmountOpened: FlexDouble = null,
+    @SerialName("stock_amount_aggregated") val stockAmountAggregated: FlexDouble = null,
+    @SerialName("stock_amount_opened_aggregated")
+    val stockAmountOpenedAggregated: FlexDouble = null,
+    @SerialName("is_aggregated_amount") val isAggregatedAmount: FlexBoolean = null,
+    @SerialName("last_price") val lastPrice: FlexDouble = null,
+    @SerialName("avg_price") val averagePrice: FlexDouble = null,
+    @SerialName("qu_conversion_factor_price_to_stock") val priceToStockFactor: FlexDouble = null,
+    @SerialName("average_shelf_life_days") val averageShelfLifeDays: FlexDouble = null,
+    @SerialName("spoil_rate_percent") val spoilRatePercent: FlexDouble = null,
+) {
+    fun toModel(productId: Int, priceHistory: List<PriceHistoryEntry>) = ProductOverview(
+        productId = productId,
+        stockAmount = stockAmount ?: 0.0,
+        stockAmountOpened = stockAmountOpened ?: 0.0,
+        stockAmountAggregated = stockAmountAggregated ?: 0.0,
+        stockAmountOpenedAggregated = stockAmountOpenedAggregated ?: 0.0,
+        isAggregatedAmount = isAggregatedAmount ?: false,
+        stockValue = stockValue ?: 0.0,
+        lastPurchased = lastPurchased?.toIsoDate(),
+        lastUsed = lastUsed?.toIsoDate(),
+        lastPrice = lastPrice,
+        averagePrice = averagePrice,
+        priceToStockFactor = priceToStockFactor?.takeIf { it > 0 } ?: 1.0,
+        averageShelfLifeDays = averageShelfLifeDays ?: ProductOverview.UNKNOWN_SHELF_LIFE,
+        spoilRatePercent = spoilRatePercent ?: 0.0,
+        priceHistory = priceHistory,
+    )
+}
+
+/** One entry of `/stock/products/{id}/price-history`. */
+@Serializable
+internal data class PriceHistoryDto(
+    val date: FlexString = null,
+    val price: FlexDouble = null,
+    @SerialName("shopping_location") val store: StoreDto? = null,
+) {
+    /** Null for entries without date or price, which the chart cannot place. */
+    fun toModel(): PriceHistoryEntry? {
+        val day = date?.toIsoDate() ?: return null
+        return PriceHistoryEntry(date = day, price = price ?: return null, storeId = store?.id)
+    }
+}
+
+/** The date part of Grocy's "YYYY-MM-DD" or "YYYY-MM-DD HH:MM:SS". */
+private fun String.toIsoDate(): String? = take(ISO_DATE_LENGTH).takeIf { ISO_DATE.matches(it) }
+
+private const val ISO_DATE_LENGTH = 10
+private val ISO_DATE = Regex("""\d{4}-\d{2}-\d{2}""")

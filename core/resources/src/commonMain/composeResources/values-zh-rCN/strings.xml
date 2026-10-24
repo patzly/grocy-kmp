@@ -252,6 +252,34 @@
   <string name="products_empty">还没有产品</string>
   <string name="products_empty_filtered">没有符合筛选条件的产品</string>
 
+  <!-- Product overview -->
+  <string name="product_overview">产品总览</string>
+  <string name="product_overview_show">显示产品总览</string>
+  <string name="product_overview_add_to_shopping_list">加入购物清单</string>
+  <string name="product_overview_stock_amount">库存数量</string>
+  <string name="product_overview_opened">%1$s 已开封</string>
+  <string name="product_overview_with_sub_products">含子产品：%1$s</string>
+  <string name="product_overview_stock_value">库存价值</string>
+  <string name="product_overview_last_purchased">上次购买时间</string>
+  <string name="product_overview_last_used">上次使用时间</string>
+  <string name="product_overview_never">从未</string>
+  <string name="product_overview_last_price">最近价格</string>
+  <string name="product_overview_average_price">平均价格</string>
+  <string name="product_overview_price_per_unit">%1$s每%2$s</string>
+  <string name="product_overview_average_shelf_life">平均寿命</string>
+  <string name="product_overview_spoil_rate">损坏率</string>
+  <string name="product_overview_unknown">未知</string>
+  <string name="product_overview_unlimited">无限制</string>
+  <string name="product_overview_show_more">全部显示</string>
+  <string name="product_overview_show_less">简洁显示</string>
+  <string name="product_overview_price_history">价格历史</string>
+  <string name="product_overview_no_price_history">没有价格历史</string>
+  <string name="product_overview_unknown_store">未知商店</string>
+  <string name="product_overview_other_stores">其他商店</string>
+  <string name="product_overview_trend">趋势</string>
+  <string name="product_overview_price_point">%1$s，%2$s：%3$s</string>
+  <string name="product_overview_offline">加载产品总览需要连接服务器。</string>
+
   <!-- Product form -->
   <string name="product_create">新建产品</string>
   <string name="product_edit">编辑产品</string>
