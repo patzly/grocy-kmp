@@ -65,6 +65,17 @@ class ServerRepositoryTest {
     }
 
     @Test
+    fun serverConfigIsTheStoredOne() = runTest {
+        val repository = repository()
+        server.respond("/api/system/config", body = """{"FEATURE_FLAG_STOCK_PRICE_TRACKING":0}""")
+
+        masterDataRepository.reloadConfiguration()
+
+        val config = repository.serverConfig.filterNotNull().filter { !it.stockPriceTracking }
+        assertFalse(config.first().stockPriceTracking)
+    }
+
+    @Test
     fun noServerWhileLoggedOut() = runTest {
         val repository = repository()
         repository.server.filterNotNull().first()

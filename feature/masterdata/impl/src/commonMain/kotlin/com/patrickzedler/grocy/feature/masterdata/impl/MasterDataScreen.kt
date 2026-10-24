@@ -52,9 +52,13 @@ import com.patrickzedler.grocy.core.resources.masterdata_title
 import com.patrickzedler.grocy.core.resources.masterdata_userentities
 import com.patrickzedler.grocy.core.resources.masterdata_userfields
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
@@ -97,6 +101,9 @@ internal enum class MasterDataCategory(
     USERENTITIES(Res.string.masterdata_userentities, Res.drawable.ic_rounded_dataset),
 }
 
+private fun availableCategories(config: ServerConfig) =
+    MasterDataCategory.entries.filter { it.isAvailable(config) }
+
 internal data class MasterDataUiState(
     val categories: List<MasterDataCategory>,
     /** Number of products, null until it is known (stored products or a finished download). */
@@ -105,23 +112,35 @@ internal data class MasterDataUiState(
 
 /**
  * The categories the server's features allow and the number of products, from the database;
- * pull to refresh downloads them again.
+ * pull to refresh downloads them again. The categories come from [serverConfig], read at app
+ * start, so they show in the first frame even while a download keeps the database busy.
  */
-internal class MasterDataViewModel(repository: MasterDataRepository) : ViewModel() {
+internal class MasterDataViewModel(
+    repository: MasterDataRepository,
+    serverConfig: StateFlow<ServerConfig?>,
+) : ViewModel() {
 
     private val refreshController = RefreshController(viewModelScope) { repository.refresh() }
     val refresh: StateFlow<RefreshState> = refreshController.state
 
+    // Unknown until the database answers, which must not hold back the categories
+    private val productCount: Flow<Int?> =
+        repository.products.map<_, Int?> { it.size }.onStart { emit(null) }
+
     val state: StateFlow<MasterDataUiState?> = combine(
-        repository.serverConfig,
-        repository.products,
+        serverConfig.filterNotNull(),
+        productCount,
         refreshController.state,
-    ) { config, products, refresh ->
+    ) { config, count, refresh ->
         MasterDataUiState(
-            categories = MasterDataCategory.entries.filter { it.isAvailable(config) },
-            productCount = products.size.takeIf { it > 0 || refresh.loadedOnce },
+            categories = availableCategories(config),
+            productCount = count?.takeIf { it > 0 || refresh.loadedOnce },
         )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5_000),
+        serverConfig.value?.let { MasterDataUiState(availableCategories(it), productCount = null) },
+    )
 
     init {
         refresh()

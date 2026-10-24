@@ -5,9 +5,27 @@ import com.patrickzedler.grocy.feature.about.api.AboutRoute
 import com.patrickzedler.grocy.feature.login.api.LoginChoiceRoute
 import com.patrickzedler.grocy.feature.login.api.LoginManualRoute
 import com.patrickzedler.grocy.feature.login.api.LoginScanRoute
+import com.patrickzedler.grocy.feature.masterdata.api.BatteriesRoute
+import com.patrickzedler.grocy.feature.masterdata.api.BatteryRoute
+import com.patrickzedler.grocy.feature.masterdata.api.ChoreRoute
+import com.patrickzedler.grocy.feature.masterdata.api.ChoresRoute
+import com.patrickzedler.grocy.feature.masterdata.api.LocationRoute
+import com.patrickzedler.grocy.feature.masterdata.api.LocationsRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
+import com.patrickzedler.grocy.feature.masterdata.api.ProductGroupRoute
+import com.patrickzedler.grocy.feature.masterdata.api.ProductGroupsRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductsRoute
+import com.patrickzedler.grocy.feature.masterdata.api.QuantityUnitRoute
+import com.patrickzedler.grocy.feature.masterdata.api.QuantityUnitsRoute
+import com.patrickzedler.grocy.feature.masterdata.api.StoreRoute
+import com.patrickzedler.grocy.feature.masterdata.api.StoresRoute
+import com.patrickzedler.grocy.feature.masterdata.api.TaskCategoriesRoute
+import com.patrickzedler.grocy.feature.masterdata.api.TaskCategoryRoute
+import com.patrickzedler.grocy.feature.masterdata.api.UserentitiesRoute
+import com.patrickzedler.grocy.feature.masterdata.api.UserentityRoute
+import com.patrickzedler.grocy.feature.masterdata.api.UserfieldRoute
+import com.patrickzedler.grocy.feature.masterdata.api.UserfieldsRoute
 import com.patrickzedler.grocy.feature.settings.api.GeneralSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.LogRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
@@ -41,6 +59,27 @@ class RouteSerializersTest {
         ProductsRoute,
         ProductRoute(),
         ProductRoute(productId = 7),
+        LocationsRoute,
+        LocationRoute(),
+        LocationRoute(id = 3),
+        StoresRoute,
+        StoreRoute(id = 3),
+        QuantityUnitsRoute,
+        QuantityUnitRoute(id = 3),
+        ProductGroupsRoute,
+        ProductGroupRoute(id = 3),
+        ChoresRoute,
+        ChoreRoute(id = 3),
+        BatteriesRoute,
+        BatteryRoute(id = 3),
+        TaskCategoriesRoute,
+        TaskCategoryRoute(id = 3),
+        UserfieldsRoute(),
+        UserfieldsRoute(entity = "products"),
+        UserfieldRoute(entity = "chores"),
+        UserfieldRoute(id = 3),
+        UserentitiesRoute,
+        UserentityRoute(id = 3),
     )
 
     private val json = Json { serializersModule = routeSerializers }

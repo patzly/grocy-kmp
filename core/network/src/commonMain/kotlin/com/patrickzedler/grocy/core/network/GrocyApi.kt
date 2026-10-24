@@ -3,6 +3,8 @@ package com.patrickzedler.grocy.core.network
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.SystemInfo
 import com.patrickzedler.grocy.core.model.User
+import com.patrickzedler.grocy.core.model.masterdata.Battery
+import com.patrickzedler.grocy.core.model.masterdata.Chore
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
@@ -11,22 +13,28 @@ import com.patrickzedler.grocy.core.model.masterdata.ProductOverview
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.Store
+import com.patrickzedler.grocy.core.model.masterdata.TaskCategory
+import com.patrickzedler.grocy.core.model.masterdata.Userentity
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
+import com.patrickzedler.grocy.core.network.dto.BatteryDto
+import com.patrickzedler.grocy.core.network.dto.ChoreDto
 import com.patrickzedler.grocy.core.network.dto.CreatedObjectDto
 import com.patrickzedler.grocy.core.network.dto.ErrorDto
 import com.patrickzedler.grocy.core.network.dto.LocationDto
 import com.patrickzedler.grocy.core.network.dto.PriceHistoryDto
-import com.patrickzedler.grocy.core.network.dto.ProductDetailsDto
 import com.patrickzedler.grocy.core.network.dto.ProductBarcodeDto
+import com.patrickzedler.grocy.core.network.dto.ProductDetailsDto
 import com.patrickzedler.grocy.core.network.dto.ProductDto
 import com.patrickzedler.grocy.core.network.dto.ProductGroupDto
 import com.patrickzedler.grocy.core.network.dto.QuantityUnitDto
 import com.patrickzedler.grocy.core.network.dto.StockDto
 import com.patrickzedler.grocy.core.network.dto.StoreDto
 import com.patrickzedler.grocy.core.network.dto.SystemInfoDto
+import com.patrickzedler.grocy.core.network.dto.TaskCategoryDto
 import com.patrickzedler.grocy.core.network.dto.UserDto
+import com.patrickzedler.grocy.core.network.dto.UserentityDto
 import com.patrickzedler.grocy.core.network.dto.UserfieldDto
 import com.patrickzedler.grocy.core.network.dto.toJson
 import com.patrickzedler.grocy.core.network.dto.toServerConfig
@@ -54,6 +62,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 /**
  * The Grocy REST API.
@@ -92,16 +102,92 @@ class GrocyApi(
         get<ProductDto>(connection, "objects", PRODUCTS, id.toString()).toModel()
 
     suspend fun productGroups(connection: ServerConnection): List<ProductGroup> =
-        get<List<ProductGroupDto>>(connection, "objects", "product_groups").map { it.toModel() }
+        get<List<ProductGroupDto>>(connection, "objects", PRODUCT_GROUPS).map { it.toModel() }
+
+    suspend fun productGroup(connection: ServerConnection, id: Int): ProductGroup =
+        get<ProductGroupDto>(connection, "objects", PRODUCT_GROUPS, id.toString()).toModel()
+
+    /** Creates the group without id or updates it; returns its id. */
+    suspend fun saveProductGroup(connection: ServerConnection, group: ProductGroup): Int =
+        saveObject(connection, PRODUCT_GROUPS, group.id, group.toJson())
 
     suspend fun locations(connection: ServerConnection): List<Location> =
-        get<List<LocationDto>>(connection, "objects", "locations").map { it.toModel() }
+        get<List<LocationDto>>(connection, "objects", LOCATIONS).map { it.toModel() }
+
+    suspend fun location(connection: ServerConnection, id: Int): Location =
+        get<LocationDto>(connection, "objects", LOCATIONS, id.toString()).toModel()
+
+    suspend fun saveLocation(connection: ServerConnection, location: Location): Int =
+        saveObject(connection, LOCATIONS, location.id, location.toJson())
 
     suspend fun quantityUnits(connection: ServerConnection): List<QuantityUnit> =
-        get<List<QuantityUnitDto>>(connection, "objects", "quantity_units").map { it.toModel() }
+        get<List<QuantityUnitDto>>(connection, "objects", QUANTITY_UNITS).map { it.toModel() }
+
+    suspend fun quantityUnit(connection: ServerConnection, id: Int): QuantityUnit =
+        get<QuantityUnitDto>(connection, "objects", QUANTITY_UNITS, id.toString()).toModel()
+
+    suspend fun saveQuantityUnit(connection: ServerConnection, unit: QuantityUnit): Int =
+        saveObject(connection, QUANTITY_UNITS, unit.id, unit.toJson())
 
     suspend fun stores(connection: ServerConnection): List<Store> =
-        get<List<StoreDto>>(connection, "objects", "shopping_locations").map { it.toModel() }
+        get<List<StoreDto>>(connection, "objects", STORES).map { it.toModel() }
+
+    suspend fun store(connection: ServerConnection, id: Int): Store =
+        get<StoreDto>(connection, "objects", STORES, id.toString()).toModel()
+
+    suspend fun saveStore(connection: ServerConnection, store: Store): Int =
+        saveObject(connection, STORES, store.id, store.toJson())
+
+    suspend fun chores(connection: ServerConnection): List<Chore> =
+        get<List<ChoreDto>>(connection, "objects", CHORES).map { it.toModel() }
+
+    suspend fun chore(connection: ServerConnection, id: Int): Chore =
+        get<ChoreDto>(connection, "objects", CHORES, id.toString()).toModel()
+
+    /**
+     * Saves the chore and lets Grocy assign its next execution again, like its form does.
+     */
+    suspend fun saveChore(connection: ServerConnection, chore: Chore): Int {
+        val id = saveObject(connection, CHORES, chore.id, chore.toJson())
+        execute(
+            connection,
+            HttpMethod.Post,
+            listOf("chores", "executions", "calculate-next-assignments"),
+            body = jsonBody(buildJsonObject { put("chore_id", id) }),
+        )
+        return id
+    }
+
+    suspend fun batteries(connection: ServerConnection): List<Battery> =
+        get<List<BatteryDto>>(connection, "objects", BATTERIES).map { it.toModel() }
+
+    suspend fun battery(connection: ServerConnection, id: Int): Battery =
+        get<BatteryDto>(connection, "objects", BATTERIES, id.toString()).toModel()
+
+    suspend fun saveBattery(connection: ServerConnection, battery: Battery): Int =
+        saveObject(connection, BATTERIES, battery.id, battery.toJson())
+
+    suspend fun taskCategories(connection: ServerConnection): List<TaskCategory> =
+        get<List<TaskCategoryDto>>(connection, "objects", TASK_CATEGORIES).map { it.toModel() }
+
+    suspend fun taskCategory(connection: ServerConnection, id: Int): TaskCategory =
+        get<TaskCategoryDto>(connection, "objects", TASK_CATEGORIES, id.toString()).toModel()
+
+    suspend fun saveTaskCategory(connection: ServerConnection, category: TaskCategory): Int =
+        saveObject(connection, TASK_CATEGORIES, category.id, category.toJson())
+
+    suspend fun userentities(connection: ServerConnection): List<Userentity> =
+        get<List<UserentityDto>>(connection, "objects", USERENTITIES).map { it.toModel() }
+
+    suspend fun userentity(connection: ServerConnection, id: Int): Userentity =
+        get<UserentityDto>(connection, "objects", USERENTITIES, id.toString()).toModel()
+
+    suspend fun saveUserentity(connection: ServerConnection, userentity: Userentity): Int =
+        saveObject(connection, USERENTITIES, userentity.id, userentity.toJson())
+
+    /** All users; needs Grocy's permission to read users. */
+    suspend fun users(connection: ServerConnection): List<User> =
+        get<List<UserDto>>(connection, "users").map { it.toModel() }
 
     suspend fun productBarcodes(connection: ServerConnection): List<ProductBarcode> =
         get<List<ProductBarcodeDto>>(connection, "objects", "product_barcodes")
@@ -138,9 +224,41 @@ class GrocyApi(
         get<List<UserfieldDto>>(
             connection,
             "objects",
-            "userfields",
+            USERFIELDS,
             query = listOf("query[]" to "entity=$entity"),
         ).map { it.toModel() }
+
+    /** Definitions of the userfields of every entity. */
+    suspend fun allUserfields(connection: ServerConnection): List<Userfield> =
+        get<List<UserfieldDto>>(connection, "objects", USERFIELDS).map { it.toModel() }
+
+    suspend fun userfield(connection: ServerConnection, id: Int): Userfield =
+        get<UserfieldDto>(connection, "objects", USERFIELDS, id.toString()).toModel()
+
+    suspend fun saveUserfield(connection: ServerConnection, userfield: Userfield): Int =
+        saveObject(connection, USERFIELDS, userfield.id, userfield.toJson())
+
+    /** Creates an object of [entity] for [id] 0 (returning Grocy's new id) or updates it. */
+    private suspend fun saveObject(
+        connection: ServerConnection,
+        entity: String,
+        id: Int,
+        json: JsonObject,
+    ): Int {
+        if (id != NEW_OBJECT_ID) {
+            execute(
+                connection,
+                HttpMethod.Put,
+                listOf("objects", entity, id.toString()),
+                body = jsonBody(json),
+            )
+            return id
+        }
+        val response =
+            execute(connection, HttpMethod.Post, listOf("objects", entity), body = jsonBody(json))
+        return decode<CreatedObjectDto>(response).createdObjectId
+            ?: throw GrocyApiException.NotGrocyServer()
+    }
 
     /** Creates [product] (its id is ignored) and returns the id Grocy gave it. */
     suspend fun addProduct(connection: ServerConnection, product: Product): Int {
@@ -163,8 +281,45 @@ class GrocyApi(
         )
     }
 
-    suspend fun deleteProduct(connection: ServerConnection, id: Int) {
-        execute(connection, HttpMethod.Delete, listOf("objects", PRODUCTS, id.toString()))
+    /** Deletes the object [id] of [entity] (the name of Grocy's `objects` path). */
+    suspend fun deleteObject(connection: ServerConnection, entity: String, id: Int) {
+        execute(connection, HttpMethod.Delete, listOf("objects", entity, id.toString()))
+    }
+
+    /** Copies the product like Grocy's "Copy" (named "Copy of ...") and returns the copy's id. */
+    suspend fun copyProduct(connection: ServerConnection, id: Int): Int {
+        val response = execute(
+            connection,
+            HttpMethod.Post,
+            listOf("stock", PRODUCTS, id.toString(), "copy"),
+            body = jsonBody(JsonObject(emptyMap())),
+        )
+        return decode<CreatedObjectDto>(response).createdObjectId
+            ?: throw GrocyApiException.NotGrocyServer()
+    }
+
+    /** Replaces every use of product [removeId] by [keepId] and deletes [removeId]. */
+    suspend fun mergeProducts(connection: ServerConnection, keepId: Int, removeId: Int) {
+        merge(connection, listOf("stock", PRODUCTS), keepId, removeId)
+    }
+
+    /** Replaces every use of chore [removeId] by [keepId] and deletes [removeId]. */
+    suspend fun mergeChores(connection: ServerConnection, keepId: Int, removeId: Int) {
+        merge(connection, listOf(CHORES), keepId, removeId)
+    }
+
+    private suspend fun merge(
+        connection: ServerConnection,
+        path: List<String>,
+        keepId: Int,
+        removeId: Int,
+    ) {
+        execute(
+            connection,
+            HttpMethod.Post,
+            path + listOf(keepId.toString(), "merge", removeId.toString()),
+            body = jsonBody(JsonObject(emptyMap())),
+        )
     }
 
     /** Saves the userfield [values] by field name of one object of [entity]. */
@@ -321,7 +476,19 @@ class GrocyApi(
         /** Header name, and query parameter name where the header cannot be used. */
         const val API_KEY_HEADER = "GROCY-API-KEY"
 
+        /** Id of objects that do not exist on the server yet. */
+        const val NEW_OBJECT_ID = 0
+
         private const val PRODUCTS = "products"
+        private const val PRODUCT_GROUPS = "product_groups"
+        private const val LOCATIONS = "locations"
+        private const val QUANTITY_UNITS = "quantity_units"
+        private const val STORES = "shopping_locations"
+        private const val CHORES = "chores"
+        private const val BATTERIES = "batteries"
+        private const val TASK_CATEGORIES = "task_categories"
+        private const val USERENTITIES = "userentities"
+        private const val USERFIELDS = "userfields"
         private const val PRODUCT_PICTURES = "productpictures"
 
         private const val INGRESS_COOKIE = "ingress_session"

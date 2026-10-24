@@ -1,5 +1,10 @@
 package com.patrickzedler.grocy.core.database
 
+import com.patrickzedler.grocy.core.model.User
+import com.patrickzedler.grocy.core.model.masterdata.Battery
+import com.patrickzedler.grocy.core.model.masterdata.Chore
+import com.patrickzedler.grocy.core.model.masterdata.ChoreAssignmentType
+import com.patrickzedler.grocy.core.model.masterdata.ChorePeriodType
 import com.patrickzedler.grocy.core.model.masterdata.DueType
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
@@ -10,8 +15,11 @@ import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.StockLabelType
 import com.patrickzedler.grocy.core.model.masterdata.Store
+import com.patrickzedler.grocy.core.model.masterdata.TaskCategory
+import com.patrickzedler.grocy.core.model.masterdata.Userentity
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
 import com.patrickzedler.grocy.core.model.masterdata.UserfieldType
+import com.patrickzedler.grocy.core.model.masterdata.Weekday
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.builtins.nullable
@@ -58,7 +66,7 @@ fun Product.toEntity() = ProductEntity(
     hideOnStockOverview = hideOnStockOverview,
     noOwnStock = noOwnStock,
     pictureFileName = pictureFileName,
-    userfields = Json.encodeToString(userfieldValuesSerializer, userfields),
+    userfields = encodeUserfieldValues(userfields),
 )
 
 fun ProductEntity.toModel() = Product(
@@ -101,6 +109,9 @@ fun ProductEntity.toModel() = Product(
     userfields = decodeUserfieldValues(userfields),
 )
 
+private fun encodeUserfieldValues(values: Map<String, String?>): String =
+    Json.encodeToString(userfieldValuesSerializer, values)
+
 private fun decodeUserfieldValues(json: String): Map<String, String?> = try {
     Json.decodeFromString(userfieldValuesSerializer, json)
 } catch (_: SerializationException) {
@@ -109,21 +120,117 @@ private fun decodeUserfieldValues(json: String): Map<String, String?> = try {
     emptyMap()
 }
 
-fun ProductGroup.toEntity() = ProductGroupEntity(id, name, description, active)
+fun ProductGroup.toEntity() =
+    ProductGroupEntity(id, name, description, active, encodeUserfieldValues(userfields))
 
-fun ProductGroupEntity.toModel() = ProductGroup(id, name, description, active)
+fun ProductGroupEntity.toModel() =
+    ProductGroup(id, name, description, active, decodeUserfieldValues(userfields))
 
-fun Location.toEntity() = LocationEntity(id, name, description, isFreezer, active)
+fun Location.toEntity() =
+    LocationEntity(id, name, description, isFreezer, active, encodeUserfieldValues(userfields))
 
-fun LocationEntity.toModel() = Location(id, name, description, isFreezer, active)
+fun LocationEntity.toModel() =
+    Location(id, name, description, isFreezer, active, decodeUserfieldValues(userfields))
 
-fun QuantityUnit.toEntity() = QuantityUnitEntity(id, name, namePlural, description, active)
+fun QuantityUnit.toEntity() = QuantityUnitEntity(
+    id = id,
+    name = name,
+    namePlural = namePlural,
+    description = description,
+    active = active,
+    pluralForms = pluralForms,
+    userfields = encodeUserfieldValues(userfields),
+)
 
-fun QuantityUnitEntity.toModel() = QuantityUnit(id, name, namePlural, description, active)
+fun QuantityUnitEntity.toModel() = QuantityUnit(
+    id = id,
+    name = name,
+    namePlural = namePlural,
+    description = description,
+    active = active,
+    pluralForms = pluralForms,
+    userfields = decodeUserfieldValues(userfields),
+)
 
-fun Store.toEntity() = StoreEntity(id, name, description, active)
+fun Store.toEntity() = StoreEntity(id, name, description, active, encodeUserfieldValues(userfields))
 
-fun StoreEntity.toModel() = Store(id, name, description, active)
+fun StoreEntity.toModel() = Store(id, name, description, active, decodeUserfieldValues(userfields))
+
+fun Chore.toEntity() = ChoreEntity(
+    id = id,
+    name = name,
+    description = description,
+    active = active,
+    periodType = periodType.value,
+    periodDays = periodDays,
+    periodInterval = periodInterval,
+    weekdays = Weekday.format(weekdays),
+    startDate = startDate,
+    assignmentType = assignmentType.value,
+    assignedUserIds = assignedUserIds.joinToString(","),
+    trackDateOnly = trackDateOnly,
+    rollover = rollover,
+    consumeProductOnExecution = consumeProductOnExecution,
+    productId = productId,
+    productAmount = productAmount,
+    userfields = encodeUserfieldValues(userfields),
+)
+
+fun ChoreEntity.toModel() = Chore(
+    id = id,
+    name = name,
+    description = description,
+    active = active,
+    periodType = ChorePeriodType.of(periodType),
+    periodDays = periodDays,
+    periodInterval = periodInterval,
+    weekdays = Weekday.parse(weekdays),
+    startDate = startDate,
+    assignmentType = ChoreAssignmentType.of(assignmentType),
+    assignedUserIds = assignedUserIds.split(",").mapNotNull { it.toIntOrNull() },
+    trackDateOnly = trackDateOnly,
+    rollover = rollover,
+    consumeProductOnExecution = consumeProductOnExecution,
+    productId = productId,
+    productAmount = productAmount,
+    userfields = decodeUserfieldValues(userfields),
+)
+
+fun Battery.toEntity() = BatteryEntity(
+    id = id,
+    name = name,
+    description = description,
+    active = active,
+    usedIn = usedIn,
+    chargeIntervalDays = chargeIntervalDays,
+    userfields = encodeUserfieldValues(userfields),
+)
+
+fun BatteryEntity.toModel() = Battery(
+    id = id,
+    name = name,
+    description = description,
+    active = active,
+    usedIn = usedIn,
+    chargeIntervalDays = chargeIntervalDays,
+    userfields = decodeUserfieldValues(userfields),
+)
+
+fun TaskCategory.toEntity() =
+    TaskCategoryEntity(id, name, description, active, encodeUserfieldValues(userfields))
+
+fun TaskCategoryEntity.toModel() =
+    TaskCategory(id, name, description, active, decodeUserfieldValues(userfields))
+
+fun Userentity.toEntity() =
+    UserentityEntity(id, name, caption, description, showInSidebarMenu, iconCssClass)
+
+fun UserentityEntity.toModel() =
+    Userentity(id, name, caption, description, showInSidebarMenu, iconCssClass)
+
+fun User.toEntity() = UserEntity(id, username, displayName)
+
+fun UserEntity.toModel() = User(id, username, displayName)
 
 fun ProductBarcode.toEntity() =
     ProductBarcodeEntity(id, productId, barcode, quId, amount, storeId, lastPrice, note)

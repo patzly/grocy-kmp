@@ -8,6 +8,7 @@ kotlin {
         commonMain.dependencies {
             api(libs.jetbrains.navigation3.ui)
             implementation(projects.core.design)
+            implementation(libs.compose.material3.adaptive.navigation3)
             implementation(libs.jetbrains.lifecycle.viewmodel.navigation3)
             implementation(libs.jetbrains.navigationevent.compose)
             implementation(libs.kotlinx.serialization.json)

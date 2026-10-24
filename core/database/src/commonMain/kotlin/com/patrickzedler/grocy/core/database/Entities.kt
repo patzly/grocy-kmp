@@ -56,6 +56,8 @@ data class ProductGroupEntity(
     val name: String,
     val description: String?,
     val active: Boolean,
+    /** Userfield values by name as JSON object. */
+    @ColumnInfo(defaultValue = "{}") val userfields: String,
 )
 
 @Entity(tableName = "locations")
@@ -65,6 +67,8 @@ data class LocationEntity(
     val description: String?,
     @ColumnInfo(name = "is_freezer") val isFreezer: Boolean,
     val active: Boolean,
+    /** Userfield values by name as JSON object. */
+    @ColumnInfo(defaultValue = "{}") val userfields: String,
 )
 
 @Entity(tableName = "quantity_units")
@@ -74,6 +78,9 @@ data class QuantityUnitEntity(
     @ColumnInfo(name = "name_plural") val namePlural: String?,
     val description: String?,
     val active: Boolean,
+    @ColumnInfo(name = "plural_forms") val pluralForms: String?,
+    /** Userfield values by name as JSON object. */
+    @ColumnInfo(defaultValue = "{}") val userfields: String,
 )
 
 @Entity(tableName = "stores")
@@ -82,6 +89,8 @@ data class StoreEntity(
     val name: String,
     val description: String?,
     val active: Boolean,
+    /** Userfield values by name as JSON object. */
+    @ColumnInfo(defaultValue = "{}") val userfields: String,
 )
 
 @Entity(tableName = "product_barcodes")
@@ -116,6 +125,67 @@ data class UserfieldEntity(
     val options: String,
     @ColumnInfo(name = "default_value") val defaultValue: String?,
     @ColumnInfo(name = "sort_number") val sortNumber: Int?,
+)
+
+@Entity(tableName = "chores")
+data class ChoreEntity(
+    @PrimaryKey val id: Int,
+    val name: String,
+    val description: String?,
+    val active: Boolean,
+    @ColumnInfo(name = "period_type") val periodType: String,
+    @ColumnInfo(name = "period_days") val periodDays: Int,
+    @ColumnInfo(name = "period_interval") val periodInterval: Int,
+    /** Weekdays of weekly chores, comma separated like Grocy's `period_config`. */
+    val weekdays: String,
+    @ColumnInfo(name = "start_date") val startDate: String?,
+    @ColumnInfo(name = "assignment_type") val assignmentType: String,
+    /** User ids, comma separated like Grocy's `assignment_config`. */
+    @ColumnInfo(name = "assigned_user_ids") val assignedUserIds: String,
+    @ColumnInfo(name = "track_date_only") val trackDateOnly: Boolean,
+    val rollover: Boolean,
+    @ColumnInfo(name = "consume_product_on_execution") val consumeProductOnExecution: Boolean,
+    @ColumnInfo(name = "product_id") val productId: Int?,
+    @ColumnInfo(name = "product_amount") val productAmount: Double?,
+    val userfields: String,
+)
+
+@Entity(tableName = "batteries")
+data class BatteryEntity(
+    @PrimaryKey val id: Int,
+    val name: String,
+    val description: String?,
+    val active: Boolean,
+    @ColumnInfo(name = "used_in") val usedIn: String?,
+    @ColumnInfo(name = "charge_interval_days") val chargeIntervalDays: Int,
+    val userfields: String,
+)
+
+@Entity(tableName = "task_categories")
+data class TaskCategoryEntity(
+    @PrimaryKey val id: Int,
+    val name: String,
+    val description: String?,
+    val active: Boolean,
+    val userfields: String,
+)
+
+@Entity(tableName = "userentities")
+data class UserentityEntity(
+    @PrimaryKey val id: Int,
+    val name: String,
+    val caption: String,
+    val description: String?,
+    @ColumnInfo(name = "show_in_sidebar_menu") val showInSidebarMenu: Boolean,
+    @ColumnInfo(name = "icon_css_class") val iconCssClass: String?,
+)
+
+/** The server's users, e.g. to assign chores to. */
+@Entity(tableName = "users")
+data class UserEntity(
+    @PrimaryKey val id: Int,
+    val username: String,
+    @ColumnInfo(name = "display_name") val displayName: String,
 )
 
 /** Small values of the server as JSON, e.g. its feature flags and the user settings. */

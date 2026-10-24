@@ -32,23 +32,30 @@ class AppMenu internal constructor(
 /**
  * Settings, About, Help and Send feedback: the overflow menu of every screen except About and
  * the settings, which have their own. Pass [AppMenu.items] to the screen's app bar and show
- * [AppMenuDialogs] for Help and feedback.
+ * [AppMenuDialogs] for Help and feedback. Without [onSettingsClick] and [onAboutClick] only Help
+ * and Send feedback remain, e.g. for forms, whose menu is about their object.
  */
 @Composable
-fun rememberAppMenu(onSettingsClick: () -> Unit, onAboutClick: () -> Unit): AppMenu {
+fun rememberAppMenu(
+    onSettingsClick: (() -> Unit)? = null,
+    onAboutClick: (() -> Unit)? = null,
+): AppMenu {
     // Saveable, so an open dialog survives rotating the device
     val dialog = rememberSaveable { mutableStateOf<AppDialog?>(null) }
     val currentOnSettingsClick by rememberUpdatedState(onSettingsClick)
     val currentOnAboutClick by rememberUpdatedState(onAboutClick)
+    val hasSettings = onSettingsClick != null
+    val hasAbout = onAboutClick != null
     val settings = stringResource(Res.string.title_settings)
     val about = stringResource(Res.string.title_about)
     val help = stringResource(Res.string.title_help)
     val feedback = stringResource(Res.string.action_send_feedback)
-    return remember(dialog, settings, about, help, feedback) {
+    return remember(dialog, hasSettings, hasAbout, settings, about, help, feedback) {
         AppMenu(
-            items = listOf(
-                AppBarMenuItem(settings) { currentOnSettingsClick() },
-                AppBarMenuItem(about) { currentOnAboutClick() },
+            items = listOfNotNull(
+                AppBarMenuItem(settings) { currentOnSettingsClick?.invoke() }
+                    .takeIf { hasSettings },
+                AppBarMenuItem(about) { currentOnAboutClick?.invoke() }.takeIf { hasAbout },
                 AppBarMenuItem(help) { dialog.value = AppDialog.HELP },
                 AppBarMenuItem(feedback) { dialog.value = AppDialog.FEEDBACK },
             ),

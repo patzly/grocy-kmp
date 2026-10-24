@@ -1,5 +1,9 @@
 package com.patrickzedler.grocy.core.network.dto
 
+import com.patrickzedler.grocy.core.model.masterdata.Battery
+import com.patrickzedler.grocy.core.model.masterdata.Chore
+import com.patrickzedler.grocy.core.model.masterdata.ChoreAssignmentType
+import com.patrickzedler.grocy.core.model.masterdata.ChorePeriodType
 import com.patrickzedler.grocy.core.model.masterdata.DueType
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.PriceHistoryEntry
@@ -12,8 +16,11 @@ import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.StockLabelType
 import com.patrickzedler.grocy.core.model.masterdata.Store
+import com.patrickzedler.grocy.core.model.masterdata.TaskCategory
+import com.patrickzedler.grocy.core.model.masterdata.Userentity
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
 import com.patrickzedler.grocy.core.model.masterdata.UserfieldType
+import com.patrickzedler.grocy.core.model.masterdata.Weekday
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
@@ -111,7 +118,6 @@ internal data class ProductDto(
  * sends them. Userfields are saved separately.
  */
 internal fun Product.toJson(): JsonObject = buildJsonObject {
-    fun flag(value: Boolean) = JsonPrimitive(if (value) 1 else 0)
     put("name", name)
     put("description", description.orEmpty())
     put("active", flag(active))
@@ -155,8 +161,15 @@ internal data class ProductGroupDto(
     val name: String,
     val description: FlexString = null,
     val active: FlexBoolean = null,
+    val userfields: Map<String, FlexString>? = null,
 ) {
-    fun toModel() = ProductGroup(id, name, description, active ?: true)
+    fun toModel() = ProductGroup(id, name, description, active ?: true, userfields.orEmpty())
+}
+
+internal fun ProductGroup.toJson(): JsonObject = buildJsonObject {
+    put("name", name)
+    put("description", description.orEmpty())
+    put("active", flag(active))
 }
 
 @Serializable
@@ -166,8 +179,17 @@ internal data class LocationDto(
     val description: FlexString = null,
     @SerialName("is_freezer") val isFreezer: FlexBoolean = null,
     val active: FlexBoolean = null,
+    val userfields: Map<String, FlexString>? = null,
 ) {
-    fun toModel() = Location(id, name, description, isFreezer ?: false, active ?: true)
+    fun toModel() =
+        Location(id, name, description, isFreezer ?: false, active ?: true, userfields.orEmpty())
+}
+
+internal fun Location.toJson(): JsonObject = buildJsonObject {
+    put("name", name)
+    put("description", description.orEmpty())
+    put("is_freezer", flag(isFreezer))
+    put("active", flag(active))
 }
 
 @Serializable
@@ -177,8 +199,26 @@ internal data class QuantityUnitDto(
     @SerialName("name_plural") val namePlural: FlexString = null,
     val description: FlexString = null,
     val active: FlexBoolean = null,
+    @SerialName("plural_forms") val pluralForms: FlexString = null,
+    val userfields: Map<String, FlexString>? = null,
 ) {
-    fun toModel() = QuantityUnit(id, name, namePlural, description, active ?: true)
+    fun toModel() = QuantityUnit(
+        id = id,
+        name = name,
+        namePlural = namePlural,
+        description = description,
+        active = active ?: true,
+        pluralForms = pluralForms,
+        userfields = userfields.orEmpty(),
+    )
+}
+
+internal fun QuantityUnit.toJson(): JsonObject = buildJsonObject {
+    put("name", name)
+    put("name_plural", namePlural.orEmpty())
+    put("plural_forms", pluralForms)
+    put("description", description.orEmpty())
+    put("active", flag(active))
 }
 
 @Serializable
@@ -187,9 +227,156 @@ internal data class StoreDto(
     val name: String,
     val description: FlexString = null,
     val active: FlexBoolean = null,
+    val userfields: Map<String, FlexString>? = null,
 ) {
-    fun toModel() = Store(id, name, description, active ?: true)
+    fun toModel() = Store(id, name, description, active ?: true, userfields.orEmpty())
 }
+
+internal fun Store.toJson(): JsonObject = buildJsonObject {
+    put("name", name)
+    put("description", description.orEmpty())
+    put("active", flag(active))
+}
+
+@Serializable
+internal data class ChoreDto(
+    val id: Int,
+    val name: String,
+    val description: FlexString = null,
+    val active: FlexBoolean = null,
+    @SerialName("period_type") val periodType: FlexString = null,
+    @SerialName("period_days") val periodDays: FlexInt = null,
+    @SerialName("period_interval") val periodInterval: FlexInt = null,
+    @SerialName("period_config") val periodConfig: FlexString = null,
+    @SerialName("start_date") val startDate: FlexString = null,
+    @SerialName("assignment_type") val assignmentType: FlexString = null,
+    @SerialName("assignment_config") val assignmentConfig: FlexString = null,
+    @SerialName("track_date_only") val trackDateOnly: FlexBoolean = null,
+    val rollover: FlexBoolean = null,
+    @SerialName("consume_product_on_execution") val consumeProductOnExecution: FlexBoolean = null,
+    @SerialName("product_id") val productId: FlexInt = null,
+    @SerialName("product_amount") val productAmount: FlexDouble = null,
+    val userfields: Map<String, FlexString>? = null,
+) {
+    fun toModel() = Chore(
+        id = id,
+        name = name,
+        description = description,
+        active = active ?: true,
+        periodType = ChorePeriodType.of(periodType),
+        periodDays = periodDays ?: 0,
+        periodInterval = periodInterval ?: 1,
+        weekdays = Weekday.parse(periodConfig),
+        startDate = startDate,
+        assignmentType = ChoreAssignmentType.of(assignmentType),
+        assignedUserIds = assignmentConfig.orEmpty().split(",")
+            .mapNotNull { it.trim().toIntOrNull() },
+        trackDateOnly = trackDateOnly ?: false,
+        rollover = rollover ?: false,
+        consumeProductOnExecution = consumeProductOnExecution ?: false,
+        productId = productId,
+        productAmount = productAmount,
+        userfields = userfields.orEmpty(),
+    )
+}
+
+/** Like Grocy's form: the weekdays only for weekly chores, the product only when consumed. */
+internal fun Chore.toJson(): JsonObject = buildJsonObject {
+    put("name", name)
+    put("description", description.orEmpty())
+    put("active", flag(active))
+    put("period_type", periodType.value)
+    put("period_days", periodDays)
+    put("period_interval", periodInterval)
+    put(
+        "period_config",
+        if (periodType == ChorePeriodType.WEEKLY) Weekday.format(weekdays) else "",
+    )
+    put("start_date", startDate)
+    put("assignment_type", assignmentType.value)
+    put("assignment_config", assignedUserIds.joinToString(","))
+    put("track_date_only", flag(trackDateOnly))
+    put("rollover", flag(rollover))
+    put("consume_product_on_execution", flag(consumeProductOnExecution))
+    put("product_id", productId)
+    put("product_amount", productAmount)
+}
+
+@Serializable
+internal data class BatteryDto(
+    val id: Int,
+    val name: String,
+    val description: FlexString = null,
+    val active: FlexBoolean = null,
+    @SerialName("used_in") val usedIn: FlexString = null,
+    @SerialName("charge_interval_days") val chargeIntervalDays: FlexInt = null,
+    val userfields: Map<String, FlexString>? = null,
+) {
+    fun toModel() = Battery(
+        id = id,
+        name = name,
+        description = description,
+        active = active ?: true,
+        usedIn = usedIn,
+        chargeIntervalDays = chargeIntervalDays ?: 0,
+        userfields = userfields.orEmpty(),
+    )
+}
+
+internal fun Battery.toJson(): JsonObject = buildJsonObject {
+    put("name", name)
+    put("description", description.orEmpty())
+    put("active", flag(active))
+    put("used_in", usedIn.orEmpty())
+    put("charge_interval_days", chargeIntervalDays)
+}
+
+@Serializable
+internal data class TaskCategoryDto(
+    val id: Int,
+    val name: String,
+    val description: FlexString = null,
+    val active: FlexBoolean = null,
+    val userfields: Map<String, FlexString>? = null,
+) {
+    fun toModel() = TaskCategory(id, name, description, active ?: true, userfields.orEmpty())
+}
+
+internal fun TaskCategory.toJson(): JsonObject = buildJsonObject {
+    put("name", name)
+    put("description", description.orEmpty())
+    put("active", flag(active))
+}
+
+@Serializable
+internal data class UserentityDto(
+    val id: Int,
+    val name: String,
+    val caption: FlexString = null,
+    val description: FlexString = null,
+    @SerialName("show_in_sidebar_menu") val showInSidebarMenu: FlexBoolean = null,
+    @SerialName("icon_css_class") val iconCssClass: FlexString = null,
+) {
+    fun toModel() = Userentity(
+        id = id,
+        name = name,
+        caption = caption?.takeIf { it.isNotBlank() } ?: name,
+        description = description,
+        showInSidebarMenu = showInSidebarMenu ?: false,
+        iconCssClass = iconCssClass,
+    )
+}
+
+internal fun Userentity.toJson(): JsonObject = buildJsonObject {
+    put("name", name)
+    put("caption", caption)
+    put("description", description.orEmpty())
+    put("show_in_sidebar_menu", flag(showInSidebarMenu))
+    put("icon_css_class", iconCssClass.orEmpty())
+}
+
+/** Flags as 0 and 1, like Grocy's web frontend sends them. */
+private fun flag(value: Boolean) = JsonPrimitive(if (value) 1 else 0)
 
 @Serializable
 internal data class ProductBarcodeDto(
@@ -243,6 +430,19 @@ internal data class UserfieldDto(
         defaultValue = defaultValue,
         sortNumber = sortNumber,
     )
+}
+
+/** The definition as Grocy's userfield form sends it; options are its configuration lines. */
+internal fun Userfield.toJson(): JsonObject = buildJsonObject {
+    put("entity", entity)
+    put("name", name)
+    put("caption", caption)
+    put("type", type.value)
+    put("show_as_column_in_tables", flag(showAsColumnInTables))
+    put("input_required", flag(inputRequired))
+    put("config", options.joinToString("\n"))
+    put("default_value", defaultValue.orEmpty())
+    put("sort_number", sortNumber)
 }
 
 @Serializable

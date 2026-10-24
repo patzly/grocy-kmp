@@ -7,6 +7,8 @@ package com.patrickzedler.grocy.core.testing
  *   cheese (3, disabled, Dairy), Yoghurt (4, sub product of Milk, Fridge)
  * - quantity units Piece (1) and Pack (2), store Supermarket (1), barcode 4006381333931 of Milk
  * - the product overview of Milk with two purchase prices
+ * - chores Vacuum (1, weekly, assigned to Alice) and Old chore (2, disabled), battery Remote
+ *   (1), task category Garden (1), userentity Books (1), users Alice (1) and Bob (2)
  */
 object MasterDataJson {
 
@@ -43,6 +45,28 @@ object MasterDataJson {
 
     const val STORES = """[{"id":1,"name":"Supermarket","active":1}]"""
 
+    const val CHORES =
+        """[{"id":1,"name":"Vacuum","description":"Living room","active":1,""" +
+            """"period_type":"weekly","period_days":"0","period_interval":"2",""" +
+            """"period_config":"monday,friday","start_date":"2026-01-01 08:00:00",""" +
+            """"assignment_type":"in-alphabetical-order","assignment_config":"1",""" +
+            """"track_date_only":"0","rollover":0,"consume_product_on_execution":0,""" +
+            """"userfields":{"room":"Living room"}},""" +
+            """{"id":2,"name":"Old chore","active":0,"period_type":"manually"}]"""
+
+    const val BATTERIES =
+        """[{"id":1,"name":"Remote","used_in":"Living room","charge_interval_days":"30",""" +
+            """"active":1}]"""
+
+    const val TASK_CATEGORIES = """[{"id":1,"name":"Garden","active":"1"}]"""
+
+    const val USERENTITIES =
+        """[{"id":1,"name":"books","caption":"Books","show_in_sidebar_menu":1}]"""
+
+    const val USERS =
+        """[{"id":1,"username":"alice","display_name":"Alice"},""" +
+            """{"id":2,"username":"bob","display_name":"Bob"}]"""
+
     const val PRODUCT_BARCODES =
         """[{"id":1,"product_id":1,"barcode":"4006381333931","qu_id":2,"amount":"1"}]"""
 
@@ -50,7 +74,9 @@ object MasterDataJson {
 
     const val USERFIELDS =
         """[{"id":1,"entity":"products","name":"brand","caption":"Brand",""" +
-            """"type":"text-single-line","show_as_column_in_tables":1}]"""
+            """"type":"text-single-line","show_as_column_in_tables":1},""" +
+            """{"id":2,"entity":"chores","name":"room","caption":"Room",""" +
+            """"type":"text-single-line","sort_number":"1"}]"""
 
     const val SERVER_CONFIG =
         """{"FEATURE_FLAG_STOCK":true,"FEATURE_FLAG_STOCK_PRICE_TRACKING":true,""" +
@@ -83,6 +109,11 @@ object MasterDataJson {
         "/api/objects/shopping_locations" to STORES,
         "/api/objects/product_barcodes" to PRODUCT_BARCODES,
         "/api/stock" to STOCK,
+        "/api/objects/chores" to CHORES,
+        "/api/objects/batteries" to BATTERIES,
+        "/api/objects/task_categories" to TASK_CATEGORIES,
+        "/api/objects/userentities" to USERENTITIES,
+        "/api/users" to USERS,
         "/api/objects/userfields" to USERFIELDS,
         "/api/system/config" to SERVER_CONFIG,
         "/api/user/settings" to USER_SETTINGS,

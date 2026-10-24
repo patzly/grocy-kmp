@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.core.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.navigation3.runtime.NavBackStack
@@ -19,6 +20,10 @@ class Navigator internal constructor(
     internal val backStackCodec: BackStackCodec? = null,
 ) {
 
+    /** The route on top, e.g. the detail shown beside its list. */
+    val currentRoute: NavKey
+        get() = backStack.last()
+
     fun navigate(route: Route) {
         backStack.add(route)
     }
@@ -27,6 +32,51 @@ class Navigator internal constructor(
         if (backStack.size > 1) {
             backStack.removeAt(backStack.lastIndex)
         }
+    }
+
+    // Asked before an entry with unsaved changes is replaced or removed from below
+    private val leaveGuards = mutableMapOf<NavKey, LeaveGuard>()
+
+    /**
+     * Shows [route] as detail of the list on top: replaces the detail shown beside the list,
+     * otherwise opens it. A replaced detail with unsaved changes is asked first.
+     */
+    fun openDetail(route: DetailRoute) {
+        val current = backStack.last()
+        if (current !is DetailRoute) {
+            backStack.add(route)
+        } else if (current != route) {
+            guarded(current) { backStack[backStack.lastIndexOf(current)] = route }
+        }
+    }
+
+    /**
+     * Leaves [route] and everything opened on top of it, e.g. a list with its detail beside it;
+     * entries with unsaved changes on top are asked first.
+     */
+    fun goBack(from: Route) {
+        val index = backStack.lastIndexOf(from)
+        if (index < 1) return
+        val removed = backStack.subList(index, backStack.size).toList()
+        val guarded = removed.lastOrNull { it in leaveGuards }
+        val leave = {
+            val start = backStack.lastIndexOf(from)
+            if (start >= 1) backStack.subList(start, backStack.size).clear()
+        }
+        if (guarded == null) leave() else guarded(guarded, leave)
+    }
+
+    private fun guarded(route: NavKey, leave: () -> Unit) {
+        val guard = leaveGuards[route]?.onLeaveRequest
+        if (guard == null) leave() else guard(leave)
+    }
+
+    internal fun register(route: NavKey, guard: LeaveGuard) {
+        leaveGuards[route] = guard
+    }
+
+    internal fun unregister(route: NavKey, guard: LeaveGuard) {
+        if (leaveGuards[route] === guard) leaveGuards.remove(route)
     }
 
     /**
@@ -65,3 +115,24 @@ fun rememberNavigator(
 
 /** The back stack the browser history kept for the current page, null on Android. */
 internal expect fun restoredBackStack(codec: BackStackCodec): List<NavKey>?
+
+/**
+ * Lets the screen of a route ask before the navigator leaves it from elsewhere, e.g. when
+ * another item of the list beside it is chosen. While [onLeaveRequest] is set, leaving calls it
+ * with the leave action instead; the screen runs it once the user agrees.
+ */
+@Stable
+class LeaveGuard {
+    var onLeaveRequest: ((leave: () -> Unit) -> Unit)? = null
+}
+
+/** A [LeaveGuard] for [route], registered while the route's content is shown. */
+@Composable
+fun Navigator.rememberLeaveGuard(route: NavKey): LeaveGuard {
+    val guard = remember(route) { LeaveGuard() }
+    DisposableEffect(this, route, guard) {
+        register(route, guard)
+        onDispose { unregister(route, guard) }
+    }
+    return guard
+}

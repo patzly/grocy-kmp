@@ -25,6 +25,7 @@ import com.patrickzedler.grocy.core.design.component.SearchableDropdownField
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
 import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.resources.data_datetime_invalid
 import com.patrickzedler.grocy.core.resources.data_none
 import com.patrickzedler.grocy.core.resources.data_number_invalid
 import org.jetbrains.compose.resources.StringResource
@@ -48,6 +49,7 @@ internal fun fieldErrorText(error: FieldError?, requiredMessage: StringResource?
         FieldError.Required -> requiredMessage?.let { stringResource(it) }
         is FieldError.InvalidNumber ->
             stringResource(Res.string.data_number_invalid, error.min, error.decimals.toString())
+        FieldError.InvalidDateTime -> stringResource(Res.string.data_datetime_invalid)
     }
 
 @Composable
@@ -63,6 +65,7 @@ internal fun TextItem(
     enabled: Boolean = true,
     keyboardType: KeyboardType = KeyboardType.Text,
     multiLine: Boolean = false,
+    trailingAction: (@Composable () -> Unit)? = null,
 ) {
     SegmentedContainer(index = index, count = count, modifier = modifier) {
         RoundedTextField(
@@ -70,6 +73,7 @@ internal fun TextItem(
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             label = { Text(label) },
+            trailingIcon = trailingAction,
             suffix = suffix?.let { { Text(it) } },
             supportingText = error?.let { text ->
                 {

@@ -72,6 +72,9 @@ internal sealed interface FieldError {
 
     /** Grocy's number message: at least [min], at most [decimals] decimal places. */
     data class InvalidNumber(val min: String, val decimals: Int) : FieldError
+
+    /** Not a date and time as "YYYY-MM-DD HH:MM:SS". */
+    data object InvalidDateTime : FieldError
 }
 
 /** Which parts of the form the server's features show, like Grocy's feature flags. */

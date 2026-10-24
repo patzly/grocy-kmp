@@ -72,7 +72,10 @@ import org.jetbrains.compose.resources.stringResource
  * The list shrinks with the keyboard, so a focused text field always stays above it.
  *
  * [navigationIcon] is usually a [NavigateBackButton], [actions] are [AppBarIconButton]s,
- * [menuItems] go into the overflow menu at the end of the bar.
+ * [menuItems] go into the overflow menu at the end of the bar, after [actionMenuItems] (the
+ * actions on the screen's object) as a group of their own.
+ * [isBesideList]: the screen is the detail pane beside its list, so it takes the list's small
+ * bar in its color, which lines both bars up.
  * [floatingToolbar] (a [FloatingToolbarWithFab]) floats above the bottom edge and hides while
  * the list scrolls down; the list ends above it. It must apply the given modifier itself: the
  * scroll behavior measures how far to move it within the screen high box it is placed in.
@@ -90,6 +93,8 @@ fun SegmentedListScreen(
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     menuItems: List<AppBarMenuItem> = emptyList(),
+    actionMenuItems: List<AppBarMenuItem> = emptyList(),
+    isBesideList: Boolean = false,
     listState: LazyListState = rememberLazyListState(),
     snackbarHostState: SnackbarHostState? = null,
     floatingToolbar: (@Composable (FloatingToolbarScrollBehavior, Modifier) -> Unit)? = null,
@@ -101,7 +106,7 @@ fun SegmentedListScreen(
     val isRefreshable = onRefresh != null
     val usesMouse = LocalPointerKind.current.usesMouse
     // A mouse wheel has no gesture end the large bar could settle on, it stayed half collapsed
-    val isSmallBar = isRefreshable || usesMouse
+    val isSmallBar = isRefreshable || usesMouse || isBesideList
     val scrollBehavior = if (isSmallBar) {
         TopAppBarDefaults.pinnedScrollBehavior(listState)
     } else {
@@ -111,7 +116,7 @@ fun SegmentedListScreen(
         exitDirection = FloatingToolbarExitDirection.Bottom,
     )
     val scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
-    val containerColor = if (isRefreshable) {
+    val containerColor = if (isRefreshable || isBesideList) {
         scrolledContainerColor
     } else {
         MaterialTheme.colorScheme.surfaceContainer
@@ -192,7 +197,7 @@ fun SegmentedListScreen(
                 } else {
                     emptyList()
                 }
-                AppBarOverflowMenu(groups = listOf(reloadItems, menuItems))
+                AppBarOverflowMenu(groups = listOf(reloadItems, actionMenuItems, menuItems))
             }
             val colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = containerColor,

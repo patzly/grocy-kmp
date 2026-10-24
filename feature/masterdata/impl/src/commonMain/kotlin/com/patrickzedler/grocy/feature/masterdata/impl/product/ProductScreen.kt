@@ -2,17 +2,12 @@
 
 package com.patrickzedler.grocy.feature.masterdata.impl.product
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItemDefaults
@@ -22,6 +17,7 @@ import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,19 +37,15 @@ import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import com.patrickzedler.grocy.core.data.masterdata.PictureChange
-import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
-import com.patrickzedler.grocy.core.design.component.RoundedTextField
-import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
-import com.patrickzedler.grocy.core.design.component.SegmentedTexts
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.insetItem
@@ -65,14 +57,10 @@ import com.patrickzedler.grocy.core.model.masterdata.PurchasePriceType
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.StockLabelType
 import com.patrickzedler.grocy.core.model.masterdata.Store
-import com.patrickzedler.grocy.core.model.masterdata.UserfieldType
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_close_scanner
 import com.patrickzedler.grocy.core.resources.action_save
 import com.patrickzedler.grocy.core.resources.action_scan_barcode
-import com.patrickzedler.grocy.core.resources.data_date_invalid
-import com.patrickzedler.grocy.core.resources.data_datetime_invalid
-import com.patrickzedler.grocy.core.resources.data_number_invalid
 import com.patrickzedler.grocy.core.resources.data_save_failed
 import com.patrickzedler.grocy.core.resources.data_save_failed_details
 import com.patrickzedler.grocy.core.resources.data_save_offline
@@ -178,12 +166,12 @@ import com.patrickzedler.grocy.core.resources.product_tare_weight_handling
 import com.patrickzedler.grocy.core.resources.product_tare_weight_handling_hint
 import com.patrickzedler.grocy.core.resources.product_treat_opened_as_out_of_stock
 import com.patrickzedler.grocy.core.resources.product_treat_opened_as_out_of_stock_hint
-import com.patrickzedler.grocy.core.resources.product_userfield_file
-import com.patrickzedler.grocy.core.resources.product_userfield_link
-import com.patrickzedler.grocy.core.resources.product_userfield_required
-import com.patrickzedler.grocy.core.resources.product_userfield_title
 import com.patrickzedler.grocy.core.resources.product_userfields
 import com.patrickzedler.grocy.core.scanner.BarcodeScanner
+import com.patrickzedler.grocy.feature.masterdata.impl.objects.FormFrame
+import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectActionEvent
+import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectActionsHost
+import com.patrickzedler.grocy.feature.masterdata.impl.objects.objectActionItems
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
@@ -192,43 +180,72 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun ProductScreen(
-    menuItems: List<AppBarMenuItem>,
     viewModel: ProductViewModel,
-    onBackClick: () -> Unit,
+    frame: FormFrame,
     modifier: Modifier = Modifier,
 ) {
+    val onBackClick = frame.onBackClick
+    val leaveGuard = frame.leaveGuard
     val options by viewModel.options.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     var showPictureDialog by rememberSaveable { mutableStateOf(false) }
     // Saveable, so the question and the pending leave survive rotating the device
     var showUnsavedDialog by rememberSaveable { mutableStateOf(false) }
     var leaveAfterSave by rememberSaveable { mutableStateOf(false) }
+    // Choosing another product of the list beside the form leaves differently than back
+    var pendingLeave by remember { mutableStateOf<(() -> Unit)?>(null) }
     val currentOnBackClick by rememberUpdatedState(onBackClick)
+    val leave = { (pendingLeave ?: currentOnBackClick)() }
     val requestBack = {
+        pendingLeave = null
         if (viewModel.hasUnsavedChanges) showUnsavedDialog = true else onBackClick()
     }
 
+    DisposableEffect(leaveGuard, viewModel) {
+        leaveGuard.onLeaveRequest = { action ->
+            if (viewModel.hasUnsavedChanges) {
+                pendingLeave = action
+                showUnsavedDialog = true
+            } else {
+                action()
+            }
+        }
+        onDispose { leaveGuard.onLeaveRequest = null }
+    }
     // The back gesture and the browser's back ask too
     NavigationBackHandler(
         state = rememberNavigationEventState(NavigationEventInfo.None),
         isBackEnabled = viewModel.hasUnsavedChanges && !viewModel.isSaving,
-        onBackCompleted = { showUnsavedDialog = true },
+        onBackCompleted = {
+            pendingLeave = null
+            showUnsavedDialog = true
+        },
     )
     if (showUnsavedDialog) {
         UnsavedChangesDialog(
             onSave = { leaveAfterSave = viewModel.save() },
-            onDiscard = onBackClick,
+            onDiscard = leave,
             onDismissRequest = { showUnsavedDialog = false },
         )
     }
 
+    ObjectActionsHost(frame.objectActions, snackbarHostState) { event ->
+        val id = viewModel.productId
+        val isGone = event is ObjectActionEvent.Deleted && event.id == id ||
+            event is ObjectActionEvent.Merged && event.removeId == id
+        // Its changes went with it, nothing to ask
+        if (isGone) onBackClick()
+        frame.onActionDone(event)
+    }
+
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
-            if (event !is ProductEvent.Created) leaveAfterSave = false
+            val leaving = leaveAfterSave
+            leaveAfterSave = false
             when (event) {
-                ProductEvent.Saved -> currentOnBackClick()
-                ProductEvent.Created -> if (leaveAfterSave) {
-                    currentOnBackClick()
+                ProductEvent.Saved -> leave()
+                ProductEvent.Created -> if (leaving) {
+                    leave()
                 } else {
                     snackbarHostState.showSnackbar(getString(Res.string.data_saved))
                 }
@@ -251,8 +268,17 @@ internal fun ProductScreen(
             if (viewModel.isNew) Res.string.product_create else Res.string.product_edit,
         ),
         modifier = modifier,
-        navigationIcon = { NavigateBackButton(onClick = requestBack) },
-        menuItems = menuItems,
+        navigationIcon = {
+            // Beside the list its own back button leaves both
+            if (!frame.isBesideList) NavigateBackButton(onClick = requestBack)
+        },
+        menuItems = frame.menuItems,
+        actionMenuItems = if (viewModel.isNew) {
+            emptyList()
+        } else {
+            objectActionItems(frame.objectActions, viewModel.productId)
+        },
+        isBesideList = frame.isBesideList,
         snackbarHostState = snackbarHostState,
         floatingToolbar = { scrollBehavior, toolbarModifier ->
             FloatingToolbarWithFab(
@@ -1025,115 +1051,7 @@ private fun MoreItems(
 }
 
 @Composable
-private fun UserfieldItem(
-    input: UserfieldInput,
-    error: UserfieldError?,
-    index: Int,
-    count: Int,
-) {
-    val haptic = LocalHapticFeedback.current
-    val field = input.userfield
-    val errorText = when (error) {
-        null -> null
-        UserfieldError.REQUIRED -> stringResource(Res.string.product_userfield_required)
-        UserfieldError.INVALID_NUMBER -> stringResource(Res.string.data_number_invalid, "0", "4")
-        UserfieldError.INVALID_DATE -> stringResource(Res.string.data_date_invalid)
-        UserfieldError.INVALID_DATETIME -> stringResource(Res.string.data_datetime_invalid)
-    }
-    when (field.type) {
-        UserfieldType.CHECKBOX -> SegmentedSwitchItem(
-            headline = field.caption,
-            supporting = errorText,
-            checked = input.checked,
-            onCheckedChange = { input.checked = it },
-            index = index,
-            count = count,
-        )
-
-        UserfieldType.PRESET_LIST -> DropdownItem(
-            label = field.caption,
-            options = field.options.mapIndexed { optionIndex, option ->
-                DropdownOption(optionIndex, option)
-            },
-            selectedId = field.options.indexOf(input.selectedOption).takeIf { it >= 0 },
-            onSelectedIdChange = { id -> input.selectedOption = id?.let { field.options[it] } },
-            onUnmatchedChange = { input.isUnmatched = it },
-            error = errorText,
-            optional = true,
-            index = index,
-            count = count,
-        )
-
-        UserfieldType.PRESET_CHECKLIST -> SegmentedContainer(index = index, count = count) {
-            SegmentedTexts(headline = field.caption, supporting = errorText)
-            Spacer(Modifier.height(8.dp))
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                field.options.forEach { option ->
-                    val selected = option in input.checklist
-                    FilterChip(
-                        selected = selected,
-                        modifier = Modifier.clickCursor(),
-                        onClick = {
-                            haptic.confirm()
-                            input.checklist = if (selected) {
-                                input.checklist - option
-                            } else {
-                                input.checklist + option
-                            }
-                        },
-                        label = { Text(option) },
-                    )
-                }
-            }
-        }
-
-        UserfieldType.LINK_WITH_TITLE -> SegmentedContainer(index = index, count = count) {
-            SegmentedTexts(headline = field.caption, supporting = errorText)
-            Spacer(Modifier.height(8.dp))
-            RoundedTextField(
-                state = input.title,
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(stringResource(Res.string.product_userfield_title)) },
-            )
-            Spacer(Modifier.height(8.dp))
-            RoundedTextField(
-                state = input.link,
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(stringResource(Res.string.product_userfield_link)) },
-            )
-        }
-
-        UserfieldType.FILE, UserfieldType.IMAGE -> SegmentedContainer(index, count) {
-            SegmentedTexts(
-                headline = field.caption,
-                supporting = stringResource(Res.string.product_userfield_file),
-            )
-        }
-
-        else -> TextItem(
-            state = input.text,
-            label = field.caption,
-            error = errorText,
-            hint = when (field.type) {
-                UserfieldType.DATE -> "YYYY-MM-DD"
-                UserfieldType.DATETIME -> "YYYY-MM-DD HH:MM:SS"
-                else -> null
-            },
-            keyboardType = when (field.type) {
-                UserfieldType.NUMBER_INTEGRAL -> KeyboardType.Number
-                UserfieldType.NUMBER_DECIMAL, UserfieldType.NUMBER_CURRENCY -> KeyboardType.Decimal
-                UserfieldType.LINK -> KeyboardType.Uri
-                else -> KeyboardType.Text
-            },
-            multiLine = field.type == UserfieldType.TEXT_MULTI_LINE,
-            index = index,
-            count = count,
-        )
-    }
-}
-
-@Composable
-private fun NavigationItem(
+internal fun NavigationItem(
     text: String,
     supporting: String?,
     iconPainter: Painter,

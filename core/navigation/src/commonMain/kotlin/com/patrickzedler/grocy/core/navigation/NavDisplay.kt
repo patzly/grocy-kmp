@@ -78,6 +78,8 @@ fun GrocyNavDisplay(
             // Scopes each ViewModel to its entry, cleared when the entry leaves the back stack
             rememberViewModelStoreNavEntryDecorator(),
         ),
+        // Lists and their details side by side where the window is wide enough
+        sceneStrategies = listOf(rememberListDetailStrategy()),
         entryProvider = entryProvider { entries() },
         transitionSpec = { forwardTransition },
         popTransitionSpec = { if (skipPopTransition) NoTransition else backwardTransition },

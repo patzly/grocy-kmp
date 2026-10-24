@@ -1,14 +1,21 @@
 package com.patrickzedler.grocy.core.design.component
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MenuAnchorPosition
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
@@ -40,7 +47,6 @@ class AppBarMenuItem(
 fun AppBarOverflowMenu(groups: List<List<AppBarMenuItem>>) {
     val shownGroups = groups.filter { it.isNotEmpty() }
     if (shownGroups.isEmpty()) return
-    val haptic = LocalHapticFeedback.current
     var showMenu by remember { mutableStateOf(false) }
 
     AppBarIconButton(
@@ -49,19 +55,78 @@ fun AppBarOverflowMenu(groups: List<List<AppBarMenuItem>>) {
         onClick = { showMenu = true },
         narrow = true,
     )
+    OverflowMenuPopup(
+        expanded = showMenu,
+        groups = shownGroups,
+        onDismissRequest = { showMenu = false },
+    )
+}
+
+/**
+ * The standard narrow three dots button at the end of a list item and its menu with the
+ * actions on the item's object, like [AppBarOverflowMenu].
+ */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun ListItemOverflowMenu(groups: List<List<AppBarMenuItem>>, modifier: Modifier = Modifier) {
+    val shownGroups = groups.filter { it.isNotEmpty() }
+    if (shownGroups.isEmpty()) return
+    val haptic = LocalHapticFeedback.current
+    var showMenu by remember { mutableStateOf(false) }
+    val description = stringResource(Res.string.action_more_options)
+
+    // A box of its own, so the menu opens at the button
+    Box(modifier) {
+        HapticTooltipBox(text = description) {
+            IconButton(
+                onClick = {
+                    haptic.confirm()
+                    showMenu = true
+                },
+                modifier = Modifier
+                    .minimumInteractiveComponentSize()
+                    .size(
+                        IconButtonDefaults.smallContainerSize(
+                            IconButtonDefaults.IconButtonWidthOption.Narrow,
+                        ),
+                    )
+                    .clickCursor(),
+                shapes = IconButtonDefaults.shapes(),
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_rounded_more_vert),
+                    contentDescription = description,
+                )
+            }
+        }
+        OverflowMenuPopup(
+            expanded = showMenu,
+            groups = shownGroups,
+            onDismissRequest = { showMenu = false },
+        )
+    }
+}
+
+@Composable
+private fun OverflowMenuPopup(
+    expanded: Boolean,
+    groups: List<List<AppBarMenuItem>>,
+    onDismissRequest: () -> Unit,
+) {
+    val haptic = LocalHapticFeedback.current
 
     DropdownMenuPopup(
-        expanded = showMenu,
-        onDismissRequest = { showMenu = false },
+        expanded = expanded,
+        onDismissRequest = onDismissRequest,
         popupPositionProvider = MenuDefaults.rememberDropdownMenuPopupPositionProvider(
             dropdownMenuAnchorPosition = MenuAnchorPosition.Below,
             offset = DpOffset(x = (-8).dp, y = 0.dp),
         ),
     ) {
-        shownGroups.forEachIndexed { groupIndex, items ->
+        groups.forEachIndexed { groupIndex, items ->
             if (groupIndex > 0) Spacer(Modifier.height(MenuDefaults.GroupSpacing))
             DropdownMenuGroup(
-                shapes = MenuDefaults.groupShape(index = groupIndex, count = shownGroups.size),
+                shapes = MenuDefaults.groupShape(index = groupIndex, count = groups.size),
             ) {
                 items.forEachIndexed { index, item ->
                     DropdownMenuItem(
@@ -69,14 +134,14 @@ fun AppBarOverflowMenu(groups: List<List<AppBarMenuItem>>) {
                         modifier = Modifier.clickCursor(),
                         onClick = {
                             haptic.confirm()
-                            showMenu = false
+                            onDismissRequest()
                             item.onClick()
                         },
                         shape = menuItemShape(
                             index = index,
                             count = items.size,
                             groupIndex = groupIndex,
-                            groupCount = shownGroups.size,
+                            groupCount = groups.size,
                         ),
                     )
                 }

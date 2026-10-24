@@ -7,16 +7,71 @@ Compose Multiplatform. Targets: Android (phone, Wear OS) and Web (Kotlin/Wasm). 
 Current state: login (demo server, QR code of Grocy's API key page, manual Grocy URL + API key,
 Home Assistant ingress on Android), the reusable barcode scanner (`core:scanner`), update checks
 on every platform, the start screen (Master data item, the app menu), an About
-screen, the Settings overview (`feature:settings`) and the first master data
-(`feature:masterdata`): the overview of Grocy's master data categories, the product list, the
-product overview dialog and the product form. Only Products opens a screen so far; Barcodes, QU conversions, Stock entries,
-Stock journal, "Configure userfields" and "Presets for new products" are placeholders without
-action.
+screen, the Settings overview (`feature:settings`) and the master data
+(`feature:masterdata`): the overview of Grocy's master data categories, the list and form of
+every category (products with their overview dialog, locations, stores, quantity units,
+product groups, chores, batteries, task categories, userfields, userentities). Barcodes, QU
+conversions (of products and the default conversions of units), Stock entries, Stock journal
+and "Presets for new products" are placeholders without action.
 
 Master data (`feature:masterdata`), built after Grocy's web frontend:
 - `MasterDataScreen` lists the categories of Grocy's "Manage master data" menu in its order and
-  hides the ones whose feature flag is off (`MasterDataCategory.isAvailable`); Products shows
+  hides the ones whose feature flag is off (`MasterDataCategory.isAvailable`), from the eager
+  `ServerRepository.serverConfig` (`MasterDataDependencies.serverConfig`), so they show in the
+  first frame: on the web a refresh's write transaction keeps the single database connection
+  busy for seconds while animations run, and reads wait behind it; Products shows
   the number of products once it is known (stored products or a finished download).
+- Lists and their forms are list-detail scenes of Navigation 3 (`listPaneMetadata` /
+  `detailPaneMetadata` of `core:navigation`, Material's `ListDetailSceneStrategy` in
+  `GrocyNavDisplay`): from Material's expanded window width on (840.dp, the default pane
+  directive) the form opens beside its list, before a choice `DetailPlaceholder` (`core:design`)
+  fills the detail pane with `objects_select_hint`; narrower windows show list and form one after
+  the other. Both panes start half and half with Material's `VerticalDragHandle` between them
+  (`PaneAnchors` 1/2, 1/3, 2/3: drag, the screen reader's action or the arrow keys, a tick per
+  snap); the pane expansion overrides the hinge avoidance, the middle lies on a book posture's
+  fold anyway. Beside its list a form has no back button (the list's leaves both) and the list's
+  small app bar in its color (`SegmentedListScreen(isBesideList)`), so both bars line up. Forms are `DetailRoute`s opened with `Navigator.openDetail` (replaces the form beside
+  the list), lists leave with `goBack(from = route)`. A form with unsaved changes asks
+  (`UnsavedChangesDialog`) also when another item of the list beside it is chosen or the list is
+  left: `rememberLeaveGuard(route)` + `LeaveGuard.onLeaveRequest`. Beside a form
+  (`showsDetailBesideList`) list items are single choice items marking the shown object
+  (`ListDetailItem`), otherwise plain clickable items (no radio semantics in one pane).
+- Overflow menus act on objects like Grocy's buttons and table menus (`ObjectActionsViewModel`,
+  one per list and per form, `objectActionsOf`): every object can be deleted (Grocy's question,
+  with its warning for products), products copied (`stock/products/{id}/copy`, the copy opens)
+  and merged, chores merged (Grocy's merge dialog, the object preset as the one to keep, a
+  refresh afterwards). Every list item has the narrow three dots button (`ListItemOverflowMenu`
+  of `core:design`), products with "Product overview" as first group; forms put the actions as a
+  group before Help and Send feedback (`SegmentedListScreen(actionMenuItems)`, the app menu
+  without Settings and About: `rememberAppMenu()` without both). A deleted or merged away object
+  closes its form. Forms get menu, leave guard, back and actions as one `FormFrame`.
+- Date fields (date and datetime userfields, a chore's start date) have a calendar button
+  (`DatePickerButton`): Material's date picker, for date and time then its time picker (dial or
+  text input); the pure `withPickedDate`/`withPickedTime` write Grocy's format, typing still
+  works.
+- The other categories share one list (`objects/`): `ObjectListKind` describes each like its
+  Grocy table (columns in Grocy's order to sort by, first column as default sort, e.g. Entity for
+  userfields, "Show disabled" where objects can be disabled, the entity of "Configure
+  userfields"), `ObjectListViewModel` turns the database into `ObjectRow`s (shown texts and
+  numeric sort values per `ObjectColumn`, enum labels through `ListTexts`, product count of
+  groups, charge cycle of batteries) and the pure `buildObjectList` filters, sorts (empty values
+  last, ties by name) and searches every column. Userfields filter by entity (Grocy's entity list:
+  OpenAPI's exposed entities, `userentity-<name>`, users; `UserfieldsRoute(entity)` from every
+  "Configure userfields"), userentities link to their fields. The filter chips
+  (`FilterChipRow`, `DropdownFilterChip`, `ShowDisabledChip`, `SortChip`, `ClearFilterChip`), the
+  search item and the empty states (`ListParts.kt`) are shared with the product list.
+- Forms of the other categories build on `ObjectFormViewModel` (load, refresh for unknown ids,
+  validation, unsaved changes, userfields of `userfieldEntity`, `ObjectFormEvent`s) and
+  `ObjectFormScreen` (save FAB, Scroll to top, userfield group, leave guard). Fields and rules
+  follow Grocy's forms, each with pure `XxxValues.validate` and conversion tested:
+  `SimpleObjectViewModel` for locations (freezer only with freezing), stores, quantity units
+  (plural forms only for languages with more than two, `grocyPluralFormCount` of the app
+  language; default conversions as placeholder), product groups, batteries and task categories;
+  `ChoreViewModel` (Grocy's first period and assignment type for new chores, start now, hidden
+  period fields set like Grocy's JS, assignment only with `choresAssignments`, consumed product
+  with stock; saving lets Grocy calculate the next assignment), `UserfieldViewModel` (entity and
+  type start empty, options for preset types, "Now / today" for dates) and
+  `UserentityViewModel`. Saved objects close the form, created ones become their edit form.
 - List pictures are stored for offline use: `MasterDataRepository.productThumbnail` keeps them
   in `product_thumbnails` (Grocy gives every new picture a new file name, so they never get
   outdated), the product list downloads the missing ones after each refresh
@@ -43,7 +98,7 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   `RefreshController` (`core:data`: one at a time, offline/failed errors, `loadedOnce`);
   `RefreshErrorEffect` (`core:ui`) shows a failed download as snackbar.
 - `ProductsScreen`: one segmented item per product (`itemSpacing = SegmentedGap`, a product with
-  picture shows it at the item's end, `ProductThumbnail`, 56.dp with small corners, without
+  picture shows it at the item's end before the overflow menu button, `ProductThumbnail`, 56.dp with small corners, without
   `LeadingTrailingContentWrapper`, whose padding only icons and switches need), first the
   filter row directly on the background
   (`edgeToEdgeItem` of `InsetLazyColumn`: it scrolls sideways up to the screen's edges, the
@@ -58,15 +113,21 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   at its start while a filter (not the search) is active; chips use the standard overloads with Material's 8.dp rounded rectangle, not the
   morphing `shapes` overloads whose tokens are full round). Back closes an open search first
   (`NavigationBackHandler`, also the browser's back) and stays on the list
-  and a floating toolbar (Add as FAB, Configure userfields, Presets for new products, Scroll to
+  and a floating toolbar (Add as FAB, Configure userfields (the product userfields), Presets for
+  new products, Scroll to
   top, Search last). Filtering, sorting and the fuzzy search are the pure `buildProductList`:
   in stock means `amount_aggregated > 0` of an active product, like Grocy's `stock_current`.
-- `ProductOverviewDialog` (`overview/`) is Grocy's "Product overview" card, opened by the narrow
-  info button at the end of each active product item (before its picture; Grocy computes no
-  overview for disabled products). Its icon buttons on top of the scrolling content are the
-  card header's: Stock entries, Stock journal, Add to shopping list (only with the shopping list
-  feature) and Edit product; only Edit leads somewhere so far. Then every value of the card in
-  its order, hidden like in Grocy by feature flag (prices: stock value, last/average price and
+- `ProductOverviewDialog` (`overview/`) is Grocy's "Product overview" card, opened from the
+  first group of each active product item's overflow menu (Grocy computes no overview for
+  disabled products). The title is "Product overview"; on top of the scrolling
+  content the card header's buttons as an expressive `ButtonGroup` of wide filled (primary)
+  icon buttons with `animateWidth` and its default 12.dp spacing, the last ones in its overflow
+  menu when the dialog is too narrow, so they are ordered by importance (unlike Grocy): Edit
+  product, Add to shopping list (only with the shopping list feature), Stock entries and Stock
+  journal; only Edit leads somewhere so far. Then every
+  value of the card in its order, all as items with the label as text and the value as
+  supporting text, the product name first in the stock group (with the loading indicator of a
+  download over stored values), hidden like in Grocy by feature flag (prices: stock value, last/average price and
   price history; location: default location; best before dates: average shelf life),
   description (three lines, "Show more"), picture (1200 px, offline the stored list picture)
   and the price history. `ProductOverviewViewModel` is one per product list (`show`/`hide`, kept
@@ -77,8 +138,11 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
 - `PriceHistoryChart`: Canvas line chart after the dataviz rules: one 2.dp line per store with
   surface-ringed points, Grocy's dotted least squares trend, y axis from zero in round steps
   (`priceAxis`), first and last date below, legend from two series or with a trend. Colors come
-  from `chartColors` (`core:design`): a validated color blind safe categorical palette in fixed
-  order with light and dark steps, not derived from the theme; stores keep their color by id,
+  from `rememberChartColors` (`core:design`): a validated color blind safe categorical palette
+  in fixed order with light and dark steps, harmonized with the theme's primary color by the
+  strongest hue rotation (15 degrees like Material's harmonization, down to none) that keeps
+  neighbours apart with normal vision and simulated protanopia/deuteranopia
+  (`isDistinguishable`, the dataviz validator's OKLab checks); stores keep their color by id,
   stores beyond eight are drawn together as "Other stores". Tap, sideways drag, mouse hover and
   the arrow keys select a price (date, store, price as tooltip); screen readers get all prices.
 - `ProductScreen` edits or creates (`ProductRoute(productId = null)`) a product with every field
@@ -436,7 +500,8 @@ both modules to `apps/shared/build.gradle.kts`, and add the new routes to `allRo
 - Every route must be registered in the feature's `SerializersModule` under
   `polymorphic(NavKey::class)`. Wasm has no reflection, so a missing registration breaks state
   saving at runtime, not at compile time.
-- Features only use `Navigator` (`navigate`, `goBack`, `replaceAll`), never the back stack.
+- Features only use `Navigator` (`navigate`, `goBack`, `replaceAll`, `openDetail`,
+  `goBack(from)`, `currentRoute`), never the back stack. List-detail: see "Master data".
 - Each feature exposes `fun EntryProviderScope<NavKey>.xxxEntries(dependencies, navigator)`.
   ViewModels are created there with `viewModel { XxxViewModel(...) }` and are scoped to the entry
   by `GrocyNavDisplay`.
@@ -516,7 +581,11 @@ both modules to `apps/shared/build.gradle.kts`, and add the new routes to `allRo
 - Offline first: screens read `GrocyDatabase` through repositories (`MasterDataRepository` in
   `core:data`), `refresh()` downloads everything a screen shows in parallel and replaces the
   tables in one `withWriteTransaction`, so readers never see half an update. Changes are online
-  only (`saveProduct`, `deleteProduct`) and store what the server returns afterwards.
+  only (`saveProduct`, `deleteProduct`, `saveLocation`, `saveChore`, ...: one `saveObject` per
+  type posts or puts, sends changed userfields, then stores the object as the server returns it).
+  `refresh()` downloads all master data at once; users need a permission of their own, a 403
+  keeps the stored ones instead of failing the refresh. Version 4 added chores, batteries, task
+  categories, userentities, users and the userfield values of the simple objects.
 - `AuthRepository` clears the database before a login and on logout (`clearLocalData`), so no
   screen shows the data of another server. The database file is excluded from backups.
 - Server configuration and user settings live as JSON in `server_values`; only the known feature
@@ -641,7 +710,8 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   (newest Compose and Material 3 Expressive design state); many APIs need
   `@OptIn(ExperimentalMaterial3ExpressiveApi::class)`, tooltips `ExperimentalMaterial3Api`
   (kept out of public APIs: `HapticTooltipBox` takes its own `TooltipPosition`). Compose 1.13
-  needs compileSdk 37.1 or newer (`android-compileSdkMinor`).
+  needs compileSdk 37.1 or newer (`android-compileSdkMinor`). Material's adaptive libraries
+  (`adaptive-navigation3`, list-detail scenes) follow the same rule: newest alpha.
 - Font is Google Sans Flex from Compose Resources. On web fonts load async;
   `rememberResourcesReady()` (also every string and icon: browsers load them asynchronously, so a new screen would fill in its texts while sliding in) gates `onContentReady`, which removes the Android splash / the HTML
   `#loading` element.
@@ -765,7 +835,9 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
     `FakeAppLanguageStore`.
   - `FakeGrocyServer` also serves the master data of `MasterDataJson` (Milk, Bread, a disabled
     product, a sub product, units, barcode, stock, userfield, config, settings, the product
-    overview of Milk with two prices), answers
+    overview of Milk with two prices, chores Vacuum and a disabled one, a battery, a task
+    category, a userentity, users, a chore userfield), answers POST of the chores' next
+    assignments and
     `respond(..., method = HttpMethod.Post)` per method, accepts PUT and DELETE with 204 and lists
     them with `requestsTo(path, method)`.
 - Room needs a real SQLite: tests with a database live in `androidHostTest` (Node has no web

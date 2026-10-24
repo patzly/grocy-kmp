@@ -17,6 +17,11 @@ actual fun todayEpochDay(): Long {
     return Math.floorDiv(now + TimeZone.getDefault().getOffset(now), MILLIS_PER_DAY)
 }
 
+actual fun localNowMillis(): Long {
+    val now = System.currentTimeMillis()
+    return now + TimeZone.getDefault().getOffset(now)
+}
+
 actual fun formatDate(epochDay: Long): String =
     DateFormat.getDateInstance(DateFormat.MEDIUM)
         // The day itself, not its midnight in another time zone

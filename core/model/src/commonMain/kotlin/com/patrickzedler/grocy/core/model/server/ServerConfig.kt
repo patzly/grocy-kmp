@@ -12,6 +12,8 @@ data class ServerConfig(
     val shoppingList: Boolean = true,
     val recipes: Boolean = true,
     val chores: Boolean = true,
+    /** Chores can be assigned to users. */
+    val choresAssignments: Boolean = true,
     val tasks: Boolean = true,
     val batteries: Boolean = true,
     val labelPrinter: Boolean = false,

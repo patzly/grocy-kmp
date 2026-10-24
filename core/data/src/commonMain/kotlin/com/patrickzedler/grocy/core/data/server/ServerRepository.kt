@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.data.server
 
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.model.ServerConnection
+import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -38,6 +39,13 @@ class ServerRepository(
         combine(connection, masterDataRepository.systemInfo) { connection, systemInfo ->
             connection?.let { ServerState(it, systemInfo?.grocyVersion) }
         }.stateIn(scope, SharingStarted.Eagerly, null)
+
+    /**
+     * The stored configuration of the server, null for the moment until it is read. Screens get
+     * it without waiting for the database, which a running download can keep busy for a while.
+     */
+    val serverConfig: StateFlow<ServerConfig?> =
+        masterDataRepository.serverConfig.stateIn(scope, SharingStarted.Eagerly, null)
 
     /** @throws GrocyApiException e.g. [GrocyApiException.Unreachable] when offline. */
     suspend fun reloadConfiguration() {

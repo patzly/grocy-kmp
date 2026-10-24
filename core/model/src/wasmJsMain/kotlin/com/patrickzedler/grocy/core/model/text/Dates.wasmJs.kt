@@ -8,6 +8,8 @@ import kotlin.math.abs
 
 actual fun todayEpochDay(): Long = localTodayEpochDay().toLong()
 
+actual fun localNowMillis(): Long = localNowInBrowser().toLong()
+
 actual fun formatDate(epochDay: Long): String =
     formatDateInBrowser(epochDay.toDouble() * MILLIS_PER_DAY)
 
@@ -35,6 +37,9 @@ private const val MILLIS_PER_DAY = 86_400_000.0
     }""",
 )
 private external fun localTodayEpochDay(): Double
+
+@JsFun("() => { const now = new Date(); return now.getTime() - now.getTimezoneOffset() * 60000; }")
+private external fun localNowInBrowser(): Double
 
 // The day itself, not its midnight in another time zone
 @JsFun(

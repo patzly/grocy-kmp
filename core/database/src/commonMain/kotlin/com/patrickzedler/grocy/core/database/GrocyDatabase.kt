@@ -24,13 +24,20 @@ import androidx.room3.RoomDatabaseConstructor
         ServerValueEntity::class,
         ProductThumbnailEntity::class,
         ProductOverviewEntity::class,
+        ChoreEntity::class,
+        BatteryEntity::class,
+        TaskCategoryEntity::class,
+        UserentityEntity::class,
+        UserEntity::class,
     ],
-    version = 3,
+    version = 4,
     autoMigrations = [
         // 2 adds product_thumbnails
         AutoMigration(from = 1, to = 2),
         // 3 adds product_overviews
         AutoMigration(from = 2, to = 3),
+        // 4 adds the other master data and userfield values of locations, stores, units, groups
+        AutoMigration(from = 3, to = 4),
     ],
 )
 @ConstructedBy(GrocyDatabaseConstructor::class)

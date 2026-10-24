@@ -275,7 +275,7 @@ class MasterDataRepositoryTest {
         repository.refresh()
         server.respond("/api/objects/products/2", status = HttpStatusCode.NoContent)
 
-        repository.deleteProduct(2)
+        repository.deleteObject(MasterDataRepository.PRODUCTS, 2)
 
         assertNull(repository.product(2).first())
         assertEquals(1, server.requestsTo("/api/objects/products/2", HttpMethod.Delete).size)

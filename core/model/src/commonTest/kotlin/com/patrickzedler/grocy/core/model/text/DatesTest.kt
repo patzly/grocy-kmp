@@ -46,4 +46,54 @@ class DatesTest {
     fun datesAreWrittenWithTheirYear() {
         assertTrue("2026" in formatDate(20_750), formatDate(20_750))
     }
+
+    @Test
+    fun localTimesBecomeGrocyDateTimes() {
+        val day = epochDayOf("2026-10-24")!!
+        val millis = day * 86_400_000L + ((14 * 60 + 5) * 60 + 9) * 1_000L
+
+        assertEquals("2026-10-24 14:05:09", grocyDateTimeOf(millis))
+    }
+
+    @Test
+    fun grocyDateTimesHandleLeapDaysAndEarlyDates() {
+        val leapDay = epochDayOf("2024-02-29")!! * 86_400_000L
+
+        assertEquals("2024-02-29 00:00:00", grocyDateTimeOf(leapDay))
+        assertEquals("1969-12-31 23:59:59", grocyDateTimeOf(-1_000L))
+    }
+
+    @Test
+    fun nowIsAValidGrocyDateTime() {
+        val now = grocyDateTimeOf(localNowMillis())
+
+        assertTrue(Regex("""\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}""").matches(now), now)
+    }
+
+    @Test
+    fun epochDaysBecomeIsoDates() {
+        assertEquals("1970-01-01", isoDateOf(0))
+        assertEquals("2024-02-29", isoDateOf(19_782))
+        assertEquals("1969-12-31", isoDateOf(-1))
+    }
+
+    @Test
+    fun isoDatesSurviveTheRoundTrip() {
+        for (day in listOf(-300_000L, -1L, 0L, 20_750L, 2_932_896L)) {
+            assertEquals(day, epochDayOf(isoDateOf(day)))
+        }
+    }
+
+    @Test
+    fun timeOfDayIsReadFromGrocyDateTimes() {
+        assertEquals(8 to 30, timeOfDayOf("2026-10-24 08:30:15"))
+        assertEquals(23 to 59, timeOfDayOf("2026-10-24 23:59"))
+    }
+
+    @Test
+    fun datesWithoutValidTimeHaveNoTimeOfDay() {
+        assertNull(timeOfDayOf("2026-10-24"))
+        assertNull(timeOfDayOf("2026-10-24 24:00:00"))
+        assertNull(timeOfDayOf("08:30"))
+    }
 }

@@ -9,6 +9,9 @@ import com.patrickzedler.grocy.core.database.toEntity
 import com.patrickzedler.grocy.core.database.toModel
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.SystemInfo
+import com.patrickzedler.grocy.core.model.User
+import com.patrickzedler.grocy.core.model.masterdata.Battery
+import com.patrickzedler.grocy.core.model.masterdata.Chore
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
@@ -17,6 +20,8 @@ import com.patrickzedler.grocy.core.model.masterdata.ProductOverview
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.Store
+import com.patrickzedler.grocy.core.model.masterdata.TaskCategory
+import com.patrickzedler.grocy.core.model.masterdata.Userentity
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
@@ -68,6 +73,24 @@ class MasterDataRepository(
     val stock: Flow<List<StockAmount>> =
         dao.observeStock().map { list -> list.map { it.toModel() } }
 
+    val chores: Flow<List<Chore>> = dao.observeChores().map { list -> list.map { it.toModel() } }
+
+    val batteries: Flow<List<Battery>> =
+        dao.observeBatteries().map { list -> list.map { it.toModel() } }
+
+    val taskCategories: Flow<List<TaskCategory>> =
+        dao.observeTaskCategories().map { list -> list.map { it.toModel() } }
+
+    val userentities: Flow<List<Userentity>> =
+        dao.observeUserentities().map { list -> list.map { it.toModel() } }
+
+    /** The server's users; empty when the API key's user may not read them. */
+    val users: Flow<List<User>> = dao.observeUsers().map { list -> list.map { it.toModel() } }
+
+    /** The userfields of every entity, ordered by entity and like Grocy's forms. */
+    val allUserfields: Flow<List<Userfield>> =
+        dao.observeAllUserfields().map { list -> list.map { it.toModel() } }
+
     /** Grocy's defaults until the server's configuration was downloaded once. */
     val serverConfig: Flow<ServerConfig> =
         observeValue(SERVER_CONFIG, ServerConfig.serializer(), ServerConfig())
@@ -103,7 +126,7 @@ class MasterDataRepository(
         dao.observeUserfields(entity).map { list -> list.map { it.toModel() } }
 
     /**
-     * Downloads everything the product screens show and replaces the local copy at once.
+     * Downloads all master data and replaces the local copy at once.
      *
      * @throws GrocyApiException e.g. [GrocyApiException.Unreachable] when offline; the local
      *   data stays as it was.
@@ -118,14 +141,33 @@ class MasterDataRepository(
             val stores = async { api.stores(connection) }
             val barcodes = async { api.productBarcodes(connection) }
             val stock = async { api.stock(connection) }
-            val userfields = async { api.userfields(connection, PRODUCTS) }
+            val chores = async { api.chores(connection) }
+            val batteries = async { api.batteries(connection) }
+            val taskCategories = async { api.taskCategories(connection) }
+            val userentities = async { api.userentities(connection) }
+            // Reading users needs a permission of its own, the rest works without them
+            val users = async { usersOrNull(connection) }
+            val userfields = async { api.allUserfields(connection) }
             val config = async { api.serverConfig(connection) }
             val settings = async { api.userSettings(connection) }
             val systemInfo = async { api.systemInfo(connection) }
             Download(
-                products.await(), groups.await(), locations.await(), units.await(),
-                stores.await(), barcodes.await(), stock.await(), userfields.await(),
-                config.await(), settings.await(), systemInfo.await(),
+                products = products.await(),
+                productGroups = groups.await(),
+                locations = locations.await(),
+                quantityUnits = units.await(),
+                stores = stores.await(),
+                barcodes = barcodes.await(),
+                stock = stock.await(),
+                chores = chores.await(),
+                batteries = batteries.await(),
+                taskCategories = taskCategories.await(),
+                userentities = userentities.await(),
+                users = users.await(),
+                userfields = userfields.await(),
+                config = config.await(),
+                settings = settings.await(),
+                systemInfo = systemInfo.await(),
             )
         }
         database.withWriteTransaction {
@@ -143,12 +185,31 @@ class MasterDataRepository(
             dao.insertProductBarcodes(download.barcodes.map { it.toEntity() })
             dao.deleteStock()
             dao.insertStock(download.stock.map { it.toEntity() })
-            dao.deleteUserfields(PRODUCTS)
+            dao.deleteChores()
+            dao.insertChores(download.chores.map { it.toEntity() })
+            dao.deleteBatteries()
+            dao.insertBatteries(download.batteries.map { it.toEntity() })
+            dao.deleteTaskCategories()
+            dao.insertTaskCategories(download.taskCategories.map { it.toEntity() })
+            dao.deleteUserentities()
+            dao.insertUserentities(download.userentities.map { it.toEntity() })
+            // Without the permission the stored users stay, they still name assignments
+            download.users?.let { users ->
+                dao.deleteUsers()
+                dao.insertUsers(users.map { it.toEntity() })
+            }
+            dao.deleteUserfields()
             dao.insertUserfields(download.userfields.map { it.toEntity() })
             storeConfiguration(download.config, download.settings, download.systemInfo)
             dao.deleteUnusedThumbnails()
             dao.deleteUnusedProductOverviews()
         }
+    }
+
+    private suspend fun usersOrNull(connection: ServerConnection): List<User>? = try {
+        api.users(connection)
+    } catch (e: GrocyApiException.HttpError) {
+        if (e.statusCode == HTTP_FORBIDDEN) null else throw e
     }
 
     /**
@@ -222,7 +283,7 @@ class MasterDataRepository(
             is PictureChange.Replace -> product.copy(pictureFileName = newPicture)
         }
 
-        val id = if (product.id == NEW_PRODUCT_ID) {
+        val id = if (product.id == NEW_OBJECT_ID) {
             api.addProduct(connection, saved)
         } else {
             api.editProduct(connection, saved)
@@ -242,11 +303,120 @@ class MasterDataRepository(
         return id
     }
 
-    /** Deletes the product with everything that refers to it on the server. Online only. */
-    suspend fun deleteProduct(id: Int) {
-        api.deleteProduct(requireConnection(), id)
-        dao.deleteProduct(id)
-        dao.deleteProductOverview(id)
+    /**
+     * Creates the location (id [NEW_OBJECT_ID]) or updates it like Grocy's form does, then
+     * stores what the server saved. Online only, like all following saves.
+     *
+     * @param userfields changed userfield values by name; untouched fields are not sent.
+     * @return the id of the location, new for a created one.
+     * @throws GrocyApiException if the server cannot be reached or rejects the location.
+     */
+    suspend fun saveLocation(location: Location, userfields: Map<String, String?>): Int =
+        saveObject(LOCATIONS, userfields, { api.saveLocation(it, location) }) { connection, id ->
+            dao.upsertLocation(api.location(connection, id).toEntity())
+        }
+
+    suspend fun saveStore(store: Store, userfields: Map<String, String?>): Int =
+        saveObject(STORES, userfields, { api.saveStore(it, store) }) { connection, id ->
+            dao.upsertStore(api.store(connection, id).toEntity())
+        }
+
+    suspend fun saveQuantityUnit(unit: QuantityUnit, userfields: Map<String, String?>): Int =
+        saveObject(QUANTITY_UNITS, userfields, { api.saveQuantityUnit(it, unit) }) { c, id ->
+            dao.upsertQuantityUnit(api.quantityUnit(c, id).toEntity())
+        }
+
+    suspend fun saveProductGroup(group: ProductGroup, userfields: Map<String, String?>): Int =
+        saveObject(PRODUCT_GROUPS, userfields, { api.saveProductGroup(it, group) }) { c, id ->
+            dao.upsertProductGroup(api.productGroup(c, id).toEntity())
+        }
+
+    suspend fun saveChore(chore: Chore, userfields: Map<String, String?>): Int =
+        saveObject(CHORES, userfields, { api.saveChore(it, chore) }) { connection, id ->
+            dao.upsertChore(api.chore(connection, id).toEntity())
+        }
+
+    suspend fun saveBattery(battery: Battery, userfields: Map<String, String?>): Int =
+        saveObject(BATTERIES, userfields, { api.saveBattery(it, battery) }) { connection, id ->
+            dao.upsertBattery(api.battery(connection, id).toEntity())
+        }
+
+    suspend fun saveTaskCategory(category: TaskCategory, userfields: Map<String, String?>): Int =
+        saveObject(TASK_CATEGORIES, userfields, { api.saveTaskCategory(it, category) }) { c, id ->
+            dao.upsertTaskCategory(api.taskCategory(c, id).toEntity())
+        }
+
+    /** Userentities have no userfields of their own. */
+    suspend fun saveUserentity(userentity: Userentity): Int =
+        saveObject(USERENTITIES, emptyMap(), { api.saveUserentity(it, userentity) }) { c, id ->
+            dao.upsertUserentity(api.userentity(c, id).toEntity())
+        }
+
+    suspend fun saveUserfield(userfield: Userfield): Int =
+        saveObject(USERFIELDS, emptyMap(), { api.saveUserfield(it, userfield) }) { c, id ->
+            dao.upsertUserfield(api.userfield(c, id).toEntity())
+        }
+
+    /** Saves an object with [save], then its changed [userfields], then stores the result. */
+    private suspend fun saveObject(
+        entity: String,
+        userfields: Map<String, String?>,
+        save: suspend (ServerConnection) -> Int,
+        store: suspend (ServerConnection, id: Int) -> Unit,
+    ): Int {
+        val connection = requireConnection()
+        val id = save(connection)
+        if (userfields.isNotEmpty()) {
+            api.setUserfields(connection, entity, id, userfields)
+        }
+        store(connection, id)
+        return id
+    }
+
+    /**
+     * Deletes the object [id] of [entity] (one of the entity names below) on the server, which
+     * removes everything that refers to it there, and its local copy. Online only.
+     */
+    suspend fun deleteObject(entity: String, id: Int) {
+        api.deleteObject(requireConnection(), entity, id)
+        when (entity) {
+            PRODUCTS -> {
+                dao.deleteProduct(id)
+                dao.deleteProductOverview(id)
+            }
+            LOCATIONS -> dao.deleteLocation(id)
+            STORES -> dao.deleteStore(id)
+            QUANTITY_UNITS -> dao.deleteQuantityUnit(id)
+            PRODUCT_GROUPS -> dao.deleteProductGroup(id)
+            CHORES -> dao.deleteChore(id)
+            BATTERIES -> dao.deleteBattery(id)
+            TASK_CATEGORIES -> dao.deleteTaskCategory(id)
+            USERENTITIES -> dao.deleteUserentity(id)
+            USERFIELDS -> dao.deleteUserfield(id)
+        }
+    }
+
+    /** Copies the product on the server like Grocy's "Copy" and returns the copy's id. */
+    suspend fun copyProduct(id: Int): Int {
+        val connection = requireConnection()
+        val copyId = api.copyProduct(connection, id)
+        dao.upsertProduct(api.product(connection, copyId).toEntity())
+        return copyId
+    }
+
+    /**
+     * Merges product [removeId] into [keepId] on the server, then downloads everything again:
+     * the merge changes whatever referred to the removed product. Online only.
+     */
+    suspend fun mergeProducts(keepId: Int, removeId: Int) {
+        api.mergeProducts(requireConnection(), keepId, removeId)
+        refresh()
+    }
+
+    /** Merges chore [removeId] into [keepId] like [mergeProducts]. */
+    suspend fun mergeChores(keepId: Int, removeId: Int) {
+        api.mergeChores(requireConnection(), keepId, removeId)
+        refresh()
     }
 
     /**
@@ -303,6 +473,12 @@ class MasterDataRepository(
         val stores: List<Store>,
         val barcodes: List<ProductBarcode>,
         val stock: List<StockAmount>,
+        val chores: List<Chore>,
+        val batteries: List<Battery>,
+        val taskCategories: List<TaskCategory>,
+        val userentities: List<Userentity>,
+        /** Null without the permission to read users. */
+        val users: List<User>?,
         val userfields: List<Userfield>,
         val config: ServerConfig,
         val settings: UserSettings,
@@ -310,10 +486,28 @@ class MasterDataRepository(
     )
 
     companion object {
-        /** Id of a product that does not exist on the server yet. */
-        const val NEW_PRODUCT_ID = 0
+        /** Id of an object that does not exist on the server yet. */
+        const val NEW_OBJECT_ID = GrocyApi.NEW_OBJECT_ID
 
+        /** Id of a product that does not exist on the server yet. */
+        const val NEW_PRODUCT_ID = NEW_OBJECT_ID
+
+        // Grocy's entity names, e.g. of userfields
         const val PRODUCTS = "products"
+        const val LOCATIONS = "locations"
+        const val STORES = "shopping_locations"
+        const val QUANTITY_UNITS = "quantity_units"
+        const val PRODUCT_GROUPS = "product_groups"
+        const val CHORES = "chores"
+        const val BATTERIES = "batteries"
+        const val TASK_CATEGORIES = "task_categories"
+        const val USERENTITIES = "userentities"
+        const val USERFIELDS = "userfields"
+
+        /** Prefix of the userfield entity of a userentity, e.g. "userentity-books". */
+        const val USERENTITY_PREFIX = "userentity-"
+
+        private const val HTTP_FORBIDDEN = 403
 
         /** Pixels of a list picture: the 56.dp of the list on screens of up to 3.5x density. */
         const val THUMBNAIL_WIDTH = 196

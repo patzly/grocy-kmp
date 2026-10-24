@@ -20,6 +20,8 @@ internal fun JsonObject.toServerConfig(): ServerConfig {
         shoppingList = flag("FEATURE_FLAG_SHOPPINGLIST", defaults.shoppingList),
         recipes = flag("FEATURE_FLAG_RECIPES", defaults.recipes),
         chores = flag("FEATURE_FLAG_CHORES", defaults.chores),
+        choresAssignments =
+            flag("FEATURE_FLAG_CHORES_ASSIGNMENTS", defaults.choresAssignments),
         tasks = flag("FEATURE_FLAG_TASKS", defaults.tasks),
         batteries = flag("FEATURE_FLAG_BATTERIES", defaults.batteries),
         labelPrinter = flag("FEATURE_FLAG_LABEL_PRINTER", defaults.labelPrinter),

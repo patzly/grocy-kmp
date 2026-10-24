@@ -53,6 +53,27 @@ interface MasterDataDao {
     @Query("SELECT * FROM stores ORDER BY name COLLATE NOCASE")
     fun observeStores(): Flow<List<StoreEntity>>
 
+    @Query("SELECT * FROM chores ORDER BY name COLLATE NOCASE")
+    fun observeChores(): Flow<List<ChoreEntity>>
+
+    @Query("SELECT * FROM batteries ORDER BY name COLLATE NOCASE")
+    fun observeBatteries(): Flow<List<BatteryEntity>>
+
+    @Query("SELECT * FROM task_categories ORDER BY name COLLATE NOCASE")
+    fun observeTaskCategories(): Flow<List<TaskCategoryEntity>>
+
+    @Query("SELECT * FROM userentities ORDER BY name COLLATE NOCASE")
+    fun observeUserentities(): Flow<List<UserentityEntity>>
+
+    @Query("SELECT * FROM users ORDER BY display_name COLLATE NOCASE")
+    fun observeUsers(): Flow<List<UserEntity>>
+
+    @Query(
+        "SELECT * FROM userfields " +
+            "ORDER BY entity, sort_number IS NULL, sort_number, name COLLATE NOCASE",
+    )
+    fun observeAllUserfields(): Flow<List<UserfieldEntity>>
+
     @Query("SELECT * FROM product_barcodes ORDER BY barcode")
     fun observeProductBarcodes(): Flow<List<ProductBarcodeEntity>>
 
@@ -113,11 +134,99 @@ interface MasterDataDao {
     @Insert
     suspend fun insertStock(stock: List<StockEntity>)
 
-    @Query("DELETE FROM userfields WHERE entity = :entity")
-    suspend fun deleteUserfields(entity: String)
+    @Query("DELETE FROM userfields")
+    suspend fun deleteUserfields()
 
     @Insert
     suspend fun insertUserfields(userfields: List<UserfieldEntity>)
+
+    @Query("DELETE FROM chores")
+    suspend fun deleteChores()
+
+    @Insert
+    suspend fun insertChores(chores: List<ChoreEntity>)
+
+    @Query("DELETE FROM batteries")
+    suspend fun deleteBatteries()
+
+    @Insert
+    suspend fun insertBatteries(batteries: List<BatteryEntity>)
+
+    @Query("DELETE FROM task_categories")
+    suspend fun deleteTaskCategories()
+
+    @Insert
+    suspend fun insertTaskCategories(categories: List<TaskCategoryEntity>)
+
+    @Query("DELETE FROM userentities")
+    suspend fun deleteUserentities()
+
+    @Insert
+    suspend fun insertUserentities(userentities: List<UserentityEntity>)
+
+    @Query("DELETE FROM users")
+    suspend fun deleteUsers()
+
+    @Insert
+    suspend fun insertUsers(users: List<UserEntity>)
+
+    // Single objects as the server saved them after a change
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertProductGroup(group: ProductGroupEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertLocation(location: LocationEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertQuantityUnit(unit: QuantityUnitEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertStore(store: StoreEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertChore(chore: ChoreEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertBattery(battery: BatteryEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertTaskCategory(category: TaskCategoryEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertUserentity(userentity: UserentityEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertUserfield(userfield: UserfieldEntity)
+
+    // Single objects deleted on the server
+
+    @Query("DELETE FROM product_groups WHERE id = :id")
+    suspend fun deleteProductGroup(id: Int)
+
+    @Query("DELETE FROM locations WHERE id = :id")
+    suspend fun deleteLocation(id: Int)
+
+    @Query("DELETE FROM quantity_units WHERE id = :id")
+    suspend fun deleteQuantityUnit(id: Int)
+
+    @Query("DELETE FROM stores WHERE id = :id")
+    suspend fun deleteStore(id: Int)
+
+    @Query("DELETE FROM chores WHERE id = :id")
+    suspend fun deleteChore(id: Int)
+
+    @Query("DELETE FROM batteries WHERE id = :id")
+    suspend fun deleteBattery(id: Int)
+
+    @Query("DELETE FROM task_categories WHERE id = :id")
+    suspend fun deleteTaskCategory(id: Int)
+
+    @Query("DELETE FROM userentities WHERE id = :id")
+    suspend fun deleteUserentity(id: Int)
+
+    @Query("DELETE FROM userfields WHERE id = :id")
+    suspend fun deleteUserfield(id: Int)
 
     @Query("SELECT bytes FROM product_thumbnails WHERE file_name = :fileName")
     suspend fun thumbnail(fileName: String): ByteArray?

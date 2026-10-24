@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.masterdata.api
 
 import androidx.navigation3.runtime.NavKey
+import com.patrickzedler.grocy.core.navigation.DetailRoute
 import com.patrickzedler.grocy.core.navigation.Route
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -12,6 +13,9 @@ import kotlinx.serialization.modules.polymorphic
 @SerialName("masterdata")
 data object MasterDataRoute : Route
 
+// Every list opens its objects as details, beside it where the window is wide enough; details
+// without id create a new object
+
 @Serializable
 @SerialName("masterdata/products")
 data object ProductsRoute : Route
@@ -19,12 +23,104 @@ data object ProductsRoute : Route
 /** Edits the product with [productId], or creates a new product without one. */
 @Serializable
 @SerialName("masterdata/product")
-data class ProductRoute(val productId: Int? = null) : Route
+data class ProductRoute(val productId: Int? = null) : DetailRoute
+
+@Serializable
+@SerialName("masterdata/locations")
+data object LocationsRoute : Route
+
+@Serializable
+@SerialName("masterdata/location")
+data class LocationRoute(val id: Int? = null) : DetailRoute
+
+@Serializable
+@SerialName("masterdata/stores")
+data object StoresRoute : Route
+
+@Serializable
+@SerialName("masterdata/store")
+data class StoreRoute(val id: Int? = null) : DetailRoute
+
+@Serializable
+@SerialName("masterdata/quantityunits")
+data object QuantityUnitsRoute : Route
+
+@Serializable
+@SerialName("masterdata/quantityunit")
+data class QuantityUnitRoute(val id: Int? = null) : DetailRoute
+
+@Serializable
+@SerialName("masterdata/productgroups")
+data object ProductGroupsRoute : Route
+
+@Serializable
+@SerialName("masterdata/productgroup")
+data class ProductGroupRoute(val id: Int? = null) : DetailRoute
+
+@Serializable
+@SerialName("masterdata/chores")
+data object ChoresRoute : Route
+
+@Serializable
+@SerialName("masterdata/chore")
+data class ChoreRoute(val id: Int? = null) : DetailRoute
+
+@Serializable
+@SerialName("masterdata/batteries")
+data object BatteriesRoute : Route
+
+@Serializable
+@SerialName("masterdata/battery")
+data class BatteryRoute(val id: Int? = null) : DetailRoute
+
+@Serializable
+@SerialName("masterdata/taskcategories")
+data object TaskCategoriesRoute : Route
+
+@Serializable
+@SerialName("masterdata/taskcategory")
+data class TaskCategoryRoute(val id: Int? = null) : DetailRoute
+
+/** The userfields, only those of [entity] (e.g. "products") if given, like Grocy's filter. */
+@Serializable
+@SerialName("masterdata/userfields")
+data class UserfieldsRoute(val entity: String? = null) : Route
+
+/** Edits a userfield, or creates one for [entity] without [id]. */
+@Serializable
+@SerialName("masterdata/userfield")
+data class UserfieldRoute(val id: Int? = null, val entity: String? = null) : DetailRoute
+
+@Serializable
+@SerialName("masterdata/userentities")
+data object UserentitiesRoute : Route
+
+@Serializable
+@SerialName("masterdata/userentity")
+data class UserentityRoute(val id: Int? = null) : DetailRoute
 
 val masterDataRouteSerializers = SerializersModule {
     polymorphic(NavKey::class) {
         subclass(MasterDataRoute::class, MasterDataRoute.serializer())
         subclass(ProductsRoute::class, ProductsRoute.serializer())
         subclass(ProductRoute::class, ProductRoute.serializer())
+        subclass(LocationsRoute::class, LocationsRoute.serializer())
+        subclass(LocationRoute::class, LocationRoute.serializer())
+        subclass(StoresRoute::class, StoresRoute.serializer())
+        subclass(StoreRoute::class, StoreRoute.serializer())
+        subclass(QuantityUnitsRoute::class, QuantityUnitsRoute.serializer())
+        subclass(QuantityUnitRoute::class, QuantityUnitRoute.serializer())
+        subclass(ProductGroupsRoute::class, ProductGroupsRoute.serializer())
+        subclass(ProductGroupRoute::class, ProductGroupRoute.serializer())
+        subclass(ChoresRoute::class, ChoresRoute.serializer())
+        subclass(ChoreRoute::class, ChoreRoute.serializer())
+        subclass(BatteriesRoute::class, BatteriesRoute.serializer())
+        subclass(BatteryRoute::class, BatteryRoute.serializer())
+        subclass(TaskCategoriesRoute::class, TaskCategoriesRoute.serializer())
+        subclass(TaskCategoryRoute::class, TaskCategoryRoute.serializer())
+        subclass(UserfieldsRoute::class, UserfieldsRoute.serializer())
+        subclass(UserfieldRoute::class, UserfieldRoute.serializer())
+        subclass(UserentitiesRoute::class, UserentitiesRoute.serializer())
+        subclass(UserentityRoute::class, UserentityRoute.serializer())
     }
 }

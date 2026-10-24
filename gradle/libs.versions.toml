@@ -18,6 +18,8 @@ compose-multiplatform = "1.13.0-alpha02"
 kotlinx-coroutines = "1.11.0"
 # Alpha on purpose: Material 3 Expressive, matching Compose Multiplatform 1.13.0-alpha02
 compose-material3 = "1.13.0-alpha02"
+# Alpha on purpose like Material 3: list-detail scenes for Navigation 3
+compose-material3-adaptive = "1.4.0-alpha01"
 jetbrains-navigation3 = "1.1.2"
 jetbrains-lifecycle = "2.11.0"
 # Same version Navigation 3 brings along
@@ -83,6 +85,7 @@ jetbrains-lifecycle-viewmodel-navigation3 = { module = "org.jetbrains.androidx.l
 
 # Navigation 3 for Compose Multiplatform (brings the matching navigation3-runtime)
 jetbrains-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "jetbrains-navigation3" }
+compose-material3-adaptive-navigation3 = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation3", version.ref = "compose-material3-adaptive" }
 jetbrains-navigationevent-compose = { module = "org.jetbrains.androidx.navigationevent:navigationevent-compose", version.ref = "jetbrains-navigationevent" }
 
 # Networking

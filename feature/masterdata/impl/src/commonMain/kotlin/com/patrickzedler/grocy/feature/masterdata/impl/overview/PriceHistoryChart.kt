@@ -51,7 +51,7 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.patrickzedler.grocy.core.design.component.chartColors
+import com.patrickzedler.grocy.core.design.component.rememberChartColors
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.model.text.formatDate
 import com.patrickzedler.grocy.core.resources.Res
@@ -78,7 +78,7 @@ internal fun PriceHistoryChart(
     priceDecimals: Int,
     modifier: Modifier = Modifier,
 ) {
-    val colors = chartColors
+    val colors = rememberChartColors()
     val unknownStore = stringResource(Res.string.product_overview_unknown_store)
     val otherStores = stringResource(Res.string.product_overview_other_stores)
     val storeNames = history.series.map {

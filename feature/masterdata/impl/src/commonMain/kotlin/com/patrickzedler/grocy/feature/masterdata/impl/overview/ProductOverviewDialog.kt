@@ -4,11 +4,11 @@ package com.patrickzedler.grocy.feature.masterdata.impl.overview
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -17,15 +17,22 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.ButtonGroup
+import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.ButtonGroupMenuState
+import androidx.compose.material3.ButtonGroupScope
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +44,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.LiveRegionMode
@@ -47,6 +53,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEachIndexed
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.core.data.util.RefreshState
@@ -70,17 +77,20 @@ import com.patrickzedler.grocy.core.model.text.timeSpanBetween
 import com.patrickzedler.grocy.core.model.text.todayEpochDay
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_close
+import com.patrickzedler.grocy.core.resources.action_more_options
 import com.patrickzedler.grocy.core.resources.action_retry
 import com.patrickzedler.grocy.core.resources.data_load_failed
 import com.patrickzedler.grocy.core.resources.data_offline
 import com.patrickzedler.grocy.core.resources.ic_rounded_add_shopping_cart
 import com.patrickzedler.grocy.core.resources.ic_rounded_calculate
-import com.patrickzedler.grocy.core.resources.ic_rounded_compost
+import com.patrickzedler.grocy.core.resources.ic_rounded_delete
 import com.patrickzedler.grocy.core.resources.ic_rounded_edit
 import com.patrickzedler.grocy.core.resources.ic_rounded_history
-import com.patrickzedler.grocy.core.resources.ic_rounded_hourglass_bottom
+import com.patrickzedler.grocy.core.resources.ic_rounded_hourglass_empty
 import com.patrickzedler.grocy.core.resources.ic_rounded_inventory_2
+import com.patrickzedler.grocy.core.resources.ic_rounded_label
 import com.patrickzedler.grocy.core.resources.ic_rounded_location_on
+import com.patrickzedler.grocy.core.resources.ic_rounded_more_vert
 import com.patrickzedler.grocy.core.resources.ic_rounded_no_photography
 import com.patrickzedler.grocy.core.resources.ic_rounded_payments
 import com.patrickzedler.grocy.core.resources.ic_rounded_receipt_long
@@ -101,6 +111,7 @@ import com.patrickzedler.grocy.core.resources.product_overview_offline
 import com.patrickzedler.grocy.core.resources.product_overview_opened
 import com.patrickzedler.grocy.core.resources.product_overview_price_history
 import com.patrickzedler.grocy.core.resources.product_overview_price_per_unit
+import com.patrickzedler.grocy.core.resources.product_overview_product_name
 import com.patrickzedler.grocy.core.resources.product_overview_show_less
 import com.patrickzedler.grocy.core.resources.product_overview_show_more
 import com.patrickzedler.grocy.core.resources.product_overview_spoil_rate
@@ -114,14 +125,15 @@ import com.patrickzedler.grocy.core.resources.product_picture_load_failed
 import com.patrickzedler.grocy.core.resources.product_stock_entries
 import com.patrickzedler.grocy.core.resources.product_stock_journal
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.decodeToImageBitmap
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * Grocy's "Product overview" as dialog: its actions on top, then every value the web frontend
- * shows, its picture and the price history. [name] is the product's name from the list, so the
- * title is there in the first frame.
+ * Grocy's "Product overview" as dialog: its actions on top, the product's name, then every value
+ * the web frontend shows, its picture and the price history. [name] is the product's name from
+ * the list, so it is there in the first frame.
  */
 @Composable
 internal fun ProductOverviewDialog(
@@ -166,7 +178,7 @@ private fun ProductOverviewContent(
     val details = state?.details
 
     ScrollableAlertDialogContent(
-        title = { Text(state?.name ?: name) },
+        title = { Text(stringResource(Res.string.product_overview)) },
         confirmButton = {
             TextButton(
                 onClick = {
@@ -184,10 +196,8 @@ private fun ProductOverviewContent(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(SegmentedListDefaults.GroupSpacing),
         ) {
-            ActionRow(
+            ActionGroup(
                 showShoppingList = state?.showShoppingList == true,
-                // Downloads with stored values show here, the values stay readable meanwhile
-                isRefreshing = refresh.isRefreshing && details != null,
                 onEditClick = onEditClick,
             )
             if (details != null && refresh.error != null) {
@@ -204,12 +214,23 @@ private fun ProductOverviewContent(
                     modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
                 )
             }
-            if (state == null) return@Column
+            val nameRow = OverviewRow(
+                title = stringResource(Res.string.product_overview_product_name),
+                lines = listOf(state?.name ?: name),
+                icon = Res.drawable.ic_rounded_label,
+                // Downloads with stored values show here, the values stay readable meanwhile
+                isLoading = refresh.isRefreshing && details != null,
+            )
+            if (state == null) {
+                SegmentedGroup { OverviewItem(row = nameRow, index = 0, count = 1) }
+                return@Column
+            }
             if (state.description.isNotEmpty()) {
                 DescriptionItem(state.description)
             }
+            OverviewGroups(state, details, nameRow)
             when {
-                details != null -> OverviewGroups(state, details)
+                details != null -> Unit
                 refresh.isRefreshing -> Box(
                     modifier = Modifier.fillMaxWidth().padding(16.dp),
                     contentAlignment = Alignment.Center,
@@ -227,68 +248,140 @@ private fun ProductOverviewContent(
     }
 }
 
+/** One button of Grocy's card header. */
+private class OverviewAction(
+    val icon: DrawableResource,
+    val label: StringResource,
+    val onClick: () -> Unit,
+)
+
 /**
- * The buttons of Grocy's card header. Stock entries, the stock journal and the shopping list
- * have no screens in the app yet, like the web frontend they will lead there.
+ * The buttons of Grocy's card header as button group, the pressed one widens. Stock entries,
+ * the stock journal and the shopping list have no screens in the app yet, like the web
+ * frontend they will lead there.
  */
 @Composable
-private fun ActionRow(
+private fun ActionGroup(
     showShoppingList: Boolean,
-    isRefreshing: Boolean,
     onEditClick: () -> Unit,
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        ActionButton(
-            painter = painterResource(Res.drawable.ic_rounded_inventory_2),
-            description = stringResource(Res.string.product_stock_entries),
-            onClick = {},
-        )
-        ActionButton(
-            painter = painterResource(Res.drawable.ic_rounded_receipt_long),
-            description = stringResource(Res.string.product_stock_journal),
-            onClick = {},
-        )
+    // Most important first: narrow dialogs move the last ones into the overflow menu
+    val actions = buildList {
+        add(OverviewAction(Res.drawable.ic_rounded_edit, Res.string.product_edit, onEditClick))
         if (showShoppingList) {
-            ActionButton(
-                painter = painterResource(Res.drawable.ic_rounded_add_shopping_cart),
-                description = stringResource(Res.string.product_overview_add_to_shopping_list),
-                onClick = {},
+            add(
+                OverviewAction(
+                    Res.drawable.ic_rounded_add_shopping_cart,
+                    Res.string.product_overview_add_to_shopping_list,
+                ) {},
             )
         }
-        ActionButton(
-            painter = painterResource(Res.drawable.ic_rounded_edit),
-            description = stringResource(Res.string.product_edit),
-            onClick = onEditClick,
+        add(
+            OverviewAction(
+                Res.drawable.ic_rounded_inventory_2,
+                Res.string.product_stock_entries,
+            ) {},
         )
-        Spacer(Modifier.weight(1f))
-        if (isRefreshing) {
-            LoadingIndicator(Modifier.size(ActionSize))
+        add(
+            OverviewAction(
+                Res.drawable.ic_rounded_receipt_long,
+                Res.string.product_stock_journal,
+            ) {},
+        )
+    }
+
+    ButtonGroup(
+        overflowIndicator = { menuState -> ActionOverflowIndicator(menuState) },
+        // The guidelines' 12.dp between buttons of a small standard group
+        horizontalArrangement = ButtonGroupDefaults.HorizontalArrangement,
+    ) {
+        actions.fastForEachIndexed { index, action ->
+            customItem(
+                buttonGroupContent = { ActionButton(action) },
+                menuContent = { menuState ->
+                    ActionMenuItem(
+                        action = action,
+                        index = index,
+                        count = actions.size,
+                        onDismiss = menuState::dismiss,
+                    )
+                },
+            )
         }
     }
 }
 
 @Composable
-private fun ActionButton(
-    painter: Painter,
-    description: String,
-    onClick: () -> Unit,
+private fun ButtonGroupScope.ActionButton(action: OverviewAction) {
+    val haptic = LocalHapticFeedback.current
+    val interactionSource = remember { MutableInteractionSource() }
+    val label = stringResource(action.label)
+
+    HapticTooltipBox(text = label, modifier = Modifier.animateWidth(interactionSource)) {
+        FilledIconButton(
+            onClick = {
+                haptic.confirm()
+                action.onClick()
+            },
+            modifier = Modifier
+                .minimumInteractiveComponentSize()
+                .size(
+                    IconButtonDefaults.smallContainerSize(
+                        IconButtonDefaults.IconButtonWidthOption.Wide,
+                    ),
+                )
+                .clickCursor(),
+            shapes = IconButtonDefaults.shapes(),
+            interactionSource = interactionSource,
+        ) {
+            Icon(painter = painterResource(action.icon), contentDescription = label)
+        }
+    }
+}
+
+@Composable
+private fun ActionMenuItem(
+    action: OverviewAction,
+    index: Int,
+    count: Int,
+    onDismiss: () -> Unit,
 ) {
     val haptic = LocalHapticFeedback.current
 
+    DropdownMenuItem(
+        text = { Text(stringResource(action.label)) },
+        onClick = {
+            haptic.confirm()
+            onDismiss()
+            action.onClick()
+        },
+        modifier = Modifier.clickCursor(),
+        leadingIcon = { Icon(painter = painterResource(action.icon), contentDescription = null) },
+        shape = MenuDefaults.itemShape(index = index, count = count).shape,
+    )
+}
+
+@Composable
+private fun ActionOverflowIndicator(menuState: ButtonGroupMenuState) {
+    val haptic = LocalHapticFeedback.current
+    val description = stringResource(Res.string.action_more_options)
+
     HapticTooltipBox(text = description) {
-        FilledTonalIconButton(
+        FilledIconButton(
             onClick = {
                 haptic.confirm()
-                onClick()
+                if (menuState.isShowing) menuState.dismiss() else menuState.show()
             },
-            modifier = Modifier.clickCursor(),
+            modifier = Modifier
+                .minimumInteractiveComponentSize()
+                .size(IconButtonDefaults.smallContainerSize())
+                .clickCursor(),
             shapes = IconButtonDefaults.shapes(),
         ) {
-            Icon(painter = painter, contentDescription = description)
+            Icon(
+                painter = painterResource(Res.drawable.ic_rounded_more_vert),
+                contentDescription = description,
+            )
         }
     }
 }
@@ -337,10 +430,15 @@ private class OverviewRow(
     val title: String,
     val lines: List<String>,
     val icon: DrawableResource,
+    val isLoading: Boolean = false,
 )
 
 @Composable
-private fun OverviewGroups(state: ProductOverviewUiState, details: OverviewDetails) {
+private fun OverviewGroups(
+    state: ProductOverviewUiState,
+    details: OverviewDetails?,
+    nameRow: OverviewRow,
+) {
     val today = remember { todayEpochDay() }
     val unknown = stringResource(Res.string.product_overview_unknown)
     val never = stringResource(Res.string.product_overview_never)
@@ -365,6 +463,8 @@ private fun OverviewGroups(state: ProductOverviewUiState, details: OverviewDetai
     } ?: listOf(unknown)
 
     val stock = buildList {
+        add(nameRow)
+        if (details == null) return@buildList
         val amounts = listOfNotNull(
             details.stockAmount?.let(::amount),
             details.aggregatedAmount?.let { withSubProducts.fill(amount(it)) },
@@ -396,6 +496,7 @@ private fun OverviewGroups(state: ProductOverviewUiState, details: OverviewDetai
         }
     }
     val history = buildList {
+        if (details == null) return@buildList
         add(
             OverviewRow(
                 title = stringResource(Res.string.product_overview_last_purchased),
@@ -438,7 +539,7 @@ private fun OverviewGroups(state: ProductOverviewUiState, details: OverviewDetai
                             is ShelfLife.Days -> formatDuration(durationOf(shelfLife.days))
                         },
                     ),
-                    icon = Res.drawable.ic_rounded_hourglass_bottom,
+                    icon = Res.drawable.ic_rounded_hourglass_empty,
                 ),
             )
         }
@@ -446,7 +547,7 @@ private fun OverviewGroups(state: ProductOverviewUiState, details: OverviewDetai
             OverviewRow(
                 title = stringResource(Res.string.product_overview_spoil_rate),
                 lines = listOf(formatPercent(details.spoilRate)),
-                icon = Res.drawable.ic_rounded_compost,
+                icon = Res.drawable.ic_rounded_delete,
             ),
         )
     }
@@ -454,7 +555,7 @@ private fun OverviewGroups(state: ProductOverviewUiState, details: OverviewDetai
     Column(
         verticalArrangement = Arrangement.spacedBy(SegmentedListDefaults.GroupSpacing),
     ) {
-        listOf(stock, history).forEach { rows ->
+        listOf(stock, history).filter { it.isNotEmpty() }.forEach { rows ->
             SegmentedGroup {
                 rows.forEachIndexed { index, row ->
                     OverviewItem(row = row, index = index, count = rows.size)
@@ -477,6 +578,11 @@ private fun OverviewItem(row: OverviewRow, index: Int, count: Int) {
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 row.lines.forEach { Text(it) }
             }
+        },
+        trailingContent = if (row.isLoading) {
+            { LoadingIndicator(Modifier.size(IndicatorSize)) }
+        } else {
+            null
         },
         shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         colors = SegmentedListDefaults.colors(),
@@ -614,7 +720,7 @@ internal fun String.fill(vararg args: String): String =
 // Grocy shows the opened amount and the relative date next to the value
 private const val SEPARATOR = " · "
 private const val COLLAPSED_DESCRIPTION_LINES = 3
-private val ActionSize = 40.dp
+private val IndicatorSize = 40.dp
 private val MaxPictureHeight = 320.dp
 private val PlaceholderHeight = 160.dp
 

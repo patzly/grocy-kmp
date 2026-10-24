@@ -8,3 +8,9 @@ import androidx.navigation3.runtime.NavKey
  * browser history, so routes must never carry secrets.
  */
 interface Route : NavKey
+
+/**
+ * A route shown as detail pane beside its list where the window allows two panes; opened with
+ * [Navigator.openDetail], so choosing another item replaces it instead of piling up.
+ */
+interface DetailRoute : Route

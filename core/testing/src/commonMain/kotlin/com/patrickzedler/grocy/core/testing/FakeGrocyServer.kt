@@ -94,6 +94,12 @@ class FakeGrocyServer(
             body = """{"created_object_id":${MasterDataJson.CREATED_ID}}""",
             method = HttpMethod.Post,
         )
+        // Saving a chore lets Grocy assign its next execution, which answers without content
+        respond(
+            path = "/api/chores/executions/calculate-next-assignments",
+            status = HttpStatusCode.NoContent,
+            method = HttpMethod.Post,
+        )
         respond(
             path = "$PRODUCTS_PATH/${MasterDataJson.CREATED_ID}",
             body = MasterDataJson.CREATED_PRODUCT,

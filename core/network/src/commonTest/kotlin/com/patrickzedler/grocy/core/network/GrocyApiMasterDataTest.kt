@@ -113,7 +113,7 @@ class GrocyApiMasterDataTest {
     fun writesSendTheApiKeyAsQueryParameterInBrowsers() = runTest {
         val api = api(apiKeyAsQueryParameter = true) { json("", HttpStatusCode.NoContent) }
 
-        api.deleteProduct(CONNECTION, 7)
+        api.deleteObject(CONNECTION, "products", 7)
 
         assertEquals("key", requests.single().url.parameters[GrocyApi.API_KEY_HEADER])
         assertEquals(HttpMethod.Delete, requests.single().method)

@@ -1,15 +1,21 @@
 package com.patrickzedler.grocy.feature.masterdata.impl
 
 import com.patrickzedler.grocy.core.data.util.RefreshError
+import com.patrickzedler.grocy.core.model.server.ServerConfig
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -31,9 +37,29 @@ class MasterDataViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun TestScope.viewModel() = MasterDataViewModel(environment.repository).also {
-        backgroundScope.launch { it.state.collect {} }
-        advanceUntilIdle()
+    // Read eagerly like the app's, which reads it at start
+    private fun TestScope.serverConfig() = environment.repository.serverConfig.stateIn(
+        backgroundScope + UnconfinedTestDispatcher(testScheduler),
+        SharingStarted.Eagerly,
+        null,
+    )
+
+    private fun TestScope.viewModel() =
+        MasterDataViewModel(environment.repository, serverConfig()).also {
+            backgroundScope.launch { it.state.collect {} }
+            advanceUntilIdle()
+        }
+
+    @Test
+    fun categoriesShowRightAwayFromTheConfigReadAtStart() = runTest(dispatcher) {
+        val config = MutableStateFlow<ServerConfig?>(ServerConfig(chores = false))
+
+        val viewModel = MasterDataViewModel(environment.repository, config)
+
+        // Before the database answered anything
+        val state = viewModel.state.value
+        assertEquals(MasterDataCategory.entries - MasterDataCategory.CHORES, state?.categories)
+        assertNull(state?.productCount)
     }
 
     @Test

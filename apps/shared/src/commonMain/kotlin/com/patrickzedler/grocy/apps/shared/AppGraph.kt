@@ -10,6 +10,7 @@ import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
 import com.patrickzedler.grocy.core.data.update.UpdateRepository
+import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.createGrocyHttpClient
@@ -23,6 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
@@ -125,6 +127,8 @@ class AppGraph(
     internal val masterDataDependencies: MasterDataDependencies = object : MasterDataDependencies {
         override val masterDataRepository: MasterDataRepository
             get() = this@AppGraph.masterDataRepository
+        override val serverConfig: StateFlow<ServerConfig?>
+            get() = serverRepository.serverConfig
     }
 
     internal val aboutDependencies: AboutDependencies = object : AboutDependencies {
