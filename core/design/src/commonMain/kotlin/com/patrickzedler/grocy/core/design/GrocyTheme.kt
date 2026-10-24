@@ -85,12 +85,8 @@ private val AppPaletteStyle.paletteStyle: PaletteStyle
         AppPaletteStyle.TONAL_SPOT -> PaletteStyle.TonalSpot
         AppPaletteStyle.NEUTRAL -> PaletteStyle.Neutral
         AppPaletteStyle.VIBRANT -> PaletteStyle.Vibrant
-        AppPaletteStyle.EXPRESSIVE -> PaletteStyle.Expressive
         AppPaletteStyle.RAINBOW -> PaletteStyle.Rainbow
-        AppPaletteStyle.FRUIT_SALAD -> PaletteStyle.FruitSalad
         AppPaletteStyle.MONOCHROME -> PaletteStyle.Monochrome
-        AppPaletteStyle.FIDELITY -> PaletteStyle.Fidelity
-        AppPaletteStyle.CONTENT -> PaletteStyle.Content
     }
 
 private val AppContrast.level: Double

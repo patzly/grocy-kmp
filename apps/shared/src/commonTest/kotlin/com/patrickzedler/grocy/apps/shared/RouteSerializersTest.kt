@@ -10,6 +10,7 @@ import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductsRoute
 import com.patrickzedler.grocy.feature.settings.api.GeneralSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.LogRoute
+import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import kotlin.test.Test
@@ -34,6 +35,7 @@ class RouteSerializersTest {
         AboutRoute,
         SettingsRoute,
         GeneralSettingsRoute,
+        ServerSettingsRoute,
         LogRoute,
         MasterDataRoute,
         ProductsRoute,

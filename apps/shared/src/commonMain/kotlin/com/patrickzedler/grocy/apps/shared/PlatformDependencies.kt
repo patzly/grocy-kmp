@@ -39,4 +39,7 @@ interface PlatformDependencies {
      * for every other Android build, its service worker on the web.
      */
     fun createAppUpdater(gitHubReleases: GitHubReleases): AppUpdater
+
+    /** Starts the app anew: a new process on Android, a reload of the page on the web. */
+    fun restartApp()
 }

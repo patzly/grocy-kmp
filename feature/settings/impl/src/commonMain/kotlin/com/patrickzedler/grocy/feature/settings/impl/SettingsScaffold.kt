@@ -8,6 +8,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.MenuAnchorPosition
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -67,6 +68,7 @@ internal fun SettingsScaffold(
     menuActions: SettingsMenuActions,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState? = null,
     content: LazyListScope.() -> Unit,
 ) {
     val unlockState by menuViewModel.unlockState.collectAsStateWithLifecycle()
@@ -85,6 +87,7 @@ internal fun SettingsScaffold(
         onHelpClick = { activeDialog = AppDialog.HELP },
         onFeedbackClick = { activeDialog = AppDialog.FEEDBACK },
         modifier = modifier,
+        snackbarHostState = snackbarHostState,
         content = content,
     )
 }
@@ -98,11 +101,13 @@ internal fun SettingsScaffoldContent(
     onHelpClick: () -> Unit,
     onFeedbackClick: () -> Unit,
     modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState? = null,
     content: LazyListScope.() -> Unit,
 ) {
     SegmentedListScreen(
         title = title,
         modifier = modifier,
+        snackbarHostState = snackbarHostState,
         navigationIcon = { NavigateBackButton(onClick = onBackClick) },
         actions = {
             SettingsMenu(

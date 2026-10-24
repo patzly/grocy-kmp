@@ -8,7 +8,6 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -48,7 +47,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
@@ -59,12 +57,12 @@ import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
-import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.RoundedTextField
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.design.component.SupportingLines
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
@@ -407,23 +405,13 @@ private fun ProductItem(
             null
         },
         supportingContent = if (supporting.isNotEmpty()) {
-            {
-                Column(
-                    modifier = Modifier.alpha(contentAlpha),
-                    verticalArrangement = Arrangement.spacedBy(2.dp),
-                ) {
-                    supporting.forEach { Text(it, maxLines = 1, overflow = TextOverflow.Ellipsis) }
-                }
-            }
+            { SupportingLines(lines = supporting, modifier = Modifier.alpha(contentAlpha)) }
         } else {
             null
         },
+        // The picture brings enough space of its own, unlike icons and switches
         trailingContent = item.pictureFileName?.let { fileName ->
-            {
-                LeadingTrailingContentWrapper {
-                    ProductThumbnail(fileName = fileName, load = loadThumbnail)
-                }
-            }
+            { ProductThumbnail(fileName = fileName, load = loadThumbnail) }
         },
     ) {
         Text(item.name, modifier = Modifier.alpha(contentAlpha))

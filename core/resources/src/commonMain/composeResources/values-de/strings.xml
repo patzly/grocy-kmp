@@ -154,6 +154,23 @@
   <string name="settings_backup_description">Speichere deine Einstellungen in einer Datei oder stelle sie wieder her</string>
   <string name="settings_reset">Alles zurücksetzen</string>
   <string name="settings_reset_description">Setzt jede Einstellung auf ihren Standard zurück</string>
+  <string name="settings_server_demo">Öffentlicher Demo-Server</string>
+  <string name="settings_server_demo_warning">Alles, was du hier eingibst, ist für alle sichtbar und bleibt es, bis die Demo ihre Änderungen einmal pro Tag zurücksetzt.</string>
+  <string name="settings_server_url">Server-URL</string>
+  <string name="settings_server_version">Grocy-Version</string>
+  <string name="settings_server_version_loading">Wird geladen…</string>
+  <string name="settings_server_version_unknown">Unbekannt</string>
+  <string name="settings_server_reload">Konfiguration neu laden</string>
+  <string name="settings_server_reload_description">Neustart der App erforderlich</string>
+  <string name="settings_server_reload_offline">Der Server ist nicht erreichbar. Die Konfiguration wurde nicht neu geladen.</string>
+  <string name="settings_server_reload_failed">Die Konfiguration konnte nicht neu geladen werden.</string>
+  <string name="settings_server_restart_title">App neu starten?</string>
+  <string name="settings_server_restart_message">Die Konfiguration wurde neu geladen. Starte die App jetzt neu, damit jeder Bildschirm sie verwendet.</string>
+  <string name="action_restart">Neu starten</string>
+  <string name="settings_server_logout">Abmelden</string>
+  <string name="settings_server_logout_description">Zurück zum Anmeldebildschirm</string>
+  <string name="settings_server_logout_title">Abmelden?</string>
+  <string name="settings_server_logout_message">Du kehrst zum Anmeldebildschirm zurück. Um dich wieder anzumelden, brauchst du die Adresse des Servers und einen API-Schlüssel.</string>
   <string name="settings_language">Sprache</string>
   <string name="settings_language_system">Systemstandard</string>
   <string name="settings_language_system_description">Die Sprache deines Geräts</string>
@@ -346,10 +363,6 @@
   <string name="settings_style_tonal_spot">Tonaler Akzent</string>
   <string name="settings_style_neutral">Neutral</string>
   <string name="settings_style_vibrant">Lebhaft</string>
-  <string name="settings_style_expressive">Ausdrucksstark</string>
   <string name="settings_style_rainbow">Regenbogen</string>
-  <string name="settings_style_fruit_salad">Obstsalat</string>
   <string name="settings_style_monochrome">Monochrom</string>
-  <string name="settings_style_fidelity">Farbtreu</string>
-  <string name="settings_style_content">Inhaltsbasiert</string>
 </resources>

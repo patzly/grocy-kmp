@@ -154,6 +154,23 @@
   <string name="settings_backup_description">Sla je instellingen op in een bestand of zet ze terug</string>
   <string name="settings_reset">Alles resetten</string>
   <string name="settings_reset_description">Zet elke instelling terug naar de standaardwaarde</string>
+  <string name="settings_server_demo">Openbare demoserver</string>
+  <string name="settings_server_demo_warning">Alles wat je hier invoert is voor iedereen zichtbaar en blijft dat totdat de demo zijn wijzigingen één keer per dag terugzet.</string>
+  <string name="settings_server_url">Server-URL</string>
+  <string name="settings_server_version">Grocy-versie</string>
+  <string name="settings_server_version_loading">Laden…</string>
+  <string name="settings_server_version_unknown">Onbekend</string>
+  <string name="settings_server_reload">Configuratie opnieuw laden</string>
+  <string name="settings_server_reload_description">Herstart van de app vereist</string>
+  <string name="settings_server_reload_offline">De server is niet bereikbaar. De configuratie is niet opnieuw geladen.</string>
+  <string name="settings_server_reload_failed">De configuratie kon niet opnieuw worden geladen.</string>
+  <string name="settings_server_restart_title">App opnieuw starten?</string>
+  <string name="settings_server_restart_message">De configuratie is opnieuw geladen. Start de app nu opnieuw zodat elk scherm deze gebruikt.</string>
+  <string name="action_restart">Opnieuw starten</string>
+  <string name="settings_server_logout">Afmelden</string>
+  <string name="settings_server_logout_description">Terug naar het aanmeldscherm</string>
+  <string name="settings_server_logout_title">Afmelden?</string>
+  <string name="settings_server_logout_message">Je keert terug naar het aanmeldscherm. Om je opnieuw aan te melden heb je het adres van de server en een API-sleutel nodig.</string>
   <string name="settings_language">Taal</string>
   <string name="settings_language_system">Systeemstandaard</string>
   <string name="settings_language_system_description">De taal van je apparaat</string>
@@ -346,10 +363,6 @@
   <string name="settings_style_tonal_spot">Tonaal</string>
   <string name="settings_style_neutral">Neutraal</string>
   <string name="settings_style_vibrant">Levendig</string>
-  <string name="settings_style_expressive">Expressief</string>
   <string name="settings_style_rainbow">Regenboog</string>
-  <string name="settings_style_fruit_salad">Fruitsalade</string>
   <string name="settings_style_monochrome">Monochroom</string>
-  <string name="settings_style_fidelity">Getrouw</string>
-  <string name="settings_style_content">Inhoud</string>
 </resources>

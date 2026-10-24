@@ -154,6 +154,23 @@
   <string name="settings_backup_description">Salvesta oma seaded faili või taasta need</string>
   <string name="settings_reset">Nulli kõik</string>
   <string name="settings_reset_description">Taastab kõigi seadete vaikeväärtused</string>
+  <string name="settings_server_demo">Avalik demoserver</string>
+  <string name="settings_server_demo_warning">Kõik, mida siia sisestad, on kõigile nähtav ja jääb nii, kuni demo lähtestab oma muudatused kord päevas.</string>
+  <string name="settings_server_url">Serveri URL</string>
+  <string name="settings_server_version">Grocy versioon</string>
+  <string name="settings_server_version_loading">Laadimine…</string>
+  <string name="settings_server_version_unknown">Teadmata</string>
+  <string name="settings_server_reload">Laadi seadistus uuesti</string>
+  <string name="settings_server_reload_description">Vajab rakenduse taaskäivitamist</string>
+  <string name="settings_server_reload_offline">Serveriga ei saanud ühendust. Seadistust ei laaditud uuesti.</string>
+  <string name="settings_server_reload_failed">Seadistust ei õnnestunud uuesti laadida.</string>
+  <string name="settings_server_restart_title">Kas taaskäivitada rakendus?</string>
+  <string name="settings_server_restart_message">Seadistus laaditi uuesti. Taaskäivita rakendus kohe, et kõik vaated seda kasutaksid.</string>
+  <string name="action_restart">Taaskäivita</string>
+  <string name="settings_server_logout">Logi välja</string>
+  <string name="settings_server_logout_description">Tagasi sisselogimisvaatesse</string>
+  <string name="settings_server_logout_title">Kas logida välja?</string>
+  <string name="settings_server_logout_message">Naased sisselogimisvaatesse. Uuesti sisselogimiseks on vaja serveri aadressi ja API-võtit.</string>
   <string name="settings_language">Keel</string>
   <string name="settings_language_system">Süsteemi vaikimisi</string>
   <string name="settings_language_system_description">Sinu seadme keel</string>
@@ -346,10 +363,6 @@
   <string name="settings_style_tonal_spot">Toonitud</string>
   <string name="settings_style_neutral">Neutraalne</string>
   <string name="settings_style_vibrant">Erk</string>
-  <string name="settings_style_expressive">Väljendusrikas</string>
   <string name="settings_style_rainbow">Vikerkaar</string>
-  <string name="settings_style_fruit_salad">Puuviljasalat</string>
   <string name="settings_style_monochrome">Ühevärviline</string>
-  <string name="settings_style_fidelity">Truu</string>
-  <string name="settings_style_content">Sisu</string>
 </resources>

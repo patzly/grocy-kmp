@@ -154,6 +154,23 @@
   <string name="settings_backup_description">Guarde su configuración en un archivo o restáurela</string>
   <string name="settings_reset">Restablecer todo</string>
   <string name="settings_reset_description">Devuelve cada opción a su valor predeterminado</string>
+  <string name="settings_server_demo">Servidor de demostración público</string>
+  <string name="settings_server_demo_warning">Todo lo que introduzcas aquí es visible para todos y lo seguirá siendo hasta que la demostración restablezca sus cambios una vez al día.</string>
+  <string name="settings_server_url">URL del servidor</string>
+  <string name="settings_server_version">Versión de Grocy</string>
+  <string name="settings_server_version_loading">Cargando…</string>
+  <string name="settings_server_version_unknown">Desconocida</string>
+  <string name="settings_server_reload">Recargar configuración</string>
+  <string name="settings_server_reload_description">Requiere reiniciar la aplicación</string>
+  <string name="settings_server_reload_offline">No se pudo conectar con el servidor. La configuración no se ha recargado.</string>
+  <string name="settings_server_reload_failed">No se pudo recargar la configuración.</string>
+  <string name="settings_server_restart_title">¿Reiniciar la aplicación?</string>
+  <string name="settings_server_restart_message">La configuración se ha recargado. Reinicia la aplicación ahora para que todas las pantallas la usen.</string>
+  <string name="action_restart">Reiniciar</string>
+  <string name="settings_server_logout">Cerrar sesión</string>
+  <string name="settings_server_logout_description">Volver a la pantalla de inicio de sesión</string>
+  <string name="settings_server_logout_title">¿Cerrar sesión?</string>
+  <string name="settings_server_logout_message">Volverás a la pantalla de inicio de sesión. Para iniciar sesión de nuevo, necesitarás la dirección del servidor y una clave API.</string>
   <string name="settings_language">Idioma</string>
   <string name="settings_language_system">Predeterminado del sistema</string>
   <string name="settings_language_system_description">El idioma de su dispositivo</string>
@@ -347,10 +364,6 @@
   <string name="settings_style_tonal_spot">Tonal</string>
   <string name="settings_style_neutral">Neutro</string>
   <string name="settings_style_vibrant">Vibrante</string>
-  <string name="settings_style_expressive">Expresivo</string>
   <string name="settings_style_rainbow">Arcoíris</string>
-  <string name="settings_style_fruit_salad">Macedonia</string>
   <string name="settings_style_monochrome">Monocromo</string>
-  <string name="settings_style_fidelity">Fiel</string>
-  <string name="settings_style_content">Contenido</string>
 </resources>

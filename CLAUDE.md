@@ -32,8 +32,8 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   `PullToRefreshDefaults.LoadingIndicator`, sliding out from below the app bar, and "Reload" in
   the app bar's overflow menu (`AppBarOverflowMenu`, narrow three dots button) for keyboards and
   screen readers. With a mouse or trackpad (`LocalPointerKind`, below) pulling is off (a wheel
-  only showed the indicator without refreshing) and "Reload" is a narrow icon button of the bar
-  instead. These screens use the small centered app bar with `pinnedScrollBehavior` (no
+  only showed the indicator without refreshing) and "Reload" is a round icon button of the bar
+  instead (only the three dots are narrow). These screens use the small centered app bar with `pinnedScrollBehavior` (no
   collapsing, which would fight with pulling), always in its scrolled color
   (`surfaceContainerHighest`), so the indicator visibly comes from below it; the others keep
   the large one, except while a mouse is used: its wheel has no gesture end the large bar could
@@ -43,7 +43,8 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   `RefreshController` (`core:data`: one at a time, offline/failed errors, `loadedOnce`);
   `RefreshErrorEffect` (`core:ui`) shows a failed download as snackbar.
 - `ProductsScreen`: one segmented item per product (`itemSpacing = SegmentedGap`, a product with
-  picture shows it at the item's end, `ProductThumbnail`, 56.dp with small corners), first the
+  picture shows it at the item's end, `ProductThumbnail`, 56.dp with small corners, without
+  `LeadingTrailingContentWrapper`, whose padding only icons and switches need), first the
   filter row directly on the background
   (`edgeToEdgeItem` of `InsetLazyColumn`: it scrolls sideways up to the screen's edges, the
   padding that lines it up with the items scrolls along) and, while open, the search as its own
@@ -83,8 +84,21 @@ server: stock, shopping list), Network (loading timeout, Tor with Orbot, HTTP pr
 (navigation, date and keyboard settings, Open Food Facts / Open Beauty Facts), Scanner (engine,
 front camera, 2D formats, barcode formats, external scanners) and Notifications (stock, chores)
 as one group (`SettingsCategory`), then "Backup and restore" and "Reset all" as a second group.
-Built so far: the overview and General (language, theme, contrast). The other category pages,
-backup and reset follow; `settingsEntries` wires their clicks to nothing until then.
+Built so far: the overview, General (language, theme, contrast) and Server. The other category
+pages, backup and reset follow; `settingsEntries` wires their clicks to nothing until then.
+
+- Server (`ServerSettingsScreen`): on the demo server first a red `errorContainer` `Card` (a
+  plain card, not a list item, no icon: a `titleMedium` title and `bodyMedium` text) warning
+  that everything entered is public until the demo resets its changes once a day; then server URL and Grocy version, then "Reload configuration" and
+  "Logout". `ServerRepository` (`core:data`, eager `StateFlow` in the app scope) combines the
+  stored connection with the stored `SystemInfo` (`server_values` key `system_info`, written by
+  every `MasterDataRepository.refresh`); opening the screen downloads the version again quietly
+  (an update of the server changes it). Reloading downloads version, `/system/config` and user
+  settings (`MasterDataRepository.reloadConfiguration`) and then asks whether to restart now
+  (`PlatformDependencies.restartApp`: a new process on Android, a page reload on the web, which
+  keeps the back stack); failures show as snackbar. Logout asks first (logging in again needs
+  address and API key) and goes through `AuthRepository.logout`; the screen keeps showing the
+  server while it slides out.
 
 - Every settings screen uses `SettingsScaffold` (`feature:settings:impl`): `SegmentedListScreen`
   with back button and the same overflow menu (About, Help, Send feedback, Show logcat / Show
@@ -108,8 +122,8 @@ backup and reset follow; `settingsEntries` wires their clicks to nothing until t
   (`dynamicColorFollowsSystemContrast`), so the contrast buttons are disabled with dynamic
   color. `HueSlider` (`core:design`) is the rainbow slider, colored with the same chroma and
   tone as the theme's seed. Below it a button group chooses MaterialKolor's `PaletteStyle`
-  (`AppPaletteStyle`: tonal spot, neutral, vibrant, ... content; the ones that do not fit go
-  into its overflow menu). Changing light/dark, color source, style or contrast fades the whole
+  (`AppPaletteStyle`: tonal spot, neutral, vibrant, rainbow, monochrome; the ones that do not
+  fit go into its overflow menu; stored styles that were removed fall back to tonal spot). Changing light/dark, color source, style or contrast fades the whole
   app into the new colors (`animateColorScheme`: one animation blends every color of the
   scheme); hue changes apply at once, so dragging the slider never piles up animations.
 - Language (`AppLanguageStore`, null = system language). The translations are the tags in
@@ -613,7 +627,9 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   640.dp, `RoundedTextField`, `ConnectedButtonGroup`, `NavigateBackButton`, `HapticTooltipBox`,
   `TextDialog`, `FormattedText`, `FloatingToolbarWithFab` + `FloatingToolbarIconButton` for the
   floatingToolbar slot of `SegmentedListScreen`, `SegmentedSwitchItem`,
-  `SearchableDropdownField` for every choice of objects, a combobox like Grocy's pickers: the
+  `SupportingLines` for every multi-line supporting content in lazy lists (Material sizes items
+  by the slot's baselines, a reused column kept those of its former line count, so items stayed
+  too high), `SearchableDropdownField` for every choice of objects, a combobox like Grocy's pickers: the
   text is the value (a text naming an option chooses it, an empty one chooses nothing, other
   text shows "Choose an entry from the list" once no suggestion is open and is reported through
   `onUnmatchedChange`, so forms refuse to save); the menu only suggests (fuzzy, no check marks,

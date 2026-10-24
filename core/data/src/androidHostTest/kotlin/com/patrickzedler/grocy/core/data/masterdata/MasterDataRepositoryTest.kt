@@ -1,7 +1,9 @@
 package com.patrickzedler.grocy.core.data.masterdata
 
+import com.patrickzedler.grocy.core.database.ServerValueEntity
 import com.patrickzedler.grocy.core.database.createInMemoryGrocyDatabase
 import com.patrickzedler.grocy.core.model.ServerConnection
+import com.patrickzedler.grocy.core.model.SystemInfo
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import com.patrickzedler.grocy.core.testing.FakeGrocyServer
@@ -98,6 +100,74 @@ class MasterDataRepositoryTest {
     fun configurationHasGrocysDefaultsBeforeTheFirstDownload() = runTest {
         assertTrue(repository.serverConfig.first().stockLocationTracking)
         assertEquals(4, repository.userSettings.first().stockDecimalPlacesAmounts)
+    }
+
+    @Test
+    fun refreshStoresTheServersVersion() = runTest {
+        repository.refresh()
+
+        assertEquals("4.7.1", repository.systemInfo.first()?.grocyVersion)
+    }
+
+    @Test
+    fun versionIsUnknownBeforeTheFirstDownload() = runTest {
+        assertNull(repository.systemInfo.first())
+    }
+
+    @Test
+    fun storedVersionOfEarlierInstallationsIsRead() = runTest {
+        // Literal of the stored format, so existing installations keep reading it
+        database.masterDataDao().upsertServerValue(
+            ServerValueEntity(
+                key = "system_info",
+                json = """{"grocy_version":"4.5.0","grocy_release_date":"2025-04-01"}""",
+            ),
+        )
+
+        assertEquals(
+            SystemInfo(grocyVersion = "4.5.0", grocyReleaseDate = "2025-04-01"),
+            repository.systemInfo.first(),
+        )
+    }
+
+    @Test
+    fun reloadConfigurationStoresConfigSettingsAndVersion() = runTest {
+        server.respond(
+            "/api/system/config",
+            body = """{"FEATURE_FLAG_STOCK_PRICE_TRACKING":false}""",
+        )
+        server.respond("/api/user/settings", body = """{"stock_decimal_places_amounts":"1"}""")
+
+        repository.reloadConfiguration()
+
+        assertFalse(repository.serverConfig.first().stockPriceTracking)
+        assertEquals(1, repository.userSettings.first().stockDecimalPlacesAmounts)
+        assertEquals("4.7.1", repository.systemInfo.first()?.grocyVersion)
+        assertTrue(server.requestedPaths.none { it.startsWith("/api/objects") })
+    }
+
+    @Test
+    fun offlineReloadKeepsTheStoredConfiguration() = runTest {
+        repository.refresh()
+        server.unreachable = true
+
+        assertFailsWith<GrocyApiException.Unreachable> { repository.reloadConfiguration() }
+
+        assertEquals(2, repository.userSettings.first().stockDecimalPlacesAmounts)
+        assertEquals("4.7.1", repository.systemInfo.first()?.grocyVersion)
+    }
+
+    @Test
+    fun refreshedVersionReplacesTheStoredOne() = runTest {
+        repository.refresh()
+        server.respond(
+            FakeGrocyServer.SYSTEM_INFO_PATH,
+            body = """{"grocy_version":{"Version":"4.8.0","ReleaseDate":"2026-10-01"}}""",
+        )
+
+        repository.refreshSystemInfo()
+
+        assertEquals("4.8.0", repository.systemInfo.first()?.grocyVersion)
     }
 
     @Test

@@ -37,7 +37,16 @@ class SettingValuesTest {
     @Test
     fun storedPaletteStyleIsRead() {
         assertEquals(
-            AppPaletteStyle.FRUIT_SALAD,
+            AppPaletteStyle.MONOCHROME,
+            appearanceOf(null, null, null, null, style = "MONOCHROME").style,
+        )
+    }
+
+    @Test
+    fun removedPaletteStyleIsTonalSpot() {
+        // Expressive, fruit salad, fidelity and content were offered once
+        assertEquals(
+            AppPaletteStyle.TONAL_SPOT,
             appearanceOf(null, null, null, null, style = "FRUIT_SALAD").style,
         )
     }

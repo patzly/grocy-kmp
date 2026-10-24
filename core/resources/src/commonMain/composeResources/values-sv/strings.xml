@@ -154,6 +154,23 @@
   <string name="settings_backup_description">Spara dina inställningar i en fil eller återställ dem</string>
   <string name="settings_reset">Nollställ allt</string>
   <string name="settings_reset_description">Återställer varje inställning till standard</string>
+  <string name="settings_server_demo">Offentlig demoserver</string>
+  <string name="settings_server_demo_warning">Allt du anger här är synligt för alla och förblir det tills demon återställer sina ändringar en gång om dagen.</string>
+  <string name="settings_server_url">Server-URL</string>
+  <string name="settings_server_version">Grocy-version</string>
+  <string name="settings_server_version_loading">Läser in…</string>
+  <string name="settings_server_version_unknown">Okänd</string>
+  <string name="settings_server_reload">Läs in konfigurationen igen</string>
+  <string name="settings_server_reload_description">Kräver omstart av appen</string>
+  <string name="settings_server_reload_offline">Servern kunde inte nås. Konfigurationen lästes inte in igen.</string>
+  <string name="settings_server_reload_failed">Konfigurationen kunde inte läsas in igen.</string>
+  <string name="settings_server_restart_title">Starta om appen?</string>
+  <string name="settings_server_restart_message">Konfigurationen lästes in igen. Starta om appen nu så att alla skärmar använder den.</string>
+  <string name="action_restart">Starta om</string>
+  <string name="settings_server_logout">Logga ut</string>
+  <string name="settings_server_logout_description">Tillbaka till inloggningsskärmen</string>
+  <string name="settings_server_logout_title">Logga ut?</string>
+  <string name="settings_server_logout_message">Du går tillbaka till inloggningsskärmen. För att logga in igen behöver du serverns adress och en API-nyckel.</string>
   <string name="settings_language">Språk</string>
   <string name="settings_language_system">Systemstandard</string>
   <string name="settings_language_system_description">Språket på din enhet</string>
@@ -346,10 +363,6 @@
   <string name="settings_style_tonal_spot">Tonal</string>
   <string name="settings_style_neutral">Neutral</string>
   <string name="settings_style_vibrant">Livfull</string>
-  <string name="settings_style_expressive">Uttrycksfull</string>
   <string name="settings_style_rainbow">Regnbåge</string>
-  <string name="settings_style_fruit_salad">Fruktsallad</string>
   <string name="settings_style_monochrome">Monokrom</string>
-  <string name="settings_style_fidelity">Trogen</string>
-  <string name="settings_style_content">Innehåll</string>
 </resources>

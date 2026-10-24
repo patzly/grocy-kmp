@@ -5,6 +5,7 @@ import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.scanner.ScannerRepository
+import com.patrickzedler.grocy.core.data.server.ServerRepository
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
@@ -52,6 +53,13 @@ class AppGraph(
             connection = { platform.credentialStore.connection.first() },
         )
     }
+
+    /** The logged in server and its version, read right at app start. */
+    private val serverRepository = ServerRepository(
+        connection = platform.credentialStore.connection,
+        masterDataRepository = masterDataRepository,
+        scope = appScope,
+    )
 
     internal val unlockRepository by lazy {
         UnlockRepository(platform.unlockChecker, platform.settingsStore, appScope)
@@ -101,6 +109,12 @@ class AppGraph(
             get() = this@AppGraph.unlockRepository
         override val logReader: LogReader
             get() = platform.logReader
+        override val serverRepository: ServerRepository
+            get() = this@AppGraph.serverRepository
+        override val authRepository: AuthRepository
+            get() = this@AppGraph.authRepository
+
+        override fun restartApp() = platform.restartApp()
     }
 
     internal val startDependencies: StartDependencies = object : StartDependencies {

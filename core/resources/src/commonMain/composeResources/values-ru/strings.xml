@@ -154,6 +154,23 @@
   <string name="settings_backup_description">Сохраните настройки в файл или восстановите их</string>
   <string name="settings_reset">Сбросить всё</string>
   <string name="settings_reset_description">Возвращает все настройки к значениям по умолчанию</string>
+  <string name="settings_server_demo">Публичный демо-сервер</string>
+  <string name="settings_server_demo_warning">Всё, что вы здесь вводите, видно всем и останется видимым, пока демо раз в день не сбросит свои изменения.</string>
+  <string name="settings_server_url">URL сервера</string>
+  <string name="settings_server_version">Версия Grocy</string>
+  <string name="settings_server_version_loading">Загрузка…</string>
+  <string name="settings_server_version_unknown">Неизвестна</string>
+  <string name="settings_server_reload">Перезагрузить конфигурацию</string>
+  <string name="settings_server_reload_description">Требуется перезапуск приложения</string>
+  <string name="settings_server_reload_offline">Сервер недоступен. Конфигурация не перезагружена.</string>
+  <string name="settings_server_reload_failed">Не удалось перезагрузить конфигурацию.</string>
+  <string name="settings_server_restart_title">Перезапустить приложение?</string>
+  <string name="settings_server_restart_message">Конфигурация перезагружена. Перезапустите приложение сейчас, чтобы все экраны её использовали.</string>
+  <string name="action_restart">Перезапустить</string>
+  <string name="settings_server_logout">Выйти</string>
+  <string name="settings_server_logout_description">Вернуться к экрану входа</string>
+  <string name="settings_server_logout_title">Выйти?</string>
+  <string name="settings_server_logout_message">Вы вернётесь к экрану входа. Чтобы войти снова, понадобятся адрес сервера и API-ключ.</string>
   <string name="settings_language">Язык</string>
   <string name="settings_language_system">Как в системе</string>
   <string name="settings_language_system_description">Язык вашего устройства</string>
@@ -348,10 +365,6 @@
   <string name="settings_style_tonal_spot">Тональный</string>
   <string name="settings_style_neutral">Нейтральный</string>
   <string name="settings_style_vibrant">Яркий</string>
-  <string name="settings_style_expressive">Выразительный</string>
   <string name="settings_style_rainbow">Радуга</string>
-  <string name="settings_style_fruit_salad">Фруктовый салат</string>
   <string name="settings_style_monochrome">Монохромный</string>
-  <string name="settings_style_fidelity">Точный</string>
-  <string name="settings_style_content">Контент</string>
 </resources>

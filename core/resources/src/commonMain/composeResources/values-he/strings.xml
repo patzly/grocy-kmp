@@ -154,6 +154,23 @@
   <string name="settings_backup_description">שמירת ההגדרות בקובץ או שחזור שלהן</string>
   <string name="settings_reset">איפוס הכול</string>
   <string name="settings_reset_description">החזרת כל ההגדרות לבררת המחדל</string>
+  <string name="settings_server_demo">שרת הדגמה ציבורי</string>
+  <string name="settings_server_demo_warning">כל מה שתזינו כאן גלוי לכולם ונשאר כך עד שההדגמה מאפסת את השינויים שלה פעם ביום.</string>
+  <string name="settings_server_url">כתובת השרת</string>
+  <string name="settings_server_version">גרסת Grocy</string>
+  <string name="settings_server_version_loading">בטעינה…</string>
+  <string name="settings_server_version_unknown">לא ידועה</string>
+  <string name="settings_server_reload">טעינה מחדש של התצורה</string>
+  <string name="settings_server_reload_description">נדרשת הפעלה מחדש של היישום</string>
+  <string name="settings_server_reload_offline">לא ניתן להתחבר לשרת. התצורה לא נטענה מחדש.</string>
+  <string name="settings_server_reload_failed">לא ניתן היה לטעון מחדש את התצורה.</string>
+  <string name="settings_server_restart_title">להפעיל את היישום מחדש?</string>
+  <string name="settings_server_restart_message">התצורה נטענה מחדש. הפעילו את היישום מחדש עכשיו כדי שכל המסכים ישתמשו בה.</string>
+  <string name="action_restart">הפעלה מחדש</string>
+  <string name="settings_server_logout">התנתקות</string>
+  <string name="settings_server_logout_description">חזרה למסך הכניסה</string>
+  <string name="settings_server_logout_title">להתנתק?</string>
+  <string name="settings_server_logout_message">תחזרו למסך הכניסה. כדי להתחבר שוב תצטרכו את כתובת השרת ומפתח API.</string>
   <string name="settings_language">שפה</string>
   <string name="settings_language_system">בררת המחדל של המערכת</string>
   <string name="settings_language_system_description">השפה של המכשיר שלך</string>
@@ -347,10 +364,6 @@
   <string name="settings_style_tonal_spot">טונאלי</string>
   <string name="settings_style_neutral">ניטרלי</string>
   <string name="settings_style_vibrant">תוסס</string>
-  <string name="settings_style_expressive">אקספרסיבי</string>
   <string name="settings_style_rainbow">קשת</string>
-  <string name="settings_style_fruit_salad">סלט פירות</string>
   <string name="settings_style_monochrome">מונוכרום</string>
-  <string name="settings_style_fidelity">נאמן</string>
-  <string name="settings_style_content">תוכן</string>
 </resources>

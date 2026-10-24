@@ -154,6 +154,23 @@
   <string name="settings_backup_description">Збережіть налаштування у файл або відновіть їх</string>
   <string name="settings_reset">Скинути все</string>
   <string name="settings_reset_description">Повертає всі налаштування до значень за замовчуванням</string>
+  <string name="settings_server_demo">Публічний демосервер</string>
+  <string name="settings_server_demo_warning">Усе, що ви тут вводите, видно всім і залишиться видимим, доки демо раз на день не скине свої зміни.</string>
+  <string name="settings_server_url">URL сервера</string>
+  <string name="settings_server_version">Версія Grocy</string>
+  <string name="settings_server_version_loading">Завантаження…</string>
+  <string name="settings_server_version_unknown">Невідома</string>
+  <string name="settings_server_reload">Перезавантажити конфігурацію</string>
+  <string name="settings_server_reload_description">Потрібен перезапуск застосунку</string>
+  <string name="settings_server_reload_offline">Сервер недоступний. Конфігурацію не перезавантажено.</string>
+  <string name="settings_server_reload_failed">Не вдалося перезавантажити конфігурацію.</string>
+  <string name="settings_server_restart_title">Перезапустити застосунок?</string>
+  <string name="settings_server_restart_message">Конфігурацію перезавантажено. Перезапустіть застосунок зараз, щоб усі екрани її використовували.</string>
+  <string name="action_restart">Перезапустити</string>
+  <string name="settings_server_logout">Вийти</string>
+  <string name="settings_server_logout_description">Повернутися до екрана входу</string>
+  <string name="settings_server_logout_title">Вийти?</string>
+  <string name="settings_server_logout_message">Ви повернетеся до екрана входу. Щоб увійти знову, знадобляться адреса сервера та API-ключ.</string>
   <string name="settings_language">Мова</string>
   <string name="settings_language_system">Як у системі</string>
   <string name="settings_language_system_description">Мова вашого пристрою</string>
@@ -348,10 +365,6 @@
   <string name="settings_style_tonal_spot">Тональний</string>
   <string name="settings_style_neutral">Нейтральний</string>
   <string name="settings_style_vibrant">Яскравий</string>
-  <string name="settings_style_expressive">Виразний</string>
   <string name="settings_style_rainbow">Веселка</string>
-  <string name="settings_style_fruit_salad">Фруктовий салат</string>
   <string name="settings_style_monochrome">Монохромний</string>
-  <string name="settings_style_fidelity">Точний</string>
-  <string name="settings_style_content">Вміст</string>
 </resources>

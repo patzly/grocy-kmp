@@ -154,6 +154,23 @@
   <string name="settings_backup_description">將設定儲存到檔案或從檔案還原</string>
   <string name="settings_reset">全部重設</string>
   <string name="settings_reset_description">將所有設定還原為預設值</string>
+  <string name="settings_server_demo">公開示範伺服器</string>
+  <string name="settings_server_demo_warning">你在這裡輸入的所有內容對所有人可見，並會一直保留，直到示範每天重設一次變更。</string>
+  <string name="settings_server_url">伺服器 URL</string>
+  <string name="settings_server_version">Grocy 版本</string>
+  <string name="settings_server_version_loading">載入中…</string>
+  <string name="settings_server_version_unknown">未知</string>
+  <string name="settings_server_reload">重新載入設定</string>
+  <string name="settings_server_reload_description">需要重新啟動應用程式</string>
+  <string name="settings_server_reload_offline">無法連線到伺服器。設定未重新載入。</string>
+  <string name="settings_server_reload_failed">無法重新載入設定。</string>
+  <string name="settings_server_restart_title">要重新啟動應用程式嗎？</string>
+  <string name="settings_server_restart_message">設定已重新載入。請立即重新啟動應用程式，讓每個畫面都使用它。</string>
+  <string name="action_restart">重新啟動</string>
+  <string name="settings_server_logout">登出</string>
+  <string name="settings_server_logout_description">返回登入畫面</string>
+  <string name="settings_server_logout_title">要登出嗎？</string>
+  <string name="settings_server_logout_message">你將返回登入畫面。若要再次登入，需要伺服器位址和 API 金鑰。</string>
   <string name="settings_language">語言</string>
   <string name="settings_language_system">系統預設</string>
   <string name="settings_language_system_description">您裝置的語言</string>
@@ -345,10 +362,6 @@
   <string name="settings_style_tonal_spot">色調點綴</string>
   <string name="settings_style_neutral">中性</string>
   <string name="settings_style_vibrant">鮮豔</string>
-  <string name="settings_style_expressive">富有表現力</string>
   <string name="settings_style_rainbow">彩虹</string>
-  <string name="settings_style_fruit_salad">水果沙拉</string>
   <string name="settings_style_monochrome">單色</string>
-  <string name="settings_style_fidelity">保真</string>
-  <string name="settings_style_content">內容</string>
 </resources>

@@ -154,6 +154,23 @@
   <string name="settings_backup_description">設定をファイルに保存、またはファイルから復元</string>
   <string name="settings_reset">すべてリセット</string>
   <string name="settings_reset_description">すべての設定を既定に戻す</string>
+  <string name="settings_server_demo">公開デモサーバー</string>
+  <string name="settings_server_demo_warning">ここで入力した内容はすべて誰でも見ることができ、デモが1日に1回変更をリセットするまでそのまま残ります。</string>
+  <string name="settings_server_url">サーバーURL</string>
+  <string name="settings_server_version">Grocyのバージョン</string>
+  <string name="settings_server_version_loading">読み込み中…</string>
+  <string name="settings_server_version_unknown">不明</string>
+  <string name="settings_server_reload">設定を再読み込み</string>
+  <string name="settings_server_reload_description">アプリの再起動が必要です</string>
+  <string name="settings_server_reload_offline">サーバーに接続できませんでした。設定は再読み込みされていません。</string>
+  <string name="settings_server_reload_failed">設定を再読み込みできませんでした。</string>
+  <string name="settings_server_restart_title">アプリを再起動しますか？</string>
+  <string name="settings_server_restart_message">設定を再読み込みしました。すべての画面で使用されるように、今すぐアプリを再起動してください。</string>
+  <string name="action_restart">再起動</string>
+  <string name="settings_server_logout">ログアウト</string>
+  <string name="settings_server_logout_description">ログイン画面に戻る</string>
+  <string name="settings_server_logout_title">ログアウトしますか？</string>
+  <string name="settings_server_logout_message">ログイン画面に戻ります。再度ログインするには、サーバーのアドレスとAPIキーが必要です。</string>
   <string name="settings_language">言語</string>
   <string name="settings_language_system">システムの既定</string>
   <string name="settings_language_system_description">デバイスの言語</string>
@@ -345,10 +362,6 @@
   <string name="settings_style_tonal_spot">トーナル</string>
   <string name="settings_style_neutral">ニュートラル</string>
   <string name="settings_style_vibrant">ビビッド</string>
-  <string name="settings_style_expressive">エクスプレッシブ</string>
   <string name="settings_style_rainbow">レインボー</string>
-  <string name="settings_style_fruit_salad">フルーツサラダ</string>
   <string name="settings_style_monochrome">モノクローム</string>
-  <string name="settings_style_fidelity">忠実</string>
-  <string name="settings_style_content">コンテンツ</string>
 </resources>

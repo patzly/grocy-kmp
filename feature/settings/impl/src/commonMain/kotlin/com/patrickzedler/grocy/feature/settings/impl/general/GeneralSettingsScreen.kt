@@ -54,10 +54,6 @@ import com.patrickzedler.grocy.core.resources.settings_contrast_standard
 import com.patrickzedler.grocy.core.resources.settings_general
 import com.patrickzedler.grocy.core.resources.settings_language
 import com.patrickzedler.grocy.core.resources.settings_language_system
-import com.patrickzedler.grocy.core.resources.settings_style_content
-import com.patrickzedler.grocy.core.resources.settings_style_expressive
-import com.patrickzedler.grocy.core.resources.settings_style_fidelity
-import com.patrickzedler.grocy.core.resources.settings_style_fruit_salad
 import com.patrickzedler.grocy.core.resources.settings_style_monochrome
 import com.patrickzedler.grocy.core.resources.settings_style_neutral
 import com.patrickzedler.grocy.core.resources.settings_style_rainbow
@@ -347,10 +343,6 @@ private val AppPaletteStyle.label: StringResource
         AppPaletteStyle.TONAL_SPOT -> Res.string.settings_style_tonal_spot
         AppPaletteStyle.NEUTRAL -> Res.string.settings_style_neutral
         AppPaletteStyle.VIBRANT -> Res.string.settings_style_vibrant
-        AppPaletteStyle.EXPRESSIVE -> Res.string.settings_style_expressive
         AppPaletteStyle.RAINBOW -> Res.string.settings_style_rainbow
-        AppPaletteStyle.FRUIT_SALAD -> Res.string.settings_style_fruit_salad
         AppPaletteStyle.MONOCHROME -> Res.string.settings_style_monochrome
-        AppPaletteStyle.FIDELITY -> Res.string.settings_style_fidelity
-        AppPaletteStyle.CONTENT -> Res.string.settings_style_content
     }

@@ -154,6 +154,23 @@
   <string name="settings_backup_description">Αποθηκεύστε τις ρυθμίσεις σας σε ένα αρχείο ή επαναφέρετέ τες</string>
   <string name="settings_reset">Επαναφορά όλων</string>
   <string name="settings_reset_description">Επαναφέρει κάθε ρύθμιση στην προεπιλογή της</string>
+  <string name="settings_server_demo">Δημόσιος διακομιστής επίδειξης</string>
+  <string name="settings_server_demo_warning">Ό,τι εισάγετε εδώ είναι ορατό σε όλους και παραμένει έτσι μέχρι η επίδειξη να επαναφέρει τις αλλαγές της μία φορά την ημέρα.</string>
+  <string name="settings_server_url">URL διακομιστή</string>
+  <string name="settings_server_version">Έκδοση Grocy</string>
+  <string name="settings_server_version_loading">Φόρτωση…</string>
+  <string name="settings_server_version_unknown">Άγνωστη</string>
+  <string name="settings_server_reload">Επαναφόρτωση ρυθμίσεων</string>
+  <string name="settings_server_reload_description">Απαιτείται επανεκκίνηση της εφαρμογής</string>
+  <string name="settings_server_reload_offline">Ο διακομιστής δεν είναι προσβάσιμος. Οι ρυθμίσεις δεν φορτώθηκαν ξανά.</string>
+  <string name="settings_server_reload_failed">Δεν ήταν δυνατή η επαναφόρτωση των ρυθμίσεων.</string>
+  <string name="settings_server_restart_title">Επανεκκίνηση της εφαρμογής;</string>
+  <string name="settings_server_restart_message">Οι ρυθμίσεις φορτώθηκαν ξανά. Επανεκκινήστε την εφαρμογή τώρα, ώστε να τις χρησιμοποιεί κάθε οθόνη.</string>
+  <string name="action_restart">Επανεκκίνηση</string>
+  <string name="settings_server_logout">Αποσύνδεση</string>
+  <string name="settings_server_logout_description">Επιστροφή στην οθόνη σύνδεσης</string>
+  <string name="settings_server_logout_title">Αποσύνδεση;</string>
+  <string name="settings_server_logout_message">Επιστρέφετε στην οθόνη σύνδεσης. Για να συνδεθείτε ξανά, χρειάζεστε τη διεύθυνση του διακομιστή και ένα κλειδί API.</string>
   <string name="settings_language">Γλώσσα</string>
   <string name="settings_language_system">Προεπιλογή συστήματος</string>
   <string name="settings_language_system_description">Η γλώσσα της συσκευής σας</string>
@@ -346,10 +363,6 @@
   <string name="settings_style_tonal_spot">Τονικό</string>
   <string name="settings_style_neutral">Ουδέτερο</string>
   <string name="settings_style_vibrant">Ζωντανό</string>
-  <string name="settings_style_expressive">Εκφραστικό</string>
   <string name="settings_style_rainbow">Ουράνιο τόξο</string>
-  <string name="settings_style_fruit_salad">Φρουτοσαλάτα</string>
   <string name="settings_style_monochrome">Μονόχρωμο</string>
-  <string name="settings_style_fidelity">Πιστό</string>
-  <string name="settings_style_content">Περιεχόμενο</string>
 </resources>

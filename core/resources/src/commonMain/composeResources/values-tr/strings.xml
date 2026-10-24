@@ -154,6 +154,23 @@
   <string name="settings_backup_description">Ayarlarınızı bir dosyaya kaydedin veya geri yükleyin</string>
   <string name="settings_reset">Tümünü sıfırla</string>
   <string name="settings_reset_description">Tüm ayarları varsayılan değerlerine döndürür</string>
+  <string name="settings_server_demo">Herkese açık demo sunucusu</string>
+  <string name="settings_server_demo_warning">Buraya girdiğiniz her şey herkes tarafından görülebilir ve demo değişikliklerini günde bir kez sıfırlayana kadar öyle kalır.</string>
+  <string name="settings_server_url">Sunucu URL’si</string>
+  <string name="settings_server_version">Grocy sürümü</string>
+  <string name="settings_server_version_loading">Yükleniyor…</string>
+  <string name="settings_server_version_unknown">Bilinmiyor</string>
+  <string name="settings_server_reload">Yapılandırmayı yeniden yükle</string>
+  <string name="settings_server_reload_description">Uygulamanın yeniden başlatılması gerekir</string>
+  <string name="settings_server_reload_offline">Sunucuya ulaşılamadı. Yapılandırma yeniden yüklenmedi.</string>
+  <string name="settings_server_reload_failed">Yapılandırma yeniden yüklenemedi.</string>
+  <string name="settings_server_restart_title">Uygulama yeniden başlatılsın mı?</string>
+  <string name="settings_server_restart_message">Yapılandırma yeniden yüklendi. Her ekranın kullanması için uygulamayı şimdi yeniden başlatın.</string>
+  <string name="action_restart">Yeniden başlat</string>
+  <string name="settings_server_logout">Oturumu kapat</string>
+  <string name="settings_server_logout_description">Giriş ekranına dön</string>
+  <string name="settings_server_logout_title">Oturum kapatılsın mı?</string>
+  <string name="settings_server_logout_message">Giriş ekranına dönersiniz. Yeniden giriş yapmak için sunucunun adresi ve bir API anahtarı gerekir.</string>
   <string name="settings_language">Dil</string>
   <string name="settings_language_system">Sistem varsayılanı</string>
   <string name="settings_language_system_description">Cihazınızın dili</string>
@@ -346,10 +363,6 @@
   <string name="settings_style_tonal_spot">Tonal</string>
   <string name="settings_style_neutral">Nötr</string>
   <string name="settings_style_vibrant">Canlı</string>
-  <string name="settings_style_expressive">Etkileyici</string>
   <string name="settings_style_rainbow">Gökkuşağı</string>
-  <string name="settings_style_fruit_salad">Meyve salatası</string>
   <string name="settings_style_monochrome">Tek renkli</string>
-  <string name="settings_style_fidelity">Sadık</string>
-  <string name="settings_style_content">İçerik</string>
 </resources>

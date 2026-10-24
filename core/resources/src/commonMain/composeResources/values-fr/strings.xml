@@ -154,6 +154,23 @@
   <string name="settings_backup_description">Enregistrez vos paramètres dans un fichier ou restaurez-les</string>
   <string name="settings_reset">Tout réinitialiser</string>
   <string name="settings_reset_description">Rétablit chaque paramètre à sa valeur par défaut</string>
+  <string name="settings_server_demo">Serveur de démonstration public</string>
+  <string name="settings_server_demo_warning">Tout ce que vous saisissez ici est visible par tous et le reste jusqu’à ce que la démo réinitialise ses modifications une fois par jour.</string>
+  <string name="settings_server_url">URL du serveur</string>
+  <string name="settings_server_version">Version de Grocy</string>
+  <string name="settings_server_version_loading">Chargement…</string>
+  <string name="settings_server_version_unknown">Inconnue</string>
+  <string name="settings_server_reload">Recharger la configuration</string>
+  <string name="settings_server_reload_description">Redémarrage de l’application requis</string>
+  <string name="settings_server_reload_offline">Le serveur est injoignable. La configuration n’a pas été rechargée.</string>
+  <string name="settings_server_reload_failed">La configuration n’a pas pu être rechargée.</string>
+  <string name="settings_server_restart_title">Redémarrer l’application ?</string>
+  <string name="settings_server_restart_message">La configuration a été rechargée. Redémarrez l’application maintenant pour que chaque écran l’utilise.</string>
+  <string name="action_restart">Redémarrer</string>
+  <string name="settings_server_logout">Se déconnecter</string>
+  <string name="settings_server_logout_description">Revenir à l’écran de connexion</string>
+  <string name="settings_server_logout_title">Se déconnecter ?</string>
+  <string name="settings_server_logout_message">Vous revenez à l’écran de connexion. Pour vous reconnecter, il vous faudra l’adresse du serveur et une clé API.</string>
   <string name="settings_language">Langue</string>
   <string name="settings_language_system">Langue du système</string>
   <string name="settings_language_system_description">La langue de votre appareil</string>
@@ -347,10 +364,6 @@
   <string name="settings_style_tonal_spot">Ton sur ton</string>
   <string name="settings_style_neutral">Neutre</string>
   <string name="settings_style_vibrant">Vif</string>
-  <string name="settings_style_expressive">Expressif</string>
   <string name="settings_style_rainbow">Arc-en-ciel</string>
-  <string name="settings_style_fruit_salad">Salade de fruits</string>
   <string name="settings_style_monochrome">Monochrome</string>
-  <string name="settings_style_fidelity">Fidèle</string>
-  <string name="settings_style_content">Contenu</string>
 </resources>

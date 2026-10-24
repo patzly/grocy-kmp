@@ -64,6 +64,15 @@ class AndroidPlatformDependencies(
             ),
         )
 
+    override fun restartApp() {
+        val launchIntent = appContext.packageManager
+            .getLaunchIntentForPackage(appContext.packageName)
+            ?: return
+        appContext.startActivity(Intent.makeRestartActivityTask(launchIntent.component))
+        // A new process, so nothing read before the restart survives in memory
+        Runtime.getRuntime().exit(0)
+    }
+
     private fun openInBrowser(url: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

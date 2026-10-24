@@ -154,6 +154,23 @@
   <string name="settings_backup_description">Mentsd fájlba a beállításaidat, vagy állítsd vissza őket</string>
   <string name="settings_reset">Minden visszaállítása</string>
   <string name="settings_reset_description">Minden beállítást visszaállít az alapértelmezettre</string>
+  <string name="settings_server_demo">Nyilvános bemutató szerver</string>
+  <string name="settings_server_demo_warning">Minden, amit itt megadsz, mindenki számára látható, és az is marad, amíg a bemutató naponta egyszer vissza nem állítja a változásokat.</string>
+  <string name="settings_server_url">Szerver URL</string>
+  <string name="settings_server_version">Grocy verzió</string>
+  <string name="settings_server_version_loading">Betöltés…</string>
+  <string name="settings_server_version_unknown">Ismeretlen</string>
+  <string name="settings_server_reload">Konfiguráció újratöltése</string>
+  <string name="settings_server_reload_description">Az alkalmazás újraindítása szükséges</string>
+  <string name="settings_server_reload_offline">A szerver nem érhető el. A konfiguráció nem töltődött újra.</string>
+  <string name="settings_server_reload_failed">A konfigurációt nem sikerült újratölteni.</string>
+  <string name="settings_server_restart_title">Újraindítod az alkalmazást?</string>
+  <string name="settings_server_restart_message">A konfiguráció újratöltődött. Indítsd újra most az alkalmazást, hogy minden képernyő azt használja.</string>
+  <string name="action_restart">Újraindítás</string>
+  <string name="settings_server_logout">Kijelentkezés</string>
+  <string name="settings_server_logout_description">Vissza a bejelentkezési képernyőre</string>
+  <string name="settings_server_logout_title">Kijelentkezel?</string>
+  <string name="settings_server_logout_message">Visszatérsz a bejelentkezési képernyőre. Az újbóli bejelentkezéshez szükséged lesz a szerver címére és egy API-kulcsra.</string>
   <string name="settings_language">Nyelv</string>
   <string name="settings_language_system">Rendszer alapértelmezése</string>
   <string name="settings_language_system_description">Az eszközöd nyelve</string>
@@ -346,10 +363,6 @@
   <string name="settings_style_tonal_spot">Tónusos</string>
   <string name="settings_style_neutral">Semleges</string>
   <string name="settings_style_vibrant">Élénk</string>
-  <string name="settings_style_expressive">Kifejező</string>
   <string name="settings_style_rainbow">Szivárvány</string>
-  <string name="settings_style_fruit_salad">Gyümölcssaláta</string>
   <string name="settings_style_monochrome">Monokróm</string>
-  <string name="settings_style_fidelity">Hű</string>
-  <string name="settings_style_content">Tartalom</string>
 </resources>

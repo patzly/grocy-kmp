@@ -184,7 +184,6 @@ fun SegmentedListScreen(
                         painter = painterResource(Res.drawable.ic_rounded_refresh),
                         contentDescription = reload,
                         onClick = onRefresh,
-                        narrow = true,
                     )
                 }
                 // Pulling is a gesture; the menu refreshes for keyboards and screen readers

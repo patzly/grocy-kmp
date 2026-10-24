@@ -154,6 +154,23 @@
   <string name="settings_backup_description">Guarde as suas definições num ficheiro ou restaure-as</string>
   <string name="settings_reset">Repor tudo</string>
   <string name="settings_reset_description">Repõe cada definição no valor padrão</string>
+  <string name="settings_server_demo">Servidor de demonstração público</string>
+  <string name="settings_server_demo_warning">Tudo o que introduzir aqui fica visível para todos e continua assim até a demonstração repor as suas alterações uma vez por dia.</string>
+  <string name="settings_server_url">URL do servidor</string>
+  <string name="settings_server_version">Versão do Grocy</string>
+  <string name="settings_server_version_loading">A carregar…</string>
+  <string name="settings_server_version_unknown">Desconhecida</string>
+  <string name="settings_server_reload">Recarregar configuração</string>
+  <string name="settings_server_reload_description">Requer reiniciar a aplicação</string>
+  <string name="settings_server_reload_offline">Não foi possível contactar o servidor. A configuração não foi recarregada.</string>
+  <string name="settings_server_reload_failed">Não foi possível recarregar a configuração.</string>
+  <string name="settings_server_restart_title">Reiniciar a aplicação?</string>
+  <string name="settings_server_restart_message">A configuração foi recarregada. Reinicie a aplicação agora para que todos os ecrãs a utilizem.</string>
+  <string name="action_restart">Reiniciar</string>
+  <string name="settings_server_logout">Terminar sessão</string>
+  <string name="settings_server_logout_description">Voltar ao ecrã de início de sessão</string>
+  <string name="settings_server_logout_title">Terminar sessão?</string>
+  <string name="settings_server_logout_message">Volta ao ecrã de início de sessão. Para iniciar sessão de novo, precisa do endereço do servidor e de uma chave de API.</string>
   <string name="settings_language">Idioma</string>
   <string name="settings_language_system">Predefinição do sistema</string>
   <string name="settings_language_system_description">O idioma do seu dispositivo</string>
@@ -347,10 +364,6 @@
   <string name="settings_style_tonal_spot">Tonal</string>
   <string name="settings_style_neutral">Neutro</string>
   <string name="settings_style_vibrant">Vibrante</string>
-  <string name="settings_style_expressive">Expressivo</string>
   <string name="settings_style_rainbow">Arco-íris</string>
-  <string name="settings_style_fruit_salad">Salada de fruta</string>
   <string name="settings_style_monochrome">Monocromático</string>
-  <string name="settings_style_fidelity">Fiel</string>
-  <string name="settings_style_content">Conteúdo</string>
 </resources>

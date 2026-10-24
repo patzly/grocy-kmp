@@ -154,6 +154,23 @@
   <string name="settings_backup_description">Lagre innstillingene dine i en fil eller gjenopprett dem</string>
   <string name="settings_reset">Tilbakestill alt</string>
   <string name="settings_reset_description">Setter alle innstillinger tilbake til standard</string>
+  <string name="settings_server_demo">Offentlig demoserver</string>
+  <string name="settings_server_demo_warning">Alt du skriver inn her er synlig for alle og forblir det til demoen tilbakestiller endringene sine én gang om dagen.</string>
+  <string name="settings_server_url">Server-URL</string>
+  <string name="settings_server_version">Grocy-versjon</string>
+  <string name="settings_server_version_loading">Laster inn…</string>
+  <string name="settings_server_version_unknown">Ukjent</string>
+  <string name="settings_server_reload">Last inn konfigurasjonen på nytt</string>
+  <string name="settings_server_reload_description">Krever omstart av appen</string>
+  <string name="settings_server_reload_offline">Fikk ikke kontakt med serveren. Konfigurasjonen ble ikke lastet inn på nytt.</string>
+  <string name="settings_server_reload_failed">Konfigurasjonen kunne ikke lastes inn på nytt.</string>
+  <string name="settings_server_restart_title">Starte appen på nytt?</string>
+  <string name="settings_server_restart_message">Konfigurasjonen ble lastet inn på nytt. Start appen på nytt nå, slik at alle skjermer bruker den.</string>
+  <string name="action_restart">Start på nytt</string>
+  <string name="settings_server_logout">Logg ut</string>
+  <string name="settings_server_logout_description">Tilbake til innloggingsskjermen</string>
+  <string name="settings_server_logout_title">Logge ut?</string>
+  <string name="settings_server_logout_message">Du går tilbake til innloggingsskjermen. For å logge inn igjen trenger du serverens adresse og en API-nøkkel.</string>
   <string name="settings_language">Språk</string>
   <string name="settings_language_system">Systemstandard</string>
   <string name="settings_language_system_description">Språket på enheten din</string>
@@ -346,10 +363,6 @@
   <string name="settings_style_tonal_spot">Tonal</string>
   <string name="settings_style_neutral">Nøytral</string>
   <string name="settings_style_vibrant">Livlig</string>
-  <string name="settings_style_expressive">Uttrykksfull</string>
   <string name="settings_style_rainbow">Regnbue</string>
-  <string name="settings_style_fruit_salad">Fruktsalat</string>
   <string name="settings_style_monochrome">Monokrom</string>
-  <string name="settings_style_fidelity">Tro mot fargen</string>
-  <string name="settings_style_content">Innhold</string>
 </resources>

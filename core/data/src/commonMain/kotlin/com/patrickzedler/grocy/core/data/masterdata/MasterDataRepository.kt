@@ -7,6 +7,7 @@ import com.patrickzedler.grocy.core.database.ServerValueEntity
 import com.patrickzedler.grocy.core.database.toEntity
 import com.patrickzedler.grocy.core.database.toModel
 import com.patrickzedler.grocy.core.model.ServerConnection
+import com.patrickzedler.grocy.core.model.SystemInfo
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
@@ -26,6 +27,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
+import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.json.Json
 
 /**
@@ -71,6 +73,10 @@ class MasterDataRepository(
     val userSettings: Flow<UserSettings> =
         observeValue(USER_SETTINGS, UserSettings.serializer(), UserSettings())
 
+    /** Version of the server, null until it was downloaded once. */
+    val systemInfo: Flow<SystemInfo?> =
+        observeValue(SYSTEM_INFO, SystemInfo.serializer().nullable, null)
+
     fun product(id: Int): Flow<Product?> = dao.observeProduct(id).map { it?.toModel() }
 
     fun userfields(entity: String): Flow<List<Userfield>> =
@@ -95,10 +101,11 @@ class MasterDataRepository(
             val userfields = async { api.userfields(connection, PRODUCTS) }
             val config = async { api.serverConfig(connection) }
             val settings = async { api.userSettings(connection) }
+            val systemInfo = async { api.systemInfo(connection) }
             Download(
                 products.await(), groups.await(), locations.await(), units.await(),
                 stores.await(), barcodes.await(), stock.await(), userfields.await(),
-                config.await(), settings.await(),
+                config.await(), settings.await(), systemInfo.await(),
             )
         }
         database.withWriteTransaction {
@@ -118,12 +125,42 @@ class MasterDataRepository(
             dao.insertStock(download.stock.map { it.toEntity() })
             dao.deleteUserfields(PRODUCTS)
             dao.insertUserfields(download.userfields.map { it.toEntity() })
-            dao.upsertServerValue(value(SERVER_CONFIG, ServerConfig.serializer(), download.config))
-            dao.upsertServerValue(
-                value(USER_SETTINGS, UserSettings.serializer(), download.settings),
-            )
+            storeConfiguration(download.config, download.settings, download.systemInfo)
             dao.deleteUnusedThumbnails()
         }
+    }
+
+    /**
+     * Downloads the server's version, configuration and the user's settings again, e.g. after
+     * the server was updated or reconfigured.
+     *
+     * @throws GrocyApiException e.g. [GrocyApiException.Unreachable] when offline.
+     */
+    suspend fun reloadConfiguration() {
+        val connection = requireConnection()
+        val (config, settings, systemInfo) = coroutineScope {
+            val config = async { api.serverConfig(connection) }
+            val settings = async { api.userSettings(connection) }
+            val systemInfo = async { api.systemInfo(connection) }
+            Triple(config.await(), settings.await(), systemInfo.await())
+        }
+        database.withWriteTransaction { storeConfiguration(config, settings, systemInfo) }
+    }
+
+    /** Downloads only the server's version, which an update of the server changes. */
+    suspend fun refreshSystemInfo() {
+        val systemInfo = api.systemInfo(requireConnection())
+        dao.upsertServerValue(value(SYSTEM_INFO, SystemInfo.serializer(), systemInfo))
+    }
+
+    private suspend fun storeConfiguration(
+        config: ServerConfig,
+        settings: UserSettings,
+        systemInfo: SystemInfo,
+    ) {
+        dao.upsertServerValue(value(SERVER_CONFIG, ServerConfig.serializer(), config))
+        dao.upsertServerValue(value(USER_SETTINGS, UserSettings.serializer(), settings))
+        dao.upsertServerValue(value(SYSTEM_INFO, SystemInfo.serializer(), systemInfo))
     }
 
     /**
@@ -235,6 +272,7 @@ class MasterDataRepository(
         val userfields: List<Userfield>,
         val config: ServerConfig,
         val settings: UserSettings,
+        val systemInfo: SystemInfo,
     )
 
     companion object {
@@ -247,6 +285,7 @@ class MasterDataRepository(
         const val THUMBNAIL_WIDTH = 196
         private const val SERVER_CONFIG = "server_config"
         private const val USER_SETTINGS = "user_settings"
+        private const val SYSTEM_INFO = "system_info"
     }
 }
 

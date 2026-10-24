@@ -154,6 +154,23 @@
   <string name="settings_backup_description">Uložte nastavení do souboru nebo je obnovte</string>
   <string name="settings_reset">Resetovat vše</string>
   <string name="settings_reset_description">Vrátí všechna nastavení na výchozí hodnoty</string>
+  <string name="settings_server_demo">Veřejný demo server</string>
+  <string name="settings_server_demo_warning">Vše, co sem zadáte, je viditelné pro všechny a zůstane tak, dokud demo jednou denně neobnoví své změny.</string>
+  <string name="settings_server_url">URL serveru</string>
+  <string name="settings_server_version">Verze Grocy</string>
+  <string name="settings_server_version_loading">Načítání…</string>
+  <string name="settings_server_version_unknown">Neznámá</string>
+  <string name="settings_server_reload">Znovu načíst konfiguraci</string>
+  <string name="settings_server_reload_description">Vyžaduje restart aplikace</string>
+  <string name="settings_server_reload_offline">Server není dostupný. Konfigurace nebyla znovu načtena.</string>
+  <string name="settings_server_reload_failed">Konfiguraci se nepodařilo znovu načíst.</string>
+  <string name="settings_server_restart_title">Restartovat aplikaci?</string>
+  <string name="settings_server_restart_message">Konfigurace byla znovu načtena. Restartujte aplikaci nyní, aby ji používaly všechny obrazovky.</string>
+  <string name="action_restart">Restartovat</string>
+  <string name="settings_server_logout">Odhlásit</string>
+  <string name="settings_server_logout_description">Zpět na přihlašovací obrazovku</string>
+  <string name="settings_server_logout_title">Odhlásit se?</string>
+  <string name="settings_server_logout_message">Vrátíte se na přihlašovací obrazovku. K opětovnému přihlášení budete potřebovat adresu serveru a API klíč.</string>
   <string name="settings_language">Jazyk</string>
   <string name="settings_language_system">Výchozí nastavení systému</string>
   <string name="settings_language_system_description">Jazyk vašeho zařízení</string>
@@ -348,10 +365,6 @@
   <string name="settings_style_tonal_spot">Tónový</string>
   <string name="settings_style_neutral">Neutrální</string>
   <string name="settings_style_vibrant">Živý</string>
-  <string name="settings_style_expressive">Výrazný</string>
   <string name="settings_style_rainbow">Duha</string>
-  <string name="settings_style_fruit_salad">Ovocný salát</string>
   <string name="settings_style_monochrome">Monochromatický</string>
-  <string name="settings_style_fidelity">Věrný</string>
-  <string name="settings_style_content">Obsah</string>
 </resources>

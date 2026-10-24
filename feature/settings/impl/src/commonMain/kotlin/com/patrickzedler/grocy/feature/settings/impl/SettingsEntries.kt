@@ -8,11 +8,14 @@ import com.patrickzedler.grocy.core.navigation.Navigator
 import com.patrickzedler.grocy.feature.about.api.AboutRoute
 import com.patrickzedler.grocy.feature.settings.api.GeneralSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.LogRoute
+import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.settings.impl.general.GeneralSettingsScreen
 import com.patrickzedler.grocy.feature.settings.impl.general.GeneralSettingsViewModel
 import com.patrickzedler.grocy.feature.settings.impl.log.LogScreen
 import com.patrickzedler.grocy.feature.settings.impl.log.LogViewModel
+import com.patrickzedler.grocy.feature.settings.impl.server.ServerSettingsScreen
+import com.patrickzedler.grocy.feature.settings.impl.server.ServerSettingsViewModel
 
 fun EntryProviderScope<NavKey>.settingsEntries(
     dependencies: SettingsDependencies,
@@ -33,6 +36,7 @@ fun EntryProviderScope<NavKey>.settingsEntries(
                 // The other pages follow one by one
                 when (category) {
                     SettingsCategory.GENERAL -> navigator.navigate(GeneralSettingsRoute)
+                    SettingsCategory.SERVER -> navigator.navigate(ServerSettingsRoute)
                     else -> Unit
                 }
             },
@@ -52,6 +56,21 @@ fun EntryProviderScope<NavKey>.settingsEntries(
             menuViewModel = settingsMenuViewModel(dependencies),
             menuActions = menuActions,
             onBackClick = navigator::goBack,
+        )
+    }
+
+    entry<ServerSettingsRoute> {
+        ServerSettingsScreen(
+            viewModel = viewModel {
+                ServerSettingsViewModel(
+                    dependencies.serverRepository,
+                    dependencies.authRepository,
+                )
+            },
+            menuViewModel = settingsMenuViewModel(dependencies),
+            menuActions = menuActions,
+            onBackClick = navigator::goBack,
+            onRestart = dependencies::restartApp,
         )
     }
 

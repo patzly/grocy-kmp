@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.grocy.kmp.compose)
+    alias(libs.plugins.grocy.sqlite.host.tests)
 }
 
 kotlin {

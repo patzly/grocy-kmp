@@ -5,10 +5,6 @@ enum class AppPaletteStyle {
     TONAL_SPOT,
     NEUTRAL,
     VIBRANT,
-    EXPRESSIVE,
     RAINBOW,
-    FRUIT_SALAD,
     MONOCHROME,
-    FIDELITY,
-    CONTENT,
 }

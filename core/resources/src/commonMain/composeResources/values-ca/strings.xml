@@ -154,6 +154,23 @@
   <string name="settings_backup_description">Desa la configuració en un fitxer o restaura-la</string>
   <string name="settings_reset">Restablir-ho tot</string>
   <string name="settings_reset_description">Torna cada opció al seu valor per defecte</string>
+  <string name="settings_server_demo">Servidor de demostració públic</string>
+  <string name="settings_server_demo_warning">Tot el que hi introdueixis és visible per a tothom i ho continuarà sent fins que la demostració restableixi els canvis un cop al dia.</string>
+  <string name="settings_server_url">URL del servidor</string>
+  <string name="settings_server_version">Versió de Grocy</string>
+  <string name="settings_server_version_loading">S’està carregant…</string>
+  <string name="settings_server_version_unknown">Desconeguda</string>
+  <string name="settings_server_reload">Torna a carregar la configuració</string>
+  <string name="settings_server_reload_description">Cal reiniciar l’aplicació</string>
+  <string name="settings_server_reload_offline">No s’ha pogut connectar amb el servidor. La configuració no s’ha tornat a carregar.</string>
+  <string name="settings_server_reload_failed">No s’ha pogut tornar a carregar la configuració.</string>
+  <string name="settings_server_restart_title">Vols reiniciar l’aplicació?</string>
+  <string name="settings_server_restart_message">S’ha tornat a carregar la configuració. Reinicia l’aplicació ara perquè totes les pantalles la facin servir.</string>
+  <string name="action_restart">Reinicia</string>
+  <string name="settings_server_logout">Tanca la sessió</string>
+  <string name="settings_server_logout_description">Torna a la pantalla d’inici de sessió</string>
+  <string name="settings_server_logout_title">Vols tancar la sessió?</string>
+  <string name="settings_server_logout_message">Tornaràs a la pantalla d’inici de sessió. Per tornar a iniciar la sessió, necessitaràs l’adreça del servidor i una clau d’API.</string>
   <string name="settings_language">Idioma</string>
   <string name="settings_language_system">Per defecte del sistema</string>
   <string name="settings_language_system_description">L’idioma del teu dispositiu</string>
@@ -347,10 +364,6 @@
   <string name="settings_style_tonal_spot">Tonal</string>
   <string name="settings_style_neutral">Neutre</string>
   <string name="settings_style_vibrant">Vibrant</string>
-  <string name="settings_style_expressive">Expressiu</string>
   <string name="settings_style_rainbow">Arc de Sant Martí</string>
-  <string name="settings_style_fruit_salad">Macedònia</string>
   <string name="settings_style_monochrome">Monocrom</string>
-  <string name="settings_style_fidelity">Fidel</string>
-  <string name="settings_style_content">Contingut</string>
 </resources>

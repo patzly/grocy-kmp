@@ -15,6 +15,10 @@ data object SettingsRoute : Route
 @SerialName("settings/general")
 data object GeneralSettingsRoute : Route
 
+@Serializable
+@SerialName("settings/server")
+data object ServerSettingsRoute : Route
+
 /** Recent errors of the app: logcat on Android, the errors the web app recorded. */
 @Serializable
 @SerialName("settings/log")
@@ -24,6 +28,7 @@ val settingsRouteSerializers = SerializersModule {
     polymorphic(NavKey::class) {
         subclass(SettingsRoute::class, SettingsRoute.serializer())
         subclass(GeneralSettingsRoute::class, GeneralSettingsRoute.serializer())
+        subclass(ServerSettingsRoute::class, ServerSettingsRoute.serializer())
         subclass(LogRoute::class, LogRoute.serializer())
     }
 }

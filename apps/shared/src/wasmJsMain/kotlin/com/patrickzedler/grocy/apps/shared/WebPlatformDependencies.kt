@@ -42,4 +42,11 @@ class WebPlatformDependencies(
     // The web app is deployed, not released; its service worker knows the newest version
     override fun createAppUpdater(gitHubReleases: GitHubReleases): AppUpdater =
         ServiceWorkerAppUpdater(buildId)
+
+    // Like every reload, the page keeps its back stack and history
+    override fun restartApp() = reloadPage()
 }
+
+@OptIn(ExperimentalWasmJsInterop::class)
+@JsFun("() => location.reload()")
+private external fun reloadPage()

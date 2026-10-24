@@ -154,6 +154,23 @@
   <string name="settings_backup_description">Salva le impostazioni in un file o ripristinale</string>
   <string name="settings_reset">Ripristina tutto</string>
   <string name="settings_reset_description">Riporta ogni impostazione al valore predefinito</string>
+  <string name="settings_server_demo">Server demo pubblico</string>
+  <string name="settings_server_demo_warning">Tutto ciò che inserisci qui è visibile a tutti e lo rimane finché la demo non ripristina le sue modifiche una volta al giorno.</string>
+  <string name="settings_server_url">URL del server</string>
+  <string name="settings_server_version">Versione di Grocy</string>
+  <string name="settings_server_version_loading">Caricamento…</string>
+  <string name="settings_server_version_unknown">Sconosciuta</string>
+  <string name="settings_server_reload">Ricarica configurazione</string>
+  <string name="settings_server_reload_description">Richiede il riavvio dell’app</string>
+  <string name="settings_server_reload_offline">Impossibile raggiungere il server. La configurazione non è stata ricaricata.</string>
+  <string name="settings_server_reload_failed">Impossibile ricaricare la configurazione.</string>
+  <string name="settings_server_restart_title">Riavviare l’app?</string>
+  <string name="settings_server_restart_message">La configurazione è stata ricaricata. Riavvia l’app ora affinché ogni schermata la utilizzi.</string>
+  <string name="action_restart">Riavvia</string>
+  <string name="settings_server_logout">Esci</string>
+  <string name="settings_server_logout_description">Torna alla schermata di accesso</string>
+  <string name="settings_server_logout_title">Uscire?</string>
+  <string name="settings_server_logout_message">Tornerai alla schermata di accesso. Per accedere di nuovo ti serviranno l’indirizzo del server e una chiave API.</string>
   <string name="settings_language">Lingua</string>
   <string name="settings_language_system">Predefinita di sistema</string>
   <string name="settings_language_system_description">La lingua del tuo dispositivo</string>
@@ -347,10 +364,6 @@
   <string name="settings_style_tonal_spot">Tonale</string>
   <string name="settings_style_neutral">Neutro</string>
   <string name="settings_style_vibrant">Vivace</string>
-  <string name="settings_style_expressive">Espressivo</string>
   <string name="settings_style_rainbow">Arcobaleno</string>
-  <string name="settings_style_fruit_salad">Macedonia</string>
   <string name="settings_style_monochrome">Monocromatico</string>
-  <string name="settings_style_fidelity">Fedele</string>
-  <string name="settings_style_content">Contenuto</string>
 </resources>

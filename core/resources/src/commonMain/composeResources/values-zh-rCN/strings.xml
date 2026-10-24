@@ -154,6 +154,23 @@
   <string name="settings_backup_description">将设置保存到文件或从文件恢复</string>
   <string name="settings_reset">全部重置</string>
   <string name="settings_reset_description">将所有设置恢复为默认值</string>
+  <string name="settings_server_demo">公共演示服务器</string>
+  <string name="settings_server_demo_warning">你在这里输入的所有内容对所有人可见，并会一直保留，直到演示每天重置一次更改。</string>
+  <string name="settings_server_url">服务器 URL</string>
+  <string name="settings_server_version">Grocy 版本</string>
+  <string name="settings_server_version_loading">正在加载…</string>
+  <string name="settings_server_version_unknown">未知</string>
+  <string name="settings_server_reload">重新加载配置</string>
+  <string name="settings_server_reload_description">需要重启应用</string>
+  <string name="settings_server_reload_offline">无法连接到服务器。配置未重新加载。</string>
+  <string name="settings_server_reload_failed">无法重新加载配置。</string>
+  <string name="settings_server_restart_title">要重启应用吗？</string>
+  <string name="settings_server_restart_message">配置已重新加载。立即重启应用，以便每个页面都使用它。</string>
+  <string name="action_restart">重启</string>
+  <string name="settings_server_logout">退出登录</string>
+  <string name="settings_server_logout_description">返回登录页面</string>
+  <string name="settings_server_logout_title">要退出登录吗？</string>
+  <string name="settings_server_logout_message">你将返回登录页面。要再次登录，需要服务器地址和 API 密钥。</string>
   <string name="settings_language">语言</string>
   <string name="settings_language_system">系统默认</string>
   <string name="settings_language_system_description">您设备的语言</string>
@@ -345,10 +362,6 @@
   <string name="settings_style_tonal_spot">色调点缀</string>
   <string name="settings_style_neutral">中性</string>
   <string name="settings_style_vibrant">鲜艳</string>
-  <string name="settings_style_expressive">富有表现力</string>
   <string name="settings_style_rainbow">彩虹</string>
-  <string name="settings_style_fruit_salad">水果沙拉</string>
   <string name="settings_style_monochrome">单色</string>
-  <string name="settings_style_fidelity">保真</string>
-  <string name="settings_style_content">内容</string>
 </resources>

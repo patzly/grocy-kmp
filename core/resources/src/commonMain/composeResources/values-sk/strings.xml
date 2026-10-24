@@ -154,6 +154,23 @@
   <string name="settings_backup_description">Uložte nastavenia do súboru alebo ich obnovte</string>
   <string name="settings_reset">Resetovať všetko</string>
   <string name="settings_reset_description">Vráti všetky nastavenia na predvolené hodnoty</string>
+  <string name="settings_server_demo">Verejný demo server</string>
+  <string name="settings_server_demo_warning">Všetko, čo sem zadáte, je viditeľné pre všetkých a zostane tak, kým demo raz denne neobnoví svoje zmeny.</string>
+  <string name="settings_server_url">URL servera</string>
+  <string name="settings_server_version">Verzia Grocy</string>
+  <string name="settings_server_version_loading">Načítava sa…</string>
+  <string name="settings_server_version_unknown">Neznáma</string>
+  <string name="settings_server_reload">Znova načítať konfiguráciu</string>
+  <string name="settings_server_reload_description">Vyžaduje reštart aplikácie</string>
+  <string name="settings_server_reload_offline">Server nie je dostupný. Konfigurácia nebola znova načítaná.</string>
+  <string name="settings_server_reload_failed">Konfiguráciu sa nepodarilo znova načítať.</string>
+  <string name="settings_server_restart_title">Reštartovať aplikáciu?</string>
+  <string name="settings_server_restart_message">Konfigurácia bola znova načítaná. Reštartujte aplikáciu teraz, aby ju používali všetky obrazovky.</string>
+  <string name="action_restart">Reštartovať</string>
+  <string name="settings_server_logout">Odhlásiť</string>
+  <string name="settings_server_logout_description">Späť na prihlasovaciu obrazovku</string>
+  <string name="settings_server_logout_title">Odhlásiť sa?</string>
+  <string name="settings_server_logout_message">Vrátite sa na prihlasovaciu obrazovku. Na opätovné prihlásenie budete potrebovať adresu servera a API kľúč.</string>
   <string name="settings_language">Jazyk</string>
   <string name="settings_language_system">Predvolený systémom</string>
   <string name="settings_language_system_description">Jazyk vášho zariadenia</string>
@@ -348,10 +365,6 @@
   <string name="settings_style_tonal_spot">Tónový</string>
   <string name="settings_style_neutral">Neutrálny</string>
   <string name="settings_style_vibrant">Živý</string>
-  <string name="settings_style_expressive">Výrazný</string>
   <string name="settings_style_rainbow">Dúha</string>
-  <string name="settings_style_fruit_salad">Ovocný šalát</string>
   <string name="settings_style_monochrome">Monochromatický</string>
-  <string name="settings_style_fidelity">Verný</string>
-  <string name="settings_style_content">Obsah</string>
 </resources>
