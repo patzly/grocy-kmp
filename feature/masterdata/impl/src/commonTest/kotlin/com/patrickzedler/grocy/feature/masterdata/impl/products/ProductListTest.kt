@@ -38,8 +38,9 @@ class ProductListTest {
         filter: ProductFilter = ProductFilter(),
         sort: ProductSort = ProductSort(),
         query: String = "",
-    ) = buildProductList(data, filter, sort, query, 4, '.', showLocation = true, showStore = true)
-        .map { it.name }
+    ) = buildProductList(
+        data, filter, sort, query, 4, '.', showLocation = true, showStore = true, language = "en",
+    ).map { it.name }
 
     @Test
     fun disabledProductsAreHiddenByDefault() {
@@ -109,7 +110,15 @@ class ProductListTest {
     @Test
     fun itemsShowTheColumnsOfGrocysTable() {
         val items = buildProductList(
-            data, ProductFilter(), ProductSort(), "", 4, ',', showLocation = true, showStore = true,
+            data,
+            ProductFilter(),
+            ProductSort(),
+            "",
+            4,
+            ',',
+            showLocation = true,
+            showStore = true,
+            language = "en",
         ).associateBy { it.name }
 
         assertEquals("Fridge", items.getValue("Milk").locationName)
@@ -134,6 +143,7 @@ class ProductListTest {
             decimalSeparator = '.',
             showLocation = false,
             showStore = true,
+            language = "en",
         ).first { it.name == "Milk" }
 
         assertNull(item.locationName)

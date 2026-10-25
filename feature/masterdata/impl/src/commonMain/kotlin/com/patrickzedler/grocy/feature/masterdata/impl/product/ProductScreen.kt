@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
@@ -40,11 +39,10 @@ import com.patrickzedler.grocy.core.data.masterdata.PictureChange
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
-import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
-import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.ScreenPane
+import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.clickCursor
@@ -58,19 +56,16 @@ import com.patrickzedler.grocy.core.model.masterdata.PurchasePriceType
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.StockLabelType
 import com.patrickzedler.grocy.core.model.masterdata.Store
+import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.resources.Res
-import com.patrickzedler.grocy.core.resources.action_close_scanner
 import com.patrickzedler.grocy.core.resources.action_save
-import com.patrickzedler.grocy.core.resources.action_scan_barcode
 import com.patrickzedler.grocy.core.resources.data_save_failed
 import com.patrickzedler.grocy.core.resources.data_save_failed_details
 import com.patrickzedler.grocy.core.resources.data_save_offline
 import com.patrickzedler.grocy.core.resources.data_saved
+import com.patrickzedler.grocy.core.resources.grocycode_product
+import com.patrickzedler.grocy.core.resources.grocycode_title
 import com.patrickzedler.grocy.core.resources.ic_rounded_arrow_right
-import com.patrickzedler.grocy.core.resources.ic_rounded_barcode
-import com.patrickzedler.grocy.core.resources.ic_rounded_barcode_scanner
-import com.patrickzedler.grocy.core.resources.ic_rounded_close
-import com.patrickzedler.grocy.core.resources.ic_rounded_conversion_path
 import com.patrickzedler.grocy.core.resources.ic_rounded_image
 import com.patrickzedler.grocy.core.resources.ic_rounded_inventory_2
 import com.patrickzedler.grocy.core.resources.ic_rounded_receipt_long
@@ -78,7 +73,6 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_save
 import com.patrickzedler.grocy.core.resources.product_active
 import com.patrickzedler.grocy.core.resources.product_auto_reprint_label
 import com.patrickzedler.grocy.core.resources.product_auto_reprint_label_hint
-import com.patrickzedler.grocy.core.resources.product_barcodes
 import com.patrickzedler.grocy.core.resources.product_consume_location
 import com.patrickzedler.grocy.core.resources.product_consume_location_hint
 import com.patrickzedler.grocy.core.resources.product_create
@@ -107,7 +101,6 @@ import com.patrickzedler.grocy.core.resources.product_group_due_date
 import com.patrickzedler.grocy.core.resources.product_group_location
 import com.patrickzedler.grocy.core.resources.product_group_more
 import com.patrickzedler.grocy.core.resources.product_group_quantity_units
-import com.patrickzedler.grocy.core.resources.product_group_related
 import com.patrickzedler.grocy.core.resources.product_group_stock
 import com.patrickzedler.grocy.core.resources.product_group_tare_weight
 import com.patrickzedler.grocy.core.resources.product_hide_on_stock_overview
@@ -169,25 +162,60 @@ import com.patrickzedler.grocy.core.resources.product_treat_opened_as_out_of_sto
 import com.patrickzedler.grocy.core.resources.product_treat_opened_as_out_of_stock_hint
 import com.patrickzedler.grocy.core.resources.product_userfields
 import com.patrickzedler.grocy.core.scanner.BarcodeScanner
+import com.patrickzedler.grocy.core.scanner.writer.Grocycode
+import com.patrickzedler.grocy.feature.masterdata.impl.barcode.BarcodeDialog
+import com.patrickzedler.grocy.feature.masterdata.impl.barcode.BarcodeItem
+import com.patrickzedler.grocy.feature.masterdata.impl.barcode.ProductBarcodesViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionDialog
+import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionItem
+import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionOwner
+import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionsViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ResolvedConversionsDialog
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.FormFrame
+import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectAction
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectActionEvent
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectActionsHost
+import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectActionsViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.objectActionItems
+import com.patrickzedler.grocy.feature.masterdata.impl.related.GrocycodeItem
+import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintEffect
+import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.related.ScannerToggleButton
+import com.patrickzedler.grocy.feature.masterdata.impl.related.barcodesGroup
+import com.patrickzedler.grocy.feature.masterdata.impl.related.conversionsGroup
+import com.patrickzedler.grocy.feature.masterdata.impl.related.rememberGrocycodeDownload
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * What belongs to the product besides its form: barcodes, conversions, its stock entries and
+ * journal, each with what acts on them.
+ */
+internal class ProductRelated(
+    val barcodes: ProductBarcodesViewModel,
+    val barcodeActions: ObjectActionsViewModel,
+    val conversions: ConversionsViewModel,
+    val conversionActions: ObjectActionsViewModel,
+    val labels: LabelPrintViewModel,
+    val onStockEntriesClick: (productId: Int) -> Unit,
+    val onStockJournalClick: (productId: Int) -> Unit,
+)
+
 @Composable
 internal fun ProductScreen(
     viewModel: ProductViewModel,
     frame: FormFrame,
+    related: ProductRelated,
     modifier: Modifier = Modifier,
 ) {
     val onBackClick = frame.onBackClick
     val leaveGuard = frame.leaveGuard
     val options by viewModel.options.collectAsStateWithLifecycle()
+    val barcodes by related.barcodes.items.collectAsStateWithLifecycle()
+    val conversions by related.conversions.items.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     var showPictureDialog by rememberSaveable { mutableStateOf(false) }
     // Saveable, so the question and the pending leave survive rotating the device
@@ -229,6 +257,18 @@ internal fun ProductScreen(
             onDismissRequest = { showUnsavedDialog = false },
         )
     }
+
+    // Barcodes and conversions belong to the saved product, a created one gets them now
+    LaunchedEffect(viewModel.productId, viewModel.isNew) {
+        if (!viewModel.isNew) {
+            related.barcodes.showProduct(viewModel.productId)
+            related.conversions.showOwner(ConversionOwner.Product(viewModel.productId))
+        }
+    }
+    ObjectActionsHost(related.barcodeActions, snackbarHostState) {}
+    LabelPrintEffect(related.labels, snackbarHostState)
+    val downloadGrocycode = rememberGrocycodeDownload(snackbarHostState)
+    ObjectActionsHost(related.conversionActions, snackbarHostState) {}
 
     ObjectActionsHost(frame.objectActions, snackbarHostState) { event ->
         val id = viewModel.productId
@@ -289,17 +329,17 @@ internal fun ProductScreen(
                 fabDescription = stringResource(Res.string.action_save),
                 onFabClick = { viewModel.save() },
             ) {
-                // Their screens follow, they exist once the product is saved
+                // They exist once the product is saved
                 FloatingToolbarIconButton(
                     painter = painterResource(Res.drawable.ic_rounded_inventory_2),
                     contentDescription = stringResource(Res.string.product_stock_entries),
-                    onClick = {},
+                    onClick = { related.onStockEntriesClick(viewModel.productId) },
                     enabled = !viewModel.isNew,
                 )
                 FloatingToolbarIconButton(
                     painter = painterResource(Res.drawable.ic_rounded_receipt_long),
                     contentDescription = stringResource(Res.string.product_stock_journal),
-                    onClick = {},
+                    onClick = { related.onStockJournalClick(viewModel.productId) },
                     enabled = !viewModel.isNew,
                 )
             }
@@ -308,13 +348,23 @@ internal fun ProductScreen(
         val state = viewModel.loadState
         val currentOptions = options
         when {
-            state is ProductLoadState.Ready && currentOptions != null -> productForm(
-                state = state,
-                options = currentOptions,
-                viewModel = viewModel,
-                snackbarHostState = snackbarHostState,
-                onPictureClick = { showPictureDialog = true },
-            )
+            state is ProductLoadState.Ready && currentOptions != null -> {
+                productForm(
+                    state = state,
+                    options = currentOptions,
+                    viewModel = viewModel,
+                    snackbarHostState = snackbarHostState,
+                )
+                relatedGroups(
+                    viewModel = viewModel,
+                    related = related,
+                    config = currentOptions.config,
+                    barcodes = barcodes,
+                    conversions = conversions,
+                    onGrocycodeDownload = downloadGrocycode,
+                    onPictureClick = { showPictureDialog = true },
+                )
+            }
 
             state is ProductLoadState.NotFound -> Unit
 
@@ -324,6 +374,28 @@ internal fun ProductScreen(
                 }
             }
         }
+    }
+
+    related.barcodes.dialog?.let { dialog ->
+        BarcodeDialog(
+            state = dialog,
+            onSave = related.barcodes::save,
+            onDismissRequest = related.barcodes::dismissDialog,
+        )
+    }
+    related.conversions.dialog?.let { dialog ->
+        ConversionDialog(
+            state = dialog,
+            onSave = related.conversions::save,
+            onDismissRequest = related.conversions::dismissDialog,
+        )
+    }
+    if (related.conversions.showsResolved) {
+        val groups by related.conversions.resolvedGroups.collectAsStateWithLifecycle()
+        ResolvedConversionsDialog(
+            groups = groups,
+            onDismissRequest = { related.conversions.showResolved(false) },
+        )
     }
 
     if (showPictureDialog) {
@@ -342,7 +414,6 @@ private fun LazyListScope.productForm(
     options: ProductOptions,
     viewModel: ProductViewModel,
     snackbarHostState: SnackbarHostState,
-    onPictureClick: () -> Unit,
 ) {
     val form = state.form
     val features = state.features
@@ -585,28 +656,61 @@ private fun LazyListScope.productForm(
             }
         }
     }
+}
 
-    segmentedGroup(key = "related", title = Res.string.product_group_related) {
-        val notSaved = stringResource(Res.string.product_save_hint).takeIf { viewModel.isNew }
-        // Their screens follow; until then the items show where they will be
-        NavigationItem(
-            text = stringResource(Res.string.product_barcodes),
-            supporting = notSaved,
-            iconPainter = painterResource(Res.drawable.ic_rounded_barcode),
-            index = 0,
-            count = 3,
-            enabled = !viewModel.isNew,
-            onClick = {},
-        )
-        NavigationItem(
-            text = stringResource(Res.string.product_qu_conversions),
-            supporting = notSaved,
-            iconPainter = painterResource(Res.drawable.ic_rounded_conversion_path),
-            index = 1,
-            count = 3,
-            enabled = !viewModel.isNew,
-            onClick = {},
-        )
+/**
+ * The right column of Grocy's product form: barcodes, conversion overrides and the picture;
+ * barcodes and conversions once the product is saved.
+ */
+private fun LazyListScope.relatedGroups(
+    viewModel: ProductViewModel,
+    related: ProductRelated,
+    config: ServerConfig,
+    barcodes: List<BarcodeItem>,
+    conversions: List<ConversionItem>,
+    onGrocycodeDownload: (code: String, twoDimensional: Boolean) -> Unit,
+    onPictureClick: () -> Unit,
+) {
+    val canAdd = !viewModel.isNew
+    barcodesGroup(
+        items = barcodes,
+        canAdd = canAdd,
+        disabledHint = Res.string.product_save_hint,
+        onBarcodeClick = related.barcodes::open,
+        onDeleteClick = { related.barcodeActions.request(ObjectAction.DELETE, it) },
+        onAddClick = { related.barcodes.open() },
+    )
+    // Grocy shows a product's grocycode once it exists
+    if (!viewModel.isNew) {
+        val productId = viewModel.productId
+        val code = Grocycode.product(productId)
+        segmentedGroup(key = "grocycode", title = Res.string.grocycode_title) {
+            GrocycodeItem(
+                code = code,
+                objectName = stringResource(Res.string.grocycode_product),
+                twoDimensional = config.grocycode2D,
+                onDownloadClick = { onGrocycodeDownload(code, config.grocycode2D) },
+                onPrintClick = if (config.labelPrinter && config.labelPrinterRunsOnServer) {
+                    { related.labels.printProduct(productId) }
+                } else {
+                    null
+                },
+                index = 0,
+                count = 1,
+            )
+        }
+    }
+    conversionsGroup(
+        title = Res.string.product_qu_conversions,
+        items = conversions,
+        canAdd = canAdd,
+        disabledHint = Res.string.product_save_hint,
+        onConversionClick = related.conversions::open,
+        onDeleteClick = { related.conversionActions.request(ObjectAction.DELETE, it) },
+        onAddClick = { related.conversions.open() },
+        onShowResolvedClick = { related.conversions.showResolved(true) },
+    )
+    segmentedGroup(key = "picture", title = Res.string.product_picture) {
         NavigationItem(
             text = stringResource(Res.string.product_picture),
             supporting = when (viewModel.pictureChange) {
@@ -620,8 +724,8 @@ private fun LazyListScope.productForm(
                 }
             },
             iconPainter = painterResource(Res.drawable.ic_rounded_image),
-            index = 2,
-            count = 3,
+            index = 0,
+            count = 1,
             onClick = onPictureClick,
         )
     }
@@ -635,7 +739,6 @@ private fun GeneralItems(
     snackbarHostState: SnackbarHostState,
 ) {
     val form = state.form
-    val haptic = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
     var showScanner by rememberSaveable { mutableStateOf(false) }
     val hasSubProducts = viewModel.hasSubProducts(options)
@@ -701,34 +804,11 @@ private fun GeneralItems(
                     null
                 },
                 trailingAction = {
-                    val description = stringResource(
-                        if (showScanner) {
-                            Res.string.action_close_scanner
-                        } else {
-                            Res.string.action_scan_barcode
-                        },
+                    ScannerToggleButton(
+                        isScannerOpen = showScanner,
+                        onClick = { showScanner = !showScanner },
+                        enabled = !hasSubProducts,
                     )
-                    HapticTooltipBox(text = description) {
-                        IconButton(
-                            onClick = {
-                                haptic.confirm()
-                                showScanner = !showScanner
-                            },
-                            modifier = Modifier.clickCursor(enabled = !hasSubProducts),
-                            enabled = !hasSubProducts,
-                        ) {
-                            Icon(
-                                painter = painterResource(
-                                    if (showScanner) {
-                                        Res.drawable.ic_rounded_close
-                                    } else {
-                                        Res.drawable.ic_rounded_barcode_scanner
-                                    },
-                                ),
-                                contentDescription = description,
-                            )
-                        }
-                    }
                 },
             )
         },

@@ -25,6 +25,7 @@ import com.patrickzedler.grocy.core.design.component.SearchableDropdownField
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
 import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.resources.data_date_invalid
 import com.patrickzedler.grocy.core.resources.data_datetime_invalid
 import com.patrickzedler.grocy.core.resources.data_none
 import com.patrickzedler.grocy.core.resources.data_number_invalid
@@ -50,6 +51,7 @@ internal fun fieldErrorText(error: FieldError?, requiredMessage: StringResource?
         is FieldError.InvalidNumber ->
             stringResource(Res.string.data_number_invalid, error.min, error.decimals.toString())
         FieldError.InvalidDateTime -> stringResource(Res.string.data_datetime_invalid)
+        FieldError.InvalidDate -> stringResource(Res.string.data_date_invalid)
     }
 
 @Composable
@@ -66,6 +68,7 @@ internal fun TextItem(
     keyboardType: KeyboardType = KeyboardType.Text,
     multiLine: Boolean = false,
     trailingAction: (@Composable () -> Unit)? = null,
+    below: (@Composable () -> Unit)? = null,
 ) {
     SegmentedContainer(index = index, count = count, modifier = modifier) {
         RoundedTextField(
@@ -101,6 +104,11 @@ internal fun TextItem(
             },
         )
         HintText(hint)
+        // Belongs to the field, e.g. the scanner of its scan action
+        if (below != null) {
+            Spacer(Modifier.height(16.dp))
+            below()
+        }
     }
 }
 

@@ -12,6 +12,7 @@ import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.feature.masterdata.impl.product.htmlToPlainText
+import com.patrickzedler.grocy.core.model.masterdata.nameFor
 
 /**
  * Grocy's "Product overview" of one product: what the stored product says at once, what the
@@ -127,6 +128,7 @@ internal fun buildProductOverview(
     config: ServerConfig,
     settings: UserSettings,
     decimalSeparator: Char,
+    language: String,
 ): ProductOverviewUiState {
     val units = quantityUnits.associateBy { it.id }
     val stockUnit = product.quIdStock?.let { units[it] }
@@ -135,7 +137,7 @@ internal fun buildProductOverview(
     fun amount(value: Double, opened: Double) = AmountText(
         amount = listOfNotNull(
             formatDecimal(value, decimals, decimalSeparator),
-            stockUnit?.let { if (value == 1.0) it.name else it.namePlural ?: it.name },
+            stockUnit?.nameFor(value, language),
         ).joinToString(" "),
         opened = if (opened > 0) formatDecimal(opened, decimals, decimalSeparator) else null,
     )

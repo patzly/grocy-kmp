@@ -10,9 +10,12 @@ on every platform, the start screen (Master data item, the app menu), an About
 screen, the Settings overview (`feature:settings`) and the master data
 (`feature:masterdata`): the overview of Grocy's master data categories, the list and form of
 every category (products with their overview dialog, locations, stores, quantity units,
-product groups, chores, batteries, task categories, userfields, userentities). Barcodes, QU
-conversions (of products and the default conversions of units), Stock entries, Stock journal
-and "Presets for new products" are placeholders without action.
+product groups, chores, batteries, task categories, userfields, userentities), with the
+product's barcodes, grocycode and conversion overrides, the default conversions of units,
+Grocy's stock pages of products (stock entries, stock journal, journal summary), "Add to
+shopping list" and the stock settings ("Presets for new products"). Grocy's purchase,
+consume, transfer and inventory pages do not exist yet, so the stock pages leave out their
+links.
 
 Master data (`feature:masterdata`), built after Grocy's web frontend:
 - `MasterDataScreen` lists the categories of Grocy's "Manage master data" menu in its order and
@@ -102,6 +105,9 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   (`surfaceContainerHighest`), so the indicator visibly comes from below it; the others keep
   the large one, except while a mouse is used: its wheel has no gesture end the large bar could
   settle on, so every screen gets the small centered bar then, changing only its color.
+  Menus opened from list items get `LocalMinimumInteractiveComponentSize` back to 48dp
+  (`MenuTouchTarget`): a list item's trailing slot lowers it by its padding and the popup
+  inherits it, so the items were 44dp with tighter padding than the app bar's menus.
   Single items of a menu group use `menuItemShape(0, 1)`: Material's standalone item shape has
   the small corners of middle items, so its ripple would not fill the rounded group. ViewModels run downloads through
   `RefreshController` (`core:data`: one at a time, offline/failed errors, `loadedOnce`);
@@ -154,6 +160,44 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   (`isDistinguishable`, the dataviz validator's OKLab checks); stores keep their color by id,
   stores beyond eight are drawn together as "Other stores". Tap, sideways drag, mouse hover and
   the arrow keys select a price (date, store, price as tooltip); screen readers get all prices.
+- Related objects of forms (`barcode/`, `conversion/`, `related/`): Grocy's popup forms are
+  `FormDialog`s (Save with loading indicator, Cancel, the server's error above the groups),
+  their state lives in a ViewModel (`ProductBarcodesViewModel`, `ConversionsViewModel`, shown
+  object set by `showProduct`/`showOwner`, so a just created product gets them), saving
+  online only (`changeErrorOf`). The product form shows after its userfields Grocy's right
+  column: barcodes (amount in the units the purchase unit converts into, `productAmountUnits`
+  from `quantity_unit_conversions_resolved`, "This equals" below), the grocycode, the product's
+  conversion overrides with "Show resolved conversions" (`ResolvedConversionsDialog`), the
+  picture; a quantity unit's form its default conversions (`from` fixed). Items edit on a tap
+  and delete through their menu (`ObjectActionsViewModel` of `product_barcodes` /
+  `quantity_unit_conversions`, Grocy's questions); a saved or deleted conversion downloads the
+  resolved ones again.
+- Grocycodes (`GrocycodeItem`): `grcy:p:<id>` (`:<stock_id>` for stock entries) written by
+  `core:scanner`'s own `DataMatrixWriter` (ECC 200, square up to 48x48) or `Code128Writer` for
+  Grocy's `GROCYCODE_TYPE` 1D (`ServerConfig.grocycode2D`), drawn black on white; "Download"
+  saves `Grocycode.png` (`PngWriter`, stored deflate blocks) through `rememberFileSaver` of
+  `core:ui` ("Save as" on Android, a download in browsers). "Print on label printer" calls
+  Grocy's `printlabel` and shows only when the server runs the webhook itself
+  (`labelPrinterRunsOnServer`), the app never stores webhook addresses.
+- Stock pages (`stock/`, `journal/`, routes `StockEntriesRoute`, `StockJournalRoute`,
+  `StockJournalSummaryRoute` of `feature:masterdata:api`, from the product form's toolbar and
+  the product overview's buttons; they live here because they open the product overview too).
+  `StockRepository` (`core:data`) stores the entries (`stock_entries`, with the amounts) and
+  the journal (`stock_log`, a download of a date range replaces the bookings of that range) for
+  offline use; bookings (consume, consume as spoiled, open, edit, undo) are online only and
+  download the entries again. Entries show Grocy's columns and due highlighting
+  (`dueStatusOf`: overdue/expired by due type, due soon by `stock_due_soon_days`), price per
+  price unit; their menu holds Grocy's other actions in its groups. Booking messages offer
+  "Undo" in the snackbar. The journal filters by product, type, location, user and Grocy's
+  date ranges (`journalSince`, SQLite month arithmetic), searches, undoes; the summary sums
+  every booking not undone per product, type and user (Grocy's view is not exposed).
+- "Add to shopping list" (`AddToShoppingListViewModel`/`AddToShoppingListHost`, from the
+  overview and the stock pages): Grocy's form with `updateexistingproduct`, the amount in the
+  product's units sent in the stock unit (`stock/shoppinglist/add-product`), the item's
+  userfields saved afterwards on the item found by product and list (Grocy forgets them).
+- Units are named like Grocy's `__n` for quantity units: `QuantityUnit.nameFor(amount,
+  language)` with the plural rules of Grocy's translations (`grocyPluralIndex`) and the unit's
+  `plural_forms` lines.
 - `ProductScreen` edits or creates (`ProductRoute(productId = null)`) a product with every field
   of Grocy's form, in its order, grouped, fields of disabled features hidden
   (`ProductFormFeatures`). The logic is pure and tested: `ProductFormValues.validate` (Grocy's
@@ -177,8 +221,20 @@ server: stock, shopping list), Network (loading timeout, Tor with Orbot, HTTP pr
 (navigation, date and keyboard settings, Open Food Facts / Open Beauty Facts), Scanner (engine,
 front camera, 2D formats, barcode formats, external scanners) and Notifications (stock, chores)
 as one group (`SettingsCategory`), then "Backup and restore" and "Reset all" as a second group.
-Built so far: the overview, General (language, theme, contrast) and Server. The other category
-pages, backup and reset follow; `settingsEntries` wires their clicks to nothing until then.
+Built so far: the overview, General (language, theme, contrast), Server and the stock settings
+(`StockSettingsRoute`, opened by "Presets for new products"). The other category pages, backup
+and reset follow; `settingsEntries` wires their clicks to nothing until then.
+- Wide windows show a category's page beside the categories, but only once one is chosen:
+  `SettingsRoute` has `listPaneMetadata(placeholder = null)`, which `ListAloneSceneStrategy`
+  leaves alone on the screen while it is on top; the pages are `DetailRoute`s opened with
+  `openDetail`, the categories then single choice items marking the shown page. A page beside
+  them has neither back button nor menu (the categories' bar has both). Back returns to the
+  categories alone (`ListBesideDetailScene` sets the scene's `previousEntries`, which the
+  browser history follows too).
+- Stock settings (`stock/`): every setting of Grocy's stock settings page in its groups, hidden
+  by feature flag; each change is saved at once (`MasterDataRepository.saveUserSetting`,
+  `UserSettingValue`), typed numbers once typing pauses and only when valid (Grocy's ranges,
+  `StockNumberSetting`); a failed save returns to the stored value with a message.
 
 - Server (`ServerSettingsScreen`): on the demo server first a group of its own with one
   non-clickable item in `error`/`onError` (warning icon, "Public demo server", supporting text
@@ -622,7 +678,9 @@ both modules to `apps/shared/build.gradle.kts`, and add the new routes to `allRo
   type posts or puts, sends changed userfields, then stores the object as the server returns it).
   `refresh()` downloads all master data at once; users need a permission of their own, a 403
   keeps the stored ones instead of failing the refresh. Version 4 added chores, batteries, task
-  categories, userentities, users and the userfield values of the simple objects.
+  categories, userentities, users and the userfield values of the simple objects; version 5
+  quantity unit conversions (defined and resolved), shopping lists, stock entries, the stock
+  journal and the userfield values of barcodes.
 - `AuthRepository` clears the database before a login and on logout (`clearLocalData`), so no
   screen shows the data of another server. The database file is excluded from backups.
 - Server configuration and user settings live as JSON in `server_values`; only the known feature
@@ -749,6 +807,8 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   (kept out of public APIs: `HapticTooltipBox` takes its own `TooltipPosition`). Compose 1.13
   needs compileSdk 37.1 or newer (`android-compileSdkMinor`). Material's adaptive libraries
   (`adaptive-navigation3`, list-detail scenes) follow the same rule: newest alpha.
+- Version numbers (app, Grocy) and other numbers read as columns use tabular figures
+  (`TextStyle.withTabularNumbers()`), every digit equally wide.
 - Font is Google Sans Flex from Compose Resources. On web fonts load async;
   `rememberResourcesReady()` (also every string and icon: browsers load them asynchronously, so a new screen would fill in its texts while sliding in) gates `onContentReady`, which removes the Android splash / the HTML
   `#loading` element.

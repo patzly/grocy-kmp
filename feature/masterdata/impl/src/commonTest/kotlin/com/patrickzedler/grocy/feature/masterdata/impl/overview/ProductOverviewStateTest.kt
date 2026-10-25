@@ -45,6 +45,7 @@ class ProductOverviewStateTest {
         config = config,
         settings = UserSettings(stockDecimalPlacesAmounts = 2),
         decimalSeparator = ',',
+        language = "de",
     )
 
     @Test

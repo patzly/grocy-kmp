@@ -18,6 +18,9 @@ import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductsRoute
 import com.patrickzedler.grocy.feature.masterdata.api.QuantityUnitRoute
 import com.patrickzedler.grocy.feature.masterdata.api.QuantityUnitsRoute
+import com.patrickzedler.grocy.feature.masterdata.api.StockEntriesRoute
+import com.patrickzedler.grocy.feature.masterdata.api.StockJournalRoute
+import com.patrickzedler.grocy.feature.masterdata.api.StockJournalSummaryRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StoreRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StoresRoute
 import com.patrickzedler.grocy.feature.masterdata.api.TaskCategoriesRoute
@@ -30,6 +33,7 @@ import com.patrickzedler.grocy.feature.settings.api.GeneralSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.LogRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
+import com.patrickzedler.grocy.feature.settings.api.StockSettingsRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -80,6 +84,12 @@ class RouteSerializersTest {
         UserfieldRoute(id = 3),
         UserentitiesRoute,
         UserentityRoute(id = 3),
+        StockSettingsRoute,
+        StockEntriesRoute(),
+        StockEntriesRoute(productId = 7),
+        StockJournalRoute(),
+        StockJournalRoute(productId = 7),
+        StockJournalSummaryRoute(productId = 7),
     )
 
     private val json = Json { serializersModule = routeSerializers }

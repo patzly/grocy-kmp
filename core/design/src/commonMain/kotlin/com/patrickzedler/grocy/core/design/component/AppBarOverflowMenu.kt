@@ -13,11 +13,13 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MenuAnchorPosition
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -130,32 +133,49 @@ private fun OverflowMenuPopup(
             offset = DpOffset(x = (-8).dp, y = 0.dp),
         ),
     ) {
-        groups.forEachIndexed { groupIndex, items ->
-            if (groupIndex > 0) Spacer(Modifier.height(MenuDefaults.GroupSpacing))
-            DropdownMenuGroup(
-                shapes = MenuDefaults.groupShape(index = groupIndex, count = groups.size),
-            ) {
-                items.forEachIndexed { index, item ->
-                    DropdownMenuItem(
-                        text = { Text(item.text) },
-                        modifier = Modifier.clickCursor(),
-                        onClick = {
-                            haptic.confirm()
-                            onDismissRequest()
-                            item.onClick()
-                        },
-                        shape = menuItemShape(
-                            index = index,
-                            count = items.size,
-                            groupIndex = groupIndex,
-                            groupCount = groups.size,
-                        ),
-                    )
-                }
+        // The popup inherits the touch target size of where it opens: the trailing slot of a list
+        // item lowers it by its padding, which shrank the items below the 48dp of other menus
+        CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides MenuTouchTarget) {
+            MenuGroups(groups, haptic, onDismissRequest)
+        }
+    }
+}
+
+/** The groups of a menu, children of the popup's column, so they share its width. */
+@Composable
+private fun MenuGroups(
+    groups: List<List<AppBarMenuItem>>,
+    haptic: HapticFeedback,
+    onDismissRequest: () -> Unit,
+) {
+    groups.forEachIndexed { groupIndex, items ->
+        if (groupIndex > 0) Spacer(Modifier.height(MenuDefaults.GroupSpacing))
+        DropdownMenuGroup(
+            shapes = MenuDefaults.groupShape(index = groupIndex, count = groups.size),
+        ) {
+            items.forEachIndexed { index, item ->
+                DropdownMenuItem(
+                    text = { Text(item.text) },
+                    modifier = Modifier.clickCursor(),
+                    onClick = {
+                        haptic.confirm()
+                        onDismissRequest()
+                        item.onClick()
+                    },
+                    shape = menuItemShape(
+                        index = index,
+                        count = items.size,
+                        groupIndex = groupIndex,
+                        groupCount = groups.size,
+                    ),
+                )
             }
         }
     }
 }
+
+/** Material's minimum touch target, which menu items take as their height too. */
+val MenuTouchTarget = 48.dp
 
 /**
  * Shape of the item at [index] of [count] items in group [groupIndex] of [groupCount] groups of

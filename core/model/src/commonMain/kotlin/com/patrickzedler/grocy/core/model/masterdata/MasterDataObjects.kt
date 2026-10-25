@@ -47,6 +47,7 @@ data class ProductBarcode(
     val storeId: Int? = null,
     val lastPrice: Double? = null,
     val note: String? = null,
+    val userfields: Map<String, String?> = emptyMap(),
 )
 
 /** Current stock of a product, the part of Grocy's `/stock` the master data needs. */

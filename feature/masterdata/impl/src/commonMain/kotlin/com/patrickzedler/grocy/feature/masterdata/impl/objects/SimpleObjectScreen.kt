@@ -1,8 +1,12 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.objects
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
@@ -12,7 +16,6 @@ import com.patrickzedler.grocy.core.resources.battery_charge_interval_hint
 import com.patrickzedler.grocy.core.resources.battery_create
 import com.patrickzedler.grocy.core.resources.battery_edit
 import com.patrickzedler.grocy.core.resources.battery_used_in
-import com.patrickzedler.grocy.core.resources.ic_rounded_conversion_path
 import com.patrickzedler.grocy.core.resources.ic_rounded_edit_attributes
 import com.patrickzedler.grocy.core.resources.location_create
 import com.patrickzedler.grocy.core.resources.location_edit
@@ -23,7 +26,6 @@ import com.patrickzedler.grocy.core.resources.product_active
 import com.patrickzedler.grocy.core.resources.product_description
 import com.patrickzedler.grocy.core.resources.product_group_create
 import com.patrickzedler.grocy.core.resources.product_group_edit
-import com.patrickzedler.grocy.core.resources.product_group_related
 import com.patrickzedler.grocy.core.resources.product_name
 import com.patrickzedler.grocy.core.resources.product_name_required
 import com.patrickzedler.grocy.core.resources.products_configure_userfields
@@ -38,30 +40,58 @@ import com.patrickzedler.grocy.core.resources.store_create
 import com.patrickzedler.grocy.core.resources.store_edit
 import com.patrickzedler.grocy.core.resources.task_category_create
 import com.patrickzedler.grocy.core.resources.task_category_edit
+import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionDialog
+import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionOwner
+import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionsViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.product.GroupItems
-import com.patrickzedler.grocy.feature.masterdata.impl.product.NavigationItem
 import com.patrickzedler.grocy.feature.masterdata.impl.product.TextItem
 import com.patrickzedler.grocy.feature.masterdata.impl.product.fieldErrorText
+import com.patrickzedler.grocy.feature.masterdata.impl.related.conversionsGroup
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-/** Grocy's form of a location, store, quantity unit, product group, battery or task category. */
+/**
+ * Grocy's form of a location, store, quantity unit, product group, battery or task category;
+ * a quantity unit's with its default [conversions] and what deletes them.
+ */
 @Composable
 internal fun SimpleObjectScreen(
     viewModel: SimpleObjectViewModel,
     frame: FormFrame,
     onConfigureUserfieldsClick: (entity: String) -> Unit,
     modifier: Modifier = Modifier,
+    conversions: ConversionsViewModel? = null,
+    conversionActions: ObjectActionsViewModel? = null,
 ) {
     val kind = viewModel.kind
     val (createTitle, editTitle) = kind.formTitles
+    val conversionItems = conversions?.items?.collectAsStateWithLifecycle()?.value.orEmpty()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    if (conversions != null) {
+        // A created unit gets its conversions now
+        LaunchedEffect(viewModel.objectId, viewModel.isNew) {
+            if (!viewModel.isNew) conversions.showOwner(ConversionOwner.Unit(viewModel.objectId))
+        }
+        conversions.dialog?.let { dialog ->
+            ConversionDialog(
+                state = dialog,
+                onSave = conversions::save,
+                onDismissRequest = conversions::dismissDialog,
+            )
+        }
+    }
+    if (conversionActions != null) {
+        ObjectActionsHost(conversionActions, snackbarHostState) {}
+    }
 
     ObjectFormScreen(
         title = stringResource(if (viewModel.isNew) createTitle else editTitle),
         viewModel = viewModel,
         frame = frame,
         modifier = modifier,
+        snackbarHostState = snackbarHostState,
         toolbarActions = {
             kind.userfieldEntity?.let { entity ->
                 FloatingToolbarIconButton(
@@ -183,20 +213,16 @@ internal fun SimpleObjectScreen(
                 },
             )
         }
-        if (kind == ObjectListKind.QUANTITY_UNITS) {
-            segmentedGroup(key = "related", title = Res.string.product_group_related) {
-                // Its screen follows with the quantity unit conversions
-                NavigationItem(
-                    text = stringResource(Res.string.objects_default_conversions),
-                    supporting = stringResource(Res.string.quantity_unit_save_hint)
-                        .takeIf { viewModel.isNew },
-                    iconPainter = painterResource(Res.drawable.ic_rounded_conversion_path),
-                    index = 0,
-                    count = 1,
-                    enabled = !viewModel.isNew,
-                    onClick = {},
-                )
-            }
+        if (kind == ObjectListKind.QUANTITY_UNITS && conversions != null) {
+            conversionsGroup(
+                title = Res.string.objects_default_conversions,
+                items = conversionItems,
+                canAdd = !viewModel.isNew,
+                disabledHint = Res.string.quantity_unit_save_hint,
+                onConversionClick = conversions::open,
+                onDeleteClick = { conversionActions?.request(ObjectAction.DELETE, it) },
+                onAddClick = { conversions.open() },
+            )
         }
     }
 }

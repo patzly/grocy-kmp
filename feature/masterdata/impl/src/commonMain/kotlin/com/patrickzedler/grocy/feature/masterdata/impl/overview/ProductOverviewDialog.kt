@@ -16,12 +16,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ButtonGroupMenuState
 import androidx.compose.material3.ButtonGroupScope
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -141,6 +141,9 @@ internal fun ProductOverviewDialog(
     name: String,
     viewModel: ProductOverviewViewModel,
     onEditClick: (productId: Int) -> Unit,
+    onAddToShoppingListClick: (productId: Int) -> Unit,
+    onStockEntriesClick: (productId: Int) -> Unit,
+    onStockJournalClick: (productId: Int) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
     // Right after opening it may still be the previously opened product's
@@ -159,6 +162,9 @@ internal fun ProductOverviewDialog(
             loadPicture = viewModel::picture,
             onRetryClick = viewModel::refresh,
             onEditClick = { onEditClick(productId) },
+            onAddToShoppingListClick = { onAddToShoppingListClick(productId) },
+            onStockEntriesClick = { onStockEntriesClick(productId) },
+            onStockJournalClick = { onStockJournalClick(productId) },
             onCloseClick = onDismissRequest,
         )
     }
@@ -172,6 +178,9 @@ private fun ProductOverviewContent(
     loadPicture: suspend (fileName: String) -> ByteArray?,
     onRetryClick: () -> Unit,
     onEditClick: () -> Unit,
+    onAddToShoppingListClick: () -> Unit,
+    onStockEntriesClick: () -> Unit,
+    onStockJournalClick: () -> Unit,
     onCloseClick: () -> Unit,
 ) {
     val haptic = LocalHapticFeedback.current
@@ -199,6 +208,9 @@ private fun ProductOverviewContent(
             ActionGroup(
                 showShoppingList = state?.showShoppingList == true,
                 onEditClick = onEditClick,
+                onAddToShoppingListClick = onAddToShoppingListClick,
+                onStockEntriesClick = onStockEntriesClick,
+                onStockJournalClick = onStockJournalClick,
             )
             if (details != null && refresh.error != null) {
                 Text(
@@ -255,15 +267,14 @@ private class OverviewAction(
     val onClick: () -> Unit,
 )
 
-/**
- * The buttons of Grocy's card header as button group, the pressed one widens. Stock entries,
- * the stock journal and the shopping list have no screens in the app yet, like the web
- * frontend they will lead there.
- */
+/** The buttons of Grocy's card header as button group, the pressed one widens. */
 @Composable
 private fun ActionGroup(
     showShoppingList: Boolean,
     onEditClick: () -> Unit,
+    onAddToShoppingListClick: () -> Unit,
+    onStockEntriesClick: () -> Unit,
+    onStockJournalClick: () -> Unit,
 ) {
     // Most important first: narrow dialogs move the last ones into the overflow menu
     val actions = buildList {
@@ -273,20 +284,23 @@ private fun ActionGroup(
                 OverviewAction(
                     Res.drawable.ic_rounded_add_shopping_cart,
                     Res.string.product_overview_add_to_shopping_list,
-                ) {},
+                    onAddToShoppingListClick,
+                ),
             )
         }
         add(
             OverviewAction(
                 Res.drawable.ic_rounded_inventory_2,
                 Res.string.product_stock_entries,
-            ) {},
+                onStockEntriesClick,
+            ),
         )
         add(
             OverviewAction(
                 Res.drawable.ic_rounded_receipt_long,
                 Res.string.product_stock_journal,
-            ) {},
+                onStockJournalClick,
+            ),
         )
     }
 
@@ -729,6 +743,9 @@ private val PlaceholderHeight = 160.dp
 private fun ProductOverviewPreview() {
     GrocyTheme {
         ProductOverviewContent(
+            onAddToShoppingListClick = {},
+            onStockEntriesClick = {},
+            onStockJournalClick = {},
             name = "Milk",
             state = ProductOverviewUiState(
                 productId = 1,

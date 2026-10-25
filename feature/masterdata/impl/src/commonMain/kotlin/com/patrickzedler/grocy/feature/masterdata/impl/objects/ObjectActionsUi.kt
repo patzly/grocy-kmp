@@ -48,8 +48,10 @@ import com.patrickzedler.grocy.core.resources.merge_product_required
 import com.patrickzedler.grocy.core.resources.merge_products_title
 import com.patrickzedler.grocy.core.resources.merge_same
 import com.patrickzedler.grocy.core.resources.objects_action_offline
+import com.patrickzedler.grocy.core.resources.objects_delete_barcode
 import com.patrickzedler.grocy.core.resources.objects_delete_battery
 import com.patrickzedler.grocy.core.resources.objects_delete_chore
+import com.patrickzedler.grocy.core.resources.objects_delete_conversion
 import com.patrickzedler.grocy.core.resources.objects_delete_failed
 import com.patrickzedler.grocy.core.resources.objects_delete_location
 import com.patrickzedler.grocy.core.resources.objects_delete_product
@@ -161,6 +163,8 @@ private fun deleteQuestionOf(entity: String): StringResource = when (entity) {
     MasterDataRepository.BATTERIES -> Res.string.objects_delete_battery
     MasterDataRepository.TASK_CATEGORIES -> Res.string.objects_delete_task_category
     MasterDataRepository.USERENTITIES -> Res.string.objects_delete_userentity
+    MasterDataRepository.PRODUCT_BARCODES -> Res.string.objects_delete_barcode
+    MasterDataRepository.QU_CONVERSIONS -> Res.string.objects_delete_conversion
     else -> Res.string.objects_delete_userfield
 }
 

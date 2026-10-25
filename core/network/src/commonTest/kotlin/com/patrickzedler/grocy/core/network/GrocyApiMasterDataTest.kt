@@ -158,6 +158,25 @@ class GrocyApiMasterDataTest {
         assertEquals("USD", config.currency)
         // Missing flags keep Grocy's defaults
         assertTrue(config.stockProductFreezing)
+        assertTrue(config.shoppingListMultipleLists)
+        assertTrue(config.labelPrinterRunsOnServer)
+        assertTrue(config.grocycode2D)
+    }
+
+    @Test
+    fun serverConfigReadsGrocycodesAndShoppingListsAndLabelPrinting() = runTest {
+        val api = api {
+            json(
+                """{"FEATURE_FLAG_SHOPPINGLIST_MULTIPLE_LISTS":"0",""" +
+                    """"LABEL_PRINTER_RUN_SERVER":false,"GROCYCODE_TYPE":"1d"}""",
+            )
+        }
+
+        val config = api.serverConfig(CONNECTION)
+
+        assertFalse(config.shoppingListMultipleLists)
+        assertFalse(config.labelPrinterRunsOnServer)
+        assertFalse(config.grocycode2D)
     }
 
     @Test
@@ -184,6 +203,36 @@ class GrocyApiMasterDataTest {
             ),
             settings.productPresets,
         )
+    }
+
+    @Test
+    fun userSettingsReadTheStockSettings() = runTest {
+        val api = api {
+            json(
+                """{"stock_due_soon_days":"7","stock_default_purchase_amount":"0.5",""" +
+                    """"stock_default_consume_amount":2,""" +
+                    """"stock_default_consume_amount_use_quick_consume_amount":"1",""" +
+                    """"show_icon_on_stock_overview_page_when_product_is_on_shopping_list":0,""" +
+                    """"stock_overview_show_all_out_of_stock_products":true,""" +
+                    """"show_purchased_date_on_purchase":"1",""" +
+                    """"show_warning_on_purchase_when_due_date_is_earlier_than_next":"0",""" +
+                    """"stock_decimal_places_prices_input":"3",""" +
+                    """"stock_auto_decimal_separator_prices":"1"}""",
+            )
+        }
+
+        val settings = api.userSettings(CONNECTION)
+
+        assertEquals(7, settings.stockDueSoonDays)
+        assertEquals(0.5, settings.stockDefaultPurchaseAmount)
+        assertEquals(2.0, settings.stockDefaultConsumeAmount)
+        assertTrue(settings.stockDefaultConsumeAmountUseQuickConsumeAmount)
+        assertFalse(settings.showIconOnStockOverviewWhenOnShoppingList)
+        assertTrue(settings.stockOverviewShowAllOutOfStockProducts)
+        assertTrue(settings.showPurchasedDateOnPurchase)
+        assertFalse(settings.showWarningOnPurchaseWhenDueDateIsEarlierThanNext)
+        assertEquals(3, settings.stockDecimalPlacesPricesInput)
+        assertTrue(settings.stockAutoDecimalSeparatorPrices)
     }
 
     @Test

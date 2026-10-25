@@ -17,10 +17,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -38,6 +40,7 @@ import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.ListItemOverflowMenu
+import com.patrickzedler.grocy.core.design.component.MenuTouchTarget
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
@@ -410,14 +413,18 @@ private fun UserentityButtons(
                 )
             },
             menuContent = { menuState ->
-                DropdownMenuItem(
-                    text = { Text(configureText) },
-                    modifier = Modifier.clickCursor(),
-                    onClick = {
-                        menuState.dismiss()
-                        onConfigure()
-                    },
-                )
+                CompositionLocalProvider(
+                    LocalMinimumInteractiveComponentSize provides MenuTouchTarget,
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(configureText) },
+                        modifier = Modifier.clickCursor(),
+                        onClick = {
+                            menuState.dismiss()
+                            onConfigure()
+                        },
+                    )
+                }
             },
         )
         customItem(
@@ -429,16 +436,20 @@ private fun UserentityButtons(
                 )
             },
             menuContent = { menuState ->
-                menuItems.forEach { item ->
-                    DropdownMenuItem(
-                        text = { Text(item.text) },
-                        modifier = Modifier.clickCursor(),
-                        onClick = {
-                            haptic.confirm()
-                            menuState.dismiss()
-                            item.onClick()
-                        },
-                    )
+                CompositionLocalProvider(
+                    LocalMinimumInteractiveComponentSize provides MenuTouchTarget,
+                ) {
+                    menuItems.forEach { item ->
+                        DropdownMenuItem(
+                            text = { Text(item.text) },
+                            modifier = Modifier.clickCursor(),
+                            onClick = {
+                                haptic.confirm()
+                                menuState.dismiss()
+                                item.onClick()
+                            },
+                        )
+                    }
                 }
             },
         )

@@ -18,12 +18,16 @@ import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.ProductGroup
 import com.patrickzedler.grocy.core.model.masterdata.ProductOverview
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
+import com.patrickzedler.grocy.core.model.masterdata.QuantityUnitConversion
+import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.masterdata.TaskCategory
 import com.patrickzedler.grocy.core.model.masterdata.Userentity
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
 import com.patrickzedler.grocy.core.model.server.ServerConfig
+import com.patrickzedler.grocy.core.model.server.UserSettingValue
 import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.GrocyApiException
@@ -72,6 +76,17 @@ class MasterDataRepository(
 
     val stock: Flow<List<StockAmount>> =
         dao.observeStock().map { list -> list.map { it.toModel() } }
+
+    /** The defined conversions, default ones and the overrides of products. */
+    val quantityUnitConversions: Flow<List<QuantityUnitConversion>> =
+        dao.observeQuantityUnitConversions().map { list -> list.map { it.toModel() } }
+
+    /** Every conversion Grocy derived from the defined ones. */
+    val resolvedQuantityUnitConversions: Flow<List<ResolvedQuantityUnitConversion>> =
+        dao.observeResolvedQuantityUnitConversions().map { list -> list.map { it.toModel() } }
+
+    val shoppingLists: Flow<List<ShoppingList>> =
+        dao.observeShoppingLists().map { list -> list.map { it.toModel() } }
 
     val chores: Flow<List<Chore>> = dao.observeChores().map { list -> list.map { it.toModel() } }
 
@@ -140,6 +155,9 @@ class MasterDataRepository(
             val units = async { api.quantityUnits(connection) }
             val stores = async { api.stores(connection) }
             val barcodes = async { api.productBarcodes(connection) }
+            val conversions = async { api.quantityUnitConversions(connection) }
+            val resolved = async { api.resolvedQuantityUnitConversions(connection) }
+            val shoppingLists = async { api.shoppingLists(connection) }
             val stock = async { api.stock(connection) }
             val chores = async { api.chores(connection) }
             val batteries = async { api.batteries(connection) }
@@ -158,6 +176,9 @@ class MasterDataRepository(
                 quantityUnits = units.await(),
                 stores = stores.await(),
                 barcodes = barcodes.await(),
+                conversions = conversions.await(),
+                resolvedConversions = resolved.await(),
+                shoppingLists = shoppingLists.await(),
                 stock = stock.await(),
                 chores = chores.await(),
                 batteries = batteries.await(),
@@ -183,6 +204,11 @@ class MasterDataRepository(
             dao.insertStores(download.stores.map { it.toEntity() })
             dao.deleteProductBarcodes()
             dao.insertProductBarcodes(download.barcodes.map { it.toEntity() })
+            dao.deleteQuantityUnitConversions()
+            dao.insertQuantityUnitConversions(download.conversions.map { it.toEntity() })
+            storeResolvedConversions(download.resolvedConversions)
+            dao.deleteShoppingLists()
+            dao.insertShoppingLists(download.shoppingLists.map { it.toEntity() })
             dao.deleteStock()
             dao.insertStock(download.stock.map { it.toEntity() })
             dao.deleteChores()
@@ -206,6 +232,11 @@ class MasterDataRepository(
         }
     }
 
+    private suspend fun storeResolvedConversions(resolved: List<ResolvedQuantityUnitConversion>) {
+        dao.deleteResolvedQuantityUnitConversions()
+        dao.insertResolvedQuantityUnitConversions(resolved.map { it.toEntity() })
+    }
+
     private suspend fun usersOrNull(connection: ServerConnection): List<User>? = try {
         api.users(connection)
     } catch (e: GrocyApiException.HttpError) {
@@ -227,6 +258,20 @@ class MasterDataRepository(
             Triple(config.await(), settings.await(), systemInfo.await())
         }
         database.withWriteTransaction { storeConfiguration(config, settings, systemInfo) }
+    }
+
+    /**
+     * Saves [newValue] as one of the user's settings ([key] like Grocy's, e.g.
+     * "stock_due_soon_days"), then stores the user's settings as the server has them now.
+     * Online only.
+     *
+     * @throws GrocyApiException if the server cannot be reached or rejects the value.
+     */
+    suspend fun saveUserSetting(key: String, newValue: UserSettingValue) {
+        val connection = requireConnection()
+        api.saveUserSetting(connection, key, newValue)
+        val settings = api.userSettings(connection)
+        dao.upsertServerValue(value(USER_SETTINGS, UserSettings.serializer(), settings))
     }
 
     /** Downloads only the server's version, which an update of the server changes. */
@@ -347,6 +392,32 @@ class MasterDataRepository(
             dao.upsertTaskCategory(api.taskCategory(c, id).toEntity())
         }
 
+    /** Creates or updates a product's barcode like Grocy's barcode form. */
+    suspend fun saveProductBarcode(barcode: ProductBarcode, userfields: Map<String, String?>): Int =
+        saveObject(PRODUCT_BARCODES, userfields, { api.saveProductBarcode(it, barcode) }) { c, id ->
+            dao.upsertProductBarcode(api.productBarcode(c, id).toEntity())
+        }
+
+    /**
+     * Creates or updates a conversion like Grocy's conversion form; the conversions Grocy
+     * derives change with it, so they are downloaded again.
+     */
+    suspend fun saveQuantityUnitConversion(
+        conversion: QuantityUnitConversion,
+        userfields: Map<String, String?>,
+    ): Int = saveObject(
+        entity = QU_CONVERSIONS,
+        userfields = userfields,
+        save = { api.saveQuantityUnitConversion(it, conversion) },
+    ) { connection, id ->
+        val saved = api.quantityUnitConversion(connection, id)
+        val resolved = api.resolvedQuantityUnitConversions(connection)
+        database.withWriteTransaction {
+            dao.upsertQuantityUnitConversion(saved.toEntity())
+            storeResolvedConversions(resolved)
+        }
+    }
+
     /** Userentities have no userfields of their own. */
     suspend fun saveUserentity(userentity: Userentity): Int =
         saveObject(USERENTITIES, emptyMap(), { api.saveUserentity(it, userentity) }) { c, id ->
@@ -394,6 +465,13 @@ class MasterDataRepository(
             TASK_CATEGORIES -> dao.deleteTaskCategory(id)
             USERENTITIES -> dao.deleteUserentity(id)
             USERFIELDS -> dao.deleteUserfield(id)
+            PRODUCT_BARCODES -> dao.deleteProductBarcode(id)
+            QU_CONVERSIONS -> {
+                dao.deleteQuantityUnitConversion(id)
+                // Grocy derives the others anew
+                val resolved = api.resolvedQuantityUnitConversions(requireConnection())
+                database.withWriteTransaction { storeResolvedConversions(resolved) }
+            }
         }
     }
 
@@ -473,6 +551,9 @@ class MasterDataRepository(
         val quantityUnits: List<QuantityUnit>,
         val stores: List<Store>,
         val barcodes: List<ProductBarcode>,
+        val conversions: List<QuantityUnitConversion>,
+        val resolvedConversions: List<ResolvedQuantityUnitConversion>,
+        val shoppingLists: List<ShoppingList>,
         val stock: List<StockAmount>,
         val chores: List<Chore>,
         val batteries: List<Battery>,
@@ -504,6 +585,12 @@ class MasterDataRepository(
         const val TASK_CATEGORIES = "task_categories"
         const val USERENTITIES = "userentities"
         const val USERFIELDS = "userfields"
+        const val PRODUCT_BARCODES = "product_barcodes"
+        const val QU_CONVERSIONS = "quantity_unit_conversions"
+        const val SHOPPING_LIST = "shopping_list"
+
+        /** Userfields of stock entries belong to their `stock_id`. */
+        const val STOCK = "stock"
 
         /** Prefix of the userfield entity of a userentity, e.g. "userentity-books". */
         const val USERENTITY_PREFIX = "userentity-"

@@ -64,3 +64,15 @@ private fun Typography.withFontFamily(fontFamily: FontFamily): Typography {
         labelSmallEmphasized = labelSmallEmphasized.emphasized(),
     )
 }
+
+/**
+ * The style with tabular figures, every digit equally wide: version numbers and other numbers
+ * read as columns, a "1" no longer narrower than a "5". Keeps font features set already.
+ */
+fun TextStyle.withTabularNumbers(): TextStyle {
+    val features = fontFeatureSettings?.takeIf { it.isNotBlank() }
+    if (features?.split(',')?.any { it.trim() == TABULAR_NUMBERS } == true) return this
+    return copy(fontFeatureSettings = listOfNotNull(features, TABULAR_NUMBERS).joinToString(", "))
+}
+
+private const val TABULAR_NUMBERS = "tnum"

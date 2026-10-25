@@ -99,6 +99,23 @@ data object UserentitiesRoute : Route
 @SerialName("masterdata/userentity")
 data class UserentityRoute(val id: Int? = null) : DetailRoute
 
+// Grocy's stock pages its master data leads to
+
+/** Grocy's "Stock entries", only those of [productId] if given. */
+@Serializable
+@SerialName("stockentries")
+data class StockEntriesRoute(val productId: Int? = null) : Route
+
+/** Grocy's "Stock journal", only the bookings of [productId] if given. */
+@Serializable
+@SerialName("stockjournal")
+data class StockJournalRoute(val productId: Int? = null) : Route
+
+/** Grocy's "Stock journal summary", only of [productId] if given. */
+@Serializable
+@SerialName("stockjournal/summary")
+data class StockJournalSummaryRoute(val productId: Int? = null) : Route
+
 val masterDataRouteSerializers = SerializersModule {
     polymorphic(NavKey::class) {
         subclass(MasterDataRoute::class, MasterDataRoute.serializer())
@@ -122,5 +139,8 @@ val masterDataRouteSerializers = SerializersModule {
         subclass(UserfieldRoute::class, UserfieldRoute.serializer())
         subclass(UserentitiesRoute::class, UserentitiesRoute.serializer())
         subclass(UserentityRoute::class, UserentityRoute.serializer())
+        subclass(StockEntriesRoute::class, StockEntriesRoute.serializer())
+        subclass(StockJournalRoute::class, StockJournalRoute.serializer())
+        subclass(StockJournalSummaryRoute::class, StockJournalSummaryRoute.serializer())
     }
 }

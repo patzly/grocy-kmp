@@ -30,6 +30,7 @@ import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.ConnectedButtonGroup
 import com.patrickzedler.grocy.core.design.component.HueSlider
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
+import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
 import com.patrickzedler.grocy.core.design.component.clickCursor
@@ -93,6 +94,7 @@ internal fun GeneralSettingsScreen(
     menuActions: SettingsMenuActions,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
+    pane: ScreenPane? = null,
 ) {
     val appearance by viewModel.appearance.collectAsStateWithLifecycle()
     val language by viewModel.language.collectAsStateWithLifecycle()
@@ -136,6 +138,7 @@ internal fun GeneralSettingsScreen(
         menuActions = menuActions,
         onBackClick = onBackClick,
         modifier = modifier,
+        pane = pane,
         snackbarHostState = snackbarHostState,
     ) {
         // Empty for the moment until the stored settings are read

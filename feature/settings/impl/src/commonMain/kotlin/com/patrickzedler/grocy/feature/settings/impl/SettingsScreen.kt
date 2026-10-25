@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.patrickzedler.grocy.core.data.log.LogSource
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
+import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
@@ -82,10 +83,15 @@ internal enum class SettingsCategory(
     ),
 }
 
+/**
+ * The categories of the settings. Beside the page of one ([shownCategory] not null) they are a
+ * single choice marking it and the list is the start [ScreenPane.List] of the layout.
+ */
 @Composable
 internal fun SettingsScreen(
     menuViewModel: SettingsMenuViewModel,
     menuActions: SettingsMenuActions,
+    shownCategory: SettingsCategory?,
     onBackClick: () -> Unit,
     onCategoryClick: (SettingsCategory) -> Unit,
     onBackupClick: () -> Unit,
@@ -98,8 +104,10 @@ internal fun SettingsScreen(
         menuActions = menuActions,
         onBackClick = onBackClick,
         modifier = modifier,
+        pane = ScreenPane.List.takeIf { shownCategory != null },
     ) {
         settingsOverview(
+            shownCategory = shownCategory,
             onCategoryClick = onCategoryClick,
             onBackupClick = onBackupClick,
             onResetClick = onResetClick,
@@ -108,6 +116,7 @@ internal fun SettingsScreen(
 }
 
 private fun LazyListScope.settingsOverview(
+    shownCategory: SettingsCategory?,
     onCategoryClick: (SettingsCategory) -> Unit,
     onBackupClick: () -> Unit,
     onResetClick: () -> Unit,
@@ -124,6 +133,7 @@ private fun LazyListScope.settingsOverview(
                 count = categories.size,
                 colors = colors,
                 onClick = { onCategoryClick(category) },
+                selected = shownCategory?.let { it == category },
             )
         }
     }
@@ -162,26 +172,46 @@ private fun SettingsItem(
     colors: ListItemColors,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    selected: Boolean? = null,
 ) {
     val haptic = LocalHapticFeedback.current
+    val click = {
+        haptic.confirm()
+        onClick()
+    }
+    val shapes = ListItemDefaults.segmentedShapes(index = index, count = count)
+    val leading = @Composable {
+        LeadingTrailingContentWrapper {
+            Icon(painter = painterResource(icon), contentDescription = null)
+        }
+    }
+    val supporting: (@Composable () -> Unit)? = description?.let { { Text(it) } }
 
-    SegmentedListItem(
-        onClick = {
-            haptic.confirm()
-            onClick()
-        },
-        shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
-        colors = colors,
-        modifier = modifier.fillMaxWidth().clickCursor(),
-        verticalAlignment = Alignment.CenterVertically,
-        leadingContent = {
-            LeadingTrailingContentWrapper {
-                Icon(painter = painterResource(icon), contentDescription = null)
-            }
-        },
-        supportingContent = description?.let { { Text(it) } },
-        content = { Text(title) },
-    )
+    // Beside a page a single choice marking it, without page a plain item (no radio semantics)
+    if (selected != null) {
+        SegmentedListItem(
+            selected = selected,
+            onClick = click,
+            shapes = shapes,
+            colors = colors,
+            modifier = modifier.fillMaxWidth().clickCursor(),
+            verticalAlignment = Alignment.CenterVertically,
+            leadingContent = leading,
+            supportingContent = supporting,
+            content = { Text(title) },
+        )
+    } else {
+        SegmentedListItem(
+            onClick = click,
+            shapes = shapes,
+            colors = colors,
+            modifier = modifier.fillMaxWidth().clickCursor(),
+            verticalAlignment = Alignment.CenterVertically,
+            leadingContent = leading,
+            supportingContent = supporting,
+            content = { Text(title) },
+        )
+    }
 }
 
 @Preview
@@ -199,7 +229,12 @@ private fun SettingsScreenPreview() {
             onHelpClick = {},
             onFeedbackClick = {},
         ) {
-            settingsOverview(onCategoryClick = {}, onBackupClick = {}, onResetClick = {})
+            settingsOverview(
+                shownCategory = null,
+                onCategoryClick = {},
+                onBackupClick = {},
+                onResetClick = {},
+            )
         }
     }
 }

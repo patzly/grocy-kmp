@@ -34,6 +34,9 @@ import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductsRoute
 import com.patrickzedler.grocy.feature.masterdata.api.QuantityUnitRoute
 import com.patrickzedler.grocy.feature.masterdata.api.QuantityUnitsRoute
+import com.patrickzedler.grocy.feature.masterdata.api.StockEntriesRoute
+import com.patrickzedler.grocy.feature.masterdata.api.StockJournalRoute
+import com.patrickzedler.grocy.feature.masterdata.api.StockJournalSummaryRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StoreRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StoresRoute
 import com.patrickzedler.grocy.feature.masterdata.api.TaskCategoriesRoute
@@ -42,6 +45,10 @@ import com.patrickzedler.grocy.feature.masterdata.api.UserentitiesRoute
 import com.patrickzedler.grocy.feature.masterdata.api.UserentityRoute
 import com.patrickzedler.grocy.feature.masterdata.api.UserfieldRoute
 import com.patrickzedler.grocy.feature.masterdata.api.UserfieldsRoute
+import com.patrickzedler.grocy.feature.masterdata.impl.barcode.ProductBarcodesViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionsViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.journal.StockJournalScreen
+import com.patrickzedler.grocy.feature.masterdata.impl.journal.StockJournalViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.ChoreScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.ChoreViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.FormFrame
@@ -57,12 +64,20 @@ import com.patrickzedler.grocy.feature.masterdata.impl.objects.UserentityViewMod
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.UserfieldScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.UserfieldViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.entity
+import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductLinks
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.product.ProductRelated
 import com.patrickzedler.grocy.feature.masterdata.impl.product.ProductScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.product.ProductViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.products.ProductsScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.products.ProductsViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist.AddToShoppingListViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockEntriesScreen
+import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockEntriesViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockPageActions
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
+import com.patrickzedler.grocy.feature.settings.api.StockSettingsRoute
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -90,18 +105,68 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
             menuItems = appMenuItems(navigator),
             viewModel = viewModel { ProductsViewModel(repository) },
             overviewViewModel = viewModel { ProductOverviewViewModel(repository) },
+            shoppingList = shoppingListViewModel(dependencies),
             objectActions = viewModel {
                 ObjectActionsViewModel(MasterDataRepository.PRODUCTS, repository)
             },
+            links = productLinks(navigator),
             selectedId = (navigator.currentRoute as? ProductRoute)?.productId,
             isBesideDetail = showsDetailBesideList(),
             onBackClick = { navigator.goBack(from = route) },
             onProductClick = { id -> navigator.openDetail(ProductRoute(id)) },
             onAddClick = { navigator.openDetail(ProductRoute()) },
             onConfigureUserfieldsClick = { openUserfields(MasterDataRepository.PRODUCTS) },
+            // Grocy's button leads to the stock settings, its presets first
+            onPresetsClick = { navigator.navigate(StockSettingsRoute) },
             onActionDone = listActionDone(navigator, ::ProductRoute) {
                 (it as? ProductRoute)?.productId
             },
+        )
+    }
+
+    // Grocy's stock pages of a product, or of all products
+    entry<StockEntriesRoute> { route ->
+        StockEntriesScreen(
+            viewModel = viewModel {
+                StockEntriesViewModel(
+                    route.productId,
+                    repository,
+                    dependencies.stockRepository,
+                )
+            },
+            actions = stockPageActions(dependencies, navigator),
+            menuItems = appMenuItems(navigator),
+            onBackClick = navigator::goBack,
+        )
+    }
+    entry<StockJournalRoute> { route ->
+        StockJournalScreen(
+            viewModel = viewModel {
+                StockJournalViewModel(
+                    productId = route.productId,
+                    summary = false,
+                    masterData = repository,
+                    stock = dependencies.stockRepository,
+                )
+            },
+            actions = stockPageActions(dependencies, navigator),
+            menuItems = appMenuItems(navigator),
+            onBackClick = navigator::goBack,
+        )
+    }
+    entry<StockJournalSummaryRoute> { route ->
+        StockJournalScreen(
+            viewModel = viewModel {
+                StockJournalViewModel(
+                    productId = route.productId,
+                    summary = true,
+                    masterData = repository,
+                    stock = dependencies.stockRepository,
+                )
+            },
+            actions = stockPageActions(dependencies, navigator),
+            menuItems = appMenuItems(navigator),
+            onBackClick = navigator::goBack,
         )
     }
 
@@ -111,6 +176,19 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
             frame = formFrame(navigator, route, MasterDataRepository.PRODUCTS, repository) {
                 ProductRoute(it)
             },
+            related = ProductRelated(
+                barcodes = viewModel { ProductBarcodesViewModel(repository) },
+                barcodeActions = viewModel(key = "barcodeActions") {
+                    ObjectActionsViewModel(MasterDataRepository.PRODUCT_BARCODES, repository)
+                },
+                conversions = viewModel { ConversionsViewModel(repository) },
+                conversionActions = viewModel(key = "conversionActions") {
+                    ObjectActionsViewModel(MasterDataRepository.QU_CONVERSIONS, repository)
+                },
+                labels = viewModel { LabelPrintViewModel(dependencies.stockRepository) },
+                onStockEntriesClick = { navigator.navigate(StockEntriesRoute(it)) },
+                onStockJournalClick = { navigator.navigate(StockJournalRoute(it)) },
+            ),
         )
     }
 
@@ -245,6 +323,19 @@ private inline fun <reified L : Route, reified D : DetailRoute> EntryProviderSco
             },
             frame = formFrame(navigator, route, kind.entity, repository, detail),
             onConfigureUserfieldsClick = { navigator.navigate(UserfieldsRoute(it)) },
+            // A quantity unit's form has its default conversions
+            conversions = if (kind == ObjectListKind.QUANTITY_UNITS) {
+                viewModel { ConversionsViewModel(repository) }
+            } else {
+                null
+            },
+            conversionActions = if (kind == ObjectListKind.QUANTITY_UNITS) {
+                viewModel(key = "conversionActions") {
+                    ObjectActionsViewModel(MasterDataRepository.QU_CONVERSIONS, repository)
+                }
+            } else {
+                null
+            },
         )
     }
 }
@@ -319,6 +410,35 @@ private fun formFrame(
             if (event is ObjectActionEvent.Copied) navigator.openDetail(detail(event.id))
         },
     )
+}
+
+/** Where Grocy's product pages lead, the form opening as detail beside the products. */
+private fun productLinks(navigator: Navigator) = ProductLinks(
+    onEditClick = { navigator.openDetail(ProductRoute(it)) },
+    onStockEntriesClick = { navigator.navigate(StockEntriesRoute(it)) },
+    onStockJournalClick = { navigator.navigate(StockJournalRoute(it)) },
+    onStockJournalSummaryClick = { navigator.navigate(StockJournalSummaryRoute(it)) },
+)
+
+/** The product overview, shopping list and labels of a stock page. */
+@Composable
+private fun stockPageActions(dependencies: MasterDataDependencies, navigator: Navigator) =
+    StockPageActions(
+        overview = viewModel { ProductOverviewViewModel(dependencies.masterDataRepository) },
+        shoppingList = shoppingListViewModel(dependencies),
+        labels = viewModel { LabelPrintViewModel(dependencies.stockRepository) },
+        links = ProductLinks(
+            // Outside the product list the form opens on its own
+            onEditClick = { navigator.navigate(ProductRoute(it)) },
+            onStockEntriesClick = { navigator.navigate(StockEntriesRoute(it)) },
+            onStockJournalClick = { navigator.navigate(StockJournalRoute(it)) },
+            onStockJournalSummaryClick = { navigator.navigate(StockJournalSummaryRoute(it)) },
+        ),
+    )
+
+@Composable
+private fun shoppingListViewModel(dependencies: MasterDataDependencies) = viewModel {
+    AddToShoppingListViewModel(dependencies.masterDataRepository, dependencies.stockRepository)
 }
 
 /** The detail pane beside a list until an item is chosen. */

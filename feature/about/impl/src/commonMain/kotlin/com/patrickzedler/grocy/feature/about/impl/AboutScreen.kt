@@ -11,6 +11,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MenuAnchorPosition
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SegmentedListItem
@@ -40,6 +41,7 @@ import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.design.component.tryOpenUri
+import com.patrickzedler.grocy.core.design.withTabularNumbers
 import com.patrickzedler.grocy.core.model.UnlockState
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.about_changelog
@@ -403,7 +405,8 @@ private fun VersionItem(
         leadingContent = { AboutItemIcon(Res.drawable.ic_rounded_info) },
         shapes = ListItemDefaults.segmentedShapes(index = 0, count = count),
         colors = colors,
-        content = { Text(versionName) },
+        // Every digit equally wide, so a "1" is no narrower than a "5"
+        content = { Text(versionName, style = LocalTextStyle.current.withTabularNumbers()) },
     )
 }
 

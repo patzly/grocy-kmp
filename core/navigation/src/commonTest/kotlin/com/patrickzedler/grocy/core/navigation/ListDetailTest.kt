@@ -8,6 +8,8 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneDecoratorStrategyScope
+import androidx.navigation3.scene.SceneStrategy
+import androidx.navigation3.scene.SceneStrategyScope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -72,6 +74,72 @@ class ListDetailTest {
         assertEquals(decorate(scene, isTwoPane = true), decorate(scene, isTwoPane = true))
     }
 
+    @Test
+    fun listWithoutPlaceholderStaysAloneWhileOnTop() {
+        val strategy = ListAloneSceneStrategy(RecordingStrategy)
+        val list = entry(listPaneMetadata("settings", placeholder = null))
+
+        val scene = with(strategy) { SceneStrategyScope<NavKey>().calculateScene(listOf(list)) }
+
+        assertNull(scene)
+    }
+
+    @Test
+    fun detailOnTopOpensBesideTheListWithoutPlaceholder() {
+        val strategy = ListAloneSceneStrategy(RecordingStrategy)
+        val entries = listOf(
+            entry(listPaneMetadata("settings", placeholder = null)),
+            entry(detailPaneMetadata("settings")),
+        )
+
+        val scene = with(strategy) { SceneStrategyScope<NavKey>().calculateScene(entries) }
+
+        assertEquals(entries, scene?.entries)
+    }
+
+    @Test
+    fun backFromTheDetailBesideTheListShowsTheListAlone() {
+        val strategy = ListAloneSceneStrategy(RecordingStrategy)
+        val start = entry(emptyMap())
+        val list = entry(listPaneMetadata("settings", placeholder = null))
+        val detail = entry(detailPaneMetadata("settings"))
+
+        val scene = with(strategy) {
+            SceneStrategyScope<NavKey>().calculateScene(listOf(start, list, detail))
+        }
+
+        assertEquals(listOf(start, list), scene?.previousEntries)
+    }
+
+    @Test
+    fun listsWithPlaceholderOpenTheirScene() {
+        val strategy = ListAloneSceneStrategy(RecordingStrategy)
+        val entries = listOf(entry(listPaneMetadata("list") {}))
+
+        val scene = with(strategy) { SceneStrategyScope<NavKey>().calculateScene(entries) }
+
+        assertEquals(entries, scene?.entries)
+    }
+
+    @Test
+    fun listAloneKeepsTheScreensBackground() {
+        val scene = TestScene(listOf(entry(listPaneMetadata("settings", placeholder = null))))
+
+        assertSame(scene, decorate(scene, isTwoPane = true))
+    }
+
+    @Test
+    fun listWithoutPlaceholderBesideItsDetailGetsThePaneBackground() {
+        val scene = TestScene(
+            listOf(
+                entry(listPaneMetadata("settings", placeholder = null)),
+                entry(detailPaneMetadata("settings")),
+            ),
+        )
+
+        assertIs<PaneBackgroundScene>(decorate(scene, isTwoPane = true))
+    }
+
     private fun decorate(scene: Scene<NavKey>, isTwoPane: Boolean): Scene<NavKey> =
         with(PaneBackgroundDecorator(isTwoPane)) {
             SceneDecoratorStrategyScope<NavKey>().decorateScene(scene)
@@ -81,6 +149,13 @@ class ListDetailTest {
         NavEntry<NavKey>(TestKey, metadata = metadata) {}
 
     private data object TestKey : NavKey
+
+    // Lays out every entry it gets as one scene
+    private object RecordingStrategy : SceneStrategy<NavKey> {
+        override fun SceneStrategyScope<NavKey>.calculateScene(
+            entries: List<NavEntry<NavKey>>,
+        ): Scene<NavKey> = TestScene(entries)
+    }
 
     private class TestScene(override val entries: List<NavEntry<NavKey>>) : Scene<NavKey> {
         override val key: Any = "scene"

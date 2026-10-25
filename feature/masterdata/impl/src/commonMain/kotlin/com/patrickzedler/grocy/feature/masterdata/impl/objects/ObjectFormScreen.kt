@@ -84,10 +84,10 @@ internal fun <F : ObjectFormState<*>> ObjectFormScreen(
     viewModel: ObjectFormViewModel<*, F>,
     frame: FormFrame,
     modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     toolbarActions: @Composable RowScope.() -> Unit = {},
     content: LazyListScope.(form: F) -> Unit,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
     // Saveable, so the question and the pending leave survive rotating the device

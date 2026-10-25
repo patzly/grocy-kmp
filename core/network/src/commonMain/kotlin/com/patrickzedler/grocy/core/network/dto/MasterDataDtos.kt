@@ -376,7 +376,7 @@ internal fun Userentity.toJson(): JsonObject = buildJsonObject {
 }
 
 /** Flags as 0 and 1, like Grocy's web frontend sends them. */
-private fun flag(value: Boolean) = JsonPrimitive(if (value) 1 else 0)
+internal fun flag(value: Boolean) = JsonPrimitive(if (value) 1 else 0)
 
 @Serializable
 internal data class ProductBarcodeDto(
@@ -388,8 +388,32 @@ internal data class ProductBarcodeDto(
     @SerialName("shopping_location_id") val storeId: FlexInt = null,
     @SerialName("last_price") val lastPrice: FlexDouble = null,
     val note: FlexString = null,
+    val userfields: Map<String, FlexString>? = null,
 ) {
-    fun toModel() = ProductBarcode(id, productId, barcode, quId, amount, storeId, lastPrice, note)
+    fun toModel() = ProductBarcode(
+        id = id,
+        productId = productId,
+        barcode = barcode,
+        quId = quId,
+        amount = amount,
+        storeId = storeId,
+        lastPrice = lastPrice,
+        note = note,
+        userfields = userfields.orEmpty(),
+    )
+}
+
+/**
+ * The barcode as Grocy's barcode form sends it; the last price stays the purchases' own.
+ * Userfields are saved separately.
+ */
+internal fun ProductBarcode.toJson(): JsonObject = buildJsonObject {
+    put("product_id", productId)
+    put("barcode", barcode)
+    put("qu_id", quId)
+    put("amount", amount)
+    put("shopping_location_id", storeId)
+    put("note", note.orEmpty())
 }
 
 @Serializable

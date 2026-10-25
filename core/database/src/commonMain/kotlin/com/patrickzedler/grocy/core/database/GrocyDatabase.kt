@@ -29,8 +29,13 @@ import androidx.room3.RoomDatabaseConstructor
         TaskCategoryEntity::class,
         UserentityEntity::class,
         UserEntity::class,
+        QuantityUnitConversionEntity::class,
+        ResolvedQuantityUnitConversionEntity::class,
+        StockEntryEntity::class,
+        StockLogEntity::class,
+        ShoppingListEntity::class,
     ],
-    version = 4,
+    version = 5,
     autoMigrations = [
         // 2 adds product_thumbnails
         AutoMigration(from = 1, to = 2),
@@ -38,11 +43,16 @@ import androidx.room3.RoomDatabaseConstructor
         AutoMigration(from = 2, to = 3),
         // 4 adds the other master data and userfield values of locations, stores, units, groups
         AutoMigration(from = 3, to = 4),
+        // 5 adds quantity unit conversions, stock entries, the stock journal, shopping lists
+        // and the userfield values of barcodes
+        AutoMigration(from = 4, to = 5),
     ],
 )
 @ConstructedBy(GrocyDatabaseConstructor::class)
 abstract class GrocyDatabase : RoomDatabase() {
     abstract fun masterDataDao(): MasterDataDao
+
+    abstract fun stockDao(): StockDao
 }
 
 // Room generates the actual objects for every platform

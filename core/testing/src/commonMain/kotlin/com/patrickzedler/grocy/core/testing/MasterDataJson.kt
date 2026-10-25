@@ -9,6 +9,10 @@ package com.patrickzedler.grocy.core.testing
  * - the product overview of Milk with two purchase prices
  * - chores Vacuum (1, weekly, assigned to Alice) and Old chore (2, disabled), battery Remote
  *   (1), task category Garden (1), userentity Books (1), users Alice (1) and Bob (2)
+ * - the default conversion 1 Pack = 6 Pieces and what Grocy derives from it for Milk
+ * - shopping lists Shopping list (1) and Hardware store (2), the item of Milk (5) on the first
+ * - Milk's stock entries: 2 pieces in the Fridge (1) and 1 opened piece (2); its journal: a
+ *   purchase, a consumption and an undone consumption
  */
 object MasterDataJson {
 
@@ -100,6 +104,45 @@ object MasterDataJson {
             """"shopping_location":{"id":1,"name":"Supermarket"}},""" +
             """{"date":"2026-09-01","price":"0.8","shopping_location":null}]"""
 
+    const val QU_CONVERSIONS =
+        """[{"id":1,"from_qu_id":2,"to_qu_id":1,"factor":"6","product_id":null}]"""
+
+    const val RESOLVED_QU_CONVERSIONS =
+        """[{"id":1,"product_id":1,"from_qu_id":"1","to_qu_id":"1","factor":"1"},""" +
+            """{"id":2,"product_id":1,"from_qu_id":1,"to_qu_id":2,"factor":"0.1666666667"},""" +
+            """{"id":3,"product_id":1,"from_qu_id":2,"to_qu_id":1,"factor":6},""" +
+            """{"id":4,"product_id":1,"from_qu_id":2,"to_qu_id":2,"factor":1},""" +
+            """{"id":5,"product_id":null,"from_qu_id":2,"to_qu_id":1,"factor":6}]"""
+
+    const val SHOPPING_LISTS =
+        """[{"id":1,"name":"Shopping list"},{"id":"2","name":"Hardware store"}]"""
+
+    const val SHOPPING_LIST_ITEMS = """[{"id":5,"product_id":"1","shopping_list_id":1}]"""
+
+    const val STOCK_ENTRIES =
+        """[{"id":1,"product_id":1,"amount":"2","best_before_date":"2026-10-30",""" +
+            """"purchased_date":"2026-10-01","stock_id":"6f1a2b","price":"1","open":0,""" +
+            """"location_id":1,"shopping_location_id":1,""" +
+            """"row_created_timestamp":"2026-10-01 10:00:00","userfields":null},""" +
+            """{"id":2,"product_id":"1","amount":1,"best_before_date":"2026-10-20",""" +
+            """"purchased_date":"2026-09-20","stock_id":"6f1a2c","price":null,"open":"1",""" +
+            """"opened_date":"2026-10-21","location_id":"1","note":"Half full",""" +
+            """"row_created_timestamp":"2026-09-20 09:00:00"}]"""
+
+    const val STOCK_LOG =
+        """[{"id":3,"product_id":1,"amount":"-1","transaction_type":"consume",""" +
+            """"row_created_timestamp":"2026-10-22 18:00:00","spoiled":"1","undone":1,""" +
+            """"undone_timestamp":"2026-10-22 18:05:00","location_id":1,"user_id":2},""" +
+            """{"id":2,"product_id":1,"amount":-1,"transaction_type":"consume",""" +
+            """"row_created_timestamp":"2026-10-21 08:00:00","spoiled":0,"undone":0,""" +
+            """"location_id":1,"user_id":1},""" +
+            """{"id":1,"product_id":"1","amount":"3","transaction_type":"purchase",""" +
+            """"row_created_timestamp":"2026-10-01 10:00:00","spoiled":0,"undone":"0",""" +
+            """"location_id":"1","user_id":"1","stock_id":"6f1a2b","note":"Weekly"}]"""
+
+    /** The bookings Grocy answers a consumption, opening or edit of a stock entry with. */
+    const val BOOKING = """[{"id":10,"product_id":1,"amount":"-2","transaction_type":"consume"}]"""
+
     /** Paths and answers [FakeGrocyServer] serves from the start. */
     val defaults: Map<String, String> = mapOf(
         "/api/objects/products" to PRODUCTS,
@@ -119,5 +162,11 @@ object MasterDataJson {
         "/api/user/settings" to USER_SETTINGS,
         "/api/stock/products/1" to MILK_DETAILS,
         "/api/stock/products/1/price-history" to MILK_PRICE_HISTORY,
+        "/api/objects/quantity_unit_conversions" to QU_CONVERSIONS,
+        "/api/objects/quantity_unit_conversions_resolved" to RESOLVED_QU_CONVERSIONS,
+        "/api/objects/shopping_lists" to SHOPPING_LISTS,
+        "/api/objects/shopping_list" to SHOPPING_LIST_ITEMS,
+        "/api/objects/stock" to STOCK_ENTRIES,
+        "/api/objects/stock_log" to STOCK_LOG,
     )
 }

@@ -114,6 +114,25 @@ class FakeGrocyServer(
             path = "$PRODUCTS_PATH/${MasterDataJson.CREATED_ID}",
             body = MasterDataJson.CREATED_PRODUCT,
         )
+        // Bookings on Milk's stock entries, undoing them and its shopping list item
+        listOf("consume", "open").forEach { action ->
+            respond(
+                path = "/api/stock/products/1/$action",
+                body = MasterDataJson.BOOKING,
+                method = HttpMethod.Post,
+            )
+        }
+        respond("/api/stock/entry/1", body = MasterDataJson.BOOKING, method = HttpMethod.Put)
+        respond(
+            path = "/api/stock/bookings/10/undo",
+            status = HttpStatusCode.NoContent,
+            method = HttpMethod.Post,
+        )
+        respond(
+            path = "/api/stock/shoppinglist/add-product",
+            status = HttpStatusCode.NoContent,
+            method = HttpMethod.Post,
+        )
     }
 
     /** Answers requests to [path], only those with [method] if given. */

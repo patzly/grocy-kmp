@@ -34,12 +34,14 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.OverlayScene
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneDecoratorStrategy
 import androidx.navigation3.scene.SceneDecoratorStrategyScope
 import androidx.navigation3.scene.SceneStrategy
+import androidx.navigation3.scene.SceneStrategyScope
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
@@ -47,16 +49,59 @@ import kotlinx.coroutines.launch
 /**
  * Entry metadata of a list whose [DetailRoute]s open beside it where two panes are the standard
  * (Material's expanded window width and wider); [placeholder] fills the detail pane until an
- * item is chosen. Narrower windows show list and details one after the other.
+ * item is chosen. Without [placeholder] the list fills the window alone until a detail opens,
+ * like the settings' categories. Narrower windows show list and details one after the other.
  *
  * @param sceneKey the same for the list and its details, different for every list.
  */
-fun listPaneMetadata(sceneKey: Any, placeholder: @Composable () -> Unit): Map<String, Any> =
+fun listPaneMetadata(
+    sceneKey: Any,
+    placeholder: (@Composable () -> Unit)?,
+): Map<String, Any> = if (placeholder == null) {
+    ListDetailSceneStrategy.listPane(sceneKey = sceneKey) +
+        (LIST_PANE_KEY to true) + (LIST_ALONE_KEY to true)
+} else {
     ListDetailSceneStrategy.listPane(sceneKey = sceneKey, detailPlaceholder = { placeholder() }) +
         (LIST_PANE_KEY to true)
+}
 
 // Marks lists for the pane background, Material's own keys are internal
 internal const val LIST_PANE_KEY = "com.patrickzedler.grocy.listPane"
+
+// Marks lists without placeholder, which stay alone while no detail is open
+internal const val LIST_ALONE_KEY = "com.patrickzedler.grocy.listAlone"
+
+/**
+ * Leaves a list without placeholder alone on the screen while it is on top; with a detail on
+ * top [strategy] lays out both, the list beside the detail.
+ */
+internal class ListAloneSceneStrategy(
+    private val strategy: SceneStrategy<NavKey>,
+) : SceneStrategy<NavKey> {
+
+    override fun SceneStrategyScope<NavKey>.calculateScene(
+        entries: List<NavEntry<NavKey>>,
+    ): Scene<NavKey>? {
+        if (entries.lastOrNull()?.metadata?.get(LIST_ALONE_KEY) == true) return null
+        val scene = with(strategy) { calculateScene(entries) } ?: return null
+        val hasListAlone = scene.entries.any { it.metadata[LIST_ALONE_KEY] == true }
+        // Back from the list with its detail returns to the list alone, also in the browser's
+        // history: Material's scene would go back to what lay below the list
+        return if (hasListAlone) ListBesideDetailScene(scene, entries.dropLast(1)) else scene
+    }
+}
+
+/** [scene] of a list without placeholder beside its detail; back shows the list alone. */
+internal class ListBesideDetailScene(
+    val scene: Scene<NavKey>,
+    override val previousEntries: List<NavEntry<NavKey>>,
+) : Scene<NavKey> by scene {
+
+    override fun equals(other: Any?): Boolean = other is ListBesideDetailScene &&
+        other.scene == scene && other.previousEntries == previousEntries
+
+    override fun hashCode(): Int = 31 * scene.hashCode() + previousEntries.hashCode()
+}
 
 /** Entry metadata of the details of the list with the same [sceneKey]. */
 fun detailPaneMetadata(sceneKey: Any): Map<String, Any> =
@@ -96,7 +141,8 @@ internal fun neighbourAnchor(
 
 /**
  * Material's list-detail scene with its default pane rules of the current window, its panes
- * split half and half with Material's drag handle between them.
+ * split half and half with Material's drag handle between them; lists without placeholder stay
+ * alone until a detail opens.
  */
 @Composable
 internal fun rememberListDetailStrategy(): SceneStrategy<NavKey> {
@@ -104,10 +150,11 @@ internal fun rememberListDetailStrategy(): SceneStrategy<NavKey> {
         anchors = PaneAnchors,
         initialAnchoredIndex = 0,
     )
-    return rememberListDetailSceneStrategy(
+    val strategy = rememberListDetailSceneStrategy<NavKey>(
         paneExpansionState = expansionState,
         paneExpansionDragHandle = { state -> PaneDragHandle(state) },
     )
+    return remember(strategy) { ListAloneSceneStrategy(strategy) }
 }
 
 /**
@@ -165,7 +212,9 @@ internal class PaneBackgroundDecorator(
     override fun SceneDecoratorStrategyScope<NavKey>.decorateScene(
         scene: Scene<NavKey>,
     ): Scene<NavKey> {
-        val isListDetail = scene.entries.any { it.metadata[LIST_PANE_KEY] == true }
+        // A list without placeholder alone on the screen keeps the screens' background
+        val isListAlone = scene.entries.singleOrNull()?.metadata?.get(LIST_ALONE_KEY) == true
+        val isListDetail = scene.entries.any { it.metadata[LIST_PANE_KEY] == true } && !isListAlone
         return if (isTwoPane && isListDetail && scene !is OverlayScene) {
             PaneBackgroundScene(scene)
         } else {

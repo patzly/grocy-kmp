@@ -178,6 +178,7 @@ internal class ObjectActionsViewModel(
             repository.userentities.first().find { it.id == id }?.name
         MasterDataRepository.USERFIELDS ->
             repository.allUserfields.first().find { it.id == id }?.name
+        // Grocy asks about barcodes and conversions without naming them
         else -> null
     }
 }

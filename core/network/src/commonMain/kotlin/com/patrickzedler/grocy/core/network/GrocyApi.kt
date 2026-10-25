@@ -11,13 +11,19 @@ import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.ProductGroup
 import com.patrickzedler.grocy.core.model.masterdata.ProductOverview
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
+import com.patrickzedler.grocy.core.model.masterdata.QuantityUnitConversion
+import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.masterdata.TaskCategory
 import com.patrickzedler.grocy.core.model.masterdata.Userentity
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
 import com.patrickzedler.grocy.core.model.server.ServerConfig
+import com.patrickzedler.grocy.core.model.server.UserSettingValue
 import com.patrickzedler.grocy.core.model.server.UserSettings
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
+import com.patrickzedler.grocy.core.model.stock.StockEntry
+import com.patrickzedler.grocy.core.model.stock.StockLogEntry
 import com.patrickzedler.grocy.core.network.dto.BatteryDto
 import com.patrickzedler.grocy.core.network.dto.ChoreDto
 import com.patrickzedler.grocy.core.network.dto.CreatedObjectDto
@@ -28,8 +34,14 @@ import com.patrickzedler.grocy.core.network.dto.ProductBarcodeDto
 import com.patrickzedler.grocy.core.network.dto.ProductDetailsDto
 import com.patrickzedler.grocy.core.network.dto.ProductDto
 import com.patrickzedler.grocy.core.network.dto.ProductGroupDto
+import com.patrickzedler.grocy.core.network.dto.QuantityUnitConversionDto
 import com.patrickzedler.grocy.core.network.dto.QuantityUnitDto
+import com.patrickzedler.grocy.core.network.dto.ResolvedQuantityUnitConversionDto
+import com.patrickzedler.grocy.core.network.dto.ShoppingListDto
+import com.patrickzedler.grocy.core.network.dto.ShoppingListItemDto
 import com.patrickzedler.grocy.core.network.dto.StockDto
+import com.patrickzedler.grocy.core.network.dto.StockEntryDto
+import com.patrickzedler.grocy.core.network.dto.StockLogDto
 import com.patrickzedler.grocy.core.network.dto.StoreDto
 import com.patrickzedler.grocy.core.network.dto.SystemInfoDto
 import com.patrickzedler.grocy.core.network.dto.TaskCategoryDto
@@ -190,8 +202,224 @@ class GrocyApi(
         get<List<UserDto>>(connection, "users").map { it.toModel() }
 
     suspend fun productBarcodes(connection: ServerConnection): List<ProductBarcode> =
-        get<List<ProductBarcodeDto>>(connection, "objects", "product_barcodes")
+        get<List<ProductBarcodeDto>>(connection, "objects", PRODUCT_BARCODES)
             .map { it.toModel() }
+
+    suspend fun productBarcode(connection: ServerConnection, id: Int): ProductBarcode =
+        get<ProductBarcodeDto>(connection, "objects", PRODUCT_BARCODES, id.toString()).toModel()
+
+    /** Creates the barcode without id or updates it; returns its id. */
+    suspend fun saveProductBarcode(connection: ServerConnection, barcode: ProductBarcode): Int =
+        saveObject(connection, PRODUCT_BARCODES, barcode.id, barcode.toJson())
+
+    /** The defined conversions: default ones and the overrides of products. */
+    suspend fun quantityUnitConversions(
+        connection: ServerConnection,
+    ): List<QuantityUnitConversion> =
+        get<List<QuantityUnitConversionDto>>(connection, "objects", QU_CONVERSIONS)
+            .map { it.toModel() }
+
+    suspend fun quantityUnitConversion(
+        connection: ServerConnection,
+        id: Int,
+    ): QuantityUnitConversion =
+        get<QuantityUnitConversionDto>(connection, "objects", QU_CONVERSIONS, id.toString())
+            .toModel()
+
+    suspend fun saveQuantityUnitConversion(
+        connection: ServerConnection,
+        conversion: QuantityUnitConversion,
+    ): Int = saveObject(connection, QU_CONVERSIONS, conversion.id, conversion.toJson())
+
+    /** Every conversion Grocy derived, per product and for all products. */
+    suspend fun resolvedQuantityUnitConversions(
+        connection: ServerConnection,
+    ): List<ResolvedQuantityUnitConversion> =
+        get<List<ResolvedQuantityUnitConversionDto>>(
+            connection,
+            "objects",
+            "quantity_unit_conversions_resolved",
+        ).map { it.toModel() }
+
+    suspend fun shoppingLists(connection: ServerConnection): List<ShoppingList> =
+        get<List<ShoppingListDto>>(connection, "objects", "shopping_lists").map { it.toModel() }
+
+    /**
+     * Puts [productAmount] (in the stock unit) of the product on shopping list [listId], shown
+     * in unit [quId], like Grocy's "Add to shopping list": an item of the product on that list
+     * gets the amount added. Returns the id of the product's item, null if it is not found.
+     */
+    suspend fun addProductToShoppingList(
+        connection: ServerConnection,
+        productId: Int,
+        listId: Int,
+        productAmount: Double,
+        quId: Int?,
+        note: String?,
+    ): Int? {
+        execute(
+            connection,
+            HttpMethod.Post,
+            listOf("stock", "shoppinglist", "add-product"),
+            body = jsonBody(
+                buildJsonObject {
+                    put("product_id", productId)
+                    put("list_id", listId)
+                    put("product_amount", productAmount)
+                    quId?.let { put("qu_id", it) }
+                    note?.takeIf { it.isNotBlank() }?.let { put("note", it) }
+                },
+            ),
+        )
+        // Grocy answers without the item, its userfields need its id
+        return get<List<ShoppingListItemDto>>(
+            connection,
+            "objects",
+            "shopping_list",
+            query = listOf(
+                "query[]" to "product_id=$productId",
+                "query[]" to "shopping_list_id=$listId",
+            ),
+        ).firstOrNull()?.id
+    }
+
+    /** Every stock entry of every product, with the userfields of entries. */
+    suspend fun stockEntries(connection: ServerConnection): List<StockEntry> =
+        get<List<StockEntryDto>>(connection, "objects", STOCK).map { it.toModel() }
+
+    /** The stock entry [id]; [GrocyApiException.HttpError] once it is used up. */
+    suspend fun stockEntry(connection: ServerConnection, id: Int): StockEntry =
+        get<StockEntryDto>(connection, "objects", STOCK, id.toString()).toModel()
+
+    /** Changes the stock entry like Grocy's "Edit stock entry"; returns its booking's id. */
+    suspend fun editStockEntry(connection: ServerConnection, entry: StockEntry): Int? {
+        val response = execute(
+            connection,
+            HttpMethod.Put,
+            listOf("stock", "entry", entry.id.toString()),
+            body = jsonBody(
+                buildJsonObject {
+                    put("amount", entry.amount)
+                    put("best_before_date", entry.bestBeforeDate)
+                    put("purchased_date", entry.purchasedDate)
+                    put("price", entry.price)
+                    put("open", entry.open)
+                    put("location_id", entry.locationId)
+                    put("shopping_location_id", entry.storeId)
+                    put("note", entry.note.orEmpty())
+                },
+            ),
+        )
+        return decode<List<StockLogDto>>(response).firstOrNull()?.id
+    }
+
+    /**
+     * Consumes exactly the whole stock entry, as spoiled if [spoiled], like Grocy's "Consume
+     * this stock entry"; returns the booking's id for undoing it.
+     */
+    suspend fun consumeStockEntry(
+        connection: ServerConnection,
+        entry: StockEntry,
+        spoiled: Boolean,
+    ): Int? {
+        val response = execute(
+            connection,
+            HttpMethod.Post,
+            listOf("stock", PRODUCTS, entry.productId.toString(), "consume"),
+            body = jsonBody(
+                buildJsonObject {
+                    put("amount", entry.amount)
+                    put("spoiled", spoiled)
+                    entry.locationId?.let { put("location_id", it) }
+                    put("stock_entry_id", entry.stockId)
+                    put("exact_amount", true)
+                },
+            ),
+        )
+        return decode<List<StockLogDto>>(response).firstOrNull()?.id
+    }
+
+    /** Marks the whole stock entry as opened; returns the booking's id for undoing it. */
+    suspend fun openStockEntry(connection: ServerConnection, entry: StockEntry): Int? {
+        val response = execute(
+            connection,
+            HttpMethod.Post,
+            listOf("stock", PRODUCTS, entry.productId.toString(), "open"),
+            body = jsonBody(
+                buildJsonObject {
+                    put("amount", entry.amount)
+                    put("stock_entry_id", entry.stockId)
+                },
+            ),
+        )
+        return decode<List<StockLogDto>>(response).firstOrNull()?.id
+    }
+
+    /** Undoes the booking [bookingId] and the ones of the same action, like Grocy's "Undo". */
+    suspend fun undoBooking(connection: ServerConnection, bookingId: Int) {
+        execute(
+            connection,
+            HttpMethod.Post,
+            listOf("stock", "bookings", bookingId.toString(), "undo"),
+            body = jsonBody(JsonObject(emptyMap())),
+        )
+    }
+
+    /**
+     * The stock journal, newest first: bookings since [since] ("YYYY-MM-DD", all without), of
+     * [productId] only if given.
+     */
+    suspend fun stockLog(
+        connection: ServerConnection,
+        since: String?,
+        productId: Int? = null,
+    ): List<StockLogEntry> = get<List<StockLogDto>>(
+        connection,
+        "objects",
+        "stock_log",
+        query = buildList {
+            since?.let { add("query[]" to "row_created_timestamp>=$it") }
+            productId?.let { add("query[]" to "product_id=$it") }
+            add("order" to "row_created_timestamp:desc")
+        },
+    ).map { it.toModel() }
+
+    /** Saves one user setting, e.g. a stock setting, as Grocy's settings pages do. */
+    suspend fun saveUserSetting(
+        connection: ServerConnection,
+        key: String,
+        value: UserSettingValue,
+    ) {
+        val json = when (value) {
+            is UserSettingValue.Flag -> JsonPrimitive(value.value)
+            is UserSettingValue.Whole -> JsonPrimitive(value.value)
+            is UserSettingValue.Number -> JsonPrimitive(value.value)
+        }
+        execute(
+            connection,
+            HttpMethod.Put,
+            listOf("user", "settings", key),
+            body = jsonBody(buildJsonObject { put("value", json) }),
+        )
+    }
+
+    /** Prints the product's grocycode on the label printer, from the server. */
+    suspend fun printProductLabel(connection: ServerConnection, productId: Int) {
+        execute(
+            connection,
+            HttpMethod.Get,
+            listOf("stock", PRODUCTS, productId.toString(), "printlabel"),
+        )
+    }
+
+    /** Prints the stock entry's label on the label printer, from the server. */
+    suspend fun printStockEntryLabel(connection: ServerConnection, entryId: Int) {
+        execute(
+            connection,
+            HttpMethod.Get,
+            listOf("stock", "entry", entryId.toString(), "printlabel"),
+        )
+    }
 
     /** Current stock, one entry per product that is in stock. */
     suspend fun stock(connection: ServerConnection): List<StockAmount> =
@@ -329,10 +557,20 @@ class GrocyApi(
         objectId: Int,
         values: Map<String, String?>,
     ) {
+        setUserfields(connection, entity, objectId.toString(), values)
+    }
+
+    /** Like the other [setUserfields] for objects with text ids, e.g. a stock entry's stock id. */
+    suspend fun setUserfields(
+        connection: ServerConnection,
+        entity: String,
+        objectId: String,
+        values: Map<String, String?>,
+    ) {
         execute(
             connection,
             HttpMethod.Put,
-            listOf("userfields", entity, objectId.toString()),
+            listOf("userfields", entity, objectId),
             body = jsonBody(JsonObject(values.mapValues { JsonPrimitive(it.value) })),
         )
     }
@@ -490,6 +728,9 @@ class GrocyApi(
         private const val USERENTITIES = "userentities"
         private const val USERFIELDS = "userfields"
         private const val PRODUCT_PICTURES = "productpictures"
+        private const val PRODUCT_BARCODES = "product_barcodes"
+        private const val QU_CONVERSIONS = "quantity_unit_conversions"
+        private const val STOCK = "stock"
 
         private const val INGRESS_COOKIE = "ingress_session"
     }

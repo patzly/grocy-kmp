@@ -9,6 +9,7 @@ import com.patrickzedler.grocy.core.data.server.GROCY_GITHUB_REPOSITORY
 import com.patrickzedler.grocy.core.data.server.ServerRepository
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
+import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
 import com.patrickzedler.grocy.core.data.update.UpdateRepository
 import com.patrickzedler.grocy.core.model.server.ServerConfig
@@ -51,6 +52,14 @@ class AppGraph(
 
     private val masterDataRepository by lazy {
         MasterDataRepository(
+            api = grocyApi,
+            database = platform.database,
+            connection = { platform.credentialStore.connection.first() },
+        )
+    }
+
+    private val stockRepository by lazy {
+        StockRepository(
             api = grocyApi,
             database = platform.database,
             connection = { platform.credentialStore.connection.first() },
@@ -117,6 +126,8 @@ class AppGraph(
             get() = this@AppGraph.serverRepository
         override val authRepository: AuthRepository
             get() = this@AppGraph.authRepository
+        override val masterDataRepository: MasterDataRepository
+            get() = this@AppGraph.masterDataRepository
 
         override fun restartApp() = platform.restartApp()
     }
@@ -129,6 +140,8 @@ class AppGraph(
     internal val masterDataDependencies: MasterDataDependencies = object : MasterDataDependencies {
         override val masterDataRepository: MasterDataRepository
             get() = this@AppGraph.masterDataRepository
+        override val stockRepository: StockRepository
+            get() = this@AppGraph.stockRepository
         override val serverConfig: StateFlow<ServerConfig?>
             get() = serverRepository.serverConfig
     }

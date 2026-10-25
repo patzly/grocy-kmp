@@ -75,6 +75,9 @@ internal sealed interface FieldError {
 
     /** Not a date and time as "YYYY-MM-DD HH:MM:SS". */
     data object InvalidDateTime : FieldError
+
+    /** Not a date as "YYYY-MM-DD". */
+    data object InvalidDate : FieldError
 }
 
 /** Which parts of the form the server's features show, like Grocy's feature flags. */

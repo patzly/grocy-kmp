@@ -8,6 +8,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.SnackbarHostState
@@ -34,11 +35,13 @@ import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
+import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.TextDialog
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.design.withTabularNumbers
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_cancel
@@ -90,6 +93,7 @@ internal fun ServerSettingsScreen(
     onBackClick: () -> Unit,
     onRestart: () -> Unit,
     modifier: Modifier = Modifier,
+    pane: ScreenPane? = null,
 ) {
     val server by viewModel.server.collectAsStateWithLifecycle()
     val reloadState by viewModel.reloadState.collectAsStateWithLifecycle()
@@ -161,6 +165,7 @@ internal fun ServerSettingsScreen(
         menuActions = menuActions,
         onBackClick = onBackClick,
         modifier = modifier,
+        pane = pane,
         snackbarHostState = snackbarHostState,
     ) {
         // Empty only for the moment until the stored login is read
@@ -224,6 +229,7 @@ private fun LazyListScope.serverSettings(
             icon = Res.drawable.ic_rounded_info,
             index = 1,
             count = 2,
+            isNumber = server.grocyVersion != null,
             // A second tap would only repeat the running check
             onClick = { if (!isCheckingVersion) onVersionClick() },
             isLoading = isCheckingVersion,
@@ -292,6 +298,7 @@ private fun ValueItem(
     count: Int,
     onClick: (() -> Unit)? = null,
     isLoading: Boolean = false,
+    isNumber: Boolean = false,
 ) {
     val haptic = LocalHapticFeedback.current
     val shapes = ListItemDefaults.segmentedShapes(index = index, count = count)
@@ -305,6 +312,12 @@ private fun ValueItem(
         Text(
             text = value,
             modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+            // Every digit equally wide, so a "1" is no narrower than a "5"
+            style = if (isNumber) {
+                LocalTextStyle.current.withTabularNumbers()
+            } else {
+                LocalTextStyle.current
+            },
         )
     }
 

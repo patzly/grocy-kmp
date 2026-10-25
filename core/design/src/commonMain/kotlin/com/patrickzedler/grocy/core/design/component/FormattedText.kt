@@ -26,6 +26,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastForEachIndexed
+import com.patrickzedler.grocy.core.design.withTabularNumbers
 
 @Composable
 fun FormattedText(
@@ -55,7 +56,7 @@ fun FormattedText(
                         else -> MaterialTheme.typography.titleMedium
                     }
                     val style = if (block.useTNum) {
-                        baseStyle.copy(fontFeatureSettings = "tnum")
+                        baseStyle.withTabularNumbers()
                     } else {
                         baseStyle
                     }

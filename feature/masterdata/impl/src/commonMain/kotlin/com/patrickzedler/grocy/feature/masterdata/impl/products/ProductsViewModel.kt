@@ -34,6 +34,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import androidx.compose.ui.text.intl.Locale
 
 /** What the product list shows; built from the database, never waits for the server. */
 internal data class ProductsUiState(
@@ -57,6 +58,8 @@ internal class ProductsViewModel(
     private val repository: MasterDataRepository,
     computeDispatcher: CoroutineDispatcher = Dispatchers.Default,
     decimalSeparator: Char = platformDecimalSeparator(),
+    /** The app language, whose rules name the units of amounts. */
+    language: String = Locale.current.toLanguageTag(),
 ) : ViewModel() {
 
     val searchState = TextFieldState()
@@ -128,6 +131,7 @@ internal class ProductsViewModel(
                 decimalSeparator = decimalSeparator,
                 showLocation = options.showLocation,
                 showStore = options.showStore,
+                language = language,
             ),
             productGroups = data.productGroups.filter { it.active },
             filter = options.filter,

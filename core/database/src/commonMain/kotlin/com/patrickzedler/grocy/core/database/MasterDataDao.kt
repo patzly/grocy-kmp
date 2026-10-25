@@ -80,6 +80,15 @@ interface MasterDataDao {
     @Query("SELECT * FROM stock")
     fun observeStock(): Flow<List<StockEntity>>
 
+    @Query("SELECT * FROM quantity_unit_conversions")
+    fun observeQuantityUnitConversions(): Flow<List<QuantityUnitConversionEntity>>
+
+    @Query("SELECT * FROM quantity_unit_conversions_resolved")
+    fun observeResolvedQuantityUnitConversions(): Flow<List<ResolvedQuantityUnitConversionEntity>>
+
+    @Query("SELECT * FROM shopping_lists ORDER BY name COLLATE NOCASE")
+    fun observeShoppingLists(): Flow<List<ShoppingListEntity>>
+
     @Query(
         "SELECT * FROM userfields WHERE entity = :entity " +
             "ORDER BY sort_number IS NULL, sort_number, name COLLATE NOCASE",
@@ -170,6 +179,26 @@ interface MasterDataDao {
     @Insert
     suspend fun insertUsers(users: List<UserEntity>)
 
+    @Query("DELETE FROM quantity_unit_conversions")
+    suspend fun deleteQuantityUnitConversions()
+
+    @Insert
+    suspend fun insertQuantityUnitConversions(conversions: List<QuantityUnitConversionEntity>)
+
+    @Query("DELETE FROM quantity_unit_conversions_resolved")
+    suspend fun deleteResolvedQuantityUnitConversions()
+
+    @Insert
+    suspend fun insertResolvedQuantityUnitConversions(
+        conversions: List<ResolvedQuantityUnitConversionEntity>,
+    )
+
+    @Query("DELETE FROM shopping_lists")
+    suspend fun deleteShoppingLists()
+
+    @Insert
+    suspend fun insertShoppingLists(lists: List<ShoppingListEntity>)
+
     // Single objects as the server saved them after a change
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -199,6 +228,12 @@ interface MasterDataDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertUserfield(userfield: UserfieldEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertProductBarcode(barcode: ProductBarcodeEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertQuantityUnitConversion(conversion: QuantityUnitConversionEntity)
+
     // Single objects deleted on the server
 
     @Query("DELETE FROM product_groups WHERE id = :id")
@@ -227,6 +262,12 @@ interface MasterDataDao {
 
     @Query("DELETE FROM userfields WHERE id = :id")
     suspend fun deleteUserfield(id: Int)
+
+    @Query("DELETE FROM product_barcodes WHERE id = :id")
+    suspend fun deleteProductBarcode(id: Int)
+
+    @Query("DELETE FROM quantity_unit_conversions WHERE id = :id")
+    suspend fun deleteQuantityUnitConversion(id: Int)
 
     @Query("SELECT bytes FROM product_thumbnails WHERE file_name = :fileName")
     suspend fun thumbnail(fileName: String): ByteArray?

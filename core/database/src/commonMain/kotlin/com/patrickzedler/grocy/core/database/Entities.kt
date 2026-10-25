@@ -103,6 +103,74 @@ data class ProductBarcodeEntity(
     @ColumnInfo(name = "store_id") val storeId: Int?,
     @ColumnInfo(name = "last_price") val lastPrice: Double?,
     val note: String?,
+    /** Userfield values by name as JSON object. */
+    @ColumnInfo(defaultValue = "{}") val userfields: String,
+)
+
+/** A defined conversion: a default one without product, an override of a product with one. */
+@Entity(tableName = "quantity_unit_conversions")
+data class QuantityUnitConversionEntity(
+    @PrimaryKey val id: Int,
+    @ColumnInfo(name = "from_qu_id") val fromQuId: Int,
+    @ColumnInfo(name = "to_qu_id") val toQuId: Int,
+    val factor: Double,
+    @ColumnInfo(name = "product_id", index = true) val productId: Int?,
+    /** Userfield values by name as JSON object. */
+    val userfields: String,
+)
+
+/** A conversion Grocy derived; contradictory definitions can derive a pair twice. */
+@Entity(tableName = "quantity_unit_conversions_resolved")
+data class ResolvedQuantityUnitConversionEntity(
+    @PrimaryKey(autoGenerate = true) val rowId: Long = 0,
+    @ColumnInfo(name = "product_id", index = true) val productId: Int?,
+    @ColumnInfo(name = "from_qu_id") val fromQuId: Int,
+    @ColumnInfo(name = "to_qu_id") val toQuId: Int,
+    val factor: Double,
+)
+
+/** An entry of a product's stock as the stock entries last downloaded it. */
+@Entity(tableName = "stock_entries")
+data class StockEntryEntity(
+    @PrimaryKey val id: Int,
+    @ColumnInfo(name = "product_id", index = true) val productId: Int,
+    val amount: Double,
+    @ColumnInfo(name = "best_before_date") val bestBeforeDate: String?,
+    @ColumnInfo(name = "purchased_date") val purchasedDate: String?,
+    @ColumnInfo(name = "stock_id") val stockId: String,
+    val price: Double?,
+    val open: Boolean,
+    @ColumnInfo(name = "opened_date") val openedDate: String?,
+    @ColumnInfo(name = "location_id") val locationId: Int?,
+    @ColumnInfo(name = "store_id") val storeId: Int?,
+    val note: String?,
+    @ColumnInfo(name = "created_timestamp") val createdTimestamp: String?,
+    /** Userfield values by name as JSON object. */
+    val userfields: String,
+)
+
+/** A booking of the stock journal as last downloaded. */
+@Entity(tableName = "stock_log")
+data class StockLogEntity(
+    @PrimaryKey val id: Int,
+    @ColumnInfo(name = "product_id", index = true) val productId: Int,
+    val amount: Double,
+    @ColumnInfo(name = "transaction_type") val transactionType: String,
+    @ColumnInfo(name = "created_timestamp", index = true) val createdTimestamp: String,
+    val spoiled: Boolean,
+    val undone: Boolean,
+    @ColumnInfo(name = "undone_timestamp") val undoneTimestamp: String?,
+    @ColumnInfo(name = "location_id") val locationId: Int?,
+    @ColumnInfo(name = "user_id") val userId: Int?,
+    @ColumnInfo(name = "correlation_id") val correlationId: String?,
+    @ColumnInfo(name = "stock_id") val stockId: String?,
+    val note: String?,
+)
+
+@Entity(tableName = "shopping_lists")
+data class ShoppingListEntity(
+    @PrimaryKey val id: Int,
+    val name: String,
 )
 
 @Entity(tableName = "stock")

@@ -11,6 +11,7 @@ import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.text.FuzzySearch
 import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.normalizedForSearch
+import com.patrickzedler.grocy.core.model.masterdata.nameFor
 
 /** The filters of Grocy's product list; the defaults show every active product. */
 @Immutable
@@ -85,6 +86,7 @@ internal fun buildProductList(
     decimalSeparator: Char,
     showLocation: Boolean,
     showStore: Boolean,
+    language: String,
 ): List<ProductListItem> {
     val groups = data.productGroups.associateBy { it.id }
     val locations = data.locations.associateBy { it.id }
@@ -116,9 +118,8 @@ internal fun buildProductList(
                 ?.name,
             minStockAmount = product.minStockAmount.takeIf { it != 0.0 }
                 ?.let { formatDecimal(it, decimalPlaces, decimalSeparator) },
-            minStockUnit = product.quIdStock?.let { units[it] }?.let { unit ->
-                if (product.minStockAmount == 1.0) unit.name else unit.namePlural ?: unit.name
-            },
+            minStockUnit = product.quIdStock?.let { units[it] }
+                ?.nameFor(product.minStockAmount, language),
             quantityUnitStockName = product.quIdStock?.let { units[it]?.name },
             quantityUnitPurchaseName = product.quIdPurchase?.let { units[it]?.name },
             storeName = product.storeId?.let { stores[it]?.name }.takeIf { showStore },

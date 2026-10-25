@@ -12,6 +12,11 @@ import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.ProductGroup
 import com.patrickzedler.grocy.core.model.masterdata.PurchasePriceType
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
+import com.patrickzedler.grocy.core.model.masterdata.QuantityUnitConversion
+import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
+import com.patrickzedler.grocy.core.model.stock.StockEntry
+import com.patrickzedler.grocy.core.model.stock.StockLogEntry
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.StockLabelType
 import com.patrickzedler.grocy.core.model.masterdata.Store
@@ -232,11 +237,127 @@ fun User.toEntity() = UserEntity(id, username, displayName)
 
 fun UserEntity.toModel() = User(id, username, displayName)
 
-fun ProductBarcode.toEntity() =
-    ProductBarcodeEntity(id, productId, barcode, quId, amount, storeId, lastPrice, note)
+fun ProductBarcode.toEntity() = ProductBarcodeEntity(
+    id = id,
+    productId = productId,
+    barcode = barcode,
+    quId = quId,
+    amount = amount,
+    storeId = storeId,
+    lastPrice = lastPrice,
+    note = note,
+    userfields = encodeUserfieldValues(userfields),
+)
 
-fun ProductBarcodeEntity.toModel() =
-    ProductBarcode(id, productId, barcode, quId, amount, storeId, lastPrice, note)
+fun ProductBarcodeEntity.toModel() = ProductBarcode(
+    id = id,
+    productId = productId,
+    barcode = barcode,
+    quId = quId,
+    amount = amount,
+    storeId = storeId,
+    lastPrice = lastPrice,
+    note = note,
+    userfields = decodeUserfieldValues(userfields),
+)
+
+fun QuantityUnitConversion.toEntity() = QuantityUnitConversionEntity(
+    id = id,
+    fromQuId = fromQuId,
+    toQuId = toQuId,
+    factor = factor,
+    productId = productId,
+    userfields = encodeUserfieldValues(userfields),
+)
+
+fun QuantityUnitConversionEntity.toModel() = QuantityUnitConversion(
+    id = id,
+    fromQuId = fromQuId,
+    toQuId = toQuId,
+    factor = factor,
+    productId = productId,
+    userfields = decodeUserfieldValues(userfields),
+)
+
+fun ResolvedQuantityUnitConversion.toEntity() = ResolvedQuantityUnitConversionEntity(
+    productId = productId,
+    fromQuId = fromQuId,
+    toQuId = toQuId,
+    factor = factor,
+)
+
+fun ResolvedQuantityUnitConversionEntity.toModel() =
+    ResolvedQuantityUnitConversion(productId, fromQuId, toQuId, factor)
+
+fun StockEntry.toEntity() = StockEntryEntity(
+    id = id,
+    productId = productId,
+    amount = amount,
+    bestBeforeDate = bestBeforeDate,
+    purchasedDate = purchasedDate,
+    stockId = stockId,
+    price = price,
+    open = open,
+    openedDate = openedDate,
+    locationId = locationId,
+    storeId = storeId,
+    note = note,
+    createdTimestamp = createdTimestamp,
+    userfields = encodeUserfieldValues(userfields),
+)
+
+fun StockEntryEntity.toModel() = StockEntry(
+    id = id,
+    productId = productId,
+    amount = amount,
+    bestBeforeDate = bestBeforeDate,
+    purchasedDate = purchasedDate,
+    stockId = stockId,
+    price = price,
+    open = open,
+    openedDate = openedDate,
+    locationId = locationId,
+    storeId = storeId,
+    note = note,
+    createdTimestamp = createdTimestamp,
+    userfields = decodeUserfieldValues(userfields),
+)
+
+fun StockLogEntry.toEntity() = StockLogEntity(
+    id = id,
+    productId = productId,
+    amount = amount,
+    transactionType = transactionType,
+    createdTimestamp = createdTimestamp,
+    spoiled = spoiled,
+    undone = undone,
+    undoneTimestamp = undoneTimestamp,
+    locationId = locationId,
+    userId = userId,
+    correlationId = correlationId,
+    stockId = stockId,
+    note = note,
+)
+
+fun StockLogEntity.toModel() = StockLogEntry(
+    id = id,
+    productId = productId,
+    amount = amount,
+    transactionType = transactionType,
+    createdTimestamp = createdTimestamp,
+    spoiled = spoiled,
+    undone = undone,
+    undoneTimestamp = undoneTimestamp,
+    locationId = locationId,
+    userId = userId,
+    correlationId = correlationId,
+    stockId = stockId,
+    note = note,
+)
+
+fun ShoppingList.toEntity() = ShoppingListEntity(id, name)
+
+fun ShoppingListEntity.toModel() = ShoppingList(id, name)
 
 fun StockAmount.toEntity() = StockEntity(productId, amount, amountAggregated)
 

@@ -66,8 +66,10 @@ import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectActionsView
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.emptyListItem
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.objectActionItems
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.searchItem
-import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewDialog
+import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductLinks
+import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewHost
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist.AddToShoppingListViewModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -77,11 +79,15 @@ internal fun ProductsScreen(
     menuItems: List<AppBarMenuItem>,
     viewModel: ProductsViewModel,
     overviewViewModel: ProductOverviewViewModel,
+    shoppingList: AddToShoppingListViewModel,
     objectActions: ObjectActionsViewModel,
+    /** Where the product overview leads, its form is [onProductClick]. */
+    links: ProductLinks,
     onBackClick: () -> Unit,
     onProductClick: (Int) -> Unit,
     onAddClick: () -> Unit,
     onConfigureUserfieldsClick: () -> Unit,
+    onPresetsClick: () -> Unit,
     /** Gets the actions of the items' overflow menus that succeeded. */
     onActionDone: (ObjectActionEvent) -> Unit,
     modifier: Modifier = Modifier,
@@ -91,7 +97,6 @@ internal fun ProductsScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val refresh by viewModel.refresh.collectAsStateWithLifecycle()
-    val overviewProductId by overviewViewModel.productId.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
     // With saved data a failed download is only a note, without it the list explains itself
@@ -121,6 +126,7 @@ internal fun ProductsScreen(
         objectActions = objectActions,
         onAddClick = onAddClick,
         onConfigureUserfieldsClick = onConfigureUserfieldsClick,
+        onPresetsClick = onPresetsClick,
         selectedId = selectedId,
         isBesideDetail = isBesideDetail,
         onSearchClick = viewModel::showSearch,
@@ -134,18 +140,13 @@ internal fun ProductsScreen(
         modifier = modifier,
     )
 
-    overviewProductId?.let { productId ->
-        ProductOverviewDialog(
-            productId = productId,
-            name = state?.items?.find { it.id == productId }?.name.orEmpty(),
-            viewModel = overviewViewModel,
-            onEditClick = { id ->
-                overviewViewModel.hide()
-                onProductClick(id)
-            },
-            onDismissRequest = overviewViewModel::hide,
-        )
-    }
+    ProductOverviewHost(
+        overview = overviewViewModel,
+        shoppingList = shoppingList,
+        snackbarHostState = snackbarHostState,
+        links = links,
+        nameOf = { id -> state?.items?.find { it.id == id }?.name.orEmpty() },
+    )
 }
 
 @Composable
@@ -161,6 +162,7 @@ private fun ProductsContent(
     objectActions: ObjectActionsViewModel,
     onAddClick: () -> Unit,
     onConfigureUserfieldsClick: () -> Unit,
+    onPresetsClick: () -> Unit,
     selectedId: Int?,
     isBesideDetail: Boolean,
     onSearchClick: () -> Unit,
@@ -202,11 +204,10 @@ private fun ProductsContent(
                     contentDescription = stringResource(Res.string.products_configure_userfields),
                     onClick = onConfigureUserfieldsClick,
                 )
-                // Not available in the app yet, like the web frontend it leads to the settings
                 FloatingToolbarIconButton(
                     painter = painterResource(Res.drawable.ic_rounded_settings_suggest),
                     contentDescription = stringResource(Res.string.products_presets),
-                    onClick = {},
+                    onClick = onPresetsClick,
                 )
                 FloatingToolbarIconButton(
                     painter = painterResource(Res.drawable.ic_rounded_vertical_align_top),

@@ -26,6 +26,7 @@ import com.patrickzedler.grocy.core.data.log.LogSource
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
 import com.patrickzedler.grocy.core.design.component.AppBarIconButton
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
+import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
@@ -59,7 +60,9 @@ internal class SettingsMenuActions(
 
 /**
  * A settings screen: [SegmentedListScreen] with back button and the same overflow menu
- * everywhere (About, Help, Send feedback, Show logcat), including its dialogs.
+ * everywhere (About, Help, Send feedback, Show logcat), including its dialogs. As [pane] of the
+ * settings' list-detail layout a page beside the categories has neither: the categories' bar
+ * has both.
  */
 @Composable
 internal fun SettingsScaffold(
@@ -68,6 +71,7 @@ internal fun SettingsScaffold(
     menuActions: SettingsMenuActions,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
+    pane: ScreenPane? = null,
     snackbarHostState: SnackbarHostState? = null,
     content: LazyListScope.() -> Unit,
 ) {
@@ -87,6 +91,7 @@ internal fun SettingsScaffold(
         onHelpClick = { activeDialog = AppDialog.HELP },
         onFeedbackClick = { activeDialog = AppDialog.FEEDBACK },
         modifier = modifier,
+        pane = pane,
         snackbarHostState = snackbarHostState,
         content = content,
     )
@@ -101,20 +106,28 @@ internal fun SettingsScaffoldContent(
     onHelpClick: () -> Unit,
     onFeedbackClick: () -> Unit,
     modifier: Modifier = Modifier,
+    pane: ScreenPane? = null,
     snackbarHostState: SnackbarHostState? = null,
     content: LazyListScope.() -> Unit,
 ) {
+    val isBesideCategories = pane == ScreenPane.Detail
     SegmentedListScreen(
         title = title,
         modifier = modifier,
+        pane = pane,
         snackbarHostState = snackbarHostState,
-        navigationIcon = { NavigateBackButton(onClick = onBackClick) },
+        navigationIcon = {
+            // Beside the categories their back button leaves both
+            if (!isBesideCategories) NavigateBackButton(onClick = onBackClick)
+        },
         actions = {
-            SettingsMenu(
-                menuActions = menuActions,
-                onHelpClick = onHelpClick,
-                onFeedbackClick = onFeedbackClick,
-            )
+            if (!isBesideCategories) {
+                SettingsMenu(
+                    menuActions = menuActions,
+                    onHelpClick = onHelpClick,
+                    onFeedbackClick = onFeedbackClick,
+                )
+            }
         },
         content = content,
     )

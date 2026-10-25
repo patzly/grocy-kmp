@@ -18,6 +18,10 @@ internal fun JsonObject.toServerConfig(): ServerConfig {
     return ServerConfig(
         stock = flag("FEATURE_FLAG_STOCK", defaults.stock),
         shoppingList = flag("FEATURE_FLAG_SHOPPINGLIST", defaults.shoppingList),
+        shoppingListMultipleLists = flag(
+            "FEATURE_FLAG_SHOPPINGLIST_MULTIPLE_LISTS",
+            defaults.shoppingListMultipleLists,
+        ),
         recipes = flag("FEATURE_FLAG_RECIPES", defaults.recipes),
         chores = flag("FEATURE_FLAG_CHORES", defaults.chores),
         choresAssignments =
@@ -25,6 +29,11 @@ internal fun JsonObject.toServerConfig(): ServerConfig {
         tasks = flag("FEATURE_FLAG_TASKS", defaults.tasks),
         batteries = flag("FEATURE_FLAG_BATTERIES", defaults.batteries),
         labelPrinter = flag("FEATURE_FLAG_LABEL_PRINTER", defaults.labelPrinter),
+        labelPrinterRunsOnServer =
+            flag("LABEL_PRINTER_RUN_SERVER", defaults.labelPrinterRunsOnServer),
+        grocycode2D = primitive("GROCYCODE_TYPE")?.content?.trim()?.uppercase()
+            ?.let { it != "1D" }
+            ?: defaults.grocycode2D,
         stockPriceTracking = flag("FEATURE_FLAG_STOCK_PRICE_TRACKING", defaults.stockPriceTracking),
         stockLocationTracking =
             flag("FEATURE_FLAG_STOCK_LOCATION_TRACKING", defaults.stockLocationTracking),
@@ -55,6 +64,8 @@ internal fun JsonObject.toUserSettings(): UserSettings {
     fun int(key: String) = primitive(key)?.content?.toDoubleOrNull()?.toInt()
     // -1 means "no preset" in Grocy
     fun id(key: String) = int(key)?.takeIf { it > 0 }
+    fun double(key: String) = primitive(key)?.content?.toDoubleOrNull()
+    fun flag(key: String, default: Boolean) = primitive(key)?.toFlag() ?: default
     return UserSettings(
         stockDecimalPlacesAmounts = int("stock_decimal_places_amounts")
             ?.coerceIn(0, MAX_DECIMAL_PLACES)
@@ -62,6 +73,36 @@ internal fun JsonObject.toUserSettings(): UserSettings {
         stockDecimalPlacesPricesDisplay = int("stock_decimal_places_prices_display")
             ?.coerceIn(0, MAX_DECIMAL_PLACES)
             ?: defaults.stockDecimalPlacesPricesDisplay,
+        stockDecimalPlacesPricesInput = int("stock_decimal_places_prices_input")
+            ?.coerceIn(0, MAX_DECIMAL_PLACES)
+            ?: defaults.stockDecimalPlacesPricesInput,
+        stockAutoDecimalSeparatorPrices = flag(
+            "stock_auto_decimal_separator_prices",
+            defaults.stockAutoDecimalSeparatorPrices,
+        ),
+        stockDueSoonDays = int("stock_due_soon_days") ?: defaults.stockDueSoonDays,
+        showIconOnStockOverviewWhenOnShoppingList = flag(
+            "show_icon_on_stock_overview_page_when_product_is_on_shopping_list",
+            defaults.showIconOnStockOverviewWhenOnShoppingList,
+        ),
+        stockOverviewShowAllOutOfStockProducts = flag(
+            "stock_overview_show_all_out_of_stock_products",
+            defaults.stockOverviewShowAllOutOfStockProducts,
+        ),
+        stockDefaultPurchaseAmount =
+            double("stock_default_purchase_amount") ?: defaults.stockDefaultPurchaseAmount,
+        showPurchasedDateOnPurchase =
+            flag("show_purchased_date_on_purchase", defaults.showPurchasedDateOnPurchase),
+        showWarningOnPurchaseWhenDueDateIsEarlierThanNext = flag(
+            "show_warning_on_purchase_when_due_date_is_earlier_than_next",
+            defaults.showWarningOnPurchaseWhenDueDateIsEarlierThanNext,
+        ),
+        stockDefaultConsumeAmount =
+            double("stock_default_consume_amount") ?: defaults.stockDefaultConsumeAmount,
+        stockDefaultConsumeAmountUseQuickConsumeAmount = flag(
+            "stock_default_consume_amount_use_quick_consume_amount",
+            defaults.stockDefaultConsumeAmountUseQuickConsumeAmount,
+        ),
         productPresets = ProductPresets(
             locationId = id("product_presets_location_id"),
             productGroupId = id("product_presets_product_group_id"),
