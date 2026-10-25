@@ -81,7 +81,9 @@
     </style>
     <script>
         // The language chosen in the app (WebAppLanguageStore), handed to Compose before it
-        // reads the browser's; only well-formed tags, an invalid one would break the start
+        // reads the browser's; only well-formed tags, an invalid one would break the start.
+        // The browser's own stays readable for the choice of a demo server in its language.
+        window.grocySystemLanguage = navigator.language;
         try {
             const language = localStorage.getItem('grocy.language');
             if (language && /^[a-zA-Z]{2,3}(-[a-zA-Z0-9]{2,8})*$/.test(language)) {

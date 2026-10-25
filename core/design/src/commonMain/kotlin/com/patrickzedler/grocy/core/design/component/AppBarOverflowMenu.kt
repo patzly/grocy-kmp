@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.core.design.component
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -64,19 +65,24 @@ fun AppBarOverflowMenu(groups: List<List<AppBarMenuItem>>) {
 
 /**
  * The standard narrow three dots button at the end of a list item and its menu with the
- * actions on the item's object, like [AppBarOverflowMenu].
+ * actions on the item's object, like [AppBarOverflowMenu]. In a button group, pass the
+ * group's `animateWidth` as [modifier] with the same [interactionSource].
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun ListItemOverflowMenu(groups: List<List<AppBarMenuItem>>, modifier: Modifier = Modifier) {
+fun ListItemOverflowMenu(
+    groups: List<List<AppBarMenuItem>>,
+    modifier: Modifier = Modifier,
+    interactionSource: MutableInteractionSource? = null,
+) {
     val shownGroups = groups.filter { it.isNotEmpty() }
     if (shownGroups.isEmpty()) return
     val haptic = LocalHapticFeedback.current
     var showMenu by remember { mutableStateOf(false) }
     val description = stringResource(Res.string.action_more_options)
 
-    // A box of its own, so the menu opens at the button
-    Box(modifier) {
+    // A box of its own, so the menu opens at the button; the button takes the width it is given
+    Box(modifier, propagateMinConstraints = true) {
         HapticTooltipBox(text = description) {
             IconButton(
                 onClick = {
@@ -92,6 +98,7 @@ fun ListItemOverflowMenu(groups: List<List<AppBarMenuItem>>, modifier: Modifier 
                     )
                     .clickCursor(),
                 shapes = IconButtonDefaults.shapes(),
+                interactionSource = interactionSource,
             ) {
                 Icon(
                     painter = painterResource(Res.drawable.ic_rounded_more_vert),

@@ -49,8 +49,10 @@ fun EntryProviderScope<NavKey>.settingsEntries(
         GeneralSettingsScreen(
             viewModel = viewModel {
                 GeneralSettingsViewModel(
-                    dependencies.appearanceRepository,
-                    dependencies.appLanguageStore,
+                    appearanceRepository = dependencies.appearanceRepository,
+                    languageStore = dependencies.appLanguageStore,
+                    server = dependencies.serverRepository.server,
+                    demoServerSwitcher = dependencies.demoServerSwitcher(),
                 )
             },
             menuViewModel = settingsMenuViewModel(dependencies),
@@ -63,8 +65,9 @@ fun EntryProviderScope<NavKey>.settingsEntries(
         ServerSettingsScreen(
             viewModel = viewModel {
                 ServerSettingsViewModel(
-                    dependencies.serverRepository,
-                    dependencies.authRepository,
+                    serverRepository = dependencies.serverRepository,
+                    authRepository = dependencies.authRepository,
+                    demoServerSwitcher = dependencies.demoServerSwitcher(),
                 )
             },
             menuViewModel = settingsMenuViewModel(dependencies),
@@ -86,3 +89,6 @@ fun EntryProviderScope<NavKey>.settingsEntries(
 @Composable
 private fun settingsMenuViewModel(dependencies: SettingsDependencies): SettingsMenuViewModel =
     viewModel { SettingsMenuViewModel(dependencies.unlockRepository) }
+
+private fun SettingsDependencies.demoServerSwitcher() =
+    DemoServerSwitcher(authRepository, serverRepository)

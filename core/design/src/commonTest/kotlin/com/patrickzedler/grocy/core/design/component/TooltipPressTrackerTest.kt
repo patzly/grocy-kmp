@@ -12,8 +12,10 @@ class TooltipPressTrackerTest {
     private val tracker = TooltipPressTracker(time)
     private val longPressTimeout = 400.milliseconds
 
-    private fun trigger(priority: MutatePriority = MutatePriority.PreventUserInput) =
-        tracker.triggerOf(priority, longPressTimeout)
+    private fun trigger(
+        priority: MutatePriority = MutatePriority.PreventUserInput,
+        keyboardInput: Boolean = true,
+    ) = tracker.triggerOf(priority, longPressTimeout, keyboardInput)
 
     @Test
     fun hoverIsMouseHover() {
@@ -58,5 +60,20 @@ class TooltipPressTrackerTest {
         time += 2_000.milliseconds
 
         assertEquals(TooltipTrigger.KeyboardFocus, trigger())
+    }
+
+    @Test
+    fun focusWithoutAKeyPressIsNoKeyboardFocus() {
+        // A screen opened by a click focuses its first button, e.g. the back button in browsers
+        assertEquals(TooltipTrigger.PointerFocus, trigger(keyboardInput = false))
+    }
+
+    @Test
+    fun focusLongAfterAClickWithoutAKeyPressIsNoKeyboardFocus() {
+        tracker.onPress()
+        tracker.onRelease()
+        time += 2_000.milliseconds
+
+        assertEquals(TooltipTrigger.PointerFocus, trigger(keyboardInput = false))
     }
 }

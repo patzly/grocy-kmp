@@ -44,6 +44,7 @@ import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.clickCursor
@@ -278,7 +279,7 @@ internal fun ProductScreen(
         } else {
             objectActionItems(frame.objectActions, viewModel.productId)
         },
-        isBesideList = frame.isBesideList,
+        pane = ScreenPane.Detail.takeIf { frame.isBesideList },
         snackbarHostState = snackbarHostState,
         floatingToolbar = { scrollBehavior, toolbarModifier ->
             FloatingToolbarWithFab(

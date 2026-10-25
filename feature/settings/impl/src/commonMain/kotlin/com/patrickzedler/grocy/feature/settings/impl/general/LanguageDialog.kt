@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ListItemColors
@@ -112,11 +113,24 @@ private fun LanguageDialogContent(
         val colors = SegmentedListDefaults.colors()
         val count = languages.size + 1
         val namedLanguages = remember(languages) {
-            languages.map { it to languageName(it) }.sortedBy { (_, name) -> name }
+            languages
+                .map { it to languageName(it) }
+                .sortedWith(compareBy(languageNameComparator()) { (_, name) -> name })
         }
+
+        // The current language is in view right away, also far down the list
+        val listState = rememberLazyListState(
+            initialFirstVisibleItemIndex = if (selectedLanguage == null) {
+                0
+            } else {
+                // Behind the system language, the first item
+                namedLanguages.indexOfFirst { (tag, _) -> tag == selectedLanguage } + 1
+            },
+        )
 
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
+            state = listState,
             contentPadding = PaddingValues(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
         ) {

@@ -156,6 +156,20 @@
   <string name="settings_reset_description">Minden beállítást visszaállít az alapértelmezettre</string>
   <string name="settings_server_demo">Nyilvános bemutató szerver</string>
   <string name="settings_server_demo_warning">Minden, amit itt megadsz, mindenki számára látható, és az is marad, amíg a bemutató naponta egyszer vissza nem állítja a változásokat.</string>
+  <string name="settings_server_demo_choose">Másik bemutató szerver választása</string>
+  <string name="settings_server_demo_servers">Bemutató szerverek</string>
+  <string name="settings_server_demo_servers_info">A Grocy minden nyilvános bemutatója egy nyelven van beállítva, és saját adatai vannak.</string>
+  <string name="settings_server_demo_switch_title">Bemutató szerver váltása?</string>
+  <string name="settings_server_demo_switch_message">A Grocy nyilvános bemutatója ezen a nyelven is elérhető: %1$s. Átváltasz rá, hogy a termékek, a helyek és minden más is ezen a nyelven legyen?</string>
+  <string name="settings_server_demo_switch">Váltás</string>
+  <string name="settings_server_demo_keep">Jelenlegi megtartása</string>
+  <string name="settings_server_demo_switch_failed">A bemutató szerver nem érhető el. Semmi sem változott.</string>
+  <string name="settings_server_version_check">Újabb Grocy verzió keresése</string>
+  <string name="settings_server_version_check_failed">Nem sikerült ellenőrizni, hogy van-e újabb Grocy verzió.</string>
+  <string name="settings_server_version_up_to_date_title">A Grocy naprakész</string>
+  <string name="settings_server_version_up_to_date_message">A szerveren a Grocy %1$s fut, a legújabb verzió.</string>
+  <string name="settings_server_version_update_title">Grocy frissítés érhető el</string>
+  <string name="settings_server_version_update_message">Elérhető a Grocy %1$s, a szerveren %2$s fut. Frissítsd a szervert a legújabb fejlesztésekért.</string>
   <string name="settings_server_url">Szerver URL</string>
   <string name="settings_server_version">Grocy verzió</string>
   <string name="settings_server_version_loading">Betöltés…</string>
@@ -227,6 +241,42 @@
   <plurals name="masterdata_products_count">
     <item quantity="one">%1$d termék</item>
     <item quantity="other">%1$d termék</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="one">%1$d hely</item>
+    <item quantity="other">%1$d hely</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="one">%1$d áruház</item>
+    <item quantity="other">%1$d áruház</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="one">%1$d mennyiségi egység</item>
+    <item quantity="other">%1$d mennyiségi egység</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="one">%1$d termékcsoport</item>
+    <item quantity="other">%1$d termékcsoport</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="one">%1$d házimunka</item>
+    <item quantity="other">%1$d házimunka</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="one">%1$d elem</item>
+    <item quantity="other">%1$d elem</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="one">%1$d feladat kategória</item>
+    <item quantity="other">%1$d feladat kategória</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="one">%1$d egyéni mező</item>
+    <item quantity="other">%1$d egyéni mező</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="one">%1$d egyéni objektum</item>
+    <item quantity="other">%1$d egyéni objektum</item>
   </plurals>
 
   <!-- Products -->

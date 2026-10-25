@@ -10,10 +10,13 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedListItem
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -54,6 +57,11 @@ import com.patrickzedler.grocy.core.resources.settings_contrast_standard
 import com.patrickzedler.grocy.core.resources.settings_general
 import com.patrickzedler.grocy.core.resources.settings_language
 import com.patrickzedler.grocy.core.resources.settings_language_system
+import com.patrickzedler.grocy.core.resources.settings_server_demo_keep
+import com.patrickzedler.grocy.core.resources.settings_server_demo_switch
+import com.patrickzedler.grocy.core.resources.settings_server_demo_switch_failed
+import com.patrickzedler.grocy.core.resources.settings_server_demo_switch_message
+import com.patrickzedler.grocy.core.resources.settings_server_demo_switch_title
 import com.patrickzedler.grocy.core.resources.settings_style_monochrome
 import com.patrickzedler.grocy.core.resources.settings_style_neutral
 import com.patrickzedler.grocy.core.resources.settings_style_rainbow
@@ -67,12 +75,14 @@ import com.patrickzedler.grocy.core.resources.settings_theme_dynamic
 import com.patrickzedler.grocy.core.resources.settings_theme_hue
 import com.patrickzedler.grocy.core.resources.settings_theme_light
 import com.patrickzedler.grocy.core.resources.settings_theme_static
+import com.patrickzedler.grocy.feature.settings.impl.QuestionDialog
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuActions
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuViewModel
 import com.patrickzedler.grocy.feature.settings.impl.SettingsScaffold
 import com.patrickzedler.grocy.feature.settings.impl.SettingsScaffoldContent
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -87,6 +97,7 @@ internal fun GeneralSettingsScreen(
     val appearance by viewModel.appearance.collectAsStateWithLifecycle()
     val language by viewModel.language.collectAsStateWithLifecycle()
     var showLanguageDialog by rememberSaveable { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     if (showLanguageDialog) {
         LanguageDialog(
@@ -96,12 +107,36 @@ internal fun GeneralSettingsScreen(
         )
     }
 
+    viewModel.demoServerOffer?.let { offer ->
+        QuestionDialog(
+            title = stringResource(Res.string.settings_server_demo_switch_title),
+            message = stringResource(
+                Res.string.settings_server_demo_switch_message,
+                languageName(offer.server.languageTag),
+            ),
+            confirmText = stringResource(Res.string.settings_server_demo_switch),
+            dismissText = stringResource(Res.string.settings_server_demo_keep),
+            onConfirm = { viewModel.answerDemoServerOffer(switch = true) },
+            onDismiss = { viewModel.answerDemoServerOffer(switch = false) },
+            isConfirming = viewModel.isSwitchingDemoServer,
+        )
+    }
+
+    LaunchedEffect(viewModel.demoServerSwitchFailed) {
+        if (viewModel.demoServerSwitchFailed) {
+            // Cleared afterwards, a new key would cancel the snackbar while it shows
+            snackbarHostState.showSnackbar(getString(Res.string.settings_server_demo_switch_failed))
+            viewModel.onDemoServerSwitchFailureShown()
+        }
+    }
+
     SettingsScaffold(
         title = stringResource(Res.string.settings_general),
         menuViewModel = menuViewModel,
         menuActions = menuActions,
         onBackClick = onBackClick,
         modifier = modifier,
+        snackbarHostState = snackbarHostState,
     ) {
         // Empty for the moment until the stored settings are read
         appearance?.let {

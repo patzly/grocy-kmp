@@ -31,6 +31,7 @@ import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
+import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
@@ -178,7 +179,7 @@ internal fun <F : ObjectFormState<*>> ObjectFormScreen(
         } else {
             objectActionItems(frame.objectActions, viewModel.objectId)
         },
-        isBesideList = frame.isBesideList,
+        pane = ScreenPane.Detail.takeIf { frame.isBesideList },
         listState = listState,
         snackbarHostState = snackbarHostState,
         floatingToolbar = { scrollBehavior, toolbarModifier ->

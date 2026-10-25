@@ -18,8 +18,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.LookaheadScope
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.EntryProviderScope
+import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -77,14 +79,28 @@ fun GrocyNavDisplay(
             rememberSaveableStateHolderNavEntryDecorator(),
             // Scopes each ViewModel to its entry, cleared when the entry leaves the back stack
             rememberViewModelStoreNavEntryDecorator(),
+            // Keeps each entry's layout intact while it moves between scenes
+            rememberLookaheadNavEntryDecorator(),
         ),
         // Lists and their details side by side where the window is wide enough
         sceneStrategies = listOf(rememberListDetailStrategy()),
+        // Both panes on one background, also between them
+        sceneDecoratorStrategies = listOf(rememberPaneBackgroundDecorator()),
         entryProvider = entryProvider { entries() },
         transitionSpec = { forwardTransition },
         popTransitionSpec = { if (skipPopTransition) NoTransition else backwardTransition },
         predictivePopTransitionSpec = { backwardTransition },
     )
+}
+
+/**
+ * Gives each entry a lookahead scope of its own. A list moving out of the list-detail scene
+ * (the window became narrower) left its items asking a lookahead pass of the scene they had
+ * left for their text baselines, which threw and broke the layout.
+ */
+@Composable
+private fun rememberLookaheadNavEntryDecorator(): NavEntryDecorator<NavKey> = remember {
+    NavEntryDecorator { entry -> LookaheadScope { entry.Content() } }
 }
 
 private val NoTransition = EnterTransition.None togetherWith ExitTransition.None

@@ -5,6 +5,8 @@ import com.patrickzedler.grocy.core.database.createInMemoryGrocyDatabase
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.testing.FakeCredentialStore
 import com.patrickzedler.grocy.core.testing.FakeGrocyServer
+import com.patrickzedler.grocy.core.testing.FakeGrocyServer.Companion.grocyReleaseJson
+import io.ktor.http.HttpStatusCode
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -34,8 +36,12 @@ class ServerRepositoryTest {
         database.close()
     }
 
-    private fun TestScope.repository() =
-        ServerRepository(credentialStore.connection, masterDataRepository, backgroundScope)
+    private fun TestScope.repository() = ServerRepository(
+        connection = credentialStore.connection,
+        masterDataRepository = masterDataRepository,
+        grocyReleases = server.grocyReleases,
+        scope = backgroundScope,
+    )
 
     @Test
     fun serverShowsTheConnectionAndTheDownloadedVersion() = runTest {
@@ -83,5 +89,68 @@ class ServerRepositoryTest {
         credentialStore.clear()
 
         assertNull(repository.server.filter { it == null }.first())
+    }
+
+    @Test
+    fun serverWithTheNewestReleaseIsUpToDate() = runTest {
+        val check = repository().checkGrocyVersion()
+
+        assertEquals(GrocyVersionCheck.UpToDate("4.7.1"), check)
+    }
+
+    @Test
+    fun newerReleaseIsOfferedWithItsPage() = runTest {
+        server.respond(FakeGrocyServer.GROCY_RELEASE_PATH, body = grocyReleaseJson("4.10.0"))
+
+        val check = repository().checkGrocyVersion()
+
+        assertEquals(
+            GrocyVersionCheck.Available(
+                latestVersion = "4.10.0",
+                serverVersion = "4.7.1",
+                releaseUrl = "https://github.com/grocy/grocy/releases/tag/v4.10.0",
+            ),
+            check,
+        )
+    }
+
+    @Test
+    fun checkDownloadsTheServersVersionAnew() = runTest {
+        val repository = repository()
+        repository.refreshVersion()
+        // The server was updated in the meantime
+        server.respond(
+            FakeGrocyServer.SYSTEM_INFO_PATH,
+            body = """{"grocy_version":{"Version":"4.10.0","ReleaseDate":"2026-12-01"}}""",
+        )
+        server.respond(FakeGrocyServer.GROCY_RELEASE_PATH, body = grocyReleaseJson("4.10.0"))
+
+        assertEquals(GrocyVersionCheck.UpToDate("4.10.0"), repository.checkGrocyVersion())
+    }
+
+    @Test
+    fun unreachableServerIsComparedByItsStoredVersion() = runTest {
+        val repository = repository()
+        repository.refreshVersion()
+        server.respond(FakeGrocyServer.SYSTEM_INFO_PATH, status = HttpStatusCode.BadGateway)
+        server.respond(FakeGrocyServer.GROCY_RELEASE_PATH, body = grocyReleaseJson("5.0.0"))
+
+        val check = repository.checkGrocyVersion()
+
+        assertEquals("4.7.1", (check as GrocyVersionCheck.Available).serverVersion)
+    }
+
+    @Test
+    fun unknownServerVersionFailsTheCheck() = runTest {
+        server.respond(FakeGrocyServer.SYSTEM_INFO_PATH, status = HttpStatusCode.BadGateway)
+
+        assertEquals(GrocyVersionCheck.Failed, repository().checkGrocyVersion())
+    }
+
+    @Test
+    fun unreachableGitHubFailsTheCheck() = runTest {
+        server.respond(FakeGrocyServer.GROCY_RELEASE_PATH, status = HttpStatusCode.Forbidden)
+
+        assertEquals(GrocyVersionCheck.Failed, repository().checkGrocyVersion())
     }
 }

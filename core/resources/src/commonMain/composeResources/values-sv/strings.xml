@@ -156,6 +156,20 @@
   <string name="settings_reset_description">Återställer varje inställning till standard</string>
   <string name="settings_server_demo">Offentlig demoserver</string>
   <string name="settings_server_demo_warning">Allt du anger här är synligt för alla och förblir det tills demon återställer sina ändringar en gång om dagen.</string>
+  <string name="settings_server_demo_choose">Välj en annan demoserver</string>
+  <string name="settings_server_demo_servers">Demoservrar</string>
+  <string name="settings_server_demo_servers_info">Varje offentlig demo av Grocy är inställd på ett språk och har sina egna data.</string>
+  <string name="settings_server_demo_switch_title">Byta demoserver?</string>
+  <string name="settings_server_demo_switch_message">Grocys offentliga demo finns även på %1$s. Vill du byta till den, så att produkter, platser och allt annat också är på det språket?</string>
+  <string name="settings_server_demo_switch">Byt</string>
+  <string name="settings_server_demo_keep">Behåll nuvarande</string>
+  <string name="settings_server_demo_switch_failed">Demoservern kunde inte nås. Inget ändrades.</string>
+  <string name="settings_server_version_check">Sök efter en nyare Grocy-version</string>
+  <string name="settings_server_version_check_failed">Det gick inte att kontrollera om det finns en nyare Grocy-version.</string>
+  <string name="settings_server_version_up_to_date_title">Grocy är uppdaterat</string>
+  <string name="settings_server_version_up_to_date_message">Servern kör Grocy %1$s, den senaste versionen.</string>
+  <string name="settings_server_version_update_title">Grocy-uppdatering tillgänglig</string>
+  <string name="settings_server_version_update_message">Grocy %1$s är tillgänglig, servern kör %2$s. Uppdatera servern för att få de senaste förbättringarna.</string>
   <string name="settings_server_url">Server-URL</string>
   <string name="settings_server_version">Grocy-version</string>
   <string name="settings_server_version_loading">Läser in…</string>
@@ -227,6 +241,42 @@
   <plurals name="masterdata_products_count">
     <item quantity="one">%1$d produkt</item>
     <item quantity="other">%1$d produkter</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="one">%1$d plats</item>
+    <item quantity="other">%1$d platser</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="one">%1$d affär</item>
+    <item quantity="other">%1$d affärer</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="one">%1$d mängdenhet</item>
+    <item quantity="other">%1$d mängdenheter</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="one">%1$d produktgrupp</item>
+    <item quantity="other">%1$d produktgrupper</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="one">%1$d syssla</item>
+    <item quantity="other">%1$d sysslor</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="one">%1$d batteri</item>
+    <item quantity="other">%1$d batterier</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="one">%1$d uppgiftskategori</item>
+    <item quantity="other">%1$d uppgiftskategorier</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="one">%1$d användarfält</item>
+    <item quantity="other">%1$d användarfält</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="one">%1$d användarpost</item>
+    <item quantity="other">%1$d användarposter</item>
   </plurals>
 
   <!-- Products -->

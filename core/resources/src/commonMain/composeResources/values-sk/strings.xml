@@ -156,6 +156,20 @@
   <string name="settings_reset_description">Vráti všetky nastavenia na predvolené hodnoty</string>
   <string name="settings_server_demo">Verejný demo server</string>
   <string name="settings_server_demo_warning">Všetko, čo sem zadáte, je viditeľné pre všetkých a zostane tak, kým demo raz denne neobnoví svoje zmeny.</string>
+  <string name="settings_server_demo_choose">Vybrať iný demo server</string>
+  <string name="settings_server_demo_servers">Demo servery</string>
+  <string name="settings_server_demo_servers_info">Každé verejné demo Grocy je nastavené v jednom jazyku a má vlastné údaje.</string>
+  <string name="settings_server_demo_switch_title">Prepnúť demo server?</string>
+  <string name="settings_server_demo_switch_message">Verejné demo Grocy je dostupné aj v jazyku %1$s. Chceš naň prepnúť, aby aj produkty, umiestnenia a všetko ostatné boli v tomto jazyku?</string>
+  <string name="settings_server_demo_switch">Prepnúť</string>
+  <string name="settings_server_demo_keep">Ponechať súčasný</string>
+  <string name="settings_server_demo_switch_failed">Demo server nie je dostupný. Nič sa nezmenilo.</string>
+  <string name="settings_server_version_check">Skontrolovať novšiu verziu Grocy</string>
+  <string name="settings_server_version_check_failed">Nepodarilo sa skontrolovať, či existuje novšia verzia Grocy.</string>
+  <string name="settings_server_version_up_to_date_title">Grocy je aktuálne</string>
+  <string name="settings_server_version_up_to_date_message">Na serveri beží Grocy %1$s, najnovšia verzia.</string>
+  <string name="settings_server_version_update_title">Je dostupná aktualizácia Grocy</string>
+  <string name="settings_server_version_update_message">Je dostupné Grocy %1$s, na serveri beží %2$s. Aktualizuj server, aby si získal najnovšie vylepšenia.</string>
   <string name="settings_server_url">URL servera</string>
   <string name="settings_server_version">Verzia Grocy</string>
   <string name="settings_server_version_loading">Načítava sa…</string>
@@ -229,6 +243,60 @@
     <item quantity="few">%1$d výrobky</item>
     <item quantity="many">%1$d výrobku</item>
     <item quantity="other">%1$d výrobkov</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="one">%1$d umiestnenie</item>
+    <item quantity="few">%1$d umiestnenia</item>
+    <item quantity="many">%1$d umiestnenia</item>
+    <item quantity="other">%1$d umiestnení</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="one">%1$d obchod</item>
+    <item quantity="few">%1$d obchody</item>
+    <item quantity="many">%1$d obchodu</item>
+    <item quantity="other">%1$d obchodov</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="one">%1$d množstevná jednotka</item>
+    <item quantity="few">%1$d množstevné jednotky</item>
+    <item quantity="many">%1$d množstevnej jednotky</item>
+    <item quantity="other">%1$d množstevných jednotiek</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="one">%1$d skupina výrobkov</item>
+    <item quantity="few">%1$d skupiny výrobkov</item>
+    <item quantity="many">%1$d skupiny výrobkov</item>
+    <item quantity="other">%1$d skupín výrobkov</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="one">%1$d povinnosť</item>
+    <item quantity="few">%1$d povinnosti</item>
+    <item quantity="many">%1$d povinnosti</item>
+    <item quantity="other">%1$d povinností</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="one">%1$d batéria</item>
+    <item quantity="few">%1$d batérie</item>
+    <item quantity="many">%1$d batérie</item>
+    <item quantity="other">%1$d batérií</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="one">%1$d kategória úloh</item>
+    <item quantity="few">%1$d kategórie úloh</item>
+    <item quantity="many">%1$d kategórie úloh</item>
+    <item quantity="other">%1$d kategórií úloh</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="one">%1$d používateľské pole</item>
+    <item quantity="few">%1$d používateľské polia</item>
+    <item quantity="many">%1$d používateľského poľa</item>
+    <item quantity="other">%1$d používateľských polí</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="one">%1$d používateľská entita</item>
+    <item quantity="few">%1$d používateľské entity</item>
+    <item quantity="many">%1$d používateľskej entity</item>
+    <item quantity="other">%1$d používateľských entít</item>
   </plurals>
 
   <!-- Products -->

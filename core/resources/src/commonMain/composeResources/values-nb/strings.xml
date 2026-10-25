@@ -156,6 +156,20 @@
   <string name="settings_reset_description">Setter alle innstillinger tilbake til standard</string>
   <string name="settings_server_demo">Offentlig demoserver</string>
   <string name="settings_server_demo_warning">Alt du skriver inn her er synlig for alle og forblir det til demoen tilbakestiller endringene sine én gang om dagen.</string>
+  <string name="settings_server_demo_choose">Velg en annen demoserver</string>
+  <string name="settings_server_demo_servers">Demoservere</string>
+  <string name="settings_server_demo_servers_info">Hver offentlige demo av Grocy er satt opp på ett språk og har sine egne data.</string>
+  <string name="settings_server_demo_switch_title">Bytte demoserver?</string>
+  <string name="settings_server_demo_switch_message">Den offentlige demoen av Grocy finnes også på %1$s. Vil du bytte til den, slik at produkter, lokasjoner og alt annet også er på dette språket?</string>
+  <string name="settings_server_demo_switch">Bytt</string>
+  <string name="settings_server_demo_keep">Behold nåværende</string>
+  <string name="settings_server_demo_switch_failed">Demoserveren kunne ikke nås. Ingenting ble endret.</string>
+  <string name="settings_server_version_check">Se etter en nyere Grocy-versjon</string>
+  <string name="settings_server_version_check_failed">Kunne ikke sjekke om det finnes en nyere Grocy-versjon.</string>
+  <string name="settings_server_version_up_to_date_title">Grocy er oppdatert</string>
+  <string name="settings_server_version_up_to_date_message">Serveren kjører Grocy %1$s, den nyeste versjonen.</string>
+  <string name="settings_server_version_update_title">Grocy-oppdatering tilgjengelig</string>
+  <string name="settings_server_version_update_message">Grocy %1$s er tilgjengelig, serveren kjører %2$s. Oppdater serveren for å få de nyeste forbedringene.</string>
   <string name="settings_server_url">Server-URL</string>
   <string name="settings_server_version">Grocy-versjon</string>
   <string name="settings_server_version_loading">Laster inn…</string>
@@ -227,6 +241,42 @@
   <plurals name="masterdata_products_count">
     <item quantity="one">%1$d produkt</item>
     <item quantity="other">%1$d produkter</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="one">%1$d lokasjon</item>
+    <item quantity="other">%1$d lokasjoner</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="one">%1$d butikk</item>
+    <item quantity="other">%1$d butikker</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="one">%1$d forpakning</item>
+    <item quantity="other">%1$d forpakninger</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="one">%1$d produktgruppe</item>
+    <item quantity="other">%1$d produktgrupper</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="one">%1$d husarbeid</item>
+    <item quantity="other">%1$d husarbeid</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="one">%1$d batteri</item>
+    <item quantity="other">%1$d batterier</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="one">%1$d oppgavekategori</item>
+    <item quantity="other">%1$d oppgavekategorier</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="one">%1$d kolonne</item>
+    <item quantity="other">%1$d kolonner</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="one">%1$d egendefinert linje</item>
+    <item quantity="other">%1$d egendefinerte linjer</item>
   </plurals>
 
   <!-- Products -->

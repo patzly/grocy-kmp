@@ -156,6 +156,20 @@
   <string name="settings_reset_description">Taastab kõigi seadete vaikeväärtused</string>
   <string name="settings_server_demo">Avalik demoserver</string>
   <string name="settings_server_demo_warning">Kõik, mida siia sisestad, on kõigile nähtav ja jääb nii, kuni demo lähtestab oma muudatused kord päevas.</string>
+  <string name="settings_server_demo_choose">Vali teine demoserver</string>
+  <string name="settings_server_demo_servers">Demoserverid</string>
+  <string name="settings_server_demo_servers_info">Iga Grocy avalik demo on seadistatud ühes keeles ja sellel on oma andmed.</string>
+  <string name="settings_server_demo_switch_title">Kas vahetada demoserverit?</string>
+  <string name="settings_server_demo_switch_message">Grocy avalik demo on saadaval ka keeles %1$s. Kas vahetad selle vastu, et ka tooted, asukohad ja kõik muu oleksid selles keeles?</string>
+  <string name="settings_server_demo_switch">Vaheta</string>
+  <string name="settings_server_demo_keep">Jäta praegune</string>
+  <string name="settings_server_demo_switch_failed">Demoserveriga ei saanud ühendust. Midagi ei muudetud.</string>
+  <string name="settings_server_version_check">Otsi Grocy uuemat versiooni</string>
+  <string name="settings_server_version_check_failed">Ei õnnestunud kontrollida, kas Grocy uuem versioon on olemas.</string>
+  <string name="settings_server_version_up_to_date_title">Grocy on ajakohane</string>
+  <string name="settings_server_version_up_to_date_message">Serveris töötab Grocy %1$s, uusim versioon.</string>
+  <string name="settings_server_version_update_title">Grocy uuendus on saadaval</string>
+  <string name="settings_server_version_update_message">Grocy %1$s on saadaval, serveris töötab %2$s. Uuenda serverit, et saada uusimad täiustused.</string>
   <string name="settings_server_url">Serveri URL</string>
   <string name="settings_server_version">Grocy versioon</string>
   <string name="settings_server_version_loading">Laadimine…</string>
@@ -227,6 +241,42 @@
   <plurals name="masterdata_products_count">
     <item quantity="one">%1$d toode</item>
     <item quantity="other">%1$d toodet</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="one">%1$d asukoht</item>
+    <item quantity="other">%1$d asukohta</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="one">%1$d pood</item>
+    <item quantity="other">%1$d poodi</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="one">%1$d koguseühik</item>
+    <item quantity="other">%1$d koguseühikut</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="one">%1$d tootegrupp</item>
+    <item quantity="other">%1$d tootegruppi</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="one">%1$d majapidamistöö</item>
+    <item quantity="other">%1$d majapidamistööd</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="one">%1$d patarei</item>
+    <item quantity="other">%1$d patareid</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="one">%1$d ülesannete kategooria</item>
+    <item quantity="other">%1$d ülesannete kategooriat</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="one">%1$d kasutajaväli</item>
+    <item quantity="other">%1$d kasutajavälja</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="one">%1$d kasutajaolem</item>
+    <item quantity="other">%1$d kasutajaolemit</item>
   </plurals>
 
   <!-- Products -->

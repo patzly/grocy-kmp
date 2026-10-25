@@ -34,6 +34,7 @@ import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
 import com.patrickzedler.grocy.core.design.component.ListItemOverflowMenu
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
+import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.SupportingLines
 import com.patrickzedler.grocy.core.design.component.edgeToEdgeItem
@@ -179,6 +180,7 @@ private fun ProductsContent(
         title = stringResource(Res.string.masterdata_products),
         modifier = modifier,
         navigationIcon = { NavigateBackButton(onClick = onBackClick) },
+        pane = ScreenPane.List.takeIf { isBesideDetail },
         menuItems = menuItems,
         listState = listState,
         snackbarHostState = snackbarHostState,

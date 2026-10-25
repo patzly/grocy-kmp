@@ -156,6 +156,20 @@
   <string name="settings_reset_description">Zet elke instelling terug naar de standaardwaarde</string>
   <string name="settings_server_demo">Openbare demoserver</string>
   <string name="settings_server_demo_warning">Alles wat je hier invoert is voor iedereen zichtbaar en blijft dat totdat de demo zijn wijzigingen één keer per dag terugzet.</string>
+  <string name="settings_server_demo_choose">Een andere demoserver kiezen</string>
+  <string name="settings_server_demo_servers">Demoservers</string>
+  <string name="settings_server_demo_servers_info">Elke openbare demo van Grocy is in één taal ingericht en heeft zijn eigen gegevens.</string>
+  <string name="settings_server_demo_switch_title">Van demoserver wisselen?</string>
+  <string name="settings_server_demo_switch_message">De openbare demo van Grocy is ook beschikbaar in het %1$s. Wil je daarnaar wisselen, zodat producten, locaties en al het andere ook in deze taal zijn?</string>
+  <string name="settings_server_demo_switch">Wisselen</string>
+  <string name="settings_server_demo_keep">Huidige behouden</string>
+  <string name="settings_server_demo_switch_failed">De demoserver is niet bereikbaar. Er is niets gewijzigd.</string>
+  <string name="settings_server_version_check">Naar een nieuwere Grocy-versie zoeken</string>
+  <string name="settings_server_version_check_failed">Kon niet controleren of er een nieuwere Grocy-versie is.</string>
+  <string name="settings_server_version_up_to_date_title">Grocy is up-to-date</string>
+  <string name="settings_server_version_up_to_date_message">Op de server draait Grocy %1$s, de nieuwste versie.</string>
+  <string name="settings_server_version_update_title">Grocy-update beschikbaar</string>
+  <string name="settings_server_version_update_message">Grocy %1$s is beschikbaar, op de server draait %2$s. Werk de server bij voor de nieuwste verbeteringen.</string>
   <string name="settings_server_url">Server-URL</string>
   <string name="settings_server_version">Grocy-versie</string>
   <string name="settings_server_version_loading">Laden…</string>
@@ -227,6 +241,42 @@
   <plurals name="masterdata_products_count">
     <item quantity="one">%1$d product</item>
     <item quantity="other">%1$d producten</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="one">%1$d locatie</item>
+    <item quantity="other">%1$d locaties</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="one">%1$d winkel</item>
+    <item quantity="other">%1$d winkels</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="one">%1$d hoeveelheidseenheid</item>
+    <item quantity="other">%1$d hoeveelheidseenheden</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="one">%1$d productcategorie</item>
+    <item quantity="other">%1$d productcategorieën</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="one">%1$d klusje</item>
+    <item quantity="other">%1$d klusjes</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="one">%1$d batterij</item>
+    <item quantity="other">%1$d batterijen</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="one">%1$d taakcategorie</item>
+    <item quantity="other">%1$d taakcategorieën</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="one">%1$d gebruikersveld</item>
+    <item quantity="other">%1$d gebruikersvelden</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="one">%1$d gebruikersentiteit</item>
+    <item quantity="other">%1$d gebruikersentiteiten</item>
   </plurals>
 
   <!-- Products -->

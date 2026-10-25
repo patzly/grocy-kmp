@@ -156,6 +156,20 @@
   <string name="settings_reset_description">Повертає всі налаштування до значень за замовчуванням</string>
   <string name="settings_server_demo">Публічний демосервер</string>
   <string name="settings_server_demo_warning">Усе, що ви тут вводите, видно всім і залишиться видимим, доки демо раз на день не скине свої зміни.</string>
+  <string name="settings_server_demo_choose">Вибрати інший демосервер</string>
+  <string name="settings_server_demo_servers">Демосервери</string>
+  <string name="settings_server_demo_servers_info">Кожне публічне демо Grocy налаштоване однією мовою і має власні дані.</string>
+  <string name="settings_server_demo_switch_title">Змінити демосервер?</string>
+  <string name="settings_server_demo_switch_message">Публічне демо Grocy доступне також мовою: %1$s. Перейти на нього, щоб продукти, місця зберігання та все інше теж були цією мовою?</string>
+  <string name="settings_server_demo_switch">Змінити</string>
+  <string name="settings_server_demo_keep">Залишити поточний</string>
+  <string name="settings_server_demo_switch_failed">Демосервер недоступний. Нічого не змінено.</string>
+  <string name="settings_server_version_check">Перевірити наявність новішої версії Grocy</string>
+  <string name="settings_server_version_check_failed">Не вдалося перевірити, чи є новіша версія Grocy.</string>
+  <string name="settings_server_version_up_to_date_title">Grocy оновлено</string>
+  <string name="settings_server_version_up_to_date_message">На сервері працює Grocy %1$s, найновіша версія.</string>
+  <string name="settings_server_version_update_title">Доступне оновлення Grocy</string>
+  <string name="settings_server_version_update_message">Доступний Grocy %1$s, на сервері працює %2$s. Оновіть сервер, щоб отримати останні покращення.</string>
   <string name="settings_server_url">URL сервера</string>
   <string name="settings_server_version">Версія Grocy</string>
   <string name="settings_server_version_loading">Завантаження…</string>
@@ -229,6 +243,60 @@
     <item quantity="few">%1$d продукти</item>
     <item quantity="many">%1$d продуктів</item>
     <item quantity="other">%1$d продукту</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="one">%1$d місце</item>
+    <item quantity="few">%1$d місця</item>
+    <item quantity="many">%1$d місць</item>
+    <item quantity="other">%1$d місця</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="one">%1$d магазин</item>
+    <item quantity="few">%1$d магазини</item>
+    <item quantity="many">%1$d магазинів</item>
+    <item quantity="other">%1$d магазину</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="one">%1$d одиниця виміру</item>
+    <item quantity="few">%1$d одиниці виміру</item>
+    <item quantity="many">%1$d одиниць виміру</item>
+    <item quantity="other">%1$d одиниці виміру</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="one">%1$d група продуктів</item>
+    <item quantity="few">%1$d групи продуктів</item>
+    <item quantity="many">%1$d груп продуктів</item>
+    <item quantity="other">%1$d групи продуктів</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="one">%1$d завдання</item>
+    <item quantity="few">%1$d завдання</item>
+    <item quantity="many">%1$d завдань</item>
+    <item quantity="other">%1$d завдання</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="one">%1$d акумулятор</item>
+    <item quantity="few">%1$d акумулятори</item>
+    <item quantity="many">%1$d акумуляторів</item>
+    <item quantity="other">%1$d акумулятора</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="one">%1$d категорія завдань</item>
+    <item quantity="few">%1$d категорії завдань</item>
+    <item quantity="many">%1$d категорій завдань</item>
+    <item quantity="other">%1$d категорії завдань</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="one">%1$d користувацьке поле</item>
+    <item quantity="few">%1$d користувацькі поля</item>
+    <item quantity="many">%1$d користувацьких полів</item>
+    <item quantity="other">%1$d користувацького поля</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="one">%1$d користувацька сутність</item>
+    <item quantity="few">%1$d користувацькі сутності</item>
+    <item quantity="many">%1$d користувацьких сутностей</item>
+    <item quantity="other">%1$d користувацької сутності</item>
   </plurals>
 
   <!-- Products -->

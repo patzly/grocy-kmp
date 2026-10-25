@@ -187,6 +187,20 @@
   <string name="settings_reset_description">Return every setting to its default</string>
   <string name="settings_server_demo">Public demo server</string>
   <string name="settings_server_demo_warning">Everything you enter here is visible to everyone and stays so until the demo resets its changes once a day.</string>
+  <string name="settings_server_demo_choose">Choose another demo server</string>
+  <string name="settings_server_demo_servers">Demo servers</string>
+  <string name="settings_server_demo_servers_info">Each public demo of Grocy is set up in one language and has its own data.</string>
+  <string name="settings_server_demo_switch_title">Switch the demo server?</string>
+  <string name="settings_server_demo_switch_message">Grocy’s public demo is also available in %1$s. Switch to it, so products, locations and everything else are in this language too?</string>
+  <string name="settings_server_demo_switch">Switch</string>
+  <string name="settings_server_demo_keep">Keep current</string>
+  <string name="settings_server_demo_switch_failed">The demo server could not be reached. Nothing was changed.</string>
+  <string name="settings_server_version_check">Check for a newer Grocy version</string>
+  <string name="settings_server_version_check_failed">Could not check whether a newer Grocy version exists.</string>
+  <string name="settings_server_version_up_to_date_title">Grocy is up to date</string>
+  <string name="settings_server_version_up_to_date_message">The server runs Grocy %1$s, the newest version.</string>
+  <string name="settings_server_version_update_title">Grocy update available</string>
+  <string name="settings_server_version_update_message">Grocy %1$s is available, the server runs %2$s. Update the server to get the latest improvements.</string>
   <string name="settings_server_url">Server URL</string>
   <string name="settings_server_version">Grocy version</string>
   <string name="settings_server_version_loading">Loading…</string>
@@ -263,6 +277,42 @@
   <plurals name="masterdata_products_count">
     <item quantity="one">%1$d product</item>
     <item quantity="other">%1$d products</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="one">%1$d location</item>
+    <item quantity="other">%1$d locations</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="one">%1$d store</item>
+    <item quantity="other">%1$d stores</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="one">%1$d quantity unit</item>
+    <item quantity="other">%1$d quantity units</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="one">%1$d product group</item>
+    <item quantity="other">%1$d product groups</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="one">%1$d chore</item>
+    <item quantity="other">%1$d chores</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="one">%1$d battery</item>
+    <item quantity="other">%1$d batteries</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="one">%1$d task category</item>
+    <item quantity="other">%1$d task categories</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="one">%1$d userfield</item>
+    <item quantity="other">%1$d userfields</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="one">%1$d userentity</item>
+    <item quantity="other">%1$d userentities</item>
   </plurals>
 
   <!-- Products -->

@@ -156,6 +156,20 @@
   <string name="settings_reset_description">Setzt jede Einstellung auf ihren Standard zurück</string>
   <string name="settings_server_demo">Öffentlicher Demo-Server</string>
   <string name="settings_server_demo_warning">Alles, was du hier eingibst, ist für alle sichtbar und bleibt es, bis die Demo ihre Änderungen einmal pro Tag zurücksetzt.</string>
+  <string name="settings_server_demo_choose">Anderen Demo-Server wählen</string>
+  <string name="settings_server_demo_servers">Demo-Server</string>
+  <string name="settings_server_demo_servers_info">Jede öffentliche Demo von Grocy ist in einer Sprache eingerichtet und hat ihre eigenen Daten.</string>
+  <string name="settings_server_demo_switch_title">Demo-Server wechseln?</string>
+  <string name="settings_server_demo_switch_message">Die öffentliche Demo von Grocy gibt es auch auf %1$s. Möchtest du zu ihr wechseln, damit auch Produkte, Standorte und alles andere in dieser Sprache sind?</string>
+  <string name="settings_server_demo_switch">Wechseln</string>
+  <string name="settings_server_demo_keep">Beibehalten</string>
+  <string name="settings_server_demo_switch_failed">Der Demo-Server ist nicht erreichbar. Es wurde nichts geändert.</string>
+  <string name="settings_server_version_check">Nach einer neueren Grocy-Version suchen</string>
+  <string name="settings_server_version_check_failed">Es konnte nicht geprüft werden, ob es eine neuere Grocy-Version gibt.</string>
+  <string name="settings_server_version_up_to_date_title">Grocy ist auf dem neuesten Stand</string>
+  <string name="settings_server_version_up_to_date_message">Auf dem Server läuft Grocy %1$s, die neueste Version.</string>
+  <string name="settings_server_version_update_title">Grocy-Update verfügbar</string>
+  <string name="settings_server_version_update_message">Grocy %1$s ist verfügbar, auf dem Server läuft %2$s. Aktualisiere den Server, um die neuesten Verbesserungen zu erhalten.</string>
   <string name="settings_server_url">Server-URL</string>
   <string name="settings_server_version">Grocy-Version</string>
   <string name="settings_server_version_loading">Wird geladen…</string>
@@ -227,6 +241,42 @@
   <plurals name="masterdata_products_count">
     <item quantity="one">%1$d Produkt</item>
     <item quantity="other">%1$d Produkte</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="one">%1$d Standort</item>
+    <item quantity="other">%1$d Standorte</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="one">%1$d Geschäft</item>
+    <item quantity="other">%1$d Geschäfte</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="one">%1$d Mengeneinheit</item>
+    <item quantity="other">%1$d Mengeneinheiten</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="one">%1$d Produktgruppe</item>
+    <item quantity="other">%1$d Produktgruppen</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="one">%1$d Hausarbeit</item>
+    <item quantity="other">%1$d Hausarbeiten</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="one">%1$d Batterie</item>
+    <item quantity="other">%1$d Batterien</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="one">%1$d Aufgabenkategorie</item>
+    <item quantity="other">%1$d Aufgabenkategorien</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="one">%1$d Benutzerfeld</item>
+    <item quantity="other">%1$d Benutzerfelder</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="one">%1$d Benutzerentität</item>
+    <item quantity="other">%1$d Benutzerentitäten</item>
   </plurals>
 
   <!-- Products -->

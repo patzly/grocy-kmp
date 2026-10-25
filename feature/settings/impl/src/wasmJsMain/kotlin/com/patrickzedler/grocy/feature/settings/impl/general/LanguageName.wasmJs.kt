@@ -15,3 +15,11 @@ internal actual fun languageName(tag: String): String =
     }""",
 )
 private external fun displayName(tag: String): String
+
+internal actual fun languageNameComparator(): Comparator<String> =
+    Comparator { a, b -> compareNames(a, b) }
+
+/** The browser's collation of its language (navigator.language, the app's). */
+@OptIn(ExperimentalWasmJsInterop::class)
+@JsFun("(a, b) => a.localeCompare(b)")
+private external fun compareNames(a: String, b: String): Int

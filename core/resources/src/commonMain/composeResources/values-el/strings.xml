@@ -156,6 +156,20 @@
   <string name="settings_reset_description">Επαναφέρει κάθε ρύθμιση στην προεπιλογή της</string>
   <string name="settings_server_demo">Δημόσιος διακομιστής επίδειξης</string>
   <string name="settings_server_demo_warning">Ό,τι εισάγετε εδώ είναι ορατό σε όλους και παραμένει έτσι μέχρι η επίδειξη να επαναφέρει τις αλλαγές της μία φορά την ημέρα.</string>
+  <string name="settings_server_demo_choose">Επιλογή άλλου διακομιστή επίδειξης</string>
+  <string name="settings_server_demo_servers">Διακομιστές επίδειξης</string>
+  <string name="settings_server_demo_servers_info">Κάθε δημόσια επίδειξη του Grocy είναι ρυθμισμένη σε μία γλώσσα και έχει τα δικά της δεδομένα.</string>
+  <string name="settings_server_demo_switch_title">Αλλαγή διακομιστή επίδειξης;</string>
+  <string name="settings_server_demo_switch_message">Η δημόσια επίδειξη του Grocy είναι διαθέσιμη και στα %1$s. Θέλεις να μεταβείς σε αυτήν, ώστε και τα προϊόντα, οι τοποθεσίες και όλα τα άλλα να είναι σε αυτή τη γλώσσα;</string>
+  <string name="settings_server_demo_switch">Αλλαγή</string>
+  <string name="settings_server_demo_keep">Διατήρηση τρέχοντος</string>
+  <string name="settings_server_demo_switch_failed">Ο διακομιστής επίδειξης δεν είναι προσβάσιμος. Δεν άλλαξε τίποτα.</string>
+  <string name="settings_server_version_check">Έλεγχος για νεότερη έκδοση του Grocy</string>
+  <string name="settings_server_version_check_failed">Δεν ήταν δυνατός ο έλεγχος για νεότερη έκδοση του Grocy.</string>
+  <string name="settings_server_version_up_to_date_title">Το Grocy είναι ενημερωμένο</string>
+  <string name="settings_server_version_up_to_date_message">Ο διακομιστής εκτελεί το Grocy %1$s, την πιο πρόσφατη έκδοση.</string>
+  <string name="settings_server_version_update_title">Διαθέσιμη ενημέρωση του Grocy</string>
+  <string name="settings_server_version_update_message">Το Grocy %1$s είναι διαθέσιμο, ο διακομιστής εκτελεί το %2$s. Ενημέρωσε τον διακομιστή για τις πιο πρόσφατες βελτιώσεις.</string>
   <string name="settings_server_url">URL διακομιστή</string>
   <string name="settings_server_version">Έκδοση Grocy</string>
   <string name="settings_server_version_loading">Φόρτωση…</string>
@@ -227,6 +241,42 @@
   <plurals name="masterdata_products_count">
     <item quantity="one">%1$d προϊόν</item>
     <item quantity="other">%1$d προϊόντα</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="one">%1$d τοποθεσία</item>
+    <item quantity="other">%1$d τοποθεσίες</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="one">%1$d κατάστημα</item>
+    <item quantity="other">%1$d καταστήματα</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="one">%1$d μονάδα ποσότητας</item>
+    <item quantity="other">%1$d μονάδες ποσότητας</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="one">%1$d ομάδα προϊόντων</item>
+    <item quantity="other">%1$d ομάδες προϊόντων</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="one">%1$d μικροδουλειά</item>
+    <item quantity="other">%1$d μικροδουλειές</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="one">%1$d μπαταρία</item>
+    <item quantity="other">%1$d μπαταρίες</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="one">%1$d κατηγορία εργασιών</item>
+    <item quantity="other">%1$d κατηγορίες εργασιών</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="one">%1$d πεδίο χρήστη</item>
+    <item quantity="other">%1$d πεδία χρηστών</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="one">%1$d οντότητα χρήστη</item>
+    <item quantity="other">%1$d οντότητες χρήστη</item>
   </plurals>
 
   <!-- Products -->

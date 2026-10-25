@@ -33,6 +33,8 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.core.splashscreen)
+            // A popup closing during a predictive back gesture crashed older versions
+            implementation(libs.androidx.navigationevent.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlinx.serialization.json)

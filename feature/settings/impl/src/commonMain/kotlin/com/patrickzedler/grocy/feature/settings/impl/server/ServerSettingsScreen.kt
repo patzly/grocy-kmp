@@ -1,14 +1,8 @@
 package com.patrickzedler.grocy.feature.settings.impl.server
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -18,7 +12,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,23 +23,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.LiveRegionMode
-import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.data.log.LogSource
+import com.patrickzedler.grocy.core.data.server.GrocyVersionCheck
 import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
-import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
-import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.design.component.TextDialog
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
-import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.resources.Res
@@ -57,8 +48,10 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_dns
 import com.patrickzedler.grocy.core.resources.ic_rounded_info
 import com.patrickzedler.grocy.core.resources.ic_rounded_logout
 import com.patrickzedler.grocy.core.resources.ic_rounded_refresh
+import com.patrickzedler.grocy.core.resources.ic_rounded_warning
 import com.patrickzedler.grocy.core.resources.settings_server
 import com.patrickzedler.grocy.core.resources.settings_server_demo
+import com.patrickzedler.grocy.core.resources.settings_server_demo_switch_failed
 import com.patrickzedler.grocy.core.resources.settings_server_demo_warning
 import com.patrickzedler.grocy.core.resources.settings_server_logout
 import com.patrickzedler.grocy.core.resources.settings_server_logout_description
@@ -72,8 +65,14 @@ import com.patrickzedler.grocy.core.resources.settings_server_restart_message
 import com.patrickzedler.grocy.core.resources.settings_server_restart_title
 import com.patrickzedler.grocy.core.resources.settings_server_url
 import com.patrickzedler.grocy.core.resources.settings_server_version
+import com.patrickzedler.grocy.core.resources.settings_server_version_check_failed
 import com.patrickzedler.grocy.core.resources.settings_server_version_loading
 import com.patrickzedler.grocy.core.resources.settings_server_version_unknown
+import com.patrickzedler.grocy.core.resources.settings_server_version_up_to_date_message
+import com.patrickzedler.grocy.core.resources.settings_server_version_up_to_date_title
+import com.patrickzedler.grocy.core.resources.settings_server_version_update_message
+import com.patrickzedler.grocy.core.resources.settings_server_version_update_title
+import com.patrickzedler.grocy.feature.settings.impl.QuestionDialog
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuActions
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuViewModel
 import com.patrickzedler.grocy.feature.settings.impl.SettingsScaffold
@@ -96,6 +95,20 @@ internal fun ServerSettingsScreen(
     val reloadState by viewModel.reloadState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     var showLogoutDialog by rememberSaveable { mutableStateOf(false) }
+    var showDemoServerDialog by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(viewModel.error) {
+        val message = when (viewModel.error) {
+            ServerSettingsError.DEMO_SERVER_UNREACHABLE ->
+                Res.string.settings_server_demo_switch_failed
+            ServerSettingsError.VERSION_CHECK_FAILED ->
+                Res.string.settings_server_version_check_failed
+            null -> return@LaunchedEffect
+        }
+        // Cleared afterwards, a new key would cancel the snackbar while it shows
+        snackbarHostState.showSnackbar(getString(message))
+        viewModel.onErrorShown()
+    }
 
     LaunchedEffect(reloadState.error) {
         val message = when (reloadState.error) {
@@ -116,6 +129,20 @@ internal fun ServerSettingsScreen(
             },
             onLater = viewModel::onRestartAnswered,
         )
+    }
+
+    if (showDemoServerDialog) {
+        server?.let {
+            DemoServerDialog(
+                selectedUrl = it.connection.serverUrl,
+                onDemoServerSelected = viewModel::switchDemoServer,
+                onDismissRequest = { showDemoServerDialog = false },
+            )
+        }
+    }
+
+    viewModel.versionCheck?.let { check ->
+        VersionCheckDialog(check = check, onDismissRequest = viewModel::onVersionCheckShown)
     }
 
     if (showLogoutDialog) {
@@ -141,7 +168,11 @@ internal fun ServerSettingsScreen(
             serverSettings(
                 server = it,
                 isLoadingVersion = viewModel.isLoadingVersion,
+                isSwitchingDemoServer = viewModel.isSwitchingDemoServer,
+                isCheckingVersion = viewModel.isCheckingVersion,
                 isReloading = reloadState.isRefreshing,
+                onUrlClick = { showDemoServerDialog = true },
+                onVersionClick = viewModel::checkGrocyVersion,
                 onReloadClick = viewModel::reloadConfiguration,
                 onLogoutClick = { showLogoutDialog = true },
             )
@@ -153,24 +184,35 @@ internal fun ServerSettingsScreen(
 private fun LazyListScope.serverSettings(
     server: ServerState,
     isLoadingVersion: Boolean,
+    isSwitchingDemoServer: Boolean,
+    isCheckingVersion: Boolean,
     isReloading: Boolean,
+    onUrlClick: () -> Unit,
+    onVersionClick: () -> Unit,
     onReloadClick: () -> Unit,
     onLogoutClick: () -> Unit,
 ) {
     if (server.isDemo) {
-        insetItem(key = "demo") {
-            DemoWarningCard()
+        segmentedGroup(key = "demo") {
+            DemoWarningItem()
         }
     }
     segmentedGroup(key = "server") {
-        InfoItem(
+        ValueItem(
             title = stringResource(Res.string.settings_server_url),
             value = server.connection.serverUrl,
             icon = Res.drawable.ic_rounded_dns,
             index = 0,
             count = 2,
+            // Only a demo can be swapped for another, an own server needs a new login
+            onClick = if (server.isDemo) {
+                { if (!isSwitchingDemoServer) onUrlClick() }
+            } else {
+                null
+            },
+            isLoading = isSwitchingDemoServer,
         )
-        InfoItem(
+        ValueItem(
             title = stringResource(Res.string.settings_server_version),
             value = server.grocyVersion ?: stringResource(
                 if (isLoadingVersion) {
@@ -182,6 +224,9 @@ private fun LazyListScope.serverSettings(
             icon = Res.drawable.ic_rounded_info,
             index = 1,
             count = 2,
+            // A second tap would only repeat the running check
+            onClick = { if (!isCheckingVersion) onVersionClick() },
+            isLoading = isCheckingVersion,
         )
     }
     segmentedGroup(key = "actions") {
@@ -211,58 +256,84 @@ private fun LazyListScope.serverSettings(
 }
 
 /**
- * Grocy's public demo: everything entered there is public until the daily reset. A card of its
- * own above the items, so the warning cannot be taken for a setting.
+ * Grocy's public demo: everything entered there is public until the daily reset. A group of
+ * its own above the server, in the error colors, so the warning cannot be overlooked or taken
+ * for a setting.
  */
-@Composable
-private fun DemoWarningCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.errorContainer,
-            contentColor = MaterialTheme.colorScheme.onErrorContainer,
-        ),
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-            Text(
-                text = stringResource(Res.string.settings_server_demo),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.semantics { heading() },
-            )
-            Text(
-                text = stringResource(Res.string.settings_server_demo_warning),
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun InfoItem(
+private fun DemoWarningItem() {
+    val containerColor = MaterialTheme.colorScheme.error
+    val contentColor = MaterialTheme.colorScheme.onError
+
+    ListItem(
+        modifier = Modifier.fillMaxWidth(),
+        leadingContent = { SettingIcon(Res.drawable.ic_rounded_warning) },
+        supportingContent = { Text(stringResource(Res.string.settings_server_demo_warning)) },
+        shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
+        colors = ListItemDefaults.segmentedColors(
+            containerColor = containerColor,
+            contentColor = contentColor,
+            leadingContentColor = contentColor,
+            supportingContentColor = contentColor,
+        ),
+        content = { Text(stringResource(Res.string.settings_server_demo)) },
+    )
+}
+
+/** A value of the server, clickable if [onClick] is given, with a loading indicator at its end. */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun ValueItem(
     title: String,
     value: String,
     icon: DrawableResource,
     index: Int,
     count: Int,
+    onClick: (() -> Unit)? = null,
+    isLoading: Boolean = false,
 ) {
-    ListItem(
-        modifier = Modifier.fillMaxWidth(),
-        leadingContent = { SettingIcon(icon) },
-        // The version arrives later on a first visit
-        supportingContent = {
-            Text(
-                text = value,
-                modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
-            )
-        },
-        shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
-        colors = SegmentedListDefaults.colors(),
-        content = { Text(title) },
-    )
+    val haptic = LocalHapticFeedback.current
+    val shapes = ListItemDefaults.segmentedShapes(index = index, count = count)
+    val trailing: (@Composable () -> Unit)? = if (isLoading) {
+        { LoadingIndicator(modifier = Modifier.size(40.dp)) }
+    } else {
+        null
+    }
+    // The version arrives later on a first visit, a switched demo changes the address
+    val supporting: @Composable () -> Unit = {
+        Text(
+            text = value,
+            modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+        )
+    }
+
+    if (onClick == null) {
+        ListItem(
+            modifier = Modifier.fillMaxWidth(),
+            leadingContent = { SettingIcon(icon) },
+            trailingContent = trailing,
+            supportingContent = supporting,
+            shapes = shapes,
+            colors = SegmentedListDefaults.colors(),
+            content = { Text(title) },
+        )
+    } else {
+        SegmentedListItem(
+            onClick = {
+                haptic.confirm()
+                onClick()
+            },
+            shapes = shapes,
+            colors = SegmentedListDefaults.colors(),
+            modifier = Modifier.fillMaxWidth().clickCursor(),
+            verticalAlignment = Alignment.CenterVertically,
+            leadingContent = { SettingIcon(icon) },
+            trailingContent = trailing,
+            supportingContent = supporting,
+            content = { Text(title) },
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -333,72 +404,33 @@ private fun LogoutDialog(
     )
 }
 
-/** A question with two answers; dismissing the dialog counts as [onDismiss]. */
+/** The answer of a version check; a newer Grocy links to its release. */
 @Composable
-private fun QuestionDialog(
-    title: String,
-    message: String,
-    confirmText: String,
-    dismissText: String,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit,
+private fun VersionCheckDialog(
+    check: GrocyVersionCheck,
+    onDismissRequest: () -> Unit,
 ) {
-    val haptic = LocalHapticFeedback.current
-
-    ScrollableAlertDialog(onDismissRequest = onDismiss) {
-        QuestionDialogContent(
-            title = title,
-            message = message,
-            confirmText = confirmText,
-            dismissText = dismissText,
-            onConfirmClick = {
-                haptic.confirm()
-                onConfirm()
-            },
-            onDismissClick = {
-                haptic.confirm()
-                onDismiss()
-            },
+    when (check) {
+        is GrocyVersionCheck.UpToDate -> TextDialog(
+            title = stringResource(Res.string.settings_server_version_up_to_date_title),
+            text = stringResource(
+                Res.string.settings_server_version_up_to_date_message,
+                check.serverVersion,
+            ),
+            onDismissRequest = onDismissRequest,
         )
-    }
-}
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-private fun QuestionDialogContent(
-    title: String,
-    message: String,
-    confirmText: String,
-    dismissText: String,
-    onConfirmClick: () -> Unit = {},
-    onDismissClick: () -> Unit = {},
-) {
-    ScrollableAlertDialogContent(
-        title = { Text(title) },
-        confirmButton = {
-            TextButton(
-                onClick = onConfirmClick,
-                modifier = Modifier.clickCursor(),
-                shapes = ButtonDefaults.shapes(),
-            ) {
-                Text(confirmText)
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = onDismissClick,
-                modifier = Modifier.clickCursor(),
-                shapes = ButtonDefaults.shapes(),
-            ) {
-                Text(dismissText)
-            }
-        },
-    ) {
-        Text(
-            text = message,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        is GrocyVersionCheck.Available -> TextDialog(
+            title = stringResource(Res.string.settings_server_version_update_title),
+            text = stringResource(
+                Res.string.settings_server_version_update_message,
+                check.latestVersion,
+                check.serverVersion,
+            ),
+            onDismissRequest = onDismissRequest,
+            link = check.releaseUrl,
         )
+        // Shown as snackbar
+        GrocyVersionCheck.Failed -> Unit
     }
 }
 
@@ -420,23 +452,14 @@ private fun ServerSettingsDemoPreview() {
             serverSettings(
                 server = ServerState(ServerConnection.Demo(), grocyVersion = "4.7.1"),
                 isLoadingVersion = false,
+                isSwitchingDemoServer = false,
+                isCheckingVersion = true,
                 isReloading = false,
+                onUrlClick = {},
+                onVersionClick = {},
                 onReloadClick = {},
                 onLogoutClick = {},
             )
         }
-    }
-}
-
-@Preview
-@Composable
-private fun LogoutDialogPreview() {
-    GrocyTheme {
-        QuestionDialogContent(
-            title = stringResource(Res.string.settings_server_logout_title),
-            message = stringResource(Res.string.settings_server_logout_message),
-            confirmText = stringResource(Res.string.settings_server_logout),
-            dismissText = stringResource(Res.string.action_cancel),
-        )
     }
 }

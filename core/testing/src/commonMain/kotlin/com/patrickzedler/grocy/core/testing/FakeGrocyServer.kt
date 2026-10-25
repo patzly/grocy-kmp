@@ -1,5 +1,7 @@
 package com.patrickzedler.grocy.core.testing
 
+import com.patrickzedler.grocy.core.data.server.GROCY_GITHUB_REPOSITORY
+import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import com.patrickzedler.grocy.core.network.IngressSession
@@ -26,6 +28,9 @@ import kotlinx.io.IOException
  *
  * Home Assistant connections get an ingress session from the fake as well; their requests reach
  * the same responses, below [INGRESS_PATH].
+ *
+ * [grocyReleases] reads Grocy's GitHub releases from the same fake, whose newest one is the
+ * server's version until a test answers [GROCY_RELEASE_PATH] differently.
  */
 class FakeGrocyServer(
     requestDispatcher: CoroutineDispatcher? = null,
@@ -75,8 +80,10 @@ class FakeGrocyServer(
         reuseHandlers = true
     }
 
+    private val httpClient = createGrocyHttpClient(MockEngine(engineConfig))
+
     val api = GrocyApi(
-        httpClient = createGrocyHttpClient(MockEngine(engineConfig)),
+        httpClient = httpClient,
         ingressSessionSource = {
             ingressFailure?.let { throw it }
             IngressSession(ingressPath = INGRESS_PATH, sessionId = "ingress-session")
@@ -85,8 +92,11 @@ class FakeGrocyServer(
         apiKeyAsQueryParameter = false,
     )
 
+    val grocyReleases = GitHubReleases(httpClient, GROCY_GITHUB_REPOSITORY)
+
     init {
         respond(SYSTEM_INFO_PATH, body = SYSTEM_INFO_JSON)
+        respond(GROCY_RELEASE_PATH, body = grocyReleaseJson("4.7.1"))
         respond(USER_PATH, body = USER_JSON)
         MasterDataJson.defaults.forEach { (path, body) -> respond(path, body = body) }
         respond(
@@ -126,6 +136,13 @@ class FakeGrocyServer(
         const val USER_PATH = "/api/user"
         const val PRODUCTS_PATH = "/api/objects/products"
         const val INGRESS_PATH = "/api/hassio_ingress/fake-token"
+        const val GROCY_RELEASE_PATH = "/repos/$GROCY_GITHUB_REPOSITORY/releases/latest"
+
+        /** Grocy's newest release on GitHub as the REST API describes it. */
+        fun grocyReleaseJson(version: String): String =
+            """{"tag_name":"v$version","target_commitish":"master",""" +
+                """"html_url":"https://github.com/$GROCY_GITHUB_REPOSITORY/releases/""" +
+                """tag/v$version"}"""
 
         const val SYSTEM_INFO_JSON =
             """{"grocy_version":{"Version":"4.7.1","ReleaseDate":"2026-09-04"},""" +

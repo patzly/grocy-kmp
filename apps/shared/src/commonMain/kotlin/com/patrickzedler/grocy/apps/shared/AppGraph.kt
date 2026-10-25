@@ -5,6 +5,7 @@ import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.scanner.ScannerRepository
+import com.patrickzedler.grocy.core.data.server.GROCY_GITHUB_REPOSITORY
 import com.patrickzedler.grocy.core.data.server.ServerRepository
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
@@ -60,6 +61,7 @@ class AppGraph(
     private val serverRepository = ServerRepository(
         connection = platform.credentialStore.connection,
         masterDataRepository = masterDataRepository,
+        grocyReleases = GitHubReleases(httpClient, GROCY_GITHUB_REPOSITORY),
         scope = appScope,
     )
 

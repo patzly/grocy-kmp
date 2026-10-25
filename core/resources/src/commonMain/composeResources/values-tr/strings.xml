@@ -156,6 +156,20 @@
   <string name="settings_reset_description">Tüm ayarları varsayılan değerlerine döndürür</string>
   <string name="settings_server_demo">Herkese açık demo sunucusu</string>
   <string name="settings_server_demo_warning">Buraya girdiğiniz her şey herkes tarafından görülebilir ve demo değişikliklerini günde bir kez sıfırlayana kadar öyle kalır.</string>
+  <string name="settings_server_demo_choose">Başka bir demo sunucusu seç</string>
+  <string name="settings_server_demo_servers">Demo sunucuları</string>
+  <string name="settings_server_demo_servers_info">Grocy’nin her herkese açık demosu tek bir dilde kurulmuştur ve kendi verilerine sahiptir.</string>
+  <string name="settings_server_demo_switch_title">Demo sunucusu değiştirilsin mi?</string>
+  <string name="settings_server_demo_switch_message">Grocy’nin herkese açık demosu %1$s dilinde de mevcut. Ürünler, konumlar ve diğer her şey de bu dilde olsun diye ona geçmek ister misin?</string>
+  <string name="settings_server_demo_switch">Değiştir</string>
+  <string name="settings_server_demo_keep">Mevcut olanı koru</string>
+  <string name="settings_server_demo_switch_failed">Demo sunucusuna ulaşılamadı. Hiçbir şey değiştirilmedi.</string>
+  <string name="settings_server_version_check">Daha yeni bir Grocy sürümünü ara</string>
+  <string name="settings_server_version_check_failed">Daha yeni bir Grocy sürümü olup olmadığı kontrol edilemedi.</string>
+  <string name="settings_server_version_up_to_date_title">Grocy güncel</string>
+  <string name="settings_server_version_up_to_date_message">Sunucuda en yeni sürüm olan Grocy %1$s çalışıyor.</string>
+  <string name="settings_server_version_update_title">Grocy güncellemesi mevcut</string>
+  <string name="settings_server_version_update_message">Grocy %1$s mevcut, sunucuda %2$s çalışıyor. En son iyileştirmeler için sunucuyu güncelle.</string>
   <string name="settings_server_url">Sunucu URL’si</string>
   <string name="settings_server_version">Grocy sürümü</string>
   <string name="settings_server_version_loading">Yükleniyor…</string>
@@ -227,6 +241,42 @@
   <plurals name="masterdata_products_count">
     <item quantity="one">%1$d ürün</item>
     <item quantity="other">%1$d ürün</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="one">%1$d lokasyon</item>
+    <item quantity="other">%1$d lokasyon</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="one">%1$d market</item>
+    <item quantity="other">%1$d market</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="one">%1$d miktar birimi</item>
+    <item quantity="other">%1$d miktar birimi</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="one">%1$d ürün grubu</item>
+    <item quantity="other">%1$d ürün grubu</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="one">%1$d ev işi</item>
+    <item quantity="other">%1$d ev işi</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="one">%1$d pil</item>
+    <item quantity="other">%1$d pil</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="one">%1$d görev kategorisi</item>
+    <item quantity="other">%1$d görev kategorisi</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="one">%1$d kullanıcı alanı</item>
+    <item quantity="other">%1$d kullanıcı alanı</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="one">%1$d kullanıcı varlığı</item>
+    <item quantity="other">%1$d kullanıcı varlığı</item>
   </plurals>
 
   <!-- Products -->

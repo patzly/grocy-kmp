@@ -230,9 +230,10 @@ class MasterDataRepository(
     }
 
     /** Downloads only the server's version, which an update of the server changes. */
-    suspend fun refreshSystemInfo() {
+    suspend fun refreshSystemInfo(): SystemInfo {
         val systemInfo = api.systemInfo(requireConnection())
         dao.upsertServerValue(value(SYSTEM_INFO, SystemInfo.serializer(), systemInfo))
+        return systemInfo
     }
 
     private suspend fun storeConfiguration(

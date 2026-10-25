@@ -19,8 +19,9 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   hides the ones whose feature flag is off (`MasterDataCategory.isAvailable`), from the eager
   `ServerRepository.serverConfig` (`MasterDataDependencies.serverConfig`), so they show in the
   first frame: on the web a refresh's write transaction keeps the single database connection
-  busy for seconds while animations run, and reads wait behind it; Products shows
-  the number of products once it is known (stored products or a finished download).
+  busy for seconds while animations run, and reads wait behind it; every category shows its
+  number of objects (`MasterDataCategory.count`, disabled ones included) once it is known (stored
+  objects or a finished download), without holding back the categories.
 - Lists and their forms are list-detail scenes of Navigation 3 (`listPaneMetadata` /
   `detailPaneMetadata` of `core:navigation`, Material's `ListDetailSceneStrategy` in
   `GrocyNavDisplay`): from Material's expanded window width on (840.dp, the default pane
@@ -29,8 +30,15 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   the other. Both panes start half and half with Material's `VerticalDragHandle` between them
   (`PaneAnchors` 1/2, 1/3, 2/3: drag, the screen reader's action or the arrow keys, a tick per
   snap); the pane expansion overrides the hinge avoidance, the middle lies on a book posture's
-  fold anyway. Beside its list a form has no back button (the list's leaves both) and the list's
-  small app bar in its color (`SegmentedListScreen(isBesideList)`), so both bars line up. Forms are `DetailRoute`s opened with `Navigator.openDetail` (replaces the form beside
+  fold anyway. Both panes are `SegmentedListScreen(pane = ScreenPane.List / Detail)`: on a
+  `surfaceContainerHighest` background like the scrolled app bars (`PaneBackgroundDecorator`, a
+  `SceneDecoratorStrategy` of `GrocyNavDisplay` for two-pane scenes of lists, so it also fills
+  the space between the panes) with 16.dp margin at the screen's start, end and bottom edges,
+  each with a small app bar in its scrolled color (buttons included) on that background, and
+  below it a `surfaceContainer` surface with
+  `extraLargeIncreased` corners that holds the list, the background of single screens, so the
+  content looks the same in every window size (`paneMargin`, `paneSurface`;
+  `DetailPlaceholder` draws the same surface below the bar's height). Beside its list a form has no back button (the list's leaves both). Forms are `DetailRoute`s opened with `Navigator.openDetail` (replaces the form beside
   the list), lists leave with `goBack(from = route)`. A form with unsaved changes asks
   (`UnsavedChangesDialog`) also when another item of the list beside it is chosen or the list is
   left: `rememberLeaveGuard(route)` + `LeaveGuard.onLeaveRequest`. Beside a form
@@ -57,7 +65,8 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   groups, charge cycle of batteries) and the pure `buildObjectList` filters, sorts (empty values
   last, ties by name) and searches every column. Userfields filter by entity (Grocy's entity list:
   OpenAPI's exposed entities, `userentity-<name>`, users; `UserfieldsRoute(entity)` from every
-  "Configure userfields"), userentities link to their fields. The filter chips
+  "Configure userfields"), userentities link to their fields (narrow icon button and the item's
+  menu as a standard `ButtonGroup`, 12.dp apart). The filter chips
   (`FilterChipRow`, `DropdownFilterChip`, `ShowDisabledChip`, `SortChip`, `ClearFilterChip`), the
   search item and the empty states (`ListParts.kt`) are shared with the product list.
 - Forms of the other categories build on `ObjectFormViewModel` (load, refresh for unknown ids,
@@ -171,10 +180,18 @@ as one group (`SettingsCategory`), then "Backup and restore" and "Reset all" as 
 Built so far: the overview, General (language, theme, contrast) and Server. The other category
 pages, backup and reset follow; `settingsEntries` wires their clicks to nothing until then.
 
-- Server (`ServerSettingsScreen`): on the demo server first a red `errorContainer` `Card` (a
-  plain card, not a list item, no icon: a `titleMedium` title and `bodyMedium` text) warning
-  that everything entered is public until the demo resets its changes once a day; then server URL and Grocy version, then "Reload configuration" and
-  "Logout". `ServerRepository` (`core:data`, eager `StateFlow` in the app scope) combines the
+- Server (`ServerSettingsScreen`): on the demo server first a group of its own with one
+  non-clickable item in `error`/`onError` (warning icon, "Public demo server", supporting text
+  that everything entered is public until the demo resets its changes once a day); then server
+  URL and Grocy version, then "Reload configuration" and "Logout". On a demo the URL opens
+  `DemoServerDialog`: all of Grocy's demos (`DemoServers` of `core:model`, the language menu the
+  demos show themselves, e.g. `https://de.demo.grocy.info`; `demoServerFor` maps app tags such as
+  "nb" and "iw"), named like the language dialog. `DemoServerSwitcher` checks the chosen demo
+  (`AuthRepository.verify`, a demo that is down never replaces a working one), logs in to it
+  (clears the data) and downloads its configuration. The version checks Grocy's newest GitHub
+  release (`ServerRepository.checkGrocyVersion`: the server's version downloaded anew, the
+  stored one offline, compared with `releases/latest` of `grocy/grocy`): up to date or a newer
+  version with a link to its release as `TextDialog`, a failed check as snackbar. `ServerRepository` (`core:data`, eager `StateFlow` in the app scope) combines the
   stored connection with the stored `SystemInfo` (`server_values` key `system_info`, written by
   every `MasterDataRepository.refresh`); opening the screen downloads the version again quietly
   (an update of the server changes it). Reloading downloads version, `/system/config` and user
@@ -205,7 +222,9 @@ pages, backup and reset follow; `settingsEntries` wires their clicks to nothing 
   `isDynamicColorAvailable` (Android 12+); its contrast follows the system from Android 14 on
   (`dynamicColorFollowsSystemContrast`), so the contrast buttons are disabled with dynamic
   color. `HueSlider` (`core:design`) is the rainbow slider, colored with the same chroma and
-  tone as the theme's seed. Below it a button group chooses MaterialKolor's `PaletteStyle`
+  tone as the theme's seed; it vibrates exactly once per step (`SliderStepTracker`: drags
+  report a step on every move) and ignores the stored hue while it is dragged or pressed (the
+  value arrives late and would move the thumb back, which ticked twice). Below it a button group chooses MaterialKolor's `PaletteStyle`
   (`AppPaletteStyle`: tonal spot, neutral, vibrant, rainbow, monochrome; the ones that do not
   fit go into its overflow menu; stored styles that were removed fall back to tonal spot). Changing light/dark, color source, style or contrast fades the whole
   app into the new colors (`animateColorScheme`: one animation blends every color of the
@@ -216,8 +235,17 @@ pages, backup and reset follow; `settingsEntries` wires their clicks to nothing 
   `LocalesConfigTest` checks the lists, that every language has its `values-<tag>/strings.xml`
   and that translations keep the placeholders of English. The dialog shows only the names, from
   the platform in the language itself (`languageName`: `Locale.getDisplayName` /
-  `Intl.DisplayNames`); a regional system language resolves to its base translation
-  (`resolveAppLanguage`, "de-CH" uses "de"). Compose Multiplatform takes the text language from
+  `Intl.DisplayNames`), sorted by the collation of the app language
+  (`languageNameComparator`: `Collator` / `localeCompare`, so "Čeština" follows "Català"); it
+  opens scrolled to the chosen language, `DemoServerDialog` to the current demo; a regional system language resolves to its base translation
+  (`resolveAppLanguage`, "de-CH" uses "de"). Choosing a language in the app while logged in to
+  a demo first asks whether to switch to the demo in that language too (only if one exists and
+  it is not the current demo; "System default" means the language the app will show, from
+  `systemLanguageTag`: Android's system resources, on the web the browser language that
+  `index.html` keeps in `window.grocySystemLanguage` before overriding it). The question comes
+  before the language is applied, which restarts the screen; switching applies the language
+  only once the demo answered, "Keep current" or dismissing applies it right away. Changes from
+  Android's per-app language settings never ask. Compose Multiplatform takes the text language from
   `Locale.getDefault()` on Android, so `AndroidAppLanguageStore` works like Tack: from Android 13
   on `LocaleManager` (system settings show it, the system recreates the activity); before, the
   tag is stored in a plain preference, `MainActivity.attachBaseContext` wraps the context and
@@ -287,10 +315,12 @@ for `SegmentedListItem`s, and `AppBarIconButton` for app bar actions.
   (`TopAppBarDefaults.topAppBarColors(containerColor = surfaceContainer,
   scrolledContainerColor = surfaceContainerHighest)` plus a scroll behavior connected via
   `nestedScroll`).
-- App bar actions (navigation icon included) are `FilledIconButton`s with
-  `containerColor = surfaceContainerHighest`, `contentColor = onSurface`, inside a
-  `HapticTooltipBox`; `NavigateBackButton` and the menu button in `AboutScreen` show how. When the
-  bar scrolls it takes the same color, so actions and bar become one.
+- App bar actions (navigation icon included) are `FilledIconButton`s with `contentColor =
+  onSurface` inside a `HapticTooltipBox`: `AppBarIconButton`, which `NavigateBackButton` and
+  `AppBarOverflowMenu` use. Their container follows the bar (`LocalAppBarButtonColor`, blended
+  with the bar's scroll): `surfaceContainerHigh` on the `surfaceContainer` bar,
+  `surfaceContainerHighest` on the scrolled bar, so actions and bar become one; screens without
+  `SegmentedListScreen` get `surfaceContainerHigh`.
 - Nothing except group titles sits directly on the `surfaceContainer` background. Exceptions: the
   header of `LoginChoiceScreen` (logo, welcome title, subtitle, centered above the choices) and
   the primary action button that ends a form (`LoginManualScreen`'s Connect, full list width in
@@ -500,6 +530,13 @@ both modules to `apps/shared/build.gradle.kts`, and add the new routes to `allRo
 - Every route must be registered in the feature's `SerializersModule` under
   `polymorphic(NavKey::class)`. Wasm has no reflection, so a missing registration breaks state
   saving at runtime, not at compile time.
+- `GrocyNavDisplay` gives every entry its own `LookaheadScope` (an entry decorator): a list
+  moving out of the list-detail scene when the window gets narrower otherwise had its items ask
+  the left scene's lookahead pass for text baselines, which threw (`NullPointerException` in
+  `LookaheadDelegate`) and broke the layout.
+- Android uses androidx `navigationevent` 1.2.0 (`apps:shared`, newer than the JetBrains 1.1.0
+  of the other platforms): older versions crashed when a popup (an item's menu) closed during a
+  predictive back gesture; `NavigationEventVersionTest` guards it.
 - Features only use `Navigator` (`navigate`, `goBack`, `replaceAll`, `openDetail`,
   `goBack(from)`, `currentRoute`), never the back stack. List-detail: see "Master data".
 - Each feature exposes `fun EntryProviderScope<NavKey>.xxxEntries(dependencies, navigator)`.
@@ -736,7 +773,10 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   puts its modifier on an outer `Box`, because Material's `TooltipBox` loses parent data such as `align`.
   Tooltips show on long press, mouse hover and keyboard focus, never after a plain tap or click:
   Compose on the web focuses a clicked button, so `TooltipPressTracker` tells a pointer focus
-  (`TooltipTrigger.PointerFocus`) from keyboard focus and long press.
+  (`TooltipTrigger.PointerFocus`) from keyboard focus and long press. Focus counts as keyboard
+  focus only while the keyboard is in use (`rememberKeyboardInput`: Android's input mode, on the
+  web the last of `keydown` and `pointerdown`), because a screen opened by a click focuses its
+  first button (the back button) by itself.
 - `LocalPointerKind` (`core:design`, provided and tracked by `GrocyApp` with
   `trackPointerKind`): whether the user works with a mouse or trackpad right now. It starts with
   the device (`(pointer: fine)` in browsers, `FEATURE_PC` on Android) and follows the pointer of

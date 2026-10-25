@@ -2,13 +2,17 @@ package com.patrickzedler.grocy.feature.settings.impl.server
 
 import com.patrickzedler.grocy.core.data.auth.AuthRepository
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.server.GrocyVersionCheck
 import com.patrickzedler.grocy.core.data.server.ServerRepository
 import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.core.database.createInMemoryGrocyDatabase
 import com.patrickzedler.grocy.core.model.ServerConnection
+import com.patrickzedler.grocy.core.model.demoServerFor
 import com.patrickzedler.grocy.core.testing.FakeCredentialStore
 import com.patrickzedler.grocy.core.testing.FakeGrocyServer
+import com.patrickzedler.grocy.core.testing.FakeGrocyServer.Companion.grocyReleaseJson
+import com.patrickzedler.grocy.feature.settings.impl.DemoServerSwitcher
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -56,6 +60,7 @@ class ServerSettingsViewModelTest {
         val serverRepository = ServerRepository(
             connection = credentialStore.connection,
             masterDataRepository = masterDataRepository,
+            grocyReleases = server.grocyReleases,
             scope = backgroundScope + UnconfinedTestDispatcher(testScheduler),
         )
         // At app start the database has long answered when the screen opens
@@ -63,7 +68,11 @@ class ServerSettingsViewModelTest {
         val authRepository = AuthRepository(credentialStore, server.api) {
             masterDataRepository.clear()
         }
-        return ServerSettingsViewModel(serverRepository, authRepository)
+        return ServerSettingsViewModel(
+            serverRepository = serverRepository,
+            authRepository = authRepository,
+            demoServerSwitcher = DemoServerSwitcher(authRepository, serverRepository),
+        )
     }
 
     @Test
@@ -148,5 +157,86 @@ class ServerSettingsViewModelTest {
         assertNull(credentialStore.connection.value)
         // The screen slides out with its content instead of turning empty
         assertEquals(ServerState(apiKey, "4.7.1"), viewModel.server.value)
+    }
+
+    @Test
+    fun otherDemoReplacesTheCurrentOneWithItsConfiguration() = runTest(dispatcher) {
+        credentialStore.save(ServerConnection.Demo())
+        val viewModel = viewModel()
+        advanceUntilIdle()
+        server.requests.clear()
+        val german = demoServerFor("de")!!
+
+        viewModel.switchDemoServer(german)
+        assertTrue(viewModel.isSwitchingDemoServer)
+        advanceUntilIdle()
+
+        assertEquals(ServerConnection.Demo(german.url), credentialStore.connection.value)
+        assertFalse(viewModel.isSwitchingDemoServer)
+        assertTrue("/api/system/config" in server.requestedPaths)
+        assertEquals("4.7.1", viewModel.server.first { it?.grocyVersion != null }?.grocyVersion)
+    }
+
+    @Test
+    fun unreachableDemoKeepsTheCurrentOne() = runTest(dispatcher) {
+        credentialStore.save(ServerConnection.Demo())
+        val viewModel = viewModel()
+        advanceUntilIdle()
+        server.unreachable = true
+
+        viewModel.switchDemoServer(demoServerFor("de")!!)
+        advanceUntilIdle()
+
+        assertEquals(ServerConnection.Demo(), credentialStore.connection.value)
+        assertEquals(ServerSettingsError.DEMO_SERVER_UNREACHABLE, viewModel.error)
+        viewModel.onErrorShown()
+        assertNull(viewModel.error)
+    }
+
+    @Test
+    fun currentDemoIsNotSwitchedTo() = runTest(dispatcher) {
+        credentialStore.save(ServerConnection.Demo())
+        val viewModel = viewModel()
+        advanceUntilIdle()
+        server.requests.clear()
+
+        viewModel.switchDemoServer(demoServerFor("en")!!)
+        advanceUntilIdle()
+
+        assertEquals(emptyList(), server.requestedPaths)
+    }
+
+    @Test
+    fun newerGrocyIsShownWithItsRelease() = runTest(dispatcher) {
+        server.respond(FakeGrocyServer.GROCY_RELEASE_PATH, body = grocyReleaseJson("4.8.0"))
+        val viewModel = viewModel()
+
+        viewModel.checkGrocyVersion()
+        assertTrue(viewModel.isCheckingVersion)
+        advanceUntilIdle()
+
+        assertFalse(viewModel.isCheckingVersion)
+        assertEquals(
+            GrocyVersionCheck.Available(
+                latestVersion = "4.8.0",
+                serverVersion = "4.7.1",
+                releaseUrl = "https://github.com/grocy/grocy/releases/tag/v4.8.0",
+            ),
+            viewModel.versionCheck,
+        )
+        viewModel.onVersionCheckShown()
+        assertNull(viewModel.versionCheck)
+    }
+
+    @Test
+    fun failedVersionCheckIsAnError() = runTest(dispatcher) {
+        server.unreachable = true
+        val viewModel = viewModel()
+
+        viewModel.checkGrocyVersion()
+        advanceUntilIdle()
+
+        assertNull(viewModel.versionCheck)
+        assertEquals(ServerSettingsError.VERSION_CHECK_FAILED, viewModel.error)
     }
 }

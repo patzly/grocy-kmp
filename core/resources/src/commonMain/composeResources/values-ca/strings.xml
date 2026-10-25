@@ -156,6 +156,20 @@
   <string name="settings_reset_description">Torna cada opció al seu valor per defecte</string>
   <string name="settings_server_demo">Servidor de demostració públic</string>
   <string name="settings_server_demo_warning">Tot el que hi introdueixis és visible per a tothom i ho continuarà sent fins que la demostració restableixi els canvis un cop al dia.</string>
+  <string name="settings_server_demo_choose">Tria un altre servidor de demostració</string>
+  <string name="settings_server_demo_servers">Servidors de demostració</string>
+  <string name="settings_server_demo_servers_info">Cada demostració pública de Grocy està configurada en un idioma i té les seves pròpies dades.</string>
+  <string name="settings_server_demo_switch_title">Vols canviar de servidor de demostració?</string>
+  <string name="settings_server_demo_switch_message">La demostració pública de Grocy també està disponible en %1$s. Vols canviar-hi perquè els productes, les ubicacions i tota la resta també estiguin en aquest idioma?</string>
+  <string name="settings_server_demo_switch">Canvia</string>
+  <string name="settings_server_demo_keep">Mantén l’actual</string>
+  <string name="settings_server_demo_switch_failed">No s’ha pogut connectar amb el servidor de demostració. No s’ha canviat res.</string>
+  <string name="settings_server_version_check">Cerca una versió més nova de Grocy</string>
+  <string name="settings_server_version_check_failed">No s’ha pogut comprovar si hi ha una versió més nova de Grocy.</string>
+  <string name="settings_server_version_up_to_date_title">Grocy està actualitzat</string>
+  <string name="settings_server_version_up_to_date_message">El servidor executa Grocy %1$s, la versió més nova.</string>
+  <string name="settings_server_version_update_title">Hi ha una actualització de Grocy</string>
+  <string name="settings_server_version_update_message">Grocy %1$s està disponible i el servidor executa %2$s. Actualitza el servidor per obtenir les últimes millores.</string>
   <string name="settings_server_url">URL del servidor</string>
   <string name="settings_server_version">Versió de Grocy</string>
   <string name="settings_server_version_loading">S’està carregant…</string>
@@ -228,6 +242,51 @@
     <item quantity="one">%1$d producte</item>
     <item quantity="many">%1$d productes</item>
     <item quantity="other">%1$d productes</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="one">%1$d ubicació</item>
+    <item quantity="many">%1$d ubicacions</item>
+    <item quantity="other">%1$d ubicacions</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="one">%1$d botiga</item>
+    <item quantity="many">%1$d botigues</item>
+    <item quantity="other">%1$d botigues</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="one">%1$d unitat</item>
+    <item quantity="many">%1$d unitats</item>
+    <item quantity="other">%1$d unitats</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="one">%1$d grup de productes</item>
+    <item quantity="many">%1$d grups de productes</item>
+    <item quantity="other">%1$d grups de productes</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="one">%1$d feina de casa</item>
+    <item quantity="many">%1$d feines de casa</item>
+    <item quantity="other">%1$d feines de casa</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="one">%1$d bateria</item>
+    <item quantity="many">%1$d bateries</item>
+    <item quantity="other">%1$d bateries</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="one">%1$d categoria de tasca</item>
+    <item quantity="many">%1$d categories de tasca</item>
+    <item quantity="other">%1$d categories de tasca</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="one">%1$d camp d’usuari</item>
+    <item quantity="many">%1$d camps d’usuari</item>
+    <item quantity="other">%1$d camps d’usuari</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="one">%1$d entitat d’usuari</item>
+    <item quantity="many">%1$d entitats d’usuari</item>
+    <item quantity="other">%1$d entitats d’usuari</item>
   </plurals>
 
   <!-- Products -->

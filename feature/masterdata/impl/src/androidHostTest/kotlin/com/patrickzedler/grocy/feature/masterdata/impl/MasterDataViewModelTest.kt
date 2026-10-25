@@ -59,7 +59,7 @@ class MasterDataViewModelTest {
         // Before the database answered anything
         val state = viewModel.state.value
         assertEquals(MasterDataCategory.entries - MasterDataCategory.CHORES, state?.categories)
-        assertNull(state?.productCount)
+        assertNull(state?.counts?.get(MasterDataCategory.PRODUCTS))
     }
 
     @Test
@@ -89,14 +89,24 @@ class MasterDataViewModelTest {
 
     @Test
     fun productCountIncludesDisabledProducts() = runTest(dispatcher) {
-        assertEquals(4, viewModel().state.value?.productCount)
+        assertEquals(4, viewModel().state.value?.counts?.get(MasterDataCategory.PRODUCTS))
+    }
+
+    @Test
+    fun everyCategoryShowsItsNumberOfObjects() = runTest(dispatcher) {
+        val counts = viewModel().state.value?.counts
+
+        assertEquals(2, counts?.get(MasterDataCategory.CHORES))
+        assertEquals(1, counts?.get(MasterDataCategory.BATTERIES))
+        assertEquals(1, counts?.get(MasterDataCategory.TASK_CATEGORIES))
+        assertEquals(1, counts?.get(MasterDataCategory.USERENTITIES))
     }
 
     @Test
     fun noProductsAfterADownloadIsZero() = runTest(dispatcher) {
         environment.server.respond("/api/objects/products", body = "[]")
 
-        assertEquals(0, viewModel().state.value?.productCount)
+        assertEquals(0, viewModel().state.value?.counts?.get(MasterDataCategory.PRODUCTS))
     }
 
     @Test
@@ -106,7 +116,7 @@ class MasterDataViewModelTest {
         val viewModel = viewModel()
 
         // An empty database is no proof that the server has no products
-        assertNull(viewModel.state.value?.productCount)
+        assertNull(viewModel.state.value?.counts?.get(MasterDataCategory.PRODUCTS))
         assertEquals(RefreshError.OFFLINE, viewModel.refresh.value.error)
     }
 
@@ -118,6 +128,6 @@ class MasterDataViewModelTest {
         viewModel.refresh()
         advanceUntilIdle()
 
-        assertEquals(0, viewModel.state.value?.productCount)
+        assertEquals(0, viewModel.state.value?.counts?.get(MasterDataCategory.PRODUCTS))
     }
 }

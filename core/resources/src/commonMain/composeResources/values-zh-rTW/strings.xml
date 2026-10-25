@@ -156,6 +156,20 @@
   <string name="settings_reset_description">將所有設定還原為預設值</string>
   <string name="settings_server_demo">公開示範伺服器</string>
   <string name="settings_server_demo_warning">你在這裡輸入的所有內容對所有人可見，並會一直保留，直到示範每天重設一次變更。</string>
+  <string name="settings_server_demo_choose">選擇其他示範伺服器</string>
+  <string name="settings_server_demo_servers">示範伺服器</string>
+  <string name="settings_server_demo_servers_info">Grocy 的每個公開示範都以一種語言設定，並擁有自己的資料。</string>
+  <string name="settings_server_demo_switch_title">切換示範伺服器？</string>
+  <string name="settings_server_demo_switch_message">Grocy 的公開示範也提供%1$s版本。要切換到該版本，讓產品、位置和其他所有內容也使用這種語言嗎？</string>
+  <string name="settings_server_demo_switch">切換</string>
+  <string name="settings_server_demo_keep">保留目前</string>
+  <string name="settings_server_demo_switch_failed">無法連線至示範伺服器。未做任何變更。</string>
+  <string name="settings_server_version_check">檢查 Grocy 新版本</string>
+  <string name="settings_server_version_check_failed">無法檢查是否有更新的 Grocy 版本。</string>
+  <string name="settings_server_version_up_to_date_title">Grocy 已是最新版本</string>
+  <string name="settings_server_version_up_to_date_message">伺服器執行的是最新版本 Grocy %1$s。</string>
+  <string name="settings_server_version_update_title">Grocy 有可用更新</string>
+  <string name="settings_server_version_update_message">Grocy %1$s 已推出，伺服器執行的是 %2$s。更新伺服器以取得最新改進。</string>
   <string name="settings_server_url">伺服器 URL</string>
   <string name="settings_server_version">Grocy 版本</string>
   <string name="settings_server_version_loading">載入中…</string>
@@ -226,6 +240,33 @@
   <string name="masterdata_userentities">自定義實體</string>
   <plurals name="masterdata_products_count">
     <item quantity="other">%1$d 個物品</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="other">%1$d 個位置</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="other">%1$d 家店家</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="other">%1$d 個數量單位</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="other">%1$d 個物品分類</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="other">%1$d 項家務</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="other">%1$d 個電池</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="other">%1$d 個任務分類</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="other">%1$d 個自定義欄位</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="other">%1$d 個自定義實體</item>
   </plurals>
 
   <!-- Products -->

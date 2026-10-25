@@ -2,13 +2,16 @@
 
 package com.patrickzedler.grocy.feature.masterdata.impl.objects
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.material3.ButtonGroup
+import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,9 +24,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
@@ -36,6 +39,7 @@ import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.ListItemOverflowMenu
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
+import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.SupportingLines
 import com.patrickzedler.grocy.core.design.component.clickCursor
@@ -44,11 +48,13 @@ import com.patrickzedler.grocy.core.design.component.edgeToEdgeItem
 import com.patrickzedler.grocy.core.design.component.insetItems
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_add
+import com.patrickzedler.grocy.core.resources.action_more_options
 import com.patrickzedler.grocy.core.resources.action_scroll_to_top
 import com.patrickzedler.grocy.core.resources.action_search
 import com.patrickzedler.grocy.core.resources.data_all
 import com.patrickzedler.grocy.core.resources.ic_rounded_add
 import com.patrickzedler.grocy.core.resources.ic_rounded_edit_attributes
+import com.patrickzedler.grocy.core.resources.ic_rounded_more_vert
 import com.patrickzedler.grocy.core.resources.ic_rounded_search
 import com.patrickzedler.grocy.core.resources.ic_rounded_vertical_align_top
 import com.patrickzedler.grocy.core.resources.objects_column_entity
@@ -170,6 +176,7 @@ private fun ObjectListContent(
         title = stringResource(kind.category.title),
         modifier = modifier,
         navigationIcon = { NavigateBackButton(onClick = actions.onBackClick) },
+        pane = ScreenPane.List.takeIf { isBesideDetail },
         menuItems = menuItems,
         listState = listState,
         snackbarHostState = snackbarHostState,
@@ -349,8 +356,9 @@ private fun ObjectItem(
         },
         // Buttons bring enough space of their own, unlike icons and switches
         trailingContent = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                onConfigureFieldsClick?.let { ConfigureFieldsButton(it) }
+            if (onConfigureFieldsClick != null) {
+                UserentityButtons(onConfigureFieldsClick, menuItems)
+            } else {
                 ListItemOverflowMenu(groups = listOf(menuItems))
             }
         },
@@ -362,13 +370,93 @@ private fun ObjectItem(
     }
 }
 
-/** Grocy's "Configure fields" of a userentity, narrow so the item keeps room for its name. */
+/**
+ * Grocy's "Configure fields" of a userentity and the item's menu as a standard button group,
+ * narrow buttons, so the item keeps room for its name.
+ */
 @Composable
-private fun ConfigureFieldsButton(onClick: () -> Unit) {
+private fun UserentityButtons(
+    onConfigureFieldsClick: () -> Unit,
+    menuItems: List<AppBarMenuItem>,
+) {
     val haptic = LocalHapticFeedback.current
-    val description = stringResource(Res.string.objects_configure_fields)
+    val configureSource = remember { MutableInteractionSource() }
+    val menuSource = remember { MutableInteractionSource() }
+    val configureText = stringResource(Res.string.objects_configure_fields)
+    val onConfigure = {
+        haptic.confirm()
+        onConfigureFieldsClick()
+    }
 
-    HapticTooltipBox(text = description) {
+    ButtonGroup(
+        // Only where the item is too narrow for both buttons
+        overflowIndicator = { menuState ->
+            NarrowIconButton(
+                painter = painterResource(Res.drawable.ic_rounded_more_vert),
+                description = stringResource(Res.string.action_more_options),
+                onClick = { if (menuState.isShowing) menuState.dismiss() else menuState.show() },
+            )
+        },
+        horizontalArrangement = ButtonGroupDefaults.HorizontalArrangement,
+    ) {
+        customItem(
+            buttonGroupContent = {
+                NarrowIconButton(
+                    painter = painterResource(Res.drawable.ic_rounded_edit_attributes),
+                    description = configureText,
+                    onClick = onConfigureFieldsClick,
+                    modifier = Modifier.animateWidth(configureSource),
+                    interactionSource = configureSource,
+                )
+            },
+            menuContent = { menuState ->
+                DropdownMenuItem(
+                    text = { Text(configureText) },
+                    modifier = Modifier.clickCursor(),
+                    onClick = {
+                        menuState.dismiss()
+                        onConfigure()
+                    },
+                )
+            },
+        )
+        customItem(
+            buttonGroupContent = {
+                ListItemOverflowMenu(
+                    groups = listOf(menuItems),
+                    modifier = Modifier.animateWidth(menuSource),
+                    interactionSource = menuSource,
+                )
+            },
+            menuContent = { menuState ->
+                menuItems.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text(item.text) },
+                        modifier = Modifier.clickCursor(),
+                        onClick = {
+                            haptic.confirm()
+                            menuState.dismiss()
+                            item.onClick()
+                        },
+                    )
+                }
+            },
+        )
+    }
+}
+
+/** A standard narrow icon button with its tooltip. */
+@Composable
+private fun NarrowIconButton(
+    painter: Painter,
+    description: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    interactionSource: MutableInteractionSource? = null,
+) {
+    val haptic = LocalHapticFeedback.current
+
+    HapticTooltipBox(text = description, modifier = modifier) {
         IconButton(
             onClick = {
                 haptic.confirm()
@@ -383,11 +471,9 @@ private fun ConfigureFieldsButton(onClick: () -> Unit) {
                 )
                 .clickCursor(),
             shapes = IconButtonDefaults.shapes(),
+            interactionSource = interactionSource,
         ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_rounded_edit_attributes),
-                contentDescription = description,
-            )
+            Icon(painter = painter, contentDescription = description)
         }
     }
 }

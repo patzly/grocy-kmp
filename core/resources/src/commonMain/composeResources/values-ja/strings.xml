@@ -156,6 +156,20 @@
   <string name="settings_reset_description">すべての設定を既定に戻す</string>
   <string name="settings_server_demo">公開デモサーバー</string>
   <string name="settings_server_demo_warning">ここで入力した内容はすべて誰でも見ることができ、デモが1日に1回変更をリセットするまでそのまま残ります。</string>
+  <string name="settings_server_demo_choose">別のデモサーバーを選択</string>
+  <string name="settings_server_demo_servers">デモサーバー</string>
+  <string name="settings_server_demo_servers_info">Grocyの公開デモはそれぞれ1つの言語で設定され、独自のデータを持っています。</string>
+  <string name="settings_server_demo_switch_title">デモサーバーを切り替えますか？</string>
+  <string name="settings_server_demo_switch_message">Grocyの公開デモは%1$sでも利用できます。製品やロケーションなどもすべてこの言語になるよう、切り替えますか？</string>
+  <string name="settings_server_demo_switch">切り替える</string>
+  <string name="settings_server_demo_keep">現在のまま</string>
+  <string name="settings_server_demo_switch_failed">デモサーバーに接続できませんでした。何も変更されていません。</string>
+  <string name="settings_server_version_check">Grocyの新しいバージョンを確認</string>
+  <string name="settings_server_version_check_failed">Grocyの新しいバージョンがあるか確認できませんでした。</string>
+  <string name="settings_server_version_up_to_date_title">Grocyは最新です</string>
+  <string name="settings_server_version_up_to_date_message">サーバーでは最新バージョンのGrocy %1$sが動作しています。</string>
+  <string name="settings_server_version_update_title">Grocyのアップデートがあります</string>
+  <string name="settings_server_version_update_message">Grocy %1$sが利用可能です。サーバーでは%2$sが動作しています。最新の改善を利用するにはサーバーを更新してください。</string>
   <string name="settings_server_url">サーバーURL</string>
   <string name="settings_server_version">Grocyのバージョン</string>
   <string name="settings_server_version_loading">読み込み中…</string>
@@ -226,6 +240,33 @@
   <string name="masterdata_userentities">ユーザーエンティティ</string>
   <plurals name="masterdata_products_count">
     <item quantity="other">%1$d 件の物品</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="other">%1$d 件の保管場所</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="other">%1$d 件の購入店</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="other">%1$d 件の単位</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="other">%1$d 件の物品グループ</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="other">%1$d 件の家事</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="other">%1$d 件の電池</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="other">%1$d 件のタスク分類</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="other">%1$d 件のユーザーフィールド</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="other">%1$d 件のユーザーエンティティ</item>
   </plurals>
 
   <!-- Products -->

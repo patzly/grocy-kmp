@@ -12,7 +12,10 @@ internal enum class TooltipTrigger {
     MouseHover,
     KeyboardFocus,
 
-    /** Focus a tap or click gave the anchor, e.g. in browsers: no reason for a tooltip. */
+    /**
+     * Focus a tap or click gave the anchor (browsers focus clicked buttons), or that moved to it
+     * without a key press (a new screen focusing its first button): no reason for a tooltip.
+     */
     PointerFocus,
 }
 
@@ -36,9 +39,19 @@ internal class TooltipPressTracker(
         release = timeSource.markNow()
     }
 
-    fun triggerOf(mutatePriority: MutatePriority, longPressTimeout: Duration): TooltipTrigger {
+    /** [keyboardInput]: the last input anywhere was a key press, not a pointer. */
+    fun triggerOf(
+        mutatePriority: MutatePriority,
+        longPressTimeout: Duration,
+        keyboardInput: Boolean,
+    ): TooltipTrigger {
         if (mutatePriority == MutatePriority.UserInput) return TooltipTrigger.MouseHover
-        val start = pressStart ?: return TooltipTrigger.KeyboardFocus
+        val keyboardFocus = if (keyboardInput) {
+            TooltipTrigger.KeyboardFocus
+        } else {
+            TooltipTrigger.PointerFocus
+        }
+        val start = pressStart ?: return keyboardFocus
         val released = release
         return when {
             // Still pressed: a long press once the timeout has passed (the show comes right then)
@@ -49,7 +62,7 @@ internal class TooltipPressTracker(
             }
             // Focus right after a tap or click
             released.elapsedNow() < CLICK_FOCUS_WINDOW -> TooltipTrigger.PointerFocus
-            else -> TooltipTrigger.KeyboardFocus
+            else -> keyboardFocus
         }
     }
 

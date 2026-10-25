@@ -1,6 +1,8 @@
 package com.patrickzedler.grocy.core.design.component
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsDraggedAsState
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -10,6 +12,7 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
@@ -30,6 +33,7 @@ import com.patrickzedler.grocy.core.design.SEED_TONE
 
 /** Steps of 18 degrees, enough to tell the colors apart without endless fiddling. */
 private const val HUE_STEPS = 19
+private const val HUE_STEP_SIZE = 360f / (HUE_STEPS + 1)
 
 private val TrackHeight = 24.dp
 private val TrackCornerSize = 8.dp
@@ -55,8 +59,17 @@ fun HueSlider(
     val haptic = LocalHapticFeedback.current
     val sliderState = rememberSliderState(value = hue, steps = HUE_STEPS, trackRange = 0f..360f)
     val interactionSource = remember { MutableInteractionSource() }
-    // A change from elsewhere (restore, reset) moves the thumb too
-    LaunchedEffect(hue) { sliderState.value = hue }
+    val isDragged by interactionSource.collectIsDraggedAsState()
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val stepTracker = remember { SliderStepTracker(hue, HUE_STEP_SIZE) }
+    // A change from elsewhere (restore, reset) moves the thumb too. The stored hue arrives after
+    // the thumb moved on, so while the user moves it, it would jump back and tick twice.
+    LaunchedEffect(hue) {
+        if (!isDragged && !isPressed) {
+            sliderState.value = hue
+            stepTracker.reset(hue)
+        }
+    }
 
     Box(modifier = modifier.semantics { this.contentDescription = contentDescription }) {
         if (enabled) {
@@ -93,7 +106,8 @@ fun HueSlider(
             modifier = Modifier.clickCursor(enabled = enabled),
             enabled = enabled,
             onValueChange = {
-                if (it != hue) {
+                // Drags report every move, a tick belongs only to a new step
+                if (stepTracker.moveTo(it)) {
                     sliderState.value = it
                     haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
                     onHueChange(it)

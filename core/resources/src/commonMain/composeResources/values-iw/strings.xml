@@ -156,6 +156,20 @@
   <string name="settings_reset_description">החזרת כל ההגדרות לבררת המחדל</string>
   <string name="settings_server_demo">שרת הדגמה ציבורי</string>
   <string name="settings_server_demo_warning">כל מה שתזינו כאן גלוי לכולם ונשאר כך עד שההדגמה מאפסת את השינויים שלה פעם ביום.</string>
+  <string name="settings_server_demo_choose">בחירת שרת הדגמה אחר</string>
+  <string name="settings_server_demo_servers">שרתי הדגמה</string>
+  <string name="settings_server_demo_servers_info">כל הדגמה ציבורית של Grocy מוגדרת בשפה אחת ויש לה נתונים משלה.</string>
+  <string name="settings_server_demo_switch_title">להחליף את שרת ההדגמה?</string>
+  <string name="settings_server_demo_switch_message">ההדגמה הציבורית של Grocy זמינה גם ב%1$s. לעבור אליה, כדי שגם המוצרים, המיקומים וכל השאר יהיו בשפה הזו?</string>
+  <string name="settings_server_demo_switch">החלפה</string>
+  <string name="settings_server_demo_keep">להשאיר את הנוכחי</string>
+  <string name="settings_server_demo_switch_failed">אין אפשרות להתחבר לשרת ההדגמה. דבר לא השתנה.</string>
+  <string name="settings_server_version_check">בדיקת גרסה חדשה יותר של Grocy</string>
+  <string name="settings_server_version_check_failed">לא ניתן היה לבדוק אם קיימת גרסה חדשה יותר של Grocy.</string>
+  <string name="settings_server_version_up_to_date_title">Grocy מעודכן</string>
+  <string name="settings_server_version_up_to_date_message">בשרת פועלת הגרסה %1$s של Grocy, הגרסה החדשה ביותר.</string>
+  <string name="settings_server_version_update_title">יש עדכון ל-Grocy</string>
+  <string name="settings_server_version_update_message">Grocy %1$s זמין, בשרת פועלת הגרסה %2$s. כדאי לעדכן את השרת כדי לקבל את השיפורים האחרונים.</string>
   <string name="settings_server_url">כתובת השרת</string>
   <string name="settings_server_version">גרסת Grocy</string>
   <string name="settings_server_version_loading">בטעינה…</string>
@@ -228,6 +242,51 @@
     <item quantity="one">%1$d מוצר</item>
     <item quantity="two">%1$d מוצרים</item>
     <item quantity="other">%1$d מוצרים</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="one">%1$d מיקום</item>
+    <item quantity="two">%1$d מיקומים</item>
+    <item quantity="other">%1$d מיקומים</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="one">%1$d חנות</item>
+    <item quantity="two">%1$d חנויות</item>
+    <item quantity="other">%1$d חנויות</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="one">%1$d יחידת כמות</item>
+    <item quantity="two">%1$d יחידות כמות</item>
+    <item quantity="other">%1$d יחידות כמות</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="one">%1$d קבוצת מוצרים</item>
+    <item quantity="two">%1$d קבוצות מוצרים</item>
+    <item quantity="other">%1$d קבוצות מוצרים</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="one">%1$d מטלה</item>
+    <item quantity="two">%1$d מטלות</item>
+    <item quantity="other">%1$d מטלות</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="one">%1$d סוללה</item>
+    <item quantity="two">%1$d סוללות</item>
+    <item quantity="other">%1$d סוללות</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="one">%1$d קטגוריית משימות</item>
+    <item quantity="two">%1$d קטגוריות משימות</item>
+    <item quantity="other">%1$d קטגוריות משימות</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="one">%1$d שדה משתמש</item>
+    <item quantity="two">%1$d שדות משתמשים</item>
+    <item quantity="other">%1$d שדות משתמשים</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="one">%1$d יישות משתמש</item>
+    <item quantity="two">%1$d יישויות משתמש</item>
+    <item quantity="other">%1$d יישויות משתמש</item>
   </plurals>
 
   <!-- Products -->

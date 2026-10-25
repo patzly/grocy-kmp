@@ -27,7 +27,8 @@ import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Plain tooltip that opens on long press (with vibration), mouse hover and keyboard focus, but
- * not on the focus a plain click gives a button in browsers.
+ * not on the focus a plain click gives a button in browsers, nor on focus that moves to it while
+ * the keyboard is not in use (a screen opened by a click focusing its first button).
  *
  * The tooltip does not replace the content description of the wrapped element, set both.
  * [modifier] goes on an outer box, because TooltipBox places it on an inner one where parent data
@@ -46,11 +47,12 @@ fun HapticTooltipBox(
     val longPressTimeout = LocalViewConfiguration.current.longPressTimeoutMillis.milliseconds
     val baseState = rememberTooltipState()
     val pressTracker = remember { TooltipPressTracker() }
+    val keyboardInput = rememberKeyboardInput()
 
-    val state = remember(baseState, haptic, longPressTimeout) {
+    val state = remember(baseState, haptic, longPressTimeout, keyboardInput) {
         object : TooltipState by baseState {
             override suspend fun show(mutatePriority: MutatePriority) {
-                when (pressTracker.triggerOf(mutatePriority, longPressTimeout)) {
+                when (pressTracker.triggerOf(mutatePriority, longPressTimeout, keyboardInput())) {
                     TooltipTrigger.PointerFocus -> return
                     TooltipTrigger.LongPress ->
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)

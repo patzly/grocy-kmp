@@ -156,6 +156,20 @@
   <string name="settings_reset_description">Возвращает все настройки к значениям по умолчанию</string>
   <string name="settings_server_demo">Публичный демо-сервер</string>
   <string name="settings_server_demo_warning">Всё, что вы здесь вводите, видно всем и останется видимым, пока демо раз в день не сбросит свои изменения.</string>
+  <string name="settings_server_demo_choose">Выбрать другой демо-сервер</string>
+  <string name="settings_server_demo_servers">Демо-серверы</string>
+  <string name="settings_server_demo_servers_info">Каждое публичное демо Grocy настроено на одном языке и имеет свои собственные данные.</string>
+  <string name="settings_server_demo_switch_title">Сменить демо-сервер?</string>
+  <string name="settings_server_demo_switch_message">Публичное демо Grocy также доступно на языке: %1$s. Перейти на него, чтобы продукты, места хранения и всё остальное тоже были на этом языке?</string>
+  <string name="settings_server_demo_switch">Сменить</string>
+  <string name="settings_server_demo_keep">Оставить текущий</string>
+  <string name="settings_server_demo_switch_failed">Демо-сервер недоступен. Ничего не изменено.</string>
+  <string name="settings_server_version_check">Проверить наличие новой версии Grocy</string>
+  <string name="settings_server_version_check_failed">Не удалось проверить, есть ли более новая версия Grocy.</string>
+  <string name="settings_server_version_up_to_date_title">Grocy обновлён</string>
+  <string name="settings_server_version_up_to_date_message">На сервере работает Grocy %1$s, самая новая версия.</string>
+  <string name="settings_server_version_update_title">Доступно обновление Grocy</string>
+  <string name="settings_server_version_update_message">Доступен Grocy %1$s, на сервере работает %2$s. Обновите сервер, чтобы получить последние улучшения.</string>
   <string name="settings_server_url">URL сервера</string>
   <string name="settings_server_version">Версия Grocy</string>
   <string name="settings_server_version_loading">Загрузка…</string>
@@ -229,6 +243,60 @@
     <item quantity="few">%1$d продукта</item>
     <item quantity="many">%1$d продуктов</item>
     <item quantity="other">%1$d продукта</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="one">%1$d место хранения</item>
+    <item quantity="few">%1$d места хранения</item>
+    <item quantity="many">%1$d мест хранения</item>
+    <item quantity="other">%1$d места хранения</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="one">%1$d магазин</item>
+    <item quantity="few">%1$d магазина</item>
+    <item quantity="many">%1$d магазинов</item>
+    <item quantity="other">%1$d магазина</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="one">%1$d единица измерения</item>
+    <item quantity="few">%1$d единицы измерения</item>
+    <item quantity="many">%1$d единиц измерения</item>
+    <item quantity="other">%1$d единицы измерения</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="one">%1$d группа продуктов</item>
+    <item quantity="few">%1$d группы продуктов</item>
+    <item quantity="many">%1$d групп продуктов</item>
+    <item quantity="other">%1$d группы продуктов</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="one">%1$d работа</item>
+    <item quantity="few">%1$d работы</item>
+    <item quantity="many">%1$d работ</item>
+    <item quantity="other">%1$d работы</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="one">%1$d батарейка</item>
+    <item quantity="few">%1$d батарейки</item>
+    <item quantity="many">%1$d батареек</item>
+    <item quantity="other">%1$d батарейки</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="one">%1$d категория задач</item>
+    <item quantity="few">%1$d категории задач</item>
+    <item quantity="many">%1$d категорий задач</item>
+    <item quantity="other">%1$d категории задач</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="one">%1$d поле пользователя</item>
+    <item quantity="few">%1$d поля пользователя</item>
+    <item quantity="many">%1$d полей пользователя</item>
+    <item quantity="other">%1$d поля пользователя</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="one">%1$d пользовательская сущность</item>
+    <item quantity="few">%1$d пользовательские сущности</item>
+    <item quantity="many">%1$d пользовательских сущностей</item>
+    <item quantity="other">%1$d пользовательской сущности</item>
   </plurals>
 
   <!-- Products -->

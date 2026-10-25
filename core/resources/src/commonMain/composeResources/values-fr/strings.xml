@@ -156,6 +156,20 @@
   <string name="settings_reset_description">Rétablit chaque paramètre à sa valeur par défaut</string>
   <string name="settings_server_demo">Serveur de démonstration public</string>
   <string name="settings_server_demo_warning">Tout ce que vous saisissez ici est visible par tous et le reste jusqu’à ce que la démo réinitialise ses modifications une fois par jour.</string>
+  <string name="settings_server_demo_choose">Choisir un autre serveur de démonstration</string>
+  <string name="settings_server_demo_servers">Serveurs de démonstration</string>
+  <string name="settings_server_demo_servers_info">Chaque démo publique de Grocy est configurée dans une langue et possède ses propres données.</string>
+  <string name="settings_server_demo_switch_title">Changer de serveur de démonstration ?</string>
+  <string name="settings_server_demo_switch_message">La démo publique de Grocy existe aussi en %1$s. Voulez-vous y passer, afin que les produits, les emplacements et tout le reste soient aussi dans cette langue ?</string>
+  <string name="settings_server_demo_switch">Changer</string>
+  <string name="settings_server_demo_keep">Conserver l’actuel</string>
+  <string name="settings_server_demo_switch_failed">Le serveur de démonstration est injoignable. Rien n’a été modifié.</string>
+  <string name="settings_server_version_check">Rechercher une version plus récente de Grocy</string>
+  <string name="settings_server_version_check_failed">Impossible de vérifier s’il existe une version plus récente de Grocy.</string>
+  <string name="settings_server_version_up_to_date_title">Grocy est à jour</string>
+  <string name="settings_server_version_up_to_date_message">Le serveur exécute Grocy %1$s, la version la plus récente.</string>
+  <string name="settings_server_version_update_title">Mise à jour de Grocy disponible</string>
+  <string name="settings_server_version_update_message">Grocy %1$s est disponible, le serveur exécute %2$s. Mettez à jour le serveur pour profiter des dernières améliorations.</string>
   <string name="settings_server_url">URL du serveur</string>
   <string name="settings_server_version">Version de Grocy</string>
   <string name="settings_server_version_loading">Chargement…</string>
@@ -228,6 +242,51 @@
     <item quantity="one">%1$d produit</item>
     <item quantity="many">%1$d produits</item>
     <item quantity="other">%1$d produits</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="one">%1$d emplacement</item>
+    <item quantity="many">%1$d emplacements</item>
+    <item quantity="other">%1$d emplacements</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="one">%1$d magasin</item>
+    <item quantity="many">%1$d magasins</item>
+    <item quantity="other">%1$d magasins</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="one">%1$d unité</item>
+    <item quantity="many">%1$d unités</item>
+    <item quantity="other">%1$d unités</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="one">%1$d groupe de produit</item>
+    <item quantity="many">%1$d groupes de produit</item>
+    <item quantity="other">%1$d groupes de produit</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="one">%1$d corvée</item>
+    <item quantity="many">%1$d corvées</item>
+    <item quantity="other">%1$d corvées</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="one">%1$d pile</item>
+    <item quantity="many">%1$d piles</item>
+    <item quantity="other">%1$d piles</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="one">%1$d catégorie de tâche</item>
+    <item quantity="many">%1$d catégories de tâche</item>
+    <item quantity="other">%1$d catégories de tâche</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="one">%1$d attribut personnalisé</item>
+    <item quantity="many">%1$d attributs personnalisés</item>
+    <item quantity="other">%1$d attributs personnalisés</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="one">%1$d entité utilisateur</item>
+    <item quantity="many">%1$d entités utilisateur</item>
+    <item quantity="other">%1$d entités utilisateur</item>
   </plurals>
 
   <!-- Products -->

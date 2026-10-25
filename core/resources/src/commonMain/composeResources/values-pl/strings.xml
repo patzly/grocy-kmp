@@ -156,6 +156,20 @@
   <string name="settings_reset_description">Przywraca domyślne wartości wszystkich ustawień</string>
   <string name="settings_server_demo">Publiczny serwer demonstracyjny</string>
   <string name="settings_server_demo_warning">Wszystko, co tu wprowadzisz, jest widoczne dla wszystkich i pozostanie takie, dopóki demo raz dziennie nie zresetuje swoich zmian.</string>
+  <string name="settings_server_demo_choose">Wybierz inny serwer demo</string>
+  <string name="settings_server_demo_servers">Serwery demo</string>
+  <string name="settings_server_demo_servers_info">Każde publiczne demo Grocy jest skonfigurowane w jednym języku i ma własne dane.</string>
+  <string name="settings_server_demo_switch_title">Zmienić serwer demo?</string>
+  <string name="settings_server_demo_switch_message">Publiczne demo Grocy jest dostępne także w języku %1$s. Czy chcesz na nie przejść, aby produkty, lokalizacje i wszystko inne też były w tym języku?</string>
+  <string name="settings_server_demo_switch">Zmień</string>
+  <string name="settings_server_demo_keep">Zostaw obecny</string>
+  <string name="settings_server_demo_switch_failed">Nie można połączyć się z serwerem demo. Nic nie zostało zmienione.</string>
+  <string name="settings_server_version_check">Sprawdź nowszą wersję Grocy</string>
+  <string name="settings_server_version_check_failed">Nie udało się sprawdzić, czy istnieje nowsza wersja Grocy.</string>
+  <string name="settings_server_version_up_to_date_title">Grocy jest aktualny</string>
+  <string name="settings_server_version_up_to_date_message">Na serwerze działa Grocy %1$s, najnowsza wersja.</string>
+  <string name="settings_server_version_update_title">Dostępna aktualizacja Grocy</string>
+  <string name="settings_server_version_update_message">Dostępne jest Grocy %1$s, na serwerze działa %2$s. Zaktualizuj serwer, aby otrzymać najnowsze ulepszenia.</string>
   <string name="settings_server_url">Adres URL serwera</string>
   <string name="settings_server_version">Wersja Grocy</string>
   <string name="settings_server_version_loading">Wczytywanie…</string>
@@ -229,6 +243,60 @@
     <item quantity="few">%1$d produkty</item>
     <item quantity="many">%1$d produktów</item>
     <item quantity="other">%1$d produktu</item>
+  </plurals>
+  <plurals name="masterdata_locations_count">
+    <item quantity="one">%1$d miejsce</item>
+    <item quantity="few">%1$d miejsca</item>
+    <item quantity="many">%1$d miejsc</item>
+    <item quantity="other">%1$d miejsca</item>
+  </plurals>
+  <plurals name="masterdata_stores_count">
+    <item quantity="one">%1$d sklep</item>
+    <item quantity="few">%1$d sklepy</item>
+    <item quantity="many">%1$d sklepów</item>
+    <item quantity="other">%1$d sklepu</item>
+  </plurals>
+  <plurals name="masterdata_quantity_units_count">
+    <item quantity="one">%1$d jednostka ilości</item>
+    <item quantity="few">%1$d jednostki ilości</item>
+    <item quantity="many">%1$d jednostek ilości</item>
+    <item quantity="other">%1$d jednostki ilości</item>
+  </plurals>
+  <plurals name="masterdata_product_groups_count">
+    <item quantity="one">%1$d grupa produktów</item>
+    <item quantity="few">%1$d grupy produktów</item>
+    <item quantity="many">%1$d grup produktów</item>
+    <item quantity="other">%1$d grupy produktów</item>
+  </plurals>
+  <plurals name="masterdata_chores_count">
+    <item quantity="one">%1$d obowiązek</item>
+    <item quantity="few">%1$d obowiązki</item>
+    <item quantity="many">%1$d obowiązków</item>
+    <item quantity="other">%1$d obowiązku</item>
+  </plurals>
+  <plurals name="masterdata_batteries_count">
+    <item quantity="one">%1$d bateria</item>
+    <item quantity="few">%1$d baterie</item>
+    <item quantity="many">%1$d baterii</item>
+    <item quantity="other">%1$d baterii</item>
+  </plurals>
+  <plurals name="masterdata_task_categories_count">
+    <item quantity="one">%1$d kategoria zadań</item>
+    <item quantity="few">%1$d kategorie zadań</item>
+    <item quantity="many">%1$d kategorii zadań</item>
+    <item quantity="other">%1$d kategorii zadań</item>
+  </plurals>
+  <plurals name="masterdata_userfields_count">
+    <item quantity="one">%1$d pole użytkownika</item>
+    <item quantity="few">%1$d pola użytkownika</item>
+    <item quantity="many">%1$d pól użytkownika</item>
+    <item quantity="other">%1$d pola użytkownika</item>
+  </plurals>
+  <plurals name="masterdata_userentities_count">
+    <item quantity="one">%1$d podmiot użytkownika</item>
+    <item quantity="few">%1$d podmioty użytkownika</item>
+    <item quantity="many">%1$d podmiotów użytkownika</item>
+    <item quantity="other">%1$d podmiotu użytkownika</item>
   </plurals>
 
   <!-- Products -->
