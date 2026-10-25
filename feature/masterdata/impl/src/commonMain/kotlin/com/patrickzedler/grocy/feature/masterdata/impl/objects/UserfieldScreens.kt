@@ -8,6 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
+import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.resources.Res
@@ -121,6 +122,7 @@ internal fun UserfieldScreen(
                         hint = stringResource(Res.string.userfield_sort_number_hint),
                         error = fieldErrorText(errors[ObjectField.SORT_NUMBER]),
                         keyboardType = KeyboardType.Number,
+                        stepper = NumberStepper(min = 0.0),
                         index = index,
                         count = count,
                     )

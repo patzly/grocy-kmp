@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">חזרה</string>
   <string name="action_more_options">אפשרויות נוספות</string>
+  <string name="action_decrease">הפחתה</string>
+  <string name="action_increase">הגדלה</string>
   <string name="action_cancel">ביטול</string>
   <string name="action_close">סגירה</string>
   <string name="action_update">עדכון</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">כללי</string>
+  <string name="settings_select_hint">יש לבחור קטגוריה כדי להציג כאן את ההגדרות שלה</string>
   <string name="settings_server">שרת</string>
   <string name="settings_user">הגדרות המשתמש</string>
+  <string name="settings_user_synced">נשמרות בשרת</string>
+  <string name="settings_user_synced_hint">Grocy שומר את ההגדרות האלה עבור המשתמש שלך, ולכן הן חלות גם בממשק האינטרנט שלו ובמכשירים האחרים שלך</string>
   <string name="settings_network">רשת</string>
   <string name="settings_behavior">התנהגות</string>
   <string name="settings_scanner">סורק</string>
@@ -382,6 +387,7 @@
   <string name="product_due_type_expiration_hint">המשמעות היא שהמוצר לא בטוח לצריכה לאחר שמועד סיום התוקף שלו חלף</string>
   <string name="product_due_days">ימים בתוקף עד כבררת מחדל</string>
   <string name="product_due_days_hint">לרכישות תתווסף כמות הימים הזאת ליום הנוכחי להצעת תאריך תפוגת התוקף המיטבי (‎-1 משמעו שתוקף המוצר הזה לא יפוג לעולם)</string>
+  <string name="product_due_days_pick">ספירת הימים עד תאריך</string>
   <string name="product_due_days_after_open">ימים לתום התוקף לאחר הפתיחה כבררת מחדל</string>
   <string name="product_due_days_after_open_hint">כאשר המוצר הזה מסומן כפתוח, תאריך התפוגה יוחלף ביום הנוכחי + כמות כזאת של ימים, אך רק אם התאריך שמתקבל אינו מאוחר מתאריך התפוגה המקורי (0 ישבית את זה)</string>
   <string name="product_due_days_after_freezing">ימים לתום התוקף לאחר ההקפאה כבררת מחדל</string>
@@ -745,7 +751,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">כברירת מחדל, עמוד סקירת המלאי מציג את כל המוצרים החדשים שאינם במלאי כרגע או מתחת לכמות המזערית שלהם במלאי - כשהאפשרות פעילה, כל המוצרים (הפעילים) מופיעים תמיד</string>
   <string name="stock_settings_purchase">רכישה</string>
   <string name="stock_settings_purchase_amount">כמות בררת מחדל לרכישה</string>
-  <string name="stock_settings_show_purchased_date">הצגת תאריך הרכישה בעמודי הרכישה והמצאי (אחרת תאריך הרכישה יוגדר להיום)</string>
+  <string name="stock_settings_show_purchased_date">הצגת תאריך הרכישה בעמודי הרכישה והמצאי</string>
+  <string name="stock_settings_show_purchased_date_hint">אחרת תאריך הרכישה יוגדר להיום</string>
   <string name="stock_settings_due_date_warning">להציג אזהרה כאשר התאריך בתוקף עד של המוצר הנרכש הוא מוקדם מתאריך התוקף עד הבא במלאי</string>
   <string name="stock_settings_consume">צריכה</string>
   <string name="stock_settings_consume_amount">כמות בררת מחדל לצריכה</string>

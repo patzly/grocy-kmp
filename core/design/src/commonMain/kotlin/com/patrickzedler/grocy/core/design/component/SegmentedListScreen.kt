@@ -42,20 +42,18 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.patrickzedler.grocy.core.design.LocalPointerKind
@@ -63,6 +61,7 @@ import com.patrickzedler.grocy.core.design.StatusBarColorEffect
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_reload
 import com.patrickzedler.grocy.core.resources.ic_rounded_refresh
+import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -152,6 +151,9 @@ fun SegmentedListScreen(
         0.dp
     }
 
+    // Snackbars keep a little more distance to the toolbar than its own screen offset
+    val snackbarSpace = if (floatingToolbar != null) toolbarSpace + SnackbarToolbarGap else 0.dp
+
     Scaffold(
         modifier = modifier
             .then(if (pane != null) Modifier.paneMargin(pane) else Modifier)
@@ -207,36 +209,39 @@ fun SegmentedListScreen(
                 containerColor = containerColor,
                 scrolledContainerColor = scrolledContainerColor,
             )
-            // One step above the bar, the scrolled bar's color once it scrolled, so both are one
-            val buttonColor = lerp(
-                MaterialTheme.colorScheme.surfaceContainerHigh,
-                MaterialTheme.colorScheme.surfaceContainerHighest,
-                scrolledFraction(),
-            )
-            CompositionLocalProvider(LocalAppBarButtonColor provides buttonColor) {
-                if (isSmallBar) {
-                    CenterAlignedTopAppBar(
-                        title = titleContent,
-                        navigationIcon = navigationIcon,
-                        actions = allActions,
-                        colors = colors,
-                        scrollBehavior = scrollBehavior,
-                    )
-                } else {
-                    LargeFlexibleTopAppBar(
-                        title = largeTitleContent,
-                        titleHorizontalAlignment = Alignment.CenterHorizontally,
-                        navigationIcon = navigationIcon,
-                        actions = allActions,
-                        colors = colors,
-                        scrollBehavior = scrollBehavior,
-                    )
-                }
+            if (isSmallBar) {
+                CenterAlignedTopAppBar(
+                    title = titleContent,
+                    navigationIcon = navigationIcon,
+                    actions = allActions,
+                    colors = colors,
+                    scrollBehavior = scrollBehavior,
+                )
+            } else {
+                LargeFlexibleTopAppBar(
+                    title = largeTitleContent,
+                    titleHorizontalAlignment = Alignment.CenterHorizontally,
+                    navigationIcon = navigationIcon,
+                    actions = allActions,
+                    colors = colors,
+                    scrollBehavior = scrollBehavior,
+                )
             }
         },
         snackbarHost = {
             snackbarHostState?.let {
-                SnackbarHost(it, Modifier.padding(bottom = toolbarSpace))
+                // Above the toolbar, following it while it slides out and back in, read during
+                // placement so scrolling never recomposes
+                SnackbarHost(
+                    hostState = it,
+                    modifier = Modifier.offset {
+                        val state = toolbarScrollBehavior.state
+                        IntOffset(
+                            x = 0,
+                            y = -snackbarLift(snackbarSpace.toPx(), state.offset, state.offsetLimit),
+                        )
+                    },
+                )
             }
         },
         containerColor = if (pane != null) {
@@ -316,12 +321,10 @@ fun SegmentedListScreen(
 }
 
 /**
- * Container color of [AppBarIconButton]s: surfaceContainerHigh on the surfaceContainer bar,
- * surfaceContainerHighest like the scrolled bar, so bar and buttons become one surface.
+ * Icon button of a top app bar on surfaceContainerHighest, which stands out on the
+ * surfaceContainer bar (High was a single tone step above it) and becomes one surface with the
+ * scrolled bar.
  */
-internal val LocalAppBarButtonColor = compositionLocalOf<Color?> { null }
-
-/** Icon button of a top app bar, in the [LocalAppBarButtonColor]. */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AppBarIconButton(
@@ -355,8 +358,7 @@ fun AppBarIconButton(
                 Modifier
             }.clickCursor(),
             colors = IconButtonDefaults.iconButtonColors(
-                containerColor = LocalAppBarButtonColor.current
-                    ?: MaterialTheme.colorScheme.surfaceContainerHigh,
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                 contentColor = MaterialTheme.colorScheme.onSurface,
             ),
             shapes = IconButtonDefaults.shapes(),
@@ -369,5 +371,16 @@ fun AppBarIconButton(
     }
 }
 
+private val SnackbarToolbarGap = 4.dp
+
 // Material switches the small app bar's color once content scrolled below it
 private const val OVERLAP_THRESHOLD = 0.01f
+
+/**
+ * How far snackbars lie above the bottom: the [toolbarSpace] of a floating toolbar, less the
+ * part it has slid out of the screen ([toolbarOffset] from 0 to its negative [offsetLimit]).
+ */
+internal fun snackbarLift(toolbarSpace: Float, toolbarOffset: Float, offsetLimit: Float): Int {
+    val hidden = if (offsetLimit == 0f) 0f else (toolbarOffset / offsetLimit).coerceIn(0f, 1f)
+    return (toolbarSpace * (1 - hidden)).roundToInt()
+}

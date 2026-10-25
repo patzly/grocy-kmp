@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Назад</string>
   <string name="action_more_options">Інші параметри</string>
+  <string name="action_decrease">Зменшити</string>
+  <string name="action_increase">Збільшити</string>
   <string name="action_cancel">Скасувати</string>
   <string name="action_close">Закрити</string>
   <string name="action_update">Оновити</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">Загальні</string>
+  <string name="settings_select_hint">Оберіть категорію, щоб показати тут її налаштування</string>
   <string name="settings_server">Сервер</string>
   <string name="settings_user">Налаштування користувача</string>
+  <string name="settings_user_synced">Зберігаються на сервері</string>
+  <string name="settings_user_synced_hint">Grocy зберігає ці налаштування для вашого користувача, тому вони діють і в його вебінтерфейсі, і на ваших інших пристроях</string>
   <string name="settings_network">Мережа</string>
   <string name="settings_behavior">Поведінка</string>
   <string name="settings_scanner">Сканер</string>
@@ -392,6 +397,7 @@
   <string name="product_due_type_expiration_hint">Означає, що вживати продукт після вичерпання строку придатності може бути небезпечно!</string>
   <string name="product_due_days">Термін придатності за замовчуванням</string>
   <string name="product_due_days_hint">Під час покупок ця кількість днів додаватиметься до сьогоднішньої дати для пропозиції терміну придатності (-1 означає, що цей продукт ніколи не прострочиться)</string>
+  <string name="product_due_days_pick">Порахувати дні до дати</string>
   <string name="product_due_days_after_open">Термін придатності після відкривання</string>
   <string name="product_due_days_after_open_hint">Коли продукт буде відмічено відкритим, термін придатності стане поточною датою + ця кількість днів. Але тільки в тому разі, якщо ця дата не пізніше ніж початковий термін придатності (поставле 0, щоб вимкнути це)</string>
   <string name="product_due_days_after_freezing">Термін придатності після заморозки за замовчуванням</string>
@@ -760,7 +766,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">За замовчуванням інвентар показує всі продукти, які є в наявності або нижче мінімальної кількості; якщо ввімкнено, завжди показуються всі (активні) продукти</string>
   <string name="stock_settings_purchase">Придбати</string>
   <string name="stock_settings_purchase_amount">Кількість придбання за замовчуванням</string>
-  <string name="stock_settings_show_purchased_date">Показувати дату покупки на сторінках покупки та інвентаризації (інакше датою покупки буде сьогодні)</string>
+  <string name="stock_settings_show_purchased_date">Показувати дату покупки на сторінках покупки та інвентаризації</string>
+  <string name="stock_settings_show_purchased_date_hint">Інакше датою покупки буде сьогодні</string>
   <string name="stock_settings_due_date_warning">Попередити, якщо термін придатності придбаного продукту мешний, ніж в того, що вже був у наявності</string>
   <string name="stock_settings_consume">Вжити</string>
   <string name="stock_settings_consume_amount">Кількість, яка вживається за замовчуванням</string>

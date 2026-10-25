@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Späť</string>
   <string name="action_more_options">Ďalšie možnosti</string>
+  <string name="action_decrease">Znížiť</string>
+  <string name="action_increase">Zvýšiť</string>
   <string name="action_cancel">Zrušiť</string>
   <string name="action_close">Zatvoriť</string>
   <string name="action_update">Aktualizovať</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">Všeobecné</string>
+  <string name="settings_select_hint">Vyberte kategóriu a zobrazte tu jej nastavenia</string>
   <string name="settings_server">Server</string>
   <string name="settings_user">Nastavenia používateľa</string>
+  <string name="settings_user_synced">Uložené na serveri</string>
+  <string name="settings_user_synced_hint">Grocy ukladá tieto nastavenia pre vášho používateľa, takže platia aj v jeho webovom rozhraní a na vašich ďalších zariadeniach</string>
   <string name="settings_network">Sieť</string>
   <string name="settings_behavior">Správanie</string>
   <string name="settings_scanner">Skener</string>
@@ -392,6 +397,7 @@
   <string name="product_due_type_expiration_hint">Zanmená, že tento výrobok je po dátume spotreby nepožívateľný</string>
   <string name="product_due_days">Predvolený počet dní na spotrebu</string>
   <string name="product_due_days_hint">Tento počet dní bude pridaný k návrhu dátumu spotreby pri nákupoch (-1 znamená, že tento výrobok sa nikdy nepokazí)</string>
+  <string name="product_due_days_pick">Spočítať dni do dátumu</string>
   <string name="product_due_days_after_open">Predvolený počet dní na spotrebu po otvorení</string>
   <string name="product_due_days_after_open_hint">Keď je tento výrobok označený ako otvorený, dátum spotreby bude nahradený dnešným dátumom + tento počet dní, ale len ak výsledný dátum nepresiahne pôvodný dátum spotreby (zadaním 0, toto vypnete)</string>
   <string name="product_due_days_after_freezing">Predvolený počet dní na spotrebu po zmrazení</string>
@@ -761,7 +767,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">Prehľad zásob predvolene zobrazuje všetky výrobky, ktoré sú na sklade alebo pod minimálnym množstvom – ak je to zapnuté, zobrazujú sa vždy všetky (aktívne) výrobky</string>
   <string name="stock_settings_purchase">Nakúpiť</string>
   <string name="stock_settings_purchase_amount">Predvolené množstvo pre nákup</string>
-  <string name="stock_settings_show_purchased_date">Zobraziť dátum nákupu na stránkach nákupu a inventúry (inak je dátumom nákupu dnešok)</string>
+  <string name="stock_settings_show_purchased_date">Zobraziť dátum nákupu na stránkach nákupu a inventúry</string>
+  <string name="stock_settings_show_purchased_date_hint">Inak je dátumom nákupu dnešok</string>
   <string name="stock_settings_due_date_warning">Zobraziť upozornenie, keď je dátum spotreby nakúpeného výrobku skorší ako najbližší dátum spotreby na sklade</string>
   <string name="stock_settings_consume">Spotrebovať</string>
   <string name="stock_settings_consume_amount">Predvolené množstvo pre spotrebu</string>

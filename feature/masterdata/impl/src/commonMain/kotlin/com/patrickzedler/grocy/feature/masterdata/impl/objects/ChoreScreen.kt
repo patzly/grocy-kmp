@@ -23,6 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
+import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
@@ -180,6 +181,7 @@ internal fun ChoreScreen(
                             label = stringResource(Res.string.chore_day_of_month),
                             error = fieldErrorText(errors[ObjectField.PERIOD_DAYS]),
                             keyboardType = KeyboardType.Number,
+                            stepper = NumberStepper(min = 1.0, max = 31.0),
                             index = index,
                             count = count,
                         )
@@ -209,6 +211,7 @@ internal fun ChoreScreen(
                             label = stringResource(Res.string.chore_period_interval),
                             error = fieldErrorText(errors[ObjectField.PERIOD_INTERVAL]),
                             keyboardType = KeyboardType.Number,
+                            stepper = NumberStepper(min = 1.0),
                             index = index,
                             count = count,
                         )
@@ -344,6 +347,7 @@ internal fun ChoreScreen(
                             suffix = stockUnit?.let { it.namePlural?.ifBlank { null } ?: it.name },
                             enabled = consume,
                             keyboardType = KeyboardType.Decimal,
+                            stepper = NumberStepper.Positive,
                             index = index,
                             count = count,
                         )

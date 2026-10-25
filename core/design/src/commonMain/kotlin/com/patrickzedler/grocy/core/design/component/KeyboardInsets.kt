@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.runtime.Composable
 
 /**
- * The software keyboard as window insets, animated while it opens and closes:
- * `WindowInsets.ime` on Android, the part of the app covered by the browser keyboard on the web.
+ * The software keyboard as window insets: `WindowInsets.ime` on Android, animated with the
+ * keyboard; on the web the part of the app the browser keyboard covers, without animation.
  *
  * Apply it as padding of the scrolling container, not as content padding: only a shrinking
  * viewport keeps the focused text field in view.

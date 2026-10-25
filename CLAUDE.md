@@ -29,7 +29,8 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   `detailPaneMetadata` of `core:navigation`, Material's `ListDetailSceneStrategy` in
   `GrocyNavDisplay`): from Material's expanded window width on (840.dp, the default pane
   directive) the form opens beside its list, before a choice `DetailPlaceholder` (`core:design`)
-  fills the detail pane with `objects_select_hint`; narrower windows show list and form one after
+  fills the detail pane with `objects_select_hint` (icon and text directly on the pane's
+  `surfaceContainer`, no card); narrower windows show list and form one after
   the other. Both panes start half and half with Material's `VerticalDragHandle` between them
   (`PaneAnchors` 1/2, 1/3, 2/3: drag, the screen reader's action or the arrow keys, a tick per
   snap); the pane expansion overrides the hinge avoidance, the middle lies on a book posture's
@@ -42,7 +43,11 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   `extraLargeIncreased` corners that holds the list, the background of single screens, so the
   content looks the same in every window size (`paneMargin`, `paneSurface`;
   `DetailPlaceholder` draws the same surface below the bar's height). Beside its list a form has no back button (the list's leaves both). Forms are `DetailRoute`s opened with `Navigator.openDetail` (replaces the form beside
-  the list), lists leave with `goBack(from = route)`. A form with unsaved changes asks
+  the list, and the details opened from it), lists leave with `goBack(from = route)`. A detail
+  opened from a detail (`navigate`, e.g. the stock settings from the user settings) takes its
+  place beside the list and back returns to it (`NestedDetailSceneStrategy`: Material's scene
+  goes back until its panes change, which left the list); Material's other option, an extra
+  pane that pushes the list out, is for supplementary content of a detail, not for pages. A form with unsaved changes asks
   (`UnsavedChangesDialog`) also when another item of the list beside it is chosen or the list is
   left: `rememberLeaveGuard(route)` + `LeaveGuard.onLeaveRequest`. Beside a form
   (`showsDetailBesideList`) list items are single choice items marking the shown object
@@ -59,7 +64,15 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
 - Date fields (date and datetime userfields, a chore's start date) have a calendar button
   (`DatePickerButton`): Material's date picker, for date and time then its time picker (dial or
   text input); the pure `withPickedDate`/`withPickedTime` write Grocy's format, typing still
-  works.
+  works. The product's due days fields have one too (`DueDaysPickerButton`): a date from today
+  on becomes the days until it (`dueDaysUntil`), e.g. the date printed on the first purchase.
+- Number fields are Grocy's number pickers: minus and plus after the field in the same item
+  (`NumberStepperField` of `core:design`, round filled `secondaryContainer` icon buttons in a
+  `ButtonGroup`, `TextItem(stepper)`; gaps count the 4.dp each side of a 40.dp button inside its
+  48.dp touch target, so 4.dp between the buttons and 8.dp to the field look like Material's
+  12.dp; narrow buttons would leave 8.dp each side, too much), stepping by one within Grocy's range (`NumberStepper`,
+  `NumberStepper.Positive` for amounts above zero; the pure `steppedDecimal` of `core:model`
+  keeps the typed decimals and separator, an empty field becomes 1 or 0 like Grocy's).
 - The other categories share one list (`objects/`): `ObjectListKind` describes each like its
   Grocy table (columns in Grocy's order to sort by, first column as default sort, e.g. Entity for
   userfields, "Show disabled" where objects can be disabled, the entity of "Configure
@@ -71,7 +84,8 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   "Configure userfields"), userentities link to their fields (narrow icon button and the item's
   menu as a standard `ButtonGroup`, 12.dp apart). The filter chips
   (`FilterChipRow`, `DropdownFilterChip`, `ShowDisabledChip`, `SortChip`, `ClearFilterChip`), the
-  search item and the empty states (`ListParts.kt`) are shared with the product list.
+  search item and the empty states (`ListParts.kt`) are shared with the product list; a list
+  without search (stock entries) keeps the same gap below the chips (`filterGapItem`).
 - Forms of the other categories build on `ObjectFormViewModel` (load, refresh for unknown ids,
   validation, unsaved changes, userfields of `userfieldEntity`, `ObjectFormEvent`s) and
   `ObjectFormScreen` (save FAB, Scroll to top, userfield group, leave guard). Fields and rules
@@ -154,10 +168,15 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   surface-ringed points, Grocy's dotted least squares trend, y axis from zero in round steps
   (`priceAxis`), first and last date below, legend from two series or with a trend. Colors come
   from `rememberChartColors` (`core:design`): a validated color blind safe categorical palette
-  in fixed order with light and dark steps, harmonized with the theme's primary color by the
-  strongest hue rotation (15 degrees like Material's harmonization, down to none) that keeps
-  neighbours apart with normal vision and simulated protanopia/deuteranopia
-  (`isDistinguishable`, the dataviz validator's OKLab checks); stores keep their color by id,
+  in fixed order with light and dark steps, harmonized with the theme's primary color: it
+  starts at its color closest to primary (the order stays), then the strongest hue rotation (up
+  to 30 degrees, Material's 15 alone looked foreign) and tone shift towards primary that still
+  passes the dataviz validator's checks (`isValidPalette`: lightness band and chroma floor of
+  the mode, neighbours apart with normal vision and simulated protanopia/deuteranopia in OKLab).
+  A palette generated from primary failed those checks for many hues (the dark band is
+  narrow), so keep the validated one. Every other color outside the color scheme must be
+  harmonized with primary as well (codes such as the grocycode stay black on white); stores
+  keep their color by id,
   stores beyond eight are drawn together as "Other stores". Tap, sideways drag, mouse hover and
   the arrow keys select a price (date, store, price as tooltip); screen readers get all prices.
 - Related objects of forms (`barcode/`, `conversion/`, `related/`): Grocy's popup forms are
@@ -206,7 +225,9 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   (the other units follow the stock unit). Saving is online only: an edited product closes the
   form like "Save & return", a created one turns the form into its edit form. Userfields are
   edited by type (`UserfieldInput`, only changed ones are sent; files and images read only),
-  the picture through `ProductPictureDialog` (`rememberImagePicker` of `core:ui`), the parent
+  the picture through `ProductPictureDialog` (`rememberImagePicker` of `core:ui`; its item
+  shows the picture the product will have before its arrow, the stored list picture or the
+  picked one, `ProductViewModel.thumbnail`, and "No picture available" without one), the parent
   product can also be scanned (barcode or grocycode `grcy:p:<id>`): the scanner opens inside the
   field's item below it (`DropdownItem(below)`, small corners, text field color). Pickers whose
   text names no option (`ProductFormState.unmatchedChoices`, `UserfieldInput.isUnmatched`) block
@@ -221,16 +242,18 @@ server: stock, shopping list), Network (loading timeout, Tor with Orbot, HTTP pr
 (navigation, date and keyboard settings, Open Food Facts / Open Beauty Facts), Scanner (engine,
 front camera, 2D formats, barcode formats, external scanners) and Notifications (stock, chores)
 as one group (`SettingsCategory`), then "Backup and restore" and "Reset all" as a second group.
-Built so far: the overview, General (language, theme, contrast), Server and the stock settings
-(`StockSettingsRoute`, opened by "Presets for new products"). The other category pages, backup
-and reset follow; `settingsEntries` wires their clicks to nothing until then.
-- Wide windows show a category's page beside the categories, but only once one is chosen:
-  `SettingsRoute` has `listPaneMetadata(placeholder = null)`, which `ListAloneSceneStrategy`
-  leaves alone on the screen while it is on top; the pages are `DetailRoute`s opened with
-  `openDetail`, the categories then single choice items marking the shown page. A page beside
-  them has neither back button nor menu (the categories' bar has both). Back returns to the
-  categories alone (`ListBesideDetailScene` sets the scene's `previousEntries`, which the
-  browser history follows too).
+Built so far: the overview, General (language, theme, contrast), Server, User settings (a
+note that Grocy keeps them for the user on the server, then a page per area: the stock settings
+so far, hidden without the stock feature) and the stock settings (`StockSettingsRoute`, also
+opened by "Presets for new products"). The other category pages, backup and reset follow;
+`settingsEntries` wires their clicks to nothing until then.
+- Wide windows show the categories as list-detail scene like the master data: the detail pane
+  says to choose a category (`settings_select_hint`) until a page is open; the pages are
+  `DetailRoute`s opened with `openDetail`, the categories then single choice items marking the
+  shown page (`settingsCategoryOf`). A page beside them has neither back button nor menu (the
+  categories' bar has both). A page opened from a page (`StockSettingsRoute(inSettings =
+  true)`) takes its place beside the categories with a back button to it; opened from the
+  products (`inSettings = false`) it is a screen of its own.
 - Stock settings (`stock/`): every setting of Grocy's stock settings page in its groups, hidden
   by feature flag; each change is saved at once (`MasterDataRepository.saveUserSetting`,
   `UserSettingValue`), typed numbers once typing pauses and only when valid (Grocy's ranges,
@@ -348,8 +371,9 @@ Composables must be finished work that leaves nothing to improve:
   `LocalHapticFeedback`.
 - Text input never hides behind the keyboard, on every platform and in every window size: the
   scrolling container shrinks with the keyboard (padding from `WindowInsets.keyboard`, not
-  content padding), so Compose keeps the focused field in view, and the change is animated in
-  sync with the keyboard. `SegmentedListScreen` and `ScrollableAlertDialog` do this already.
+  content padding), so Compose keeps the focused field in view; on Android the change is
+  animated in sync with the keyboard. `SegmentedListScreen` and `ScrollableAlertDialog` do this
+  already.
 
 ### Screen and dialog design
 
@@ -373,10 +397,9 @@ for `SegmentedListItem`s, and `AppBarIconButton` for app bar actions.
   `nestedScroll`).
 - App bar actions (navigation icon included) are `FilledIconButton`s with `contentColor =
   onSurface` inside a `HapticTooltipBox`: `AppBarIconButton`, which `NavigateBackButton` and
-  `AppBarOverflowMenu` use. Their container follows the bar (`LocalAppBarButtonColor`, blended
-  with the bar's scroll): `surfaceContainerHigh` on the `surfaceContainer` bar,
-  `surfaceContainerHighest` on the scrolled bar, so actions and bar become one; screens without
-  `SegmentedListScreen` get `surfaceContainerHigh`.
+  `AppBarOverflowMenu` use. Their container is always `surfaceContainerHighest`: it stands out
+  on the `surfaceContainer` bar (`surfaceContainerHigh` was a single tone step above it, too
+  faint) and becomes one with the scrolled bar.
 - Nothing except group titles sits directly on the `surfaceContainer` background. Exceptions: the
   header of `LoginChoiceScreen` (logo, welcome title, subtitle, centered above the choices) and
   the primary action button that ends a form (`LoginManualScreen`'s Connect, full list width in
@@ -816,7 +839,8 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   `SegmentedContainer`, `AppBarIconButton`, `InsetLazyColumn` + `insetItem` with max width
   640.dp, `RoundedTextField`, `ConnectedButtonGroup`, `NavigateBackButton`, `HapticTooltipBox`,
   `TextDialog`, `FormattedText`, `FloatingToolbarWithFab` + `FloatingToolbarIconButton` for the
-  floatingToolbar slot of `SegmentedListScreen`, `SegmentedSwitchItem`,
+  floatingToolbar slot of `SegmentedListScreen` (snackbars never cover it: they lie above it
+  and follow it while it slides out and back in, `snackbarLift`), `SegmentedSwitchItem`,
   `SupportingLines` for every multi-line supporting content in lazy lists (Material sizes items
   by the slot's baselines, a reused column kept those of its former line count, so items stayed
   too high), `SearchableDropdownField` for every choice of objects, a combobox like Grocy's pickers: the
@@ -825,9 +849,10 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   `onUnmatchedChange`, so forms refuse to save); the menu only suggests (fuzzy, no check marks,
   optional fields offer "None"), opens through its arrow or while typing and closes on a choice
   or once the text names an option completely;
-  a tap on the field or its trailing action (scan) only focuses; its menu is one expressive menu
-  group in a `DropdownMenuPopup`, not `ExposedDropdownMenu`, whose old menu padding sits outside
-  the scrolling and cuts the items off), units of text fields go in the
+  a tap on the field or its trailing action (scan) only focuses, the arrow never does (choosing
+  needs no keyboard); its menu is one expressive menu group in a `DropdownMenuPopup`, not
+  `ExposedDropdownMenu`, whose old menu padding sits outside the scrolling and cuts the items
+  off, and no `ExposedDropdownMenuBox` either: it focuses the field whenever its menu opens), units of text fields go in the
   `suffix` slot of `RoundedTextField`. `SegmentedSwitchItem` is Material's checkable segmented item: while on it takes the selected
   shape and color (`secondaryContainer`) of the segmented defaults. Clicks trigger `haptic.confirm()`. `HapticTooltipBox`
   puts its modifier on an outer `Box`, because Material's `TooltipBox` loses parent data such as `align`.
@@ -863,9 +888,12 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   system's light or dark mode. Never add `theme_color` back.
 - Keyboard: `WindowInsets.keyboard` (`core:design`) is `WindowInsets.ime` on Android (edge-to-edge
   plus `adjustResize`, animated frame by frame). On the web `observeBrowserKeyboard` (called in
-  `main()`) measures it: Chromium's VirtualKeyboard API with `overlaysContent = true`, otherwise
-  the visual viewport; the app animates the overlap with Android's IME curve (285 ms,
-  cubic-bezier(0.2, 0, 0, 1)). `SegmentedListScreen` pads the list by the keyboard and puts only
+  `main()`) measures it from the visual viewport, without animation: Chromium and Firefox
+  shrink the page above the keyboard themselves (`interactive-widget=resizes-content`), so
+  nothing is covered and the app lays out anew; Safari only shrinks the visual viewport, the
+  covered part applies at once. Browsers expose no keyboard animation; an own one (the old
+  VirtualKeyboard API with `overlaysContent`) never matched it and let the page background
+  flash above the keyboard, so never add one back. `SegmentedListScreen` pads the list by the keyboard and puts only
   the uncovered part of the navigation bar below the content (`ScreenContentPadding`, read
   during layout, so animations relayout without recomposing).
 - Web page (`index.html`): `viewport-fit=cover` and `interactive-widget=resizes-content`; the

@@ -4,6 +4,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -11,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimeInput
@@ -21,6 +23,7 @@ import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -36,7 +39,9 @@ import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_cancel
 import com.patrickzedler.grocy.core.resources.action_ok
 import com.patrickzedler.grocy.core.resources.date_picker_open
+import com.patrickzedler.grocy.core.resources.product_due_days_pick
 import com.patrickzedler.grocy.core.resources.ic_rounded_calendar_month
+import com.patrickzedler.grocy.core.resources.ic_rounded_event
 import com.patrickzedler.grocy.core.resources.ic_rounded_keyboard
 import com.patrickzedler.grocy.core.resources.ic_rounded_schedule
 import com.patrickzedler.grocy.core.resources.time_picker_dial
@@ -66,6 +71,25 @@ internal fun withPickedTime(text: String, hour: Int, minute: Int, today: Long): 
     val day = epochDayOf(text.trim()) ?: today
     return "${isoDateOf(day)} ${timeText(hour, minute)}"
 }
+
+/**
+ * The days from [today] until the date [epochDay] picked for a due days field, so the first
+ * purchase's due date can be picked instead of counted.
+ */
+internal fun dueDaysUntil(epochDay: Long, today: Long): String =
+    (epochDay - today).coerceAtLeast(0).toString()
+
+/**
+ * The date the picker of a due days field starts on: [text] days after [today], today for no
+ * or negative days (-1 means never overdue), at most the picker's last year.
+ */
+internal fun dueDateOf(text: String, today: Long): Long {
+    val days = text.trim().toLongOrNull()?.coerceAtLeast(0) ?: 0
+    return (today + days.coerceAtMost(LAST_PICKER_DAY - today)).coerceAtLeast(today)
+}
+
+// 2100-12-31, the end of Material's date picker
+private const val LAST_PICKER_DAY = 47_846L
 
 private fun timeText(hour: Int, minute: Int) =
     "${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00"
@@ -102,7 +126,7 @@ internal fun DatePickerButton(state: TextFieldState, withTime: Boolean) {
 
     if (showDate) {
         PickDateDialog(
-            text = state.text.toString(),
+            initialEpochDay = epochDayOf(state.text.toString().trim()) ?: todayEpochDay(),
             onPick = { epochDay ->
                 showDate = false
                 val text = state.text.toString()
@@ -127,17 +151,76 @@ internal fun DatePickerButton(state: TextFieldState, withTime: Boolean) {
     }
 }
 
+/**
+ * The calendar button at the end of a due days field: picking a date from today on writes the
+ * days until it, e.g. the due date printed on the first purchase of a product.
+ */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+internal fun DueDaysPickerButton(state: TextFieldState) {
+    val haptic = LocalHapticFeedback.current
+    var showDate by rememberSaveable { mutableStateOf(false) }
+    val description = stringResource(Res.string.product_due_days_pick)
+
+    HapticTooltipBox(text = description) {
+        IconButton(
+            onClick = {
+                haptic.confirm()
+                showDate = true
+            },
+            modifier = Modifier.clickCursor(),
+            shapes = IconButtonDefaults.shapes(),
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_rounded_event),
+                contentDescription = description,
+            )
+        }
+    }
+
+    if (showDate) {
+        val today = todayEpochDay()
+        PickDateDialog(
+            initialEpochDay = dueDateOf(state.text.toString(), today),
+            firstEpochDay = today,
+            onPick = { epochDay ->
+                showDate = false
+                state.setTextAndPlaceCursorAtEnd(dueDaysUntil(epochDay, today))
+            },
+            onDismissRequest = { showDate = false },
+        )
+    }
+}
+
+/** Only [firstEpochDay] and the days after it can be picked. */
+@OptIn(ExperimentalMaterial3Api::class)
+private class FromDay(private val firstEpochDay: Long) : SelectableDates {
+    override fun isSelectableDate(utcTimeMillis: Long): Boolean =
+        utcTimeMillis.floorDiv(MILLIS_PER_DAY) >= firstEpochDay
+
+    override fun isSelectableYear(year: Int): Boolean =
+        year >= isoDateOf(firstEpochDay).substringBefore('-').toInt()
+}
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun PickDateDialog(
-    text: String,
+    initialEpochDay: Long,
     onPick: (epochDay: Long) -> Unit,
     onDismissRequest: () -> Unit,
+    firstEpochDay: Long? = null,
 ) {
     val haptic = LocalHapticFeedback.current
     // The picker counts in UTC milliseconds
     val pickerState = rememberDatePickerState(
-        initialSelectedDateMillis = (epochDayOf(text.trim()) ?: todayEpochDay()) * MILLIS_PER_DAY,
+        initialSelectedDateMillis = initialEpochDay * MILLIS_PER_DAY,
+        selectableDates = remember(firstEpochDay) {
+            if (firstEpochDay == null) {
+                DatePickerDefaults.AllDates
+            } else {
+                FromDay(firstEpochDay)
+            }
+        },
     )
 
     DatePickerDialog(

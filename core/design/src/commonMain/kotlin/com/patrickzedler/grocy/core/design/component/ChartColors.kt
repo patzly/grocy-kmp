@@ -16,15 +16,16 @@ import kotlin.math.sqrt
 
 /**
  * Colors of chart series in a fixed order, never cycled: more series must be drawn together.
- * A validated categorical palette (neighbours stay apart for color blind users too), its hues
- * turned towards the theme's primary color as far as they stay that distinguishable.
+ * A validated categorical palette (neighbours stay apart for color blind users too), harmonized
+ * with the theme's primary color as far as it stays valid: the first series is the palette's
+ * color closest to primary, and every hue turns towards primary.
  */
 @Composable
 fun rememberChartColors(): List<Color> {
     val primary = MaterialTheme.colorScheme.primary
     val isDark = MaterialTheme.colorScheme.surface.luminance() < DARK_LUMINANCE
     return remember(primary, isDark) {
-        harmonizedChartColors(if (isDark) DarkChartColors else LightChartColors, primary)
+        harmonizedChartColors(if (isDark) DarkChartColors else LightChartColors, primary, isDark)
     }
 }
 
@@ -43,26 +44,67 @@ internal val DarkChartColors = listOf(
 )
 
 /**
- * [palette] harmonized with [primary] like Material's color harmonization, with the strongest
- * hue rotation of [HarmonizationSteps] that keeps [isDistinguishable]; the palette itself is.
+ * [palette] harmonized with [primary]: it starts at its color closest to primary (the order
+ * stays, the last color neighbours the first one), then the strongest hue rotation and tone
+ * shift of [HarmonizationStrengths] that keep [isValidPalette]; the palette itself is valid.
  */
-internal fun harmonizedChartColors(palette: List<Color>, primary: Color): List<Color> =
-    HarmonizationSteps.asSequence()
-        .map { maxRotation -> palette.map { it.harmonize(primary, maxRotation) } }
-        .firstOrNull(::isDistinguishable)
-        ?: palette
+internal fun harmonizedChartColors(
+    palette: List<Color>,
+    primary: Color,
+    isDark: Boolean,
+): List<Color> {
+    val source = Hct.fromInt(primary.toArgb())
+    val closest = palette.indices.minBy { abs(hueDifference(hctOf(palette[it]).hue, source.hue)) }
+    val orders = listOf(palette.drop(closest) + palette.take(closest), palette)
+    val meanTone = palette.map { hctOf(it).tone }.average()
+    for (order in orders) {
+        for (rotation in HarmonizationStrengths) {
+            for (toning in HarmonizationStrengths) {
+                val colors = order.map { it.harmonize(source, rotation, toning, meanTone) }
+                if (isValidPalette(colors, isDark)) return colors
+            }
+        }
+    }
+    return palette
+}
 
 /**
- * Turns the hue towards [source] by half their difference, at most [maxRotation] degrees.
- * Chroma and tone stay, so the colors keep their weight.
+ * Turns the hue towards [source] like Material's harmonization, half their difference but up to
+ * [MAX_ROTATION] degrees, times [rotation]; [toning] moves the tone towards the one of [source],
+ * keeping the palette's spread around its [meanTone]. Chroma stays, so the colors keep their
+ * weight.
  */
-internal fun Color.harmonize(source: Color, maxRotation: Double): Color {
-    val from = Hct.fromInt(toArgb())
-    val towards = Hct.fromInt(source.toArgb()).hue
-    val difference = (towards - from.hue + HALF_TURN * 3) % FULL_TURN - HALF_TURN
-    val rotation = min(abs(difference) / 2, maxRotation) * sign(difference)
-    val hue = (from.hue + rotation + FULL_TURN) % FULL_TURN
-    return Color(Hct.from(hue, from.chroma, from.tone).toInt())
+internal fun Color.harmonize(
+    source: Hct,
+    rotation: Double,
+    toning: Double,
+    meanTone: Double,
+): Color {
+    val from = hctOf(this)
+    val difference = hueDifference(from.hue, source.hue)
+    val turn = min(abs(difference) / 2, MAX_ROTATION) * sign(difference) * rotation
+    val hue = (from.hue + turn + FULL_TURN) % FULL_TURN
+    val themedTone = source.tone + (from.tone - meanTone) * TONE_SPREAD
+    val tone = (from.tone + (themedTone - from.tone) * toning).coerceIn(MIN_TONE, MAX_TONE)
+    return Color(Hct.from(hue, from.chroma, tone).toInt())
+}
+
+private fun hctOf(color: Color): Hct = Hct.fromInt(color.toArgb())
+
+// From [from] to [to] the short way round, -180 to 180 degrees
+private fun hueDifference(from: Double, to: Double): Double =
+    (to - from + HALF_TURN * 3) % FULL_TURN - HALF_TURN
+
+/**
+ * The dataviz validator's checks of a categorical palette: every color inside the lightness
+ * band of its mode with enough chroma not to read gray, neighbours [isDistinguishable].
+ */
+internal fun isValidPalette(colors: List<Color>, isDark: Boolean): Boolean {
+    val band = if (isDark) DarkLightnessBand else LightLightnessBand
+    return colors.all { color ->
+        val (lightness, a, b) = oklab(linearRgb(color))
+        lightness in band && sqrt(a * a + b * b) >= CHROMA_FLOOR
+    } && isDistinguishable(colors)
 }
 
 /**
@@ -114,8 +156,19 @@ private val Deuteranopia = listOf(
     doubleArrayOf(-0.011820, 0.042940, 0.968881),
 )
 
-// Material harmonizes by up to 15 degrees; red themes pull green and red too close for that
-private val HarmonizationSteps = listOf(15.0, 12.0, 9.0, 6.0, 3.0)
+// From full strength down to none, rotation before tone: hues matter most for the look
+private val HarmonizationStrengths = listOf(1.0, 0.8, 0.6, 0.4, 0.2, 0.0)
+
+// Twice Material's 15 degrees: its harmonization alone left the palette looking foreign
+private const val MAX_ROTATION = 30.0
+private const val TONE_SPREAD = 0.8
+private const val MIN_TONE = 5.0
+private const val MAX_TONE = 95.0
+
+// OKLCH lightness and chroma limits of the dataviz validator
+private val LightLightnessBand = 0.43..0.77
+private val DarkLightnessBand = 0.48..0.67
+private const val CHROMA_FLOOR = 0.10
 private const val NORMAL_VISION_MIN_DISTANCE = 15.0
 private const val COLOR_BLIND_MIN_DISTANCE = 8.0
 private const val PERCENT = 100.0

@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Zpět</string>
   <string name="action_more_options">Další možnosti</string>
+  <string name="action_decrease">Snížit</string>
+  <string name="action_increase">Zvýšit</string>
   <string name="action_cancel">Zrušit</string>
   <string name="action_close">Zavřít</string>
   <string name="action_update">Aktualizovat</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">Obecné</string>
+  <string name="settings_select_hint">Vyberte kategorii a zobrazte zde její nastavení</string>
   <string name="settings_server">Server</string>
   <string name="settings_user">Uživatelské nastavení</string>
+  <string name="settings_user_synced">Uloženo na serveru</string>
+  <string name="settings_user_synced_hint">Grocy ukládá tato nastavení pro vašeho uživatele, takže platí i v jeho webovém rozhraní a na vašich dalších zařízeních</string>
   <string name="settings_network">Síť</string>
   <string name="settings_behavior">Chování</string>
   <string name="settings_scanner">Skener</string>
@@ -392,6 +397,7 @@
   <string name="product_due_type_expiration_hint">Po vypršení doby použitelnosti není vhodné produkt konzumovat</string>
   <string name="product_due_days">Výchozí počet dní min. trvanlivosti</string>
   <string name="product_due_days_hint">Tento počet dní bude přidán k dnešnímu datu jako návrh data minimální trvanlivosti (zadáním -1 bude mít produkt neomezenou trvanlivost)</string>
+  <string name="product_due_days_pick">Spočítat dny do data</string>
   <string name="product_due_days_after_open">Výchozí počet dní min. trvanlivosti po otevření</string>
   <string name="product_due_days_after_open_hint">Při označení jako Otevřený, bude nastavené datum min. trvanlivosti: dnes + tento počet dní. Ale jen pokud nové datum spotřeby nebude později, než původní. Hodnota 0 datum min. trvanlivosti (spotřeby) nemění.</string>
   <string name="product_due_days_after_freezing">Výchozí počet dní min. trvanlivosti po zamražení</string>
@@ -761,7 +767,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">Stránka Přehledu zásob zobrazuje všechny produkty, které jsou v zásobě nebo pod jejich minimálním stavem. Zaškrtnutím se zobrazí všechny (aktivní) produkty.</string>
   <string name="stock_settings_purchase">Nakoupit</string>
   <string name="stock_settings_purchase_amount">Obvyklé množství k nákupu</string>
-  <string name="stock_settings_show_purchased_date">Zobrazit datum nákupu na stránce nákupu. Jinak se bude ukládat aktuální datum.</string>
+  <string name="stock_settings_show_purchased_date">Zobrazit datum nákupu na stránce nákupu</string>
+  <string name="stock_settings_show_purchased_date_hint">Jinak se bude ukládat aktuální datum</string>
   <string name="stock_settings_due_date_warning">Upozorni, pokud je datum min. trvanlivosti (použitelnosti) nakoupeného produktu dříve, než nejbližší datum spotřeby produktu v zásobě.</string>
   <string name="stock_settings_consume">Spotřebovat</string>
   <string name="stock_settings_consume_amount">Výchozí množství ke spotřebě</string>

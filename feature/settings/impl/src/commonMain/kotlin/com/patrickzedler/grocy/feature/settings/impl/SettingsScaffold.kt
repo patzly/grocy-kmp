@@ -62,7 +62,7 @@ internal class SettingsMenuActions(
  * A settings screen: [SegmentedListScreen] with back button and the same overflow menu
  * everywhere (About, Help, Send feedback, Show logcat), including its dialogs. As [pane] of the
  * settings' list-detail layout a page beside the categories has neither: the categories' bar
- * has both.
+ * has both. A page opened from such a page keeps its back button ([hasBackButton]).
  */
 @Composable
 internal fun SettingsScaffold(
@@ -72,6 +72,7 @@ internal fun SettingsScaffold(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     pane: ScreenPane? = null,
+    hasBackButton: Boolean = pane != ScreenPane.Detail,
     snackbarHostState: SnackbarHostState? = null,
     content: LazyListScope.() -> Unit,
 ) {
@@ -92,6 +93,7 @@ internal fun SettingsScaffold(
         onFeedbackClick = { activeDialog = AppDialog.FEEDBACK },
         modifier = modifier,
         pane = pane,
+        hasBackButton = hasBackButton,
         snackbarHostState = snackbarHostState,
         content = content,
     )
@@ -107,6 +109,7 @@ internal fun SettingsScaffoldContent(
     onFeedbackClick: () -> Unit,
     modifier: Modifier = Modifier,
     pane: ScreenPane? = null,
+    hasBackButton: Boolean = pane != ScreenPane.Detail,
     snackbarHostState: SnackbarHostState? = null,
     content: LazyListScope.() -> Unit,
 ) {
@@ -118,7 +121,7 @@ internal fun SettingsScaffoldContent(
         snackbarHostState = snackbarHostState,
         navigationIcon = {
             // Beside the categories their back button leaves both
-            if (!isBesideCategories) NavigateBackButton(onClick = onBackClick)
+            if (hasBackButton) NavigateBackButton(onClick = onBackClick)
         },
         actions = {
             if (!isBesideCategories) {

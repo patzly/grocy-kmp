@@ -34,6 +34,7 @@ import com.patrickzedler.grocy.feature.settings.api.LogRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.StockSettingsRoute
+import com.patrickzedler.grocy.feature.settings.api.UserSettingsRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -84,7 +85,9 @@ class RouteSerializersTest {
         UserfieldRoute(id = 3),
         UserentitiesRoute,
         UserentityRoute(id = 3),
-        StockSettingsRoute,
+        UserSettingsRoute,
+        StockSettingsRoute(),
+        StockSettingsRoute(inSettings = true),
         StockEntriesRoute(),
         StockEntriesRoute(productId = 7),
         StockJournalRoute(),

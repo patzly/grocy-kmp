@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,7 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.component.ConnectedButtonGroup
 import com.patrickzedler.grocy.core.design.component.DropdownOption
+import com.patrickzedler.grocy.core.design.component.NumberStepper
+import com.patrickzedler.grocy.core.design.component.NumberStepperField
 import com.patrickzedler.grocy.core.design.component.RoundedTextField
+import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SearchableDropdownField
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
@@ -62,6 +66,7 @@ import com.patrickzedler.grocy.core.resources.stock_settings_show_all_out_of_sto
 import com.patrickzedler.grocy.core.resources.stock_settings_show_all_out_of_stock_hint
 import com.patrickzedler.grocy.core.resources.stock_settings_show_icon
 import com.patrickzedler.grocy.core.resources.stock_settings_show_purchased_date
+import com.patrickzedler.grocy.core.resources.stock_settings_show_purchased_date_hint
 import com.patrickzedler.grocy.core.resources.stock_settings_use_quick_consume
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuActions
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuViewModel
@@ -81,6 +86,7 @@ internal fun StockSettingsScreen(
     menuActions: SettingsMenuActions,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
+    pane: ScreenPane? = null,
 ) {
     val options by viewModel.options.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -107,6 +113,9 @@ internal fun StockSettingsScreen(
         menuActions = menuActions,
         onBackClick = onBackClick,
         modifier = modifier,
+        pane = pane,
+        // Opened from the user settings, it returns to them beside the categories too
+        hasBackButton = true,
         snackbarHostState = snackbarHostState,
     ) {
         val form = viewModel.form
@@ -226,6 +235,7 @@ private fun LazyListScope.stockSettings(
         )
         SwitchItem(
             label = Res.string.stock_settings_show_purchased_date,
+            hint = Res.string.stock_settings_show_purchased_date_hint,
             setting = StockSwitchSetting.SHOW_PURCHASED_DATE,
             form = form,
             viewModel = viewModel,
@@ -330,27 +340,46 @@ private fun NumberItem(
     enabled: Boolean = true,
 ) {
     val error = form.errors[setting]?.let { errorText(it) }
+    val state = form.numbers.getValue(setting)
     SegmentedContainer(index = index, count = count) {
-        RoundedTextField(
-            state = form.numbers.getValue(setting),
+        NumberStepperField(
+            state = state,
+            stepper = NumberStepper(min = setting.min, max = setting.max),
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
-            label = { Text(stringResource(label)) },
-            isError = error != null,
-            supportingText = error?.let { text ->
-                {
-                    Text(
-                        text = text,
-                        modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
-                    )
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal,
-                imeAction = ImeAction.Next,
-            ),
-        )
+        ) { fieldModifier ->
+            NumberField(state, label, error, enabled, modifier = fieldModifier)
+        }
     }
+}
+
+@Composable
+private fun NumberField(
+    state: TextFieldState,
+    label: StringResource,
+    error: String?,
+    enabled: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    RoundedTextField(
+        state = state,
+        modifier = modifier,
+        enabled = enabled,
+        label = { Text(stringResource(label)) },
+        isError = error != null,
+        supportingText = error?.let { text ->
+            {
+                Text(
+                    text = text,
+                    modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+                )
+            }
+        },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Decimal,
+            imeAction = ImeAction.Next,
+        ),
+    )
 }
 
 @Composable

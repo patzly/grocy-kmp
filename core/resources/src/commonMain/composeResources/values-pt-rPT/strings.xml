@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Voltar</string>
   <string name="action_more_options">Mais opções</string>
+  <string name="action_decrease">Diminuir</string>
+  <string name="action_increase">Aumentar</string>
   <string name="action_cancel">Cancelar</string>
   <string name="action_close">Fechar</string>
   <string name="action_update">Atualizar</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">Geral</string>
+  <string name="settings_select_hint">Escolha uma categoria para mostrar aqui as configurações</string>
   <string name="settings_server">Servidor</string>
   <string name="settings_user">Configurações do utilizador</string>
+  <string name="settings_user_synced">Guardadas no servidor</string>
+  <string name="settings_user_synced_hint">O Grocy guarda estas configurações para o seu utilizador, por isso também se aplicam na interface web e nos seus outros dispositivos</string>
   <string name="settings_network">Rede</string>
   <string name="settings_behavior">Comportamento</string>
   <string name="settings_scanner">Leitor de códigos</string>
@@ -382,6 +387,7 @@
   <string name="product_due_type_expiration_hint">Significa que o produto não é seguro para consumo depois de atingida a data de validade</string>
   <string name="product_due_days">Dias de validade predefinidos</string>
   <string name="product_due_days_hint">Nas compras, este número de dias será somado a hoje para sugerir a data de validade (-1 significa que este produto nunca expira)</string>
+  <string name="product_due_days_pick">Contar os dias até uma data</string>
   <string name="product_due_days_after_open">Dias de validade predefinidos após abrir</string>
   <string name="product_due_days_after_open_hint">Quando este produto for marcado como aberto, a data de validade será substituída por hoje + este número de dias, mas apenas se a data resultante não for posterior à data de validade original (um valor de 0 desativa isto)</string>
   <string name="product_due_days_after_freezing">Dias de validade predefinidos após congelar</string>
@@ -745,7 +751,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">Por predefinição, a visão geral do stock mostra todos os produtos em stock ou abaixo da quantidade mínima - quando ativado, são sempre mostrados todos os produtos (ativos)</string>
   <string name="stock_settings_purchase">Comprar</string>
   <string name="stock_settings_purchase_amount">Quantidade predefinida para comprar</string>
-  <string name="stock_settings_show_purchased_date">Mostrar a data de compra na página de compra e inventário (caso contrário, a data de compra padrão será a de hoje)</string>
+  <string name="stock_settings_show_purchased_date">Mostrar a data de compra na página de compra e inventário</string>
+  <string name="stock_settings_show_purchased_date_hint">Caso contrário, a data de compra padrão será a de hoje</string>
   <string name="stock_settings_due_date_warning">Mostrar um aviso quando a data de validade do produto comprado é anterior à próxima data de validade em stock</string>
   <string name="stock_settings_consume">Consumir</string>
   <string name="stock_settings_consume_amount">Quantidade predefinida para consumir</string>

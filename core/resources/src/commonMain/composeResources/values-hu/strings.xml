@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Vissza</string>
   <string name="action_more_options">További lehetőségek</string>
+  <string name="action_decrease">Csökkentés</string>
+  <string name="action_increase">Növelés</string>
   <string name="action_cancel">Mégse</string>
   <string name="action_close">Bezár</string>
   <string name="action_update">Frissítés</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">Általános</string>
+  <string name="settings_select_hint">Válassz egy kategóriát, hogy itt lásd a beállításait</string>
   <string name="settings_server">Szerver</string>
   <string name="settings_user">Felhasználói beállítások</string>
+  <string name="settings_user_synced">A szerveren tárolva</string>
+  <string name="settings_user_synced_hint">A Grocy ezeket a beállításokat a felhasználódhoz tárolja, így a webes felületén és a többi eszközödön is érvényesek</string>
   <string name="settings_network">Hálózat</string>
   <string name="settings_behavior">Viselkedés</string>
   <string name="settings_scanner">Vonalkódolvasó</string>
@@ -372,6 +377,7 @@
   <string name="product_due_type_expiration_hint">Azt jelenti, hogy a termék már nem fogyasztható biztonságosan a lejárati dátum után</string>
   <string name="product_due_days">Alapértelmezett lejárati idő</string>
   <string name="product_due_days_hint">Vásárlás esetén mától számítva ennyi nap adódik hozzá a felkínált lejárati idő javaslathoz (-1 esetén a termék soha nem jár le)</string>
+  <string name="product_due_days_pick">Napok számolása egy dátumig</string>
   <string name="product_due_days_after_open">Alapértelmezett fogyaszthatósági idő felbontás után</string>
   <string name="product_due_days_after_open_hint">Felbontáskor a lejárati időt kicseréli a mai nap + a megadott napok összegére, azonban csak akkor, ha a számolt dátum az eredetinél nincs később (a 0 érték kikapcsolja a funkciót)</string>
   <string name="product_due_days_after_freezing">Alapértelmezett lejárati idő fagyasztás után</string>
@@ -729,7 +735,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">Alapértelmezetten a készletáttekintés a készleten lévő vagy a minimális mennyiség alatti termékeket mutatja – ha bekapcsolod, mindig az összes (aktív) termék megjelenik</string>
   <string name="stock_settings_purchase">Vásárlás</string>
   <string name="stock_settings_purchase_amount">Alapértelmezett vásárlási mennyiség</string>
-  <string name="stock_settings_show_purchased_date">Vásárlási dátum mutatása a vásárlás és készlet áttekintés oldalakon (enélkül a vásárlási dátum a mai napra áll be)</string>
+  <string name="stock_settings_show_purchased_date">Vásárlási dátum mutatása a vásárlás és készlet áttekintés oldalakon</string>
+  <string name="stock_settings_show_purchased_date_hint">Enélkül a vásárlási dátum a mai napra áll be</string>
   <string name="stock_settings_due_date_warning">Figyelmeztessen, ha a vásárolt termék előbb jár le, mint ami készleten van</string>
   <string name="stock_settings_consume">Felhasználás</string>
   <string name="stock_settings_consume_amount">Alapértelmezett felhasználási mennyiség</string>

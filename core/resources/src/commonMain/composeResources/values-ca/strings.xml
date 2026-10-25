@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Enrere</string>
   <string name="action_more_options">Més opcions</string>
+  <string name="action_decrease">Disminueix</string>
+  <string name="action_increase">Augmenta</string>
   <string name="action_cancel">Cancel·lar</string>
   <string name="action_close">Tancar</string>
   <string name="action_update">Actualitzar</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">General</string>
+  <string name="settings_select_hint">Tria una categoria per mostrar-ne la configuració aquí</string>
   <string name="settings_server">Servidor</string>
   <string name="settings_user">Configuració d’usuari</string>
+  <string name="settings_user_synced">Desat al servidor</string>
+  <string name="settings_user_synced_hint">El Grocy desa aquesta configuració per al teu usuari, de manera que també s'aplica a la seva interfície web i als teus altres dispositius</string>
   <string name="settings_network">Xarxa</string>
   <string name="settings_behavior">Comportament</string>
   <string name="settings_scanner">Escàner</string>
@@ -382,6 +387,7 @@
   <string name="product_due_type_expiration_hint">Significa que el producte no és segur per al consum després de la data de caducitat</string>
   <string name="product_due_days">Dies per al consum per defecte</string>
   <string name="product_due_days_hint">Per a compres, aquesta quantitat de dies serà afegida a la data d’avui per a la suggerència de data de consum (-1 significa que aquest producte no caducarà mai)</string>
+  <string name="product_due_days_pick">Compta els dies fins a una data</string>
   <string name="product_due_days_after_open">Dies per al consum després d’obrir per defecte</string>
   <string name="product_due_days_after_open_hint">Quan aquest producte es marqui com a obert, la data de consum serà substituida per la data del dia + aquesta quantitat de dies, pero només si la data resultant no és més tard de la data de consum original (el valor 0 desactiva aquesta opció)</string>
   <string name="product_due_days_after_freezing">Dies per al consum després de congelar per defecte</string>
@@ -745,7 +751,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">Per defecte, el resum d'existències mostra tots els productes que hi ha en existència o per sota de la seva quantitat mínima; si ho actives, sempre s'hi mostren tots els productes (actius)</string>
   <string name="stock_settings_purchase">Compra</string>
   <string name="stock_settings_purchase_amount">Quantitat per defecte per a la compra</string>
-  <string name="stock_settings_show_purchased_date">Mostra la data de compra a les pàgines de compra i d'inventari (altrament la data de compra és avui)</string>
+  <string name="stock_settings_show_purchased_date">Mostra la data de compra a les pàgines de compra i d'inventari</string>
+  <string name="stock_settings_show_purchased_date_hint">Altrament la data de compra és avui</string>
   <string name="stock_settings_due_date_warning">Mostra una advertència quan la data de caducitat del producte comprat és més propera que la de les existències</string>
   <string name="stock_settings_consume">Consum</string>
   <string name="stock_settings_consume_amount">Quantitat per defecte per al consum</string>

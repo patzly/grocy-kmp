@@ -75,69 +75,49 @@ class ListDetailTest {
     }
 
     @Test
-    fun listWithoutPlaceholderStaysAloneWhileOnTop() {
-        val strategy = ListAloneSceneStrategy(RecordingStrategy)
-        val list = entry(listPaneMetadata("settings", placeholder = null))
+    fun backFromADetailOpenedFromAnotherReturnsToIt() {
+        val strategy = NestedDetailSceneStrategy(RecordingStrategy)
+        val list = entry(listPaneMetadata("settings") {})
+        val detail = entry(detailPaneMetadata("settings"))
+        val nested = entry(detailPaneMetadata("settings"))
 
-        val scene = with(strategy) { SceneStrategyScope<NavKey>().calculateScene(listOf(list)) }
+        val scene = with(strategy) {
+            SceneStrategyScope<NavKey>().calculateScene(listOf(list, detail, nested))
+        }
 
-        assertNull(scene)
+        assertIs<BackToDetailScene>(scene)
+        assertEquals(listOf(list, detail), scene.previousEntries)
     }
 
     @Test
-    fun detailOnTopOpensBesideTheListWithoutPlaceholder() {
-        val strategy = ListAloneSceneStrategy(RecordingStrategy)
+    fun aSingleDetailKeepsMaterialsBack() {
+        val strategy = NestedDetailSceneStrategy(RecordingStrategy)
         val entries = listOf(
-            entry(listPaneMetadata("settings", placeholder = null)),
+            entry(listPaneMetadata("list") {}),
+            entry(detailPaneMetadata("list")),
+        )
+
+        val scene = with(strategy) { SceneStrategyScope<NavKey>().calculateScene(entries) }
+
+        assertIs<TestScene>(scene)
+    }
+
+    @Test
+    fun scenesOfOnePaneAreLeftToTheNextStrategy() {
+        val strategy = NestedDetailSceneStrategy(NoSceneStrategy)
+        val entries = listOf(
+            entry(detailPaneMetadata("settings")),
             entry(detailPaneMetadata("settings")),
         )
 
-        val scene = with(strategy) { SceneStrategyScope<NavKey>().calculateScene(entries) }
-
-        assertEquals(entries, scene?.entries)
+        assertNull(with(strategy) { SceneStrategyScope<NavKey>().calculateScene(entries) })
     }
 
     @Test
-    fun backFromTheDetailBesideTheListShowsTheListAlone() {
-        val strategy = ListAloneSceneStrategy(RecordingStrategy)
-        val start = entry(emptyMap())
-        val list = entry(listPaneMetadata("settings", placeholder = null))
-        val detail = entry(detailPaneMetadata("settings"))
+    fun scenesBackToADetailAreEqualForTheSameScene() {
+        val scene = TestScene(listOf(entry(detailPaneMetadata("settings"))))
 
-        val scene = with(strategy) {
-            SceneStrategyScope<NavKey>().calculateScene(listOf(start, list, detail))
-        }
-
-        assertEquals(listOf(start, list), scene?.previousEntries)
-    }
-
-    @Test
-    fun listsWithPlaceholderOpenTheirScene() {
-        val strategy = ListAloneSceneStrategy(RecordingStrategy)
-        val entries = listOf(entry(listPaneMetadata("list") {}))
-
-        val scene = with(strategy) { SceneStrategyScope<NavKey>().calculateScene(entries) }
-
-        assertEquals(entries, scene?.entries)
-    }
-
-    @Test
-    fun listAloneKeepsTheScreensBackground() {
-        val scene = TestScene(listOf(entry(listPaneMetadata("settings", placeholder = null))))
-
-        assertSame(scene, decorate(scene, isTwoPane = true))
-    }
-
-    @Test
-    fun listWithoutPlaceholderBesideItsDetailGetsThePaneBackground() {
-        val scene = TestScene(
-            listOf(
-                entry(listPaneMetadata("settings", placeholder = null)),
-                entry(detailPaneMetadata("settings")),
-            ),
-        )
-
-        assertIs<PaneBackgroundScene>(decorate(scene, isTwoPane = true))
+        assertEquals(BackToDetailScene(scene, emptyList()), BackToDetailScene(scene, emptyList()))
     }
 
     private fun decorate(scene: Scene<NavKey>, isTwoPane: Boolean): Scene<NavKey> =
@@ -149,6 +129,13 @@ class ListDetailTest {
         NavEntry<NavKey>(TestKey, metadata = metadata) {}
 
     private data object TestKey : NavKey
+
+    // Lays out no scene, like Material's strategy for a single pane
+    private object NoSceneStrategy : SceneStrategy<NavKey> {
+        override fun SceneStrategyScope<NavKey>.calculateScene(
+            entries: List<NavEntry<NavKey>>,
+        ): Scene<NavKey>? = null
+    }
 
     // Lays out every entry it gets as one scene
     private object RecordingStrategy : SceneStrategy<NavKey> {

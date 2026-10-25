@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Πίσω</string>
   <string name="action_more_options">Περισσότερες επιλογές</string>
+  <string name="action_decrease">Μείωση</string>
+  <string name="action_increase">Αύξηση</string>
   <string name="action_cancel">Ματαίωση</string>
   <string name="action_close">Κλείσιμο</string>
   <string name="action_update">Ενημέρωση</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">Γενικά</string>
+  <string name="settings_select_hint">Επιλέξτε μια κατηγορία για να εμφανιστούν εδώ οι ρυθμίσεις της</string>
   <string name="settings_server">Διακομιστής</string>
   <string name="settings_user">Ρυθμίσεις χρήστη</string>
+  <string name="settings_user_synced">Αποθηκεύονται στον διακομιστή</string>
+  <string name="settings_user_synced_hint">Το Grocy αποθηκεύει αυτές τις ρυθμίσεις για τον χρήστη σας, οπότε ισχύουν και στη διεπαφή ιστού του και στις άλλες συσκευές σας</string>
   <string name="settings_network">Δίκτυο</string>
   <string name="settings_behavior">Συμπεριφορά</string>
   <string name="settings_scanner">Σαρωτής</string>
@@ -372,6 +377,7 @@
   <string name="product_due_type_expiration_hint">Το προϊόν δεν είναι ασφαλές να καταναλωθεί αφού παρέλθει η ημερομηνία λήξης του</string>
   <string name="product_due_days">Προεπιλεγμένες ημέρες λήξης</string>
   <string name="product_due_days_hint">Κατά τις αγορές, αυτός ο αριθμός ημερών θα προστίθεται στη σημερινή ημερομηνία για την προτεινόμενη ημερομηνία λήξης (-1 σημαίνει ότι αυτό το προϊόν δεν θα λήξει ποτέ)</string>
+  <string name="product_due_days_pick">Μέτρηση ημερών έως μια ημερομηνία</string>
   <string name="product_due_days_after_open">Προεπιλεγμένες ημέρες λήξης μετά το άνοιγμα</string>
   <string name="product_due_days_after_open_hint">Όταν αυτό το προϊόν επισημανθεί ως ανοιγμένο, η ημερομηνία λήξης θα αντικατασταθεί από τη σημερινή + αυτόν τον αριθμό ημερών, αλλά μόνο αν η νέα ημερομηνία δεν είναι μετά την αρχική ημερομηνία λήξης (η τιμή 0 το απενεργοποιεί)</string>
   <string name="product_due_days_after_freezing">Προεπιλεγμένες ημέρες λήξης μετά την κατάψυξη</string>
@@ -729,7 +735,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">Από προεπιλογή η επισκόπηση αποθεμάτων εμφανίζει όλα τα προϊόντα που βρίσκονται σε απόθεμα ή κάτω από την ελάχιστη ποσότητά τους - με αυτή τη ρύθμιση εμφανίζονται πάντα όλα τα (ενεργά) προϊόντα</string>
   <string name="stock_settings_purchase">Αγορά</string>
   <string name="stock_settings_purchase_amount">Προεπιλεγμένο ποσό για αγορά</string>
-  <string name="stock_settings_show_purchased_date">Εμφάνιση της ημερομηνίας αγοράς στις σελίδες αγοράς και απογραφής (αλλιώς η ημερομηνία αγοράς είναι η σημερινή)</string>
+  <string name="stock_settings_show_purchased_date">Εμφάνιση της ημερομηνίας αγοράς στις σελίδες αγοράς και απογραφής</string>
+  <string name="stock_settings_show_purchased_date_hint">Αλλιώς η ημερομηνία αγοράς είναι η σημερινή</string>
   <string name="stock_settings_due_date_warning">Εμφάνιση προειδοποίησης όταν η ημερομηνία λήξης του αγορασμένου προϊόντος είναι νωρίτερα από την επόμενη ημερομηνία λήξης στο απόθεμα</string>
   <string name="stock_settings_consume">Καταναλώνω</string>
   <string name="stock_settings_consume_amount">Προεπιλεγμένο ποσό για κατανάλωση</string>

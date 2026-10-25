@@ -30,8 +30,18 @@ internal fun ProductThumbnail(
     load: suspend (fileName: String) -> ByteArray?,
     modifier: Modifier = Modifier,
 ) {
-    val image by produceState<ImageBitmap?>(null, fileName) {
-        value = load(fileName)?.let { bytes ->
+    ProductThumbnail(key = fileName, load = { load(fileName) }, modifier = modifier)
+}
+
+/** [ProductThumbnail] of the image [load] reads, read again when [key] changes. */
+@Composable
+internal fun ProductThumbnail(
+    key: Any,
+    load: suspend () -> ByteArray?,
+    modifier: Modifier = Modifier,
+) {
+    val image by produceState<ImageBitmap?>(null, key) {
+        value = load()?.let { bytes ->
             try {
                 bytes.decodeToImageBitmap()
             } catch (_: Exception) {

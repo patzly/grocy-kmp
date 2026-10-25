@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Terug</string>
   <string name="action_more_options">Meer opties</string>
+  <string name="action_decrease">Verlagen</string>
+  <string name="action_increase">Verhogen</string>
   <string name="action_cancel">Annuleer</string>
   <string name="action_close">Sluit</string>
   <string name="action_update">Bijwerken</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">Algemeen</string>
+  <string name="settings_select_hint">Kies een categorie om de instellingen hier te tonen</string>
   <string name="settings_server">Server</string>
   <string name="settings_user">Gebruikersinstellingen</string>
+  <string name="settings_user_synced">Opgeslagen op de server</string>
+  <string name="settings_user_synced_hint">Grocy slaat deze instellingen op voor je gebruiker, dus ze gelden ook in de webinterface en op je andere apparaten</string>
   <string name="settings_network">Netwerk</string>
   <string name="settings_behavior">Gedrag</string>
   <string name="settings_scanner">Scanner</string>
@@ -372,6 +377,7 @@
   <string name="product_due_type_expiration_hint">Betekent dat het product niet meer gebruikt kan worden na de houdbaarheidsdatum</string>
   <string name="product_due_days">Standaard houdbaarheidsdatum</string>
   <string name="product_due_days_hint">De volgende uitvoeringsdatum zal worden aangeraden op zoveel dagen na vandaag (-1 betekent dat dit product nooit achterstallig zal zijn)</string>
+  <string name="product_due_days_pick">Dagen tot een datum tellen</string>
   <string name="product_due_days_after_open">Standaard houdbaarheidsdatum na openen</string>
   <string name="product_due_days_after_open_hint">Toen dit product als geopend werd gemarkeerd, wordt de vervaldatum vervangen door vandaag + dit aantal dagen, maar alleen als de resulterende datum niet na de originele vervaldatum valt (een waarde van 0 schakelt dit uit)</string>
   <string name="product_due_days_after_freezing">Standaard houdbaarheidsdatum na invriezen</string>
@@ -729,7 +735,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">Op de voorraadoverzichtspagina staan alle producten die momenteel op voorraad zijn of onder hun min. voorraadhoeveelheid - schakel dit in om dit product daar altijd te verbergen</string>
   <string name="stock_settings_purchase">Aankoop</string>
   <string name="stock_settings_purchase_amount">Standaardhoeveelheid voor aankoop</string>
-  <string name="stock_settings_show_purchased_date">Toon aankoopdatum op aankoop- en voorraadpagina (anders zal de aankoopdatum standaard op vandaag worden gezet)</string>
+  <string name="stock_settings_show_purchased_date">Toon aankoopdatum op aankoop- en voorraadpagina</string>
+  <string name="stock_settings_show_purchased_date_hint">Anders zal de aankoopdatum standaard op vandaag worden gezet</string>
   <string name="stock_settings_due_date_warning">Toon een waarschuwing wanneer de verloop datum van het gekochte product eerder is dan de volgende verloop datum is in de voorraad</string>
   <string name="stock_settings_consume">Verbruiken</string>
   <string name="stock_settings_consume_amount">Standaardhoeveelheid voor verbruiken</string>

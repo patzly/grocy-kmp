@@ -28,6 +28,8 @@
   <!-- Common actions -->
   <string name="action_back">Back</string>
   <string name="action_more_options">More options</string>
+  <string name="action_decrease">Decrease</string>
+  <string name="action_increase">Increase</string>
   <string name="action_cancel">Cancel</string>
   <string name="action_discard">Discard</string>
   <string name="action_close">Close</string>
@@ -175,8 +177,11 @@
 
   <!-- Settings -->
   <string name="settings_general">General</string>
+  <string name="settings_select_hint">Choose a category to show its settings here</string>
   <string name="settings_server">Server</string>
   <string name="settings_user">User settings</string>
+  <string name="settings_user_synced">Saved on the server</string>
+  <string name="settings_user_synced_hint">Grocy keeps these settings for your user, so they also apply in its web frontend and on your other devices</string>
   <string name="settings_network">Network</string>
   <string name="settings_behavior">Behavior</string>
   <string name="settings_scanner">Scanner</string>
@@ -408,6 +413,7 @@
   <string name="product_due_type_expiration_hint">Means that the product is not safe to be consumed after its due date is reached</string>
   <string name="product_due_days">Default due days</string>
   <string name="product_due_days_hint">For purchases this amount of days will be added to today for the due date suggestion (-1 means that this product will be never overdue)</string>
+  <string name="product_due_days_pick">Count the days until a date</string>
   <string name="product_due_days_after_open">Default due days after opened</string>
   <string name="product_due_days_after_open_hint">When this product was marked as opened, the due date will be replaced by today + this amount of days, but only if the resulting date is not after the original due date (a value of 0 disables this)</string>
   <string name="product_due_days_after_freezing">Default due days after freezing</string>
@@ -754,7 +760,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">By default the stock overview page lists all products which are currently in stock or below their min. stock amount - when this is enabled, all (active) products are always shown</string>
   <string name="stock_settings_purchase">Purchase</string>
   <string name="stock_settings_purchase_amount">Default amount for purchase</string>
-  <string name="stock_settings_show_purchased_date">Show purchased date on purchase and inventory page (otherwise the purchased date defaults to today)</string>
+  <string name="stock_settings_show_purchased_date">Show purchased date on purchase and inventory page</string>
+  <string name="stock_settings_show_purchased_date_hint">Otherwise the purchased date defaults to today</string>
   <string name="stock_settings_due_date_warning">Show a warning when the due date of the purchased product is earlier than the next due date in stock</string>
   <string name="stock_settings_consume">Consume</string>
   <string name="stock_settings_consume_amount">Default amount for consume</string>

@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Atrás</string>
   <string name="action_more_options">Más opciones</string>
+  <string name="action_decrease">Disminuir</string>
+  <string name="action_increase">Aumentar</string>
   <string name="action_cancel">Cancelar</string>
   <string name="action_close">Cerrar</string>
   <string name="action_update">Actualizar</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">General</string>
+  <string name="settings_select_hint">Elija una categoría para mostrar aquí su configuración</string>
   <string name="settings_server">Servidor</string>
   <string name="settings_user">Configuración de usuario</string>
+  <string name="settings_user_synced">Guardado en el servidor</string>
+  <string name="settings_user_synced_hint">Grocy guarda esta configuración para su usuario, así que también se aplica en la interfaz web de Grocy y en sus otros dispositivos</string>
   <string name="settings_network">Red</string>
   <string name="settings_behavior">Comportamiento</string>
   <string name="settings_scanner">Escáner</string>
@@ -382,6 +387,7 @@
   <string name="product_due_type_expiration_hint">Significa que no es seguro consumir el producto después de su fecha límite</string>
   <string name="product_due_days">Número predeterminado de días hasta la fecha límite</string>
   <string name="product_due_days_hint">Este número de días será añadido a la fecha de hoy para la sugerencia de fecha límite de la compra (-1 significa que este producto no tiene fecha límite)</string>
+  <string name="product_due_days_pick">Contar los días hasta una fecha</string>
   <string name="product_due_days_after_open">Número predeterminado de días hasta la fecha límite después de abierto</string>
   <string name="product_due_days_after_open_hint">Cuando este producto se marque como abierto, la fecha límite será reemplazada por la fecha de hoy más este número de días, pero solo si la fecha resultante no está después de la fecha límite original (un valor de 0 desactiva esto)</string>
   <string name="product_due_days_after_freezing">Número predeterminado de días hasta la fecha límite después de congelado</string>
@@ -745,7 +751,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">Por defecto, el resumen del stock muestra todos los productos que están en stock o por debajo de su cantidad mínima; si se activa, se muestran siempre todos los productos (activos)</string>
   <string name="stock_settings_purchase">Comprar</string>
   <string name="stock_settings_purchase_amount">Cantidad de compra predeterminada</string>
-  <string name="stock_settings_show_purchased_date">Mostrar la fecha de compra en la página de compra e inventario (si no, la fecha de compra predeterminada es hoy)</string>
+  <string name="stock_settings_show_purchased_date">Mostrar la fecha de compra en la página de compra e inventario</string>
+  <string name="stock_settings_show_purchased_date_hint">Si no, la fecha de compra predeterminada es hoy</string>
   <string name="stock_settings_due_date_warning">Mostrar un aviso cuando la fecha límite del producto comprado sea anterior a la próxima fecha límite de las existencias del inventario</string>
   <string name="stock_settings_consume">Consumir</string>
   <string name="stock_settings_consume_amount">Cantidad de consumo predeterminada</string>

@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -24,8 +23,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 /**
- * The detail pane beside a list before an item is chosen: [text] with [icon] in a card on the
- * pane's surface, like the items of the list.
+ * The detail pane beside a list before an item is chosen: [text] with [icon] directly on the
+ * pane's surfaceContainer surface.
  */
 @Composable
 fun DetailPlaceholder(
@@ -45,29 +44,24 @@ fun DetailPlaceholder(
             .padding(24.dp),
         contentAlignment = Alignment.Center,
     ) {
-        Surface(
-            shape = MaterialTheme.shapes.large,
-            color = SegmentedListDefaults.containerColor,
+        // Directly on the pane's surface: it is no item, nothing to tap
+        Column(
             modifier = Modifier.widthIn(max = PlaceholderMaxWidth),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Column(
-                modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                Icon(
-                    painter = icon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(IconSize),
-                )
-                Text(
-                    text = text,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center,
-                )
-            }
+            Icon(
+                painter = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(IconSize),
+            )
+            Text(
+                text = text,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+            )
         }
     }
 }

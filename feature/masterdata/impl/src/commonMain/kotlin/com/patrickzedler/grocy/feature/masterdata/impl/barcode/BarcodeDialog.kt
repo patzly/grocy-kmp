@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.intl.Locale
 import com.patrickzedler.grocy.core.design.component.DropdownOption
+import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.model.masterdata.nameFor
 import com.patrickzedler.grocy.core.model.text.formatDecimal
@@ -175,6 +176,7 @@ private fun AmountItem(
             null
         },
         keyboardType = KeyboardType.Decimal,
+        stepper = NumberStepper.Positive,
         index = index,
         count = count,
     )

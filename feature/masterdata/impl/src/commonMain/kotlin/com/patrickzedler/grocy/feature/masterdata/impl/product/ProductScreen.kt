@@ -2,7 +2,9 @@
 
 package com.patrickzedler.grocy.feature.masterdata.impl.product
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
@@ -41,6 +43,7 @@ import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
+import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
@@ -177,6 +180,7 @@ import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectActionEvent
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectActionsHost
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectActionsViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.objectActionItems
+import com.patrickzedler.grocy.feature.masterdata.impl.products.ProductThumbnail
 import com.patrickzedler.grocy.feature.masterdata.impl.related.GrocycodeItem
 import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintEffect
 import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintViewModel
@@ -513,6 +517,7 @@ private fun LazyListScope.productForm(
                     suffix = stockUnit?.pluralName,
                     enabled = viewModel.isMinStockEditable(options, form.parentProductId),
                     keyboardType = KeyboardType.Decimal,
+                    stepper = NumberStepper(min = 0.0),
                     index = index,
                     count = count,
                 )
@@ -632,6 +637,7 @@ private fun LazyListScope.productForm(
                     suffix = units.firstOrNull { it.id == form.quIdStock }?.pluralName,
                     enabled = form.enableTareWeightHandling,
                     keyboardType = KeyboardType.Decimal,
+                    stepper = NumberStepper(min = 0.0),
                     index = index,
                     count = count,
                 )
@@ -716,7 +722,7 @@ private fun LazyListScope.relatedGroups(
             supporting = when (viewModel.pictureChange) {
                 PictureChange.Delete -> stringResource(Res.string.product_picture_will_delete)
                 is PictureChange.Replace -> stringResource(Res.string.product_picture_will_upload)
-                // A saved picture needs no note, the dialog shows it
+                // A saved picture needs no note, the item shows it
                 PictureChange.Keep -> if (viewModel.pictureFileName == null) {
                     stringResource(Res.string.product_picture_none)
                 } else {
@@ -727,6 +733,16 @@ private fun LazyListScope.relatedGroups(
             index = 0,
             count = 1,
             onClick = onPictureClick,
+            // The picture the product will have, so it shows without opening the dialog
+            image = when (val change = viewModel.pictureChange) {
+                is PictureChange.Replace -> {
+                    { ProductThumbnail(key = change, load = { change.bytes }) }
+                }
+                PictureChange.Keep -> viewModel.pictureFileName?.let { fileName ->
+                    { ProductThumbnail(key = fileName, load = viewModel::thumbnail) }
+                }
+                PictureChange.Delete -> null
+            },
         )
     }
 }
@@ -884,6 +900,7 @@ private fun DueDateItems(
                     label = Res.string.product_due_days,
                     hint = Res.string.product_due_days_hint,
                     error = errors[ProductField.DUE_DAYS],
+                    min = -1.0,
                     index = index,
                     count = count,
                 )
@@ -898,6 +915,7 @@ private fun DueDateItems(
                     label = Res.string.product_due_days_after_open,
                     hint = Res.string.product_due_days_after_open_hint,
                     error = errors[ProductField.DUE_DAYS_AFTER_OPEN],
+                    min = 0.0,
                     index = index,
                     count = count,
                 )
@@ -912,6 +930,7 @@ private fun DueDateItems(
                     label = Res.string.product_due_days_after_freezing,
                     hint = Res.string.product_due_days_after_freezing_hint,
                     error = errors[ProductField.DUE_DAYS_AFTER_FREEZING],
+                    min = -1.0,
                     index = index,
                     count = count,
                 )
@@ -926,6 +945,7 @@ private fun DueDateItems(
                     label = Res.string.product_due_days_after_thawing,
                     hint = Res.string.product_due_days_after_thawing_hint,
                     error = errors[ProductField.DUE_DAYS_AFTER_THAWING],
+                    min = 0.0,
                     index = index,
                     count = count,
                 )
@@ -956,6 +976,7 @@ private fun DaysItem(
     label: StringResource,
     hint: StringResource,
     error: FieldError?,
+    min: Double,
     index: Int,
     count: Int,
 ) {
@@ -967,6 +988,8 @@ private fun DaysItem(
         keyboardType = KeyboardType.Number,
         index = index,
         count = count,
+        trailingAction = { DueDaysPickerButton(state) },
+        stepper = NumberStepper(min = min),
     )
 }
 
@@ -1003,6 +1026,7 @@ private fun MoreItems(
                 error = fieldErrorText(errors[ProductField.CALORIES]),
                 suffix = listOfNotNull(state.energyUnit, stockUnit?.name).joinToString(" / "),
                 keyboardType = KeyboardType.Decimal,
+                stepper = NumberStepper(min = 0.0),
                 index = index,
                 count = count,
             )
@@ -1015,6 +1039,7 @@ private fun MoreItems(
                 error = fieldErrorText(errors[ProductField.QUICK_CONSUME_AMOUNT]),
                 suffix = stockUnit?.pluralName,
                 keyboardType = KeyboardType.Decimal,
+                stepper = NumberStepper.Positive,
                 index = index,
                 count = count,
             )
@@ -1027,6 +1052,7 @@ private fun MoreItems(
                 error = fieldErrorText(errors[ProductField.QUICK_OPEN_AMOUNT]),
                 suffix = stockUnit?.pluralName,
                 keyboardType = KeyboardType.Decimal,
+                stepper = NumberStepper.Positive,
                 index = index,
                 count = count,
             )
@@ -1140,6 +1166,7 @@ internal fun NavigationItem(
     count: Int,
     onClick: () -> Unit,
     enabled: Boolean = true,
+    image: (@Composable () -> Unit)? = null,
 ) {
     val haptic = LocalHapticFeedback.current
     SegmentedListItem(
@@ -1156,18 +1183,27 @@ internal fun NavigationItem(
         },
         supportingContent = supporting?.let { { Text(it) } },
         trailingContent = {
-            LeadingTrailingContentWrapper {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_rounded_arrow_right),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(ImageArrowSpacing),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                image?.invoke()
+                LeadingTrailingContentWrapper {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_rounded_arrow_right),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
         },
     ) {
         Text(text)
     }
 }
+
+// Between an item's image and its arrow, the spacing of a list item's slots
+private val ImageArrowSpacing = 16.dp
 
 /** Plural name for amounts, as Grocy shows the stock unit next to amount fields. */
 private val QuantityUnit.pluralName: String

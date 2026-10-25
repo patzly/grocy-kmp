@@ -38,17 +38,29 @@ class Navigator internal constructor(
     private val leaveGuards = mutableMapOf<NavKey, LeaveGuard>()
 
     /**
-     * Shows [route] as detail of the list on top: replaces the detail shown beside the list,
-     * otherwise opens it. A replaced detail with unsaved changes is asked first.
+     * Shows [route] as detail of the list on top: replaces the details shown beside the list (a
+     * detail and those opened from it), otherwise opens it. Replaced details with unsaved
+     * changes are asked first.
      */
     fun openDetail(route: DetailRoute) {
         val current = backStack.last()
         if (current !is DetailRoute) {
             backStack.add(route)
-        } else if (current != route) {
-            guarded(current) { backStack[backStack.lastIndexOf(current)] = route }
+            return
         }
+        if (current == route) return
+        val replaced = backStack.subList(firstDetailIndex(), backStack.size).toList()
+        val guarded = replaced.lastOrNull { it in leaveGuards }
+        val replace = {
+            val first = firstDetailIndex()
+            backStack[first] = route
+            backStack.subList(first + 1, backStack.size).clear()
+        }
+        if (guarded == null) replace() else guarded(guarded, replace)
     }
+
+    // The first of the details on top, the one opened beside the list
+    private fun firstDetailIndex(): Int = backStack.indexOfLast { it !is DetailRoute } + 1
 
     /**
      * Leaves [route] and everything opened on top of it, e.g. a list with its detail beside it;

@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">返回</string>
   <string name="action_more_options">更多選項</string>
+  <string name="action_decrease">減少</string>
+  <string name="action_increase">增加</string>
   <string name="action_cancel">取消</string>
   <string name="action_close">關閉</string>
   <string name="action_update">更新</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">一般</string>
+  <string name="settings_select_hint">選擇一個類別以在此顯示其設定</string>
   <string name="settings_server">伺服器</string>
   <string name="settings_user">使用者設定</string>
+  <string name="settings_user_synced">儲存在伺服器上</string>
+  <string name="settings_user_synced_hint">Grocy 會為你的使用者儲存這些設定，因此也適用於其網頁介面和你的其他裝置</string>
   <string name="settings_network">網路</string>
   <string name="settings_behavior">行為</string>
   <string name="settings_scanner">掃描器</string>
@@ -362,6 +367,7 @@
   <string name="product_due_type_expiration_hint">代表逾期後物品無法正常使用</string>
   <string name="product_due_days">預設到期天數</string>
   <string name="product_due_days_hint">所購買物品的建議到期日期為今天的日期加上此天數 (-1表示此物品永不逾期)</string>
+  <string name="product_due_days_pick">計算到某個日期的天數</string>
   <string name="product_due_days_after_open">預設開封後到期天數</string>
   <string name="product_due_days_after_open_hint">當此物品被標記為已開封時，到期日期將由今天加上此天數代替(0表示停用此功能)，新到期日期和舊到期日期以先到者為準</string>
   <string name="product_due_days_after_freezing">預設冷凍後到期天數</string>
@@ -712,7 +718,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">預設情況下，庫存總覽會列出所有有庫存或低於最低庫存量的物品；啟用後一律顯示所有（啟用中的）物品</string>
   <string name="stock_settings_purchase">購買</string>
   <string name="stock_settings_purchase_amount">預設購買數量</string>
-  <string name="stock_settings_show_purchased_date">在購買和庫存頁面顯示購買日期欄位(否則預設購買日期為今天)</string>
+  <string name="stock_settings_show_purchased_date">在購買和庫存頁面顯示購買日期欄位</string>
+  <string name="stock_settings_show_purchased_date_hint">否則預設購買日期為今天</string>
   <string name="stock_settings_due_date_warning">當所購買物品的到期日期比庫存物品的到期日期早時顯示警告</string>
   <string name="stock_settings_consume">消耗</string>
   <string name="stock_settings_consume_amount">預設消耗數量</string>

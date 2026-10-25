@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Назад</string>
   <string name="action_more_options">Другие параметры</string>
+  <string name="action_decrease">Уменьшить</string>
+  <string name="action_increase">Увеличить</string>
   <string name="action_cancel">Отмена</string>
   <string name="action_close">Закрыть</string>
   <string name="action_update">Обновить</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">Общие</string>
+  <string name="settings_select_hint">Выберите категорию, чтобы показать здесь её настройки</string>
   <string name="settings_server">Сервер</string>
   <string name="settings_user">Пользовательские настройки</string>
+  <string name="settings_user_synced">Сохраняются на сервере</string>
+  <string name="settings_user_synced_hint">Grocy хранит эти настройки для вашего пользователя, поэтому они действуют и в его веб-интерфейсе, и на ваших других устройствах</string>
   <string name="settings_network">Сеть</string>
   <string name="settings_behavior">Поведение</string>
   <string name="settings_scanner">Сканер</string>
@@ -392,6 +397,7 @@
   <string name="product_due_type_expiration_hint">Означает, что просроченный продукт употреблять опасно</string>
   <string name="product_due_days">Срок годности по умолчанию</string>
   <string name="product_due_days_hint">Данное количество дней будет добавлено к предлагаемому сроку годности при покупке (-1 означает, что у данного продукта бесконечный срок годности)</string>
+  <string name="product_due_days_pick">Посчитать дни до даты</string>
   <string name="product_due_days_after_open">Срок годности в днях по умолчанию после открытия</string>
   <string name="product_due_days_after_open_hint">Когда продукт помечается как открытый, срок годности будет изменён на это количество дней, начиная с сегодняшнего, но только если срок годности на упаковке наступает не раньше (значение 0 отключает этот функционал)</string>
   <string name="product_due_days_after_freezing">Срок годности по умолчанию после заморозки</string>
@@ -761,7 +767,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">По умолчанию обзор запасов показывает все продукты, которые есть в наличии или ниже минимального количества; если включено, всегда показываются все (активные) продукты</string>
   <string name="stock_settings_purchase">Покупка</string>
   <string name="stock_settings_purchase_amount">Количество покупки по умолчанию</string>
-  <string name="stock_settings_show_purchased_date">Показывать дату на страницах покупки или ревизии (иначе дата покупки будет сегодняшней)</string>
+  <string name="stock_settings_show_purchased_date">Показывать дату на страницах покупки или ревизии</string>
+  <string name="stock_settings_show_purchased_date_hint">Иначе дата покупки будет сегодняшней</string>
   <string name="stock_settings_due_date_warning">Показывать уведомление когда срок годности купленного продукта меньше, чем срок годности продукта в запасе.</string>
   <string name="stock_settings_consume">Использовать</string>
   <string name="stock_settings_consume_amount">Количество потребления по умолчанию</string>

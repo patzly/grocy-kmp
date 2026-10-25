@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
+import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.resources.Res
@@ -204,6 +205,7 @@ internal fun SimpleObjectScreen(
                             hint = stringResource(Res.string.battery_charge_interval_hint),
                             error = fieldErrorText(errors[ObjectField.CHARGE_INTERVAL]),
                             keyboardType = KeyboardType.Number,
+                            stepper = NumberStepper(min = 0.0),
                             index = index,
                             count = count,
                         )

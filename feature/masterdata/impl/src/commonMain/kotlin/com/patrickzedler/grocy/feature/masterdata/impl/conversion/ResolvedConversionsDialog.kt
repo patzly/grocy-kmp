@@ -8,7 +8,6 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -76,10 +75,11 @@ private fun ResolvedConversionsContent(
             verticalArrangement = Arrangement.spacedBy(SegmentedListDefaults.GroupSpacing),
         ) {
             if (groups.isEmpty()) {
-                Text(
-                    text = stringResource(Res.string.conversion_resolved_none),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                ListItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
+                    colors = SegmentedListDefaults.colors(),
+                    content = { Text(stringResource(Res.string.conversion_resolved_none)) },
                 )
             }
             groups.forEach { group ->
@@ -113,6 +113,14 @@ internal fun ConversionEquation(meaning: ConversionMeaning) {
         ),
         style = LocalTextStyle.current.withTabularNumbers(),
     )
+}
+
+@Preview
+@Composable
+private fun ResolvedConversionsEmptyPreview() {
+    GrocyTheme {
+        ResolvedConversionsContent(groups = emptyList())
+    }
 }
 
 @Preview

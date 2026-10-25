@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">返回</string>
   <string name="action_more_options">更多选项</string>
+  <string name="action_decrease">减少</string>
+  <string name="action_increase">增加</string>
   <string name="action_cancel">取消</string>
   <string name="action_close">关闭</string>
   <string name="action_update">更新</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">常规</string>
+  <string name="settings_select_hint">选择一个类别以在此显示其设置</string>
   <string name="settings_server">服务器</string>
   <string name="settings_user">用户设置</string>
+  <string name="settings_user_synced">保存在服务器上</string>
+  <string name="settings_user_synced_hint">Grocy 为你的用户保存这些设置，因此它们也适用于其网页界面和你的其他设备</string>
   <string name="settings_network">网络</string>
   <string name="settings_behavior">行为</string>
   <string name="settings_scanner">扫描器</string>
@@ -362,6 +367,7 @@
   <string name="product_due_type_expiration_hint">指产品过期后食用不安全</string>
   <string name="product_due_days">默认到期天数</string>
   <string name="product_due_days_hint">建议的到期日期，是从采购之日起加上此天数。 (-1表示此产品永不到期)</string>
+  <string name="product_due_days_pick">计算到某个日期的天数</string>
   <string name="product_due_days_after_open">开封后默认到期天数</string>
   <string name="product_due_days_after_open_hint">本产品开封后，到期日期替换为开封日期加上此天数，但前提是新生成的日期不在原到期日期之后（值0将禁用此功能）</string>
   <string name="product_due_days_after_freezing">冷冻后默认到期天数</string>
@@ -712,7 +718,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">默认情况下，库存总览列出所有有库存或低于最低库存量的物品；启用后将始终显示所有（启用的）物品</string>
   <string name="stock_settings_purchase">采购</string>
   <string name="stock_settings_purchase_amount">默认采购数量</string>
-  <string name="stock_settings_show_purchased_date">在采购页面和库存页面显示采购日期（否则采购日期默认为当天）</string>
+  <string name="stock_settings_show_purchased_date">在采购页面和库存页面显示采购日期</string>
+  <string name="stock_settings_show_purchased_date_hint">否则采购日期默认为当天</string>
   <string name="stock_settings_due_date_warning">当采购产品的到期日期早于库存产品的下次到期日期时显示警告</string>
   <string name="stock_settings_consume">消耗</string>
   <string name="stock_settings_consume_amount">默认消耗数量</string>

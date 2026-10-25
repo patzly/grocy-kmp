@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Tagasi</string>
   <string name="action_more_options">Rohkem valikuid</string>
+  <string name="action_decrease">Vähenda</string>
+  <string name="action_increase">Suurenda</string>
   <string name="action_cancel">Tühista</string>
   <string name="action_close">Sulge</string>
   <string name="action_update">Uuenda</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">Üldine</string>
+  <string name="settings_select_hint">Vali kategooria, et selle seadeid siin näha</string>
   <string name="settings_server">Server</string>
   <string name="settings_user">Kasutajaseaded</string>
+  <string name="settings_user_synced">Salvestatud serverisse</string>
+  <string name="settings_user_synced_hint">Grocy salvestab need seaded sinu kasutajale, seega kehtivad need ka Grocy veebiliideses ja sinu teistes seadmetes</string>
   <string name="settings_network">Võrk</string>
   <string name="settings_behavior">Käitumine</string>
   <string name="settings_scanner">Skänner</string>
@@ -372,6 +377,7 @@
   <string name="product_due_type_expiration_hint">Tähendab, et toodet ei ole pärast selle tähtpäeva saabumist ohutu tarbida</string>
   <string name="product_due_days">Vaikimisi tähtaja päevi</string>
   <string name="product_due_days_hint">Ostude puhul lisatakse tähtpäeva soovituse jaoks see päevade arv tänasele päevale (-1 tähendab, et see toode ei rikne)</string>
+  <string name="product_due_days_pick">Loe päevad kuupäevani</string>
   <string name="product_due_days_after_open">Vaikimisi tähtaeg pärast avamist</string>
   <string name="product_due_days_after_open_hint">Kui see toode märgitakse avatuks, asendatakse tähtaeg tänasega + selle päevade arvuga, kuid ainult siis, kui tulemuseks olev kuupäev ei ole hilisem kui algne tähtaeg (väärtus 0 keelab selle)</string>
   <string name="product_due_days_after_freezing">Vaikimisi maksetähtaeg päeva pärast külmutamist</string>
@@ -729,7 +735,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">Vaikimisi näitab laoülevaade kõiki tooteid, mis on laos või alla miinimumkoguse – kui see on lubatud, näidatakse alati kõiki (aktiivseid) tooteid</string>
   <string name="stock_settings_purchase">Osta</string>
   <string name="stock_settings_purchase_amount">Vaikimisi kogus ostmiseks</string>
-  <string name="stock_settings_show_purchased_date">Kuva ostukuupäev ostu- ja varuseisulehel (muidu on ostukuupäevaks vaikimisi tänane)</string>
+  <string name="stock_settings_show_purchased_date">Kuva ostukuupäev ostu- ja varuseisulehel</string>
+  <string name="stock_settings_show_purchased_date_hint">Muidu on ostukuupäevaks vaikimisi tänane</string>
   <string name="stock_settings_due_date_warning">Näita hoiatust, kui osetud eseme parim enne on varasem kui varudes oleva parim enne</string>
   <string name="stock_settings_consume">Tarbi</string>
   <string name="stock_settings_consume_amount">Vaikimisi kogus tarbimiseks</string>

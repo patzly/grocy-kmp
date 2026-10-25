@@ -84,6 +84,7 @@ import com.patrickzedler.grocy.feature.masterdata.impl.objects.ClearFilterChip
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.DropdownFilterChip
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.FilterChipRow
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.emptyListItem
+import com.patrickzedler.grocy.feature.masterdata.impl.objects.filterGapItem
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductLinks
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewHost
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewViewModel
@@ -146,6 +147,8 @@ internal fun StockEntriesScreen(
         edgeToEdgeItem(key = "filters") { contentPadding ->
             StockEntryFilterBar(current, viewModel, contentPadding)
         }
+        // Grocy's stock entries have no search; the items keep the other lists' distance
+        filterGapItem()
         stockEntryItems(
             state = current,
             refresh = refresh,

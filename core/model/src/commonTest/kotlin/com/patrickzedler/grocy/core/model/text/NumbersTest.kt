@@ -56,4 +56,48 @@ class NumbersTest {
         assertEquals(0, decimalPlaces("12"))
         assertEquals(2, decimalPlaces("1,25"))
     }
+
+    @Test
+    fun steppingAddsOrSubtractsOne() {
+        assertEquals("3", steppedDecimal("2", step = 1))
+        assertEquals("1", steppedDecimal("2", step = -1))
+    }
+
+    @Test
+    fun steppingKeepsTheTypedDecimalsAndSeparator() {
+        assertEquals("2,5", steppedDecimal("1,5", step = 1))
+        assertEquals("0.25", steppedDecimal("1.25", step = -1, decimalSeparator = ','))
+    }
+
+    @Test
+    fun steppingAnEmptyFieldStartsLikeGrocy() {
+        assertEquals("1", steppedDecimal("", step = 1))
+        assertEquals("0", steppedDecimal(" ", step = -1))
+    }
+
+    @Test
+    fun steppingUsesTheGivenSeparatorWithoutOneInTheText() {
+        assertEquals("3", steppedDecimal("2", step = 1, decimalSeparator = ','))
+    }
+
+    @Test
+    fun steppingStopsAtTheRange() {
+        assertNull(steppedDecimal("-1", step = -1, min = -1.0))
+        assertNull(steppedDecimal("31", step = 1, max = 31.0))
+        // Positive amounts: 1 can not go down to 0
+        assertNull(steppedDecimal("1", step = -1, min = Double.MIN_VALUE))
+        assertEquals("0.5", steppedDecimal("1.5", step = -1, min = Double.MIN_VALUE))
+    }
+
+    @Test
+    fun steppingMovesValuesOutsideTheRangeTowardsIt() {
+        assertEquals("-4", steppedDecimal("-5", step = 1, min = 0.0))
+        assertNull(steppedDecimal("-5", step = -1, min = 0.0))
+        assertEquals("40", steppedDecimal("41", step = -1, max = 31.0))
+    }
+
+    @Test
+    fun steppingTextThatIsNoNumberDoesNothing() {
+        assertNull(steppedDecimal("abc", step = 1))
+    }
 }

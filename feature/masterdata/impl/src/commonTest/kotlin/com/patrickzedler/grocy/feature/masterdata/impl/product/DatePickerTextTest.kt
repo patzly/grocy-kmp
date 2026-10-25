@@ -33,4 +33,28 @@ class DatePickerTextTest {
     fun pickedTimeOfAFieldWithoutDateIsToday() {
         assertEquals("1970-01-02 18:45:00", withPickedTime("abc", 18, 45, today = 1))
     }
+
+    @Test
+    fun pickedDueDateBecomesTheDaysFromToday() {
+        assertEquals("14", dueDaysUntil(epochDay = 20_764, today = 20_750))
+        assertEquals("0", dueDaysUntil(epochDay = 20_750, today = 20_750))
+    }
+
+    @Test
+    fun dueDatePickerStartsTheDaysOfTheFieldAfterToday() {
+        assertEquals(20_757L, dueDateOf("7", today = 20_750))
+    }
+
+    @Test
+    fun dueDatePickerStartsTodayForNoOrNegativeDays() {
+        // -1 means never overdue, which no date can show
+        assertEquals(20_750L, dueDateOf("-1", today = 20_750))
+        assertEquals(20_750L, dueDateOf("", today = 20_750))
+        assertEquals(20_750L, dueDateOf("abc", today = 20_750))
+    }
+
+    @Test
+    fun dueDatePickerStopsAtItsLastYear() {
+        assertEquals(47_846L, dueDateOf("999999", today = 20_750))
+    }
 }

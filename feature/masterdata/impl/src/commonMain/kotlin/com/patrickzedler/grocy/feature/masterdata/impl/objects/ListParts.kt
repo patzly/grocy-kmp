@@ -8,7 +8,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.text.KeyboardOptions
@@ -96,6 +98,16 @@ internal fun LazyListScope.searchItem(
                 )
             }
         }
+    }
+}
+
+/**
+ * The space below the filter chips of a list without search: the same group gap that the
+ * closed [searchItem] leaves.
+ */
+internal fun LazyListScope.filterGapItem() {
+    insetItem(key = "filter-gap") {
+        Spacer(Modifier.height(SearchSpacing))
     }
 }
 

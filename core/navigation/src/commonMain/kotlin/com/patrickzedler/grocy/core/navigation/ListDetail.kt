@@ -49,63 +49,60 @@ import kotlinx.coroutines.launch
 /**
  * Entry metadata of a list whose [DetailRoute]s open beside it where two panes are the standard
  * (Material's expanded window width and wider); [placeholder] fills the detail pane until an
- * item is chosen. Without [placeholder] the list fills the window alone until a detail opens,
- * like the settings' categories. Narrower windows show list and details one after the other.
+ * item is chosen. Narrower windows show list and details one after the other.
  *
  * @param sceneKey the same for the list and its details, different for every list.
  */
 fun listPaneMetadata(
     sceneKey: Any,
-    placeholder: (@Composable () -> Unit)?,
-): Map<String, Any> = if (placeholder == null) {
-    ListDetailSceneStrategy.listPane(sceneKey = sceneKey) +
-        (LIST_PANE_KEY to true) + (LIST_ALONE_KEY to true)
-} else {
+    placeholder: @Composable () -> Unit,
+): Map<String, Any> =
     ListDetailSceneStrategy.listPane(sceneKey = sceneKey, detailPlaceholder = { placeholder() }) +
         (LIST_PANE_KEY to true)
-}
 
 // Marks lists for the pane background, Material's own keys are internal
 internal const val LIST_PANE_KEY = "com.patrickzedler.grocy.listPane"
 
-// Marks lists without placeholder, which stay alone while no detail is open
-internal const val LIST_ALONE_KEY = "com.patrickzedler.grocy.listAlone"
+// Marks details, so a detail opened from another one can return to it
+internal const val DETAIL_PANE_KEY = "com.patrickzedler.grocy.detailPane"
 
 /**
- * Leaves a list without placeholder alone on the screen while it is on top; with a detail on
- * top [strategy] lays out both, the list beside the detail.
+ * Entry metadata of the details of the list with the same [sceneKey]. A detail opened from
+ * another one ([Navigator.navigate]) takes its place beside the list, back returns to it.
  */
-internal class ListAloneSceneStrategy(
+fun detailPaneMetadata(sceneKey: Any): Map<String, Any> =
+    ListDetailSceneStrategy.detailPane(sceneKey = sceneKey) + (DETAIL_PANE_KEY to true)
+
+/**
+ * Lets back from a detail opened from another detail return to that one: Material's scene goes
+ * back until its panes change, which left the list with both details at once.
+ */
+internal class NestedDetailSceneStrategy(
     private val strategy: SceneStrategy<NavKey>,
 ) : SceneStrategy<NavKey> {
 
     override fun SceneStrategyScope<NavKey>.calculateScene(
         entries: List<NavEntry<NavKey>>,
     ): Scene<NavKey>? {
-        if (entries.lastOrNull()?.metadata?.get(LIST_ALONE_KEY) == true) return null
         val scene = with(strategy) { calculateScene(entries) } ?: return null
-        val hasListAlone = scene.entries.any { it.metadata[LIST_ALONE_KEY] == true }
-        // Back from the list with its detail returns to the list alone, also in the browser's
-        // history: Material's scene would go back to what lay below the list
-        return if (hasListAlone) ListBesideDetailScene(scene, entries.dropLast(1)) else scene
+        val lastTwo = entries.takeLast(2)
+        val isNested = lastTwo.size == 2 &&
+            lastTwo.all { it.metadata[DETAIL_PANE_KEY] == true && it in scene.entries }
+        return if (isNested) BackToDetailScene(scene, entries.dropLast(1)) else scene
     }
 }
 
-/** [scene] of a list without placeholder beside its detail; back shows the list alone. */
-internal class ListBesideDetailScene(
+/** [scene] of a detail opened from another one; back shows that one again. */
+internal class BackToDetailScene(
     val scene: Scene<NavKey>,
     override val previousEntries: List<NavEntry<NavKey>>,
 ) : Scene<NavKey> by scene {
 
-    override fun equals(other: Any?): Boolean = other is ListBesideDetailScene &&
+    override fun equals(other: Any?): Boolean = other is BackToDetailScene &&
         other.scene == scene && other.previousEntries == previousEntries
 
     override fun hashCode(): Int = 31 * scene.hashCode() + previousEntries.hashCode()
 }
-
-/** Entry metadata of the details of the list with the same [sceneKey]. */
-fun detailPaneMetadata(sceneKey: Any): Map<String, Any> =
-    ListDetailSceneStrategy.detailPane(sceneKey = sceneKey)
 
 /**
  * Whether the current window shows details beside their list, so the list marks the item shown
@@ -141,8 +138,8 @@ internal fun neighbourAnchor(
 
 /**
  * Material's list-detail scene with its default pane rules of the current window, its panes
- * split half and half with Material's drag handle between them; lists without placeholder stay
- * alone until a detail opens.
+ * split half and half with Material's drag handle between them; back from a detail opened from
+ * another detail returns to that one.
  */
 @Composable
 internal fun rememberListDetailStrategy(): SceneStrategy<NavKey> {
@@ -154,7 +151,7 @@ internal fun rememberListDetailStrategy(): SceneStrategy<NavKey> {
         paneExpansionState = expansionState,
         paneExpansionDragHandle = { state -> PaneDragHandle(state) },
     )
-    return remember(strategy) { ListAloneSceneStrategy(strategy) }
+    return remember(strategy) { NestedDetailSceneStrategy(strategy) }
 }
 
 /**
@@ -212,9 +209,7 @@ internal class PaneBackgroundDecorator(
     override fun SceneDecoratorStrategyScope<NavKey>.decorateScene(
         scene: Scene<NavKey>,
     ): Scene<NavKey> {
-        // A list without placeholder alone on the screen keeps the screens' background
-        val isListAlone = scene.entries.singleOrNull()?.metadata?.get(LIST_ALONE_KEY) == true
-        val isListDetail = scene.entries.any { it.metadata[LIST_PANE_KEY] == true } && !isListAlone
+        val isListDetail = scene.entries.any { it.metadata[LIST_PANE_KEY] == true }
         return if (isTwoPane && isListDetail && scene !is OverlayScene) {
             PaneBackgroundScene(scene)
         } else {

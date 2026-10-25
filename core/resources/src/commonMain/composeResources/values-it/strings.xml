@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Indietro</string>
   <string name="action_more_options">Altre opzioni</string>
+  <string name="action_decrease">Diminuisci</string>
+  <string name="action_increase">Aumenta</string>
   <string name="action_cancel">Annulla</string>
   <string name="action_close">Chiudi</string>
   <string name="action_update">Aggiorna</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">Generali</string>
+  <string name="settings_select_hint">Scegli una categoria per mostrarne qui le impostazioni</string>
   <string name="settings_server">Server</string>
   <string name="settings_user">Impostazioni utente</string>
+  <string name="settings_user_synced">Salvate sul server</string>
+  <string name="settings_user_synced_hint">Grocy salva queste impostazioni per il tuo utente, quindi valgono anche nella sua interfaccia web e sugli altri tuoi dispositivi</string>
   <string name="settings_network">Rete</string>
   <string name="settings_behavior">Comportamento</string>
   <string name="settings_scanner">Scanner</string>
@@ -382,6 +387,7 @@
   <string name="product_due_type_expiration_hint">Significa che il prodotto non è sicuro da consumare una volta raggiunta la data di scadenza</string>
   <string name="product_due_days">Giorni di scadenza predefiniti</string>
   <string name="product_due_days_hint">Per gli acquisti, questo numero di giorni verrà aggiunto a oggi per il suggerimento della data di scadenza (-1 significa che questo prodotto non sarà mai scaduto)</string>
+  <string name="product_due_days_pick">Conta i giorni fino a una data</string>
   <string name="product_due_days_after_open">Giorni di scadenza predefiniti dopo l’apertura</string>
   <string name="product_due_days_after_open_hint">Quando questo prodotto è stato contrassegnato come aperto, la data di scadenza verrà sostituita da oggi + questo numero di giorni, ma solo se la data risultante non è successiva alla data di scadenza originale (un valore di 0 lo disabilita)</string>
   <string name="product_due_days_after_freezing">Giorni di scadenza predefiniti dopo il congelamento</string>
@@ -745,7 +751,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">Per impostazione predefinita, la pagina di panoramica delle scorte elenca tutti i prodotti attualmente in magazzino o al di sotto della quantità minima di scorta: quando questa opzione è abilitata, tutti i prodotti (attivi) vengono sempre visualizzati</string>
   <string name="stock_settings_purchase">Acquista</string>
   <string name="stock_settings_purchase_amount">Quantità predefinita per l'acquisto</string>
-  <string name="stock_settings_show_purchased_date">Mostra la data di acquisto sulla pagina acquisti ed inventario (altrimenti la data di acquisto predefinita è quella odierna)</string>
+  <string name="stock_settings_show_purchased_date">Mostra la data di acquisto sulla pagina acquisti ed inventario</string>
+  <string name="stock_settings_show_purchased_date_hint">Altrimenti la data di acquisto predefinita è quella odierna</string>
   <string name="stock_settings_due_date_warning">Mostra un avviso quando la data di scadenza del prodotto acquistato è precedente alla successiva data di scadenza in dispensa</string>
   <string name="stock_settings_consume">Consuma</string>
   <string name="stock_settings_consume_amount">Quantità predefinita per il consumo</string>

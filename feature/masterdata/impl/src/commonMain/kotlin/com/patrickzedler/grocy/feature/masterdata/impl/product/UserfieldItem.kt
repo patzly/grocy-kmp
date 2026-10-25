@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.DropdownOption
+import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.RoundedTextField
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
@@ -133,6 +134,7 @@ internal fun UserfieldItem(
                 else -> KeyboardType.Text
             },
             multiLine = field.type == UserfieldType.TEXT_MULTI_LINE,
+            stepper = if (field.type in NumberTypes) NumberStepper() else null,
             index = index,
             count = count,
             trailingAction = if (field.type == UserfieldType.DATE ||
@@ -145,3 +147,10 @@ internal fun UserfieldItem(
         )
     }
 }
+
+// Grocy's number pickers, with their minus and plus buttons
+private val NumberTypes = setOf(
+    UserfieldType.NUMBER_INTEGRAL,
+    UserfieldType.NUMBER_DECIMAL,
+    UserfieldType.NUMBER_CURRENCY,
+)

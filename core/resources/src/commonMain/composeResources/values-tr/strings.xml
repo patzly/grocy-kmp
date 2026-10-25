@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Geri</string>
   <string name="action_more_options">Diğer seçenekler</string>
+  <string name="action_decrease">Azalt</string>
+  <string name="action_increase">Artır</string>
   <string name="action_cancel">İptal et</string>
   <string name="action_close">Kapat</string>
   <string name="action_update">Güncelle</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">Genel</string>
+  <string name="settings_select_hint">Ayarlarını burada göstermek için bir kategori seç</string>
   <string name="settings_server">Sunucu</string>
   <string name="settings_user">Kullanıcı ayarları</string>
+  <string name="settings_user_synced">Sunucuda kaydedilir</string>
+  <string name="settings_user_synced_hint">Grocy bu ayarları kullanıcın için saklar, bu yüzden web arayüzünde ve diğer cihazlarında da geçerlidir</string>
   <string name="settings_network">Ağ</string>
   <string name="settings_behavior">Davranış</string>
   <string name="settings_scanner">Barkod okuyucu</string>
@@ -372,6 +377,7 @@
   <string name="product_due_type_expiration_hint">Ürünün son kullanma tarihi geçince tüketilemez olduğu anlamına gelir</string>
   <string name="product_due_days">Varsayılan vade günleri</string>
   <string name="product_due_days_hint">Satın alma işlemlerinde son tarih önerisi için bu gün sayısı bugüne eklenecektir (-1, bu ürünün hiçbir zaman vadesinin geçmeyeceği anlamına gelir)</string>
+  <string name="product_due_days_pick">Bir tarihe kadar olan günleri say</string>
   <string name="product_due_days_after_open">Açıldıktan sonra varsayılan bekleme günü</string>
   <string name="product_due_days_after_open_hint">Bu ürün açılmış olarak işaretlendiğinde, son tarih; bugün + buradaki gün miktarıyla değiştirilecektir, ancak yalnızca sonuç tarihin orijinal son tarihten sonra olmaması durumunda (0 değeri bunu devre dışı bırakır)</string>
   <string name="product_due_days_after_freezing">Döndürdüktan sonra varsayılan bekleme günü</string>
@@ -728,7 +734,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">Varsayılan olarak stok özeti, stokta olan veya minimum stok miktarının altındaki tüm ürünleri gösterir; bu etkinleştirildiğinde her zaman tüm (aktif) ürünler gösterilir</string>
   <string name="stock_settings_purchase">Satın al</string>
   <string name="stock_settings_purchase_amount">Satın almak için varsayılan miktar</string>
-  <string name="stock_settings_show_purchased_date">Satın alma tarihini satın alma ve envanter sayfasında göster (aksi takdirde satın alma tarihi varsayılan olarak bugün olur)</string>
+  <string name="stock_settings_show_purchased_date">Satın alma tarihini satın alma ve envanter sayfasında göster</string>
+  <string name="stock_settings_show_purchased_date_hint">Aksi takdirde satın alma tarihi varsayılan olarak bugün olur</string>
   <string name="stock_settings_due_date_warning">Satın alınan ürünün son ödeme tarihi, stoktaki bir sonraki son ödeme tarihinden önce olduğunda uyarı göster</string>
   <string name="stock_settings_consume">Tüket</string>
   <string name="stock_settings_consume_amount">Tüketmek için varsayılan miktar</string>

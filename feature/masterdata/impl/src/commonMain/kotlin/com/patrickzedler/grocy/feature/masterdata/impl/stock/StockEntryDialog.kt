@@ -5,6 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.text.input.KeyboardType
 import com.patrickzedler.grocy.core.design.component.DropdownOption
+import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.resources.Res
@@ -68,6 +69,7 @@ internal fun StockEntryDialog(
                         error = fieldErrorText(errors[StockEntryField.AMOUNT]),
                         suffix = state.stockUnitName,
                         keyboardType = KeyboardType.Decimal,
+                        stepper = NumberStepper.Positive,
                         index = index,
                         count = count,
                     )
@@ -119,6 +121,7 @@ internal fun StockEntryDialog(
                             hint = stringResource(Res.string.data_per_stock_unit),
                             error = fieldErrorText(errors[StockEntryField.PRICE]),
                             keyboardType = KeyboardType.Decimal,
+                            stepper = NumberStepper(min = 0.0),
                             index = index,
                             count = count,
                         )

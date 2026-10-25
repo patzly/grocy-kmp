@@ -1,8 +1,10 @@
 package com.patrickzedler.grocy.core.design.component
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -11,8 +13,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
-import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MenuAnchorPosition
@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -31,7 +32,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.collapse
+import androidx.compose.ui.semantics.expand
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
@@ -61,7 +67,8 @@ data class DropdownOption(
  * either, keeps standing and shows an error once no suggestion is open, and [onUnmatchedChange]
  * reports it, so a form can refuse to save. The menu only helps typing: it suggests the options
  * that fit the text (forgiving small typos), the arrow shows all of them, and choosing one or
- * typing one completely closes it. Tapping the field itself only focuses it for typing.
+ * typing one completely closes it. Tapping the field itself only focuses it for typing; the
+ * arrow opens the menu without focusing it, so choosing needs no keyboard.
  *
  * @param noneLabel makes the choice optional: offered as first suggestion, it clears the field.
  * @param trailingAction e.g. a scan button, placed before the dropdown arrow.
@@ -150,18 +157,30 @@ fun SearchableDropdownField(
     val isMenuShown = expanded && enabled && (matches.isNotEmpty() || showNone)
     // As soon as no suggestion is left: a tap beside the field does not take its focus away
     val showUnmatched = isUnmatched && !isMenuShown
-    ExposedDropdownMenuBox(
-        expanded = expanded && enabled,
-        // Taps on the field (and its scan button) only close the menu; it opens through the
-        // arrow or while typing, so the keyboard and the other field actions stay usable
-        onExpandedChange = { if (!it) close() },
-        modifier = modifier,
-    ) {
+    // Material's ExposedDropdownMenuBox focuses the field whenever its menu opens, which opened
+    // the keyboard for a tap on the arrow, and the menu jumped up once it was there
+    var fieldWidth by remember { mutableIntStateOf(0) }
+    Box(modifier = modifier) {
         RoundedTextField(
             state = textState,
             modifier = Modifier
-                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryEditable, enabled)
                 .fillMaxWidth()
+                .onSizeChanged { fieldWidth = it.width }
+                .semantics {
+                    if (enabled) {
+                        if (isMenuShown) {
+                            collapse {
+                                close()
+                                true
+                            }
+                        } else {
+                            expand {
+                                expanded = true
+                                true
+                            }
+                        }
+                    }
+                }
                 .onFocusChanged { focus ->
                     if (isFocused && !focus.isFocused) {
                         close()
@@ -199,11 +218,12 @@ fun SearchableDropdownField(
         )
         // An expressive menu group instead of ExposedDropdownMenu: that one wraps its items in
         // the padding of the old menus outside the scrolling, which cuts them off and breaks
-        // the group's concentric corners. Not focusable, so the keyboard stays for typing.
+        // the group's concentric corners. Not focusable, so the keyboard stays for typing; a tap
+        // beside it (also on the field) closes it.
         DropdownMenuPopup(
             expanded = isMenuShown,
             onDismissRequest = { close() },
-            modifier = Modifier.exposedDropdownSize(),
+            modifier = Modifier.width(with(LocalDensity.current) { fieldWidth.toDp() }),
             popupPositionProvider = MenuDefaults.rememberDropdownMenuPopupPositionProvider(
                 MenuAnchorPosition.Below,
             ),

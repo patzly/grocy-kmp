@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Tillbaka</string>
   <string name="action_more_options">Fler alternativ</string>
+  <string name="action_decrease">Minska</string>
+  <string name="action_increase">Öka</string>
   <string name="action_cancel">Avbryt</string>
   <string name="action_close">Stäng</string>
   <string name="action_update">Uppdatera</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">Allmänt</string>
+  <string name="settings_select_hint">Välj en kategori för att visa dess inställningar här</string>
   <string name="settings_server">Server</string>
   <string name="settings_user">Användarinställningar</string>
+  <string name="settings_user_synced">Sparas på servern</string>
+  <string name="settings_user_synced_hint">Grocy sparar de här inställningarna för din användare, så de gäller även i webbgränssnittet och på dina andra enheter</string>
   <string name="settings_network">Nätverk</string>
   <string name="settings_behavior">Beteende</string>
   <string name="settings_scanner">Skanner</string>
@@ -372,6 +377,7 @@
   <string name="product_due_type_expiration_hint">Betyder att produkten inte är säker att äta efter sista förbrukningsdag</string>
   <string name="product_due_days">Standardantal dagar till förfallodatum</string>
   <string name="product_due_days_hint">Vid inköp läggs detta antal dagar till dagens datum för att föreslå ett förfallodatum (-1 betyder att denna produkt aldrig löper ut)</string>
+  <string name="product_due_days_pick">Räkna dagarna fram till ett datum</string>
   <string name="product_due_days_after_open">Standardantal dagar till förfallodatum efter öppning</string>
   <string name="product_due_days_after_open_hint">När produkten markeras som öppnad ersätts förfallodatumet med dagens datum + detta antal dagar, men endast om det nya datumet inte infaller efter det ursprungliga förfallodatumet (värdet 0 inaktiverar detta)</string>
   <string name="product_due_days_after_freezing">Standardantal dagar till förfallodatum efter infrysning</string>
@@ -728,7 +734,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">Som standard visar lageröversikten alla produkter som finns i lager eller understiger sitt minsta lagersaldo. När detta är aktiverat visas alltid alla aktiva produkter</string>
   <string name="stock_settings_purchase">Inköp</string>
   <string name="stock_settings_purchase_amount">Standardmängd för inköp</string>
-  <string name="stock_settings_show_purchased_date">Visa inköpsdatum på inköps- och inventeringssidan (annars används dagens datum som inköpsdatum)</string>
+  <string name="stock_settings_show_purchased_date">Visa inköpsdatum på inköps- och inventeringssidan</string>
+  <string name="stock_settings_show_purchased_date_hint">Annars används dagens datum som inköpsdatum</string>
   <string name="stock_settings_due_date_warning">Visa en varning när den inköpta produktens förfallodatum är tidigare än nästa förfallodatum i lager</string>
   <string name="stock_settings_consume">Förbruka</string>
   <string name="stock_settings_consume_amount">Standardmängd för förbrukning</string>

@@ -8,12 +8,14 @@ import com.patrickzedler.grocy.core.testing.MasterDataJson
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import io.ktor.util.encodeBase64
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -59,6 +61,24 @@ class ProductViewModelTest {
         assertEquals(1, form.quIdStock)
         assertEquals(1, form.quIdPrice)
         assertEquals(2, viewModel.ready.decimals)
+    }
+
+    @Test
+    fun formShowsTheStoredListPictureOffline() = runTest(dispatcher) {
+        val path = "/api/files/productpictures/${"x1bread.jpg".encodeBase64()}"
+        environment.server.respond(path, body = "jpeg")
+        val viewModel = viewModel(productId = 2)
+        viewModel.thumbnail()
+        environment.server.unreachable = true
+
+        assertEquals("jpeg", viewModel.thumbnail()?.decodeToString())
+    }
+
+    @Test
+    fun productWithoutPictureHasNoThumbnail() = runTest(dispatcher) {
+        val viewModel = viewModel(productId = 1)
+
+        assertNull(viewModel.thumbnail())
     }
 
     @Test

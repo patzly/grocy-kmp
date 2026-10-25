@@ -16,6 +16,7 @@ import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
 import com.patrickzedler.grocy.core.network.GrocyApiException
+import com.patrickzedler.grocy.feature.masterdata.impl.products.ignoringServerErrors
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -275,6 +276,15 @@ internal class ProductViewModel(
     suspend fun loadPicture(maxWidth: Int): ByteArray? {
         val fileName = pictureFileName ?: return null
         return repository.productPicture(fileName, maxWidth)
+    }
+
+    /**
+     * The saved picture as the product list shows it, stored for offline use; null without one
+     * or when it is neither stored nor downloadable.
+     */
+    suspend fun thumbnail(): ByteArray? {
+        val fileName = pictureFileName ?: return null
+        return ignoringServerErrors { repository.productThumbnail(fileName) }
     }
 
     private companion object {

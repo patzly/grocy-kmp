@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Retour</string>
   <string name="action_more_options">Plus d’options</string>
+  <string name="action_decrease">Diminuer</string>
+  <string name="action_increase">Augmenter</string>
   <string name="action_cancel">Annuler</string>
   <string name="action_close">Fermer</string>
   <string name="action_update">Mettre à jour</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">Général</string>
+  <string name="settings_select_hint">Choisissez une catégorie pour afficher ses paramètres ici</string>
   <string name="settings_server">Serveur</string>
   <string name="settings_user">Paramètres utilisateur</string>
+  <string name="settings_user_synced">Enregistrés sur le serveur</string>
+  <string name="settings_user_synced_hint">Grocy enregistre ces paramètres pour votre utilisateur, ils s'appliquent donc aussi dans son interface web et sur vos autres appareils</string>
   <string name="settings_network">Réseau</string>
   <string name="settings_behavior">Comportement</string>
   <string name="settings_scanner">Scanner</string>
@@ -382,6 +387,7 @@
   <string name="product_due_type_expiration_hint">Signifie que ce produit ne peut être consommé après la date de péremption</string>
   <string name="product_due_days">Date de péremption par défaut</string>
   <string name="product_due_days_hint">A l’achat, ce nombre de jours sera ajouté à la date de péremption suggérée (-1 signifie que le produit ne sera jamais périmé)</string>
+  <string name="product_due_days_pick">Compter les jours jusqu'à une date</string>
   <string name="product_due_days_after_open">Date de péremption après ouverture par défaut</string>
   <string name="product_due_days_after_open_hint">Quand ce produit est marqué comme ouvert, la date d’échéance sera remplacée par la date d’aujourd’hui plus ce nombre de jour, mais seulement si la nouvelle date ne se trouve pas après la date d’échéance originale (une valeur de 0 désactive ce comportement)</string>
   <string name="product_due_days_after_freezing">Date de péremption par défaut après congélation</string>
@@ -745,7 +751,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">Par défaut, la page d'aperçu des stocks liste tous les produits qui sont actuellement en stock ou en dessous de leur stock minimal - Lorsque cette option est activée, tous les produits (actifs) sont toujours affichés</string>
   <string name="stock_settings_purchase">Acheter</string>
   <string name="stock_settings_purchase_amount">Quantité ajoutée par défaut lors d'un achat</string>
-  <string name="stock_settings_show_purchased_date">Indiquer la date d'achat sur le formulaire d'achat (sinon, la date d'achat est fixée par défaut à aujourd'hui)</string>
+  <string name="stock_settings_show_purchased_date">Indiquer la date d'achat sur le formulaire d'achat</string>
+  <string name="stock_settings_show_purchased_date_hint">Sinon, la date d'achat est fixée par défaut à aujourd'hui</string>
   <string name="stock_settings_due_date_warning">Afficher un avertissement lorsque la date de péremption du produit acheté est avant la date de péremption du produit dans le stock</string>
   <string name="stock_settings_consume">Consommer</string>
   <string name="stock_settings_consume_amount">Quantité retirée par défaut lors de la consommation</string>

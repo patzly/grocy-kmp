@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.intl.Locale
 import com.patrickzedler.grocy.core.design.component.DropdownOption
+import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.model.text.parseDecimal
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
@@ -101,6 +102,7 @@ internal fun ConversionDialog(
                     null
                 },
                 keyboardType = KeyboardType.Decimal,
+                stepper = NumberStepper.Positive,
                 index = 2,
                 count = 3,
             )

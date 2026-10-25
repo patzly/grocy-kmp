@@ -86,6 +86,32 @@ class NavigatorTest {
     }
 
     @Test
+    fun openDetailReplacesADetailAndTheOneOpenedFromIt() {
+        navigator.navigate(Second)
+        navigator.openDetail(Detail(1))
+        navigator.navigate(Detail(3))
+
+        navigator.openDetail(Detail(2))
+
+        assertEquals(listOf(First, Second, Detail(2)), backStack.toList())
+    }
+
+    @Test
+    fun openDetailAsksADetailBelowTheTopWithUnsavedChanges() {
+        navigator.navigate(Second)
+        navigator.openDetail(Detail(1))
+        navigator.navigate(Detail(3))
+        var pendingLeave: (() -> Unit)? = null
+        navigator.register(Detail(1), LeaveGuard().apply { onLeaveRequest = { pendingLeave = it } })
+
+        navigator.openDetail(Detail(2))
+
+        assertEquals(listOf(First, Second, Detail(1), Detail(3)), backStack.toList())
+        pendingLeave?.invoke()
+        assertEquals(listOf(First, Second, Detail(2)), backStack.toList())
+    }
+
+    @Test
     fun goBackFromAListAlsoLeavesItsDetail() {
         navigator.navigate(Second)
         navigator.openDetail(Detail(1))

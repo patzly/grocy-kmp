@@ -117,7 +117,7 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
             onAddClick = { navigator.openDetail(ProductRoute()) },
             onConfigureUserfieldsClick = { openUserfields(MasterDataRepository.PRODUCTS) },
             // Grocy's button leads to the stock settings, its presets first
-            onPresetsClick = { navigator.navigate(StockSettingsRoute) },
+            onPresetsClick = { navigator.navigate(StockSettingsRoute()) },
             onActionDone = listActionDone(navigator, ::ProductRoute) {
                 (it as? ProductRoute)?.productId
             },

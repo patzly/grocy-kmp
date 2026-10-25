@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Wstecz</string>
   <string name="action_more_options">Więcej opcji</string>
+  <string name="action_decrease">Zmniejsz</string>
+  <string name="action_increase">Zwiększ</string>
   <string name="action_cancel">Anuluj</string>
   <string name="action_close">Zamknij</string>
   <string name="action_update">Aktualizuj</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">Ogólne</string>
+  <string name="settings_select_hint">Wybierz kategorię, aby wyświetlić tutaj jej ustawienia</string>
   <string name="settings_server">Serwer</string>
   <string name="settings_user">Ustawienia użytkownika</string>
+  <string name="settings_user_synced">Zapisane na serwerze</string>
+  <string name="settings_user_synced_hint">Grocy zapisuje te ustawienia dla Twojego użytkownika, więc obowiązują też w jego interfejsie webowym i na Twoich innych urządzeniach</string>
   <string name="settings_network">Sieć</string>
   <string name="settings_behavior">Zachowanie</string>
   <string name="settings_scanner">Skaner</string>
@@ -392,6 +397,7 @@
   <string name="product_due_type_expiration_hint">Oznacza, że ten produkt nie jest bezpieczny do spożycia, po przekroczeniu jego terminu ważności</string>
   <string name="product_due_days">Domyślna liczba dni ważności</string>
   <string name="product_due_days_hint">Dla zakupów ta liczba dni zostanie dodana do dzisiejszej daty jako sugestia terminu ważności (-1 oznacza, że ten produkt nigdy się nie przeterminuje)</string>
+  <string name="product_due_days_pick">Policz dni do daty</string>
   <string name="product_due_days_after_open">Domyślny termin ważności po otwarciu</string>
   <string name="product_due_days_after_open_hint">Gdy ten produkt zostanie oznaczony jako otwarty, data ważności zostanie zastąpiona dzisiejszą datą + ilością dni, o ile wynikowa data nie przekracza oryginalnego terminu przydatności (0 - opcja nieaktywna)</string>
   <string name="product_due_days_after_freezing">Domyślna ilość dni ważności po zamrożeniu</string>
@@ -761,7 +767,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">Domyślnie przegląd zapasów pokazuje wszystkie produkty, które są na stanie lub poniżej minimalnej ilości – po włączeniu zawsze pokazywane są wszystkie (aktywne) produkty</string>
   <string name="stock_settings_purchase">Zakup</string>
   <string name="stock_settings_purchase_amount">Domyślna ilość do zakupu</string>
-  <string name="stock_settings_show_purchased_date">Pokaż datę zakupu na stronach zakupów oraz zapasów (w innym wypadku data zakupu będzie domyślnie ustawiona na dzisiaj)</string>
+  <string name="stock_settings_show_purchased_date">Pokaż datę zakupu na stronach zakupów oraz zapasów</string>
+  <string name="stock_settings_show_purchased_date_hint">W innym wypadku data zakupu będzie domyślnie ustawiona na dzisiaj</string>
   <string name="stock_settings_due_date_warning">Pokaż ostrzeżenie, gdy termin ważności kupionego produktu jest wcześniejszy niż najbliższy termin przydatności w zapasach</string>
   <string name="stock_settings_consume">Zużyj</string>
   <string name="stock_settings_consume_amount">Domyślna ilość do spożycia</string>

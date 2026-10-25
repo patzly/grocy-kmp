@@ -20,6 +20,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.ConnectedButtonGroup
 import com.patrickzedler.grocy.core.design.component.DropdownOption
+import com.patrickzedler.grocy.core.design.component.NumberStepper
+import com.patrickzedler.grocy.core.design.component.NumberStepperField
 import com.patrickzedler.grocy.core.design.component.RoundedTextField
 import com.patrickzedler.grocy.core.design.component.SearchableDropdownField
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
@@ -69,40 +71,54 @@ internal fun TextItem(
     multiLine: Boolean = false,
     trailingAction: (@Composable () -> Unit)? = null,
     below: (@Composable () -> Unit)? = null,
+    stepper: NumberStepper? = null,
 ) {
     SegmentedContainer(index = index, count = count, modifier = modifier) {
-        RoundedTextField(
-            state = state,
-            modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            label = { Text(label) },
-            trailingIcon = trailingAction,
-            suffix = suffix?.let { { Text(it) } },
-            supportingText = error?.let { text ->
-                {
-                    Text(
-                        text = text,
-                        modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
-                    )
-                }
-            },
-            isError = error != null,
-            keyboardOptions = KeyboardOptions(
-                capitalization = if (keyboardType == KeyboardType.Text) {
-                    KeyboardCapitalization.Sentences
-                } else {
-                    KeyboardCapitalization.None
+        val field: @Composable (Modifier) -> Unit = { fieldModifier ->
+            RoundedTextField(
+                state = state,
+                modifier = fieldModifier,
+                enabled = enabled,
+                label = { Text(label) },
+                trailingIcon = trailingAction,
+                suffix = suffix?.let { { Text(it) } },
+                supportingText = error?.let { text ->
+                    {
+                        Text(
+                            text = text,
+                            modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+                        )
+                    }
                 },
-                keyboardType = keyboardType,
-                imeAction = if (multiLine) ImeAction.Default else ImeAction.Next,
-            ),
-            // Multi-line fields start as high as the others and grow with their paragraphs
-            lineLimits = if (multiLine) {
-                TextFieldLineLimits.MultiLine(minHeightInLines = 1)
-            } else {
-                TextFieldLineLimits.SingleLine
-            },
-        )
+                isError = error != null,
+                keyboardOptions = KeyboardOptions(
+                    capitalization = if (keyboardType == KeyboardType.Text) {
+                        KeyboardCapitalization.Sentences
+                    } else {
+                        KeyboardCapitalization.None
+                    },
+                    keyboardType = keyboardType,
+                    imeAction = if (multiLine) ImeAction.Default else ImeAction.Next,
+                ),
+                // Multi-line fields start as high as the others and grow with their paragraphs
+                lineLimits = if (multiLine) {
+                    TextFieldLineLimits.MultiLine(minHeightInLines = 1)
+                } else {
+                    TextFieldLineLimits.SingleLine
+                },
+            )
+        }
+        if (stepper == null) {
+            field(Modifier.fillMaxWidth())
+        } else {
+            NumberStepperField(
+                state = state,
+                stepper = stepper,
+                modifier = Modifier.fillMaxWidth(),
+                enabled = enabled,
+                field = field,
+            )
+        }
         HintText(hint)
         // Belongs to the field, e.g. the scanner of its scan action
         if (below != null) {

@@ -6,15 +6,20 @@ import com.materialkolor.hct.Hct
 import kotlin.math.abs
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 class ChartColorsTest {
 
-    private fun primary(hue: Int) = Color(Hct.from(hue.toDouble(), 48.0, 40.0).toInt())
+    // Material's primary tones: 40 in light schemes, 80 in dark ones
+    private fun primary(hue: Int, isDark: Boolean = false) =
+        Color(Hct.from(hue.toDouble(), 48.0, if (isDark) 80.0 else 40.0).toInt())
 
-    private fun hueOf(color: Color) = Hct.fromInt(color.toArgb()).hue
+    private fun hctOf(color: Color) = Hct.fromInt(color.toArgb())
+
+    private fun hueDistance(a: Double, b: Double) = abs((b - a + 540) % 360 - 180)
+
+    private fun palette(isDark: Boolean) = if (isDark) DarkChartColors else LightChartColors
 
     @Test
     fun bothModesHaveEveryColorOnce() {
@@ -25,55 +30,83 @@ class ChartColorsTest {
     }
 
     @Test
-    fun palettesAreDistinguishableThemselves() {
-        assertTrue(isDistinguishable(LightChartColors))
-        assertTrue(isDistinguishable(DarkChartColors))
+    fun palettesAreValidThemselves() {
+        assertTrue(isValidPalette(LightChartColors, isDark = false))
+        assertTrue(isValidPalette(DarkChartColors, isDark = true))
     }
 
     @Test
-    fun harmonizedColorsStayDistinguishableForEveryPrimaryHue() {
+    fun harmonizedColorsStayValidForEveryPrimaryHue() {
         for (hue in 0 until 360) {
-            for (palette in listOf(LightChartColors, DarkChartColors)) {
-                val colors = harmonizedChartColors(palette, primary(hue))
+            for (isDark in listOf(false, true)) {
+                val colors = harmonizedChartColors(palette(isDark), primary(hue, isDark), isDark)
 
-                assertTrue(isDistinguishable(colors), "hue $hue")
+                assertTrue(isValidPalette(colors, isDark), "hue $hue, dark $isDark")
+                assertEquals(CHART_COLOR_COUNT, colors.distinct().size)
             }
         }
     }
 
     @Test
-    fun harmonizingTurnsTheHuesTowardsThePrimaryColor() {
-        val blue = LightChartColors.first()
+    fun theFirstSeriesTakesTheColorClosestToPrimary() {
+        for (hue in listOf(0, 60, 154, 250, 300)) {
+            for (isDark in listOf(false, true)) {
+                val source = primary(hue, isDark)
+                val closest = palette(isDark).minOf {
+                    hueDistance(hctOf(it).hue, hctOf(source).hue)
+                }
 
-        val harmonized = blue.harmonize(primary(154), maxRotation = 15.0)
+                val first = harmonizedChartColors(palette(isDark), source, isDark).first()
 
-        assertNotEquals(blue, harmonized)
-        assertTrue(abs(hueOf(harmonized) - 154) < abs(hueOf(blue) - 154))
+                assertTrue(
+                    hueDistance(hctOf(first).hue, hctOf(source).hue) <= closest,
+                    "hue $hue, dark $isDark",
+                )
+            }
+        }
     }
 
     @Test
-    fun harmonizingTurnsAtMostTheGivenDegrees() {
-        val blue = LightChartColors.first()
+    fun theDefaultThemeTurnsTheHuesTowardsPrimary() {
+        val source = primary(154)
 
-        val harmonized = blue.harmonize(primary(154), maxRotation = 5.0)
+        val harmonized = harmonizedChartColors(LightChartColors, source, isDark = false)
 
-        assertTrue(abs(hueOf(harmonized) - hueOf(blue)) <= 5.5)
-    }
-
-    @Test
-    fun redThemesHarmonizeLessThanMaterialsFifteenDegrees() {
-        val fully = LightChartColors.map { it.harmonize(primary(0), maxRotation = 15.0) }
-
-        val harmonized = harmonizedChartColors(LightChartColors, primary(0))
-
-        assertFalse(isDistinguishable(fully))
-        assertNotEquals(fully, harmonized)
-    }
-
-    @Test
-    fun theDefaultThemeHarmonizesTheColors() {
-        val harmonized = harmonizedChartColors(LightChartColors, primary(154))
-
+        // The default green theme starts with the aqua, turned towards its green
+        val aqua = LightChartColors[2]
+        assertTrue(
+            hueDistance(hctOf(harmonized.first()).hue, 154.0) <
+                hueDistance(hctOf(aqua).hue, 154.0),
+        )
         assertNotEquals(LightChartColors, harmonized)
+    }
+
+    @Test
+    fun harmonizingTurnsAtMostThirtyDegrees() {
+        val blue = LightChartColors.first()
+
+        val harmonized = blue.harmonize(hctOf(primary(30)), 1.0, 0.0, 50.0)
+
+        val turn = hueDistance(hctOf(blue).hue, hctOf(harmonized).hue)
+        assertTrue(turn in 25.0..30.5, "turned $turn")
+    }
+
+    @Test
+    fun harmonizingWithoutStrengthKeepsTheColor() {
+        val blue = LightChartColors.first()
+
+        val harmonized = blue.harmonize(hctOf(primary(154)), 0.0, 0.0, 50.0)
+
+        assertTrue(hueDistance(hctOf(blue).hue, hctOf(harmonized).hue) < 1)
+        assertTrue(abs(hctOf(blue).tone - hctOf(harmonized).tone) < 1)
+    }
+
+    @Test
+    fun toningMovesTheToneTowardsPrimary() {
+        val yellow = LightChartColors[3]
+
+        val harmonized = yellow.harmonize(hctOf(primary(154)), 0.0, 1.0, hctOf(yellow).tone)
+
+        assertTrue(abs(hctOf(harmonized).tone - 40) < 2)
     }
 }

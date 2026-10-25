@@ -84,13 +84,14 @@ internal enum class SettingsCategory(
 }
 
 /**
- * The categories of the settings. Beside the page of one ([shownCategory] not null) they are a
- * single choice marking it and the list is the start [ScreenPane.List] of the layout.
+ * The categories of the settings. Beside the pages ([isBesideDetail]) they are a single choice
+ * marking the [shownCategory] and the list is the start [ScreenPane.List] of the layout.
  */
 @Composable
 internal fun SettingsScreen(
     menuViewModel: SettingsMenuViewModel,
     menuActions: SettingsMenuActions,
+    isBesideDetail: Boolean,
     shownCategory: SettingsCategory?,
     onBackClick: () -> Unit,
     onCategoryClick: (SettingsCategory) -> Unit,
@@ -104,9 +105,10 @@ internal fun SettingsScreen(
         menuActions = menuActions,
         onBackClick = onBackClick,
         modifier = modifier,
-        pane = ScreenPane.List.takeIf { shownCategory != null },
+        pane = ScreenPane.List.takeIf { isBesideDetail },
     ) {
         settingsOverview(
+            isBesideDetail = isBesideDetail,
             shownCategory = shownCategory,
             onCategoryClick = onCategoryClick,
             onBackupClick = onBackupClick,
@@ -116,6 +118,7 @@ internal fun SettingsScreen(
 }
 
 private fun LazyListScope.settingsOverview(
+    isBesideDetail: Boolean,
     shownCategory: SettingsCategory?,
     onCategoryClick: (SettingsCategory) -> Unit,
     onBackupClick: () -> Unit,
@@ -133,7 +136,7 @@ private fun LazyListScope.settingsOverview(
                 count = categories.size,
                 colors = colors,
                 onClick = { onCategoryClick(category) },
-                selected = shownCategory?.let { it == category },
+                selected = if (isBesideDetail) shownCategory == category else null,
             )
         }
     }
@@ -230,6 +233,7 @@ private fun SettingsScreenPreview() {
             onFeedbackClick = {},
         ) {
             settingsOverview(
+                isBesideDetail = false,
                 shownCategory = null,
                 onCategoryClick = {},
                 onBackupClick = {},

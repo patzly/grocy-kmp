@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Tilbake</string>
   <string name="action_more_options">Flere alternativer</string>
+  <string name="action_decrease">Reduser</string>
+  <string name="action_increase">Øk</string>
   <string name="action_cancel">Avbryt</string>
   <string name="action_close">Lukk</string>
   <string name="action_update">Oppdater</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">Generelt</string>
+  <string name="settings_select_hint">Velg en kategori for å vise innstillingene her</string>
   <string name="settings_server">Server</string>
   <string name="settings_user">Brukerinnstillinger</string>
+  <string name="settings_user_synced">Lagret på serveren</string>
+  <string name="settings_user_synced_hint">Grocy lagrer disse innstillingene for brukeren din, så de gjelder også i nettgrensesnittet og på de andre enhetene dine</string>
   <string name="settings_network">Nettverk</string>
   <string name="settings_behavior">Atferd</string>
   <string name="settings_scanner">Skanner</string>
@@ -372,6 +377,7 @@
   <string name="product_due_type_expiration_hint">Betyr at produktet ikke er trygt å konsumere etter at utløpsdato</string>
   <string name="product_due_days">Standard forfallsdager</string>
   <string name="product_due_days_hint">For kjøp blir dette antall dager lagt til i dag for forslaget på forfallsdato (-1 betyr at dette produktet aldri forfaller)</string>
+  <string name="product_due_days_pick">Tell dagene frem til en dato</string>
   <string name="product_due_days_after_open">Standard forfallsdager etter åpning</string>
   <string name="product_due_days_after_open_hint">Når dette produktet blir merket som åpnet, vil utløpsdato bli erstattet med dagens dato + dette antall dager, men bare dersom datoen ikke ender etter original utløpsdato (sett verdien til 0 for å deaktivere dette)</string>
   <string name="product_due_days_after_freezing">Standard forfallsdager etter frysing</string>
@@ -729,7 +735,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">Som standard viser beholdningsoversikten alle produkter som er på lager eller under minimumsbeholdningen - når dette er aktivert, vises alltid alle (aktive) produkter</string>
   <string name="stock_settings_purchase">Innkjøp</string>
   <string name="stock_settings_purchase_amount">Standard mengde for innkjøp</string>
-  <string name="stock_settings_show_purchased_date">Vis innkjøpsdato på innkjøp og beholdningssidene (ellers vil innkjøpsdato settes til i dag)</string>
+  <string name="stock_settings_show_purchased_date">Vis innkjøpsdato på innkjøp og beholdningssidene</string>
+  <string name="stock_settings_show_purchased_date_hint">Ellers vil innkjøpsdato settes til i dag</string>
   <string name="stock_settings_due_date_warning">Vis en advarsel når forfallsdatoen for det kjøpte produktet er tidligere enn neste forfallsdato i beholdningen</string>
   <string name="stock_settings_consume">Forbruk produkt</string>
   <string name="stock_settings_consume_amount">Standard mengde for forbruk</string>

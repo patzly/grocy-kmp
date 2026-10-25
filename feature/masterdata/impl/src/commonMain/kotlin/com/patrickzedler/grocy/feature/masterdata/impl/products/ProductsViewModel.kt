@@ -198,7 +198,8 @@ internal class ProductsViewModel(
     }
 }
 
-private suspend fun <T> ignoringServerErrors(block: suspend () -> T): T? = try {
+/** [block]'s result, null when the server could not answer it (offline, errors). */
+internal suspend fun <T> ignoringServerErrors(block: suspend () -> T): T? = try {
     block()
 } catch (e: CancellationException) {
     throw e

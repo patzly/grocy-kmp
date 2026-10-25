@@ -17,6 +17,8 @@
   <!-- Common actions -->
   <string name="action_back">Zurück</string>
   <string name="action_more_options">Weitere Optionen</string>
+  <string name="action_decrease">Verringern</string>
+  <string name="action_increase">Erhöhen</string>
   <string name="action_cancel">Abbrechen</string>
   <string name="action_close">Schließen</string>
   <string name="action_update">Aktualisieren</string>
@@ -144,8 +146,11 @@
 
   <!-- Settings -->
   <string name="settings_general">Allgemein</string>
+  <string name="settings_select_hint">Wähle eine Kategorie, um ihre Einstellungen hier anzuzeigen</string>
   <string name="settings_server">Server</string>
   <string name="settings_user">Benutzereinstellungen</string>
+  <string name="settings_user_synced">Auf dem Server gespeichert</string>
+  <string name="settings_user_synced_hint">Grocy speichert diese Einstellungen für deinen Benutzer, deshalb gelten sie auch in seiner Weboberfläche und auf deinen anderen Geräten</string>
   <string name="settings_network">Netzwerk</string>
   <string name="settings_behavior">Verhalten</string>
   <string name="settings_scanner">Scanner</string>
@@ -372,6 +377,7 @@
   <string name="product_due_type_expiration_hint">Bedeutet, dass das Produkt nach dem Fälligkeitsdatum nicht mehr verzehrt werden kann</string>
   <string name="product_due_days">Standardfälligkeitstage</string>
   <string name="product_due_days_hint">Bei Einkäufen wird hierauf basierend das Fälligkeitsdatum vorausgefüllt (-1 bedeutet, dass dieses Produkt niemals überfällig ist)</string>
+  <string name="product_due_days_pick">Tage bis zu einem Datum zählen</string>
   <string name="product_due_days_after_open">Standardfälligkeitstage nach dem Öffnen</string>
   <string name="product_due_days_after_open_hint">Wenn dieses Produkt als geöffnet markiert wurde, wird das Fälligkeitsdatum durch heute + diese Anzahl von Tagen ersetzt, aber nur, wenn das resultierende Datum nicht nach dem ursprünglichen Fälligkeitsdatum liegt (ein Wert von 0 deaktiviert dies)</string>
   <string name="product_due_days_after_freezing">Standardfälligkeitstage nach dem Einfrieren</string>
@@ -729,7 +735,8 @@
   <string name="stock_settings_show_all_out_of_stock_hint">Standardmäßig listet die Bestandsübersicht alle Produkte auf, die derzeit im Bestand oder unter ihrem Mindestbestand sind - aktiviere dies, um dort immer alle (aktiven) Produkte anzuzeigen</string>
   <string name="stock_settings_purchase">Einkauf</string>
   <string name="stock_settings_purchase_amount">Standardmenge für Einkauf</string>
-  <string name="stock_settings_show_purchased_date">Einkaufsdatum auf der Einkauf- und Inventur-Seite anzeigen (ansonsten wird heute als Einkaufsdatum verwendet)</string>
+  <string name="stock_settings_show_purchased_date">Einkaufsdatum auf der Einkauf- und Inventur-Seite anzeigen</string>
+  <string name="stock_settings_show_purchased_date_hint">Ansonsten wird heute als Einkaufsdatum verwendet</string>
   <string name="stock_settings_due_date_warning">Eine Warnung anzeigen, wenn das Fälligkeitsdatum des gekauften Produkts vor dem nächsten Fälligkeitsdatum von bereits vorrätigen Bestandseinträgen liegt</string>
   <string name="stock_settings_consume">Verbrauch</string>
   <string name="stock_settings_consume_amount">Standardmenge für Verbrauch</string>

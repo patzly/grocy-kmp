@@ -31,6 +31,34 @@ fun decimalPlaces(text: String): Int {
     return if (separator < 0) 0 else trimmed.length - separator - 1
 }
 
+/**
+ * [text] changed by [step] like the buttons of Grocy's number picker: an empty field counts as 0
+ * going up and as 1 going down, so it becomes 1 or 0. The decimals and the separator the user
+ * typed stay ([decimalSeparator] where [text] has none). Null where the button does nothing: for
+ * text that is no number, and for a result outside [min]..[max], unless it moves a value outside
+ * the range towards it.
+ */
+fun steppedDecimal(
+    text: String,
+    step: Int,
+    min: Double? = null,
+    max: Double? = null,
+    decimalSeparator: Char = '.',
+): String? {
+    val value = if (text.isBlank()) {
+        if (step > 0) 0.0 else 1.0
+    } else {
+        parseDecimal(text) ?: return null
+    }
+    val result = value + step
+    val isInRange = (min == null || result >= min) && (max == null || result <= max)
+    val movesTowardsRange = (step > 0 && min != null && value < min) ||
+        (step < 0 && max != null && value > max)
+    if (!isInRange && !movesTowardsRange) return null
+    val separator = text.firstOrNull { it == '.' || it == ',' } ?: decimalSeparator
+    return formatDecimal(result, decimalPlaces(text), separator)
+}
+
 /** The decimal separator of the app language, "," in German. */
 expect fun platformDecimalSeparator(): Char
 

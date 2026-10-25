@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
-/** The categories, alone until one is chosen; wide windows then show its page beside them. */
+/** The categories; wide windows show the chosen one's page beside them. */
 @Serializable
 @SerialName("settings")
 data object SettingsRoute : Route
@@ -23,10 +23,18 @@ data object GeneralSettingsRoute : DetailRoute
 @SerialName("settings/server")
 data object ServerSettingsRoute : DetailRoute
 
-/** Grocy's stock settings of the user, "Presets for new products" first. */
+/** The settings Grocy stores per user on the server, a page per area. */
+@Serializable
+@SerialName("settings/user")
+data object UserSettingsRoute : DetailRoute
+
+/**
+ * Grocy's stock settings of the user, "Presets for new products" first; [inSettings] when
+ * opened from the user settings, so it shows beside the categories in wide windows.
+ */
 @Serializable
 @SerialName("settings/stock")
-data object StockSettingsRoute : Route
+data class StockSettingsRoute(val inSettings: Boolean = false) : DetailRoute
 
 /** Recent errors of the app: logcat on Android, the errors the web app recorded. */
 @Serializable
@@ -38,6 +46,7 @@ val settingsRouteSerializers = SerializersModule {
         subclass(SettingsRoute::class, SettingsRoute.serializer())
         subclass(GeneralSettingsRoute::class, GeneralSettingsRoute.serializer())
         subclass(ServerSettingsRoute::class, ServerSettingsRoute.serializer())
+        subclass(UserSettingsRoute::class, UserSettingsRoute.serializer())
         subclass(StockSettingsRoute::class, StockSettingsRoute.serializer())
         subclass(LogRoute::class, LogRoute.serializer())
     }
