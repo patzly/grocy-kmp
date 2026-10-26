@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
+import com.patrickzedler.grocy.core.design.component.AppBarLogo
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
@@ -94,6 +95,8 @@ private fun StartContent(
     SegmentedListScreen(
         title = stringResource(Res.string.app_name),
         modifier = modifier,
+        // No back button on the first screen, its place shows the logo
+        navigationIcon = { AppBarLogo() },
         menuItems = menuItems,
         pane = ScreenPane.List.takeIf { isBesideDetail },
         snackbarHostState = snackbarHostState,

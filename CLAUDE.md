@@ -10,7 +10,9 @@ on every platform, the start screen (sections, Master data so far, and the app m
 Material's expanded width on a list-detail scene like the settings: `StartSection`, the
 section's page (`MasterDataRoute`, a `DetailRoute`) opens beside it, `start_select_hint` until
 then, and a category of the master data still opens its list as a scene of its own with its
-forms beside it, never in place of the master data), an About
+forms beside it, never in place of the master data; back leaves the whole scene like every
+list-detail scene, from the start screen the app, it never closes the page beside it first, on
+purpose), an About
 screen, the Settings overview (`feature:settings`) and the master data
 (`feature:masterdata`): the overview of Grocy's master data categories, the list and form of
 every category (products with their overview dialog, locations, stores, quantity units,
@@ -38,7 +40,9 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   `surfaceContainer`, no card); narrower windows show list and form one after
   the other. Both panes start half and half with Material's `VerticalDragHandle` between them
   (`PaneAnchors` 1/2, 1/3, 2/3: drag, the screen reader's action or the arrow keys, a tick per
-  snap); the pane expansion overrides the hinge avoidance, the middle lies on a book posture's
+  snap; `PaneBackgroundScene` measures the scene at least 48.dp wide, Material's scaffold throws
+  when it clamps the handle into a window narrower than its margins, e.g. the one pixel window
+  of headless browsers' screenshots); the pane expansion overrides the hinge avoidance, the middle lies on a book posture's
   fold anyway. Both panes are `SegmentedListScreen(pane = ScreenPane.List / Detail)`: on a
   `surfaceContainerHighest` background like the scrolled app bars (`PaneBackgroundDecorator`, a
   `SceneDecoratorStrategy` of `GrocyNavDisplay` for two-pane scenes of lists, so it also fills
@@ -843,6 +847,11 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   (kept out of public APIs: `HapticTooltipBox` takes its own `TooltipPosition`). Compose 1.13
   needs compileSdk 37.1 or newer (`android-compileSdkMinor`). Material's adaptive libraries
   (`adaptive-navigation3`, list-detail scenes) follow the same rule: newest alpha.
+- `GrocyLogo` (`core:design`, 30.dp; `AppBarLogo` in the start screen's app bar, in the place of
+  the navigation button the first screen has none of, the title stays centered) stacks the logo's layers (`ic_logo_*`, one color each) and
+  tints them like the API 34 splash screen with the theme's roles instead of the system's
+  (`onSurface` outlines, `primaryContainer` basket, `onPrimaryContainer` letter at 80 %), the
+  fruits' fixed colors harmonized with primary (`grocyLogoColors`).
 - Version numbers (app, Grocy) and other numbers read as columns use tabular figures
   (`TextStyle.withTabularNumbers()`), every digit equally wide.
 - Font is Google Sans Flex from Compose Resources. On web fonts load async;

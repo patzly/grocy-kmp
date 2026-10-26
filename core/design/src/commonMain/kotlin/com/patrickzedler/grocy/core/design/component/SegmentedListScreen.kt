@@ -236,10 +236,12 @@ fun SegmentedListScreen(
                     hostState = it,
                     modifier = Modifier.offset {
                         val state = toolbarScrollBehavior.state
-                        IntOffset(
-                            x = 0,
-                            y = -snackbarLift(snackbarSpace.toPx(), state.offset, state.offsetLimit),
+                        val lift = snackbarLift(
+                            toolbarSpace = snackbarSpace.toPx(),
+                            toolbarOffset = state.offset,
+                            offsetLimit = state.offsetLimit,
                         )
+                        IntOffset(x = 0, y = -lift)
                     },
                 )
             }

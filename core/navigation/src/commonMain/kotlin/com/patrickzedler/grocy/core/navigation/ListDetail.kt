@@ -31,9 +31,13 @@ import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.OverlayScene
@@ -227,7 +231,12 @@ internal class PaneBackgroundScene(val scene: Scene<NavKey>) : Scene<NavKey> by 
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surfaceContainerHighest),
         ) {
-            scene.content()
+            // A window that shrinks below the drag handle's margins (headless browsers resize to
+            // one pixel for screenshots) is measured once before the scene turns single pane,
+            // and Material's scaffold throws when it clamps the handle into that width
+            Box(Modifier.atLeastWidth(MinTwoPaneWidth)) {
+                scene.content()
+            }
         }
     }
 
@@ -236,6 +245,20 @@ internal class PaneBackgroundScene(val scene: Scene<NavKey>) : Scene<NavKey> by 
 
     override fun hashCode(): Int = scene.hashCode()
 }
+
+/** Fills the incoming size, but never narrower than [width] (centered, overflowing then). */
+private fun Modifier.atLeastWidth(width: Dp): Modifier = layout { measurable, constraints ->
+    val minWidth = width.roundToPx()
+    val measureWidth = maxOf(constraints.maxWidth, minWidth)
+    val placeable = measurable.measure(
+        Constraints.fixed(measureWidth, constraints.maxHeight),
+    )
+    layout(constraints.maxWidth, constraints.maxHeight) {
+        placeable.placeRelative((constraints.maxWidth - placeable.width) / 2, 0)
+    }
+}
+
+private val MinTwoPaneWidth = 48.dp
 
 @Composable
 internal fun rememberPaneBackgroundDecorator(): SceneDecoratorStrategy<NavKey> {
