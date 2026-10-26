@@ -23,12 +23,20 @@ class BackStackCodecTest {
     @SerialName("product")
     private data class ProductRoute(val id: Int) : Route
 
+    @Serializable
+    @SerialName("userfields")
+    private data class UserfieldsRoute(
+        val entity: String? = null,
+        val showDisabled: Boolean = false,
+    ) : Route
+
     private val codec = BackStackCodec(
         SerializersModule {
             polymorphic(NavKey::class) {
                 subclass(HomeRoute::class, HomeRoute.serializer())
                 subclass(GeneralRoute::class, GeneralRoute.serializer())
                 subclass(ProductRoute::class, ProductRoute.serializer())
+                subclass(UserfieldsRoute::class, UserfieldsRoute.serializer())
             }
         },
     )
@@ -63,6 +71,26 @@ class BackStackCodecTest {
     @Test
     fun hashNamesTheTopScreen() {
         assertEquals("#/settings/general", codec.hash(listOf(HomeRoute, GeneralRoute)))
+    }
+
+    @Test
+    fun hashShowsTheArgumentsOfTheTopScreen() {
+        assertEquals("#/product?id=12", codec.hash(listOf(HomeRoute, ProductRoute(12))))
+    }
+
+    @Test
+    fun hashLeavesOutArgumentsAtTheirDefault() {
+        assertEquals("#/userfields", codec.hash(listOf(HomeRoute, UserfieldsRoute())))
+    }
+
+    @Test
+    fun hashEncodesTextArguments() {
+        val route = UserfieldsRoute(entity = "userentity-Bücher & Co", showDisabled = true)
+
+        assertEquals(
+            "#/userfields?entity=userentity-B%C3%BCcher%20%26%20Co&showDisabled=true",
+            codec.hash(listOf(HomeRoute, route)),
+        )
     }
 
     @Test

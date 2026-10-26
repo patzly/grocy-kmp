@@ -33,13 +33,13 @@ class BrowserHistoryInputTest {
         dispatcher.dispose()
     }
 
-    private fun TestScope.connect(browser: FakeBrowser) {
+    private fun TestScope.connect(browser: FakeBrowser, initialIndex: Int = app.size - 1) {
         val scope = CoroutineScope(StandardTestDispatcher(testScheduler) + Job())
         inputScope = scope
         dispatcher.addHandler(app)
         input = BrowserHistoryInput(
             history = browser,
-            initialIndex = app.size - 1,
+            initialIndex = initialIndex,
             scope = scope,
             awaitFrame = { delay(FRAME) },
             isScreen = { it is ScreenInfo },
@@ -194,6 +194,19 @@ class BrowserHistoryInputTest {
         connect(browser)
 
         assertEquals(1, browser.position)
+    }
+
+    @Test
+    fun reloadOfASceneWithTwoPanesKeepsTheBrowserOnItsEntry() = runTest {
+        // Start screen and master data share the first scene, the products are the second
+        val browser = FakeBrowser(entries = listOf(0, 1), position = 1)
+        app = FakeBackStack(initialSize = 2)
+
+        connect(browser, initialIndex = 2)
+
+        assertEquals(1, browser.position)
+        assertEquals(listOf<Int?>(0, 1), browser.entries)
+        assertEquals(2, app.size)
     }
 
     @Test

@@ -113,17 +113,28 @@ fun EntryProviderScope<NavKey>.settingsEntries(
         )
     }
 
-    // Beside the categories only when opened from the user settings, not from the products
+    // Beside the categories when opened from the user settings, or from the products in wide
+    // windows together with both; a screen of its own from the products in narrow ones
     entry<StockSettingsRoute>(
         metadata = { route ->
-            if (route.inSettings) detailPaneMetadata(SettingsRoute) else emptyMap()
+            if (route.inSettings) {
+                detailPaneMetadata(SettingsRoute, backLeavesScene = route.backLeavesSettings)
+            } else {
+                emptyMap()
+            }
         },
     ) { route ->
         StockSettingsScreen(
             viewModel = viewModel { StockSettingsViewModel(dependencies.masterDataRepository) },
             menuViewModel = settingsMenuViewModel(dependencies),
             menuActions = menuActions,
-            onBackClick = navigator::goBack,
+            onBackClick = {
+                if (route.backLeavesSettings) {
+                    navigator.goBack(from = SettingsRoute)
+                } else {
+                    navigator.goBack()
+                }
+            },
             pane = ScreenPane.Detail.takeIf { route.inSettings && showsDetailBesideList() },
         )
     }

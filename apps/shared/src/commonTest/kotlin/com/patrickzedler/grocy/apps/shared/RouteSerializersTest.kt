@@ -88,6 +88,7 @@ class RouteSerializersTest {
         UserSettingsRoute,
         StockSettingsRoute(),
         StockSettingsRoute(inSettings = true),
+        StockSettingsRoute(inSettings = true, backLeavesSettings = true),
         StockEntriesRoute(),
         StockEntriesRoute(productId = 7),
         StockJournalRoute(),

@@ -28,6 +28,11 @@ class Navigator internal constructor(
         backStack.add(route)
     }
 
+    /** Opens [routes] at once, e.g. a list with the detail to show beside it. */
+    fun navigateAll(routes: List<Route>) {
+        backStack.addAll(routes)
+    }
+
     fun goBack() {
         if (backStack.size > 1) {
             backStack.removeAt(backStack.lastIndex)

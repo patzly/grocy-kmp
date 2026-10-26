@@ -20,6 +20,13 @@ class NavigatorTest {
     }
 
     @Test
+    fun navigateAllAddsTheRoutesOnTopInTheirOrder() {
+        navigator.navigateAll(listOf(Second, Third))
+
+        assertEquals(listOf(First, Second, Third), backStack.toList())
+    }
+
+    @Test
     fun goBackRemovesTopRoute() {
         navigator.navigate(Second)
         navigator.navigate(Third)

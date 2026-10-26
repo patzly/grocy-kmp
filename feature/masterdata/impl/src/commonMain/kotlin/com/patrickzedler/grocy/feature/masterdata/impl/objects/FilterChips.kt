@@ -39,6 +39,7 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.verticalScrollbar
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_arrow_downward
 import com.patrickzedler.grocy.core.resources.ic_rounded_arrow_drop_down
@@ -166,12 +167,14 @@ internal fun <T> DropdownFilterChip(
             elevation = filterChipElevation(),
         )
         DropdownMenuPopup(expanded = expanded, onDismissRequest = { expanded = false }) {
+            val menuScrollState = rememberScrollState()
             DropdownMenuGroup(
                 shapes = MenuDefaults.groupShape(index = 0, count = 1),
                 // Long lists of choices scroll inside the menu
                 modifier = Modifier
                     .heightIn(max = MenuMaxHeight)
-                    .verticalScroll(rememberScrollState()),
+                    .verticalScrollbar(menuScrollState)
+                    .verticalScroll(menuScrollState),
             ) {
                 options.forEachIndexed { index, option ->
                     SelectableDropdownMenuItem(

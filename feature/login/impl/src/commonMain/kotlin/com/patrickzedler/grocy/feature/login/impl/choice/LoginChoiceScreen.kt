@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.login.impl.choice
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemDefaults
@@ -35,6 +37,7 @@ import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.design.component.verticalScrollbar
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_dns
 import com.patrickzedler.grocy.core.resources.ic_rounded_home
@@ -80,10 +83,12 @@ private fun LoginChoiceContent(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
     ) { padding ->
+        val listState = rememberLazyListState()
         InsetLazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .consumeWindowInsets(padding),
+            state = listState,
             contentPadding = PaddingValues(
                 top = padding.calculateTopPadding() + SegmentedListDefaults.GroupSpacing,
                 bottom = padding.calculateBottomPadding() + SegmentedListDefaults.GroupSpacing,
@@ -122,6 +127,13 @@ private fun LoginChoiceContent(
                 }
             }
         }
+        // Between the system bars, where the list shows its content
+        Box(
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScrollbar(listState),
+        )
     }
 }
 

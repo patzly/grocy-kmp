@@ -229,12 +229,14 @@ fun SearchableDropdownField(
             ),
             properties = PopupProperties(focusable = false),
         ) {
+            val menuScrollState = rememberScrollState()
             DropdownMenuGroup(
                 shapes = MenuDefaults.groupShape(index = 0, count = 1),
                 // Scrolls inside the group, so the group's padding scrolls with the items
                 modifier = Modifier
                     .heightIn(max = MenuMaxHeight)
-                    .verticalScroll(rememberScrollState()),
+                    .verticalScrollbar(menuScrollState)
+                    .verticalScroll(menuScrollState),
             ) {
                 val count = matches.size + if (showNone) 1 else 0
                 if (showNone && noneLabel != null) {

@@ -16,8 +16,8 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.GrocyTheme
-import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.AppBarLogo
+import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
@@ -28,7 +28,9 @@ import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.app_name
 import com.patrickzedler.grocy.core.resources.ic_rounded_database
+import com.patrickzedler.grocy.core.resources.ic_rounded_settings
 import com.patrickzedler.grocy.core.resources.masterdata_title
+import com.patrickzedler.grocy.core.resources.title_settings
 import com.patrickzedler.grocy.core.ui.AppMenuDialogs
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
 import com.patrickzedler.grocy.core.ui.rememberAppMenu
@@ -43,9 +45,10 @@ internal enum class StartSection(val title: StringResource, val icon: DrawableRe
 }
 
 /**
- * The first screen after login; grows with the app's sections, master data so far. Beside the
- * sections' pages ([isBesideDetail]) it is the start [ScreenPane.List] of the layout and its
- * sections a single choice marking the [shownSection].
+ * The first screen after login; grows with the app's sections, master data so far, and leads to
+ * the settings in a group of their own below them. Beside the sections' pages
+ * ([isBesideDetail]) it is the start [ScreenPane.List] of the layout and its sections a single
+ * choice marking the [shownSection]; the settings open as a screen of their own.
  */
 @Composable
 internal fun StartScreen(
@@ -59,7 +62,8 @@ internal fun StartScreen(
 ) {
     val refresh by viewModel.refresh.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    val appMenu = rememberAppMenu(onSettingsClick = onSettingsClick, onAboutClick = onAboutClick)
+    // Settings are an item of the list here, not of the menu
+    val appMenu = rememberAppMenu(onAboutClick = onAboutClick)
     AppMenuDialogs(appMenu)
 
     RefreshErrorEffect(
@@ -76,6 +80,7 @@ internal fun StartScreen(
         isBesideDetail = isBesideDetail,
         shownSection = shownSection,
         onSectionClick = onSectionClick,
+        onSettingsClick = onSettingsClick,
         menuItems = appMenu.items,
         modifier = modifier,
     )
@@ -89,6 +94,7 @@ private fun StartContent(
     isBesideDetail: Boolean,
     shownSection: StartSection?,
     onSectionClick: (StartSection) -> Unit,
+    onSettingsClick: () -> Unit,
     menuItems: List<AppBarMenuItem>,
     modifier: Modifier = Modifier,
 ) {
@@ -115,7 +121,33 @@ private fun StartContent(
                 )
             }
         }
+        segmentedGroup(key = "settings") {
+            SettingsItem(onClick = onSettingsClick)
+        }
     }
+}
+
+/** Opens the settings, which never show beside the start screen, so a plain item always. */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun SettingsItem(onClick: () -> Unit) {
+    val haptic = LocalHapticFeedback.current
+    SegmentedListItem(
+        onClick = {
+            haptic.confirm()
+            onClick()
+        },
+        shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
+        colors = SegmentedListDefaults.colors(),
+        modifier = Modifier.fillMaxWidth().clickCursor(),
+        verticalAlignment = Alignment.CenterVertically,
+        leadingContent = {
+            LeadingTrailingContentWrapper {
+                Icon(painterResource(Res.drawable.ic_rounded_settings), contentDescription = null)
+            }
+        },
+        content = { Text(stringResource(Res.string.title_settings)) },
+    )
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -178,6 +210,7 @@ private fun StartScreenPreview() {
             isBesideDetail = false,
             shownSection = null,
             onSectionClick = {},
+            onSettingsClick = {},
             menuItems = emptyList(),
         )
     }

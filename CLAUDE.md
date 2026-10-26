@@ -6,7 +6,9 @@ Compose Multiplatform. Targets: Android (phone, Wear OS) and Web (Kotlin/Wasm). 
 
 Current state: login (demo server, QR code of Grocy's API key page, manual Grocy URL + API key,
 Home Assistant ingress on Android), the reusable barcode scanner (`core:scanner`), update checks
-on every platform, the start screen (sections, Master data so far, and the app menu; from
+on every platform, the start screen (sections, Master data so far, then Settings as a group of its
+own with the gear icon, a plain item opening the settings as their own scene, and the app menu
+without Settings; from
 Material's expanded width on a list-detail scene like the settings: `StartSection`, the
 section's page (`MasterDataRoute`, a `DetailRoute`) opens beside it, `start_select_hint` until
 then, and a category of the master data still opens its list as a scene of its own with its
@@ -43,7 +45,9 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   snap; `PaneBackgroundScene` measures the scene at least 48.dp wide, Material's scaffold throws
   when it clamps the handle into a window narrower than its margins, e.g. the one pixel window
   of headless browsers' screenshots); the pane expansion overrides the hinge avoidance, the middle lies on a book posture's
-  fold anyway. Both panes are `SegmentedListScreen(pane = ScreenPane.List / Detail)`: on a
+  fold anyway. The scene never moves the focus into its destination pane
+  (`withoutAutoFocus`): browsers let items take the focus without keyboard, so after a reload
+  the first item of the list showed the focus state layer (grey) until the first click. Both panes are `SegmentedListScreen(pane = ScreenPane.List / Detail)`: on a
   `surfaceContainerHighest` background like the scrolled app bars (`PaneBackgroundDecorator`, a
   `SceneDecoratorStrategy` of `GrocyNavDisplay` for two-pane scenes of lists, so it also fills
   the space between the panes) with 16.dp margin at the screen's start, end and bottom edges,
@@ -116,8 +120,8 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   in `product_thumbnails` (Grocy gives every new picture a new file name, so they never get
   outdated), the product list downloads the missing ones after each refresh
   (`downloadMissingThumbnails`), and a refresh deletes those no product shows anymore.
-- Every screen except About and the settings has the app menu in its overflow menu: Settings,
-  About, Help and Send feedback (`rememberAppMenu` + `AppMenuDialogs` of `core:ui`, the items go
+- Every screen except About and the settings has the app menu in its overflow menu: Settings
+  (not on the start screen, which lists them), About, Help and Send feedback (`rememberAppMenu` + `AppMenuDialogs` of `core:ui`, the items go
   to `SegmentedListScreen(menuItems)`, which puts "Reload" as a group of its own before them).
   The feedback dialog reads the unlock state from `LocalUnlockState`, provided by `GrocyApp`.
   Ripples of grouped menus follow the group's corners through
@@ -262,7 +266,11 @@ as one group (`SettingsCategory`), then "Backup and restore" and "Reset all" as 
 Built so far: the overview, General (language, theme, contrast), Server, User settings (a
 note that Grocy keeps them for the user on the server, then a page per area: the stock settings
 so far, hidden without the stock feature) and the stock settings (`StockSettingsRoute`, also
-opened by "Presets for new products"). The other category pages, backup and reset follow;
+opened by "Presets for new products": in wide windows the products open the categories, the user
+settings and the stock settings at once (`Navigator.navigateAll`), so they look like reached
+through the settings, and back (`StockSettingsRoute.backLeavesSettings`, a
+`detailPaneMetadata(backLeavesScene)` that `NestedDetailSceneStrategy` lets leave the whole
+scene, and the page's back button) returns to the products in one step). The other category pages, backup and reset follow;
 `settingsEntries` wires their clicks to nothing until then.
 - Wide windows show the categories as list-detail scene like the master data: the detail pane
   says to choose a category (`settings_select_hint`) until a page is open; the pages are
@@ -644,10 +652,13 @@ both modules to `apps/shared/build.gradle.kts`, and add the new routes to `allRo
   gesture of the installed web app therefore go back inside the app and only leave it from the
   first screen. Forward moves are reverted. Every entry stores `{ index, stack }` (the back stack
   as JSON, `BackStackCodec`) and the URL shows the screen as hash: the route's `@SerialName` is
-  its path (`#/settings/general`, the first screen keeps the plain address; `RouteSerializersTest`
-  checks paths are URL-like and unique). A reload restores the entry's back stack
+  its path, its arguments not at their default the query (`#/settings/general`,
+  `#/masterdata/product?productId=5`, the first screen keeps the plain address;
+  `RouteSerializersTest` checks paths are URL-like and unique). A reload restores the entry's back stack
   (`rememberNavigator`, only if it starts with the start route of the current login state) and
-  stays on its entry; on a dialog's entry it returns to the screen below. A pasted URL without
+  stays on its entry, whose index stays until the app's history says where it is (the back
+  stack's size does not tell, a two-pane scene shows two entries; guessing from it went back
+  past the app's first entry and left the page); on a dialog's entry it returns to the screen below. A pasted URL without
   stored back stack starts on the first screen. When the first screen changes in place (login),
   no handler reports it, so `onBackStackChanged` rewrites the entry. A back the
   browser animated itself (`hasUAVisualTransition`) skips the app's pop transition. Browsers
@@ -852,6 +863,13 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   tints them like the API 34 splash screen with the theme's roles instead of the system's
   (`onSurface` outlines, `primaryContainer` basket, `onPrimaryContainer` letter at 80 %), the
   fruits' fixed colors harmonized with primary (`grocyLogoColors`).
+- Every vertically scrolling list, form, dialog and menu shows Material's
+  `nonInteractiveScrollbar` through `Modifier.verticalScrollbar` (`core:design`): no track, a
+  4.dp fully round thumb in Material's default `outline` at 70 % at the end edge while scrolling, 16.dp from the
+  ends; `SegmentedListScreen` lays it between app bar and navigation bar (beside side
+  cutouts), lists that scroll a dialog themselves use `dialogListScrollbar` (in the dialog's end
+  padding, like `ScrollableAlertDialogContent`'s own). Material's scrollbar cannot be dragged,
+  on purpose no own one that can.
 - Version numbers (app, Grocy) and other numbers read as columns use tabular figures
   (`TextStyle.withTabularNumbers()`), every digit equally wide.
 - Font is Google Sans Flex from Compose Resources. On web fonts load async;

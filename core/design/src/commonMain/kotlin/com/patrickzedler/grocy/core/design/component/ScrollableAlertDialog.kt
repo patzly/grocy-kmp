@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.core.design.component
 
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -124,7 +125,10 @@ fun ScrollableAlertDialogContent(
     iconContentColor: Color = MaterialTheme.colorScheme.secondary,
     titleContentColor: Color = MaterialTheme.colorScheme.onSurface,
     textContentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
-    scrollableContentPadding: PaddingValues = PaddingValues(horizontal = 24.dp, vertical = 16.dp),
+    scrollableContentPadding: PaddingValues = PaddingValues(
+        horizontal = DialogContentHorizontalPadding,
+        vertical = 16.dp,
+    ),
     content: @Composable (() -> Unit)? = null,
 ) {
     Surface(
@@ -206,7 +210,12 @@ fun ScrollableAlertDialogContent(
                             .align(Alignment.Start)
                             .then(
                                 if (!isScrollableControlledByContent && scrollState != null) {
-                                    Modifier.verticalScroll(scrollState)
+                                    Modifier
+                                        .verticalScrollbar(
+                                            state = scrollState,
+                                            endInset = DialogScrollbarEndInset,
+                                        )
+                                        .verticalScroll(scrollState)
                                 } else {
                                     Modifier
                                 }
@@ -255,6 +264,22 @@ fun ScrollableAlertDialogContent(
         }
     }
 }
+
+/**
+ * [verticalScrollbar] of a list that scrolls a [ScrollableAlertDialogContent] itself
+ * (`isScrollableControlledByContent`): in the middle of the dialog's end padding beside the list,
+ * where dialogs scrolled by the content's scroll state show it too.
+ */
+@Composable
+fun Modifier.dialogListScrollbar(state: ScrollableState): Modifier =
+    verticalScrollbar(
+        state = state,
+        endInset = DialogScrollbarEndInset - DialogContentHorizontalPadding,
+    )
+
+// The default horizontal padding of the dialog's content, the scrollbar lies in the end one
+private val DialogContentHorizontalPadding = 24.dp
+private val DialogScrollbarEndInset = (DialogContentHorizontalPadding - ScrollbarThickness) / 2
 
 @Composable
 private fun AlertDialogCombinedButtons(

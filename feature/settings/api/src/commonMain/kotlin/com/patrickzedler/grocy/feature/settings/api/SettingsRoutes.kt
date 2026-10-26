@@ -31,10 +31,15 @@ data object UserSettingsRoute : DetailRoute
 /**
  * Grocy's stock settings of the user, "Presets for new products" first; [inSettings] when
  * opened from the user settings, so it shows beside the categories in wide windows.
+ * [backLeavesSettings] when another screen opened it there together with the categories and the
+ * user settings below it, so back returns to that screen in one step.
  */
 @Serializable
 @SerialName("settings/stock")
-data class StockSettingsRoute(val inSettings: Boolean = false) : DetailRoute
+data class StockSettingsRoute(
+    val inSettings: Boolean = false,
+    val backLeavesSettings: Boolean = false,
+) : DetailRoute
 
 /** Recent errors of the app: logcat on Android, the errors the web app recorded. */
 @Serializable

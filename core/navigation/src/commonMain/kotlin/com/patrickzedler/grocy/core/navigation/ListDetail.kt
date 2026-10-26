@@ -14,6 +14,7 @@ import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.layout.PaneExpansionAnchor
 import androidx.compose.material3.adaptive.layout.PaneExpansionState
+import androidx.compose.material3.adaptive.layout.PaneScaffoldDirective
 import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldScope
 import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.material3.adaptive.layout.rememberPaneExpansionState
@@ -70,16 +71,24 @@ internal const val LIST_PANE_KEY = "com.patrickzedler.grocy.listPane"
 // Marks details, so a detail opened from another one can return to it
 internal const val DETAIL_PANE_KEY = "com.patrickzedler.grocy.detailPane"
 
+// Marks details whose back leaves their list too
+internal const val BACK_LEAVES_SCENE_KEY = "com.patrickzedler.grocy.backLeavesScene"
+
 /**
  * Entry metadata of the details of the list with the same [sceneKey]. A detail opened from
  * another one ([Navigator.navigate]) takes its place beside the list, back returns to it.
+ * With [backLeavesScene] back leaves the list as well, for a detail another screen opened
+ * together with its list ([Navigator.navigateAll]).
  */
-fun detailPaneMetadata(sceneKey: Any): Map<String, Any> =
-    ListDetailSceneStrategy.detailPane(sceneKey = sceneKey) + (DETAIL_PANE_KEY to true)
+fun detailPaneMetadata(sceneKey: Any, backLeavesScene: Boolean = false): Map<String, Any> =
+    ListDetailSceneStrategy.detailPane(sceneKey = sceneKey) +
+        (DETAIL_PANE_KEY to true) +
+        (BACK_LEAVES_SCENE_KEY to backLeavesScene)
 
 /**
  * Lets back from a detail opened from another detail return to that one: Material's scene goes
- * back until its panes change, which left the list with both details at once.
+ * back until its panes change, which left the list with both details at once. Back from a
+ * detail marked `backLeavesScene` leaves the whole scene instead.
  */
 internal class NestedDetailSceneStrategy(
     private val strategy: SceneStrategy<NavKey>,
@@ -89,20 +98,25 @@ internal class NestedDetailSceneStrategy(
         entries: List<NavEntry<NavKey>>,
     ): Scene<NavKey>? {
         val scene = with(strategy) { calculateScene(entries) } ?: return null
+        val last = entries.lastOrNull()
+        if (last?.metadata[BACK_LEAVES_SCENE_KEY] == true && last in scene.entries) {
+            val first = entries.indexOfFirst { it in scene.entries }
+            return BackToScene(scene, entries.take(first))
+        }
         val lastTwo = entries.takeLast(2)
         val isNested = lastTwo.size == 2 &&
             lastTwo.all { it.metadata[DETAIL_PANE_KEY] == true && it in scene.entries }
-        return if (isNested) BackToDetailScene(scene, entries.dropLast(1)) else scene
+        return if (isNested) BackToScene(scene, entries.dropLast(1)) else scene
     }
 }
 
-/** [scene] of a detail opened from another one; back shows that one again. */
-internal class BackToDetailScene(
+/** [scene] whose back shows [previousEntries] instead of what Material's scene would. */
+internal class BackToScene(
     val scene: Scene<NavKey>,
     override val previousEntries: List<NavEntry<NavKey>>,
 ) : Scene<NavKey> by scene {
 
-    override fun equals(other: Any?): Boolean = other is BackToDetailScene &&
+    override fun equals(other: Any?): Boolean = other is BackToScene &&
         other.scene == scene && other.previousEntries == previousEntries
 
     override fun hashCode(): Int = 31 * scene.hashCode() + previousEntries.hashCode()
@@ -116,6 +130,23 @@ internal class BackToDetailScene(
 @Composable
 fun showsDetailBesideList(): Boolean =
     calculatePaneScaffoldDirective(currentWindowAdaptiveInfoV2()).maxHorizontalPartitions > 1
+
+/**
+ * [this] without moving the focus into the pane that becomes the destination: in browsers, where
+ * Compose lets clickable items take the focus also without keyboard, it greyed out the first item
+ * of the list (the focus state layer) after a reload, until the first click. The focus stays
+ * where the user acted, a new pane is a Tab away. `copy` would turn auto focus back on.
+ */
+internal fun PaneScaffoldDirective.withoutAutoFocus() = PaneScaffoldDirective(
+    maxHorizontalPartitions = maxHorizontalPartitions,
+    horizontalPartitionSpacerSize = horizontalPartitionSpacerSize,
+    maxVerticalPartitions = maxVerticalPartitions,
+    verticalPartitionSpacerSize = verticalPartitionSpacerSize,
+    defaultPanePreferredWidth = defaultPanePreferredWidth,
+    defaultPanePreferredHeight = defaultPanePreferredHeight,
+    excludedBounds = excludedBounds,
+    shouldAutoFocusCurrentDestination = false,
+)
 
 /** Where the drag handle between list and details snaps to, half and half first. */
 internal val PaneAnchors = listOf(
@@ -152,6 +183,8 @@ internal fun rememberListDetailStrategy(): SceneStrategy<NavKey> {
         initialAnchoredIndex = 0,
     )
     val strategy = rememberListDetailSceneStrategy<NavKey>(
+        directive = calculatePaneScaffoldDirective(currentWindowAdaptiveInfoV2())
+            .withoutAutoFocus(),
         paneExpansionState = expansionState,
         paneExpansionDragHandle = { state -> PaneDragHandle(state) },
     )

@@ -79,6 +79,7 @@ import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockEntriesViewMod
 import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockPageActions
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.StockSettingsRoute
+import com.patrickzedler.grocy.feature.settings.api.UserSettingsRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -107,6 +108,7 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
     entry<ProductsRoute>(
         metadata = listPaneMetadata(ProductsRoute) { SelectHint(MasterDataCategory.PRODUCTS) },
     ) { route ->
+        val isBesideDetail = showsDetailBesideList()
         ProductsScreen(
             menuItems = appMenuItems(navigator),
             viewModel = viewModel { ProductsViewModel(repository) },
@@ -117,13 +119,26 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
             },
             links = productLinks(navigator),
             selectedId = (navigator.currentRoute as? ProductRoute)?.productId,
-            isBesideDetail = showsDetailBesideList(),
+            isBesideDetail = isBesideDetail,
             onBackClick = { navigator.goBack(from = route) },
             onProductClick = { id -> navigator.openDetail(ProductRoute(id)) },
             onAddClick = { navigator.openDetail(ProductRoute()) },
             onConfigureUserfieldsClick = { openUserfields(MasterDataRepository.PRODUCTS) },
-            // Grocy's button leads to the stock settings, its presets first
-            onPresetsClick = { navigator.navigate(StockSettingsRoute()) },
+            // Grocy's button leads to the stock settings, its presets first; wide windows show
+            // them like the settings do, beside the categories as page of the user settings
+            onPresetsClick = {
+                if (isBesideDetail) {
+                    navigator.navigateAll(
+                        listOf(
+                            SettingsRoute,
+                            UserSettingsRoute,
+                            StockSettingsRoute(inSettings = true, backLeavesSettings = true),
+                        ),
+                    )
+                } else {
+                    navigator.navigate(StockSettingsRoute())
+                }
+            },
             onActionDone = listActionDone(navigator, ::ProductRoute) {
                 (it as? ProductRoute)?.productId
             },

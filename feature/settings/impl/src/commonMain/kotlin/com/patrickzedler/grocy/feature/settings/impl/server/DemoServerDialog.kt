@@ -27,6 +27,7 @@ import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogConten
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.dialogListScrollbar
 import com.patrickzedler.grocy.core.model.DemoServer
 import com.patrickzedler.grocy.core.model.DemoServers
 import com.patrickzedler.grocy.core.resources.Res
@@ -103,7 +104,9 @@ private fun DemoServerDialogContent(
         )
 
         LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .dialogListScrollbar(listState),
             state = listState,
             contentPadding = PaddingValues(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),

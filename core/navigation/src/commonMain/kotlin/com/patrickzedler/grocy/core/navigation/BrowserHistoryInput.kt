@@ -46,8 +46,8 @@ internal interface BrowserHistory {
  * Every screen gets one entry storing its index. A dialog or popup on top gets one more entry,
  * so back closes it first. [isScreen] tells screens from such overlays.
  *
- * @param initialIndex index of the app's screen when it starts, above 0 when a reload restored
- *   the back stack from the browser history.
+ * @param initialIndex index of the app's screen when it starts, for a page whose entry the app
+ *   did not write yet; a reloaded entry keeps its index until the app's history is known.
  * @param awaitFrame waits for the next frame; overlay changes are applied after it, because
  *   screens being replaced briefly look like overlays.
  * @param onUserAgentTransition called before a back the browser has animated already.
@@ -79,14 +79,16 @@ internal class BrowserHistoryInput(
             history.popStates.collect(::onPopState)
         }
         val restoredIndex = history.currentIndex
-        if (restoredIndex != null && restoredIndex > initialIndex) {
-            // A reload on a dialog's entry, or one the app could not restore: back to the screen
-            expectArrival(initialIndex)
-            history.go(initialIndex - restoredIndex)
+        if (restoredIndex != null) {
+            // A reload stays on the entry it happened on; the history the dispatcher reports
+            // right after this says where the app is, and syncing moves there: back from a
+            // dialog's entry or one the app could not restore. The back stack's size alone
+            // does not tell, a scene of two panes shows two entries.
+            browserIndex = restoredIndex
         } else {
             history.replaceState(initialIndex)
+            browserIndex = initialIndex
         }
-        browserIndex = initialIndex
         targetIndex = initialIndex
     }
 

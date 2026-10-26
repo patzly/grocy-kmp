@@ -1,12 +1,13 @@
 package com.patrickzedler.grocy.core.design.component
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.exclude
@@ -14,7 +15,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyListScope
@@ -316,6 +319,25 @@ fun SegmentedListScreen(
                     },
                     verticalArrangement = Arrangement.spacedBy(itemSpacing),
                     content = content,
+                )
+                // Over the list's part between the app bar and the navigation bar (a pane's
+                // surface), beside the cutouts at the sides
+                Box(
+                    Modifier
+                        .matchParentSize()
+                        .windowInsetsPadding(WindowInsets.keyboard)
+                        .padding(top = barPadding)
+                        .padding(bottomInsets)
+                        .then(
+                            if (pane != null) {
+                                Modifier
+                            } else {
+                                Modifier.windowInsetsPadding(
+                                    WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal),
+                                )
+                            },
+                        )
+                        .verticalScrollbar(listState),
                 )
             }
         }
