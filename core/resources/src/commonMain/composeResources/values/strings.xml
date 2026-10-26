@@ -178,6 +178,7 @@
   <!-- Settings -->
   <string name="settings_general">General</string>
   <string name="settings_select_hint">Choose a category to show its settings here</string>
+  <string name="start_select_hint">Choose a section to show it here</string>
   <string name="settings_server">Server</string>
   <string name="settings_user">User settings</string>
   <string name="settings_user_synced">Saved on the server</string>

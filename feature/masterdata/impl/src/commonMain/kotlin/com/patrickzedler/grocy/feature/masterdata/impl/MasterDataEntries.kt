@@ -8,6 +8,7 @@ import androidx.navigation3.runtime.NavKey
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.DetailPlaceholder
+import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.model.masterdata.grocyPluralFormCount
 import com.patrickzedler.grocy.core.navigation.DetailRoute
 import com.patrickzedler.grocy.core.navigation.Navigator
@@ -78,6 +79,7 @@ import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockEntriesViewMod
 import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockPageActions
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.StockSettingsRoute
+import com.patrickzedler.grocy.feature.start.api.StartRoute
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -89,12 +91,16 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
     // Opens the userfields of an entity, like Grocy's "Configure userfields"
     val openUserfields = { entity: String -> navigator.navigate(UserfieldsRoute(entity)) }
 
-    entry<MasterDataRoute> {
+    // Beside the start screen a category's list still opens as screen of its own with its forms
+    entry<MasterDataRoute>(metadata = detailPaneMetadata(StartRoute)) {
+        val isBesideList = showsDetailBesideList()
         MasterDataScreen(
-            menuItems = appMenuItems(navigator),
+            // Beside the start screen its bar has the app menu
+            menuItems = if (isBesideList) emptyList() else appMenuItems(navigator),
             viewModel = viewModel { MasterDataViewModel(repository, dependencies.serverConfig) },
             onBackClick = navigator::goBack,
             onCategoryClick = { category -> navigator.navigate(category.route) },
+            pane = ScreenPane.Detail.takeIf { isBesideList },
         )
     }
 

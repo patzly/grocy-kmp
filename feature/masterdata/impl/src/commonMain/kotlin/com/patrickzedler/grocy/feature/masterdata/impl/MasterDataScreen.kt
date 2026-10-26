@@ -22,6 +22,7 @@ import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
+import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.clickCursor
@@ -211,6 +212,10 @@ internal class MasterDataViewModel(
     fun onErrorShown() = refreshController.onErrorShown()
 }
 
+/**
+ * The master data categories; as [ScreenPane.Detail] beside the start screen without back
+ * button.
+ */
 @Composable
 internal fun MasterDataScreen(
     menuItems: List<AppBarMenuItem>,
@@ -218,6 +223,7 @@ internal fun MasterDataScreen(
     onBackClick: () -> Unit,
     onCategoryClick: (MasterDataCategory) -> Unit,
     modifier: Modifier = Modifier,
+    pane: ScreenPane? = null,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val refresh by viewModel.refresh.collectAsStateWithLifecycle()
@@ -233,8 +239,11 @@ internal fun MasterDataScreen(
     SegmentedListScreen(
         title = stringResource(Res.string.masterdata_title),
         modifier = modifier,
-        navigationIcon = { NavigateBackButton(onClick = onBackClick) },
+        navigationIcon = {
+            if (pane == null) NavigateBackButton(onClick = onBackClick)
+        },
         menuItems = menuItems,
+        pane = pane,
         snackbarHostState = snackbarHostState,
         isRefreshing = refresh.isRefreshing,
         onRefresh = viewModel::refresh,

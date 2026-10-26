@@ -147,6 +147,7 @@
   <!-- Settings -->
   <string name="settings_general">Общие</string>
   <string name="settings_select_hint">Выберите категорию, чтобы показать здесь её настройки</string>
+  <string name="start_select_hint">Выберите раздел, чтобы показать его здесь</string>
   <string name="settings_server">Сервер</string>
   <string name="settings_user">Пользовательские настройки</string>
   <string name="settings_user_synced">Сохраняются на сервере</string>

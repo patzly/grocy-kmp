@@ -147,6 +147,7 @@
   <!-- Settings -->
   <string name="settings_general">全般</string>
   <string name="settings_select_hint">カテゴリを選択すると、ここに設定が表示されます</string>
+  <string name="start_select_hint">セクションを選択すると、ここに表示されます</string>
   <string name="settings_server">サーバー</string>
   <string name="settings_user">ユーザー設定</string>
   <string name="settings_user_synced">サーバーに保存</string>

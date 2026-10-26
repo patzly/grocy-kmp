@@ -13,9 +13,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.LiveRegionMode
-import androidx.compose.ui.semantics.liveRegion
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -347,8 +344,9 @@ private fun NumberItem(
             stepper = NumberStepper(min = setting.min, max = setting.max),
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
+            error = error,
         ) { fieldModifier ->
-            NumberField(state, label, error, enabled, modifier = fieldModifier)
+            NumberField(state, label, isError = error != null, enabled, modifier = fieldModifier)
         }
     }
 }
@@ -357,24 +355,17 @@ private fun NumberItem(
 private fun NumberField(
     state: TextFieldState,
     label: StringResource,
-    error: String?,
+    isError: Boolean,
     enabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    // The stepper shows the error below its buttons, so they stay centered on the field
     RoundedTextField(
         state = state,
         modifier = modifier,
         enabled = enabled,
         label = { Text(stringResource(label)) },
-        isError = error != null,
-        supportingText = error?.let { text ->
-            {
-                Text(
-                    text = text,
-                    modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
-                )
-            }
-        },
+        isError = isError,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Decimal,
             imeAction = ImeAction.Next,

@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.product
 
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.ButtonDefaults
@@ -17,7 +18,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.TimePickerDialog
+import androidx.compose.material3.TimePickerLayoutType
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -28,6 +31,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
@@ -271,8 +275,17 @@ private fun PickTimeDialog(
         if (showInput) Res.string.time_picker_dial else Res.string.time_picker_input,
     )
 
+    val layoutType = TimePickerDefaults.layoutType()
+
     TimePickerDialog(
         onDismissRequest = onDismissRequest,
+        // Material's dialog fills the window's height beside its dial, e.g. in desktop browsers;
+        // the specified landscape dialog is at most 384.dp high
+        modifier = if (layoutType == TimePickerLayoutType.Horizontal) {
+            Modifier.heightIn(max = LandscapeTimeDialogMaxHeight)
+        } else {
+            Modifier
+        },
         title = {
             Text(
                 text = stringResource(Res.string.time_picker_title),
@@ -327,6 +340,12 @@ private fun PickTimeDialog(
             }
         },
     ) {
-        if (showInput) TimeInput(state = pickerState) else TimePicker(state = pickerState)
+        if (showInput) {
+            TimeInput(state = pickerState)
+        } else {
+            TimePicker(state = pickerState, layoutType = layoutType)
+        }
     }
 }
+
+private val LandscapeTimeDialogMaxHeight = 384.dp

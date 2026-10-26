@@ -147,6 +147,7 @@
   <!-- Settings -->
   <string name="settings_general">Általános</string>
   <string name="settings_select_hint">Válassz egy kategóriát, hogy itt lásd a beállításait</string>
+  <string name="start_select_hint">Válassz egy részt, hogy itt lásd</string>
   <string name="settings_server">Szerver</string>
   <string name="settings_user">Felhasználói beállítások</string>
   <string name="settings_user_synced">A szerveren tárolva</string>

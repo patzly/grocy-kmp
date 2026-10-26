@@ -18,6 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
+import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.clickCursor
@@ -30,14 +31,27 @@ import com.patrickzedler.grocy.core.resources.masterdata_title
 import com.patrickzedler.grocy.core.ui.AppMenuDialogs
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
 import com.patrickzedler.grocy.core.ui.rememberAppMenu
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-/** The first screen after login; grows with the app's sections, master data so far. */
+/** The sections of the start screen, in their order. */
+internal enum class StartSection(val title: StringResource, val icon: DrawableResource) {
+    MASTER_DATA(Res.string.masterdata_title, Res.drawable.ic_rounded_database),
+}
+
+/**
+ * The first screen after login; grows with the app's sections, master data so far. Beside the
+ * sections' pages ([isBesideDetail]) it is the start [ScreenPane.List] of the layout and its
+ * sections a single choice marking the [shownSection].
+ */
 @Composable
 internal fun StartScreen(
     viewModel: StartViewModel,
-    onMasterDataClick: () -> Unit,
+    isBesideDetail: Boolean,
+    shownSection: StartSection?,
+    onSectionClick: (StartSection) -> Unit,
     onSettingsClick: () -> Unit,
     onAboutClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -58,7 +72,9 @@ internal fun StartScreen(
         isRefreshing = refresh.isRefreshing,
         snackbarHostState = snackbarHostState,
         onRefresh = viewModel::refresh,
-        onMasterDataClick = onMasterDataClick,
+        isBesideDetail = isBesideDetail,
+        shownSection = shownSection,
+        onSectionClick = onSectionClick,
         menuItems = appMenu.items,
         modifier = modifier,
     )
@@ -69,7 +85,9 @@ private fun StartContent(
     isRefreshing: Boolean,
     snackbarHostState: SnackbarHostState,
     onRefresh: () -> Unit,
-    onMasterDataClick: () -> Unit,
+    isBesideDetail: Boolean,
+    shownSection: StartSection?,
+    onSectionClick: (StartSection) -> Unit,
     menuItems: List<AppBarMenuItem>,
     modifier: Modifier = Modifier,
 ) {
@@ -77,15 +95,22 @@ private fun StartContent(
         title = stringResource(Res.string.app_name),
         modifier = modifier,
         menuItems = menuItems,
+        pane = ScreenPane.List.takeIf { isBesideDetail },
         snackbarHostState = snackbarHostState,
         isRefreshing = isRefreshing,
         onRefresh = onRefresh,
     ) {
         segmentedGroup(key = "sections") {
-            SectionItem(
-                title = stringResource(Res.string.masterdata_title),
-                onClick = onMasterDataClick,
-            )
+            val sections = StartSection.entries
+            sections.forEachIndexed { index, section ->
+                SectionItem(
+                    section = section,
+                    index = index,
+                    count = sections.size,
+                    onClick = { onSectionClick(section) },
+                    selected = if (isBesideDetail) shownSection == section else null,
+                )
+            }
         }
     }
 }
@@ -93,27 +118,49 @@ private fun StartContent(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun SectionItem(
-    title: String,
+    section: StartSection,
+    index: Int,
+    count: Int,
     onClick: () -> Unit,
+    selected: Boolean?,
 ) {
     val haptic = LocalHapticFeedback.current
+    val click = {
+        haptic.confirm()
+        onClick()
+    }
+    val shapes = ListItemDefaults.segmentedShapes(index = index, count = count)
+    val colors = SegmentedListDefaults.colors()
+    val modifier = Modifier.fillMaxWidth().clickCursor()
+    val leading = @Composable {
+        LeadingTrailingContentWrapper {
+            Icon(painterResource(section.icon), contentDescription = null)
+        }
+    }
+    val title = @Composable { Text(stringResource(section.title)) }
 
-    SegmentedListItem(
-        onClick = {
-            haptic.confirm()
-            onClick()
-        },
-        shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
-        colors = SegmentedListDefaults.colors(),
-        modifier = Modifier.fillMaxWidth().clickCursor(),
-        verticalAlignment = Alignment.CenterVertically,
-        leadingContent = {
-            LeadingTrailingContentWrapper {
-                Icon(painterResource(Res.drawable.ic_rounded_database), contentDescription = null)
-            }
-        },
-    ) {
-        Text(title)
+    // Beside a page a single choice marking it, without page a plain item (no radio semantics)
+    if (selected != null) {
+        SegmentedListItem(
+            selected = selected,
+            onClick = click,
+            shapes = shapes,
+            colors = colors,
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically,
+            leadingContent = leading,
+            content = title,
+        )
+    } else {
+        SegmentedListItem(
+            onClick = click,
+            shapes = shapes,
+            colors = colors,
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically,
+            leadingContent = leading,
+            content = title,
+        )
     }
 }
 
@@ -125,7 +172,9 @@ private fun StartScreenPreview() {
             isRefreshing = false,
             snackbarHostState = remember { SnackbarHostState() },
             onRefresh = {},
-            onMasterDataClick = {},
+            isBesideDetail = false,
+            shownSection = null,
+            onSectionClick = {},
             menuItems = emptyList(),
         )
     }

@@ -147,6 +147,7 @@
   <!-- Settings -->
   <string name="settings_general">Geral</string>
   <string name="settings_select_hint">Escolha uma categoria para mostrar as configurações aqui</string>
+  <string name="start_select_hint">Escolha uma seção para mostrá-la aqui</string>
   <string name="settings_server">Servidor</string>
   <string name="settings_user">Configurações de usuário</string>
   <string name="settings_user_synced">Salvas no servidor</string>

@@ -25,10 +25,13 @@ import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.data_date_invalid
 import com.patrickzedler.grocy.core.resources.data_datetime_invalid
 import com.patrickzedler.grocy.core.resources.data_number_invalid
+import com.patrickzedler.grocy.core.resources.ic_rounded_check
 import com.patrickzedler.grocy.core.resources.product_userfield_file
 import com.patrickzedler.grocy.core.resources.product_userfield_link
 import com.patrickzedler.grocy.core.resources.product_userfield_required
 import com.patrickzedler.grocy.core.resources.product_userfield_title
+import com.patrickzedler.grocy.feature.masterdata.impl.objects.ChipIcon
+import com.patrickzedler.grocy.feature.masterdata.impl.objects.filterChipElevation
 import org.jetbrains.compose.resources.stringResource
 
 /** The input of one userfield by its type, used by the forms of every object with userfields. */
@@ -90,6 +93,12 @@ internal fun UserfieldItem(
                             }
                         },
                         label = { Text(option) },
+                        elevation = filterChipElevation(),
+                        leadingIcon = if (selected) {
+                            { ChipIcon(Res.drawable.ic_rounded_check) }
+                        } else {
+                            null
+                        },
                     )
                 }
             }

@@ -147,6 +147,7 @@
   <!-- Settings -->
   <string name="settings_general">Genel</string>
   <string name="settings_select_hint">Ayarlarını burada göstermek için bir kategori seç</string>
+  <string name="start_select_hint">Burada göstermek için bir bölüm seç</string>
   <string name="settings_server">Sunucu</string>
   <string name="settings_user">Kullanıcı ayarları</string>
   <string name="settings_user_synced">Sunucuda kaydedilir</string>

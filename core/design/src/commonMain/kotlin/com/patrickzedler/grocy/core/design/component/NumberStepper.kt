@@ -2,7 +2,10 @@ package com.patrickzedler.grocy.core.design.component
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
@@ -20,7 +23,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
 import com.patrickzedler.grocy.core.model.text.steppedDecimal
@@ -44,7 +52,8 @@ data class NumberStepper(val min: Double? = null, val max: Double? = null) {
 /**
  * A number field with Grocy's number picker buttons after it: minus and plus as round filled
  * icon buttons, so a value can be changed by one without the keyboard. [field] fills the width
- * the buttons leave.
+ * the buttons leave; its [error] shows below both like the field's supporting text, so the
+ * buttons stay centered on the field when it grows with a wrapped label.
  */
 @Composable
 fun NumberStepperField(
@@ -52,21 +61,46 @@ fun NumberStepperField(
     stepper: NumberStepper,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    error: String? = null,
     field: @Composable (Modifier) -> Unit,
 ) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(StepperSpacing),
-        verticalAlignment = Alignment.Top,
-    ) {
-        field(Modifier.weight(1f))
-        NumberStepperButtons(
-            state = state,
-            stepper = stepper,
-            enabled = enabled,
-            // Centered on the field, not on its supporting text below
-            modifier = Modifier.padding(top = FieldButtonOffset),
-        )
+    Column(modifier = modifier) {
+        Row(
+            modifier = Modifier.fillMaxWidth().extendToEnd(EndOverlap),
+            horizontalArrangement = Arrangement.spacedBy(StepperSpacing),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            field(Modifier.weight(1f))
+            NumberStepperButtons(state = state, stepper = stepper, enabled = enabled)
+        }
+        if (error != null) {
+            Text(
+                text = error,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier
+                    .padding(SupportingTextPadding)
+                    .semantics { liveRegion = LiveRegionMode.Polite },
+            )
+        }
+    }
+}
+
+/**
+ * Lets the content reach [overlap] into the padding at the end, where only the transparent part
+ * of a touch target lands.
+ */
+private fun Modifier.extendToEnd(overlap: Dp): Modifier = layout { measurable, constraints ->
+    val extra = overlap.roundToPx()
+    val placeable = measurable.measure(
+        constraints.copy(
+            minWidth = constraints.minWidth + extra,
+            maxWidth = constraints.maxWidth + extra,
+        ),
+    )
+    layout(placeable.width - extra, placeable.height) {
+        // Relative, so the extra width lies at the end in right to left layouts too
+        placeable.placeRelative(0, 0)
     }
 }
 
@@ -163,9 +197,10 @@ private fun StepIconButton(
 }
 
 // Round 40.dp buttons in 48.dp touch targets leave 4.dp on each side: these spacings make the
-// visible gaps the 12.dp of Material's button groups, to the field as well
+// visible gaps the 12.dp of Material's button groups, to the field and the item's end as well
 private val ButtonSpacing = 4.dp
 private val StepperSpacing = 8.dp
+private val EndOverlap = 8.dp
 
-// Material's text field is 56.dp high, the buttons' touch targets 48.dp
-private val FieldButtonOffset = 4.dp
+// Material's supporting text padding of text fields, which it keeps internal
+private val SupportingTextPadding = PaddingValues(start = 16.dp, top = 4.dp, end = 16.dp)

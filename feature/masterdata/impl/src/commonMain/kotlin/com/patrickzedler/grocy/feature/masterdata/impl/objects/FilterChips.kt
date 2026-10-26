@@ -294,8 +294,12 @@ private fun filterChipColors() = FilterChipDefaults.filterChipColors(
     containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
 )
 
+/**
+ * No elevation in any state: chips are outlined with a transparent or flat container, and the
+ * web draws the hover elevation's shadow of such a chip as a dark frame around it.
+ */
 @Composable
-private fun filterChipElevation() = FilterChipDefaults.filterChipElevation(
+internal fun filterChipElevation() = FilterChipDefaults.filterChipElevation(
     elevation = 0.dp,
     pressedElevation = 0.dp,
     focusedElevation = 0.dp,
@@ -305,7 +309,7 @@ private fun filterChipElevation() = FilterChipDefaults.filterChipElevation(
 )
 
 @Composable
-private fun ChipIcon(icon: DrawableResource) {
+internal fun ChipIcon(icon: DrawableResource) {
     Icon(
         painter = painterResource(icon),
         contentDescription = null,

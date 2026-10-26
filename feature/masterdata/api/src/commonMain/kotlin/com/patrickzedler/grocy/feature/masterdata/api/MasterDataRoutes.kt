@@ -8,10 +8,13 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
-/** Overview of the master data categories, like Grocy's "Manage master data" menu. */
+/**
+ * Overview of the master data categories, like Grocy's "Manage master data" menu; a detail of
+ * the start screen, beside it where the window is wide enough.
+ */
 @Serializable
 @SerialName("masterdata")
-data object MasterDataRoute : Route
+data object MasterDataRoute : DetailRoute
 
 // Every list opens its objects as details, beside it where the window is wide enough; details
 // without id create a new object

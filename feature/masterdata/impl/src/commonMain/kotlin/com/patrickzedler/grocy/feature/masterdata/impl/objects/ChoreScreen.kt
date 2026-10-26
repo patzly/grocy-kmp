@@ -4,10 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -410,14 +407,9 @@ private fun <T> ChipsItem(
                             )
                         },
                         label = { Text(optionLabel(option)) },
+                        elevation = filterChipElevation(),
                         leadingIcon = if (isSelected) {
-                            {
-                                Icon(
-                                    painter = painterResource(Res.drawable.ic_rounded_check),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(FilterChipDefaults.IconSize),
-                                )
-                            }
+                            { ChipIcon(Res.drawable.ic_rounded_check) }
                         } else {
                             null
                         },

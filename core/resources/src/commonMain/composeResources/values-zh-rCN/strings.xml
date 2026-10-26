@@ -147,6 +147,7 @@
   <!-- Settings -->
   <string name="settings_general">常规</string>
   <string name="settings_select_hint">选择一个类别以在此显示其设置</string>
+  <string name="start_select_hint">选择一个部分以在此显示</string>
   <string name="settings_server">服务器</string>
   <string name="settings_user">用户设置</string>
   <string name="settings_user_synced">保存在服务器上</string>

@@ -72,6 +72,17 @@ class NavigatorTest {
     }
 
     @Test
+    fun openDetailOfAListOpenedFromADetailAddsIt() {
+        // The start screen with the master data beside it, then the products
+        navigator.openDetail(Detail(1))
+        navigator.navigate(Second)
+
+        navigator.openDetail(Detail(2))
+
+        assertEquals(listOf(First, Detail(1), Second, Detail(2)), backStack.toList())
+    }
+
+    @Test
     fun openDetailAsksADetailWithUnsavedChangesFirst() {
         navigator.navigate(Second)
         navigator.openDetail(Detail(1))

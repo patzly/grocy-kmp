@@ -147,6 +147,7 @@
   <!-- Settings -->
   <string name="settings_general">Všeobecné</string>
   <string name="settings_select_hint">Vyberte kategóriu a zobrazte tu jej nastavenia</string>
+  <string name="start_select_hint">Vyberte oblasť a zobrazte ju tu</string>
   <string name="settings_server">Server</string>
   <string name="settings_user">Nastavenia používateľa</string>
   <string name="settings_user_synced">Uložené na serveri</string>

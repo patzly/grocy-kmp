@@ -103,6 +103,21 @@ class ListDetailTest {
     }
 
     @Test
+    fun aListOpenedFromADetailKeepsMaterialsBack() {
+        // The products opened from the master data beside the start screen
+        val strategy = NestedDetailSceneStrategy(RecordingStrategy)
+        val entries = listOf(
+            entry(listPaneMetadata("start") {}),
+            entry(detailPaneMetadata("start")),
+            entry(listPaneMetadata("products") {}),
+        )
+
+        val scene = with(strategy) { SceneStrategyScope<NavKey>().calculateScene(entries) }
+
+        assertIs<TestScene>(scene)
+    }
+
+    @Test
     fun scenesOfOnePaneAreLeftToTheNextStrategy() {
         val strategy = NestedDetailSceneStrategy(NoSceneStrategy)
         val entries = listOf(

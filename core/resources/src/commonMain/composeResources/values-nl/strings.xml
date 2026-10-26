@@ -147,6 +147,7 @@
   <!-- Settings -->
   <string name="settings_general">Algemeen</string>
   <string name="settings_select_hint">Kies een categorie om de instellingen hier te tonen</string>
+  <string name="start_select_hint">Kies een onderdeel om het hier te tonen</string>
   <string name="settings_server">Server</string>
   <string name="settings_user">Gebruikersinstellingen</string>
   <string name="settings_user_synced">Opgeslagen op de server</string>

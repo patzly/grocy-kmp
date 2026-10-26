@@ -147,6 +147,7 @@
   <!-- Settings -->
   <string name="settings_general">Γενικά</string>
   <string name="settings_select_hint">Επιλέξτε μια κατηγορία για να εμφανιστούν εδώ οι ρυθμίσεις της</string>
+  <string name="start_select_hint">Επιλέξτε μια ενότητα για να εμφανιστεί εδώ</string>
   <string name="settings_server">Διακομιστής</string>
   <string name="settings_user">Ρυθμίσεις χρήστη</string>
   <string name="settings_user_synced">Αποθηκεύονται στον διακομιστή</string>

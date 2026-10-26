@@ -6,7 +6,11 @@ Compose Multiplatform. Targets: Android (phone, Wear OS) and Web (Kotlin/Wasm). 
 
 Current state: login (demo server, QR code of Grocy's API key page, manual Grocy URL + API key,
 Home Assistant ingress on Android), the reusable barcode scanner (`core:scanner`), update checks
-on every platform, the start screen (Master data item, the app menu), an About
+on every platform, the start screen (sections, Master data so far, and the app menu; from
+Material's expanded width on a list-detail scene like the settings: `StartSection`, the
+section's page (`MasterDataRoute`, a `DetailRoute`) opens beside it, `start_select_hint` until
+then, and a category of the master data still opens its list as a scene of its own with its
+forms beside it, never in place of the master data), an About
 screen, the Settings overview (`feature:settings`) and the master data
 (`feature:masterdata`): the overview of Grocy's master data categories, the list and form of
 every category (products with their overview dialog, locations, stores, quantity units,
@@ -18,7 +22,8 @@ consume, transfer and inventory pages do not exist yet, so the stock pages leave
 links.
 
 Master data (`feature:masterdata`), built after Grocy's web frontend:
-- `MasterDataScreen` lists the categories of Grocy's "Manage master data" menu in its order and
+- `MasterDataScreen` (beside the start screen without back button and app menu, the start
+  screen's bar has it) lists the categories of Grocy's "Manage master data" menu in its order and
   hides the ones whose feature flag is off (`MasterDataCategory.isAvailable`), from the eager
   `ServerRepository.serverConfig` (`MasterDataDependencies.serverConfig`), so they show in the
   first frame: on the web a refresh's write transaction keeps the single database connection
@@ -64,13 +69,18 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
 - Date fields (date and datetime userfields, a chore's start date) have a calendar button
   (`DatePickerButton`): Material's date picker, for date and time then its time picker (dial or
   text input); the pure `withPickedDate`/`withPickedTime` write Grocy's format, typing still
-  works. The product's due days fields have one too (`DueDaysPickerButton`): a date from today
+  works. Material's time picker dialog fills the window's height beside its dial (landscape
+  layout, e.g. desktop browsers), so it is capped at the specified 384.dp. The product's due
+  days fields have one too (`DueDaysPickerButton`): a date from today
   on becomes the days until it (`dueDaysUntil`), e.g. the date printed on the first purchase.
 - Number fields are Grocy's number pickers: minus and plus after the field in the same item
   (`NumberStepperField` of `core:design`, round filled `secondaryContainer` icon buttons in a
   `ButtonGroup`, `TextItem(stepper)`; gaps count the 4.dp each side of a 40.dp button inside its
   48.dp touch target, so 4.dp between the buttons and 8.dp to the field look like Material's
-  12.dp; narrow buttons would leave 8.dp each side, too much), stepping by one within Grocy's range (`NumberStepper`,
+  12.dp, and the row reaches 8.dp into the item's end padding for the same 12.dp there; narrow
+  buttons would leave 8.dp each side, too much; the buttons are centered on the field, which
+  grows with a wrapped label, so its error shows below the whole row through
+  `NumberStepperField(error)` instead of the field's supporting text), stepping by one within Grocy's range (`NumberStepper`,
   `NumberStepper.Positive` for amounts above zero; the pure `steppedDecimal` of `core:model`
   keeps the typed decimals and separator, an empty field becomes 1 or 0 like Grocy's).
 - The other categories share one list (`objects/`): `ObjectListKind` describes each like its
@@ -140,7 +150,10 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   as dropdown filter chips that are selected and show the value while not "All", "Show
   disabled" as toggle chip, a sort chip, and "Clear filter" as assist chip with a reset icon
   at its start while a filter (not the search) is active; chips use the standard overloads with Material's 8.dp rounded rectangle, not the
-  morphing `shapes` overloads whose tokens are full round). Back closes an open search first
+  morphing `shapes` overloads whose tokens are full round). Every chip, also the choices of
+  forms (weekdays, checklist userfields), has no elevation in any state
+  (`filterChipElevation`): the web draws the hover elevation of an outlined chip as a dark
+  frame. Back closes an open search first
   (`NavigationBackHandler`, also the browser's back) and stays on the list
   and a floating toolbar (Add as FAB, Configure userfields (the product userfields), Presets for
   new products, Scroll to

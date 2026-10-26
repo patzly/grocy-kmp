@@ -82,7 +82,8 @@ internal fun TextItem(
                 label = { Text(label) },
                 trailingIcon = trailingAction,
                 suffix = suffix?.let { { Text(it) } },
-                supportingText = error?.let { text ->
+                // The stepper shows it below its buttons too, so they stay centered on the field
+                supportingText = error?.takeIf { stepper == null }?.let { text ->
                     {
                         Text(
                             text = text,
@@ -116,6 +117,7 @@ internal fun TextItem(
                 stepper = stepper,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = enabled,
+                error = error,
                 field = field,
             )
         }
