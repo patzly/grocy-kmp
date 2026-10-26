@@ -865,11 +865,12 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   fruits' fixed colors harmonized with primary (`grocyLogoColors`).
 - Every vertically scrolling list, form, dialog and menu shows Material's
   `nonInteractiveScrollbar` through `Modifier.verticalScrollbar` (`core:design`): no track, a
-  4.dp fully round thumb in Material's default `outline` at 70 % at the end edge while scrolling, 16.dp from the
-  ends; `SegmentedListScreen` lays it between app bar and navigation bar (beside side
-  cutouts), lists that scroll a dialog themselves use `dialogListScrollbar` (in the dialog's end
-  padding, like `ScrollableAlertDialogContent`'s own). Material's scrollbar cannot be dragged,
-  on purpose no own one that can.
+  4.dp fully round thumb in Material's default `outline` at 70 % while scrolling, 4.dp from the
+  end edge and as far from the top and bottom (`ScrollbarInset`), where the rounded corners of
+  panes and menus cover it; `SegmentedListScreen` lays it between app bar and navigation bar
+  (beside side cutouts), dialogs 4.dp from their edge between the dividers, also lists that
+  scroll a dialog themselves (`dialogListScrollbar`, in the dialog's end padding). Material's
+  scrollbar cannot be dragged, on purpose no own one that can.
 - Version numbers (app, Grocy) and other numbers read as columns use tabular figures
   (`TextStyle.withTabularNumbers()`), every digit equally wide.
 - Font is Google Sans Flex from Compose Resources. On web fonts load async;

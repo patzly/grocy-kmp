@@ -211,10 +211,7 @@ fun ScrollableAlertDialogContent(
                             .then(
                                 if (!isScrollableControlledByContent && scrollState != null) {
                                     Modifier
-                                        .verticalScrollbar(
-                                            state = scrollState,
-                                            endInset = DialogScrollbarEndInset,
-                                        )
+                                        .verticalScrollbar(scrollState)
                                         .verticalScroll(scrollState)
                                 } else {
                                     Modifier
@@ -267,19 +264,15 @@ fun ScrollableAlertDialogContent(
 
 /**
  * [verticalScrollbar] of a list that scrolls a [ScrollableAlertDialogContent] itself
- * (`isScrollableControlledByContent`): in the middle of the dialog's end padding beside the list,
- * where dialogs scrolled by the content's scroll state show it too.
+ * (`isScrollableControlledByContent`): in the dialog's end padding beside the list, as far from
+ * the dialog's edge as in dialogs scrolled by the content's scroll state.
  */
 @Composable
 fun Modifier.dialogListScrollbar(state: ScrollableState): Modifier =
-    verticalScrollbar(
-        state = state,
-        endInset = DialogScrollbarEndInset - DialogContentHorizontalPadding,
-    )
+    verticalScrollbar(state = state, endInset = ScrollbarInset - DialogContentHorizontalPadding)
 
 // The default horizontal padding of the dialog's content, the scrollbar lies in the end one
 private val DialogContentHorizontalPadding = 24.dp
-private val DialogScrollbarEndInset = (DialogContentHorizontalPadding - ScrollbarThickness) / 2
 
 @Composable
 private fun AlertDialogCombinedButtons(
