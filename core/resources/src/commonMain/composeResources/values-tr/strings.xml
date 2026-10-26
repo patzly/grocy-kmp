@@ -285,6 +285,44 @@
     <item quantity="other">%1$d kullanıcı varlığı</item>
   </plurals>
 
+  <!-- Stock overview -->
+  <string name="stock_overview_title">Stoklara genel bakış</string>
+  <plurals name="stock_overview_products">
+    <item quantity="one">%1$d ürün</item>
+    <item quantity="other">%1$d ürün</item>
+  </plurals>
+  <string name="stock_overview_total_value">%1$s toplam değer</string>
+  <string name="stock_overview_journal">Günlük</string>
+  <string name="stock_overview_reports">Raporlar</string>
+  <string name="stock_overview_scan">Tara</string>
+  <string name="stock_overview_not_fresh">Taze değil</string>
+  <string name="stock_overview_below_min_stock">Min. stok miktarının altında</string>
+  <string name="stock_overview_in_stock">Stokta</string>
+  <string name="stock_overview_status_not_fresh">%1$d taze değil</string>
+  <string name="stock_overview_status_due_soon">%1$d yakında süresi doluyor</string>
+  <string name="stock_overview_status_overdue">%1$d süresi geçmiş</string>
+  <string name="stock_overview_status_expired">%1$d süresi dolmuş</string>
+  <string name="stock_overview_status_below_min_stock">%1$d min. stok miktarının altında</string>
+  <string name="stock_overview_status_in_stock">%1$d stokta</string>
+  <string name="stock_overview_status_opened">%1$d açıldı</string>
+  <string name="stock_overview_group_by">Şununla grupla</string>
+  <string name="stock_overview_grouped_by">Grup: %1$s</string>
+  <string name="stock_overview_group_not_set">Ayarlanmadı</string>
+  <string name="stock_overview_fields">Alanlar</string>
+  <string name="stock_overview_next_due_date">Sonraki vade tarihi</string>
+  <string name="stock_overview_value">Değer</string>
+  <string name="stock_overview_product_description">Ürün Açıklaması</string>
+  <string name="stock_overview_default_location">Varsayılan yer</string>
+  <string name="stock_overview_product_picture">Ürün fotoğrafı</string>
+  <string name="stock_overview_field_value">%1$s: %2$s</string>
+  <string name="stock_overview_on_shopping_list">Bu ürün şu anda bir alışveriş listesinde</string>
+  <string name="stock_overview_consume">%1$s tüket</string>
+  <string name="stock_overview_open">%1$s açık olarak işaretle</string>
+  <string name="stock_overview_consume_all">Tümünü tüket</string>
+  <string name="stock_overview_consume_spoiled">%1$s defolu olarak tüket</string>
+  <string name="stock_overview_search_recipes">Bu ürünü içeren tarifleri ara</string>
+  <string name="stock_overview_empty">Stokta ürün yok</string>
+
   <!-- Products -->
   <string name="products_configure_userfields">Kullanıcı alanlarını ayarla</string>
   <string name="products_presets">Yeni ürünler için ön tanımlar</string>

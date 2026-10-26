@@ -285,6 +285,44 @@
     <item quantity="other">%1$d kasutajaolemit</item>
   </plurals>
 
+  <!-- Stock overview -->
+  <string name="stock_overview_title">Varude ülevaade</string>
+  <plurals name="stock_overview_products">
+    <item quantity="one">%1$d toode</item>
+    <item quantity="other">%1$d toodet</item>
+  </plurals>
+  <string name="stock_overview_total_value">%1$s koguväärtus</string>
+  <string name="stock_overview_journal">Logi</string>
+  <string name="stock_overview_reports">Aruanded</string>
+  <string name="stock_overview_scan">Skanni</string>
+  <string name="stock_overview_not_fresh">Pole värske</string>
+  <string name="stock_overview_below_min_stock">Alla min. varude koguse</string>
+  <string name="stock_overview_in_stock">Laos</string>
+  <string name="stock_overview_status_not_fresh">%1$d pole värsked</string>
+  <string name="stock_overview_status_due_soon">%1$d aegub varsti</string>
+  <string name="stock_overview_status_overdue">%1$d üle tähtaja</string>
+  <string name="stock_overview_status_expired">%1$d aegunud</string>
+  <string name="stock_overview_status_below_min_stock">%1$d alla min. varude koguse</string>
+  <string name="stock_overview_status_in_stock">%1$d laos</string>
+  <string name="stock_overview_status_opened">%1$d avatud</string>
+  <string name="stock_overview_group_by">Rühmita</string>
+  <string name="stock_overview_grouped_by">Rühm: %1$s</string>
+  <string name="stock_overview_group_not_set">Määramata</string>
+  <string name="stock_overview_fields">Väljad</string>
+  <string name="stock_overview_next_due_date">Järgmine tähtaeg</string>
+  <string name="stock_overview_value">Väärtus</string>
+  <string name="stock_overview_product_description">Toote kirjeldus</string>
+  <string name="stock_overview_default_location">Vaikimisi asukoht</string>
+  <string name="stock_overview_product_picture">Toote pilt</string>
+  <string name="stock_overview_field_value">%1$s: %2$s</string>
+  <string name="stock_overview_on_shopping_list">See toode on praegu ostunimekirjas</string>
+  <string name="stock_overview_consume">Tarbi %1$s</string>
+  <string name="stock_overview_open">Märgi %1$s avatuks</string>
+  <string name="stock_overview_consume_all">Tarbi kõik</string>
+  <string name="stock_overview_consume_spoiled">Tarbi %1$s kui raiskunud</string>
+  <string name="stock_overview_search_recipes">Otsi retsepte, mis sisaldavad seda toodet</string>
+  <string name="stock_overview_empty">Laos pole ühtegi toodet</string>
+
   <!-- Products -->
   <string name="products_configure_userfields">Kasutajaväljade seaded</string>
   <string name="products_presets">Vaikesätted uutele toodetele</string>

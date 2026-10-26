@@ -275,6 +275,43 @@
     <item quantity="other">%1$d 個自定義實體</item>
   </plurals>
 
+  <!-- Stock overview -->
+  <string name="stock_overview_title">庫存總覽</string>
+  <plurals name="stock_overview_products">
+    <item quantity="other">%1$d 個物品</item>
+  </plurals>
+  <string name="stock_overview_total_value">總價 %1$s</string>
+  <string name="stock_overview_journal">日誌</string>
+  <string name="stock_overview_reports">報表</string>
+  <string name="stock_overview_scan">掃描</string>
+  <string name="stock_overview_not_fresh">不新鮮</string>
+  <string name="stock_overview_below_min_stock">小於最低庫存數量</string>
+  <string name="stock_overview_in_stock">有庫存</string>
+  <string name="stock_overview_status_not_fresh">不新鮮 %1$d</string>
+  <string name="stock_overview_status_due_soon">即將到期 %1$d</string>
+  <string name="stock_overview_status_overdue">逾期 %1$d</string>
+  <string name="stock_overview_status_expired">已過期 %1$d</string>
+  <string name="stock_overview_status_below_min_stock">小於最低庫存數量 %1$d</string>
+  <string name="stock_overview_status_in_stock">有庫存 %1$d</string>
+  <string name="stock_overview_status_opened">已開封 %1$d</string>
+  <string name="stock_overview_group_by">分類</string>
+  <string name="stock_overview_grouped_by">分類：%1$s</string>
+  <string name="stock_overview_group_not_set">未設定</string>
+  <string name="stock_overview_fields">欄位</string>
+  <string name="stock_overview_next_due_date">最近到期日期</string>
+  <string name="stock_overview_value">數值</string>
+  <string name="stock_overview_product_description">物品說明</string>
+  <string name="stock_overview_default_location">預設位置</string>
+  <string name="stock_overview_product_picture">物品圖片</string>
+  <string name="stock_overview_field_value">%1$s：%2$s</string>
+  <string name="stock_overview_on_shopping_list">此物品目前在購物清單上</string>
+  <string name="stock_overview_consume">消耗 %1$s</string>
+  <string name="stock_overview_open">將 %1$s 標示為已開封</string>
+  <string name="stock_overview_consume_all">全部消耗</string>
+  <string name="stock_overview_consume_spoiled">將 %1$s 作為已報廢消耗</string>
+  <string name="stock_overview_search_recipes">搜尋包含該物品的食譜</string>
+  <string name="stock_overview_empty">沒有有庫存的物品</string>
+
   <!-- Products -->
   <string name="products_configure_userfields">設定自定義欄位</string>
   <string name="products_presets">新物品預設設定</string>

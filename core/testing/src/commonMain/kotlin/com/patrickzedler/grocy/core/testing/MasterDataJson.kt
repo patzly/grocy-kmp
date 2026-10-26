@@ -4,7 +4,8 @@ package com.patrickzedler.grocy.core.testing
  * Master data of [FakeGrocyServer], shaped like Grocy's API answers (numbers partly as strings,
  * as some Grocy versions send them):
  * - Milk (1, group Dairy, Fridge, in stock), Bread (2, no group, Pantry, out of stock), Old
- *   cheese (3, disabled, Dairy), Yoghurt (4, sub product of Milk, Fridge)
+ *   cheese (3, disabled, Dairy), Yoghurt (4, sub product of Milk, Fridge, 1 below its min.
+ *   stock amount)
  * - quantity units Piece (1) and Pack (2), store Supermarket (1), barcode 4006381333931 of Milk
  * - the product overview of Milk with two purchase prices
  * - chores Vacuum (1, weekly, assigned to Alice) and Old chore (2, disabled), battery Remote
@@ -12,7 +13,8 @@ package com.patrickzedler.grocy.core.testing
  * - the default conversion 1 Pack = 6 Pieces and what Grocy derives from it for Milk
  * - shopping lists Shopping list (1) and Hardware store (2), the item of Milk (5) on the first
  * - Milk's stock entries: 2 pieces in the Fridge (1) and 1 opened piece (2); its journal: a
- *   purchase, a consumption and an undone consumption
+ *   purchase, a consumption and an undone consumption; its last purchase (price 1) and average
+ *   price (0.9)
  */
 object MasterDataJson {
 
@@ -29,7 +31,8 @@ object MasterDataJson {
             """{"id":3,"name":"Old cheese","active":0,"product_group_id":1,"location_id":1,""" +
             """"qu_id_stock":1,"qu_id_purchase":1,"qu_id_consume":1,"qu_id_price":1},""" +
             """{"id":4,"name":"Yoghurt","active":1,"parent_product_id":"1","location_id":1,""" +
-            """"qu_id_stock":1,"qu_id_purchase":1,"qu_id_consume":1,"qu_id_price":1}""" +
+            """"qu_id_stock":1,"qu_id_purchase":1,"qu_id_consume":1,"qu_id_price":1,""" +
+            """"min_stock_amount":"1"}""" +
             """]"""
 
     const val CREATED_PRODUCT =
@@ -74,7 +77,27 @@ object MasterDataJson {
     const val PRODUCT_BARCODES =
         """[{"id":1,"product_id":1,"barcode":"4006381333931","qu_id":2,"amount":"1"}]"""
 
-    const val STOCK = """[{"product_id":"1","amount":"3","amount_aggregated":"3"}]"""
+    const val STOCK =
+        """[{"product_id":"1","amount":"3","amount_aggregated":"3","value":"3",""" +
+            """"best_before_date":"2026-10-20","amount_opened":"1",""" +
+            """"amount_opened_aggregated":"1","is_aggregated_amount":"0","due_type":"1"}]"""
+
+    /** `/stock/volatile`, of which the app reads the products below their min. stock amount. */
+    const val VOLATILE_STOCK =
+        """{"due_products":[],"overdue_products":[],"expired_products":[],""" +
+            """"missing_products":[{"id":4,"name":"Yoghurt","amount_missing":"1",""" +
+            """"is_partly_in_stock":0}]}"""
+
+    const val LAST_PURCHASES =
+        """[{"id":1,"product_id":"1","amount":"3","best_before_date":"2026-10-30",""" +
+            """"purchased_date":"2026-10-01","location_id":1,"shopping_location_id":1,""" +
+            """"price":"1"}]"""
+
+    const val AVERAGE_PRICES = """[{"id":1,"product_id":1,"price":"0.9"}]"""
+
+    const val STOCK_LOCATIONS =
+        """[{"id":1,"product_id":"1","amount":"3","location_id":"1",""" +
+            """"location_name":"Fridge","location_is_freezer":0}]"""
 
     const val USERFIELDS =
         """[{"id":1,"entity":"products","name":"brand","caption":"Brand",""" +
@@ -152,6 +175,10 @@ object MasterDataJson {
         "/api/objects/shopping_locations" to STORES,
         "/api/objects/product_barcodes" to PRODUCT_BARCODES,
         "/api/stock" to STOCK,
+        "/api/stock/volatile" to VOLATILE_STOCK,
+        "/api/objects/products_last_purchased" to LAST_PURCHASES,
+        "/api/objects/products_average_price" to AVERAGE_PRICES,
+        "/api/objects/stock_current_locations" to STOCK_LOCATIONS,
         "/api/objects/chores" to CHORES,
         "/api/objects/batteries" to BATTERIES,
         "/api/objects/task_categories" to TASK_CATEGORIES,

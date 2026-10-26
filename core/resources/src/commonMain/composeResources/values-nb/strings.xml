@@ -285,6 +285,44 @@
     <item quantity="other">%1$d egendefinerte linjer</item>
   </plurals>
 
+  <!-- Stock overview -->
+  <string name="stock_overview_title">Beholdningsoversikt</string>
+  <plurals name="stock_overview_products">
+    <item quantity="one">%1$d produkt</item>
+    <item quantity="other">%1$d produkter</item>
+  </plurals>
+  <string name="stock_overview_total_value">%1$s total beholdningsverdi</string>
+  <string name="stock_overview_journal">Logg</string>
+  <string name="stock_overview_reports">Rapporter</string>
+  <string name="stock_overview_scan">Skann</string>
+  <string name="stock_overview_not_fresh">Ikke ferskt</string>
+  <string name="stock_overview_below_min_stock">Under min. beholdningsmengde</string>
+  <string name="stock_overview_in_stock">På lager</string>
+  <string name="stock_overview_status_not_fresh">%1$d ikke ferske</string>
+  <string name="stock_overview_status_due_soon">%1$d forfaller snart</string>
+  <string name="stock_overview_status_overdue">%1$d forfalt</string>
+  <string name="stock_overview_status_expired">%1$d utgått</string>
+  <string name="stock_overview_status_below_min_stock">%1$d under min. beholdningsmengde</string>
+  <string name="stock_overview_status_in_stock">%1$d på lager</string>
+  <string name="stock_overview_status_opened">%1$d åpnet</string>
+  <string name="stock_overview_group_by">Grupper etter</string>
+  <string name="stock_overview_grouped_by">Gruppe: %1$s</string>
+  <string name="stock_overview_group_not_set">Ikke angitt</string>
+  <string name="stock_overview_fields">Felter</string>
+  <string name="stock_overview_next_due_date">Neste forfallsdato</string>
+  <string name="stock_overview_value">Verdi</string>
+  <string name="stock_overview_product_description">Produktbeskrivelse</string>
+  <string name="stock_overview_default_location">Standard lokasjon</string>
+  <string name="stock_overview_product_picture">Produktbilde</string>
+  <string name="stock_overview_field_value">%1$s: %2$s</string>
+  <string name="stock_overview_on_shopping_list">Dette produktet er for øyeblikket på en handleliste</string>
+  <string name="stock_overview_consume">Forbruk %1$s</string>
+  <string name="stock_overview_open">Merk %1$s som åpnet</string>
+  <string name="stock_overview_consume_all">Forbruk alt</string>
+  <string name="stock_overview_consume_spoiled">Forbruk %1$s som dårlig</string>
+  <string name="stock_overview_search_recipes">Søk etter oppskrifter som inneholder dette produktet</string>
+  <string name="stock_overview_empty">Ingen produkter på lager</string>
+
   <!-- Products -->
   <string name="products_configure_userfields">Sett opp egendefinerte kolonner</string>
   <string name="products_presets">Forhåndsatt for nye produkter</string>

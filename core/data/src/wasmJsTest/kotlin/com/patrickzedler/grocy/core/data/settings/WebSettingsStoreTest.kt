@@ -7,6 +7,9 @@ import com.patrickzedler.grocy.core.model.AppPaletteStyle
 import com.patrickzedler.grocy.core.model.AppTheme
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.stock.StockOverviewField
+import com.patrickzedler.grocy.core.model.stock.StockOverviewGrouping
+import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -86,5 +89,20 @@ class WebSettingsStoreTest {
             ),
             WebSettingsStore(storage).appearance.first(),
         )
+    }
+
+    @Test
+    fun stockOverviewOptionsAreStoredAndRestored() = runTest {
+        val storage = InMemoryStorage()
+        val options = StockOverviewOptions(
+            fields = setOf(StockOverviewField.VALUE),
+            grouping = StockOverviewGrouping.PRODUCT_GROUP,
+            sortField = StockOverviewField.VALUE,
+            ascending = false,
+        )
+
+        WebSettingsStore(storage).setStockOverviewOptions(options)
+
+        assertEquals(options, WebSettingsStore(storage).stockOverviewOptions.first())
     }
 }

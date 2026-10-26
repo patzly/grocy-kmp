@@ -6,7 +6,11 @@ import com.patrickzedler.grocy.core.database.GrocyDatabase
 import com.patrickzedler.grocy.core.database.toEntity
 import com.patrickzedler.grocy.core.database.toModel
 import com.patrickzedler.grocy.core.model.ServerConnection
+import com.patrickzedler.grocy.core.model.masterdata.StockAmount
+import com.patrickzedler.grocy.core.model.stock.ProductPurchase
+import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
 import com.patrickzedler.grocy.core.model.stock.StockEntry
+import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockLogEntry
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.GrocyApiException
@@ -35,6 +39,14 @@ class StockRepository(
     val stockEntries: Flow<List<StockEntry>> =
         stockDao.observeStockEntries().map { list -> list.map { it.toModel() } }
 
+    /** What the stock overview shows of the products besides their amounts. */
+    val productStockInfo: Flow<List<ProductStockInfo>> =
+        stockDao.observeProductStockInfo().map { list -> list.map { it.toModel() } }
+
+    /** Every product's amount per location. */
+    val stockLocations: Flow<List<StockLocationAmount>> =
+        stockDao.observeStockLocations().map { list -> list.map { it.toModel() } }
+
     /** The stored bookings since [since] ("YYYY-MM-DD", "" for all), newest first. */
     fun stockLog(since: String): Flow<List<StockLogEntry>> =
         stockDao.observeStockLog(since).map { list -> list.map { it.toModel() } }
@@ -56,6 +68,46 @@ class StockRepository(
             stockDao.insertStockEntries(entries.map { it.toEntity() })
             masterDataDao.deleteStock()
             masterDataDao.insertStock(amounts.map { it.toEntity() })
+        }
+    }
+
+    /**
+     * Downloads what Grocy's stock overview shows besides the master data: the stock amounts,
+     * the products below their min. stock amount, last purchases, average prices, the amounts
+     * per location and the products on shopping lists, each as the server computed it.
+     *
+     * @param withShoppingLists false when the server has no shopping lists.
+     * @throws GrocyApiException e.g. [GrocyApiException.Unreachable] when offline.
+     */
+    suspend fun refreshOverview(withShoppingLists: Boolean) {
+        val connection = requireConnection()
+        val download = coroutineScope {
+            val amounts = async { api.stock(connection) }
+            val missing = async { api.missingProducts(connection) }
+            val purchases = async { api.lastPurchases(connection) }
+            val averagePrices = async { api.averagePrices(connection) }
+            val locations = async { api.stockLocations(connection) }
+            val onShoppingLists = async {
+                if (withShoppingLists) api.productsOnShoppingLists(connection) else emptySet()
+            }
+            OverviewDownload(
+                amounts = amounts.await(),
+                info = productStockInfoOf(
+                    missing = missing.await(),
+                    purchases = purchases.await(),
+                    averagePrices = averagePrices.await(),
+                    onShoppingLists = onShoppingLists.await(),
+                ),
+                locations = locations.await(),
+            )
+        }
+        database.withWriteTransaction {
+            masterDataDao.deleteStock()
+            masterDataDao.insertStock(download.amounts.map { it.toEntity() })
+            stockDao.deleteProductStockInfo()
+            stockDao.insertProductStockInfo(download.info.map { it.toEntity() })
+            stockDao.deleteStockLocations()
+            stockDao.insertStockLocations(download.locations.map { it.toEntity() })
         }
     }
 
@@ -139,4 +191,31 @@ class StockRepository(
 
     private suspend fun requireConnection(): ServerConnection =
         connection() ?: throw GrocyApiException.Unauthorized()
+
+    private class OverviewDownload(
+        val amounts: List<StockAmount>,
+        val info: List<ProductStockInfo>,
+        val locations: List<StockLocationAmount>,
+    )
+}
+
+/** One [ProductStockInfo] per product any of the downloads names. */
+internal fun productStockInfoOf(
+    missing: Map<Int, Double>,
+    purchases: List<ProductPurchase>,
+    averagePrices: Map<Int, Double>,
+    onShoppingLists: Set<Int>,
+): List<ProductStockInfo> {
+    val purchasesById = purchases.associateBy { it.productId }
+    val ids = missing.keys + purchasesById.keys + averagePrices.keys + onShoppingLists
+    return ids.sorted().map { id ->
+        ProductStockInfo(
+            productId = id,
+            amountMissing = missing[id],
+            onShoppingList = id in onShoppingLists,
+            lastPurchased = purchasesById[id]?.date,
+            lastPrice = purchasesById[id]?.price,
+            averagePrice = averagePrices[id],
+        )
+    }
 }

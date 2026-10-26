@@ -7,6 +7,7 @@ import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.ServerConnection
+import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -31,6 +32,7 @@ class FakeSettingsStore(
     checkUnlockKey: Boolean = true,
     scannerEngine: ScannerEngine = ScannerEngine.ZXING,
     appearance: AppearanceSettings = AppearanceSettings(),
+    stockOverviewOptions: StockOverviewOptions = StockOverviewOptions(),
 ) : SettingsStore {
 
     override val checkUnlockKey = MutableStateFlow(checkUnlockKey)
@@ -49,6 +51,12 @@ class FakeSettingsStore(
 
     override suspend fun setAppearance(appearance: AppearanceSettings) {
         this.appearance.value = appearance
+    }
+
+    override val stockOverviewOptions = MutableStateFlow(stockOverviewOptions)
+
+    override suspend fun setStockOverviewOptions(options: StockOverviewOptions) {
+        stockOverviewOptions.value = options
     }
 }
 

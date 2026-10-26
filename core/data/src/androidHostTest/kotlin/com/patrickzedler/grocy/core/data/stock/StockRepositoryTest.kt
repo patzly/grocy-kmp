@@ -3,6 +3,8 @@ package com.patrickzedler.grocy.core.data.stock
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.database.createInMemoryGrocyDatabase
 import com.patrickzedler.grocy.core.model.ServerConnection
+import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
+import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import com.patrickzedler.grocy.core.testing.FakeGrocyServer
 import io.ktor.http.HttpMethod
@@ -37,6 +39,43 @@ class StockRepositoryTest {
         assertEquals(listOf(1, 2), entries.map { it.id })
         assertEquals("Half full", entries[1].note)
         assertEquals(3.0, masterData.stock.first().single().amount)
+    }
+
+    @Test
+    fun overviewRefreshStoresWhatTheServerComputedPerProduct() = runTest {
+        repository.refreshOverview(withShoppingLists = true)
+
+        val milk = masterData.stock.first().single()
+        assertEquals(1.0, milk.amountOpened)
+        assertEquals("2026-10-20", milk.bestBeforeDate)
+        assertEquals(
+            listOf(
+                ProductStockInfo(1, null, true, "2026-10-01", 1.0, 0.9),
+                ProductStockInfo(4, amountMissing = 1.0),
+            ),
+            repository.productStockInfo.first(),
+        )
+        assertEquals(listOf(StockLocationAmount(1, 1, 3.0)), repository.stockLocations.first())
+    }
+
+    @Test
+    fun overviewRefreshWithoutShoppingListsNeverAsksForThem() = runTest {
+        repository.refreshOverview(withShoppingLists = false)
+
+        assertTrue("/api/objects/shopping_list" !in server.requestedPaths)
+        assertEquals(false, repository.productStockInfo.first().first().onShoppingList)
+    }
+
+    @Test
+    fun overviewStaysOfflineWhenItsRefreshFails() = runTest {
+        repository.refreshOverview(withShoppingLists = true)
+        server.respond("/api/objects/products_average_price", HttpStatusCode.InternalServerError)
+
+        assertFailsWith<GrocyApiException.HttpError> {
+            repository.refreshOverview(withShoppingLists = true)
+        }
+
+        assertEquals(2, repository.productStockInfo.first().size)
     }
 
     @Test

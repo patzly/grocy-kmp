@@ -37,9 +37,11 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_more_vert
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+/** An item of an overflow menu; a disabled one shows that its action is not possible now. */
 @Immutable
 class AppBarMenuItem(
     val text: String,
+    val enabled: Boolean = true,
     val onClick: () -> Unit,
 )
 
@@ -156,7 +158,8 @@ private fun MenuGroups(
             items.forEachIndexed { index, item ->
                 DropdownMenuItem(
                     text = { Text(item.text) },
-                    modifier = Modifier.clickCursor(),
+                    modifier = Modifier.clickCursor(item.enabled),
+                    enabled = item.enabled,
                     onClick = {
                         haptic.confirm()
                         onDismissRequest()

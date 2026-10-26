@@ -6,16 +6,17 @@ Compose Multiplatform. Targets: Android (phone, Wear OS) and Web (Kotlin/Wasm). 
 
 Current state: login (demo server, QR code of Grocy's API key page, manual Grocy URL + API key,
 Home Assistant ingress on Android), the reusable barcode scanner (`core:scanner`), update checks
-on every platform, the start screen (sections, Master data so far, then Settings as a group of its
-own with the gear icon, a plain item opening the settings as their own scene, and the app menu
-without Settings; from
+on every platform, the start screen (sections, each a group of its own: the stock overview (only
+with the stock feature, `StartSection.isAvailable`) and Master data so far, then Settings as a
+group of its own with the gear icon, a plain item opening the settings as their own scene, and the
+app menu without Settings; from
 Material's expanded width on a list-detail scene like the settings: `StartSection`, the
-section's page (`MasterDataRoute`, a `DetailRoute`) opens beside it, `start_select_hint` until
+section's page (`StockOverviewRoute`, `MasterDataRoute`, both `DetailRoute`s) opens beside it, `start_select_hint` until
 then, and a category of the master data still opens its list as a scene of its own with its
 forms beside it, never in place of the master data; back leaves the whole scene like every
 list-detail scene, from the start screen the app, it never closes the page beside it first, on
 purpose), an About
-screen, the Settings overview (`feature:settings`) and the master data
+screen, the Settings overview (`feature:settings`), Grocy's stock overview and the master data
 (`feature:masterdata`): the overview of Grocy's master data categories, the list and form of
 every category (products with their overview dialog, locations, stores, quantity units,
 product groups, chores, batteries, task categories, userfields, userentities), with the
@@ -24,6 +25,47 @@ Grocy's stock pages of products (stock entries, stock journal, journal summary),
 shopping list" and the stock settings ("Presets for new products"). Grocy's purchase,
 consume, transfer and inventory pages do not exist yet, so the stock pages leave out their
 links.
+
+Stock overview (`stockoverview/` of `feature:masterdata`, it opens the product overview):
+- `StockOverviewScreen` is Grocy's stock overview page: the active products not hidden there
+  that are in stock or below their min. stock amount (every active one with the user setting
+  `stock_overview_show_all_out_of_stock_products`). Grocy computes the page in the view
+  `uihelper_stock_current_overview`, which the API does not expose, so
+  `StockRepository.refreshOverview` downloads its parts as the server computed them: `/stock`
+  (amounts, opened amounts, value, next due date; `StockAmount`), the missing products of
+  `/stock/volatile`, `products_last_purchased`, `products_average_price`,
+  `stock_current_locations` and the products on shopping lists (`product_stock_info` and
+  `stock_locations`, database version 6); the pure `buildStockOverview` only joins, filters,
+  sorts and groups them, like Grocy's page does in its template and JS (due status from the
+  date: `dueStatusOf`, unknown due dates sort as Grocy's 2888-12-31, never overdue last).
+- Below the title (`SegmentedListScreen(subtitle)`, onSurfaceVariant) Grocy's "%s Products,
+  %s total value". The filter chips: status first (with the number of products of each in its
+  menu instead of Grocy's colored messages; "All", then a group with "not fresh" (due soon,
+  overdue or expired, not in Grocy), due soon, overdue, expired, then below min. stock amount,
+  in stock and opened (not in Grocy); `DropdownFilterChip(optionGroups, selectedLabel)`), then
+  location and product group, then Grocy's table options: sort (the name and the shown fields
+  but the picture), group by (Grocy's groupable columns; groups as group titles, rows without a
+  value last as "Not set") and the shown fields (`MultiSelectChip`, only those of features the
+  server has, `availableFields`). Fields, grouping and sort are kept like Grocy keeps its table
+  options (`StockOverviewOptions` of `core:model` in `SettingsStore`, read at app start by
+  `StockOverviewOptionsRepository`); hiding the field the list is sorted by sorts it by Grocy's
+  default again (next due date, the name while that is hidden). Search like the products.
+- Each product is a segmented item: the name as title, the shown fields as chips that wrap
+  below it (`FieldChips`: surfaceContainer, no outline or elevation; the amount blue below the
+  min. stock amount, the next due date yellow when due soon and red when overdue or expired:
+  `rememberStatusColors` of `core:design`, Material's custom color container roles of fixed
+  hues harmonized with primary), the description as text, the picture as thumbnail. A tap opens
+  the product overview. Grocy's buttons in front of a row are swipe actions (`SwipeActionBox`
+  of `core:design`, like Gmail's: a rounded primary surface opens with the icon, which moves to
+  its middle beyond the threshold with a tick; letting go there runs the action and the item
+  springs back instead of being swiped away, so no extra tap): towards the end "Consume" (the
+  quick consume amount), towards the start "Mark as opened"; both are also the item's
+  accessibility actions and the first menu group (with "Consume all" and "Consume as spoiled"),
+  then "Add to shopping list" and "Search for recipes", then "Edit product"; actions that are
+  not possible are disabled (`AppBarMenuItem(enabled)`), like Grocy's buttons.
+- The floating toolbar: Journal, Stock entries, Reports (with location or price tracking) and
+  Search, scanning as its FAB. Consuming, opening, reports, scanning and recipes do nothing yet,
+  their pages do not exist.
 
 Master data (`feature:masterdata`), built after Grocy's web frontend:
 - `MasterDataScreen` (beside the start screen without back button and app menu, the start
@@ -731,7 +773,8 @@ both modules to `apps/shared/build.gradle.kts`, and add the new routes to `allRo
   keeps the stored ones instead of failing the refresh. Version 4 added chores, batteries, task
   categories, userentities, users and the userfield values of the simple objects; version 5
   quantity unit conversions (defined and resolved), shopping lists, stock entries, the stock
-  journal and the userfield values of barcodes.
+  journal and the userfield values of barcodes; version 6 the stock overview (opened amounts,
+  value and next due date of `stock`, `product_stock_info`, `stock_locations`).
 - `AuthRepository` clears the database before a login and on logout (`clearLocalData`), so no
   screen shows the data of another server. The database file is excluded from backups.
 - Server configuration and user settings live as JSON in `server_values`; only the known feature
@@ -761,7 +804,9 @@ both modules to `apps/shared/build.gradle.kts`, and add the new routes to `allRo
   (no secure storage available). Both serialize via `ServerConnectionCodec` (JSON, polymorphic
   `ServerConnection` with `@SerialName` discriminators "demo" / "api_key" / "home_assistant").
 - `SettingsStore`: DataStore on Android, `localStorage` keys prefixed `grocy.` on web. Holds
-  `checkUnlockKey` and `scannerEngine` (stored by enum name, unknown values fall back to ZXing).
+  `checkUnlockKey` and `scannerEngine` (stored by enum name, unknown values fall back to ZXing),
+  the appearance and the stock overview's table options (`StockOverviewOptions.of`: unknown
+  values of a newer version fall back to the defaults).
 - Web stores access the browser only through `KeyValueStorage` (`BrowserLocalStorage` in
   production, an in-memory one in tests). Blocked or full browser storage must not crash the app:
   values are then kept for the session only.
@@ -871,6 +916,13 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   (beside side cutouts), dialogs 4.dp from their edge between the dividers, also lists that
   scroll a dialog themselves (`dialogListScrollbar`, in the dialog's end padding). Material's
   scrollbar cannot be dragged, on purpose no own one that can.
+- Colors of states outside the color scheme (Grocy's highlighted rows) come from
+  `rememberStatusColors` (`core:design`): info (blue), warning (yellow), critical (red), fixed
+  hues harmonized with primary and turned into container and content tones like Material's
+  custom colors (90/10 light, 30/90 dark), always together with a text. Gestures on list items
+  use `SwipeActionBox` (Gmail's look, the action runs on letting go beyond the threshold, the
+  item springs back); every swipe action must also be in the item's menu and its accessibility
+  actions.
 - Version numbers (app, Grocy) and other numbers read as columns use tabular figures
   (`TextStyle.withTabularNumbers()`), every digit equally wide.
 - Font is Google Sans Flex from Compose Resources. On web fonts load async;

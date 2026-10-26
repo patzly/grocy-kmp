@@ -3,8 +3,11 @@ package com.patrickzedler.grocy.core.network
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnitConversion
+import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.server.UserSettingValue
+import com.patrickzedler.grocy.core.model.stock.ProductPurchase
 import com.patrickzedler.grocy.core.model.stock.StockEntry
+import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
 import io.ktor.client.engine.mock.respond
@@ -160,6 +163,98 @@ class GrocyApiStockTest {
         assertTrue(entry.open)
         assertNull(entry.note)
         assertEquals(mapOf("batch" to "7"), entry.userfields)
+    }
+
+    @Test
+    fun currentStockIsReadWithItsOpenedAmountsValueAndNextDueDate() = runTest {
+        val api = api {
+            json(
+                """[{"product_id":"1","amount":"2","amount_aggregated":"5","value":"3.5",""" +
+                    """"best_before_date":"2026-11-02","amount_opened":"1",""" +
+                    """"amount_opened_aggregated":"2","is_aggregated_amount":"1",""" +
+                    """"product":{"id":1,"name":"Milk"}},""" +
+                    """{"product_id":2,"amount":1}]""",
+            )
+        }
+
+        val (milk, bread) = api.stock(CONNECTION)
+
+        assertEquals(StockAmount(1, 2.0, 5.0, 1.0, 2.0, 3.5, "2026-11-02", true), milk)
+        // Older servers leave out what they did not compute yet
+        assertEquals(StockAmount(2, 1.0, 1.0), bread)
+    }
+
+    @Test
+    fun missingProductsAreReadFromTheVolatileStock() = runTest {
+        val api = api {
+            json(
+                """{"due_products":[],"missing_products":[""" +
+                    """{"id":"4","name":"Yoghurt","amount_missing":"1.5"},""" +
+                    """{"id":5,"name":"Eggs","amount_missing":2}]}""",
+            )
+        }
+
+        val missing = api.missingProducts(CONNECTION)
+
+        assertEquals("/api/stock/volatile", requests.single().url.encodedPath)
+        assertEquals(mapOf(4 to 1.5, 5 to 2.0), missing)
+    }
+
+    @Test
+    fun lastPurchasesKeepNoPriceForPurchasesWithoutOne() = runTest {
+        val api = api {
+            json(
+                """[{"id":1,"product_id":"1","purchased_date":"2026-10-01","price":"1.2"},""" +
+                    """{"id":1,"product_id":2,"purchased_date":"2026-09-01","price":"0"}]""",
+            )
+        }
+
+        val purchases = api.lastPurchases(CONNECTION)
+
+        assertEquals(
+            "/api/objects/products_last_purchased",
+            requests.single().url.encodedPath,
+        )
+        assertEquals(
+            listOf(ProductPurchase(1, "2026-10-01", 1.2), ProductPurchase(2, "2026-09-01", null)),
+            purchases,
+        )
+    }
+
+    @Test
+    fun averagePricesAreReadByProduct() = runTest {
+        val api = api { json("""[{"id":1,"product_id":"1","price":"0.9"}]""") }
+
+        assertEquals(mapOf(1 to 0.9), api.averagePrices(CONNECTION))
+        assertEquals(
+            "/api/objects/products_average_price",
+            requests.single().url.encodedPath,
+        )
+    }
+
+    @Test
+    fun stockLocationsAreReadPerProductAndLocation() = runTest {
+        val api = api {
+            json(
+                """[{"id":1,"product_id":"1","amount":"2","location_id":"3",""" +
+                    """"location_name":"Fridge","location_is_freezer":0}]""",
+            )
+        }
+
+        assertEquals(listOf(StockLocationAmount(1, 3, 2.0)), api.stockLocations(CONNECTION))
+    }
+
+    @Test
+    fun productsOnShoppingListsLeaveOutItemsWithoutProduct() = runTest {
+        val api = api {
+            json(
+                """[{"id":1,"product_id":"1","shopping_list_id":1},""" +
+                    """{"id":2,"product_id":null,"shopping_list_id":1},""" +
+                    """{"id":3,"product_id":1,"shopping_list_id":2}]""",
+            )
+        }
+
+        assertEquals(setOf(1), api.productsOnShoppingLists(CONNECTION))
     }
 
     @Test

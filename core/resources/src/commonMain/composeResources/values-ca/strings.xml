@@ -220,7 +220,7 @@
   <string name="action_show_choices">Mostrar opcions</string>
   <string name="action_scan_barcode">Escanejar codi de barres</string>
   <string name="action_close_scanner">Tancar l’escàner</string>
-  <string name="data_none">Ca</string>
+  <string name="data_none">Cap</string>
   <string name="data_all">Tot</string>
   <string name="data_offline">No s’ha pogut accedir al servidor. Es mostren les dades desades.</string>
   <string name="data_load_failed">No s’han pogut carregar les dades.</string>
@@ -294,6 +294,45 @@
     <item quantity="many">%1$d entitats d’usuari</item>
     <item quantity="other">%1$d entitats d’usuari</item>
   </plurals>
+
+  <!-- Stock overview -->
+  <string name="stock_overview_title">Resum d'existències</string>
+  <plurals name="stock_overview_products">
+    <item quantity="one">%1$d producte</item>
+    <item quantity="many">%1$d productes</item>
+    <item quantity="other">%1$d productes</item>
+  </plurals>
+  <string name="stock_overview_total_value">%1$s valor total</string>
+  <string name="stock_overview_journal">Diari</string>
+  <string name="stock_overview_reports">Informes</string>
+  <string name="stock_overview_scan">Escanejar</string>
+  <string name="stock_overview_not_fresh">No fresc</string>
+  <string name="stock_overview_below_min_stock">Per sota de la quantitat mínima d'existències</string>
+  <string name="stock_overview_in_stock">En estoc</string>
+  <string name="stock_overview_status_not_fresh">%1$d no frescos</string>
+  <string name="stock_overview_status_due_soon">%1$d caduquen aviat</string>
+  <string name="stock_overview_status_overdue">%1$d caducats</string>
+  <string name="stock_overview_status_expired">%1$d vençuts</string>
+  <string name="stock_overview_status_below_min_stock">%1$d per sota de la quantitat mínima d'existències</string>
+  <string name="stock_overview_status_in_stock">%1$d en estoc</string>
+  <string name="stock_overview_status_opened">%1$d oberts</string>
+  <string name="stock_overview_group_by">Agrupar per</string>
+  <string name="stock_overview_grouped_by">Grup: %1$s</string>
+  <string name="stock_overview_group_not_set">Sense definir</string>
+  <string name="stock_overview_fields">Camps</string>
+  <string name="stock_overview_next_due_date">Propera data límit de consum</string>
+  <string name="stock_overview_value">Valor</string>
+  <string name="stock_overview_product_description">Descripció de producte</string>
+  <string name="stock_overview_default_location">Ubicació per defecte</string>
+  <string name="stock_overview_product_picture">Imatge del producte</string>
+  <string name="stock_overview_field_value">%1$s: %2$s</string>
+  <string name="stock_overview_on_shopping_list">Aquest producte és actualment en una llista de la compra</string>
+  <string name="stock_overview_consume">Consumir %1$s</string>
+  <string name="stock_overview_open">Marcar %1$s com a obert</string>
+  <string name="stock_overview_consume_all">Consumir-ho tot</string>
+  <string name="stock_overview_consume_spoiled">Consumir %1$s com a fet malbé</string>
+  <string name="stock_overview_search_recipes">Busca receptes que continguin aquest producte</string>
+  <string name="stock_overview_empty">No hi ha cap producte en estoc</string>
 
   <!-- Products -->
   <string name="products_configure_userfields">Configurar camps d’usuari</string>

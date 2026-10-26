@@ -19,6 +19,7 @@ import com.patrickzedler.grocy.feature.masterdata.api.ProductsRoute
 import com.patrickzedler.grocy.feature.masterdata.api.QuantityUnitRoute
 import com.patrickzedler.grocy.feature.masterdata.api.QuantityUnitsRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StockEntriesRoute
+import com.patrickzedler.grocy.feature.masterdata.api.StockOverviewRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StockJournalRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StockJournalSummaryRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StoreRoute
@@ -89,6 +90,7 @@ class RouteSerializersTest {
         StockSettingsRoute(),
         StockSettingsRoute(inSettings = true),
         StockSettingsRoute(inSettings = true, backLeavesSettings = true),
+        StockOverviewRoute,
         StockEntriesRoute(),
         StockEntriesRoute(productId = 7),
         StockJournalRoute(),

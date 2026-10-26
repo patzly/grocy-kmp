@@ -178,6 +178,32 @@ data class StockEntity(
     @PrimaryKey @ColumnInfo(name = "product_id") val productId: Int,
     val amount: Double,
     @ColumnInfo(name = "amount_aggregated") val amountAggregated: Double,
+    @ColumnInfo(name = "amount_opened", defaultValue = "0") val amountOpened: Double,
+    @ColumnInfo(name = "amount_opened_aggregated", defaultValue = "0")
+    val amountOpenedAggregated: Double,
+    @ColumnInfo(defaultValue = "0") val value: Double,
+    @ColumnInfo(name = "best_before_date") val bestBeforeDate: String?,
+    @ColumnInfo(name = "is_aggregated_amount", defaultValue = "0")
+    val isAggregatedAmount: Boolean,
+)
+
+/** What Grocy's stock overview shows of a product besides its amounts, as last downloaded. */
+@Entity(tableName = "product_stock_info")
+data class ProductStockInfoEntity(
+    @PrimaryKey @ColumnInfo(name = "product_id") val productId: Int,
+    @ColumnInfo(name = "amount_missing") val amountMissing: Double?,
+    @ColumnInfo(name = "on_shopping_list") val onShoppingList: Boolean,
+    @ColumnInfo(name = "last_purchased") val lastPurchased: String?,
+    @ColumnInfo(name = "last_price") val lastPrice: Double?,
+    @ColumnInfo(name = "average_price") val averagePrice: Double?,
+)
+
+/** A product's amount at one location, Grocy's `stock_current_locations`. */
+@Entity(tableName = "stock_locations", primaryKeys = ["product_id", "location_id"])
+data class StockLocationEntity(
+    @ColumnInfo(name = "product_id") val productId: Int,
+    @ColumnInfo(name = "location_id") val locationId: Int,
+    val amount: Double,
 )
 
 @Entity(tableName = "userfields")

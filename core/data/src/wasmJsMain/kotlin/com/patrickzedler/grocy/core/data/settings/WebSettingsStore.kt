@@ -4,6 +4,7 @@ import com.patrickzedler.grocy.core.data.BrowserLocalStorage
 import com.patrickzedler.grocy.core.data.KeyValueStorage
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -57,6 +58,26 @@ class WebSettingsStore internal constructor(
         appearanceState.value = appearance
     }
 
+    private val stockOverviewOptionsState = MutableStateFlow(
+        StockOverviewOptions.of(
+            fields = storage.get(STOCK_OVERVIEW_FIELDS),
+            grouping = storage.get(STOCK_OVERVIEW_GROUPING),
+            sortField = storage.get(STOCK_OVERVIEW_SORT),
+            ascending = storage.get(STOCK_OVERVIEW_ASCENDING),
+        ),
+    )
+
+    override val stockOverviewOptions: Flow<StockOverviewOptions> =
+        stockOverviewOptionsState.asStateFlow()
+
+    override suspend fun setStockOverviewOptions(options: StockOverviewOptions) {
+        storage.set(STOCK_OVERVIEW_FIELDS, StockOverviewOptions.storedFields(options.fields))
+        storage.set(STOCK_OVERVIEW_GROUPING, options.grouping.name)
+        storage.set(STOCK_OVERVIEW_SORT, options.sortField.name)
+        storage.set(STOCK_OVERVIEW_ASCENDING, options.ascending.toString())
+        stockOverviewOptionsState.value = options
+    }
+
     internal companion object {
         const val CHECK_UNLOCK_KEY = "grocy.checkUnlockKey"
         const val SCANNER_ENGINE = "grocy.scannerEngine"
@@ -65,5 +86,9 @@ class WebSettingsStore internal constructor(
         const val HUE = "grocy.hue"
         const val CONTRAST = "grocy.contrast"
         const val STYLE = "grocy.style"
+        const val STOCK_OVERVIEW_FIELDS = "grocy.stockOverviewFields"
+        const val STOCK_OVERVIEW_GROUPING = "grocy.stockOverviewGrouping"
+        const val STOCK_OVERVIEW_SORT = "grocy.stockOverviewSort"
+        const val STOCK_OVERVIEW_ASCENDING = "grocy.stockOverviewAscending"
     }
 }

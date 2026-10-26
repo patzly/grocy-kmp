@@ -321,6 +321,44 @@
     <item quantity="other">%1$d userentities</item>
   </plurals>
 
+  <!-- Stock overview -->
+  <string name="stock_overview_title">Stock overview</string>
+  <plurals name="stock_overview_products">
+    <item quantity="one">%1$d product</item>
+    <item quantity="other">%1$d products</item>
+  </plurals>
+  <string name="stock_overview_total_value">%1$s total value</string>
+  <string name="stock_overview_journal">Journal</string>
+  <string name="stock_overview_reports">Reports</string>
+  <string name="stock_overview_scan">Scan</string>
+  <string name="stock_overview_not_fresh">Not fresh</string>
+  <string name="stock_overview_below_min_stock">Below min. stock amount</string>
+  <string name="stock_overview_in_stock">In stock</string>
+  <string name="stock_overview_status_not_fresh">%1$d not fresh</string>
+  <string name="stock_overview_status_due_soon">%1$d due soon</string>
+  <string name="stock_overview_status_overdue">%1$d overdue</string>
+  <string name="stock_overview_status_expired">%1$d expired</string>
+  <string name="stock_overview_status_below_min_stock">%1$d below min. stock amount</string>
+  <string name="stock_overview_status_in_stock">%1$d in stock</string>
+  <string name="stock_overview_status_opened">%1$d opened</string>
+  <string name="stock_overview_group_by">Group by</string>
+  <string name="stock_overview_grouped_by">Group: %1$s</string>
+  <string name="stock_overview_group_not_set">Not set</string>
+  <string name="stock_overview_fields">Fields</string>
+  <string name="stock_overview_next_due_date">Next due date</string>
+  <string name="stock_overview_value">Value</string>
+  <string name="stock_overview_product_description">Product description</string>
+  <string name="stock_overview_default_location">Default location</string>
+  <string name="stock_overview_product_picture">Product picture</string>
+  <string name="stock_overview_field_value">%1$s: %2$s</string>
+  <string name="stock_overview_on_shopping_list">This product is currently on a shopping list</string>
+  <string name="stock_overview_consume">Consume %1$s</string>
+  <string name="stock_overview_open">Mark %1$s as opened</string>
+  <string name="stock_overview_consume_all">Consume all</string>
+  <string name="stock_overview_consume_spoiled">Consume %1$s as spoiled</string>
+  <string name="stock_overview_search_recipes">Search for recipes containing this product</string>
+  <string name="stock_overview_empty">No products in stock</string>
+
   <!-- Products -->
   <string name="products_configure_userfields">Configure userfields</string>
   <string name="products_presets">Presets for new products</string>

@@ -174,4 +174,6 @@ private const val COLOR_BLIND_MIN_DISTANCE = 8.0
 private const val PERCENT = 100.0
 private const val FULL_TURN = 360.0
 private const val HALF_TURN = 180.0
-private const val DARK_LUMINANCE = 0.5f
+
+// Surfaces darker than this belong to a dark theme
+internal const val DARK_LUMINANCE = 0.5f

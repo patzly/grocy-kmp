@@ -275,6 +275,43 @@
     <item quantity="other">%1$d 个自定义项目</item>
   </plurals>
 
+  <!-- Stock overview -->
+  <string name="stock_overview_title">库存总览</string>
+  <plurals name="stock_overview_products">
+    <item quantity="other">%1$d 个产品</item>
+  </plurals>
+  <string name="stock_overview_total_value">总价值%1$s</string>
+  <string name="stock_overview_journal">日志</string>
+  <string name="stock_overview_reports">报表</string>
+  <string name="stock_overview_scan">扫描</string>
+  <string name="stock_overview_not_fresh">不新鲜</string>
+  <string name="stock_overview_below_min_stock">低于安全库存</string>
+  <string name="stock_overview_in_stock">有库存</string>
+  <string name="stock_overview_status_not_fresh">不新鲜 %1$d</string>
+  <string name="stock_overview_status_due_soon">即将到期 %1$d</string>
+  <string name="stock_overview_status_overdue">逾期 %1$d</string>
+  <string name="stock_overview_status_expired">过期 %1$d</string>
+  <string name="stock_overview_status_below_min_stock">低于安全库存 %1$d</string>
+  <string name="stock_overview_status_in_stock">有库存 %1$d</string>
+  <string name="stock_overview_status_opened">已开封 %1$d</string>
+  <string name="stock_overview_group_by">分组依据</string>
+  <string name="stock_overview_grouped_by">分组：%1$s</string>
+  <string name="stock_overview_group_not_set">未设置</string>
+  <string name="stock_overview_fields">字段</string>
+  <string name="stock_overview_next_due_date">下次到期</string>
+  <string name="stock_overview_value">价值</string>
+  <string name="stock_overview_product_description">产品描述</string>
+  <string name="stock_overview_default_location">默认位置</string>
+  <string name="stock_overview_product_picture">产品图片</string>
+  <string name="stock_overview_field_value">%1$s：%2$s</string>
+  <string name="stock_overview_on_shopping_list">此产品当前在购物清单上</string>
+  <string name="stock_overview_consume">消耗%1$s</string>
+  <string name="stock_overview_open">将%1$s标记为已开封</string>
+  <string name="stock_overview_consume_all">全部消耗</string>
+  <string name="stock_overview_consume_spoiled">将%1$s作为变质消耗</string>
+  <string name="stock_overview_search_recipes">搜索含有此产品的菜谱</string>
+  <string name="stock_overview_empty">没有有库存的产品</string>
+
   <!-- Products -->
   <string name="products_configure_userfields">配置自定义字段</string>
   <string name="products_presets">新产品预设</string>

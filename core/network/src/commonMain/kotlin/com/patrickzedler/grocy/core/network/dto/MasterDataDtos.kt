@@ -421,11 +421,21 @@ internal data class StockDto(
     @SerialName("product_id") val productId: Int,
     val amount: FlexDouble = null,
     @SerialName("amount_aggregated") val amountAggregated: FlexDouble = null,
+    @SerialName("amount_opened") val amountOpened: FlexDouble = null,
+    @SerialName("amount_opened_aggregated") val amountOpenedAggregated: FlexDouble = null,
+    val value: FlexDouble = null,
+    @SerialName("best_before_date") val bestBeforeDate: FlexString = null,
+    @SerialName("is_aggregated_amount") val isAggregatedAmount: FlexBoolean = null,
 ) {
     fun toModel() = StockAmount(
         productId = productId,
         amount = amount ?: 0.0,
         amountAggregated = amountAggregated ?: amount ?: 0.0,
+        amountOpened = amountOpened ?: 0.0,
+        amountOpenedAggregated = amountOpenedAggregated ?: amountOpened ?: 0.0,
+        value = value ?: 0.0,
+        bestBeforeDate = bestBeforeDate?.takeIf { it.isNotBlank() },
+        isAggregatedAmount = isAggregatedAmount ?: false,
     )
 }
 

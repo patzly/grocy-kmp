@@ -305,6 +305,46 @@
     <item quantity="other">%1$d користувацької сутності</item>
   </plurals>
 
+  <!-- Stock overview -->
+  <string name="stock_overview_title">Інвентар</string>
+  <plurals name="stock_overview_products">
+    <item quantity="one">%1$d продукт</item>
+    <item quantity="few">%1$d продукти</item>
+    <item quantity="many">%1$d продуктів</item>
+    <item quantity="other">%1$d продукту</item>
+  </plurals>
+  <string name="stock_overview_total_value">%1$s загальна вартість</string>
+  <string name="stock_overview_journal">Журнал</string>
+  <string name="stock_overview_reports">Звіти</string>
+  <string name="stock_overview_scan">Сканувати</string>
+  <string name="stock_overview_not_fresh">Не свіжі</string>
+  <string name="stock_overview_below_min_stock">Менше мінімальної кількості</string>
+  <string name="stock_overview_in_stock">В наявності</string>
+  <string name="stock_overview_status_not_fresh">Не свіжі: %1$d</string>
+  <string name="stock_overview_status_due_soon">Скоро зіпсується: %1$d</string>
+  <string name="stock_overview_status_overdue">Вийшли з строку придатності: %1$d</string>
+  <string name="stock_overview_status_expired">Зіпсовано: %1$d</string>
+  <string name="stock_overview_status_below_min_stock">Менше мінімальної кількості: %1$d</string>
+  <string name="stock_overview_status_in_stock">В наявності: %1$d</string>
+  <string name="stock_overview_status_opened">Відкрито: %1$d</string>
+  <string name="stock_overview_group_by">Групувати по</string>
+  <string name="stock_overview_grouped_by">Група: %1$s</string>
+  <string name="stock_overview_group_not_set">Не задано</string>
+  <string name="stock_overview_fields">Поля</string>
+  <string name="stock_overview_next_due_date">Термін придатності</string>
+  <string name="stock_overview_value">Вартість</string>
+  <string name="stock_overview_product_description">Опис продукту</string>
+  <string name="stock_overview_default_location">Місце за замовчуванням</string>
+  <string name="stock_overview_product_picture">Зображення продукту</string>
+  <string name="stock_overview_field_value">%1$s: %2$s</string>
+  <string name="stock_overview_on_shopping_list">Цей продукт зараз у списку покупок</string>
+  <string name="stock_overview_consume">Вжити %1$s</string>
+  <string name="stock_overview_open">Відмітити %1$s відкритим</string>
+  <string name="stock_overview_consume_all">Вжити все</string>
+  <string name="stock_overview_consume_spoiled">Вжити %1$s, відмітивши зіпсованим</string>
+  <string name="stock_overview_search_recipes">Шукати рецепти з цим продуктом</string>
+  <string name="stock_overview_empty">Немає продуктів в наявності</string>
+
   <!-- Products -->
   <string name="products_configure_userfields">Налаштувати користувацькі поля</string>
   <string name="products_presets">Налаштування для нових продуктів</string>

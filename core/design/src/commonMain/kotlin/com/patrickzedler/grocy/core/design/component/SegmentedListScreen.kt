@@ -39,6 +39,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -77,6 +78,7 @@ import org.jetbrains.compose.resources.stringResource
  * visibly comes out from below it.
  * The list shrinks with the keyboard, so a focused text field always stays above it.
  *
+ * [subtitle] (e.g. a summary of the list) shows below the title in onSurfaceVariant.
  * [navigationIcon] is usually a [NavigateBackButton], [actions] are [AppBarIconButton]s,
  * [menuItems] go into the overflow menu at the end of the bar, after [actionMenuItems] (the
  * actions on the screen's object) as a group of their own.
@@ -96,6 +98,7 @@ import org.jetbrains.compose.resources.stringResource
 fun SegmentedListScreen(
     title: String,
     modifier: Modifier = Modifier,
+    subtitle: String? = null,
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     menuItems: List<AppBarMenuItem> = emptyList(),
@@ -190,6 +193,20 @@ fun SegmentedListScreen(
                     overflow = TextOverflow.Ellipsis,
                 )
             }
+            // The subtitle lines up with its title the same way
+            val collapsedSubtitleStyle = MaterialTheme.typography.labelMedium
+            val subtitleContent: (@Composable () -> Unit)? = subtitle?.let { text ->
+                {
+                    val isExpandedRow =
+                        LocalTextStyle.current.fontSize != collapsedSubtitleStyle.fontSize
+                    Text(
+                        text = text,
+                        modifier = if (isExpandedRow) Modifier.fillMaxWidth() else Modifier,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            }
             val allActions: @Composable RowScope.() -> Unit = {
                 actions()
                 val reload = stringResource(Res.string.action_reload)
@@ -202,7 +219,7 @@ fun SegmentedListScreen(
                 }
                 // Pulling is a gesture; the menu refreshes for keyboards and screen readers
                 val reloadItems = if (onRefresh != null && !usesMouse) {
-                    listOf(AppBarMenuItem(reload, onRefresh))
+                    listOf(AppBarMenuItem(reload, onClick = onRefresh))
                 } else {
                     emptyList()
                 }
@@ -212,7 +229,17 @@ fun SegmentedListScreen(
                 containerColor = containerColor,
                 scrolledContainerColor = scrolledContainerColor,
             )
-            if (isSmallBar) {
+            if (isSmallBar && subtitleContent != null) {
+                TopAppBar(
+                    title = titleContent,
+                    subtitle = subtitleContent,
+                    navigationIcon = navigationIcon,
+                    actions = allActions,
+                    titleHorizontalAlignment = Alignment.CenterHorizontally,
+                    colors = colors,
+                    scrollBehavior = scrollBehavior,
+                )
+            } else if (isSmallBar) {
                 CenterAlignedTopAppBar(
                     title = titleContent,
                     navigationIcon = navigationIcon,
@@ -223,6 +250,7 @@ fun SegmentedListScreen(
             } else {
                 LargeFlexibleTopAppBar(
                     title = largeTitleContent,
+                    subtitle = subtitleContent,
                     titleHorizontalAlignment = Alignment.CenterHorizontally,
                     navigationIcon = navigationIcon,
                     actions = allActions,

@@ -305,6 +305,46 @@
     <item quantity="other">%1$d пользовательской сущности</item>
   </plurals>
 
+  <!-- Stock overview -->
+  <string name="stock_overview_title">Обзор запасов</string>
+  <plurals name="stock_overview_products">
+    <item quantity="one">%1$d продукт</item>
+    <item quantity="few">%1$d продукта</item>
+    <item quantity="many">%1$d продуктов</item>
+    <item quantity="other">%1$d продукта</item>
+  </plurals>
+  <string name="stock_overview_total_value">%1$s всего</string>
+  <string name="stock_overview_journal">Журнал</string>
+  <string name="stock_overview_reports">Отчеты</string>
+  <string name="stock_overview_scan">Сканировать</string>
+  <string name="stock_overview_not_fresh">Не свежие</string>
+  <string name="stock_overview_below_min_stock">Меньше мин. заданного кол-ва</string>
+  <string name="stock_overview_in_stock">В запасе</string>
+  <string name="stock_overview_status_not_fresh">Не свежие: %1$d</string>
+  <string name="stock_overview_status_due_soon">Срок годности подходит: %1$d</string>
+  <string name="stock_overview_status_overdue">Срок годности просрочен: %1$d</string>
+  <string name="stock_overview_status_expired">Истёк срок годности: %1$d</string>
+  <string name="stock_overview_status_below_min_stock">Меньше мин. заданного кол-ва: %1$d</string>
+  <string name="stock_overview_status_in_stock">В запасе: %1$d</string>
+  <string name="stock_overview_status_opened">Открыто: %1$d</string>
+  <string name="stock_overview_group_by">Группировать по</string>
+  <string name="stock_overview_grouped_by">Группа: %1$s</string>
+  <string name="stock_overview_group_not_set">Не задано</string>
+  <string name="stock_overview_fields">Поля</string>
+  <string name="stock_overview_next_due_date">Следующий срок годности</string>
+  <string name="stock_overview_value">Стоимость</string>
+  <string name="stock_overview_product_description">Описание продукта</string>
+  <string name="stock_overview_default_location">Место хранения по умолчанию</string>
+  <string name="stock_overview_product_picture">Изображение продукта</string>
+  <string name="stock_overview_field_value">%1$s: %2$s</string>
+  <string name="stock_overview_on_shopping_list">Этот продукт сейчас находится в списке покупок</string>
+  <string name="stock_overview_consume">Использовать %1$s</string>
+  <string name="stock_overview_open">Пометить %1$s как открытое</string>
+  <string name="stock_overview_consume_all">Использовать всё</string>
+  <string name="stock_overview_consume_spoiled">Списать %1$s как испорченное</string>
+  <string name="stock_overview_search_recipes">Искать рецепты, содержащие данный продукт</string>
+  <string name="stock_overview_empty">Нет продуктов в запасе</string>
+
   <!-- Products -->
   <string name="products_configure_userfields">Настроить поля пользователя</string>
   <string name="products_presets">Настройки по умолчанию для новых продуктов</string>

@@ -3,6 +3,8 @@ package com.patrickzedler.grocy.core.network.dto
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnitConversion
 import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
+import com.patrickzedler.grocy.core.model.stock.ProductPurchase
+import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.stock.StockLogEntry
 import kotlinx.serialization.SerialName
@@ -133,3 +135,48 @@ internal data class ShoppingListItemDto(
     @SerialName("product_id") val productId: FlexInt = null,
     @SerialName("shopping_list_id") val shoppingListId: FlexInt = null,
 )
+
+/** The part of Grocy's `/stock/volatile` its stock overview takes from there. */
+@Serializable
+internal data class VolatileStockDto(
+    @SerialName("missing_products") val missingProducts: List<MissingProductDto> = emptyList(),
+)
+
+/** A product below its min. stock amount. */
+@Serializable
+internal data class MissingProductDto(
+    val id: Int,
+    @SerialName("amount_missing") val amountMissing: FlexDouble = null,
+)
+
+/** A row of Grocy's `products_last_purchased`. */
+@Serializable
+internal data class LastPurchaseDto(
+    @SerialName("product_id") val productId: Int,
+    @SerialName("purchased_date") val purchasedDate: FlexString = null,
+    val price: FlexDouble = null,
+) {
+    fun toModel() = ProductPurchase(
+        productId = productId,
+        date = purchasedDate?.takeIf { it.isNotBlank() },
+        // Grocy stores 0 when the purchase had no price
+        price = price?.takeIf { it > 0.0 },
+    )
+}
+
+/** A row of Grocy's `products_average_price`. */
+@Serializable
+internal data class AveragePriceDto(
+    @SerialName("product_id") val productId: Int,
+    val price: FlexDouble = null,
+)
+
+/** A row of Grocy's `stock_current_locations`. */
+@Serializable
+internal data class StockLocationDto(
+    @SerialName("product_id") val productId: Int,
+    @SerialName("location_id") val locationId: Int,
+    val amount: FlexDouble = null,
+) {
+    fun toModel() = StockLocationAmount(productId, locationId, amount ?: 0.0)
+}

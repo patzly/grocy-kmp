@@ -50,12 +50,21 @@ data class ProductBarcode(
     val userfields: Map<String, String?> = emptyMap(),
 )
 
-/** Current stock of a product, the part of Grocy's `/stock` the master data needs. */
+/** Current stock of a product as Grocy's `/stock` computes it. */
 data class StockAmount(
     val productId: Int,
     val amount: Double,
     /** Including the stock of sub products for parent products. */
     val amountAggregated: Double,
+    val amountOpened: Double = 0.0,
+    /** Including the opened stock of sub products for parent products. */
+    val amountOpenedAggregated: Double = 0.0,
+    /** What the entries cost, rounded by Grocy. */
+    val value: Double = 0.0,
+    /** The next due date ("YYYY-MM-DD"), null when Grocy has none. */
+    val bestBeforeDate: String? = null,
+    /** True for parent products, whose aggregated amounts include their sub products. */
+    val isAggregatedAmount: Boolean = false,
 )
 
 data class Battery(

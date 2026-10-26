@@ -22,12 +22,16 @@ import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettingValue
 import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
+import com.patrickzedler.grocy.core.model.stock.ProductPurchase
 import com.patrickzedler.grocy.core.model.stock.StockEntry
+import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockLogEntry
+import com.patrickzedler.grocy.core.network.dto.AveragePriceDto
 import com.patrickzedler.grocy.core.network.dto.BatteryDto
 import com.patrickzedler.grocy.core.network.dto.ChoreDto
 import com.patrickzedler.grocy.core.network.dto.CreatedObjectDto
 import com.patrickzedler.grocy.core.network.dto.ErrorDto
+import com.patrickzedler.grocy.core.network.dto.LastPurchaseDto
 import com.patrickzedler.grocy.core.network.dto.LocationDto
 import com.patrickzedler.grocy.core.network.dto.PriceHistoryDto
 import com.patrickzedler.grocy.core.network.dto.ProductBarcodeDto
@@ -41,6 +45,7 @@ import com.patrickzedler.grocy.core.network.dto.ShoppingListDto
 import com.patrickzedler.grocy.core.network.dto.ShoppingListItemDto
 import com.patrickzedler.grocy.core.network.dto.StockDto
 import com.patrickzedler.grocy.core.network.dto.StockEntryDto
+import com.patrickzedler.grocy.core.network.dto.StockLocationDto
 import com.patrickzedler.grocy.core.network.dto.StockLogDto
 import com.patrickzedler.grocy.core.network.dto.StoreDto
 import com.patrickzedler.grocy.core.network.dto.SystemInfoDto
@@ -48,6 +53,7 @@ import com.patrickzedler.grocy.core.network.dto.TaskCategoryDto
 import com.patrickzedler.grocy.core.network.dto.UserDto
 import com.patrickzedler.grocy.core.network.dto.UserentityDto
 import com.patrickzedler.grocy.core.network.dto.UserfieldDto
+import com.patrickzedler.grocy.core.network.dto.VolatileStockDto
 import com.patrickzedler.grocy.core.network.dto.toJson
 import com.patrickzedler.grocy.core.network.dto.toServerConfig
 import com.patrickzedler.grocy.core.network.dto.toUserSettings
@@ -424,6 +430,33 @@ class GrocyApi(
     /** Current stock, one entry per product that is in stock. */
     suspend fun stock(connection: ServerConnection): List<StockAmount> =
         get<List<StockDto>>(connection, "stock").map { it.toModel() }
+
+    /** How much is missing of each product below its min. stock amount, by product id. */
+    suspend fun missingProducts(connection: ServerConnection): Map<Int, Double> =
+        get<VolatileStockDto>(connection, "stock", "volatile").missingProducts
+            .associate { it.id to (it.amountMissing ?: 0.0) }
+
+    /** The last purchase of every product purchased once. */
+    suspend fun lastPurchases(connection: ServerConnection): List<ProductPurchase> =
+        get<List<LastPurchaseDto>>(connection, "objects", "products_last_purchased")
+            .map { it.toModel() }
+
+    /** The average purchase price per stock unit of every product with prices, by product. */
+    suspend fun averagePrices(connection: ServerConnection): Map<Int, Double> =
+        get<List<AveragePriceDto>>(connection, "objects", "products_average_price")
+            .mapNotNull { dto -> dto.price?.let { dto.productId to it } }
+            .toMap()
+
+    /** The amount of every product in stock per location. */
+    suspend fun stockLocations(connection: ServerConnection): List<StockLocationAmount> =
+        get<List<StockLocationDto>>(connection, "objects", "stock_current_locations")
+            .map { it.toModel() }
+
+    /** The products on any shopping list. */
+    suspend fun productsOnShoppingLists(connection: ServerConnection): Set<Int> =
+        get<List<ShoppingListItemDto>>(connection, "objects", "shopping_list")
+            .mapNotNull { it.productId }
+            .toSet()
 
     /**
      * Grocy's "Product overview" of an active product (disabled ones are rejected with

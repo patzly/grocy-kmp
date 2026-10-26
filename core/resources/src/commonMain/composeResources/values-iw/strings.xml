@@ -295,6 +295,45 @@
     <item quantity="other">%1$d יישויות משתמש</item>
   </plurals>
 
+  <!-- Stock overview -->
+  <string name="stock_overview_title">סקירת מלאי</string>
+  <plurals name="stock_overview_products">
+    <item quantity="one">%1$d מוצר</item>
+    <item quantity="two">%1$d מוצרים</item>
+    <item quantity="other">%1$d מוצרים</item>
+  </plurals>
+  <string name="stock_overview_total_value">%1$s ערך כולל</string>
+  <string name="stock_overview_journal">יומן</string>
+  <string name="stock_overview_reports">דוחות</string>
+  <string name="stock_overview_scan">סריקה</string>
+  <string name="stock_overview_not_fresh">לא טרי</string>
+  <string name="stock_overview_below_min_stock">מתחת לכמות המלאי המזערית</string>
+  <string name="stock_overview_in_stock">במלאי</string>
+  <string name="stock_overview_status_not_fresh">%1$d לא טריים</string>
+  <string name="stock_overview_status_due_soon">%1$d שמועד הסיום שלהם מתקרב</string>
+  <string name="stock_overview_status_overdue">%1$d שמועד הסיום שלהם חלף</string>
+  <string name="stock_overview_status_expired">%1$d שתוקפם פג</string>
+  <string name="stock_overview_status_below_min_stock">%1$d מתחת לכמות המלאי המזערית</string>
+  <string name="stock_overview_status_in_stock">%1$d במלאי</string>
+  <string name="stock_overview_status_opened">%1$d נפתחו</string>
+  <string name="stock_overview_group_by">קיבוץ לפי</string>
+  <string name="stock_overview_grouped_by">קבוצה: %1$s</string>
+  <string name="stock_overview_group_not_set">לא מוגדר</string>
+  <string name="stock_overview_fields">שדות</string>
+  <string name="stock_overview_next_due_date">תאריך סיום התוקף הבא</string>
+  <string name="stock_overview_value">ערך</string>
+  <string name="stock_overview_product_description">תיאור מוצר</string>
+  <string name="stock_overview_default_location">מיקום בררת מחדל</string>
+  <string name="stock_overview_product_picture">תמונת המוצר</string>
+  <string name="stock_overview_field_value">%1$s: %2$s</string>
+  <string name="stock_overview_on_shopping_list">המוצר הזה נמצא כרגע ברשימת קניות</string>
+  <string name="stock_overview_consume">צריכה של %1$s</string>
+  <string name="stock_overview_open">לסמן %1$s כפתוח</string>
+  <string name="stock_overview_consume_all">לצרוך הכול</string>
+  <string name="stock_overview_consume_spoiled">צריכה של %1$s כמקולקל</string>
+  <string name="stock_overview_search_recipes">חיפוש מתכונים שמכילים את המוצר הזה</string>
+  <string name="stock_overview_empty">אין מוצרים במלאי</string>
+
   <!-- Products -->
   <string name="products_configure_userfields">הגדרת שדות משתמש</string>
   <string name="products_presets">ערכות מוגדרות למוצרים חדשים</string>

@@ -9,6 +9,7 @@ import com.patrickzedler.grocy.core.data.server.GROCY_GITHUB_REPOSITORY
 import com.patrickzedler.grocy.core.data.server.ServerRepository
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
+import com.patrickzedler.grocy.core.data.settings.StockOverviewOptionsRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
 import com.patrickzedler.grocy.core.data.update.UpdateRepository
@@ -99,6 +100,9 @@ class AppGraph(
     /** How the app looks, from the general settings; read right at app start. */
     internal val appearanceRepository = AppearanceRepository(platform.settingsStore, appScope)
 
+    private val stockOverviewOptionsRepository =
+        StockOverviewOptionsRepository(platform.settingsStore, appScope)
+
     /** Decoders of the engine that scans right now, provided to every scanner by GrocyApp. */
     internal val barcodeDecoderFactory: Flow<BarcodeDecoderFactory> by lazy {
         scannerRepository.activeEngine.map {
@@ -135,6 +139,8 @@ class AppGraph(
     internal val startDependencies: StartDependencies = object : StartDependencies {
         override val masterDataRepository: MasterDataRepository
             get() = this@AppGraph.masterDataRepository
+        override val serverConfig: StateFlow<ServerConfig?>
+            get() = serverRepository.serverConfig
     }
 
     internal val masterDataDependencies: MasterDataDependencies = object : MasterDataDependencies {
@@ -144,6 +150,8 @@ class AppGraph(
             get() = this@AppGraph.stockRepository
         override val serverConfig: StateFlow<ServerConfig?>
             get() = serverRepository.serverConfig
+        override val stockOverviewOptions: StockOverviewOptionsRepository
+            get() = stockOverviewOptionsRepository
     }
 
     internal val aboutDependencies: AboutDependencies = object : AboutDependencies {

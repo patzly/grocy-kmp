@@ -305,6 +305,46 @@
     <item quantity="other">%1$d uživatelských tabulek</item>
   </plurals>
 
+  <!-- Stock overview -->
+  <string name="stock_overview_title">Přehled zásob</string>
+  <plurals name="stock_overview_products">
+    <item quantity="one">%1$d produkt</item>
+    <item quantity="few">%1$d produkty</item>
+    <item quantity="many">%1$d produktu</item>
+    <item quantity="other">%1$d produktů</item>
+  </plurals>
+  <string name="stock_overview_total_value">celkem za %1$s</string>
+  <string name="stock_overview_journal">Deník</string>
+  <string name="stock_overview_reports">Přehledy</string>
+  <string name="stock_overview_scan">Skenovat</string>
+  <string name="stock_overview_not_fresh">Není čerstvé</string>
+  <string name="stock_overview_below_min_stock">Pod min. množstvím zásoby</string>
+  <string name="stock_overview_in_stock">Na skladě</string>
+  <string name="stock_overview_status_not_fresh">Není čerstvé: %1$d</string>
+  <string name="stock_overview_status_due_soon">Blíží se datum min. trvanlivosti: %1$d</string>
+  <string name="stock_overview_status_overdue">Po datu min. trvanlivosti: %1$d</string>
+  <string name="stock_overview_status_expired">Po době použitelnosti: %1$d</string>
+  <string name="stock_overview_status_below_min_stock">Pod min. množstvím zásoby: %1$d</string>
+  <string name="stock_overview_status_in_stock">Na skladě: %1$d</string>
+  <string name="stock_overview_status_opened">Otevřené: %1$d</string>
+  <string name="stock_overview_group_by">Seskupovat podle</string>
+  <string name="stock_overview_grouped_by">Skupina: %1$s</string>
+  <string name="stock_overview_group_not_set">Nenastaveno</string>
+  <string name="stock_overview_fields">Pole</string>
+  <string name="stock_overview_next_due_date">Datum min. trvanlivosti</string>
+  <string name="stock_overview_value">Cena</string>
+  <string name="stock_overview_product_description">Popis produktu</string>
+  <string name="stock_overview_default_location">Obvyklé umístění</string>
+  <string name="stock_overview_product_picture">Obrázek produktu</string>
+  <string name="stock_overview_field_value">%1$s: %2$s</string>
+  <string name="stock_overview_on_shopping_list">Tento produkt je aktuálně na nákupním seznamu</string>
+  <string name="stock_overview_consume">Spotřebovat %1$s</string>
+  <string name="stock_overview_open">Otevřít %1$s</string>
+  <string name="stock_overview_consume_all">Spotřebovat vše</string>
+  <string name="stock_overview_consume_spoiled">Spotřebovat %1$s jako zkažené</string>
+  <string name="stock_overview_search_recipes">Vyhledat recepty obsahující tento produkt</string>
+  <string name="stock_overview_empty">Žádné produkty na skladě</string>
+
   <!-- Products -->
   <string name="products_configure_userfields">Upravit sloupce tabulky</string>
   <string name="products_presets">Výchozí hodnoty pro nové produkty</string>

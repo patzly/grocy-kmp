@@ -156,11 +156,18 @@ internal fun dueStatusOf(dueDay: Long, today: Long, dueSoonDays: Int, dueType: D
 internal fun priceToStockFactor(
     product: Product,
     resolved: List<ResolvedQuantityUnitConversion>,
+): Double = toStockFactor(product, product.quIdPrice, resolved)
+
+/** Stock units in one unit [quId] of the product, 1 without a known conversion. */
+internal fun toStockFactor(
+    product: Product,
+    quId: Int?,
+    resolved: List<ResolvedQuantityUnitConversion>,
 ): Double {
-    val price = product.quIdPrice ?: return 1.0
+    val from = quId ?: return 1.0
     val stock = product.quIdStock ?: return 1.0
-    if (price == stock) return 1.0
+    if (from == stock) return 1.0
     return resolved.firstOrNull {
-        it.productId == product.id && it.fromQuId == price && it.toQuId == stock
+        it.productId == product.id && it.fromQuId == from && it.toQuId == stock
     }?.factor ?: 1.0
 }

@@ -15,7 +15,9 @@ import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnitConversion
 import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
+import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
 import com.patrickzedler.grocy.core.model.stock.StockEntry
+import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockLogEntry
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.StockLabelType
@@ -359,9 +361,49 @@ fun ShoppingList.toEntity() = ShoppingListEntity(id, name)
 
 fun ShoppingListEntity.toModel() = ShoppingList(id, name)
 
-fun StockAmount.toEntity() = StockEntity(productId, amount, amountAggregated)
+fun StockAmount.toEntity() = StockEntity(
+    productId = productId,
+    amount = amount,
+    amountAggregated = amountAggregated,
+    amountOpened = amountOpened,
+    amountOpenedAggregated = amountOpenedAggregated,
+    value = value,
+    bestBeforeDate = bestBeforeDate,
+    isAggregatedAmount = isAggregatedAmount,
+)
 
-fun StockEntity.toModel() = StockAmount(productId, amount, amountAggregated)
+fun StockEntity.toModel() = StockAmount(
+    productId = productId,
+    amount = amount,
+    amountAggregated = amountAggregated,
+    amountOpened = amountOpened,
+    amountOpenedAggregated = amountOpenedAggregated,
+    value = value,
+    bestBeforeDate = bestBeforeDate,
+    isAggregatedAmount = isAggregatedAmount,
+)
+
+fun ProductStockInfo.toEntity() = ProductStockInfoEntity(
+    productId = productId,
+    amountMissing = amountMissing,
+    onShoppingList = onShoppingList,
+    lastPurchased = lastPurchased,
+    lastPrice = lastPrice,
+    averagePrice = averagePrice,
+)
+
+fun ProductStockInfoEntity.toModel() = ProductStockInfo(
+    productId = productId,
+    amountMissing = amountMissing,
+    onShoppingList = onShoppingList,
+    lastPurchased = lastPurchased,
+    lastPrice = lastPrice,
+    averagePrice = averagePrice,
+)
+
+fun StockLocationAmount.toEntity() = StockLocationEntity(productId, locationId, amount)
+
+fun StockLocationEntity.toModel() = StockLocationAmount(productId, locationId, amount)
 
 fun Userfield.toEntity() = UserfieldEntity(
     id = id,

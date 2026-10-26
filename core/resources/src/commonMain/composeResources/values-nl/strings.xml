@@ -285,6 +285,44 @@
     <item quantity="other">%1$d gebruikersentiteiten</item>
   </plurals>
 
+  <!-- Stock overview -->
+  <string name="stock_overview_title">Voorraad</string>
+  <plurals name="stock_overview_products">
+    <item quantity="one">%1$d product</item>
+    <item quantity="other">%1$d producten</item>
+  </plurals>
+  <string name="stock_overview_total_value">%1$s totale waarde</string>
+  <string name="stock_overview_journal">Dagboek</string>
+  <string name="stock_overview_reports">Rapporten</string>
+  <string name="stock_overview_scan">Scannen</string>
+  <string name="stock_overview_not_fresh">Niet vers</string>
+  <string name="stock_overview_below_min_stock">Onder min. voorraadhoeveelheid</string>
+  <string name="stock_overview_in_stock">Op voorraad</string>
+  <string name="stock_overview_status_not_fresh">%1$d niet vers</string>
+  <string name="stock_overview_status_due_soon">%1$d binnenkort over datum</string>
+  <string name="stock_overview_status_overdue">%1$d achterstallig</string>
+  <string name="stock_overview_status_expired">%1$d over datum</string>
+  <string name="stock_overview_status_below_min_stock">%1$d onder min. voorraadhoeveelheid</string>
+  <string name="stock_overview_status_in_stock">%1$d op voorraad</string>
+  <string name="stock_overview_status_opened">%1$d geopend</string>
+  <string name="stock_overview_group_by">Groepeer op</string>
+  <string name="stock_overview_grouped_by">Groep: %1$s</string>
+  <string name="stock_overview_group_not_set">Niet ingesteld</string>
+  <string name="stock_overview_fields">Velden</string>
+  <string name="stock_overview_next_due_date">Volgende houdbaarheidsdatum</string>
+  <string name="stock_overview_value">Waarde</string>
+  <string name="stock_overview_product_description">Productomschrijving</string>
+  <string name="stock_overview_default_location">Standaardlocatie</string>
+  <string name="stock_overview_product_picture">Productafbeelding</string>
+  <string name="stock_overview_field_value">%1$s: %2$s</string>
+  <string name="stock_overview_on_shopping_list">Dit product staat momenteel op een boodschappenlijst</string>
+  <string name="stock_overview_consume">Verbruik %1$s</string>
+  <string name="stock_overview_open">Markeer %1$s als geopend</string>
+  <string name="stock_overview_consume_all">Alles verbruiken</string>
+  <string name="stock_overview_consume_spoiled">Verbruik %1$s als bedorven</string>
+  <string name="stock_overview_search_recipes">Zoek naar recepten met dit product</string>
+  <string name="stock_overview_empty">Geen producten op voorraad</string>
+
   <!-- Products -->
   <string name="products_configure_userfields">Configureer gebruikersvelden</string>
   <string name="products_presets">Vooraf ingesteld voor nieuwe producten</string>

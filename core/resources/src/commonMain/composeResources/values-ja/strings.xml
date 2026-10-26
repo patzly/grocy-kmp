@@ -275,6 +275,43 @@
     <item quantity="other">%1$d 件のユーザーエンティティ</item>
   </plurals>
 
+  <!-- Stock overview -->
+  <string name="stock_overview_title">ストック一覧</string>
+  <plurals name="stock_overview_products">
+    <item quantity="other">%1$d 件の物品</item>
+  </plurals>
+  <string name="stock_overview_total_value">合計価格 %1$s</string>
+  <string name="stock_overview_journal">履歴</string>
+  <string name="stock_overview_reports">レポート</string>
+  <string name="stock_overview_scan">スキャン</string>
+  <string name="stock_overview_not_fresh">鮮度切れ</string>
+  <string name="stock_overview_below_min_stock">最低ストック数量未満</string>
+  <string name="stock_overview_in_stock">ストックあり</string>
+  <string name="stock_overview_status_not_fresh">鮮度切れ %1$d</string>
+  <string name="stock_overview_status_due_soon">まもなく期限 %1$d</string>
+  <string name="stock_overview_status_overdue">期限超過 %1$d</string>
+  <string name="stock_overview_status_expired">消費期限切れ %1$d</string>
+  <string name="stock_overview_status_below_min_stock">最低ストック数量未満 %1$d</string>
+  <string name="stock_overview_status_in_stock">ストックあり %1$d</string>
+  <string name="stock_overview_status_opened">開封済み %1$d</string>
+  <string name="stock_overview_group_by">グループ化</string>
+  <string name="stock_overview_grouped_by">グループ: %1$s</string>
+  <string name="stock_overview_group_not_set">未設定</string>
+  <string name="stock_overview_fields">項目</string>
+  <string name="stock_overview_next_due_date">次の期限</string>
+  <string name="stock_overview_value">価格</string>
+  <string name="stock_overview_product_description">物品説明</string>
+  <string name="stock_overview_default_location">既定の保管場所</string>
+  <string name="stock_overview_product_picture">物品の画像</string>
+  <string name="stock_overview_field_value">%1$s: %2$s</string>
+  <string name="stock_overview_on_shopping_list">この物品は現在買い物リストにあります</string>
+  <string name="stock_overview_consume">%1$s を消費</string>
+  <string name="stock_overview_open">%1$s を開封済みとしてマーク</string>
+  <string name="stock_overview_consume_all">すべて消費</string>
+  <string name="stock_overview_consume_spoiled">%1$s を廃棄済みとして消費</string>
+  <string name="stock_overview_search_recipes">この物品を含むレシピを検索</string>
+  <string name="stock_overview_empty">ストックのある物品はありません</string>
+
   <!-- Products -->
   <string name="products_configure_userfields">ユーザーフィールドを設定</string>
   <string name="products_presets">既定の新規物品</string>

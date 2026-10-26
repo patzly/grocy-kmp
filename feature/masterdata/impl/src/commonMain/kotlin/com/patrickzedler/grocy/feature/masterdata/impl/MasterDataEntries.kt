@@ -38,6 +38,7 @@ import com.patrickzedler.grocy.feature.masterdata.api.QuantityUnitsRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StockEntriesRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StockJournalRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StockJournalSummaryRoute
+import com.patrickzedler.grocy.feature.masterdata.api.StockOverviewRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StoreRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StoresRoute
 import com.patrickzedler.grocy.feature.masterdata.api.TaskCategoriesRoute
@@ -77,6 +78,10 @@ import com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist.AddToShoppin
 import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockEntriesScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockEntriesViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockPageActions
+import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.StockOverviewItemActions
+import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.StockOverviewLinks
+import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.StockOverviewScreen
+import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.StockOverviewViewModel
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.StockSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.UserSettingsRoute
@@ -142,6 +147,52 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
             onActionDone = listActionDone(navigator, ::ProductRoute) {
                 (it as? ProductRoute)?.productId
             },
+        )
+    }
+
+    // Beside the start screen like the master data, its bar has back and the app menu
+    entry<StockOverviewRoute>(metadata = detailPaneMetadata(StartRoute)) {
+        val isBesideList = showsDetailBesideList()
+        val overview = viewModel { ProductOverviewViewModel(repository) }
+        val shoppingList = shoppingListViewModel(dependencies)
+        // Outside the product list the form opens on its own
+        val openProduct = { id: Int -> navigator.navigate(ProductRoute(id)) }
+        StockOverviewScreen(
+            viewModel = viewModel {
+                StockOverviewViewModel(
+                    repository,
+                    dependencies.stockRepository,
+                    dependencies.stockOverviewOptions,
+                )
+            },
+            overviewViewModel = overview,
+            shoppingList = shoppingList,
+            productLinks = ProductLinks(
+                onEditClick = openProduct,
+                onStockEntriesClick = { navigator.navigate(StockEntriesRoute(it)) },
+                onStockJournalClick = { navigator.navigate(StockJournalRoute(it)) },
+                onStockJournalSummaryClick = { navigator.navigate(StockJournalSummaryRoute(it)) },
+            ),
+            // Grocy's booking pages, reports and recipes do not exist in the app yet
+            links = StockOverviewLinks(
+                onJournalClick = { navigator.navigate(StockJournalRoute()) },
+                onStockEntriesClick = { navigator.navigate(StockEntriesRoute()) },
+                onReportsClick = {},
+                onScanClick = {},
+            ),
+            itemActions = StockOverviewItemActions(
+                onClick = { overview.show(it.productId) },
+                onConsume = {},
+                onOpen = {},
+                onConsumeAll = {},
+                onConsumeSpoiled = {},
+                onAddToShoppingList = { shoppingList.open(it.productId) },
+                onSearchRecipes = {},
+                onEditProduct = { openProduct(it.productId) },
+            ),
+            menuItems = if (isBesideList) emptyList() else appMenuItems(navigator),
+            onBackClick = navigator::goBack,
+            pane = ScreenPane.Detail.takeIf { isBesideList },
         )
     }
 

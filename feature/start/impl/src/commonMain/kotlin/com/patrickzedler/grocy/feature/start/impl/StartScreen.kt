@@ -27,9 +27,12 @@ import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.app_name
+import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.resources.ic_rounded_database
+import com.patrickzedler.grocy.core.resources.ic_rounded_kitchen
 import com.patrickzedler.grocy.core.resources.ic_rounded_settings
 import com.patrickzedler.grocy.core.resources.masterdata_title
+import com.patrickzedler.grocy.core.resources.stock_overview_title
 import com.patrickzedler.grocy.core.resources.title_settings
 import com.patrickzedler.grocy.core.ui.AppMenuDialogs
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
@@ -39,14 +42,24 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-/** The sections of the start screen, in their order. */
-internal enum class StartSection(val title: StringResource, val icon: DrawableResource) {
+/** The sections of the start screen, in their order, each a group of its own. */
+internal enum class StartSection(
+    val title: StringResource,
+    val icon: DrawableResource,
+    /** Hidden while the server turned the feature off, like Grocy's menu. */
+    val isAvailable: (ServerConfig) -> Boolean = { true },
+) {
+    STOCK_OVERVIEW(Res.string.stock_overview_title, Res.drawable.ic_rounded_kitchen, { it.stock }),
     MASTER_DATA(Res.string.masterdata_title, Res.drawable.ic_rounded_database),
 }
 
+/** The sections [config] allows, all of them until the configuration is read. */
+internal fun availableSections(config: ServerConfig?): List<StartSection> =
+    StartSection.entries.filter { config == null || it.isAvailable(config) }
+
 /**
- * The first screen after login; grows with the app's sections, master data so far, and leads to
- * the settings in a group of their own below them. Beside the sections' pages
+ * The first screen after login; grows with the app's sections (stock overview and master data so
+ * far) and leads to the settings in a group of their own below them. Beside the sections' pages
  * ([isBesideDetail]) it is the start [ScreenPane.List] of the layout and its sections a single
  * choice marking the [shownSection]; the settings open as a screen of their own.
  */
@@ -61,6 +74,7 @@ internal fun StartScreen(
     modifier: Modifier = Modifier,
 ) {
     val refresh by viewModel.refresh.collectAsStateWithLifecycle()
+    val config by viewModel.serverConfig.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     // Settings are an item of the list here, not of the menu
     val appMenu = rememberAppMenu(onAboutClick = onAboutClick)
@@ -74,6 +88,7 @@ internal fun StartScreen(
     )
 
     StartContent(
+        sections = availableSections(config),
         isRefreshing = refresh.isRefreshing,
         snackbarHostState = snackbarHostState,
         onRefresh = viewModel::refresh,
@@ -88,6 +103,7 @@ internal fun StartScreen(
 
 @Composable
 private fun StartContent(
+    sections: List<StartSection>,
     isRefreshing: Boolean,
     snackbarHostState: SnackbarHostState,
     onRefresh: () -> Unit,
@@ -109,13 +125,12 @@ private fun StartContent(
         isRefreshing = isRefreshing,
         onRefresh = onRefresh,
     ) {
-        segmentedGroup(key = "sections") {
-            val sections = StartSection.entries
-            sections.forEachIndexed { index, section ->
+        sections.forEach { section ->
+            segmentedGroup(key = section.name) {
                 SectionItem(
                     section = section,
-                    index = index,
-                    count = sections.size,
+                    index = 0,
+                    count = 1,
                     onClick = { onSectionClick(section) },
                     selected = if (isBesideDetail) shownSection == section else null,
                 )
@@ -204,6 +219,7 @@ private fun SectionItem(
 private fun StartScreenPreview() {
     GrocyTheme {
         StartContent(
+            sections = StartSection.entries,
             isRefreshing = false,
             snackbarHostState = remember { SnackbarHostState() },
             onRefresh = {},

@@ -4,6 +4,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.patrickzedler.grocy.core.design.component.DetailPlaceholder
+import com.patrickzedler.grocy.core.navigation.DetailRoute
 import com.patrickzedler.grocy.core.navigation.Navigator
 import com.patrickzedler.grocy.core.navigation.listPaneMetadata
 import com.patrickzedler.grocy.core.navigation.showsDetailBesideList
@@ -12,6 +13,7 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_home
 import com.patrickzedler.grocy.core.resources.start_select_hint
 import com.patrickzedler.grocy.feature.about.api.AboutRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
+import com.patrickzedler.grocy.feature.masterdata.api.StockOverviewRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import org.jetbrains.compose.resources.painterResource
@@ -30,7 +32,9 @@ fun EntryProviderScope<NavKey>.startEntry(
         },
     ) {
         StartScreen(
-            viewModel = viewModel { StartViewModel(dependencies.masterDataRepository) },
+            viewModel = viewModel {
+                StartViewModel(dependencies.masterDataRepository, dependencies.serverConfig)
+            },
             isBesideDetail = showsDetailBesideList(),
             shownSection = startSectionOf(navigator.currentRoute),
             onSectionClick = { section -> navigator.openDetail(section.route) },
@@ -41,8 +45,9 @@ fun EntryProviderScope<NavKey>.startEntry(
 }
 
 /** The page a section opens beside the start screen. */
-internal val StartSection.route: MasterDataRoute
+internal val StartSection.route: DetailRoute
     get() = when (this) {
+        StartSection.STOCK_OVERVIEW -> StockOverviewRoute
         StartSection.MASTER_DATA -> MasterDataRoute
     }
 

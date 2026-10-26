@@ -34,8 +34,10 @@ import androidx.room3.RoomDatabaseConstructor
         StockEntryEntity::class,
         StockLogEntity::class,
         ShoppingListEntity::class,
+        ProductStockInfoEntity::class,
+        StockLocationEntity::class,
     ],
-    version = 5,
+    version = 6,
     autoMigrations = [
         // 2 adds product_thumbnails
         AutoMigration(from = 1, to = 2),
@@ -46,6 +48,9 @@ import androidx.room3.RoomDatabaseConstructor
         // 5 adds quantity unit conversions, stock entries, the stock journal, shopping lists
         // and the userfield values of barcodes
         AutoMigration(from = 4, to = 5),
+        // 6 adds the stock overview: opened amounts, value and next due date of the stock,
+        // product_stock_info and stock_locations
+        AutoMigration(from = 5, to = 6),
     ],
 )
 @ConstructedBy(GrocyDatabaseConstructor::class)

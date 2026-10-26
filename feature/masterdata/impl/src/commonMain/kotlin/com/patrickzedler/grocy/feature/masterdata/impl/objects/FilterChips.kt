@@ -3,6 +3,8 @@ package com.patrickzedler.grocy.feature.masterdata.impl.objects
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -16,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.CheckableDropdownMenuItem
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.FilterChip
@@ -143,9 +146,34 @@ internal fun <T> DropdownFilterChip(
     onSelect: (T) -> Unit,
     isDefault: (T) -> Boolean = { it == null },
 ) {
+    DropdownFilterChip(
+        label = label,
+        optionGroups = listOf(options),
+        selected = selected,
+        optionLabel = optionLabel,
+        onSelect = onSelect,
+        isDefault = isDefault,
+    )
+}
+
+/**
+ * [DropdownFilterChip] whose choices come in [optionGroups], one menu group each.
+ * [selectedLabel] names a chosen value on the chip, by default like in the menu.
+ */
+@Composable
+internal fun <T> DropdownFilterChip(
+    label: String,
+    optionGroups: List<List<T>>,
+    selected: T,
+    optionLabel: @Composable (T) -> String,
+    onSelect: (T) -> Unit,
+    isDefault: (T) -> Boolean = { it == null },
+    selectedLabel: @Composable (T) -> String = optionLabel,
+) {
     val haptic = LocalHapticFeedback.current
     var expanded by remember { mutableStateOf(false) }
     val active = !isDefault(selected)
+    val groups = optionGroups.filter { it.isNotEmpty() }
 
     Box {
         FilterChip(
@@ -154,7 +182,7 @@ internal fun <T> DropdownFilterChip(
                 haptic.confirm()
                 expanded = true
             },
-            label = { Text(if (active) optionLabel(selected) else label, maxLines = 1) },
+            label = { Text(if (active) selectedLabel(selected) else label, maxLines = 1) },
             // It opens a menu, so it is announced as button with the filter's name
             modifier = Modifier
                 .semantics {
@@ -167,15 +195,8 @@ internal fun <T> DropdownFilterChip(
             elevation = filterChipElevation(),
         )
         DropdownMenuPopup(expanded = expanded, onDismissRequest = { expanded = false }) {
-            val menuScrollState = rememberScrollState()
-            DropdownMenuGroup(
-                shapes = MenuDefaults.groupShape(index = 0, count = 1),
-                // Long lists of choices scroll inside the menu
-                modifier = Modifier
-                    .heightIn(max = MenuMaxHeight)
-                    .verticalScrollbar(menuScrollState)
-                    .verticalScroll(menuScrollState),
-            ) {
+            ScrollingMenuGroups(groups.size) { groupIndex ->
+                val options = groups[groupIndex]
                 options.forEachIndexed { index, option ->
                     SelectableDropdownMenuItem(
                         selected = option == selected,
@@ -190,6 +211,82 @@ internal fun <T> DropdownFilterChip(
                         selectedLeadingIcon = { MenuIcon(Res.drawable.ic_rounded_check) },
                     )
                 }
+            }
+        }
+    }
+}
+
+/**
+ * A chip whose menu turns several [options] on and off, e.g. the shown fields of a list like
+ * Grocy's "Table options"; the menu stays open for more changes. Selected while [checked]
+ * differs from the default ([isDefault]).
+ */
+@Composable
+internal fun <T> MultiSelectChip(
+    label: String,
+    options: List<T>,
+    checked: Set<T>,
+    isDefault: Boolean,
+    optionLabel: @Composable (T) -> String,
+    onCheckedChange: (option: T, checked: Boolean) -> Unit,
+) {
+    val haptic = LocalHapticFeedback.current
+    var expanded by remember { mutableStateOf(false) }
+
+    Box {
+        FilterChip(
+            selected = !isDefault,
+            onClick = {
+                haptic.confirm()
+                expanded = true
+            },
+            label = { Text(label, maxLines = 1) },
+            modifier = Modifier.semantics { role = Role.Button }.clickCursor(),
+            trailingIcon = { ChipIcon(Res.drawable.ic_rounded_arrow_drop_down) },
+            colors = filterChipColors(),
+            elevation = filterChipElevation(),
+        )
+        DropdownMenuPopup(expanded = expanded, onDismissRequest = { expanded = false }) {
+            ScrollingMenuGroups(groupCount = 1) {
+                options.forEachIndexed { index, option ->
+                    val isChecked = option in checked
+                    CheckableDropdownMenuItem(
+                        checked = isChecked,
+                        onCheckedChange = { value ->
+                            haptic.confirm()
+                            onCheckedChange(option, value)
+                        },
+                        text = { Text(optionLabel(option)) },
+                        shapes = MenuDefaults.itemShape(index = index, count = options.size),
+                        modifier = Modifier.clickCursor(),
+                        checkedLeadingIcon = { MenuIcon(Res.drawable.ic_rounded_check) },
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * [groupCount] menu groups with Material's gap between them, scrolling together when they are
+ * higher than [MenuMaxHeight].
+ */
+@Composable
+private fun ScrollingMenuGroups(
+    groupCount: Int,
+    group: @Composable ColumnScope.(index: Int) -> Unit,
+) {
+    val scrollState = rememberScrollState()
+    Column(
+        Modifier
+            .heightIn(max = MenuMaxHeight)
+            .verticalScrollbar(scrollState)
+            .verticalScroll(scrollState),
+    ) {
+        repeat(groupCount) { index ->
+            if (index > 0) Spacer(Modifier.height(MenuDefaults.GroupSpacing))
+            DropdownMenuGroup(shapes = MenuDefaults.groupShape(index = index, count = groupCount)) {
+                group(index)
             }
         }
     }
@@ -237,58 +334,84 @@ internal fun <F> SortChip(
             elevation = filterChipElevation(),
         )
         DropdownMenuPopup(expanded = expanded, onDismissRequest = { expanded = false }) {
-            DropdownMenuGroup(shapes = MenuDefaults.groupShape(index = 0, count = 2)) {
-                fields.forEachIndexed { index, option ->
-                    SelectableDropdownMenuItem(
-                        selected = option == field,
-                        modifier = Modifier.clickCursor(),
-                        onClick = {
-                            haptic.confirm()
-                            onSortChange(option, ascending)
-                            expanded = false
-                        },
-                        text = { Text(fieldLabel(option)) },
-                        shapes = MenuDefaults.itemShape(index = index, count = fields.size),
-                        selectedLeadingIcon = { MenuIcon(Res.drawable.ic_rounded_check) },
-                    )
-                }
-            }
-            Spacer(Modifier.height(MenuDefaults.GroupSpacing))
-            DropdownMenuGroup(shapes = MenuDefaults.groupShape(index = 1, count = 2)) {
-                listOf(true, false).forEachIndexed { index, direction ->
-                    SelectableDropdownMenuItem(
-                        selected = ascending == direction,
-                        modifier = Modifier.clickCursor(),
-                        onClick = {
-                            haptic.confirm()
-                            onSortChange(field, direction)
-                            expanded = false
-                        },
-                        text = {
-                            Text(
-                                stringResource(
-                                    if (direction) {
-                                        Res.string.products_sort_ascending
-                                    } else {
-                                        Res.string.products_sort_descending
-                                    },
-                                ),
-                            )
-                        },
-                        shapes = MenuDefaults.itemShape(index = index, count = 2),
-                        leadingIcon = {
-                            MenuIcon(
-                                if (direction) {
-                                    Res.drawable.ic_rounded_arrow_upward
-                                } else {
-                                    Res.drawable.ic_rounded_arrow_downward
-                                },
-                            )
-                        },
-                    )
+            ScrollingMenuGroups(groupCount = 2) { groupIndex ->
+                if (groupIndex == 0) {
+                    SortFieldItems(fields, field, ascending, fieldLabel, onSortChange) {
+                        expanded = false
+                    }
+                } else {
+                    SortDirectionItems(field, ascending, onSortChange) { expanded = false }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun <F> SortFieldItems(
+    fields: List<F>,
+    field: F,
+    ascending: Boolean,
+    fieldLabel: @Composable (F) -> String,
+    onSortChange: (field: F, ascending: Boolean) -> Unit,
+    onDone: () -> Unit,
+) {
+    val haptic = LocalHapticFeedback.current
+    fields.forEachIndexed { index, option ->
+        SelectableDropdownMenuItem(
+            selected = option == field,
+            modifier = Modifier.clickCursor(),
+            onClick = {
+                haptic.confirm()
+                onSortChange(option, ascending)
+                onDone()
+            },
+            text = { Text(fieldLabel(option)) },
+            shapes = MenuDefaults.itemShape(index = index, count = fields.size),
+            selectedLeadingIcon = { MenuIcon(Res.drawable.ic_rounded_check) },
+        )
+    }
+}
+
+@Composable
+private fun <F> SortDirectionItems(
+    field: F,
+    ascending: Boolean,
+    onSortChange: (field: F, ascending: Boolean) -> Unit,
+    onDone: () -> Unit,
+) {
+    val haptic = LocalHapticFeedback.current
+    listOf(true, false).forEachIndexed { index, direction ->
+        SelectableDropdownMenuItem(
+            selected = ascending == direction,
+            modifier = Modifier.clickCursor(),
+            onClick = {
+                haptic.confirm()
+                onSortChange(field, direction)
+                onDone()
+            },
+            text = {
+                Text(
+                    stringResource(
+                        if (direction) {
+                            Res.string.products_sort_ascending
+                        } else {
+                            Res.string.products_sort_descending
+                        },
+                    ),
+                )
+            },
+            shapes = MenuDefaults.itemShape(index = index, count = 2),
+            leadingIcon = {
+                MenuIcon(
+                    if (direction) {
+                        Res.drawable.ic_rounded_arrow_upward
+                    } else {
+                        Res.drawable.ic_rounded_arrow_downward
+                    },
+                )
+            },
+        )
     }
 }
 
@@ -329,4 +452,5 @@ private fun MenuIcon(icon: DrawableResource) {
     )
 }
 
-private val MenuMaxHeight = 360.dp
+// Room for the status menu of the stock overview, longer menus scroll
+private val MenuMaxHeight = 480.dp

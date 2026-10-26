@@ -4,6 +4,7 @@ import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.core.database.createInMemoryGrocyDatabase
 import com.patrickzedler.grocy.core.model.ServerConnection
+import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.testing.FakeGrocyServer
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -11,6 +12,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -42,7 +44,7 @@ class StartViewModelTest {
 
     @Test
     fun pullToRefreshDownloadsTheServersData() = runTest(dispatcher) {
-        val viewModel = StartViewModel(repository)
+        val viewModel = StartViewModel(repository, MutableStateFlow(ServerConfig()))
 
         viewModel.refresh()
         advanceUntilIdle()
@@ -53,7 +55,7 @@ class StartViewModelTest {
 
     @Test
     fun offlineRefreshReportsIt() = runTest(dispatcher) {
-        val viewModel = StartViewModel(repository)
+        val viewModel = StartViewModel(repository, MutableStateFlow(ServerConfig()))
         server.unreachable = true
 
         viewModel.refresh()

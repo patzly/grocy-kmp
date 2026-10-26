@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.data.settings
 
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import kotlinx.coroutines.flow.Flow
 
 interface SettingsStore {
@@ -18,4 +19,9 @@ interface SettingsStore {
     val appearance: Flow<AppearanceSettings>
 
     suspend fun setAppearance(appearance: AppearanceSettings)
+
+    /** Fields, grouping and sort of the stock overview, Grocy's defaults until changed. */
+    val stockOverviewOptions: Flow<StockOverviewOptions>
+
+    suspend fun setStockOverviewOptions(options: StockOverviewOptions)
 }

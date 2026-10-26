@@ -104,6 +104,14 @@ data class UserentityRoute(val id: Int? = null) : DetailRoute
 
 // Grocy's stock pages its master data leads to
 
+/**
+ * Grocy's "Stock overview": every product in stock or below its min. stock amount; a detail of
+ * the start screen, beside it where the window is wide enough.
+ */
+@Serializable
+@SerialName("stockoverview")
+data object StockOverviewRoute : DetailRoute
+
 /** Grocy's "Stock entries", only those of [productId] if given. */
 @Serializable
 @SerialName("stockentries")
@@ -142,6 +150,7 @@ val masterDataRouteSerializers = SerializersModule {
         subclass(UserfieldRoute::class, UserfieldRoute.serializer())
         subclass(UserentitiesRoute::class, UserentitiesRoute.serializer())
         subclass(UserentityRoute::class, UserentityRoute.serializer())
+        subclass(StockOverviewRoute::class, StockOverviewRoute.serializer())
         subclass(StockEntriesRoute::class, StockEntriesRoute.serializer())
         subclass(StockJournalRoute::class, StockJournalRoute.serializer())
         subclass(StockJournalSummaryRoute::class, StockJournalSummaryRoute.serializer())

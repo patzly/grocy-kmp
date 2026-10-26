@@ -285,6 +285,44 @@
     <item quantity="other">%1$d οντότητες χρήστη</item>
   </plurals>
 
+  <!-- Stock overview -->
+  <string name="stock_overview_title">Επισκόπηση αποθέματος</string>
+  <plurals name="stock_overview_products">
+    <item quantity="one">%1$d προϊόν</item>
+    <item quantity="other">%1$d προϊόντα</item>
+  </plurals>
+  <string name="stock_overview_total_value">%1$s συνολική αξία</string>
+  <string name="stock_overview_journal">Ημερολόγιο</string>
+  <string name="stock_overview_reports">Αναφορές</string>
+  <string name="stock_overview_scan">Σάρωση</string>
+  <string name="stock_overview_not_fresh">Όχι φρέσκα</string>
+  <string name="stock_overview_below_min_stock">Κάτω από την ελάχ. ποσότητα αποθέματος</string>
+  <string name="stock_overview_in_stock">Σε απόθεμα</string>
+  <string name="stock_overview_status_not_fresh">%1$d όχι φρέσκα</string>
+  <string name="stock_overview_status_due_soon">%1$d λήγουν σύντομα</string>
+  <string name="stock_overview_status_overdue">%1$d εκπρόθεσμα</string>
+  <string name="stock_overview_status_expired">%1$d ληγμένα</string>
+  <string name="stock_overview_status_below_min_stock">%1$d κάτω από την ελάχ. ποσότητα αποθέματος</string>
+  <string name="stock_overview_status_in_stock">%1$d σε απόθεμα</string>
+  <string name="stock_overview_status_opened">%1$d ανοιγμένα</string>
+  <string name="stock_overview_group_by">Ομαδοποίηση κατά</string>
+  <string name="stock_overview_grouped_by">Ομάδα: %1$s</string>
+  <string name="stock_overview_group_not_set">Δεν έχει οριστεί</string>
+  <string name="stock_overview_fields">Πεδία</string>
+  <string name="stock_overview_next_due_date">Επόμενη ημερομηνία λήξης</string>
+  <string name="stock_overview_value">Αξία</string>
+  <string name="stock_overview_product_description">Περιγραφή προϊόντος</string>
+  <string name="stock_overview_default_location">Προεπιλεγμένη τοποθεσία</string>
+  <string name="stock_overview_product_picture">Εικόνα προϊόντος</string>
+  <string name="stock_overview_field_value">%1$s: %2$s</string>
+  <string name="stock_overview_on_shopping_list">Αυτό το προϊόν βρίσκεται αυτή τη στιγμή σε λίστα αγορών</string>
+  <string name="stock_overview_consume">Κατανάλωση %1$s</string>
+  <string name="stock_overview_open">Επισήμανση %1$s ως ανοιγμένο</string>
+  <string name="stock_overview_consume_all">Κατανάλωση όλων</string>
+  <string name="stock_overview_consume_spoiled">Κατανάλωση %1$s ως χαλασμένο</string>
+  <string name="stock_overview_search_recipes">Αναζήτηση συνταγών που περιέχουν αυτό το προϊόν</string>
+  <string name="stock_overview_empty">Κανένα προϊόν σε απόθεμα</string>
+
   <!-- Products -->
   <string name="products_configure_userfields">Διαμόρφωση πεδίων χρήστη</string>
   <string name="products_presets">Προεπιλογές για νέα προϊόντα</string>

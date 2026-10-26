@@ -295,6 +295,45 @@
     <item quantity="other">%1$d entités utilisateur</item>
   </plurals>
 
+  <!-- Stock overview -->
+  <string name="stock_overview_title">Aperçu du stock</string>
+  <plurals name="stock_overview_products">
+    <item quantity="one">%1$d produit</item>
+    <item quantity="many">%1$d produits</item>
+    <item quantity="other">%1$d produits</item>
+  </plurals>
+  <string name="stock_overview_total_value">%1$s valeur totale</string>
+  <string name="stock_overview_journal">Journal</string>
+  <string name="stock_overview_reports">Rapports</string>
+  <string name="stock_overview_scan">Scanner</string>
+  <string name="stock_overview_not_fresh">Pas frais</string>
+  <string name="stock_overview_below_min_stock">En dessous du seuil de stock minimum</string>
+  <string name="stock_overview_in_stock">En stock</string>
+  <string name="stock_overview_status_not_fresh">%1$d pas frais</string>
+  <string name="stock_overview_status_due_soon">%1$d à consommer bientôt</string>
+  <string name="stock_overview_status_overdue">%1$d en retard</string>
+  <string name="stock_overview_status_expired">%1$d périmé(s)</string>
+  <string name="stock_overview_status_below_min_stock">%1$d en dessous du seuil de stock minimum</string>
+  <string name="stock_overview_status_in_stock">%1$d en stock</string>
+  <string name="stock_overview_status_opened">%1$d ouvert(s)</string>
+  <string name="stock_overview_group_by">Grouper par</string>
+  <string name="stock_overview_grouped_by">Groupe : %1$s</string>
+  <string name="stock_overview_group_not_set">Non défini</string>
+  <string name="stock_overview_fields">Champs</string>
+  <string name="stock_overview_next_due_date">Prochaine date de péremption</string>
+  <string name="stock_overview_value">Valeur</string>
+  <string name="stock_overview_product_description">Description du produit</string>
+  <string name="stock_overview_default_location">Emplacement par défaut</string>
+  <string name="stock_overview_product_picture">Photo du produit</string>
+  <string name="stock_overview_field_value">%1$s : %2$s</string>
+  <string name="stock_overview_on_shopping_list">Ce produit est actuellement sur une liste de courses</string>
+  <string name="stock_overview_consume">Consommer %1$s</string>
+  <string name="stock_overview_open">Indiquer %1$s comme ouvert</string>
+  <string name="stock_overview_consume_all">Tout consommer</string>
+  <string name="stock_overview_consume_spoiled">Consommer %1$s comme périmé</string>
+  <string name="stock_overview_search_recipes">Chercher des recettes contenant ce produit</string>
+  <string name="stock_overview_empty">Aucun produit en stock</string>
+
   <!-- Products -->
   <string name="products_configure_userfields">Configurer les attributs personnalisés</string>
   <string name="products_presets">Modèle pour les nouveaux produits</string>

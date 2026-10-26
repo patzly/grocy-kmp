@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -57,6 +58,26 @@ class AndroidSettingsStore(
         }
     }
 
+    override val stockOverviewOptions: Flow<StockOverviewOptions> = preferences
+        .map {
+            StockOverviewOptions.of(
+                fields = it[STOCK_OVERVIEW_FIELDS],
+                grouping = it[STOCK_OVERVIEW_GROUPING],
+                sortField = it[STOCK_OVERVIEW_SORT],
+                ascending = it[STOCK_OVERVIEW_ASCENDING]?.toString(),
+            )
+        }
+        .distinctUntilChanged()
+
+    override suspend fun setStockOverviewOptions(options: StockOverviewOptions) {
+        dataStore.edit {
+            it[STOCK_OVERVIEW_FIELDS] = StockOverviewOptions.storedFields(options.fields)
+            it[STOCK_OVERVIEW_GROUPING] = options.grouping.name
+            it[STOCK_OVERVIEW_SORT] = options.sortField.name
+            it[STOCK_OVERVIEW_ASCENDING] = options.ascending
+        }
+    }
+
     private companion object {
         const val FILE_NAME = "settings"
         val CHECK_UNLOCK_KEY = booleanPreferencesKey("check_unlock_key")
@@ -66,5 +87,9 @@ class AndroidSettingsStore(
         val HUE = floatPreferencesKey("hue")
         val CONTRAST = stringPreferencesKey("contrast")
         val STYLE = stringPreferencesKey("style")
+        val STOCK_OVERVIEW_FIELDS = stringPreferencesKey("stock_overview_fields")
+        val STOCK_OVERVIEW_GROUPING = stringPreferencesKey("stock_overview_grouping")
+        val STOCK_OVERVIEW_SORT = stringPreferencesKey("stock_overview_sort")
+        val STOCK_OVERVIEW_ASCENDING = booleanPreferencesKey("stock_overview_ascending")
     }
 }
