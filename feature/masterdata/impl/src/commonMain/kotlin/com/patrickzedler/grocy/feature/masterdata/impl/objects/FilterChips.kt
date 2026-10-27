@@ -1,15 +1,11 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.objects
 
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -43,6 +39,7 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
+import com.patrickzedler.grocy.core.design.component.EdgeToEdgeRow
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.verticalScrollbar
@@ -61,9 +58,9 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * Grocy's filter row as Material 3 chips. Scrolls sideways on narrow screens; [contentPadding]
- * scrolls along. The row lies on the screen's background, so the outlined chips get a container
- * color of their own and no elevation, not even on hover.
+ * Grocy's filter row as Material 3 chips. Centered on wide screens, scrolls sideways where the
+ * chips do not fit; [contentPadding] scrolls along. The row lies on the screen's background, so
+ * the outlined chips get a container color of their own and no elevation, not even on hover.
  */
 @Composable
 internal fun FilterChipRow(
@@ -71,15 +68,7 @@ internal fun FilterChipRow(
     contentPadding: PaddingValues = PaddingValues(),
     content: @Composable RowScope.() -> Unit,
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState())
-            // Inside the scrolling, so chips scroll up to the screen's edge instead of a margin
-            .padding(contentPadding),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        content = content,
-    )
+    EdgeToEdgeRow(contentPadding = contentPadding, modifier = modifier, content = content)
 }
 
 /** Grocy's "Show disabled" checkbox as toggle chip. */

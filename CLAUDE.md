@@ -209,8 +209,9 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   picture shows it at the item's end before the overflow menu button, `ProductThumbnail`, 56.dp with small corners, without
   `LeadingTrailingContentWrapper`, whose padding only icons and switches need), first the
   filter row directly on the background
-  (`edgeToEdgeItem` of `InsetLazyColumn`: it scrolls sideways up to the screen's edges, the
-  padding that lines it up with the items scrolls along) and, while open, the search as its own
+  (`edgeToEdgeItem` + `EdgeToEdgeRow` of `InsetLazyColumn`: centered on the screen while all
+  chips fit between its 16.dp margins, otherwise lined up with the items and scrolling sideways
+  up to the screen's edges, the padding scrolls along) and, while open, the search as its own
   segmented item below it (full width, opens with Material's spatial spring from its top edge,
   so it can be focused, keyboard included, right away without scrolling the list; closing
   clears the focus at its start).

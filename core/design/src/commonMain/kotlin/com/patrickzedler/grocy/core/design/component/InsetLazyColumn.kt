@@ -2,10 +2,13 @@ package com.patrickzedler.grocy.core.design.component
 
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollableDefaults
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -19,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
@@ -172,6 +176,73 @@ fun LazyListScope.edgeToEdgeItem(
         }
     }
 }
+
+/**
+ * A row of an [edgeToEdgeItem] that scrolls sideways, e.g. filter chips: centered on the screen
+ * while it fits between the column's own padding, otherwise starting at [contentPadding] (lined
+ * up with the items) and scrolling up to the screen's edges.
+ */
+@Composable
+fun EdgeToEdgeRow(
+    contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
+    horizontalSpacing: Dp = 8.dp,
+    content: @Composable RowScope.() -> Unit,
+) {
+    val edgePadding = LocalInsetPadding.current
+    val layoutDirection = LocalLayoutDirection.current
+
+    BoxWithConstraints(modifier.fillMaxWidth()) {
+        val viewportWidth = constraints.maxWidth
+        Row(
+            modifier = Modifier
+                .horizontalScroll(rememberScrollState())
+                .layout { measurable, constraints ->
+                    val placeable = measurable.measure(constraints.copy(minWidth = 0))
+                    fun PaddingValues.start() = calculateStartPadding(layoutDirection).roundToPx()
+                    fun PaddingValues.end() = calculateEndPadding(layoutDirection).roundToPx()
+                    val placement = edgeToEdgeRowPlacement(
+                        rowWidth = placeable.width,
+                        viewportWidth = viewportWidth,
+                        edgeStart = edgePadding.start(),
+                        edgeEnd = edgePadding.end(),
+                        contentStart = contentPadding.start(),
+                        contentEnd = contentPadding.end(),
+                    )
+                    layout(placement.width, placeable.height) {
+                        // Relative, so right to left layouts start at the right edge
+                        placeable.placeRelative(placement.start, 0)
+                    }
+                },
+            horizontalArrangement = Arrangement.spacedBy(horizontalSpacing),
+            content = content,
+        )
+    }
+}
+
+/** Where an [EdgeToEdgeRow] lies in its scrolling: its scrolled [width] and its [start]. */
+internal data class EdgeToEdgeRowPlacement(val width: Int, val start: Int)
+
+/**
+ * Centers a row of [rowWidth] in the viewport while it fits between the edge paddings, else
+ * puts it after [contentStart] with [contentEnd] after it, so it scrolls past both edges.
+ */
+internal fun edgeToEdgeRowPlacement(
+    rowWidth: Int,
+    viewportWidth: Int,
+    edgeStart: Int,
+    edgeEnd: Int,
+    contentStart: Int,
+    contentEnd: Int,
+): EdgeToEdgeRowPlacement =
+    if (edgeStart + rowWidth + edgeEnd <= viewportWidth) {
+        EdgeToEdgeRowPlacement(
+            width = viewportWidth,
+            start = edgeStart + (viewportWidth - edgeStart - edgeEnd - rowWidth) / 2,
+        )
+    } else {
+        EdgeToEdgeRowPlacement(width = contentStart + rowWidth + contentEnd, start = contentStart)
+    }
 
 /**
  * Multiple items in an [InsetLazyColumn] that are automatically constrained to 640.dp.
