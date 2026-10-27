@@ -148,6 +148,59 @@
   <string name="settings_general">Общие</string>
   <string name="settings_select_hint">Выберите категорию, чтобы показать здесь её настройки</string>
   <string name="start_select_hint">Выберите раздел, чтобы показать его здесь</string>
+  <plurals name="start_stock_in_stock">
+    <item quantity="one">У вас в запасе %1$d продукт</item>
+    <item quantity="few">У вас в запасе %1$d продукта</item>
+    <item quantity="many">У вас в запасе %1$d продуктов</item>
+    <item quantity="other">У вас в запасе %1$d продукта</item>
+  </plurals>
+  <plurals name="start_stock_in_stock_value">
+    <item quantity="one">У вас в запасе %1$d продукт на сумму %2$s</item>
+    <item quantity="few">У вас в запасе %1$d продукта на сумму %2$s</item>
+    <item quantity="many">У вас в запасе %1$d продуктов на сумму %2$s</item>
+    <item quantity="other">У вас в запасе %1$d продукта на сумму %2$s</item>
+  </plurals>
+  <string name="start_summary_intro_list">%1$s:</string>
+  <string name="start_summary_intro_end">%1$s.</string>
+  <string name="start_list_join">%1$s, %2$s</string>
+  <plurals name="start_stock_due_soon">
+    <item quantity="one">%1$d продукт подойдёт к сроку %2$s.</item>
+    <item quantity="few">%1$d продукта подойдут к сроку %2$s.</item>
+    <item quantity="many">%1$d продуктов подойдут к сроку %2$s.</item>
+    <item quantity="other">%1$d продукта подойдут к сроку %2$s.</item>
+  </plurals>
+  <plurals name="start_stock_within_days">
+    <item quantity="one">в течение %1$d дня</item>
+    <item quantity="few">в течение %1$d дней</item>
+    <item quantity="many">в течение %1$d дней</item>
+    <item quantity="other">в течение %1$d дня</item>
+  </plurals>
+  <plurals name="start_stock_overdue">
+    <item quantity="one">%1$d продукт просрочен.</item>
+    <item quantity="few">%1$d продукта просрочено.</item>
+    <item quantity="many">%1$d продуктов просрочено.</item>
+    <item quantity="other">%1$d продукта просрочено.</item>
+  </plurals>
+  <plurals name="start_stock_expired">
+    <item quantity="one">%1$d продукт испортился.</item>
+    <item quantity="few">%1$d продукта испортились.</item>
+    <item quantity="many">%1$d продуктов испортилось.</item>
+    <item quantity="other">%1$d продукта испортилось.</item>
+  </plurals>
+  <plurals name="start_stock_below_min">
+    <item quantity="one">%1$d продукт меньше мин. заданного кол-ва.</item>
+    <item quantity="few">%1$d продукта меньше мин. заданного кол-ва.</item>
+    <item quantity="many">%1$d продуктов меньше мин. заданного кол-ва.</item>
+    <item quantity="other">%1$d продукта меньше мин. заданного кол-ва.</item>
+  </plurals>
+  <plurals name="start_stock_some_on_lists">
+    <item quantity="one">%1$d из них в ваших списках покупок.</item>
+    <item quantity="few">%1$d из них в ваших списках покупок.</item>
+    <item quantity="many">%1$d из них в ваших списках покупок.</item>
+    <item quantity="other">%1$d из них в ваших списках покупок.</item>
+  </plurals>
+  <string name="start_stock_one_on_list">Он есть в списке покупок.</string>
+  <string name="start_stock_all_on_lists">Все они в ваших списках покупок.</string>
   <string name="settings_server">Сервер</string>
   <string name="settings_user">Пользовательские настройки</string>
   <string name="settings_user_synced">Сохраняются на сервере</string>

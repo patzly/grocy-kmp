@@ -14,6 +14,7 @@ import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockLogEntry
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.GrocyApiException
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -154,6 +155,31 @@ class StockRepository(
     }
 
     /**
+     * Consumes [amount] (in the stock unit) of a product like the buttons of Grocy's stock
+     * overview, as spoiled if [spoiled]; returns the transaction to undo it. The overview is
+     * downloaded again afterwards ([withShoppingLists] like [refreshOverview]).
+     *
+     * @throws GrocyApiException if the server cannot be reached or rejects it.
+     */
+    suspend fun consumeProduct(
+        productId: Int,
+        amount: Double,
+        spoiled: Boolean,
+        withShoppingLists: Boolean,
+    ): String? = bookOnOverview(withShoppingLists) {
+        api.consumeProduct(it, productId, amount, spoiled)
+    }
+
+    /** Marks [amount] (in the stock unit) of a product as opened; returns its transaction. */
+    suspend fun openProduct(productId: Int, amount: Double, withShoppingLists: Boolean): String? =
+        bookOnOverview(withShoppingLists) { api.openProduct(it, productId, amount) }
+
+    /** Undoes every booking of the transaction [transactionId]. */
+    suspend fun undoTransaction(transactionId: String, withShoppingLists: Boolean) {
+        bookOnOverview(withShoppingLists) { api.undoTransaction(it, transactionId) }
+    }
+
+    /**
      * Puts [amount] (in the stock unit) of the product on shopping list [listId], shown in unit
      * [quId], like Grocy's "Add to shopping list", then saves the item's changed [userfields].
      */
@@ -185,8 +211,32 @@ class StockRepository(
     /** Runs a booking, then downloads the entries and amounts it changed. */
     private suspend fun <T> book(block: suspend (ServerConnection) -> T): T {
         val result = block(requireConnection())
-        refreshStockEntries()
+        afterBooking { refreshStockEntries() }
         return result
+    }
+
+    /** Runs a booking, then downloads the stock overview it changed. */
+    private suspend fun <T> bookOnOverview(
+        withShoppingLists: Boolean,
+        block: suspend (ServerConnection) -> T,
+    ): T {
+        val result = block(requireConnection())
+        afterBooking { refreshOverview(withShoppingLists) }
+        return result
+    }
+
+    /**
+     * Downloads what a booking changed. The booking is done once the server took it, so a failed
+     * download must not report it as failed, which would invite booking it twice.
+     */
+    private suspend fun afterBooking(download: suspend () -> Unit) {
+        try {
+            download()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: GrocyApiException) {
+            // The next refresh downloads it
+        }
     }
 
     private suspend fun requireConnection(): ServerConnection =

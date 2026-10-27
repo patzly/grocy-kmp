@@ -148,6 +148,59 @@
   <string name="settings_general">Ogólne</string>
   <string name="settings_select_hint">Wybierz kategorię, aby wyświetlić tutaj jej ustawienia</string>
   <string name="start_select_hint">Wybierz sekcję, aby wyświetlić ją tutaj</string>
+  <plurals name="start_stock_in_stock">
+    <item quantity="one">Masz w zapasach %1$d produkt</item>
+    <item quantity="few">Masz w zapasach %1$d produkty</item>
+    <item quantity="many">Masz w zapasach %1$d produktów</item>
+    <item quantity="other">Masz w zapasach %1$d produktu</item>
+  </plurals>
+  <plurals name="start_stock_in_stock_value">
+    <item quantity="one">Masz w zapasach %1$d produkt o wartości %2$s</item>
+    <item quantity="few">Masz w zapasach %1$d produkty o wartości %2$s</item>
+    <item quantity="many">Masz w zapasach %1$d produktów o wartości %2$s</item>
+    <item quantity="other">Masz w zapasach %1$d produktu o wartości %2$s</item>
+  </plurals>
+  <string name="start_summary_intro_list">%1$s:</string>
+  <string name="start_summary_intro_end">%1$s.</string>
+  <string name="start_list_join">%1$s, %2$s</string>
+  <plurals name="start_stock_due_soon">
+    <item quantity="one">%1$d produkt traci ważność %2$s.</item>
+    <item quantity="few">%1$d produkty tracą ważność %2$s.</item>
+    <item quantity="many">%1$d produktów traci ważność %2$s.</item>
+    <item quantity="other">%1$d produktu traci ważność %2$s.</item>
+  </plurals>
+  <plurals name="start_stock_within_days">
+    <item quantity="one">w ciągu następnego dnia</item>
+    <item quantity="few">w ciągu następnych %1$d dni</item>
+    <item quantity="many">w ciągu następnych %1$d dni</item>
+    <item quantity="other">w ciągu następnych %1$d dnia</item>
+  </plurals>
+  <plurals name="start_stock_overdue">
+    <item quantity="one">%1$d produkt jest po terminie.</item>
+    <item quantity="few">%1$d produkty są po terminie.</item>
+    <item quantity="many">%1$d produktów jest po terminie.</item>
+    <item quantity="other">%1$d produktu jest po terminie.</item>
+  </plurals>
+  <plurals name="start_stock_expired">
+    <item quantity="one">%1$d produkt jest przeterminowany.</item>
+    <item quantity="few">%1$d produkty są przeterminowane.</item>
+    <item quantity="many">%1$d produktów jest przeterminowanych.</item>
+    <item quantity="other">%1$d produktu jest przeterminowane.</item>
+  </plurals>
+  <plurals name="start_stock_below_min">
+    <item quantity="one">%1$d produkt jest poniżej min. ilości zapasów.</item>
+    <item quantity="few">%1$d produkty są poniżej min. ilości zapasów.</item>
+    <item quantity="many">%1$d produktów jest poniżej min. ilości zapasów.</item>
+    <item quantity="other">%1$d produktu jest poniżej min. ilości zapasów.</item>
+  </plurals>
+  <plurals name="start_stock_some_on_lists">
+    <item quantity="one">%1$d z nich jest na liście zakupów.</item>
+    <item quantity="few">%1$d z nich są na Twoich listach zakupów.</item>
+    <item quantity="many">%1$d z nich jest na Twoich listach zakupów.</item>
+    <item quantity="other">%1$d z nich jest na Twoich listach zakupów.</item>
+  </plurals>
+  <string name="start_stock_one_on_list">Jest na liście zakupów.</string>
+  <string name="start_stock_all_on_lists">Wszystkie są na Twoich listach zakupów.</string>
   <string name="settings_server">Serwer</string>
   <string name="settings_user">Ustawienia użytkownika</string>
   <string name="settings_user_synced">Zapisane na serwerze</string>

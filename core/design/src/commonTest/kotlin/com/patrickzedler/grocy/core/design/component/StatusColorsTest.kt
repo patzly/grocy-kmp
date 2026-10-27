@@ -37,6 +37,20 @@ class StatusColorsTest {
     }
 
     @Test
+    fun marksStandOutFromTheSurface() {
+        val lightSurface = Color.White
+        val darkSurface = Color(0xFF111411)
+        for (base in listOf(StatusBlue, StatusYellow, StatusRed)) {
+            val light = statusColorOf(base, primary, isDark = false).color
+            val dark = statusColorOf(base, primary, isDark = true).color
+
+            // WCAG's 3:1 for graphics, like the theme's primary on its surface
+            assertTrue(contrast(light, lightSurface) >= 3f, "$base light")
+            assertTrue(contrast(dark, darkSurface) >= 3f, "$base dark")
+        }
+    }
+
+    @Test
     fun lightContainersAreLightAndDarkOnesDark() {
         val light = statusColorOf(StatusBlue, primary, isDark = false)
         val dark = statusColorOf(StatusBlue, primary, isDark = true)

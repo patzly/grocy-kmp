@@ -7,8 +7,11 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -33,6 +36,7 @@ import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.model.text.formatDate
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_search
+import com.patrickzedler.grocy.core.resources.action_undo
 import com.patrickzedler.grocy.core.resources.data_never_overdue
 import com.patrickzedler.grocy.core.resources.ic_rounded_analytics
 import com.patrickzedler.grocy.core.resources.ic_rounded_barcode_scanner
@@ -41,6 +45,12 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_receipt_long
 import com.patrickzedler.grocy.core.resources.ic_rounded_search
 import com.patrickzedler.grocy.core.resources.product_stock_entries
 import com.patrickzedler.grocy.core.resources.products_empty_filtered
+import com.patrickzedler.grocy.core.resources.stock_booking_failed
+import com.patrickzedler.grocy.core.resources.stock_booking_undone
+import com.patrickzedler.grocy.core.resources.stock_entry_consumed
+import com.patrickzedler.grocy.core.resources.stock_entry_moved
+import com.patrickzedler.grocy.core.resources.stock_entry_opened_message
+import com.patrickzedler.grocy.core.resources.stock_entry_spoiled
 import com.patrickzedler.grocy.core.resources.stock_overview_empty
 import com.patrickzedler.grocy.core.resources.stock_overview_group_not_set
 import com.patrickzedler.grocy.core.resources.stock_overview_journal
@@ -55,8 +65,10 @@ import com.patrickzedler.grocy.feature.masterdata.impl.objects.searchItem
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductLinks
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewHost
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.related.actionMessage
 import com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist.AddToShoppingListViewModel
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
@@ -103,6 +115,7 @@ internal fun StockOverviewScreen(
         snackbarHostState = snackbarHostState,
         onErrorShown = viewModel::onErrorShown,
     )
+    StockOverviewEvents(viewModel, snackbarHostState)
     // Back closes the search first and stays on the list
     NavigationBackHandler(
         state = rememberNavigationEventState(NavigationEventInfo.None),
@@ -204,6 +217,60 @@ internal fun StockOverviewScreen(
             }?.name.orEmpty()
         },
     )
+}
+
+/** Grocy's messages of the bookings with "Undo". */
+@Composable
+private fun StockOverviewEvents(
+    viewModel: StockOverviewViewModel,
+    snackbarHostState: SnackbarHostState,
+) {
+    LaunchedEffect(viewModel) {
+        viewModel.events.collect { event ->
+            suspend fun showUndoable(message: String, transactionId: String?) {
+                val result = snackbarHostState.showSnackbar(
+                    message = message,
+                    actionLabel = transactionId?.let { getString(Res.string.action_undo) },
+                    duration = SnackbarDuration.Long,
+                )
+                if (result == SnackbarResult.ActionPerformed && transactionId != null) {
+                    viewModel.undo(transactionId)
+                }
+            }
+            when (event) {
+                is StockOverviewEvent.Consumed -> showUndoable(
+                    message = getString(
+                        Res.string.stock_entry_consumed,
+                        event.amount,
+                        event.productName,
+                    ) + if (event.spoiled) {
+                        " (${getString(Res.string.stock_entry_spoiled)})"
+                    } else {
+                        ""
+                    },
+                    transactionId = event.transactionId,
+                )
+                is StockOverviewEvent.Opened -> {
+                    event.movedTo?.let {
+                        snackbarHostState.showSnackbar(getString(Res.string.stock_entry_moved, it))
+                    }
+                    showUndoable(
+                        message = getString(
+                            Res.string.stock_entry_opened_message,
+                            event.amount,
+                            event.productName,
+                        ),
+                        transactionId = event.transactionId,
+                    )
+                }
+                StockOverviewEvent.Undone ->
+                    snackbarHostState.showSnackbar(getString(Res.string.stock_booking_undone))
+                is StockOverviewEvent.Failed -> snackbarHostState.showSnackbar(
+                    event.error.actionMessage(Res.string.stock_booking_failed),
+                )
+            }
+        }
+    }
 }
 
 /** Grocy's text beside its title: the products in stock and, with prices, what they cost. */

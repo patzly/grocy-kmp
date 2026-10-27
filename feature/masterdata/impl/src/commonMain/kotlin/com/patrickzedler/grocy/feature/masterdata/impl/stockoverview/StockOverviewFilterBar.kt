@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import com.patrickzedler.grocy.core.model.stock.StockOverviewField
 import com.patrickzedler.grocy.core.model.stock.StockOverviewGrouping
-import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.data_all
 import com.patrickzedler.grocy.core.resources.data_amount
@@ -126,8 +125,6 @@ internal fun StockOverviewFilterBar(
             label = stringResource(Res.string.stock_overview_fields),
             options = state.availableFields,
             checked = state.fields.toSet(),
-            isDefault = state.fields.toSet() ==
-                StockOverviewOptions.DEFAULT_FIELDS.intersect(state.availableFields.toSet()),
             optionLabel = { fieldLabel(it, energyUnit) },
             onCheckedChange = onFieldShownChange,
         )

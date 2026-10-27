@@ -148,6 +148,51 @@
   <string name="settings_general">Général</string>
   <string name="settings_select_hint">Choisissez une catégorie pour afficher ses paramètres ici</string>
   <string name="start_select_hint">Choisissez une section pour l'afficher ici</string>
+  <plurals name="start_stock_in_stock">
+    <item quantity="one">Vous avez %1$d produit en stock</item>
+    <item quantity="many">Vous avez %1$d produits en stock</item>
+    <item quantity="other">Vous avez %1$d produits en stock</item>
+  </plurals>
+  <plurals name="start_stock_in_stock_value">
+    <item quantity="one">Vous avez %1$d produit en stock d'une valeur de %2$s</item>
+    <item quantity="many">Vous avez %1$d produits en stock d'une valeur de %2$s</item>
+    <item quantity="other">Vous avez %1$d produits en stock d'une valeur de %2$s</item>
+  </plurals>
+  <string name="start_summary_intro_list">%1$s :</string>
+  <string name="start_summary_intro_end">%1$s.</string>
+  <string name="start_list_join">%1$s, %2$s</string>
+  <plurals name="start_stock_due_soon">
+    <item quantity="one">%1$d produit arrive à échéance %2$s.</item>
+    <item quantity="many">%1$d produits arrivent à échéance %2$s.</item>
+    <item quantity="other">%1$d produits arrivent à échéance %2$s.</item>
+  </plurals>
+  <plurals name="start_stock_within_days">
+    <item quantity="one">dans les 24 heures</item>
+    <item quantity="many">dans les %1$d jours</item>
+    <item quantity="other">dans les %1$d jours</item>
+  </plurals>
+  <plurals name="start_stock_overdue">
+    <item quantity="one">%1$d produit a dépassé sa date limite.</item>
+    <item quantity="many">%1$d produits ont dépassé leur date limite.</item>
+    <item quantity="other">%1$d produits ont dépassé leur date limite.</item>
+  </plurals>
+  <plurals name="start_stock_expired">
+    <item quantity="one">%1$d produit est périmé.</item>
+    <item quantity="many">%1$d produits sont périmés.</item>
+    <item quantity="other">%1$d produits sont périmés.</item>
+  </plurals>
+  <plurals name="start_stock_below_min">
+    <item quantity="one">%1$d produit est en dessous du seuil de stock minimum.</item>
+    <item quantity="many">%1$d produits sont en dessous du seuil de stock minimum.</item>
+    <item quantity="other">%1$d produits sont en dessous du seuil de stock minimum.</item>
+  </plurals>
+  <plurals name="start_stock_some_on_lists">
+    <item quantity="one">%1$d d'entre eux est sur une liste de courses.</item>
+    <item quantity="many">%1$d d'entre eux sont sur vos listes de courses.</item>
+    <item quantity="other">%1$d d'entre eux sont sur vos listes de courses.</item>
+  </plurals>
+  <string name="start_stock_one_on_list">Il est sur une liste de courses.</string>
+  <string name="start_stock_all_on_lists">Tous sont sur vos listes de courses.</string>
   <string name="settings_server">Serveur</string>
   <string name="settings_user">Paramètres utilisateur</string>
   <string name="settings_user_synced">Enregistrés sur le serveur</string>

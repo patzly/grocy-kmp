@@ -32,10 +32,14 @@ import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
 import com.patrickzedler.grocy.core.model.text.todayEpochDay
 import com.patrickzedler.grocy.feature.masterdata.impl.products.ignoringServerErrors
+import com.patrickzedler.grocy.feature.masterdata.impl.related.ChangeError
+import com.patrickzedler.grocy.feature.masterdata.impl.related.changeErrorOf
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -45,6 +49,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -80,6 +85,28 @@ internal data class StockOverviewUiState(
         get() = groups.isEmpty()
 }
 
+/** What a booking of the overview did, for Grocy's messages; [transactionId] undoes it. */
+internal sealed interface StockOverviewEvent {
+    data class Consumed(
+        val amount: String,
+        val productName: String,
+        val spoiled: Boolean,
+        val transactionId: String?,
+    ) : StockOverviewEvent
+
+    data class Opened(
+        val amount: String,
+        val productName: String,
+        /** Where the product moved on opening, null if it stays. */
+        val movedTo: String?,
+        val transactionId: String?,
+    ) : StockOverviewEvent
+
+    data object Undone : StockOverviewEvent
+
+    data class Failed(val error: ChangeError) : StockOverviewEvent
+}
+
 /**
  * Grocy's stock overview: shows the stored stock at once and downloads the master data and
  * what the overview adds to it in the background. Fields, grouping and sort are kept like
@@ -104,8 +131,14 @@ internal class StockOverviewViewModel(
 
     private val filter = MutableStateFlow(StockOverviewFilter())
 
+    /** Products with a booking under way; a second one of the same product waits for it. */
+    private val bookingProducts = mutableSetOf<Int>()
+
+    private val eventChannel = Channel<StockOverviewEvent>(Channel.BUFFERED)
+    val events: Flow<StockOverviewEvent> = eventChannel.receiveAsFlow()
+
     private val refreshController = RefreshController(viewModelScope) {
-        val withShoppingLists = masterData.serverConfig.first().shoppingList
+        val withShoppingLists = withShoppingLists()
         coroutineScope {
             launch { masterData.refresh() }
             launch { stock.refreshOverview(withShoppingLists) }
@@ -253,6 +286,65 @@ internal class StockOverviewViewModel(
             }
         }
     }
+
+    /** Grocy's consume button of the row: the quick consume amount. */
+    fun consume(item: StockOverviewItem) =
+        consume(item, item.quickConsumeAmount, item.quickConsume, spoiled = false)
+
+    /** Consumes the quick consume amount as spoiled. */
+    fun consumeSpoiled(item: StockOverviewItem) =
+        consume(item, item.quickConsumeAmount, item.quickConsume, spoiled = true)
+
+    /** Grocy's "Consume all %s which are currently in stock". */
+    fun consumeAll(item: StockOverviewItem) =
+        consume(item, item.consumeAllAmount, item.consumeAll, spoiled = false)
+
+    /** Grocy's open button of the row: marks the quick open amount as opened. */
+    fun open(item: StockOverviewItem) = book(item.productId) { withShoppingLists ->
+        val transaction = stock.openProduct(
+            productId = item.productId,
+            amount = item.quickOpenAmount,
+            withShoppingLists = withShoppingLists,
+        )
+        StockOverviewEvent.Opened(item.quickOpen, item.name, item.openMovesTo, transaction)
+    }
+
+    /** Grocy's "Undo" of a booking's message. */
+    fun undo(transactionId: String) {
+        viewModelScope.launch {
+            val error = changeErrorOf {
+                stock.undoTransaction(transactionId, withShoppingLists())
+            }
+            eventChannel.send(error?.let(StockOverviewEvent::Failed) ?: StockOverviewEvent.Undone)
+        }
+    }
+
+    private fun consume(
+        item: StockOverviewItem,
+        amount: Double,
+        amountText: String,
+        spoiled: Boolean,
+    ) = book(item.productId) { withShoppingLists ->
+        val transaction = stock.consumeProduct(
+            productId = item.productId,
+            amount = amount,
+            spoiled = spoiled,
+            withShoppingLists = withShoppingLists,
+        )
+        StockOverviewEvent.Consumed(amountText, item.name, spoiled, transaction)
+    }
+
+    private fun book(productId: Int, block: suspend (Boolean) -> StockOverviewEvent) {
+        if (!bookingProducts.add(productId)) return
+        viewModelScope.launch {
+            var event: StockOverviewEvent? = null
+            val error = changeErrorOf { event = block(withShoppingLists()) }
+            bookingProducts -= productId
+            eventChannel.send(event ?: StockOverviewEvent.Failed(requireNotNull(error)))
+        }
+    }
+
+    private suspend fun withShoppingLists() = masterData.serverConfig.first().shoppingList
 
     /**
      * A product's picture for the list, stored for offline use; null when it is not stored and

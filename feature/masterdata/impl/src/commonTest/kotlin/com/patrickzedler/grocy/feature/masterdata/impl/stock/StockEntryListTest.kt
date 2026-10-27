@@ -8,6 +8,7 @@ import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConvers
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
+import com.patrickzedler.grocy.core.model.stock.DueStatus
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import kotlin.test.Test
@@ -88,15 +89,6 @@ class StockEntryListTest {
         val items = build(entries, StockEntryFilter(productId = 1, locationId = 2))
 
         assertEquals(listOf(3), items.map { it.entry.id })
-    }
-
-    @Test
-    fun dueDatesAreHighlightedLikeGrocy() {
-        assertEquals(DueStatus.EXPIRED, dueStatusOf(today - 1, today, 5, DueType.EXPIRATION))
-        assertEquals(DueStatus.OVERDUE, dueStatusOf(today - 1, today, 5, DueType.BEST_BEFORE))
-        assertEquals(DueStatus.DUE_SOON, dueStatusOf(today, today, 5, DueType.BEST_BEFORE))
-        assertEquals(DueStatus.DUE_SOON, dueStatusOf(today + 5, today, 5, DueType.BEST_BEFORE))
-        assertNull(dueStatusOf(today + 6, today, 5, DueType.BEST_BEFORE))
     }
 
     @Test

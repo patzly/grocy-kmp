@@ -148,6 +148,59 @@
   <string name="settings_general">Všeobecné</string>
   <string name="settings_select_hint">Vyberte kategóriu a zobrazte tu jej nastavenia</string>
   <string name="start_select_hint">Vyberte oblasť a zobrazte ju tu</string>
+  <plurals name="start_stock_in_stock">
+    <item quantity="one">Máte na sklade %1$d výrobok</item>
+    <item quantity="few">Máte na sklade %1$d výrobky</item>
+    <item quantity="many">Máte na sklade %1$d výrobku</item>
+    <item quantity="other">Máte na sklade %1$d výrobkov</item>
+  </plurals>
+  <plurals name="start_stock_in_stock_value">
+    <item quantity="one">Máte na sklade %1$d výrobok v hodnote %2$s</item>
+    <item quantity="few">Máte na sklade %1$d výrobky v hodnote %2$s</item>
+    <item quantity="many">Máte na sklade %1$d výrobku v hodnote %2$s</item>
+    <item quantity="other">Máte na sklade %1$d výrobkov v hodnote %2$s</item>
+  </plurals>
+  <string name="start_summary_intro_list">%1$s:</string>
+  <string name="start_summary_intro_end">%1$s.</string>
+  <string name="start_list_join">%1$s, %2$s</string>
+  <plurals name="start_stock_due_soon">
+    <item quantity="one">%1$d výrobok treba spotrebovať %2$s.</item>
+    <item quantity="few">%1$d výrobky treba spotrebovať %2$s.</item>
+    <item quantity="many">%1$d výrobku treba spotrebovať %2$s.</item>
+    <item quantity="other">%1$d výrobkov treba spotrebovať %2$s.</item>
+  </plurals>
+  <plurals name="start_stock_within_days">
+    <item quantity="one">počas nasledujúceho dňa</item>
+    <item quantity="few">počas nasledujúcich %1$d dní</item>
+    <item quantity="many">počas nasledujúcich %1$d dňa</item>
+    <item quantity="other">počas nasledujúcich %1$d dní</item>
+  </plurals>
+  <plurals name="start_stock_overdue">
+    <item quantity="one">%1$d výrobok je po dátume minimálnej trvanlivosti.</item>
+    <item quantity="few">%1$d výrobky sú po dátume minimálnej trvanlivosti.</item>
+    <item quantity="many">%1$d výrobku je po dátume minimálnej trvanlivosti.</item>
+    <item quantity="other">%1$d výrobkov je po dátume minimálnej trvanlivosti.</item>
+  </plurals>
+  <plurals name="start_stock_expired">
+    <item quantity="one">%1$d výrobok je exspirovaný.</item>
+    <item quantity="few">%1$d výrobky sú exspirované.</item>
+    <item quantity="many">%1$d výrobku je exspirovaného.</item>
+    <item quantity="other">%1$d výrobkov je exspirovaných.</item>
+  </plurals>
+  <plurals name="start_stock_below_min">
+    <item quantity="one">%1$d výrobok je pod min. množstvom zásoby.</item>
+    <item quantity="few">%1$d výrobky sú pod min. množstvom zásoby.</item>
+    <item quantity="many">%1$d výrobku je pod min. množstvom zásoby.</item>
+    <item quantity="other">%1$d výrobkov je pod min. množstvom zásoby.</item>
+  </plurals>
+  <plurals name="start_stock_some_on_lists">
+    <item quantity="one">%1$d z nich je na nákupnom zozname.</item>
+    <item quantity="few">%1$d z nich sú na vašich nákupných zoznamoch.</item>
+    <item quantity="many">%1$d z nich je na vašich nákupných zoznamoch.</item>
+    <item quantity="other">%1$d z nich je na vašich nákupných zoznamoch.</item>
+  </plurals>
+  <string name="start_stock_one_on_list">Je na nákupnom zozname.</string>
+  <string name="start_stock_all_on_lists">Všetky sú na vašich nákupných zoznamoch.</string>
   <string name="settings_server">Server</string>
   <string name="settings_user">Nastavenia používateľa</string>
   <string name="settings_user_synced">Uložené na serveri</string>

@@ -22,16 +22,32 @@ import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapp
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
+import com.patrickzedler.grocy.core.design.component.SupportingBulletList
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.model.server.ServerConfig
+import com.patrickzedler.grocy.core.model.stock.StockSummary
+import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.app_name
-import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.resources.ic_rounded_database
 import com.patrickzedler.grocy.core.resources.ic_rounded_kitchen
 import com.patrickzedler.grocy.core.resources.ic_rounded_settings
 import com.patrickzedler.grocy.core.resources.masterdata_title
+import com.patrickzedler.grocy.core.resources.start_list_join
+import com.patrickzedler.grocy.core.resources.start_stock_all_on_lists
+import com.patrickzedler.grocy.core.resources.start_stock_below_min
+import com.patrickzedler.grocy.core.resources.start_stock_due_soon
+import com.patrickzedler.grocy.core.resources.start_stock_expired
+import com.patrickzedler.grocy.core.resources.start_stock_in_stock
+import com.patrickzedler.grocy.core.resources.start_stock_in_stock_value
+import com.patrickzedler.grocy.core.resources.start_stock_one_on_list
+import com.patrickzedler.grocy.core.resources.start_stock_overdue
+import com.patrickzedler.grocy.core.resources.start_stock_some_on_lists
+import com.patrickzedler.grocy.core.resources.start_stock_within_days
+import com.patrickzedler.grocy.core.resources.start_summary_intro_end
+import com.patrickzedler.grocy.core.resources.start_summary_intro_list
 import com.patrickzedler.grocy.core.resources.stock_overview_title
 import com.patrickzedler.grocy.core.resources.title_settings
 import com.patrickzedler.grocy.core.ui.AppMenuDialogs
@@ -40,6 +56,7 @@ import com.patrickzedler.grocy.core.ui.rememberAppMenu
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 /** The sections of the start screen, in their order, each a group of its own. */
@@ -75,6 +92,7 @@ internal fun StartScreen(
 ) {
     val refresh by viewModel.refresh.collectAsStateWithLifecycle()
     val config by viewModel.serverConfig.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     // Settings are an item of the list here, not of the menu
     val appMenu = rememberAppMenu(onAboutClick = onAboutClick)
@@ -89,6 +107,7 @@ internal fun StartScreen(
 
     StartContent(
         sections = availableSections(config),
+        state = state,
         isRefreshing = refresh.isRefreshing,
         snackbarHostState = snackbarHostState,
         onRefresh = viewModel::refresh,
@@ -104,6 +123,7 @@ internal fun StartScreen(
 @Composable
 private fun StartContent(
     sections: List<StartSection>,
+    state: StartUiState?,
     isRefreshing: Boolean,
     snackbarHostState: SnackbarHostState,
     onRefresh: () -> Unit,
@@ -129,6 +149,7 @@ private fun StartContent(
             segmentedGroup(key = section.name) {
                 SectionItem(
                     section = section,
+                    summary = state?.let { sectionSummary(section, it) },
                     index = 0,
                     count = 1,
                     onClick = { onSectionClick(section) },
@@ -165,10 +186,103 @@ private fun SettingsItem(onClick: () -> Unit) {
     )
 }
 
+/** What a section tells about its data: an introduction and a list, both optional. */
+private class SectionSummary(val intro: String?, val bullets: List<String>)
+
+@Composable
+private fun sectionSummary(section: StartSection, state: StartUiState): SectionSummary? =
+    when (section) {
+        StartSection.STOCK_OVERVIEW -> state.stock?.let { stockSummary(it, state) }
+        StartSection.MASTER_DATA -> state.masterDataCounts
+            .map { (count, number) -> pluralStringResource(count.text, number, number) }
+            .takeIf { it.isNotEmpty() }
+            ?.let { SectionSummary(intro = joinedList(it), bullets = emptyList()) }
+    }
+
+/** [items] as one line of text, joined like the app language joins a list. */
+@Composable
+private fun joinedList(items: List<String>): String =
+    items.reduce { joined, next -> stringResource(Res.string.start_list_join, joined, next) }
+
+/**
+ * What is in stock and worth, then like Grocy's messages above its stock overview what is due,
+ * overdue, expired and below the min. stock amount; numbers of 0 are left out.
+ */
+@Composable
+private fun stockSummary(summary: StockSummary, state: StartUiState): SectionSummary {
+    val count = summary.productCount
+    val value = summary.totalValue?.takeIf { count > 0 }
+        ?.let { formatCurrency(it, state.currency, state.priceDecimals) }
+    val inStock = if (value != null) {
+        pluralStringResource(Res.plurals.start_stock_in_stock_value, count, count, value)
+    } else {
+        pluralStringResource(Res.plurals.start_stock_in_stock, count, count)
+    }
+    val bullets = buildList {
+        if (summary.dueSoonCount > 0) {
+            val within = pluralStringResource(
+                Res.plurals.start_stock_within_days,
+                state.dueSoonDays,
+                state.dueSoonDays,
+            )
+            add(
+                pluralStringResource(
+                    Res.plurals.start_stock_due_soon,
+                    summary.dueSoonCount,
+                    summary.dueSoonCount,
+                    within,
+                ),
+            )
+        }
+        if (summary.overdueCount > 0) {
+            add(
+                pluralStringResource(
+                    Res.plurals.start_stock_overdue,
+                    summary.overdueCount,
+                    summary.overdueCount,
+                ),
+            )
+        }
+        if (summary.expiredCount > 0) {
+            add(
+                pluralStringResource(
+                    Res.plurals.start_stock_expired,
+                    summary.expiredCount,
+                    summary.expiredCount,
+                ),
+            )
+        }
+        if (summary.belowMinStockCount > 0) add(belowMinStock(summary))
+    }
+    val intro = if (bullets.isEmpty()) {
+        stringResource(Res.string.start_summary_intro_end, inStock)
+    } else {
+        stringResource(Res.string.start_summary_intro_list, inStock)
+    }
+    return SectionSummary(intro, bullets)
+}
+
+/** The products below their min. stock amount and how many of them are on shopping lists. */
+@Composable
+private fun belowMinStock(summary: StockSummary): String {
+    val below = summary.belowMinStockCount
+    val onLists = summary.belowMinStockOnShoppingListCount
+    val text = pluralStringResource(Res.plurals.start_stock_below_min, below, below)
+    val listText = when {
+        onLists == 0 -> null
+        onLists < below ->
+            pluralStringResource(Res.plurals.start_stock_some_on_lists, onLists, onLists)
+        below == 1 -> stringResource(Res.string.start_stock_one_on_list)
+        else -> stringResource(Res.string.start_stock_all_on_lists)
+    }
+    return listOfNotNull(text, listText).joinToString(" ")
+}
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun SectionItem(
     section: StartSection,
+    summary: SectionSummary?,
     index: Int,
     count: Int,
     onClick: () -> Unit,
@@ -188,6 +302,11 @@ private fun SectionItem(
         }
     }
     val title = @Composable { Text(stringResource(section.title)) }
+    val supporting: (@Composable () -> Unit)? = summary?.let {
+        { SupportingBulletList(intro = it.intro, bullets = it.bullets) }
+    }
+    // Several lines keep the icon at the top like Material's three line items
+    val alignment = if (summary != null) Alignment.Top else Alignment.CenterVertically
 
     // Beside a page a single choice marking it, without page a plain item (no radio semantics)
     if (selected != null) {
@@ -197,8 +316,9 @@ private fun SectionItem(
             shapes = shapes,
             colors = colors,
             modifier = modifier,
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = alignment,
             leadingContent = leading,
+            supportingContent = supporting,
             content = title,
         )
     } else {
@@ -207,8 +327,9 @@ private fun SectionItem(
             shapes = shapes,
             colors = colors,
             modifier = modifier,
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = alignment,
             leadingContent = leading,
+            supportingContent = supporting,
             content = title,
         )
     }
@@ -220,6 +341,7 @@ private fun StartScreenPreview() {
     GrocyTheme {
         StartContent(
             sections = StartSection.entries,
+            state = null,
             isRefreshing = false,
             snackbarHostState = remember { SnackbarHostState() },
             onRefresh = {},

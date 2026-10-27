@@ -163,8 +163,12 @@ object MasterDataJson {
             """"row_created_timestamp":"2026-10-01 10:00:00","spoiled":0,"undone":"0",""" +
             """"location_id":"1","user_id":"1","stock_id":"6f1a2b","note":"Weekly"}]"""
 
+    /** The transaction of [BOOKING]. */
+    const val TRANSACTION_ID = "t10"
+
     /** The bookings Grocy answers a consumption, opening or edit of a stock entry with. */
-    const val BOOKING = """[{"id":10,"product_id":1,"amount":"-2","transaction_type":"consume"}]"""
+    const val BOOKING = """[{"id":10,"product_id":1,"amount":"-2","transaction_type":"consume",""" +
+        """"transaction_id":"$TRANSACTION_ID"}]"""
 
     /** Paths and answers [FakeGrocyServer] serves from the start. */
     val defaults: Map<String, String> = mapOf(

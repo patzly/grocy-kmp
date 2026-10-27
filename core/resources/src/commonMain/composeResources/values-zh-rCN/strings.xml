@@ -148,6 +148,35 @@
   <string name="settings_general">常规</string>
   <string name="settings_select_hint">选择一个类别以在此显示其设置</string>
   <string name="start_select_hint">选择一个部分以在此显示</string>
+  <plurals name="start_stock_in_stock">
+    <item quantity="other">库存中有 %1$d 个产品</item>
+  </plurals>
+  <plurals name="start_stock_in_stock_value">
+    <item quantity="other">库存中有 %1$d 个产品，总价值%2$s</item>
+  </plurals>
+  <string name="start_summary_intro_list">%1$s：</string>
+  <string name="start_summary_intro_end">%1$s。</string>
+  <string name="start_list_join">%1$s、%2$s</string>
+  <plurals name="start_stock_due_soon">
+    <item quantity="other">%1$d 个产品将在%2$s到期。</item>
+  </plurals>
+  <plurals name="start_stock_within_days">
+    <item quantity="other">%1$d 天内</item>
+  </plurals>
+  <plurals name="start_stock_overdue">
+    <item quantity="other">%1$d 个产品已逾期。</item>
+  </plurals>
+  <plurals name="start_stock_expired">
+    <item quantity="other">%1$d 个产品已过期。</item>
+  </plurals>
+  <plurals name="start_stock_below_min">
+    <item quantity="other">%1$d 个产品低于安全库存。</item>
+  </plurals>
+  <plurals name="start_stock_some_on_lists">
+    <item quantity="other">其中 %1$d 个在购物清单上。</item>
+  </plurals>
+  <string name="start_stock_one_on_list">它在购物清单上。</string>
+  <string name="start_stock_all_on_lists">它们都在购物清单上。</string>
   <string name="settings_server">服务器</string>
   <string name="settings_user">用户设置</string>
   <string name="settings_user_synced">保存在服务器上</string>

@@ -148,6 +148,43 @@
   <string name="settings_general">Γενικά</string>
   <string name="settings_select_hint">Επιλέξτε μια κατηγορία για να εμφανιστούν εδώ οι ρυθμίσεις της</string>
   <string name="start_select_hint">Επιλέξτε μια ενότητα για να εμφανιστεί εδώ</string>
+  <plurals name="start_stock_in_stock">
+    <item quantity="one">Έχετε %1$d προϊόν σε απόθεμα</item>
+    <item quantity="other">Έχετε %1$d προϊόντα σε απόθεμα</item>
+  </plurals>
+  <plurals name="start_stock_in_stock_value">
+    <item quantity="one">Έχετε %1$d προϊόν σε απόθεμα με αξία %2$s</item>
+    <item quantity="other">Έχετε %1$d προϊόντα σε απόθεμα με αξία %2$s</item>
+  </plurals>
+  <string name="start_summary_intro_list">%1$s:</string>
+  <string name="start_summary_intro_end">%1$s.</string>
+  <string name="start_list_join">%1$s, %2$s</string>
+  <plurals name="start_stock_due_soon">
+    <item quantity="one">%1$d προϊόν λήγει %2$s.</item>
+    <item quantity="other">%1$d προϊόντα λήγουν %2$s.</item>
+  </plurals>
+  <plurals name="start_stock_within_days">
+    <item quantity="one">μέσα στην επόμενη ημέρα</item>
+    <item quantity="other">μέσα στις επόμενες %1$d ημέρες</item>
+  </plurals>
+  <plurals name="start_stock_overdue">
+    <item quantity="one">%1$d προϊόν είναι εκπρόθεσμο.</item>
+    <item quantity="other">%1$d προϊόντα είναι εκπρόθεσμα.</item>
+  </plurals>
+  <plurals name="start_stock_expired">
+    <item quantity="one">%1$d προϊόν έχει λήξει.</item>
+    <item quantity="other">%1$d προϊόντα έχουν λήξει.</item>
+  </plurals>
+  <plurals name="start_stock_below_min">
+    <item quantity="one">%1$d προϊόν είναι κάτω από την ελάχ. ποσότητα αποθέματος.</item>
+    <item quantity="other">%1$d προϊόντα είναι κάτω από την ελάχ. ποσότητα αποθέματος.</item>
+  </plurals>
+  <plurals name="start_stock_some_on_lists">
+    <item quantity="one">%1$d από αυτά είναι σε λίστα αγορών.</item>
+    <item quantity="other">%1$d από αυτά είναι στις λίστες αγορών σας.</item>
+  </plurals>
+  <string name="start_stock_one_on_list">Είναι σε λίστα αγορών.</string>
+  <string name="start_stock_all_on_lists">Όλα είναι στις λίστες αγορών σας.</string>
   <string name="settings_server">Διακομιστής</string>
   <string name="settings_user">Ρυθμίσεις χρήστη</string>
   <string name="settings_user_synced">Αποθηκεύονται στον διακομιστή</string>

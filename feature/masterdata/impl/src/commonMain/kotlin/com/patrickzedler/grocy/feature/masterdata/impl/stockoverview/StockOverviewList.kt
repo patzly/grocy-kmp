@@ -12,19 +12,19 @@ import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.masterdata.nameFor
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
+import com.patrickzedler.grocy.core.model.stock.DueStatus
 import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockOverviewField
 import com.patrickzedler.grocy.core.model.stock.StockOverviewGrouping
+import com.patrickzedler.grocy.core.model.stock.dueStatusOf
 import com.patrickzedler.grocy.core.model.text.FuzzySearch
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.normalizedForSearch
 import com.patrickzedler.grocy.feature.masterdata.impl.product.htmlToPlainText
-import com.patrickzedler.grocy.feature.masterdata.impl.stock.DueStatus
 import com.patrickzedler.grocy.feature.masterdata.impl.stock.EntryPrice
-import com.patrickzedler.grocy.feature.masterdata.impl.stock.dueStatusOf
 import com.patrickzedler.grocy.feature.masterdata.impl.stock.priceToStockFactor
 import com.patrickzedler.grocy.feature.masterdata.impl.stock.toStockFactor
 
@@ -102,6 +102,15 @@ internal data class StockOverviewItem(
     /** Grocy's quick consume amount in the consume unit, e.g. "1 Piece". */
     val quickConsume: String,
     val quickOpen: String,
+    /** What the buttons of Grocy's row book, in the stock unit. */
+    val quickConsumeAmount: Double,
+    val quickOpenAmount: Double,
+    /** What "Consume all" books (the tare weight with tare weight handling), in the stock unit. */
+    val consumeAllAmount: Double,
+    /** [consumeAllAmount] with the stock unit, e.g. "3 Packs". */
+    val consumeAll: String,
+    /** Where opening moves the product, Grocy's "Move on open"; null if it stays. */
+    val openMovesTo: String?,
     val canConsume: Boolean,
     val canConsumeAll: Boolean,
     val canOpen: Boolean,
@@ -312,6 +321,12 @@ private class RowContext(
         val consumeFactor =
             toStockFactor(product, product.quIdConsume, data.resolvedConversions)
         val consumeUnit = product.quIdConsume?.let { units[it] } ?: stockUnit
+        // Grocy's own amount; a parent without stock of its own consumes its sub products
+        val consumeAll = when {
+            product.enableTareWeightHandling -> product.tareWeight
+            amount > 0 -> amount
+            else -> aggregated
+        }
 
         return StockOverviewItem(
             productId = product.id,
@@ -360,6 +375,13 @@ private class RowContext(
                 ?.takeIf { config.stockPriceTracking },
             quickConsume = amountOf(product.quickConsumeAmount / consumeFactor, consumeUnit),
             quickOpen = amountOf(product.quickOpenAmount / consumeFactor, consumeUnit),
+            quickConsumeAmount = product.quickConsumeAmount,
+            quickOpenAmount = product.quickOpenAmount,
+            consumeAllAmount = consumeAll,
+            consumeAll = amountOf(consumeAll, stockUnit),
+            openMovesTo = product.defaultConsumeLocationId
+                ?.takeIf { product.moveOnOpen && config.stockLocationTracking }
+                ?.let { locations[it]?.name },
             // Grocy's buttons of the row: tare weight handling needs the consume page
             canConsume = aggregated >= product.quickConsumeAmount && aggregated > 0 &&
                 !product.enableTareWeightHandling,

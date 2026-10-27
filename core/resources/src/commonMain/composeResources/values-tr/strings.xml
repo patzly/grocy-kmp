@@ -148,6 +148,43 @@
   <string name="settings_general">Genel</string>
   <string name="settings_select_hint">Ayarlarını burada göstermek için bir kategori seç</string>
   <string name="start_select_hint">Burada göstermek için bir bölüm seç</string>
+  <plurals name="start_stock_in_stock">
+    <item quantity="one">Stokta %1$d ürünün var</item>
+    <item quantity="other">Stokta %1$d ürünün var</item>
+  </plurals>
+  <plurals name="start_stock_in_stock_value">
+    <item quantity="one">Stokta %2$s değerinde %1$d ürünün var</item>
+    <item quantity="other">Stokta %2$s değerinde %1$d ürünün var</item>
+  </plurals>
+  <string name="start_summary_intro_list">%1$s:</string>
+  <string name="start_summary_intro_end">%1$s.</string>
+  <string name="start_list_join">%1$s, %2$s</string>
+  <plurals name="start_stock_due_soon">
+    <item quantity="one">%1$d ürünün süresi %2$s doluyor.</item>
+    <item quantity="other">%1$d ürünün süresi %2$s doluyor.</item>
+  </plurals>
+  <plurals name="start_stock_within_days">
+    <item quantity="one">önümüzdeki gün içinde</item>
+    <item quantity="other">önümüzdeki %1$d gün içinde</item>
+  </plurals>
+  <plurals name="start_stock_overdue">
+    <item quantity="one">%1$d ürünün tavsiye edilen tüketim tarihi geçmiş.</item>
+    <item quantity="other">%1$d ürünün tavsiye edilen tüketim tarihi geçmiş.</item>
+  </plurals>
+  <plurals name="start_stock_expired">
+    <item quantity="one">%1$d ürünün süresi dolmuş.</item>
+    <item quantity="other">%1$d ürünün süresi dolmuş.</item>
+  </plurals>
+  <plurals name="start_stock_below_min">
+    <item quantity="one">%1$d ürün min. stok miktarının altında.</item>
+    <item quantity="other">%1$d ürün min. stok miktarının altında.</item>
+  </plurals>
+  <plurals name="start_stock_some_on_lists">
+    <item quantity="one">Bunlardan %1$d tanesi bir alışveriş listesinde.</item>
+    <item quantity="other">Bunlardan %1$d tanesi alışveriş listelerinde.</item>
+  </plurals>
+  <string name="start_stock_one_on_list">Bir alışveriş listesinde.</string>
+  <string name="start_stock_all_on_lists">Hepsi alışveriş listelerinde.</string>
   <string name="settings_server">Sunucu</string>
   <string name="settings_user">Kullanıcı ayarları</string>
   <string name="settings_user_synced">Sunucuda kaydedilir</string>

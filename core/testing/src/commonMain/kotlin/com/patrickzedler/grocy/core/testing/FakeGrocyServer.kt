@@ -129,6 +129,11 @@ class FakeGrocyServer(
             method = HttpMethod.Post,
         )
         respond(
+            path = "/api/stock/transactions/${MasterDataJson.TRANSACTION_ID}/undo",
+            status = HttpStatusCode.NoContent,
+            method = HttpMethod.Post,
+        )
+        respond(
             path = "/api/stock/shoppinglist/add-product",
             status = HttpStatusCode.NoContent,
             method = HttpMethod.Post,

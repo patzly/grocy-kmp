@@ -34,6 +34,7 @@ import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.edgeToEdgeItem
 import com.patrickzedler.grocy.core.design.component.insetItems
+import com.patrickzedler.grocy.core.model.stock.DueStatus
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.model.text.formatDate

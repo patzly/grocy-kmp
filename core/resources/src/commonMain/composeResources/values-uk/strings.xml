@@ -148,6 +148,59 @@
   <string name="settings_general">Загальні</string>
   <string name="settings_select_hint">Оберіть категорію, щоб показати тут її налаштування</string>
   <string name="start_select_hint">Оберіть розділ, щоб показати його тут</string>
+  <plurals name="start_stock_in_stock">
+    <item quantity="one">У вас у запасі %1$d продукт</item>
+    <item quantity="few">У вас у запасі %1$d продукти</item>
+    <item quantity="many">У вас у запасі %1$d продуктів</item>
+    <item quantity="other">У вас у запасі %1$d продукту</item>
+  </plurals>
+  <plurals name="start_stock_in_stock_value">
+    <item quantity="one">У вас у запасі %1$d продукт на суму %2$s</item>
+    <item quantity="few">У вас у запасі %1$d продукти на суму %2$s</item>
+    <item quantity="many">У вас у запасі %1$d продуктів на суму %2$s</item>
+    <item quantity="other">У вас у запасі %1$d продукту на суму %2$s</item>
+  </plurals>
+  <string name="start_summary_intro_list">%1$s:</string>
+  <string name="start_summary_intro_end">%1$s.</string>
+  <string name="start_list_join">%1$s, %2$s</string>
+  <plurals name="start_stock_due_soon">
+    <item quantity="one">%1$d продукт треба спожити %2$s.</item>
+    <item quantity="few">%1$d продукти треба спожити %2$s.</item>
+    <item quantity="many">%1$d продуктів треба спожити %2$s.</item>
+    <item quantity="other">%1$d продукту треба спожити %2$s.</item>
+  </plurals>
+  <plurals name="start_stock_within_days">
+    <item quantity="one">протягом %1$d дня</item>
+    <item quantity="few">протягом %1$d днів</item>
+    <item quantity="many">протягом %1$d днів</item>
+    <item quantity="other">протягом %1$d дня</item>
+  </plurals>
+  <plurals name="start_stock_overdue">
+    <item quantity="one">%1$d продукт прострочений.</item>
+    <item quantity="few">%1$d продукти прострочені.</item>
+    <item quantity="many">%1$d продуктів прострочені.</item>
+    <item quantity="other">%1$d продукту прострочено.</item>
+  </plurals>
+  <plurals name="start_stock_expired">
+    <item quantity="one">%1$d продукт зіпсований.</item>
+    <item quantity="few">%1$d продукти зіпсовані.</item>
+    <item quantity="many">%1$d продуктів зіпсовані.</item>
+    <item quantity="other">%1$d продукту зіпсовано.</item>
+  </plurals>
+  <plurals name="start_stock_below_min">
+    <item quantity="one">%1$d продукт менше мінімальної кількості.</item>
+    <item quantity="few">%1$d продукти менше мінімальної кількості.</item>
+    <item quantity="many">%1$d продуктів менше мінімальної кількості.</item>
+    <item quantity="other">%1$d продукту менше мінімальної кількості.</item>
+  </plurals>
+  <plurals name="start_stock_some_on_lists">
+    <item quantity="one">%1$d з них у ваших списках покупок.</item>
+    <item quantity="few">%1$d з них у ваших списках покупок.</item>
+    <item quantity="many">%1$d з них у ваших списках покупок.</item>
+    <item quantity="other">%1$d з них у ваших списках покупок.</item>
+  </plurals>
+  <string name="start_stock_one_on_list">Він є у списку покупок.</string>
+  <string name="start_stock_all_on_lists">Усі вони у ваших списках покупок.</string>
   <string name="settings_server">Сервер</string>
   <string name="settings_user">Налаштування користувача</string>
   <string name="settings_user_synced">Зберігаються на сервері</string>

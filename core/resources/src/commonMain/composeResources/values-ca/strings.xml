@@ -148,6 +148,51 @@
   <string name="settings_general">General</string>
   <string name="settings_select_hint">Tria una categoria per mostrar-ne la configuració aquí</string>
   <string name="start_select_hint">Tria una secció per mostrar-la aquí</string>
+  <plurals name="start_stock_in_stock">
+    <item quantity="one">Tens %1$d producte en estoc</item>
+    <item quantity="many">Tens %1$d productes en estoc</item>
+    <item quantity="other">Tens %1$d productes en estoc</item>
+  </plurals>
+  <plurals name="start_stock_in_stock_value">
+    <item quantity="one">Tens %1$d producte en estoc amb un valor de %2$s</item>
+    <item quantity="many">Tens %1$d productes en estoc amb un valor de %2$s</item>
+    <item quantity="other">Tens %1$d productes en estoc amb un valor de %2$s</item>
+  </plurals>
+  <string name="start_summary_intro_list">%1$s:</string>
+  <string name="start_summary_intro_end">%1$s.</string>
+  <string name="start_list_join">%1$s, %2$s</string>
+  <plurals name="start_stock_due_soon">
+    <item quantity="one">%1$d producte caduca %2$s.</item>
+    <item quantity="many">%1$d productes caduquen %2$s.</item>
+    <item quantity="other">%1$d productes caduquen %2$s.</item>
+  </plurals>
+  <plurals name="start_stock_within_days">
+    <item quantity="one">en el pròxim dia</item>
+    <item quantity="many">en els pròxims %1$d dies</item>
+    <item quantity="other">en els pròxims %1$d dies</item>
+  </plurals>
+  <plurals name="start_stock_overdue">
+    <item quantity="one">%1$d producte ha superat la data límit.</item>
+    <item quantity="many">%1$d productes han superat la data límit.</item>
+    <item quantity="other">%1$d productes han superat la data límit.</item>
+  </plurals>
+  <plurals name="start_stock_expired">
+    <item quantity="one">%1$d producte està caducat.</item>
+    <item quantity="many">%1$d productes estan caducats.</item>
+    <item quantity="other">%1$d productes estan caducats.</item>
+  </plurals>
+  <plurals name="start_stock_below_min">
+    <item quantity="one">%1$d producte està per sota de la quantitat mínima d'existències.</item>
+    <item quantity="many">%1$d productes estan per sota de la quantitat mínima d'existències.</item>
+    <item quantity="other">%1$d productes estan per sota de la quantitat mínima d'existències.</item>
+  </plurals>
+  <plurals name="start_stock_some_on_lists">
+    <item quantity="one">%1$d d'ells és en una llista de la compra.</item>
+    <item quantity="many">%1$d d'ells són a les teves llistes de la compra.</item>
+    <item quantity="other">%1$d d'ells són a les teves llistes de la compra.</item>
+  </plurals>
+  <string name="start_stock_one_on_list">És en una llista de la compra.</string>
+  <string name="start_stock_all_on_lists">Tots són a les teves llistes de la compra.</string>
   <string name="settings_server">Servidor</string>
   <string name="settings_user">Configuració d’usuari</string>
   <string name="settings_user_synced">Desat al servidor</string>

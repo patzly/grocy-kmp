@@ -179,6 +179,43 @@
   <string name="settings_general">General</string>
   <string name="settings_select_hint">Choose a category to show its settings here</string>
   <string name="start_select_hint">Choose a section to show it here</string>
+  <plurals name="start_stock_in_stock">
+    <item quantity="one">You have %1$d product in stock</item>
+    <item quantity="other">You have %1$d products in stock</item>
+  </plurals>
+  <plurals name="start_stock_in_stock_value">
+    <item quantity="one">You have %1$d product in stock with a value of %2$s</item>
+    <item quantity="other">You have %1$d products in stock with a value of %2$s</item>
+  </plurals>
+  <string name="start_summary_intro_list">%1$s:</string>
+  <string name="start_summary_intro_end">%1$s.</string>
+  <string name="start_list_join">%1$s, %2$s</string>
+  <plurals name="start_stock_due_soon">
+    <item quantity="one">%1$d product is due %2$s.</item>
+    <item quantity="other">%1$d products are due %2$s.</item>
+  </plurals>
+  <plurals name="start_stock_within_days">
+    <item quantity="one">within the next day</item>
+    <item quantity="other">within the next %1$d days</item>
+  </plurals>
+  <plurals name="start_stock_overdue">
+    <item quantity="one">%1$d product is overdue.</item>
+    <item quantity="other">%1$d products are overdue.</item>
+  </plurals>
+  <plurals name="start_stock_expired">
+    <item quantity="one">%1$d product is expired.</item>
+    <item quantity="other">%1$d products are expired.</item>
+  </plurals>
+  <plurals name="start_stock_below_min">
+    <item quantity="one">%1$d product is below min. stock amount.</item>
+    <item quantity="other">%1$d products are below min. stock amount.</item>
+  </plurals>
+  <plurals name="start_stock_some_on_lists">
+    <item quantity="one">%1$d of them is on a shopping list.</item>
+    <item quantity="other">%1$d of them are on your shopping lists.</item>
+  </plurals>
+  <string name="start_stock_one_on_list">It is on a shopping list.</string>
+  <string name="start_stock_all_on_lists">All of them are on your shopping lists.</string>
   <string name="settings_server">Server</string>
   <string name="settings_user">User settings</string>
   <string name="settings_user_synced">Saved on the server</string>

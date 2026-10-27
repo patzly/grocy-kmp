@@ -11,9 +11,12 @@ import com.materialkolor.ktx.harmonize
 import com.materialkolor.ktx.toColor
 import com.materialkolor.ktx.toHct
 
-/** A container color with the color of content on it, like a color role pair of the theme. */
+/**
+ * A container color with the color of content on it, like a color role pair of the theme, and
+ * [color] for small marks on surfaces, like the theme's primary role.
+ */
 @Immutable
-data class StatusColor(val container: Color, val content: Color)
+data class StatusColor(val container: Color, val content: Color, val color: Color)
 
 /**
  * Colors that mark a state like Grocy's highlighted rows, harmonized with the theme's primary
@@ -41,17 +44,25 @@ fun rememberStatusColors(): StatusColors {
 }
 
 /**
- * [base] turned towards [primary] like Material's harmonization, then as container and content
- * tones the way Material derives a custom color's container roles: 90 and 10 in light themes,
- * 30 and 90 in dark ones.
+ * [base] turned towards [primary] like Material's harmonization, then as tones the way Material
+ * derives a custom color's roles: container 90, content 10 and color 40 in light themes,
+ * 30, 90 and 80 in dark ones.
  */
 internal fun statusColorOf(base: Color, primary: Color, isDark: Boolean): StatusColor {
     val harmonized = base.harmonize(primary).toHct()
     fun tone(tone: Double) = Hct.from(harmonized.hue, harmonized.chroma, tone).toColor()
     return if (isDark) {
-        StatusColor(container = tone(DARK_CONTAINER_TONE), content = tone(DARK_CONTENT_TONE))
+        StatusColor(
+            container = tone(DARK_CONTAINER_TONE),
+            content = tone(DARK_CONTENT_TONE),
+            color = tone(DARK_COLOR_TONE),
+        )
     } else {
-        StatusColor(container = tone(LIGHT_CONTAINER_TONE), content = tone(LIGHT_CONTENT_TONE))
+        StatusColor(
+            container = tone(LIGHT_CONTAINER_TONE),
+            content = tone(LIGHT_CONTENT_TONE),
+            color = tone(LIGHT_COLOR_TONE),
+        )
     }
 }
 
@@ -63,3 +74,5 @@ private const val LIGHT_CONTAINER_TONE = 90.0
 private const val LIGHT_CONTENT_TONE = 10.0
 private const val DARK_CONTAINER_TONE = 30.0
 private const val DARK_CONTENT_TONE = 90.0
+private const val LIGHT_COLOR_TONE = 40.0
+private const val DARK_COLOR_TONE = 80.0

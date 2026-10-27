@@ -148,6 +148,43 @@
   <string name="settings_general">Algemeen</string>
   <string name="settings_select_hint">Kies een categorie om de instellingen hier te tonen</string>
   <string name="start_select_hint">Kies een onderdeel om het hier te tonen</string>
+  <plurals name="start_stock_in_stock">
+    <item quantity="one">Je hebt %1$d product op voorraad</item>
+    <item quantity="other">Je hebt %1$d producten op voorraad</item>
+  </plurals>
+  <plurals name="start_stock_in_stock_value">
+    <item quantity="one">Je hebt %1$d product op voorraad met een waarde van %2$s</item>
+    <item quantity="other">Je hebt %1$d producten op voorraad met een waarde van %2$s</item>
+  </plurals>
+  <string name="start_summary_intro_list">%1$s:</string>
+  <string name="start_summary_intro_end">%1$s.</string>
+  <string name="start_list_join">%1$s, %2$s</string>
+  <plurals name="start_stock_due_soon">
+    <item quantity="one">%1$d product gaat %2$s over datum.</item>
+    <item quantity="other">%1$d producten gaan %2$s over datum.</item>
+  </plurals>
+  <plurals name="start_stock_within_days">
+    <item quantity="one">binnen de komende dag</item>
+    <item quantity="other">binnen de komende %1$d dagen</item>
+  </plurals>
+  <plurals name="start_stock_overdue">
+    <item quantity="one">%1$d product is achterstallig.</item>
+    <item quantity="other">%1$d producten zijn achterstallig.</item>
+  </plurals>
+  <plurals name="start_stock_expired">
+    <item quantity="one">%1$d product is over datum.</item>
+    <item quantity="other">%1$d producten zijn over datum.</item>
+  </plurals>
+  <plurals name="start_stock_below_min">
+    <item quantity="one">%1$d product is onder de min. voorraadhoeveelheid.</item>
+    <item quantity="other">%1$d producten zijn onder de min. voorraadhoeveelheid.</item>
+  </plurals>
+  <plurals name="start_stock_some_on_lists">
+    <item quantity="one">%1$d daarvan staat op een boodschappenlijst.</item>
+    <item quantity="other">%1$d daarvan staan op je boodschappenlijsten.</item>
+  </plurals>
+  <string name="start_stock_one_on_list">Het staat op een boodschappenlijst.</string>
+  <string name="start_stock_all_on_lists">Ze staan allemaal op je boodschappenlijsten.</string>
   <string name="settings_server">Server</string>
   <string name="settings_user">Gebruikersinstellingen</string>
   <string name="settings_user_synced">Opgeslagen op de server</string>

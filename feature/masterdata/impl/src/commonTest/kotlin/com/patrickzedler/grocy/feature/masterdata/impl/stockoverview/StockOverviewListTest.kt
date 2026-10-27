@@ -11,13 +11,13 @@ import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
+import com.patrickzedler.grocy.core.model.stock.DueStatus
 import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockOverviewField
 import com.patrickzedler.grocy.core.model.stock.StockOverviewGrouping
 import com.patrickzedler.grocy.core.model.text.epochDayOf
-import com.patrickzedler.grocy.feature.masterdata.impl.stock.DueStatus
 import com.patrickzedler.grocy.feature.masterdata.impl.stock.EntryPrice
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -293,6 +293,48 @@ class StockOverviewListTest {
         // Nothing in stock
         val bread = list.item("Bread")
         assertFalse(bread.canConsume || bread.canConsumeAll || bread.canOpen)
+    }
+
+    @Test
+    fun bookingsUseGrocysAmountsInTheStockUnit() {
+        val parent = Product(id = 7, name = "Fruit", quIdStock = 2, noOwnStock = true)
+        val list = build(
+            data = data.copy(
+                products = data.products.map {
+                    when (it.id) {
+                        1 -> it.copy(moveOnOpen = true, defaultConsumeLocationId = 2)
+                        3 -> it.copy(enableTareWeightHandling = true, tareWeight = 0.5)
+                        else -> it
+                    }
+                } + parent,
+                stock = data.stock + StockAmount(7, 0.0, 3.0, isAggregatedAmount = true),
+            ),
+        )
+
+        val milk = list.item("Milk")
+        assertEquals(1.0, milk.quickConsumeAmount)
+        assertEquals(2.0, milk.consumeAllAmount)
+        assertEquals("2 Pieces", milk.consumeAll)
+        assertEquals("Pantry", milk.openMovesTo)
+        // With tare weight handling "All" consumes down to the container's weight
+        assertEquals(0.5, list.item("Eggs").consumeAllAmount)
+        // A parent without stock of its own consumes its sub products
+        assertEquals(3.0, list.item("Fruit").consumeAllAmount)
+        assertNull(list.item("Cheese").openMovesTo)
+    }
+
+    @Test
+    fun openingMovesNowhereWithoutLocationTracking() {
+        val list = build(
+            config = ServerConfig(stockLocationTracking = false),
+            data = data.copy(
+                products = data.products.map {
+                    if (it.id == 1) it.copy(moveOnOpen = true, defaultConsumeLocationId = 2) else it
+                },
+            ),
+        )
+
+        assertNull(list.item("Milk").openMovesTo)
     }
 
     @Test

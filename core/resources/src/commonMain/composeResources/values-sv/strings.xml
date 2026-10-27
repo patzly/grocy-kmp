@@ -148,6 +148,43 @@
   <string name="settings_general">Allmänt</string>
   <string name="settings_select_hint">Välj en kategori för att visa dess inställningar här</string>
   <string name="start_select_hint">Välj ett avsnitt för att visa det här</string>
+  <plurals name="start_stock_in_stock">
+    <item quantity="one">Du har %1$d produkt i lager</item>
+    <item quantity="other">Du har %1$d produkter i lager</item>
+  </plurals>
+  <plurals name="start_stock_in_stock_value">
+    <item quantity="one">Du har %1$d produkt i lager med ett värde av %2$s</item>
+    <item quantity="other">Du har %1$d produkter i lager med ett värde av %2$s</item>
+  </plurals>
+  <string name="start_summary_intro_list">%1$s:</string>
+  <string name="start_summary_intro_end">%1$s.</string>
+  <string name="start_list_join">%1$s, %2$s</string>
+  <plurals name="start_stock_due_soon">
+    <item quantity="one">%1$d produkt förfaller %2$s.</item>
+    <item quantity="other">%1$d produkter förfaller %2$s.</item>
+  </plurals>
+  <plurals name="start_stock_within_days">
+    <item quantity="one">inom det närmaste dygnet</item>
+    <item quantity="other">inom de närmaste %1$d dagarna</item>
+  </plurals>
+  <plurals name="start_stock_overdue">
+    <item quantity="one">%1$d produkt är förfallen.</item>
+    <item quantity="other">%1$d produkter är förfallna.</item>
+  </plurals>
+  <plurals name="start_stock_expired">
+    <item quantity="one">%1$d produkt är utgången.</item>
+    <item quantity="other">%1$d produkter är utgångna.</item>
+  </plurals>
+  <plurals name="start_stock_below_min">
+    <item quantity="one">%1$d produkt är under min. lagersaldo.</item>
+    <item quantity="other">%1$d produkter är under min. lagersaldo.</item>
+  </plurals>
+  <plurals name="start_stock_some_on_lists">
+    <item quantity="one">%1$d av dem finns på en inköpslista.</item>
+    <item quantity="other">%1$d av dem finns på dina inköpslistor.</item>
+  </plurals>
+  <string name="start_stock_one_on_list">Den finns på en inköpslista.</string>
+  <string name="start_stock_all_on_lists">Alla finns på dina inköpslistor.</string>
   <string name="settings_server">Server</string>
   <string name="settings_user">Användarinställningar</string>
   <string name="settings_user_synced">Sparas på servern</string>

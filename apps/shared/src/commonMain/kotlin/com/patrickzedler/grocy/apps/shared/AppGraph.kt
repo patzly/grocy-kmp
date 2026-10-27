@@ -139,6 +139,8 @@ class AppGraph(
     internal val startDependencies: StartDependencies = object : StartDependencies {
         override val masterDataRepository: MasterDataRepository
             get() = this@AppGraph.masterDataRepository
+        override val stockRepository: StockRepository
+            get() = this@AppGraph.stockRepository
         override val serverConfig: StateFlow<ServerConfig?>
             get() = serverRepository.serverConfig
     }

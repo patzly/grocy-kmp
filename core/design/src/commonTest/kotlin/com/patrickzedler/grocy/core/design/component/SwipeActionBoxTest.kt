@@ -28,12 +28,14 @@ class SwipeActionBoxTest {
     }
 
     @Test
-    fun iconLiesBesideTheItemUntilItMovesToTheMiddle() {
-        // Surface at the start, the item beside its end
-        assertEquals(60f, swipeIconStart(100f, 24f, 16f, centering = 0f, besideItemAtEnd = true))
-        assertEquals(38f, swipeIconStart(100f, 24f, 16f, centering = 1f, besideItemAtEnd = true))
-        // Surface at the end, the item beside its start
-        assertEquals(16f, swipeIconStart(100f, 24f, 16f, centering = 0f, besideItemAtEnd = false))
-        assertEquals(38f, swipeIconStart(100f, 24f, 16f, centering = 1f, besideItemAtEnd = false))
+    fun iconRestsNearTheEdgeUntilTheSurfacesMiddleReachesIt() {
+        // Surface at the start: the icon is uncovered from the start without moving
+        assertEquals(16f, swipeIconStart(30f, 24f, 16f, surfaceAtStart = true))
+        assertEquals(16f, swipeIconStart(56f, 24f, 16f, surfaceAtStart = true))
+        assertEquals(38f, swipeIconStart(100f, 24f, 16f, surfaceAtStart = true))
+        // Surface at the end: the same distance from the end edge
+        assertEquals(-10f, swipeIconStart(30f, 24f, 16f, surfaceAtStart = false))
+        assertEquals(16f, swipeIconStart(56f, 24f, 16f, surfaceAtStart = false))
+        assertEquals(38f, swipeIconStart(100f, 24f, 16f, surfaceAtStart = false))
     }
 }

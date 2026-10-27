@@ -361,6 +361,60 @@ class GrocyApi(
         return decode<List<StockLogDto>>(response).firstOrNull()?.id
     }
 
+    /**
+     * Consumes [amount] (in the stock unit) of the product like the buttons of Grocy's stock
+     * overview, sub products standing in for a parent; returns the transaction for undoing it.
+     */
+    suspend fun consumeProduct(
+        connection: ServerConnection,
+        productId: Int,
+        amount: Double,
+        spoiled: Boolean,
+    ): String? {
+        val response = execute(
+            connection,
+            HttpMethod.Post,
+            listOf("stock", PRODUCTS, productId.toString(), "consume"),
+            body = jsonBody(
+                buildJsonObject {
+                    put("amount", amount)
+                    put("spoiled", spoiled)
+                    put("allow_subproduct_substitution", true)
+                },
+            ),
+        )
+        return decode<List<StockLogDto>>(response).firstOrNull()?.transactionId
+    }
+
+    /**
+     * Marks [amount] (in the stock unit) of the product as opened like the button of Grocy's
+     * stock overview; returns the transaction for undoing it.
+     */
+    suspend fun openProduct(connection: ServerConnection, productId: Int, amount: Double): String? {
+        val response = execute(
+            connection,
+            HttpMethod.Post,
+            listOf("stock", PRODUCTS, productId.toString(), "open"),
+            body = jsonBody(
+                buildJsonObject {
+                    put("amount", amount)
+                    put("allow_subproduct_substitution", true)
+                },
+            ),
+        )
+        return decode<List<StockLogDto>>(response).firstOrNull()?.transactionId
+    }
+
+    /** Undoes every booking of the transaction [transactionId], like Grocy's "Undo" messages. */
+    suspend fun undoTransaction(connection: ServerConnection, transactionId: String) {
+        execute(
+            connection,
+            HttpMethod.Post,
+            listOf("stock", "transactions", transactionId, "undo"),
+            body = jsonBody(JsonObject(emptyMap())),
+        )
+    }
+
     /** Undoes the booking [bookingId] and the ones of the same action, like Grocy's "Undo". */
     suspend fun undoBooking(connection: ServerConnection, bookingId: Int) {
         execute(

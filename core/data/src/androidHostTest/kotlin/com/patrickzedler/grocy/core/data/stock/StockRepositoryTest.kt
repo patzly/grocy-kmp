@@ -119,6 +119,38 @@ class StockRepositoryTest {
     }
 
     @Test
+    fun quickConsumeDownloadsTheOverviewAndReturnsTheTransaction() = runTest {
+        repository.refreshOverview(withShoppingLists = true)
+        server.respond("/api/stock", body = "[]")
+
+        val transaction = repository.consumeProduct(1, 1.0, false, withShoppingLists = true)
+
+        assertEquals("t10", transaction)
+        assertTrue(masterData.stock.first().isEmpty())
+    }
+
+    @Test
+    fun quickOpenAndItsUndoDownloadTheOverview() = runTest {
+        val transaction = repository.openProduct(1, 1.0, withShoppingLists = false)
+        server.respond("/api/stock", body = "[]")
+
+        repository.undoTransaction(requireNotNull(transaction), withShoppingLists = false)
+
+        assertEquals(1, server.requestsTo("/api/stock/transactions/t10/undo", HttpMethod.Post).size)
+        assertTrue(masterData.stock.first().isEmpty())
+    }
+
+    @Test
+    fun bookingIsDoneEvenWhenItsDownloadFails() = runTest {
+        server.respond("/api/stock/volatile", HttpStatusCode.InternalServerError)
+
+        val transaction = repository.consumeProduct(1, 1.0, true, withShoppingLists = true)
+
+        // Reporting it as failed would invite booking it twice
+        assertEquals("t10", transaction)
+    }
+
+    @Test
     fun journalRefreshReplacesTheBookingsOfItsTime() = runTest {
         repository.refreshStockLog(since = "2026-04-25")
         server.respond("/api/objects/stock_log", body = "[]")

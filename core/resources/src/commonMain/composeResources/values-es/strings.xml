@@ -148,6 +148,51 @@
   <string name="settings_general">General</string>
   <string name="settings_select_hint">Elija una categoría para mostrar aquí su configuración</string>
   <string name="start_select_hint">Elija una sección para mostrarla aquí</string>
+  <plurals name="start_stock_in_stock">
+    <item quantity="one">Tiene %1$d producto en existencias</item>
+    <item quantity="many">Tiene %1$d productos en existencias</item>
+    <item quantity="other">Tiene %1$d productos en existencias</item>
+  </plurals>
+  <plurals name="start_stock_in_stock_value">
+    <item quantity="one">Tiene %1$d producto en existencias con un valor de %2$s</item>
+    <item quantity="many">Tiene %1$d productos en existencias con un valor de %2$s</item>
+    <item quantity="other">Tiene %1$d productos en existencias con un valor de %2$s</item>
+  </plurals>
+  <string name="start_summary_intro_list">%1$s:</string>
+  <string name="start_summary_intro_end">%1$s.</string>
+  <string name="start_list_join">%1$s, %2$s</string>
+  <plurals name="start_stock_due_soon">
+    <item quantity="one">%1$d producto vence %2$s.</item>
+    <item quantity="many">%1$d productos vencen %2$s.</item>
+    <item quantity="other">%1$d productos vencen %2$s.</item>
+  </plurals>
+  <plurals name="start_stock_within_days">
+    <item quantity="one">en el próximo día</item>
+    <item quantity="many">en los próximos %1$d días</item>
+    <item quantity="other">en los próximos %1$d días</item>
+  </plurals>
+  <plurals name="start_stock_overdue">
+    <item quantity="one">%1$d producto ha superado su fecha límite.</item>
+    <item quantity="many">%1$d productos han superado su fecha límite.</item>
+    <item quantity="other">%1$d productos han superado su fecha límite.</item>
+  </plurals>
+  <plurals name="start_stock_expired">
+    <item quantity="one">%1$d producto está caducado.</item>
+    <item quantity="many">%1$d productos están caducados.</item>
+    <item quantity="other">%1$d productos están caducados.</item>
+  </plurals>
+  <plurals name="start_stock_below_min">
+    <item quantity="one">%1$d producto está por debajo del mínimo de existencias.</item>
+    <item quantity="many">%1$d productos están por debajo del mínimo de existencias.</item>
+    <item quantity="other">%1$d productos están por debajo del mínimo de existencias.</item>
+  </plurals>
+  <plurals name="start_stock_some_on_lists">
+    <item quantity="one">%1$d de ellos está en una lista de la compra.</item>
+    <item quantity="many">%1$d de ellos están en sus listas de la compra.</item>
+    <item quantity="other">%1$d de ellos están en sus listas de la compra.</item>
+  </plurals>
+  <string name="start_stock_one_on_list">Está en una lista de la compra.</string>
+  <string name="start_stock_all_on_lists">Todos están en sus listas de la compra.</string>
   <string name="settings_server">Servidor</string>
   <string name="settings_user">Configuración de usuario</string>
   <string name="settings_user_synced">Guardado en el servidor</string>

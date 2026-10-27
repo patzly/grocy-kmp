@@ -148,6 +148,43 @@
   <string name="settings_general">Allgemein</string>
   <string name="settings_select_hint">Wähle eine Kategorie, um ihre Einstellungen hier anzuzeigen</string>
   <string name="start_select_hint">Wähle einen Bereich, um ihn hier anzuzeigen</string>
+  <plurals name="start_stock_in_stock">
+    <item quantity="one">Du hast %1$d Produkt im Bestand</item>
+    <item quantity="other">Du hast %1$d Produkte im Bestand</item>
+  </plurals>
+  <plurals name="start_stock_in_stock_value">
+    <item quantity="one">Du hast %1$d Produkt im Bestand im Wert von %2$s</item>
+    <item quantity="other">Du hast %1$d Produkte im Bestand im Wert von %2$s</item>
+  </plurals>
+  <string name="start_summary_intro_list">%1$s:</string>
+  <string name="start_summary_intro_end">%1$s.</string>
+  <string name="start_list_join">%1$s, %2$s</string>
+  <plurals name="start_stock_due_soon">
+    <item quantity="one">%1$d Produkt ist %2$s fällig.</item>
+    <item quantity="other">%1$d Produkte sind %2$s fällig.</item>
+  </plurals>
+  <plurals name="start_stock_within_days">
+    <item quantity="one">innerhalb des nächsten Tages</item>
+    <item quantity="other">innerhalb der nächsten %1$d Tage</item>
+  </plurals>
+  <plurals name="start_stock_overdue">
+    <item quantity="one">%1$d Produkt ist überfällig.</item>
+    <item quantity="other">%1$d Produkte sind überfällig.</item>
+  </plurals>
+  <plurals name="start_stock_expired">
+    <item quantity="one">%1$d Produkt ist abgelaufen.</item>
+    <item quantity="other">%1$d Produkte sind abgelaufen.</item>
+  </plurals>
+  <plurals name="start_stock_below_min">
+    <item quantity="one">%1$d Produkt ist unter Mindestbestand.</item>
+    <item quantity="other">%1$d Produkte sind unter Mindestbestand.</item>
+  </plurals>
+  <plurals name="start_stock_some_on_lists">
+    <item quantity="one">%1$d davon ist auf einem Einkaufszettel.</item>
+    <item quantity="other">%1$d davon sind auf deinen Einkaufszetteln.</item>
+  </plurals>
+  <string name="start_stock_one_on_list">Es ist auf einem Einkaufszettel.</string>
+  <string name="start_stock_all_on_lists">Alle sind auf deinen Einkaufszetteln.</string>
   <string name="settings_server">Server</string>
   <string name="settings_user">Benutzereinstellungen</string>
   <string name="settings_user_synced">Auf dem Server gespeichert</string>

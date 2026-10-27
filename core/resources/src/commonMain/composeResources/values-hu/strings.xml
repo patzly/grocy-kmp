@@ -148,6 +148,43 @@
   <string name="settings_general">Általános</string>
   <string name="settings_select_hint">Válassz egy kategóriát, hogy itt lásd a beállításait</string>
   <string name="start_select_hint">Válassz egy részt, hogy itt lásd</string>
+  <plurals name="start_stock_in_stock">
+    <item quantity="one">%1$d terméked van készleten</item>
+    <item quantity="other">%1$d terméked van készleten</item>
+  </plurals>
+  <plurals name="start_stock_in_stock_value">
+    <item quantity="one">%1$d terméked van készleten %2$s értékben</item>
+    <item quantity="other">%1$d terméked van készleten %2$s értékben</item>
+  </plurals>
+  <string name="start_summary_intro_list">%1$s:</string>
+  <string name="start_summary_intro_end">%1$s.</string>
+  <string name="start_list_join">%1$s, %2$s</string>
+  <plurals name="start_stock_due_soon">
+    <item quantity="one">%1$d termék %2$s esedékes.</item>
+    <item quantity="other">%1$d termék %2$s esedékes.</item>
+  </plurals>
+  <plurals name="start_stock_within_days">
+    <item quantity="one">a következő napon belül</item>
+    <item quantity="other">a következő %1$d napon belül</item>
+  </plurals>
+  <plurals name="start_stock_overdue">
+    <item quantity="one">%1$d termék lejárt.</item>
+    <item quantity="other">%1$d termék lejárt.</item>
+  </plurals>
+  <plurals name="start_stock_expired">
+    <item quantity="one">%1$d termék megromlott.</item>
+    <item quantity="other">%1$d termék megromlott.</item>
+  </plurals>
+  <plurals name="start_stock_below_min">
+    <item quantity="one">%1$d termék a min. készlet mennyiség alatt van.</item>
+    <item quantity="other">%1$d termék a min. készlet mennyiség alatt van.</item>
+  </plurals>
+  <plurals name="start_stock_some_on_lists">
+    <item quantity="one">Közülük %1$d bevásárlólistán van.</item>
+    <item quantity="other">Közülük %1$d a bevásárlólistáidon van.</item>
+  </plurals>
+  <string name="start_stock_one_on_list">Bevásárlólistán van.</string>
+  <string name="start_stock_all_on_lists">Mind a bevásárlólistáidon van.</string>
   <string name="settings_server">Szerver</string>
   <string name="settings_user">Felhasználói beállítások</string>
   <string name="settings_user_synced">A szerveren tárolva</string>

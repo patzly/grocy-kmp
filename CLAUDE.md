@@ -7,7 +7,14 @@ Compose Multiplatform. Targets: Android (phone, Wear OS) and Web (Kotlin/Wasm). 
 Current state: login (demo server, QR code of Grocy's API key page, manual Grocy URL + API key,
 Home Assistant ingress on Android), the reusable barcode scanner (`core:scanner`), update checks
 on every platform, the start screen (sections, each a group of its own: the stock overview (only
-with the stock feature, `StartSection.isAvailable`) and Master data so far, then Settings as a
+with the stock feature, `StartSection.isAvailable`) and Master data so far, each telling about
+its data as supporting text (`SupportingBulletList` of `core:design`, numbers of 0 left out;
+`StartViewModel` downloads master data and stock overview when it opens): the products in stock
+and, with prices, their value, then as list Grocy's messages above its stock overview (due
+within the due soon days, overdue, expired, below min. stock amount with how many of them are
+on shopping lists; `stockSummaryOf` of `core:model`, counted like Grocy's messages), and the
+objects of each master data category the server has in one line joined by commas
+(`MasterDataCount`, `start_list_join`); then Settings as a
 group of its own with the gear icon, a plain item opening the settings as their own scene, and the
 app menu without Settings; from
 Material's expanded width on a list-detail scene like the settings: `StartSection`, the
@@ -37,7 +44,8 @@ Stock overview (`stockoverview/` of `feature:masterdata`, it opens the product o
   `stock_current_locations` and the products on shopping lists (`product_stock_info` and
   `stock_locations`, database version 6); the pure `buildStockOverview` only joins, filters,
   sorts and groups them, like Grocy's page does in its template and JS (due status from the
-  date: `dueStatusOf`, unknown due dates sort as Grocy's 2888-12-31, never overdue last).
+  date: `dueStatusOf` of `core:model`, unknown due dates sort as Grocy's 2888-12-31, never
+  overdue last).
 - Below the title (`SegmentedListScreen(subtitle)`, onSurfaceVariant) Grocy's "%s Products,
   %s total value". The filter chips: status first (with the number of products of each in its
   menu instead of Grocy's colored messages; "All", then a group with "not fresh" (due soon,
@@ -45,27 +53,37 @@ Stock overview (`stockoverview/` of `feature:masterdata`, it opens the product o
   in stock and opened (not in Grocy); `DropdownFilterChip(optionGroups, selectedLabel)`), then
   location and product group, then Grocy's table options: sort (the name and the shown fields
   but the picture), group by (Grocy's groupable columns; groups as group titles, rows without a
-  value last as "Not set") and the shown fields (`MultiSelectChip`, only those of features the
-  server has, `availableFields`). Fields, grouping and sort are kept like Grocy keeps its table
+  value last as "Not set") and the shown fields (`MultiSelectChip`, never selected: it chooses
+  the look, it filters nothing; only fields of features the server has, `availableFields`). Fields, grouping and sort are kept like Grocy keeps its table
   options (`StockOverviewOptions` of `core:model` in `SettingsStore`, read at app start by
   `StockOverviewOptionsRepository`); hiding the field the list is sorted by sorts it by Grocy's
   default again (next due date, the name while that is hidden). Search like the products.
-- Each product is a segmented item: the name as title, the shown fields as chips that wrap
-  below it (`FieldChips`: surfaceContainer, no outline or elevation; the amount blue below the
-  min. stock amount, the next due date yellow when due soon and red when overdue or expired:
-  `rememberStatusColors` of `core:design`, Material's custom color container roles of fixed
-  hues harmonized with primary), the description as text, the picture as thumbnail. A tap opens
-  the product overview. Grocy's buttons in front of a row are swipe actions (`SwipeActionBox`
-  of `core:design`, like Gmail's: a rounded primary surface opens with the icon, which moves to
-  its middle beyond the threshold with a tick; letting go there runs the action and the item
-  springs back instead of being swiped away, so no extra tap): towards the end "Consume" (the
-  quick consume amount), towards the start "Mark as opened"; both are also the item's
+- Each product is a segmented item: the name as title (a 4.dp dot in the harmonized blue after
+  it while on a shopping list, Grocy's cart icon), the shown fields as chips that wrap below it
+  (`FieldChips`: surfaceContainer, no outline or elevation; the amount blue below the min. stock
+  amount, the amount with sub products with the "functions" icon as Grocy's sigma, the next due
+  date yellow when due soon and red when overdue or expired: `rememberStatusColors` of
+  `core:design`, Material's custom color roles of fixed hues harmonized with primary), the
+  description as text, the picture as thumbnail. A tap opens the product overview. Grocy's
+  buttons in front of a row are swipe actions (`SwipeActionBox` of `core:design`, like Gmail's: a
+  rounded primary surface opens from the screen's edge and uncovers the icon, which rests 16.dp
+  from that edge until the surface's middle reaches it and stays in the middle then; passing the
+  threshold ticks; letting go beyond it runs the action and the item springs back instead of
+  being swiped away, so no extra tap): towards the end "Consume" (the quick consume amount),
+  towards the start "Mark as opened" (the quick open amount, tertiary instead of primary, so
+  both sides differ: `SwipeAction(containerColor, contentColor)`); both are also the item's
   accessibility actions and the first menu group (with "Consume all" and "Consume as spoiled"),
   then "Add to shopping list" and "Search for recipes", then "Edit product"; actions that are
   not possible are disabled (`AppBarMenuItem(enabled)`), like Grocy's buttons.
+- The bookings work like Grocy's row buttons (`StockRepository.consumeProduct`/`openProduct`:
+  `allow_subproduct_substitution`, amounts in the stock unit, "Consume all" the own amount, a
+  parent without own stock its sub products, the tare weight with tare weight handling), online
+  only; Grocy's message with "Undo" undoes the whole transaction (`undoTransaction`), and the
+  overview is downloaded again afterwards. A failed download after a booking never reports the
+  booking as failed (it would invite booking twice), the next refresh gets it.
 - The floating toolbar: Journal, Stock entries, Reports (with location or price tracking) and
-  Search, scanning as its FAB. Consuming, opening, reports, scanning and recipes do nothing yet,
-  their pages do not exist.
+  Search, scanning as its FAB. Reports, scanning and recipes do nothing yet, their pages do not
+  exist.
 
 Master data (`feature:masterdata`), built after Grocy's web frontend:
 - `MasterDataScreen` (beside the start screen without back button and app menu, the start
@@ -918,8 +936,9 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   scrollbar cannot be dragged, on purpose no own one that can.
 - Colors of states outside the color scheme (Grocy's highlighted rows) come from
   `rememberStatusColors` (`core:design`): info (blue), warning (yellow), critical (red), fixed
-  hues harmonized with primary and turned into container and content tones like Material's
-  custom colors (90/10 light, 30/90 dark), always together with a text. Gestures on list items
+  hues harmonized with primary and turned into container, content and color tones like
+  Material's custom colors (90/10/40 light, 30/90/80 dark; `color` for small marks such as
+  dots), always together with a text. Gestures on list items
   use `SwipeActionBox` (Gmail's look, the action runs on letting go beyond the threshold, the
   item springs back); every swipe action must also be in the item's menu and its accessibility
   actions.
@@ -936,7 +955,8 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   and follow it while it slides out and back in, `snackbarLift`), `SegmentedSwitchItem`,
   `SupportingLines` for every multi-line supporting content in lazy lists (Material sizes items
   by the slot's baselines, a reused column kept those of its former line count, so items stayed
-  too high), `SearchableDropdownField` for every choice of objects, a combobox like Grocy's pickers: the
+  too high), `SupportingBulletList` for a text with a bulleted list in that slot (wrapping
+  lines; `FormattedText`'s lists bring paragraph spacing a list item does not want), `SearchableDropdownField` for every choice of objects, a combobox like Grocy's pickers: the
   text is the value (a text naming an option chooses it, an empty one chooses nothing, other
   text shows "Choose an entry from the list" once no suggestion is open and is reported through
   `onUnmatchedChange`, so forms refuse to save); the menu only suggests (fuzzy, no check marks,

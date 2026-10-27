@@ -1,6 +1,5 @@
 package com.patrickzedler.grocy.core.design.component
 
-import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -28,7 +28,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onSizeChanged
@@ -48,20 +50,24 @@ import kotlinx.coroutines.launch
  * An action of [SwipeActionBox]: [onSwipe] runs when the item is let go beyond the threshold.
  * A disabled action cannot be swiped to. Swiping is a gesture, so the action must also be
  * reachable otherwise, e.g. in the item's menu and as its custom accessibility action.
+ * [containerColor] and [contentColor] tell the actions of both sides apart, primary and
+ * onPrimary by default.
  */
 @Immutable
 class SwipeAction(
     val icon: Painter,
     val enabled: Boolean = true,
+    val containerColor: Color = Color.Unspecified,
+    val contentColor: Color = Color.Unspecified,
     val onSwipe: () -> Unit,
 )
 
 /**
  * Swipes [content] sideways to run an action, like Gmail's list: a rounded primary surface
- * opens beside the item with the action's icon, which moves to its middle once the item is
- * pulled beyond the threshold (with a tick). Unlike Gmail the item is not swiped away: letting
- * it go runs the action there and the item springs back, below the threshold it springs back
- * without one.
+ * opens beside the item and uncovers the action's icon, which rests near the screen's edge
+ * until the surface's middle reaches it and then stays in the middle. Passing the threshold
+ * ticks. Unlike Gmail the item is not swiped away: letting it go beyond the threshold runs the
+ * action and the item springs back, below the threshold it springs back without one.
  *
  * @param startAction opened at the start edge, swiping towards the end.
  * @param endAction opened at the end edge, swiping towards the start.
@@ -79,7 +85,6 @@ fun SwipeActionBox(
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val motionScheme = MaterialTheme.motionScheme
     val returnSpec = motionScheme.defaultSpatialSpec<Float>()
-    val iconSpec = motionScheme.fastSpatialSpec<Float>()
     val currentStart by rememberUpdatedState(startAction?.takeIf { it.enabled })
     val currentEnd by rememberUpdatedState(endAction?.takeIf { it.enabled })
 
@@ -89,7 +94,6 @@ fun SwipeActionBox(
     var returnJob by remember { mutableStateOf<Job?>(null) }
     val threshold = with(density) { swipeThreshold(width.toFloat(), SwipeThreshold.toPx()) }
     val isArmed by remember(threshold) { derivedStateOf { abs(offset) >= threshold } }
-    val iconCentering = remember { Animatable(0f) }
     var wasArmed by remember { mutableStateOf(false) }
 
     LaunchedEffect(isArmed) {
@@ -104,7 +108,6 @@ fun SwipeActionBox(
             )
         }
         wasArmed = isArmed
-        iconCentering.animateTo(if (isArmed) 1f else 0f, iconSpec)
     }
 
     val draggableState = rememberDraggableState { delta ->
@@ -150,7 +153,6 @@ fun SwipeActionBox(
             SwipeActionSurface(
                 action = action,
                 revealed = with(density) { (abs(offset).toDp() - SwipeActionGap) },
-                centering = { iconCentering.value },
                 atStart = offset > 0f,
                 modifier = Modifier.matchParentSize(),
             )
@@ -166,7 +168,6 @@ fun SwipeActionBox(
 private fun SwipeActionSurface(
     action: SwipeAction,
     revealed: Dp,
-    centering: () -> Float,
     atStart: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -184,16 +185,15 @@ private fun SwipeActionSurface(
                     layout(surfaceWidth, placeable.height) { placeable.place(0, 0) }
                 }
                 .clip(RoundedCornerShape(percent = 50))
-                .background(MaterialTheme.colorScheme.primary),
+                .background(action.containerColor.takeOrElse { MaterialTheme.colorScheme.primary }),
         ) {
             Icon(
                 painter = action.icon,
                 // The item's menu and accessibility actions name it
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimary,
+                tint = action.contentColor.takeOrElse { MaterialTheme.colorScheme.onPrimary },
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .size(SwipeIconSize)
                     .offset {
                         val surfaceWidth = revealed.toPx()
                         val iconSize = SwipeIconSize.toPx()
@@ -201,11 +201,13 @@ private fun SwipeActionSurface(
                             surfaceWidth = surfaceWidth,
                             iconSize = iconSize,
                             edgeInset = SwipeIconInset.toPx(),
-                            centering = centering(),
-                            besideItemAtEnd = atStart,
+                            surfaceAtStart = atStart,
                         )
                         IntOffset(start.roundToInt(), 0)
-                    },
+                    }
+                    // Full size in a narrower surface, which uncovers it instead of shrinking it
+                    .wrapContentWidth(Alignment.Start, unbounded = true)
+                    .size(SwipeIconSize),
             )
         }
     }
@@ -232,20 +234,22 @@ internal fun swipeThreshold(width: Float, preferred: Float): Float =
     if (width <= 0f) preferred else minOf(preferred, width * MAX_THRESHOLD_FRACTION)
 
 /**
- * Start of the icon inside the opened surface: next to the item (at its edge, [edgeInset] away)
- * while not [centering], in the surface's middle once fully centering. [besideItemAtEnd]: the
- * item lies at the surface's end, so the icon starts there.
+ * Start of the icon inside the opened surface: [edgeInset] from the screen's edge, where the
+ * surface opens from ([surfaceAtStart]: the start edge), so the growing surface uncovers it
+ * without moving it, and in the surface's middle once that is farther from the edge.
  */
 internal fun swipeIconStart(
     surfaceWidth: Float,
     iconSize: Float,
     edgeInset: Float,
-    centering: Float,
-    besideItemAtEnd: Boolean,
+    surfaceAtStart: Boolean,
 ): Float {
-    val besideItem = if (besideItemAtEnd) surfaceWidth - edgeInset - iconSize else edgeInset
     val middle = (surfaceWidth - iconSize) / 2f
-    return besideItem + (middle - besideItem) * centering
+    return if (surfaceAtStart) {
+        maxOf(edgeInset, middle)
+    } else {
+        minOf(surfaceWidth - edgeInset - iconSize, middle)
+    }
 }
 
 private const val MAX_THRESHOLD_FRACTION = 0.4f
@@ -256,4 +260,5 @@ private val SwipeThreshold = 96.dp
 // Between the opened surface and the item, like Gmail's
 private val SwipeActionGap = 4.dp
 private val SwipeIconSize = 24.dp
+// From the screen's edge, like the icons of list items
 private val SwipeIconInset = 16.dp

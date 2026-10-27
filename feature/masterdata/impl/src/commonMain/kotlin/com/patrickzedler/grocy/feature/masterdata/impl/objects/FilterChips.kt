@@ -218,15 +218,14 @@ internal fun <T> DropdownFilterChip(
 
 /**
  * A chip whose menu turns several [options] on and off, e.g. the shown fields of a list like
- * Grocy's "Table options"; the menu stays open for more changes. Selected while [checked]
- * differs from the default ([isDefault]).
+ * Grocy's "Table options"; the menu stays open for more changes. Never selected: what it shows
+ * is a choice of the list's look, not a filter that hides something.
  */
 @Composable
 internal fun <T> MultiSelectChip(
     label: String,
     options: List<T>,
     checked: Set<T>,
-    isDefault: Boolean,
     optionLabel: @Composable (T) -> String,
     onCheckedChange: (option: T, checked: Boolean) -> Unit,
 ) {
@@ -235,7 +234,7 @@ internal fun <T> MultiSelectChip(
 
     Box {
         FilterChip(
-            selected = !isDefault,
+            selected = false,
             onClick = {
                 haptic.confirm()
                 expanded = true

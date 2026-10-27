@@ -4,8 +4,8 @@ import com.patrickzedler.grocy.core.model.masterdata.QuantityUnitConversion
 import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.model.stock.ProductPurchase
-import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockEntry
+import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockLogEntry
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -101,6 +101,8 @@ internal data class StockLogDto(
     @SerialName("user_id") val userId: FlexInt = null,
     @SerialName("correlation_id") val correlationId: FlexString = null,
     @SerialName("stock_id") val stockId: FlexString = null,
+    /** The action the booking belongs to; undoing it undoes all of its bookings. */
+    @SerialName("transaction_id") val transactionId: FlexString = null,
     val note: FlexString = null,
 ) {
     fun toModel() = StockLogEntry(

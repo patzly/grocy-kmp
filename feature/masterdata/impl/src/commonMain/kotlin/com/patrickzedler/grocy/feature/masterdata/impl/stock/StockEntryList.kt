@@ -1,6 +1,5 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.stock
 
-import com.patrickzedler.grocy.core.model.masterdata.DueType
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
@@ -9,21 +8,11 @@ import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.masterdata.nameFor
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
+import com.patrickzedler.grocy.core.model.stock.DueStatus
 import com.patrickzedler.grocy.core.model.stock.StockEntry
+import com.patrickzedler.grocy.core.model.stock.dueStatusOf
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.model.text.formatDecimal
-
-/** How Grocy highlights an entry by its due date. */
-internal enum class DueStatus {
-    /** Due within the user's "Due soon days". */
-    DUE_SOON,
-
-    /** A best before date in the past: still usable, Grocy greys it. */
-    OVERDUE,
-
-    /** An expiration date in the past: Grocy shows it red. */
-    EXPIRED,
-}
 
 /** The filters of Grocy's stock entries page: product and location. */
 internal data class StockEntryFilter(
@@ -140,16 +129,6 @@ internal fun buildStockEntryItems(
                 { it.entry.id },
             ),
         )
-}
-
-/**
- * Grocy's highlighting: a due date before today is overdue (best before) or expired
- * (expiration date), one within the next [dueSoonDays] days due soon.
- */
-internal fun dueStatusOf(dueDay: Long, today: Long, dueSoonDays: Int, dueType: DueType) = when {
-    dueDay < today -> if (dueType == DueType.EXPIRATION) DueStatus.EXPIRED else DueStatus.OVERDUE
-    dueDay <= today + dueSoonDays -> DueStatus.DUE_SOON
-    else -> null
 }
 
 /** Stock units in one price unit of the product, 1 without a known conversion. */

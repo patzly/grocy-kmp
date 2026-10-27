@@ -361,6 +361,47 @@ class GrocyApiStockTest {
     }
 
     @Test
+    fun quickConsumeLetsSubProductsStandInAndReturnsItsTransaction() = runTest {
+        val api = api {
+            json("""[{"id":12,"product_id":2,"transaction_id":"x1"},{"id":13,"product_id":5}]""")
+        }
+
+        val transaction = api.consumeProduct(CONNECTION, 2, 1.5, spoiled = false)
+
+        assertEquals("x1", transaction)
+        val request = requests.single()
+        assertEquals("/api/stock/products/2/consume", request.url.encodedPath)
+        val body = request.json
+        assertEquals(1.5, body.getValue("amount").jsonPrimitive.double)
+        assertFalse(body.getValue("spoiled").jsonPrimitive.boolean)
+        assertTrue(body.getValue("allow_subproduct_substitution").jsonPrimitive.boolean)
+        assertFalse("stock_entry_id" in body)
+    }
+
+    @Test
+    fun quickOpenReturnsItsTransaction() = runTest {
+        val api = api { json("""[{"id":14,"product_id":2,"transaction_id":"x2"}]""") }
+
+        val transaction = api.openProduct(CONNECTION, 2, 1.0)
+
+        assertEquals("x2", transaction)
+        val request = requests.single()
+        assertEquals("/api/stock/products/2/open", request.url.encodedPath)
+        assertEquals(1.0, request.json.getValue("amount").jsonPrimitive.double)
+        assertTrue(request.json.getValue("allow_subproduct_substitution").jsonPrimitive.boolean)
+    }
+
+    @Test
+    fun undoingATransactionPostsToIt() = runTest {
+        val api = api { respond("", HttpStatusCode.NoContent) }
+
+        api.undoTransaction(CONNECTION, "x1")
+
+        assertEquals(HttpMethod.Post, requests.single().method)
+        assertEquals("/api/stock/transactions/x1/undo", requests.single().url.encodedPath)
+    }
+
+    @Test
     fun productIsAddedToTheShoppingListAndItsItemFound() = runTest {
         val api = api { request ->
             if (request.method == HttpMethod.Post) {

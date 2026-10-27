@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.feature.masterdata.impl.stockoverview
 
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.snapshots.Snapshot
+import app.cash.turbine.test
 import com.patrickzedler.grocy.core.data.settings.StockOverviewOptionsRepository
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.core.model.stock.StockOverviewField
@@ -10,6 +11,9 @@ import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.testing.FakeSettingsStore
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
+import com.patrickzedler.grocy.feature.masterdata.impl.related.ChangeError
+import io.ktor.http.HttpMethod
+import io.ktor.http.content.TextContent
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -26,6 +30,11 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.boolean
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 class StockOverviewViewModelTest {
 
@@ -175,6 +184,92 @@ class StockOverviewViewModelTest {
         assertEquals(listOf("Milk", "Yoghurt"), viewModel.names)
         assertFalse(viewModel.isSearchVisible)
         assertEquals("", viewModel.searchState.text.toString())
+    }
+
+    private fun StockOverviewViewModel.item(name: String) =
+        state.value!!.groups.flatMap { it.items }.single { it.name == name }
+
+    private fun bookingBody(action: String) = environment.server
+        .requestsTo("/api/stock/products/1/$action", HttpMethod.Post)
+        .single().body.let { Json.parseToJsonElement((it as TextContent).text).jsonObject }
+
+    @Test
+    fun consumingBooksTheQuickConsumeAmountAndOffersUndo() = runTest(dispatcher) {
+        val viewModel = viewModel()
+
+        viewModel.events.test {
+            viewModel.consume(viewModel.item("Milk"))
+            advanceUntilIdle()
+
+            assertEquals(
+                StockOverviewEvent.Consumed("1 Piece", "Milk", spoiled = false, "t10"),
+                awaitItem(),
+            )
+        }
+        val body = bookingBody("consume")
+        assertEquals(1.0, body.getValue("amount").jsonPrimitive.double)
+        assertFalse(body.getValue("spoiled").jsonPrimitive.boolean)
+    }
+
+    @Test
+    fun consumingAllBooksTheWholeStockAsSpoiledOnlyWhenAsked() = runTest(dispatcher) {
+        val viewModel = viewModel()
+
+        viewModel.events.test {
+            viewModel.consumeAll(viewModel.item("Milk"))
+            advanceUntilIdle()
+
+            assertEquals("3 Pieces", (awaitItem() as StockOverviewEvent.Consumed).amount)
+        }
+        val body = bookingBody("consume")
+        assertEquals(3.0, body.getValue("amount").jsonPrimitive.double)
+        assertFalse(body.getValue("spoiled").jsonPrimitive.boolean)
+    }
+
+    @Test
+    fun openingBooksTheQuickOpenAmount() = runTest(dispatcher) {
+        val viewModel = viewModel()
+
+        viewModel.events.test {
+            viewModel.open(viewModel.item("Milk"))
+            advanceUntilIdle()
+
+            assertEquals(
+                StockOverviewEvent.Opened("1 Piece", "Milk", movedTo = null, "t10"),
+                awaitItem(),
+            )
+        }
+        assertEquals(1.0, bookingBody("open").getValue("amount").jsonPrimitive.double)
+    }
+
+    @Test
+    fun undoUndoesTheWholeTransaction() = runTest(dispatcher) {
+        val viewModel = viewModel()
+
+        viewModel.events.test {
+            viewModel.undo("t10")
+            advanceUntilIdle()
+
+            assertEquals(StockOverviewEvent.Undone, awaitItem())
+        }
+        assertEquals(
+            1,
+            environment.server.requestsTo("/api/stock/transactions/t10/undo", HttpMethod.Post).size,
+        )
+    }
+
+    @Test
+    fun bookingOfflineFailsWithoutChangingAnything() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        environment.server.unreachable = true
+
+        viewModel.events.test {
+            viewModel.consumeSpoiled(viewModel.item("Milk"))
+            advanceUntilIdle()
+
+            assertEquals(StockOverviewEvent.Failed(ChangeError.Offline), awaitItem())
+        }
+        assertEquals(listOf("Milk", "Yoghurt"), viewModel.names)
     }
 
     @Test

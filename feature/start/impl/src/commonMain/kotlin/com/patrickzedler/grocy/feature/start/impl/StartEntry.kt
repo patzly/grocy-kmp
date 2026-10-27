@@ -33,7 +33,11 @@ fun EntryProviderScope<NavKey>.startEntry(
     ) {
         StartScreen(
             viewModel = viewModel {
-                StartViewModel(dependencies.masterDataRepository, dependencies.serverConfig)
+                StartViewModel(
+                    dependencies.masterDataRepository,
+                    dependencies.stockRepository,
+                    dependencies.serverConfig,
+                )
             },
             isBesideDetail = showsDetailBesideList(),
             shownSection = startSectionOf(navigator.currentRoute),

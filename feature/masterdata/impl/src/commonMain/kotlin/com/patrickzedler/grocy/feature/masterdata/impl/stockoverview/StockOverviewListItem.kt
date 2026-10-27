@@ -2,7 +2,9 @@
 
 package com.patrickzedler.grocy.feature.masterdata.impl.stockoverview
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemDefaults
@@ -43,6 +46,7 @@ import com.patrickzedler.grocy.core.design.component.SwipeActionBox
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.rememberStatusColors
+import com.patrickzedler.grocy.core.model.stock.DueStatus
 import com.patrickzedler.grocy.core.model.stock.StockOverviewField
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.model.text.formatDate
@@ -56,13 +60,13 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_box
 import com.patrickzedler.grocy.core.resources.ic_rounded_calculate
 import com.patrickzedler.grocy.core.resources.ic_rounded_category
 import com.patrickzedler.grocy.core.resources.ic_rounded_dataset
+import com.patrickzedler.grocy.core.resources.ic_rounded_functions
 import com.patrickzedler.grocy.core.resources.ic_rounded_inventory_2
 import com.patrickzedler.grocy.core.resources.ic_rounded_local_fire_department
 import com.patrickzedler.grocy.core.resources.ic_rounded_location_on
 import com.patrickzedler.grocy.core.resources.ic_rounded_payments
 import com.patrickzedler.grocy.core.resources.ic_rounded_restaurant
 import com.patrickzedler.grocy.core.resources.ic_rounded_sell
-import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_cart
 import com.patrickzedler.grocy.core.resources.ic_rounded_storefront
 import com.patrickzedler.grocy.core.resources.product_edit
 import com.patrickzedler.grocy.core.resources.product_overview_add_to_shopping_list
@@ -82,7 +86,6 @@ import com.patrickzedler.grocy.core.resources.stock_overview_on_shopping_list
 import com.patrickzedler.grocy.core.resources.stock_overview_open
 import com.patrickzedler.grocy.core.resources.stock_overview_search_recipes
 import com.patrickzedler.grocy.feature.masterdata.impl.products.ProductThumbnail
-import com.patrickzedler.grocy.feature.masterdata.impl.stock.DueStatus
 import com.patrickzedler.grocy.feature.masterdata.impl.stock.EntryPrice
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
@@ -141,9 +144,12 @@ internal fun StockOverviewListItem(
             enabled = item.canConsume,
         ) { actions.onConsume(item) },
         endAction = if (style.canOpen) {
+            // Another color than consuming, so the two sides are told apart at a glance
             SwipeAction(
                 icon = painterResource(Res.drawable.ic_rounded_box),
                 enabled = canOpen,
+                containerColor = MaterialTheme.colorScheme.tertiary,
+                contentColor = MaterialTheme.colorScheme.onTertiary,
             ) { actions.onOpen(item) }
         } else {
             null
@@ -191,8 +197,32 @@ internal fun StockOverviewListItem(
                 }
             },
         ) {
-            Text(item.name)
+            Title(item)
         }
+    }
+}
+
+/** The name, with a small blue dot after it while the product is on a shopping list. */
+@Composable
+private fun Title(item: StockOverviewItem) {
+    if (!item.onShoppingList) {
+        Text(item.name)
+        return
+    }
+    val onShoppingList = stringResource(Res.string.stock_overview_on_shopping_list)
+    val dotColor = rememberStatusColors().info.color
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(ShoppingListDotGap),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(item.name, modifier = Modifier.weight(1f, fill = false))
+        Box(
+            Modifier
+                .size(ShoppingListDotSize)
+                .background(dotColor, CircleShape)
+                // As text like the chips, so screen readers still read the name
+                .clearAndSetSemantics { text = AnnotatedString(onShoppingList) },
+        )
     }
 }
 
@@ -343,7 +373,7 @@ private fun fieldChips(item: StockOverviewItem, style: StockOverviewItemStyle): 
     return chips
 }
 
-/** Own amount, with sub products and whether it is on a shopping list, like Grocy's column. */
+/** Own amount and the one with sub products, like Grocy's column. */
 @Composable
 private fun amountChips(item: StockOverviewItem, belowMinStock: StatusColor): List<FieldChip> {
     val below = stringResource(Res.string.stock_overview_below_min_stock)
@@ -364,17 +394,14 @@ private fun amountChips(item: StockOverviewItem, belowMinStock: StatusColor): Li
         item.amountAggregated?.let { amount ->
             val text = withOpened(amount, openedAggregated)
             FieldChip(
-                text = "$SIGMA $text",
+                text = text,
                 description = stringResource(Res.string.product_overview_with_sub_products, text),
+                // Grocy's sigma before the amount including sub products
+                icon = Res.drawable.ic_rounded_functions,
                 // Products without stock of their own show the status here
                 status = status.takeIf { item.amount == null },
             )
         },
-        FieldChip(
-            text = "",
-            description = stringResource(Res.string.stock_overview_on_shopping_list),
-            icon = Res.drawable.ic_rounded_shopping_cart,
-        ).takeIf { item.onShoppingList },
     )
 }
 
@@ -435,10 +462,7 @@ private fun FieldChipView(chip: FieldChip) {
         Row(
             modifier = Modifier
                 .heightIn(min = ChipHeight)
-                .padding(
-                    start = if (chip.icon != null) 8.dp else 12.dp,
-                    end = if (chip.text.isEmpty()) 8.dp else 12.dp,
-                ),
+                .padding(start = if (chip.icon != null) 8.dp else 12.dp, end = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -450,22 +474,20 @@ private fun FieldChipView(chip: FieldChip) {
                     tint = content,
                 )
             }
-            if (chip.text.isNotEmpty()) {
-                Text(
-                    text = chip.text,
-                    style = MaterialTheme.typography.labelLarge,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
+            Text(
+                text = chip.text,
+                style = MaterialTheme.typography.labelLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
         }
     }
 }
 
-// Grocy's sigma before the amount including sub products
-private const val SIGMA = "∑"
-
 private const val DESCRIPTION_LINES = 2
+
+private val ShoppingListDotSize = 4.dp
+private val ShoppingListDotGap = 6.dp
 
 // Material's chip height and icon size
 private val ChipHeight = 32.dp

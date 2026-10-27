@@ -157,14 +157,15 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
         val shoppingList = shoppingListViewModel(dependencies)
         // Outside the product list the form opens on its own
         val openProduct = { id: Int -> navigator.navigate(ProductRoute(id)) }
+        val stockOverview = viewModel {
+            StockOverviewViewModel(
+                repository,
+                dependencies.stockRepository,
+                dependencies.stockOverviewOptions,
+            )
+        }
         StockOverviewScreen(
-            viewModel = viewModel {
-                StockOverviewViewModel(
-                    repository,
-                    dependencies.stockRepository,
-                    dependencies.stockOverviewOptions,
-                )
-            },
+            viewModel = stockOverview,
             overviewViewModel = overview,
             shoppingList = shoppingList,
             productLinks = ProductLinks(
@@ -173,7 +174,7 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
                 onStockJournalClick = { navigator.navigate(StockJournalRoute(it)) },
                 onStockJournalSummaryClick = { navigator.navigate(StockJournalSummaryRoute(it)) },
             ),
-            // Grocy's booking pages, reports and recipes do not exist in the app yet
+            // Grocy's reports, scanning and recipes do not exist in the app yet
             links = StockOverviewLinks(
                 onJournalClick = { navigator.navigate(StockJournalRoute()) },
                 onStockEntriesClick = { navigator.navigate(StockEntriesRoute()) },
@@ -182,10 +183,10 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
             ),
             itemActions = StockOverviewItemActions(
                 onClick = { overview.show(it.productId) },
-                onConsume = {},
-                onOpen = {},
-                onConsumeAll = {},
-                onConsumeSpoiled = {},
+                onConsume = stockOverview::consume,
+                onOpen = stockOverview::open,
+                onConsumeAll = stockOverview::consumeAll,
+                onConsumeSpoiled = stockOverview::consumeSpoiled,
                 onAddToShoppingList = { shoppingList.open(it.productId) },
                 onSearchRecipes = {},
                 onEditProduct = { openProduct(it.productId) },
