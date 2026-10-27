@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.rememberScrollState
@@ -28,7 +27,6 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,7 +48,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.data.log.LogSource
 import com.patrickzedler.grocy.core.design.GrocyTheme
+import com.patrickzedler.grocy.core.design.component.AppBarAction
 import com.patrickzedler.grocy.core.design.component.AppBarIconButton
+import com.patrickzedler.grocy.core.design.component.ButtonGroupOverflowIndicator
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
@@ -59,6 +59,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedTexts
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.design.component.smallIconButtonSize
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_copy_to_clipboard
 import com.patrickzedler.grocy.core.resources.action_more_options
@@ -129,14 +130,18 @@ private fun LogContent(
         ),
         modifier = modifier,
         navigationIcon = { NavigateBackButton(onClick = onBackClick) },
-        actions = {
-            AppBarIconButton(
-                painter = painterResource(Res.drawable.ic_rounded_refresh),
-                contentDescription = stringResource(Res.string.action_reload),
-                // A reload already running shows its indicator
-                onClick = { if (log != null) onReloadClick() },
-            )
-        },
+        actions = listOf(
+            AppBarAction { actionModifier, interactionSource ->
+                AppBarIconButton(
+                    painter = painterResource(Res.drawable.ic_rounded_refresh),
+                    contentDescription = stringResource(Res.string.action_reload),
+                    // A reload already running shows its indicator
+                    onClick = { if (log != null) onReloadClick() },
+                    modifier = actionModifier,
+                    interactionSource = interactionSource,
+                )
+            },
+        ),
     ) {
         logGroup(log = log, onCopyClick = onCopyClick, onFeedbackClick = onFeedbackClick)
     }
@@ -193,11 +198,13 @@ private fun LogActions(
 
     ButtonGroup(
         overflowIndicator = { menuState ->
-            OverflowIndicator(
-                isShowing = { menuState.isShowing },
-                show = menuState::show,
-                dismiss = menuState::dismiss,
-            )
+            ButtonGroupOverflowIndicator {
+                OverflowIndicator(
+                    isShowing = { menuState.isShowing },
+                    show = menuState::show,
+                    dismiss = menuState::dismiss,
+                )
+            }
         },
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         modifier = modifier,
@@ -296,10 +303,7 @@ private fun OverflowIndicator(
                 haptic.confirm()
                 if (isShowing()) dismiss() else show()
             },
-            modifier = Modifier
-                .minimumInteractiveComponentSize()
-                .size(IconButtonDefaults.smallContainerSize())
-                .clickCursor(),
+            modifier = smallIconButtonSize().clickCursor(),
             colors = IconButtonDefaults.filledTonalIconButtonColors(),
             shapes = IconButtonDefaults.shapes(),
         ) {

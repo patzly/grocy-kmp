@@ -74,8 +74,8 @@ import io.ktor.http.content.ByteArrayContent
 import io.ktor.http.content.OutgoingContent
 import io.ktor.http.content.TextContent
 import io.ktor.http.isSuccess
-import io.ktor.util.encodeBase64
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.io.encoding.Base64
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.json.JsonObject
@@ -671,7 +671,7 @@ class GrocyApi(
         val response = execute(
             connection,
             HttpMethod.Get,
-            listOf("files", PRODUCT_PICTURES, fileName.encodeBase64()),
+            listOf("files", PRODUCT_PICTURES, Base64.encode(fileName.encodeToByteArray())),
             query = listOf("force_serve_as" to "picture", "best_fit_width" to maxWidth.toString()),
         )
         return response.bodyAsBytes()
@@ -686,7 +686,7 @@ class GrocyApi(
         execute(
             connection,
             HttpMethod.Put,
-            listOf("files", PRODUCT_PICTURES, fileName.encodeBase64()),
+            listOf("files", PRODUCT_PICTURES, Base64.encode(fileName.encodeToByteArray())),
             body = ByteArrayContent(bytes, ContentType.Application.OctetStream),
         )
     }
@@ -695,7 +695,7 @@ class GrocyApi(
         execute(
             connection,
             HttpMethod.Delete,
-            listOf("files", PRODUCT_PICTURES, fileName.encodeBase64()),
+            listOf("files", PRODUCT_PICTURES, Base64.encode(fileName.encodeToByteArray())),
         )
     }
 

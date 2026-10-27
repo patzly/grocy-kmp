@@ -142,11 +142,10 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   days fields have one too (`DueDaysPickerButton`): a date from today
   on becomes the days until it (`dueDaysUntil`), e.g. the date printed on the first purchase.
 - Number fields are Grocy's number pickers: minus and plus after the field in the same item
-  (`NumberStepperField` of `core:design`, round filled `secondaryContainer` icon buttons in a
-  `ButtonGroup`, `TextItem(stepper)`; gaps count the 4.dp each side of a 40.dp button inside its
-  48.dp touch target, so 4.dp between the buttons and 8.dp to the field look like Material's
-  12.dp, and the row reaches 8.dp into the item's end padding for the same 12.dp there; narrow
-  buttons would leave 8.dp each side, too much; the buttons are centered on the field, which
+  (`NumberStepperField` of `core:design`, narrow filled `secondaryContainer` icon buttons in a
+  standard `ButtonGroup`, `TextItem(stepper)`; 12.dp between the buttons, to the field and, the
+  row reaching 4.dp into the item's end padding, to the item's end (see "Button groups"); the
+  buttons are centered on the field, which
   grows with a wrapped label, so its error shows below the whole row through
   `NumberStepperField(error)` instead of the field's supporting text), stepping by one within Grocy's range (`NumberStepper`,
   `NumberStepper.Positive` for amounts above zero; the pure `steppedDecimal` of `core:model`
@@ -160,10 +159,12 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   last, ties by name) and searches every column. Userfields filter by entity (Grocy's entity list:
   OpenAPI's exposed entities, `userentity-<name>`, users; `UserfieldsRoute(entity)` from every
   "Configure userfields"), userentities link to their fields (narrow icon button and the item's
-  menu as a standard `ButtonGroup`, 12.dp apart). The filter chips
-  (`FilterChipRow`, `DropdownFilterChip`, `ShowDisabledChip`, `SortChip`, `ClearFilterChip`), the
-  search item and the empty states (`ListParts.kt`) are shared with the product list; a list
-  without search (stock entries) keeps the same gap below the chips (`filterGapItem`).
+  menu as a standard `ButtonGroup`, 12.dp apart, see "Button groups"). The filter chips
+  (`FilterChipRow`, `DropdownFilterChip`, `ShowDisabledChip`, `SortChip`, `ClearFilterChip`;
+  their menus scroll their groups together and leave room for the groups' shadows inside the
+  scrolling, which clips at its bounds), the search item and the empty states (`ListParts.kt`)
+  are shared with the product list; a list without search (stock entries) keeps the same gap
+  below the chips (`filterGapItem`).
 - Forms of the other categories build on `ObjectFormViewModel` (load, refresh for unknown ids,
   validation, unsaved changes, userfields of `userfieldEntity`, `ObjectFormEvent`s) and
   `ObjectFormScreen` (save FAB, Scroll to top, userfield group, leave guard). Fields and rules
@@ -942,6 +943,21 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   use `SwipeActionBox` (Gmail's look, the action runs on letting go beyond the threshold, the
   item springs back); every swipe action must also be in the item's menu and its accessibility
   actions.
+- Button groups of icon buttons (`ButtonGroupItems.kt` of `core:design`): Material's 12.dp lie
+  between the visible containers, the touch targets take no room in the group (48.dp targets
+  of narrow 32.dp buttons would leave 16.dp at least): Compose's hit test extends small
+  targets to 48.dp anyway and gives a touch in their overlap to the nearer button, each keeps
+  about 46 x 48.dp of its own. Items go in with `animatedItem` (the pressed one grows by
+  Material's ratio, its neighbours give way), icon buttons size themselves with
+  `smallIconButtonSize(width)`: in an item they fill the width the group animates (Material's
+  `TooltipBox` passes no minimum width on, so the button kept its size while only its slot
+  grew), on their own they keep the 48.dp room; overflow indicators go in
+  `ButtonGroupOverflowIndicator` (own width, hidden from screen readers until the group shows
+  it: the web announced the unplaced indicator as empty button). The groups' outer edges keep
+  the room of single buttons (`touchTargetRoom`), so they sit where single buttons would.
+  The top app bar's actions are such a group too (`SegmentedListScreen(actions:
+  List<AppBarAction>)` plus "Reload" and the overflow menu); a menu button in a group wraps
+  button and popup in one `Box`, the popup's anchor would be an item of its own.
 - Version numbers (app, Grocy) and other numbers read as columns use tabular figures
   (`TextStyle.withTabularNumbers()`), every digit equally wide.
 - Font is Google Sans Flex from Compose Resources. On web fonts load async;
@@ -1093,6 +1109,10 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   are common code. Android's ICU is stubbed in JVM tests, so tests never call the relative and
   duration formatters. Prices use the server's `CURRENCY` (`ServerConfig.currency`) and the
   user setting `stock_decimal_places_prices_display`.
+- ViewModels get the app language as parameter (`appLanguage()` of `MasterDataEntries`,
+  `LocalLocale`; a change restarts the app), composables read `LocalLocale`: Compose
+  deprecated `Locale.current`, which no state backs. Builds have no compiler warnings of the
+  project's own code.
 - Fuzzy search (`FuzzySearch`) and number formatting (`formatDecimal`, `parseDecimal`,
   `platformDecimalSeparator`) live in `core:model`, so they are tested on JVM and Wasm.
 - Network code is tested against `MockEngine` via `createGrocyHttpClient(engine)`, which uses the

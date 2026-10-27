@@ -4,7 +4,6 @@ import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.snapshots.Snapshot
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
-import io.ktor.util.encodeBase64
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -38,7 +37,12 @@ class ProductsViewModelTest {
     }
 
     private fun TestScope.viewModel() =
-        ProductsViewModel(environment.repository, dispatcher, decimalSeparator = '.').also {
+        ProductsViewModel(
+            environment.repository,
+            dispatcher,
+            decimalSeparator = '.',
+            language = "en",
+        ).also {
             backgroundScope.launch { it.state.collect {} }
             advanceUntilIdle()
         }
@@ -55,7 +59,7 @@ class ProductsViewModelTest {
 
     @Test
     fun listPicturesAreStoredInTheBackground() = runTest(dispatcher) {
-        val path = "/api/files/productpictures/${"x1bread.jpg".encodeBase64()}"
+        val path = "/api/files/productpictures/eDFicmVhZC5qcGc="
         environment.server.respond(path, body = "jpeg")
         val viewModel = viewModel()
         environment.server.unreachable = true

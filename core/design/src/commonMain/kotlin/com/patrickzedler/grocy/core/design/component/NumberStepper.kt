@@ -15,11 +15,11 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.IconButtonDefaults.IconButtonWidthOption
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -50,8 +50,9 @@ data class NumberStepper(val min: Double? = null, val max: Double? = null) {
 }
 
 /**
- * A number field with Grocy's number picker buttons after it: minus and plus as round filled
- * icon buttons, so a value can be changed by one without the keyboard. [field] fills the width
+ * A number field with Grocy's number picker buttons after it: minus and plus as narrow filled
+ * icon buttons in a standard button group, so a value can be changed by one without the
+ * keyboard. [field] fills the width
  * the buttons leave; its [error] shows below both like the field's supporting text, so the
  * buttons stay centered on the field when it grows with a wrapped label.
  */
@@ -133,21 +134,10 @@ private fun NumberStepperButtons(
         // Two buttons always fit, nothing ever moves into a menu
         overflowIndicator = {},
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(ButtonSpacing),
     ) {
         buttons.forEach { button ->
             val isEnabled = enabled && button.result != null
-            customItem(
-                buttonGroupContent = {
-                    val source = remember { MutableInteractionSource() }
-                    StepIconButton(
-                        button = button,
-                        enabled = isEnabled,
-                        onClick = { button.result?.let(state::setTextAndPlaceCursorAtEnd) },
-                        modifier = Modifier.animateWidth(source),
-                        interactionSource = source,
-                    )
-                },
+            animatedItem(
                 menuContent = { menuState ->
                     DropdownMenuItem(
                         text = { Text(button.description) },
@@ -158,7 +148,15 @@ private fun NumberStepperButtons(
                         },
                     )
                 },
-            )
+            ) { itemModifier, interactionSource ->
+                StepIconButton(
+                    button = button,
+                    enabled = isEnabled,
+                    onClick = { button.result?.let(state::setTextAndPlaceCursorAtEnd) },
+                    modifier = itemModifier,
+                    interactionSource = interactionSource,
+                )
+            }
         }
     }
 }
@@ -183,7 +181,8 @@ private fun StepIconButton(
                 onClick()
             },
             enabled = enabled,
-            modifier = Modifier.clickCursor(enabled = enabled),
+            modifier = smallIconButtonSize(IconButtonWidthOption.Narrow)
+                .clickCursor(enabled = enabled),
             colors = IconButtonDefaults.filledIconButtonColors(
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -196,11 +195,10 @@ private fun StepIconButton(
     }
 }
 
-// Round 40.dp buttons in 48.dp touch targets leave 4.dp on each side: these spacings make the
-// visible gaps the 12.dp of Material's button groups, to the field and the item's end as well
-private val ButtonSpacing = 4.dp
-private val StepperSpacing = 8.dp
-private val EndOverlap = 8.dp
+// The 12.dp of Material's button groups to the field and to the item's end as well; the buttons
+// take no room for their touch targets in the group, so only the item's padding needs reaching
+private val StepperSpacing = 12.dp
+private val EndOverlap = 4.dp
 
 // Material's supporting text padding of text fields, which it keeps internal
 private val SupportingTextPadding = PaddingValues(start = 16.dp, top = 4.dp, end = 16.dp)

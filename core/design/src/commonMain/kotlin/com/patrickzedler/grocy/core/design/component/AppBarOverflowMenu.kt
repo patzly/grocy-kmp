@@ -4,7 +4,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
@@ -17,7 +16,6 @@ import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MenuAnchorPosition
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -47,25 +45,34 @@ class AppBarMenuItem(
 
 /**
  * The narrow three dots button at the end of a top app bar and its menu: one expressive menu
- * group per entry of [groups], empty groups are left out.
+ * group per entry of [groups], empty groups are left out. In a button group, pass the item's
+ * modifier and interaction source.
  */
 @Composable
-fun AppBarOverflowMenu(groups: List<List<AppBarMenuItem>>) {
+fun AppBarOverflowMenu(
+    groups: List<List<AppBarMenuItem>>,
+    modifier: Modifier = Modifier,
+    interactionSource: MutableInteractionSource? = null,
+) {
     val shownGroups = groups.filter { it.isNotEmpty() }
     if (shownGroups.isEmpty()) return
     var showMenu by remember { mutableStateOf(false) }
 
-    AppBarIconButton(
-        painter = painterResource(Res.drawable.ic_rounded_more_vert),
-        contentDescription = stringResource(Res.string.action_more_options),
-        onClick = { showMenu = true },
-        narrow = true,
-    )
-    OverflowMenuPopup(
-        expanded = showMenu,
-        groups = shownGroups,
-        onDismissRequest = { showMenu = false },
-    )
+    // One box, so a button group sees one item and the menu opens at the button
+    Box(modifier, propagateMinConstraints = true) {
+        AppBarIconButton(
+            painter = painterResource(Res.drawable.ic_rounded_more_vert),
+            contentDescription = stringResource(Res.string.action_more_options),
+            onClick = { showMenu = true },
+            narrow = true,
+            interactionSource = interactionSource,
+        )
+        OverflowMenuPopup(
+            expanded = showMenu,
+            groups = shownGroups,
+            onDismissRequest = { showMenu = false },
+        )
+    }
 }
 
 /**
@@ -94,13 +101,7 @@ fun ListItemOverflowMenu(
                     haptic.confirm()
                     showMenu = true
                 },
-                modifier = Modifier
-                    .minimumInteractiveComponentSize()
-                    .size(
-                        IconButtonDefaults.smallContainerSize(
-                            IconButtonDefaults.IconButtonWidthOption.Narrow,
-                        ),
-                    )
+                modifier = smallIconButtonSize(IconButtonDefaults.IconButtonWidthOption.Narrow)
                     .clickCursor(),
                 shapes = IconButtonDefaults.shapes(),
                 interactionSource = interactionSource,

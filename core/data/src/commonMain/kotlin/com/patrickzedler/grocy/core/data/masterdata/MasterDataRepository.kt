@@ -537,7 +537,7 @@ class MasterDataRepository(
         ServerValueEntity(key, Json.encodeToString(serializer, value))
 
     private fun <T> decodeOrNull(serializer: KSerializer<T>, json: String): T? = try {
-        Json { ignoreUnknownKeys = true }.decodeFromString(serializer, json)
+        lenientJson.decodeFromString(serializer, json)
     } catch (_: SerializationException) {
         null
     } catch (_: IllegalArgumentException) {
@@ -632,3 +632,6 @@ private suspend fun runCatchingApi(block: suspend () -> Unit) {
         // The file stays on the server, nothing refers to it anymore
     }
 }
+
+// Stored values of older versions may hold keys this version no longer knows
+private val lenientJson = Json { ignoreUnknownKeys = true }

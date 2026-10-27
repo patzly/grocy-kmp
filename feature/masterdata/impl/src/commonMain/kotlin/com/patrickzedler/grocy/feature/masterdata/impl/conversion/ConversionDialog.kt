@@ -1,8 +1,8 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.conversion
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.intl.Locale
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
@@ -86,7 +86,7 @@ internal fun ConversionDialog(
                 // Grocy explains the factor both ways once both units are chosen
                 hint = if (from != null && to != null && factor != null && from.id != to.id) {
                     val separator = platformDecimalSeparator()
-                    val language = Locale.current.toLanguageTag()
+                    val language = LocalLocale.current.toLanguageTag()
                     listOf(false, true).map { inverse ->
                         val meaning = conversionMeaning(
                             from, to, factor, state.decimals, separator, language, inverse,

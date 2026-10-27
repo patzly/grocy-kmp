@@ -8,7 +8,6 @@ import com.patrickzedler.grocy.core.testing.MasterDataJson
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
-import io.ktor.util.encodeBase64
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -65,7 +64,7 @@ class ProductViewModelTest {
 
     @Test
     fun formShowsTheStoredListPictureOffline() = runTest(dispatcher) {
-        val path = "/api/files/productpictures/${"x1bread.jpg".encodeBase64()}"
+        val path = "/api/files/productpictures/eDFicmVhZC5qcGc="
         environment.server.respond(path, body = "jpeg")
         val viewModel = viewModel(productId = 2)
         viewModel.thumbnail()

@@ -5,7 +5,6 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.intl.Locale
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
@@ -136,7 +135,7 @@ internal class BarcodeDialogState(
 internal class ProductBarcodesViewModel(
     private val repository: MasterDataRepository,
     private val decimalSeparator: Char = platformDecimalSeparator(),
-    language: String = Locale.current.toLanguageTag(),
+    language: String,
 ) : ViewModel() {
 
     private val productId = MutableStateFlow<Int?>(null)
@@ -146,18 +145,17 @@ internal class ProductBarcodesViewModel(
         repository.productBarcodes,
         repository.quantityUnits,
         repository.stores,
-        repository.serverConfig,
-        repository.userSettings,
-    ) { values ->
-        @Suppress("UNCHECKED_CAST")
-        val id = values[0] as Int? ?: return@combine emptyList()
+        // Paired, so each part keeps its type: combine takes at most five typed flows
+        combine(repository.serverConfig, repository.userSettings, ::Pair),
+    ) { id, barcodes, units, stores, (config, settings) ->
+        if (id == null) return@combine emptyList()
         buildBarcodeItems(
             productId = id,
-            barcodes = values[1] as List<ProductBarcode>,
-            units = values[2] as List<QuantityUnit>,
-            stores = values[3] as List<Store>,
-            config = values[4] as ServerConfig,
-            settings = values[5] as UserSettings,
+            barcodes = barcodes,
+            units = units,
+            stores = stores,
+            config = config,
+            settings = settings,
             decimalSeparator = decimalSeparator,
             language = language,
         )

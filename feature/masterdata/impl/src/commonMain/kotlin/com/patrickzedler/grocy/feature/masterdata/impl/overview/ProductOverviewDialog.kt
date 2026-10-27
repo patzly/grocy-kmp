@@ -19,7 +19,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ButtonGroupMenuState
-import androidx.compose.material3.ButtonGroupScope
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
@@ -32,7 +31,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,6 +56,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.design.GrocyTheme
+import com.patrickzedler.grocy.core.design.component.ButtonGroupOverflowIndicator
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
@@ -65,8 +64,10 @@ import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogConten
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.design.component.animatedItem
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.smallIconButtonSize
 import com.patrickzedler.grocy.core.model.text.durationOf
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.model.text.formatDate
@@ -305,13 +306,14 @@ private fun ActionGroup(
     }
 
     ButtonGroup(
-        overflowIndicator = { menuState -> ActionOverflowIndicator(menuState) },
+        overflowIndicator = { menuState ->
+            ButtonGroupOverflowIndicator { ActionOverflowIndicator(menuState) }
+        },
         // The guidelines' 12.dp between buttons of a small standard group
         horizontalArrangement = ButtonGroupDefaults.HorizontalArrangement,
     ) {
         actions.fastForEachIndexed { index, action ->
-            customItem(
-                buttonGroupContent = { ActionButton(action) },
+            animatedItem(
                 menuContent = { menuState ->
                     ActionMenuItem(
                         action = action,
@@ -320,30 +322,29 @@ private fun ActionGroup(
                         onDismiss = menuState::dismiss,
                     )
                 },
-            )
+            ) { itemModifier, interactionSource ->
+                ActionButton(action, itemModifier, interactionSource)
+            }
         }
     }
 }
 
 @Composable
-private fun ButtonGroupScope.ActionButton(action: OverviewAction) {
+private fun ActionButton(
+    action: OverviewAction,
+    modifier: Modifier,
+    interactionSource: MutableInteractionSource,
+) {
     val haptic = LocalHapticFeedback.current
-    val interactionSource = remember { MutableInteractionSource() }
     val label = stringResource(action.label)
 
-    HapticTooltipBox(text = label, modifier = Modifier.animateWidth(interactionSource)) {
+    HapticTooltipBox(text = label, modifier = modifier) {
         FilledIconButton(
             onClick = {
                 haptic.confirm()
                 action.onClick()
             },
-            modifier = Modifier
-                .minimumInteractiveComponentSize()
-                .size(
-                    IconButtonDefaults.smallContainerSize(
-                        IconButtonDefaults.IconButtonWidthOption.Wide,
-                    ),
-                )
+            modifier = smallIconButtonSize(IconButtonDefaults.IconButtonWidthOption.Wide)
                 .clickCursor(),
             shapes = IconButtonDefaults.shapes(),
             interactionSource = interactionSource,
@@ -386,10 +387,7 @@ private fun ActionOverflowIndicator(menuState: ButtonGroupMenuState) {
                 haptic.confirm()
                 if (menuState.isShowing) menuState.dismiss() else menuState.show()
             },
-            modifier = Modifier
-                .minimumInteractiveComponentSize()
-                .size(IconButtonDefaults.smallContainerSize())
-                .clickCursor(),
+            modifier = smallIconButtonSize().clickCursor(),
             shapes = IconButtonDefaults.shapes(),
         ) {
             Icon(

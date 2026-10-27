@@ -239,7 +239,7 @@ fun SearchableDropdownField(
                     .verticalScroll(menuScrollState),
             ) {
                 val count = matches.size + if (showNone) 1 else 0
-                if (showNone && noneLabel != null) {
+                if (showNone) {
                     OptionItem(
                         text = noneLabel,
                         supporting = null,

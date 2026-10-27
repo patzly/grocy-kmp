@@ -40,7 +40,11 @@ class ProductBarcodesViewModelTest {
 
     private suspend fun TestScope.viewModel(): ProductBarcodesViewModel {
         environment.repository.refresh()
-        return ProductBarcodesViewModel(environment.repository, decimalSeparator = '.').also {
+        return ProductBarcodesViewModel(
+            environment.repository,
+            decimalSeparator = '.',
+            language = "en",
+        ).also {
             backgroundScope.launch { it.items.collect {} }
             it.showProduct(1)
             advanceUntilIdle()

@@ -189,7 +189,7 @@ internal fun StockOverviewListItem(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (showsPicture) {
-                        item.pictureFileName?.let { ProductThumbnail(it, loadThumbnail) }
+                        ProductThumbnail(item.pictureFileName, loadThumbnail)
                     }
                     ListItemOverflowMenu(
                         groups = menuGroups(item, style, actions, consumeText, openText),

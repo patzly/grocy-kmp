@@ -7,8 +7,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.intl.Locale
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
@@ -170,7 +170,7 @@ private fun AmountItem(
             stringResource(
                 Res.string.data_this_equals,
                 formatDecimal(converted, state.decimals, platformDecimalSeparator()),
-                destination.nameFor(converted, Locale.current.toLanguageTag()),
+                destination.nameFor(converted, LocalLocale.current.toLanguageTag()),
             )
         } else {
             null

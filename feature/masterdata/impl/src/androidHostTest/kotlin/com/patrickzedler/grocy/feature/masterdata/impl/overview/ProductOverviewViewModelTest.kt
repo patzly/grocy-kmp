@@ -3,7 +3,6 @@ package com.patrickzedler.grocy.feature.masterdata.impl.overview
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
-import io.ktor.util.encodeBase64
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -44,7 +43,11 @@ class ProductOverviewViewModelTest {
     }
 
     private fun TestScope.openedViewModel(productId: Int = 1) =
-        ProductOverviewViewModel(environment.repository, decimalSeparator = '.').also {
+        ProductOverviewViewModel(
+            environment.repository,
+            decimalSeparator = '.',
+            language = "en",
+        ).also {
             backgroundScope.launch { it.state.collect {} }
             it.show(productId)
             advanceUntilIdle()
@@ -148,7 +151,7 @@ class ProductOverviewViewModelTest {
     @Test
     fun closingCancelsTheDownload() = runTest(dispatcher) {
         environment.repository.refresh()
-        val viewModel = ProductOverviewViewModel(environment.repository)
+        val viewModel = ProductOverviewViewModel(environment.repository, language = "en")
         backgroundScope.launch { viewModel.state.collect {} }
 
         viewModel.show(1)
@@ -161,7 +164,7 @@ class ProductOverviewViewModelTest {
 
     @Test
     fun pictureFallsBackToTheListPictureOffline() = runTest(dispatcher) {
-        val path = "/api/files/productpictures/${"x1bread.jpg".encodeBase64()}"
+        val path = "/api/files/productpictures/eDFicmVhZC5qcGc="
         environment.server.respond(path, body = "jpeg")
         val viewModel = viewModel(productId = 2)
         environment.repository.productThumbnail("x1bread.jpg")

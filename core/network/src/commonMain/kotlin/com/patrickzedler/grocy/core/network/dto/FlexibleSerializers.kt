@@ -7,6 +7,7 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.JsonEncoder
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.booleanOrNull
@@ -36,7 +37,7 @@ internal object FlexibleIntSerializer : KSerializer<Int?> {
     }
 
     override fun serialize(encoder: Encoder, value: Int?) =
-        if (value == null) encoder.encodeNull() else encoder.encodeInt(value)
+        if (value == null) encoder.encodeJsonNull() else encoder.encodeInt(value)
 }
 
 internal object FlexibleDoubleSerializer : KSerializer<Double?> {
@@ -46,7 +47,7 @@ internal object FlexibleDoubleSerializer : KSerializer<Double?> {
         decoder.primitiveOrNull()?.content?.toDoubleOrNull()
 
     override fun serialize(encoder: Encoder, value: Double?) =
-        if (value == null) encoder.encodeNull() else encoder.encodeDouble(value)
+        if (value == null) encoder.encodeJsonNull() else encoder.encodeDouble(value)
 }
 
 internal object FlexibleBooleanSerializer : KSerializer<Boolean?> {
@@ -63,7 +64,7 @@ internal object FlexibleBooleanSerializer : KSerializer<Boolean?> {
     }
 
     override fun serialize(encoder: Encoder, value: Boolean?) =
-        if (value == null) encoder.encodeNull() else encoder.encodeBoolean(value)
+        if (value == null) encoder.encodeJsonNull() else encoder.encodeBoolean(value)
 }
 
 /** Strings, also when Grocy sends a number where text is expected (e.g. a userfield value). */
@@ -76,5 +77,8 @@ internal object FlexibleStringSerializer : KSerializer<String?> {
     }
 
     override fun serialize(encoder: Encoder, value: String?) =
-        if (value == null) encoder.encodeNull() else encoder.encodeString(value)
+        if (value == null) encoder.encodeJsonNull() else encoder.encodeString(value)
 }
+
+// Grocy only speaks JSON; Encoder.encodeNull is still an experimental API
+private fun Encoder.encodeJsonNull() = (this as JsonEncoder).encodeJsonElement(JsonNull)

@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.plus
-import androidx.compose.ui.text.intl.Locale
 
 /**
  * Grocy's "Product overview" of the product the list [show]s: the stored overview at once (also
@@ -42,7 +41,7 @@ internal class ProductOverviewViewModel(
     private val timeSource: TimeSource = TimeSource.Monotonic,
     private val decimalSeparator: Char = platformDecimalSeparator(),
     /** The app language, whose rules name the units of amounts. */
-    private val language: String = Locale.current.toLanguageTag(),
+    private val language: String,
 ) : ViewModel() {
 
     private val shownProductId = MutableStateFlow<Int?>(null)

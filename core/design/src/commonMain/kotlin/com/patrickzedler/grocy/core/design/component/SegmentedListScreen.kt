@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.design.component
 
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,11 +19,11 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -32,6 +33,7 @@ import androidx.compose.material3.FloatingToolbarExitDirection
 import androidx.compose.material3.FloatingToolbarScrollBehavior
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.IconButtonDefaults.IconButtonWidthOption
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -41,11 +43,11 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -79,9 +81,10 @@ import org.jetbrains.compose.resources.stringResource
  * The list shrinks with the keyboard, so a focused text field always stays above it.
  *
  * [subtitle] (e.g. a summary of the list) shows below the title in onSurfaceVariant.
- * [navigationIcon] is usually a [NavigateBackButton], [actions] are [AppBarIconButton]s,
- * [menuItems] go into the overflow menu at the end of the bar, after [actionMenuItems] (the
- * actions on the screen's object) as a group of their own.
+ * [navigationIcon] is usually a [NavigateBackButton], [actions] are [AppBarIconButton]s or
+ * menus, together with "Reload" and the overflow menu one standard button group whose pressed
+ * button grows; [menuItems] go into the overflow menu at the end of the bar, after
+ * [actionMenuItems] (the actions on the screen's object) as a group of their own.
  * [pane]: the screen is one of two panes of a list-detail layout ([ScreenPane]): a small bar in
  * the background's color that lines both bars up, the list on a rounded surface below it.
  * [floatingToolbar] (a [FloatingToolbarWithFab]) floats above the bottom edge and hides while
@@ -100,7 +103,7 @@ fun SegmentedListScreen(
     modifier: Modifier = Modifier,
     subtitle: String? = null,
     navigationIcon: @Composable () -> Unit = {},
-    actions: @Composable RowScope.() -> Unit = {},
+    actions: List<AppBarAction> = emptyList(),
     menuItems: List<AppBarMenuItem> = emptyList(),
     actionMenuItems: List<AppBarMenuItem> = emptyList(),
     pane: ScreenPane? = null,
@@ -207,23 +210,44 @@ fun SegmentedListScreen(
                     )
                 }
             }
+            val reload = stringResource(Res.string.action_reload)
+            val reloadIcon = painterResource(Res.drawable.ic_rounded_refresh)
             val allActions: @Composable RowScope.() -> Unit = {
-                actions()
-                val reload = stringResource(Res.string.action_reload)
-                if (onRefresh != null && usesMouse) {
-                    AppBarIconButton(
-                        painter = painterResource(Res.drawable.ic_rounded_refresh),
-                        contentDescription = reload,
-                        onClick = onRefresh,
-                    )
-                }
                 // Pulling is a gesture; the menu refreshes for keyboards and screen readers
                 val reloadItems = if (onRefresh != null && !usesMouse) {
                     listOf(AppBarMenuItem(reload, onClick = onRefresh))
                 } else {
                     emptyList()
                 }
-                AppBarOverflowMenu(groups = listOf(reloadItems, actionMenuItems, menuItems))
+                val menuGroups = listOf(reloadItems, actionMenuItems, menuItems)
+                val shownActions = buildList {
+                    addAll(actions)
+                    if (onRefresh != null && usesMouse) {
+                        add(
+                            AppBarAction { modifier, interactionSource ->
+                                AppBarIconButton(
+                                    painter = reloadIcon,
+                                    contentDescription = reload,
+                                    onClick = onRefresh,
+                                    modifier = modifier,
+                                    interactionSource = interactionSource,
+                                )
+                            },
+                        )
+                    }
+                    if (menuGroups.any { it.isNotEmpty() }) {
+                        add(
+                            AppBarAction(narrow = true) { modifier, interactionSource ->
+                                AppBarOverflowMenu(
+                                    groups = menuGroups,
+                                    modifier = modifier,
+                                    interactionSource = interactionSource,
+                                )
+                            },
+                        )
+                    }
+                }
+                AppBarActions(shownActions)
             }
             val colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = containerColor,
@@ -373,6 +397,39 @@ fun SegmentedListScreen(
 }
 
 /**
+ * A button of a top app bar beside the overflow menu: [content] puts the modifier on its
+ * outermost layout and passes the interaction source to its [AppBarIconButton]; a [narrow] one
+ * (a menu's three dots) keeps less room at the bar's end.
+ */
+@Immutable
+class AppBarAction(
+    val narrow: Boolean = false,
+    val content: @Composable (Modifier, MutableInteractionSource) -> Unit,
+)
+
+/**
+ * The actions of a top app bar as a standard button group: 12.dp between the visible buttons,
+ * the pressed one grows. Its edges keep the room of single buttons' touch targets, so the
+ * buttons stay where single buttons would be.
+ */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun AppBarActions(actions: List<AppBarAction>) {
+    if (actions.isEmpty()) return
+    fun room(action: AppBarAction) = touchTargetRoom(
+        if (action.narrow) IconButtonWidthOption.Narrow else IconButtonWidthOption.Uniform,
+    )
+
+    ButtonGroup(
+        // A bar's few buttons always fit
+        overflowIndicator = {},
+        modifier = Modifier.padding(start = room(actions.first()), end = room(actions.last())),
+    ) {
+        actions.forEach { action -> animatedItem(content = action.content) }
+    }
+}
+
+/**
  * Icon button of a top app bar on surfaceContainerHighest, which stands out on the
  * surfaceContainer bar (High was a single tone step above it) and becomes one surface with the
  * scrolled bar.
@@ -385,6 +442,7 @@ fun AppBarIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     narrow: Boolean = false,
+    interactionSource: MutableInteractionSource? = null,
 ) {
     val haptic = LocalHapticFeedback.current
 
@@ -398,22 +456,15 @@ fun AppBarIconButton(
                 haptic.confirm()
                 onClick()
             },
-            modifier = if (narrow) {
-                Modifier
-                    .minimumInteractiveComponentSize()
-                    .size(
-                        IconButtonDefaults.smallContainerSize(
-                            IconButtonDefaults.IconButtonWidthOption.Narrow,
-                        ),
-                    )
-            } else {
-                Modifier
-            }.clickCursor(),
+            modifier = smallIconButtonSize(
+                if (narrow) IconButtonWidthOption.Narrow else IconButtonWidthOption.Uniform,
+            ).clickCursor(),
             colors = IconButtonDefaults.iconButtonColors(
                 containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                 contentColor = MaterialTheme.colorScheme.onSurface,
             ),
             shapes = IconButtonDefaults.shapes(),
+            interactionSource = interactionSource,
         ) {
             Icon(
                 painter = painter,

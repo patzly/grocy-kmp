@@ -5,22 +5,21 @@ package com.patrickzedler.grocy.feature.masterdata.impl.objects
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.ButtonGroup
-import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.IconButtonDefaults.IconButtonWidthOption
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -36,6 +35,7 @@ import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
+import com.patrickzedler.grocy.core.design.component.ButtonGroupOverflowIndicator
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
@@ -45,10 +45,13 @@ import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.SupportingLines
+import com.patrickzedler.grocy.core.design.component.animatedItem
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.edgeToEdgeItem
 import com.patrickzedler.grocy.core.design.component.insetItems
+import com.patrickzedler.grocy.core.design.component.smallIconButtonSize
+import com.patrickzedler.grocy.core.design.component.touchTargetRoom
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_add
 import com.patrickzedler.grocy.core.resources.action_more_options
@@ -383,8 +386,6 @@ private fun UserentityButtons(
     menuItems: List<AppBarMenuItem>,
 ) {
     val haptic = LocalHapticFeedback.current
-    val configureSource = remember { MutableInteractionSource() }
-    val menuSource = remember { MutableInteractionSource() }
     val configureText = stringResource(Res.string.objects_configure_fields)
     val onConfigure = {
         haptic.confirm()
@@ -394,24 +395,20 @@ private fun UserentityButtons(
     ButtonGroup(
         // Only where the item is too narrow for both buttons
         overflowIndicator = { menuState ->
-            NarrowIconButton(
-                painter = painterResource(Res.drawable.ic_rounded_more_vert),
-                description = stringResource(Res.string.action_more_options),
-                onClick = { if (menuState.isShowing) menuState.dismiss() else menuState.show() },
-            )
-        },
-        horizontalArrangement = ButtonGroupDefaults.HorizontalArrangement,
-    ) {
-        customItem(
-            buttonGroupContent = {
+            ButtonGroupOverflowIndicator {
                 NarrowIconButton(
-                    painter = painterResource(Res.drawable.ic_rounded_edit_attributes),
-                    description = configureText,
-                    onClick = onConfigureFieldsClick,
-                    modifier = Modifier.animateWidth(configureSource),
-                    interactionSource = configureSource,
+                    painter = painterResource(Res.drawable.ic_rounded_more_vert),
+                    description = stringResource(Res.string.action_more_options),
+                    onClick = {
+                        if (menuState.isShowing) menuState.dismiss() else menuState.show()
+                    },
                 )
-            },
+            }
+        },
+        // The item's padding plus the room single buttons keep for their touch targets
+        modifier = Modifier.padding(horizontal = touchTargetRoom(IconButtonWidthOption.Narrow)),
+    ) {
+        animatedItem(
             menuContent = { menuState ->
                 CompositionLocalProvider(
                     LocalMinimumInteractiveComponentSize provides MenuTouchTarget,
@@ -426,15 +423,16 @@ private fun UserentityButtons(
                     )
                 }
             },
-        )
-        customItem(
-            buttonGroupContent = {
-                ListItemOverflowMenu(
-                    groups = listOf(menuItems),
-                    modifier = Modifier.animateWidth(menuSource),
-                    interactionSource = menuSource,
-                )
-            },
+        ) { itemModifier, interactionSource ->
+            NarrowIconButton(
+                painter = painterResource(Res.drawable.ic_rounded_edit_attributes),
+                description = configureText,
+                onClick = onConfigureFieldsClick,
+                modifier = itemModifier,
+                interactionSource = interactionSource,
+            )
+        }
+        animatedItem(
             menuContent = { menuState ->
                 CompositionLocalProvider(
                     LocalMinimumInteractiveComponentSize provides MenuTouchTarget,
@@ -452,7 +450,13 @@ private fun UserentityButtons(
                     }
                 }
             },
-        )
+        ) { itemModifier, interactionSource ->
+            ListItemOverflowMenu(
+                groups = listOf(menuItems),
+                modifier = itemModifier,
+                interactionSource = interactionSource,
+            )
+        }
     }
 }
 
@@ -473,14 +477,7 @@ private fun NarrowIconButton(
                 haptic.confirm()
                 onClick()
             },
-            modifier = Modifier
-                .minimumInteractiveComponentSize()
-                .size(
-                    IconButtonDefaults.smallContainerSize(
-                        IconButtonDefaults.IconButtonWidthOption.Narrow,
-                    ),
-                )
-                .clickCursor(),
+            modifier = smallIconButtonSize(IconButtonWidthOption.Narrow).clickCursor(),
             shapes = IconButtonDefaults.shapes(),
             interactionSource = interactionSource,
         ) {

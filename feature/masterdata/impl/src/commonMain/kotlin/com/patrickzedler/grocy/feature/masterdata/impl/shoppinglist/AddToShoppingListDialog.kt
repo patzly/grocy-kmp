@@ -3,8 +3,8 @@ package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.intl.Locale
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
@@ -42,9 +42,9 @@ internal fun AddToShoppingListHost(
     viewModel: AddToShoppingListViewModel,
     snackbarHostState: SnackbarHostState,
 ) {
+    val language = LocalLocale.current.toLanguageTag()
     LaunchedEffect(viewModel) {
         viewModel.added.collect { added ->
-            val language = Locale.current.toLanguageTag()
             val amount = parseDecimal(added.amount) ?: 0.0
             snackbarHostState.showSnackbar(
                 getString(
@@ -116,7 +116,7 @@ private fun AddToShoppingListDialog(
                             stringResource(
                                 Res.string.data_this_equals,
                                 formatDecimal(converted, state.decimals, separator),
-                                stockUnit.nameFor(converted, Locale.current.toLanguageTag()),
+                                stockUnit.nameFor(converted, LocalLocale.current.toLanguageTag()),
                             )
                         } else {
                             null

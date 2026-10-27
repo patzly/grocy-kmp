@@ -2,7 +2,6 @@ package com.patrickzedler.grocy.core.design.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.ButtonGroupDefaults
@@ -18,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.ToggleButtonShapes
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -51,7 +49,9 @@ fun <T> ConnectedButtonGroup(
     Box(modifier = modifier) {
         ButtonGroup(
             overflowIndicator = { menuState ->
-                OverflowIndicator(menuState = menuState, enabled = enabled)
+                ButtonGroupOverflowIndicator {
+                    OverflowIndicator(menuState = menuState, enabled = enabled)
+                }
             },
             expandedRatio = 0f,
             horizontalArrangement =
@@ -124,10 +124,7 @@ private fun OverflowIndicator(
                 if (menuState.isShowing) menuState.dismiss() else menuState.show()
             },
             enabled = enabled,
-            modifier = Modifier
-                .minimumInteractiveComponentSize()
-                .size(IconButtonDefaults.smallContainerSize())
-                .clickCursor(enabled = enabled),
+            modifier = smallIconButtonSize().clickCursor(enabled = enabled),
             colors = IconButtonDefaults.filledIconButtonColors(
                 containerColor = MaterialTheme.colorScheme.surfaceContainer,
                 contentColor = MaterialTheme.colorScheme.onSurfaceVariant,

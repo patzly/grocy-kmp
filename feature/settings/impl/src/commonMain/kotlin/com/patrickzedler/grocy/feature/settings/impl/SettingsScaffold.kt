@@ -1,5 +1,7 @@
 package com.patrickzedler.grocy.feature.settings.impl
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyListScope
@@ -24,6 +26,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.data.log.LogSource
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
+import com.patrickzedler.grocy.core.design.component.AppBarAction
 import com.patrickzedler.grocy.core.design.component.AppBarIconButton
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.ScreenPane
@@ -123,14 +126,20 @@ internal fun SettingsScaffoldContent(
             // Beside the categories their back button leaves both
             if (hasBackButton) NavigateBackButton(onClick = onBackClick)
         },
-        actions = {
-            if (!isBesideCategories) {
-                SettingsMenu(
-                    menuActions = menuActions,
-                    onHelpClick = onHelpClick,
-                    onFeedbackClick = onFeedbackClick,
-                )
-            }
+        actions = if (isBesideCategories) {
+            emptyList()
+        } else {
+            listOf(
+                AppBarAction(narrow = true) { actionModifier, interactionSource ->
+                    SettingsMenu(
+                        menuActions = menuActions,
+                        onHelpClick = onHelpClick,
+                        onFeedbackClick = onFeedbackClick,
+                        modifier = actionModifier,
+                        interactionSource = interactionSource,
+                    )
+                },
+            )
         },
         content = content,
     )
@@ -141,76 +150,82 @@ private fun SettingsMenu(
     menuActions: SettingsMenuActions,
     onHelpClick: () -> Unit,
     onFeedbackClick: () -> Unit,
+    modifier: Modifier,
+    interactionSource: MutableInteractionSource,
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
-    AppBarIconButton(
-        painter = painterResource(Res.drawable.ic_rounded_more_vert),
-        contentDescription = stringResource(Res.string.action_more_options),
-        onClick = { showMenu = true },
-        narrow = true,
-    )
+    // One box, so the bar's button group sees one item and the menu opens at the button
+    Box(modifier, propagateMinConstraints = true) {
+        AppBarIconButton(
+            painter = painterResource(Res.drawable.ic_rounded_more_vert),
+            contentDescription = stringResource(Res.string.action_more_options),
+            onClick = { showMenu = true },
+            narrow = true,
+            interactionSource = interactionSource,
+        )
 
-    DropdownMenuPopup(
-        expanded = showMenu,
-        onDismissRequest = { showMenu = false },
-        popupPositionProvider = MenuDefaults.rememberDropdownMenuPopupPositionProvider(
-            dropdownMenuAnchorPosition = MenuAnchorPosition.Below,
-            offset = DpOffset(x = (-8).dp, y = 0.dp),
-        ),
-    ) {
-        val groupCount = 2
-        // With a second group the ripples of the first one only look connected to it like this
-        val firstGroupItemCount = 4
+        DropdownMenuPopup(
+            expanded = showMenu,
+            onDismissRequest = { showMenu = false },
+            popupPositionProvider = MenuDefaults.rememberDropdownMenuPopupPositionProvider(
+                dropdownMenuAnchorPosition = MenuAnchorPosition.Below,
+                offset = DpOffset(x = (-8).dp, y = 0.dp),
+            ),
+        ) {
+            val groupCount = 2
+            // With a second group the ripples of the first one only look connected to it like this
+            val firstGroupItemCount = 4
 
-        DropdownMenuGroup(shapes = MenuDefaults.groupShape(index = 0, count = groupCount)) {
-            SettingsMenuItem(
-                text = stringResource(Res.string.title_about),
-                index = 0,
-                count = firstGroupItemCount,
-                onClick = {
-                    showMenu = false
-                    menuActions.onAboutClick()
-                },
-            )
-            SettingsMenuItem(
-                text = stringResource(Res.string.title_help),
-                index = 1,
-                count = firstGroupItemCount,
-                onClick = {
-                    showMenu = false
-                    onHelpClick()
-                },
-            )
-            SettingsMenuItem(
-                text = stringResource(Res.string.action_send_feedback),
-                index = 2,
-                count = firstGroupItemCount,
-                onClick = {
-                    showMenu = false
-                    onFeedbackClick()
-                },
-            )
-        }
-
-        Spacer(Modifier.height(MenuDefaults.GroupSpacing))
-
-        DropdownMenuGroup(shapes = MenuDefaults.groupShape(index = 1, count = groupCount)) {
-            SettingsMenuItem(
-                text = stringResource(
-                    when (menuActions.logSource) {
-                        LogSource.LOGCAT -> Res.string.action_show_logcat
-                        LogSource.BROWSER -> Res.string.action_show_log
+            DropdownMenuGroup(shapes = MenuDefaults.groupShape(index = 0, count = groupCount)) {
+                SettingsMenuItem(
+                    text = stringResource(Res.string.title_about),
+                    index = 0,
+                    count = firstGroupItemCount,
+                    onClick = {
+                        showMenu = false
+                        menuActions.onAboutClick()
                     },
-                ),
-                // Index and count as the last item of the group, for the ripple shape
-                index = 1,
-                count = 2,
-                onClick = {
-                    showMenu = false
-                    menuActions.onLogClick()
-                },
-            )
+                )
+                SettingsMenuItem(
+                    text = stringResource(Res.string.title_help),
+                    index = 1,
+                    count = firstGroupItemCount,
+                    onClick = {
+                        showMenu = false
+                        onHelpClick()
+                    },
+                )
+                SettingsMenuItem(
+                    text = stringResource(Res.string.action_send_feedback),
+                    index = 2,
+                    count = firstGroupItemCount,
+                    onClick = {
+                        showMenu = false
+                        onFeedbackClick()
+                    },
+                )
+            }
+
+            Spacer(Modifier.height(MenuDefaults.GroupSpacing))
+
+            DropdownMenuGroup(shapes = MenuDefaults.groupShape(index = 1, count = groupCount)) {
+                SettingsMenuItem(
+                    text = stringResource(
+                        when (menuActions.logSource) {
+                            LogSource.LOGCAT -> Res.string.action_show_logcat
+                            LogSource.BROWSER -> Res.string.action_show_log
+                        },
+                    ),
+                    // Index and count as the last item of the group, for the ripple shape
+                    index = 1,
+                    count = 2,
+                    onClick = {
+                        showMenu = false
+                        menuActions.onLogClick()
+                    },
+                )
+            }
         }
     }
 }

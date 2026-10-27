@@ -6,7 +6,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.text.intl.Locale
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
@@ -120,7 +119,7 @@ internal class StockOverviewViewModel(
     computeDispatcher: CoroutineDispatcher = Dispatchers.Default,
     decimalSeparator: Char = platformDecimalSeparator(),
     /** The app language, whose rules name the units of amounts. */
-    language: String = Locale.current.toLanguageTag(),
+    language: String,
     today: () -> Long = ::todayEpochDay,
 ) : ViewModel() {
 

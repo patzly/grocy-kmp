@@ -1,5 +1,7 @@
 package com.patrickzedler.grocy.feature.about.impl
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.DropdownMenuGroup
@@ -32,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.GrocyTheme
+import com.patrickzedler.grocy.core.design.component.AppBarAction
 import com.patrickzedler.grocy.core.design.component.AppBarIconButton
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
@@ -185,13 +188,17 @@ private fun AboutContent(
         title = stringResource(Res.string.title_about),
         modifier = modifier,
         navigationIcon = { NavigateBackButton(onClick = onBackClick) },
-        actions = {
-            AboutMenu(
-                onHelpClick = onHelpClick,
-                onRecommendClick = onRecommendClick,
-                onFeedbackClick = onFeedbackClick,
-            )
-        },
+        actions = listOf(
+            AppBarAction(narrow = true) { actionModifier, interactionSource ->
+                AboutMenu(
+                    onHelpClick = onHelpClick,
+                    onRecommendClick = onRecommendClick,
+                    onFeedbackClick = onFeedbackClick,
+                    modifier = actionModifier,
+                    interactionSource = interactionSource,
+                )
+            },
+        ),
     ) {
         segmentedGroup {
             val colors = SegmentedListDefaults.colors()
@@ -323,50 +330,56 @@ private fun AboutMenu(
     onHelpClick: () -> Unit,
     onRecommendClick: () -> Unit,
     onFeedbackClick: () -> Unit,
+    modifier: Modifier,
+    interactionSource: MutableInteractionSource,
 ) {
     var showMenu by remember { mutableStateOf(false) }
     val moreText = stringResource(Res.string.action_more_options)
 
-    AppBarIconButton(
-        painter = painterResource(Res.drawable.ic_rounded_more_vert),
-        contentDescription = moreText,
-        onClick = { showMenu = true },
-        narrow = true,
-    )
+    // One box, so the bar's button group sees one item and the menu opens at the button
+    Box(modifier, propagateMinConstraints = true) {
+        AppBarIconButton(
+            painter = painterResource(Res.drawable.ic_rounded_more_vert),
+            contentDescription = moreText,
+            onClick = { showMenu = true },
+            narrow = true,
+            interactionSource = interactionSource,
+        )
 
-    DropdownMenuPopup(
-        expanded = showMenu,
-        onDismissRequest = { showMenu = false },
-        popupPositionProvider = MenuDefaults.rememberDropdownMenuPopupPositionProvider(
-            dropdownMenuAnchorPosition = MenuAnchorPosition.Below,
-            offset = DpOffset(x = (-8).dp, y = 0.dp),
-        ),
-    ) {
-        DropdownMenuGroup(shapes = MenuDefaults.groupShape(index = 0, count = 1)) {
-            AboutMenuItem(
-                text = stringResource(Res.string.title_help),
-                index = 0,
-                onClick = {
-                    showMenu = false
-                    onHelpClick()
-                },
-            )
-            AboutMenuItem(
-                text = stringResource(Res.string.action_recommend),
-                index = 1,
-                onClick = {
-                    showMenu = false
-                    onRecommendClick()
-                },
-            )
-            AboutMenuItem(
-                text = stringResource(Res.string.action_send_feedback),
-                index = 2,
-                onClick = {
-                    showMenu = false
-                    onFeedbackClick()
-                },
-            )
+        DropdownMenuPopup(
+            expanded = showMenu,
+            onDismissRequest = { showMenu = false },
+            popupPositionProvider = MenuDefaults.rememberDropdownMenuPopupPositionProvider(
+                dropdownMenuAnchorPosition = MenuAnchorPosition.Below,
+                offset = DpOffset(x = (-8).dp, y = 0.dp),
+            ),
+        ) {
+            DropdownMenuGroup(shapes = MenuDefaults.groupShape(index = 0, count = 1)) {
+                AboutMenuItem(
+                    text = stringResource(Res.string.title_help),
+                    index = 0,
+                    onClick = {
+                        showMenu = false
+                        onHelpClick()
+                    },
+                )
+                AboutMenuItem(
+                    text = stringResource(Res.string.action_recommend),
+                    index = 1,
+                    onClick = {
+                        showMenu = false
+                        onRecommendClick()
+                    },
+                )
+                AboutMenuItem(
+                    text = stringResource(Res.string.action_send_feedback),
+                    index = 2,
+                    onClick = {
+                        showMenu = false
+                        onFeedbackClick()
+                    },
+                )
+            }
         }
     }
 }

@@ -34,12 +34,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.offset
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.verticalScrollbar
@@ -280,7 +283,9 @@ private fun ScrollingMenuGroups(
         Modifier
             .heightIn(max = MenuMaxHeight)
             .verticalScrollbar(scrollState)
-            .verticalScroll(scrollState),
+            .extendVertically(MenuShadowRoom)
+            .verticalScroll(scrollState)
+            .padding(vertical = MenuShadowRoom),
     ) {
         repeat(groupCount) { index ->
             if (index > 0) Spacer(Modifier.height(MenuDefaults.GroupSpacing))
@@ -288,6 +293,18 @@ private fun ScrollingMenuGroups(
                 group(index)
             }
         }
+    }
+}
+
+/**
+ * Lets the content reach [room] above and below without taking more space: scrolling clips at
+ * its bounds, which cut off the groups' shadows below the last one.
+ */
+private fun Modifier.extendVertically(room: Dp): Modifier = layout { measurable, constraints ->
+    val extra = room.roundToPx()
+    val placeable = measurable.measure(constraints.offset(vertical = 2 * extra))
+    layout(placeable.width, (placeable.height - 2 * extra).coerceAtLeast(0)) {
+        placeable.place(0, -extra)
     }
 }
 
@@ -453,3 +470,6 @@ private fun MenuIcon(icon: DrawableResource) {
 
 // Room for the status menu of the stock overview, longer menus scroll
 private val MenuMaxHeight = 480.dp
+
+// Beyond the reach of the menu groups' shadows
+private val MenuShadowRoom = 8.dp

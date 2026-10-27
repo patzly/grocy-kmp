@@ -5,7 +5,6 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.intl.Locale
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
@@ -140,7 +139,7 @@ internal class ConversionDialogState(
 internal class ConversionsViewModel(
     private val repository: MasterDataRepository,
     private val decimalSeparator: Char = platformDecimalSeparator(),
-    private val language: String = Locale.current.toLanguageTag(),
+    private val language: String,
 ) : ViewModel() {
 
     private val ownerFlow = MutableStateFlow<ConversionOwner?>(null)

@@ -25,6 +25,7 @@ import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import com.patrickzedler.grocy.core.data.util.RefreshState
+import com.patrickzedler.grocy.core.design.component.AppBarAction
 import com.patrickzedler.grocy.core.design.component.AppBarIconButton
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
@@ -154,19 +155,23 @@ internal fun StockJournalScreen(
         ),
         modifier = modifier,
         navigationIcon = { NavigateBackButton(onClick = onBackClick) },
-        actions = {
-            AppBarIconButton(
-                painter = painterResource(Res.drawable.ic_rounded_search),
-                contentDescription = stringResource(Res.string.action_search),
-                onClick = {
-                    if (viewModel.isSearchVisible) {
-                        viewModel.hideSearch()
-                    } else {
-                        viewModel.showSearch()
-                    }
-                },
-            )
-        },
+        actions = listOf(
+            AppBarAction { actionModifier, interactionSource ->
+                AppBarIconButton(
+                    painter = painterResource(Res.drawable.ic_rounded_search),
+                    contentDescription = stringResource(Res.string.action_search),
+                    onClick = {
+                        if (viewModel.isSearchVisible) {
+                            viewModel.hideSearch()
+                        } else {
+                            viewModel.showSearch()
+                        }
+                    },
+                    modifier = actionModifier,
+                    interactionSource = interactionSource,
+                )
+            },
+        ),
         menuItems = menuItems,
         snackbarHostState = snackbarHostState,
         isRefreshing = refresh.isRefreshing && state?.hasBookings == true,

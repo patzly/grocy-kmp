@@ -5,7 +5,6 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.intl.Locale
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
@@ -15,11 +14,9 @@ import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
-import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.masterdata.nameFor
 import com.patrickzedler.grocy.core.model.server.ServerConfig
-import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
@@ -130,7 +127,7 @@ internal class StockEntriesViewModel(
     private val masterData: MasterDataRepository,
     private val stock: StockRepository,
     private val decimalSeparator: Char = platformDecimalSeparator(),
-    private val language: String = Locale.current.toLanguageTag(),
+    private val language: String,
     private val today: () -> Long = ::todayEpochDay,
 ) : ViewModel() {
 
@@ -141,33 +138,34 @@ internal class StockEntriesViewModel(
     }
     val refresh: StateFlow<RefreshState> = refreshController.state
 
-    val state: StateFlow<StockEntriesUiState?> = combine(
+    // Grouped, so each part keeps its type: combine takes at most five typed flows
+    private val stockData = combine(
         stock.stockEntries,
         masterData.products,
         masterData.quantityUnits,
         masterData.locations,
         masterData.stores,
+        ::StockData,
+    )
+
+    val state: StateFlow<StockEntriesUiState?> = combine(
+        stockData,
         masterData.resolvedQuantityUnitConversions,
         masterData.serverConfig,
         masterData.userSettings,
         filter,
-    ) { values ->
-        @Suppress("UNCHECKED_CAST")
-        val entries = values[0] as List<StockEntry>
-        val products = values[1] as List<Product>
-        val locations = values[3] as List<Location>
-        val config = values[6] as ServerConfig
-        val settings = values[7] as UserSettings
-        val currentFilter = values[8] as StockEntryFilter
-        @Suppress("UNCHECKED_CAST")
+    ) { data, resolved, config, settings, currentFilter ->
+        val entries = data.entries
+        val products = data.products
+        val locations = data.locations
         StockEntriesUiState(
             items = buildStockEntryItems(
                 entries = entries,
                 products = products,
-                units = values[2] as List<QuantityUnit>,
+                units = data.units,
                 locations = locations,
-                stores = values[4] as List<Store>,
-                resolved = values[5] as List<ResolvedQuantityUnitConversion>,
+                stores = data.stores,
+                resolved = resolved,
                 config = config,
                 settings = settings,
                 filter = currentFilter,
@@ -187,6 +185,14 @@ internal class StockEntriesViewModel(
             hasEntries = entries.isNotEmpty(),
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    private class StockData(
+        val entries: List<StockEntry>,
+        val products: List<Product>,
+        val units: List<QuantityUnit>,
+        val locations: List<Location>,
+        val stores: List<Store>,
+    )
 
     var dialog by mutableStateOf<StockEntryDialogState?>(null)
         private set

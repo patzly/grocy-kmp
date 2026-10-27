@@ -1,7 +1,7 @@
 package com.patrickzedler.grocy.feature.masterdata.impl
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.platform.LocalLocale
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
@@ -114,10 +114,13 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
         metadata = listPaneMetadata(ProductsRoute) { SelectHint(MasterDataCategory.PRODUCTS) },
     ) { route ->
         val isBesideDetail = showsDetailBesideList()
+        val language = appLanguage()
         ProductsScreen(
             menuItems = appMenuItems(navigator),
-            viewModel = viewModel { ProductsViewModel(repository) },
-            overviewViewModel = viewModel { ProductOverviewViewModel(repository) },
+            viewModel = viewModel { ProductsViewModel(repository, language = language) },
+            overviewViewModel = viewModel {
+                ProductOverviewViewModel(repository, language = language)
+            },
             shoppingList = shoppingListViewModel(dependencies),
             objectActions = viewModel {
                 ObjectActionsViewModel(MasterDataRepository.PRODUCTS, repository)
@@ -153,7 +156,8 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
     // Beside the start screen like the master data, its bar has back and the app menu
     entry<StockOverviewRoute>(metadata = detailPaneMetadata(StartRoute)) {
         val isBesideList = showsDetailBesideList()
-        val overview = viewModel { ProductOverviewViewModel(repository) }
+        val language = appLanguage()
+        val overview = viewModel { ProductOverviewViewModel(repository, language = language) }
         val shoppingList = shoppingListViewModel(dependencies)
         // Outside the product list the form opens on its own
         val openProduct = { id: Int -> navigator.navigate(ProductRoute(id)) }
@@ -162,6 +166,7 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
                 repository,
                 dependencies.stockRepository,
                 dependencies.stockOverviewOptions,
+                language = language,
             )
         }
         StockOverviewScreen(
@@ -199,12 +204,14 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
 
     // Grocy's stock pages of a product, or of all products
     entry<StockEntriesRoute> { route ->
+        val language = appLanguage()
         StockEntriesScreen(
             viewModel = viewModel {
                 StockEntriesViewModel(
                     route.productId,
                     repository,
                     dependencies.stockRepository,
+                    language = language,
                 )
             },
             actions = stockPageActions(dependencies, navigator),
@@ -213,6 +220,7 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
         )
     }
     entry<StockJournalRoute> { route ->
+        val language = appLanguage()
         StockJournalScreen(
             viewModel = viewModel {
                 StockJournalViewModel(
@@ -220,6 +228,7 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
                     summary = false,
                     masterData = repository,
                     stock = dependencies.stockRepository,
+                    language = language,
                 )
             },
             actions = stockPageActions(dependencies, navigator),
@@ -228,6 +237,7 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
         )
     }
     entry<StockJournalSummaryRoute> { route ->
+        val language = appLanguage()
         StockJournalScreen(
             viewModel = viewModel {
                 StockJournalViewModel(
@@ -235,6 +245,7 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
                     summary = true,
                     masterData = repository,
                     stock = dependencies.stockRepository,
+                    language = language,
                 )
             },
             actions = stockPageActions(dependencies, navigator),
@@ -244,17 +255,18 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
     }
 
     entry<ProductRoute>(metadata = detailPaneMetadata(ProductsRoute)) { route ->
+        val language = appLanguage()
         ProductScreen(
             viewModel = viewModel { ProductViewModel(route.productId, repository) },
             frame = formFrame(navigator, route, MasterDataRepository.PRODUCTS, repository) {
                 ProductRoute(it)
             },
             related = ProductRelated(
-                barcodes = viewModel { ProductBarcodesViewModel(repository) },
+                barcodes = viewModel { ProductBarcodesViewModel(repository, language = language) },
                 barcodeActions = viewModel(key = "barcodeActions") {
                     ObjectActionsViewModel(MasterDataRepository.PRODUCT_BARCODES, repository)
                 },
-                conversions = viewModel { ConversionsViewModel(repository) },
+                conversions = viewModel { ConversionsViewModel(repository, language = language) },
                 conversionActions = viewModel(key = "conversionActions") {
                     ObjectActionsViewModel(MasterDataRepository.QU_CONVERSIONS, repository)
                 },
@@ -389,7 +401,8 @@ private inline fun <reified L : Route, reified D : DetailRoute> EntryProviderSco
     objectListEntry<L, D>(kind, detail, detailId, repository, navigator)
     entry<D>(metadata = detailPaneMetadata(kind)) { route ->
         // Grocy asks for a unit's plural forms in languages with more than two
-        val pluralFormCount = grocyPluralFormCount(Locale.current.toLanguageTag())
+        val language = appLanguage()
+        val pluralFormCount = grocyPluralFormCount(language)
         SimpleObjectScreen(
             viewModel = viewModel {
                 SimpleObjectViewModel(kind, detailId(route), repository, pluralFormCount)
@@ -398,7 +411,7 @@ private inline fun <reified L : Route, reified D : DetailRoute> EntryProviderSco
             onConfigureUserfieldsClick = { navigator.navigate(UserfieldsRoute(it)) },
             // A quantity unit's form has its default conversions
             conversions = if (kind == ObjectListKind.QUANTITY_UNITS) {
-                viewModel { ConversionsViewModel(repository) }
+                viewModel { ConversionsViewModel(repository, language = language) }
             } else {
                 null
             },
@@ -495,9 +508,15 @@ private fun productLinks(navigator: Navigator) = ProductLinks(
 
 /** The product overview, shopping list and labels of a stock page. */
 @Composable
-private fun stockPageActions(dependencies: MasterDataDependencies, navigator: Navigator) =
-    StockPageActions(
-        overview = viewModel { ProductOverviewViewModel(dependencies.masterDataRepository) },
+private fun stockPageActions(
+    dependencies: MasterDataDependencies,
+    navigator: Navigator,
+): StockPageActions {
+    val language = appLanguage()
+    return StockPageActions(
+        overview = viewModel {
+            ProductOverviewViewModel(dependencies.masterDataRepository, language = language)
+        },
         shoppingList = shoppingListViewModel(dependencies),
         labels = viewModel { LabelPrintViewModel(dependencies.stockRepository) },
         links = ProductLinks(
@@ -508,6 +527,11 @@ private fun stockPageActions(dependencies: MasterDataDependencies, navigator: Na
             onStockJournalSummaryClick = { navigator.navigate(StockJournalSummaryRoute(it)) },
         ),
     )
+}
+
+// The app language, a change restarts the app, so ViewModels keep it
+@Composable
+private fun appLanguage(): String = LocalLocale.current.toLanguageTag()
 
 @Composable
 private fun shoppingListViewModel(dependencies: MasterDataDependencies) = viewModel {

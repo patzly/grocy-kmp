@@ -6,7 +6,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.text.intl.Locale
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
@@ -16,7 +15,6 @@ import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.model.User
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
-import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.stock.StockLogEntry
@@ -72,7 +70,7 @@ internal class StockJournalViewModel(
     private val masterData: MasterDataRepository,
     private val stock: StockRepository,
     private val decimalSeparator: Char = platformDecimalSeparator(),
-    private val language: String = Locale.current.toLanguageTag(),
+    private val language: String,
     private val today: () -> Long = ::todayEpochDay,
 ) : ViewModel() {
 
