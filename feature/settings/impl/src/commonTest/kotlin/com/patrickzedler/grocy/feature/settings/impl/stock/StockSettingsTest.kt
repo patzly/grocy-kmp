@@ -3,6 +3,7 @@ package com.patrickzedler.grocy.feature.settings.impl.stock
 import com.patrickzedler.grocy.core.model.server.ProductPresets
 import com.patrickzedler.grocy.core.model.server.UserSettingValue
 import com.patrickzedler.grocy.core.model.server.UserSettings
+import com.patrickzedler.grocy.feature.settings.impl.SettingError
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

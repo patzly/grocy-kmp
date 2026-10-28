@@ -859,4 +859,32 @@
     <item quantity="many">%1$d años</item>
     <item quantity="other">%1$d años</item>
   </plurals>
+  <string name="settings_grocy">Configuración de Grocy</string>
+  <string name="settings_shopping_list">Configuración de lista de la compra</string>
+  <string name="settings_recipes">Configuración de recetas</string>
+  <string name="settings_chores">Configuración de las tareas del hogar</string>
+  <string name="settings_tasks">Configuración de tareas</string>
+  <string name="settings_batteries">Configuración de baterías</string>
+  <string name="shopping_list_settings_calendar">Mostrar vista mensual</string>
+  <string name="shopping_list_settings_round_up">Redondear las cantidades al número entero más próximo</string>
+  <string name="shopping_list_settings_auto_add">Agrega automáticamente productos que están por debajo de su mínimo definido. Cantidad de stock a la lista de la compra</string>
+  <string name="shopping_list_settings_workflow">Lista de la compra para el proceso de inventario</string>
+  <string name="shopping_list_settings_auto_submit">Registrar automáticamente usando el último precio y la cantidad del artículo de la lista de la compra, si el producto tiene definido "Número predeterminado de días hasta la fecha límite"</string>
+  <string name="recipes_settings_side_by_side">Mostrar la lista de recetas y la receta una al lado de la otra</string>
+  <string name="recipes_settings_ingredient_checkbox">Muestra una pequeña casilla junto a cada ingrediente para marcarlo como listo</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">El ingrediente se tacha al hacer clic, el estado no se guarda, significa que se restablece al recargar la página.</string>
+  <string name="recipes_settings_card">Tarjeta de receta</string>
+  <string name="recipes_settings_group_ingredients">Agrupar los ingredientes por su grupo de productos</string>
+  <string name="chores_settings_overview">Resumen de tareas del hogar</string>
+  <string name="chores_settings_swap_buttons">Intercambiar los botones de registrar la próxima ejecución programada / registrar ahora</string>
+  <string name="batteries_settings_overview">Resumen de baterías</string>
+  <string name="settings_due_soon_days_hint">Poner 0 para ocultar los filtros/resaltado de fecha límite próxima</string>
+  <string name="grocy_language_default">Predeterminado</string>
+  <string name="grocy_language_default_description">Grocy usa el idioma de su navegador</string>
+  <string name="grocy_language_info">El idioma de la interfaz web de Grocy para su usuario</string>
+  <string name="grocy_language_demo">Los servidores de demostración de Grocy siempre usan el idioma de su dirección</string>
+  <string name="stock_purchase">Comprar</string>
+  <string name="stock_consume">Consumir</string>
+  <string name="stock_transfer">Trasladar</string>
+  <string name="stock_inventory">Inventario</string>
 </resources>

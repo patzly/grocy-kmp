@@ -180,7 +180,7 @@
   <string name="settings_server">サーバー</string>
   <string name="settings_user">ユーザー設定</string>
   <string name="settings_user_synced">サーバーに保存</string>
-  <string name="settings_user_synced_hint">Grocyはこれらの設定をユーザーごとに保存するため、Webフロントエンドや他のデバイスでも適用されます</string>
+  <string name="settings_user_synced_hint">Grocyはこれらの設定をユーザーごとに保存するため、GrocyのWebフロントエンドや他のデバイスでも適用されます</string>
   <string name="settings_network">ネットワーク</string>
   <string name="settings_behavior">動作</string>
   <string name="settings_scanner">スキャナー</string>
@@ -805,4 +805,32 @@
   <plurals name="journal_years">
     <item quantity="other">%1$d年</item>
   </plurals>
+  <string name="settings_grocy">Grocy設定</string>
+  <string name="settings_shopping_list">買い物リスト設定</string>
+  <string name="settings_recipes">レシピ設定</string>
+  <string name="settings_chores">家事設定</string>
+  <string name="settings_tasks">タスク設定</string>
+  <string name="settings_batteries">電池設定</string>
+  <string name="shopping_list_settings_calendar">月表示カレンダー</string>
+  <string name="shopping_list_settings_round_up">数量を切り上げて整数にする</string>
+  <string name="shopping_list_settings_auto_add">最低数量未満になった物品を自動で買い物リストに追加</string>
+  <string name="shopping_list_settings_workflow">買い物リストとストックの連携</string>
+  <string name="shopping_list_settings_auto_submit">物品に「既定の期限日数」を設定している場合、直近の数量と価格で買い物リストに自動追加</string>
+  <string name="recipes_settings_side_by_side">レシピ一覧と個別レシピを並べて表示</string>
+  <string name="recipes_settings_ingredient_checkbox">各材料の横にチェックボックスを表示</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">チェックすると材料に取り消し線が引かれますが、このステータスは保存されず、ページの再読み込みによってリセットされます</string>
+  <string name="recipes_settings_card">レシピカード</string>
+  <string name="recipes_settings_group_ingredients">物品グループごとに材料をグループ化</string>
+  <string name="chores_settings_overview">家事一覧</string>
+  <string name="chores_settings_swap_buttons">次回予定の実行/今すぐ実行ボタン切替</string>
+  <string name="batteries_settings_overview">電池一覧</string>
+  <string name="settings_due_soon_days_hint">0を入力すると、「まもなく期限」のフィルター/ハイライトを非表示にします</string>
+  <string name="grocy_language_default">既定</string>
+  <string name="grocy_language_default_description">Grocyはブラウザの言語を使用します</string>
+  <string name="grocy_language_info">あなたのユーザーに表示されるGrocyのWebフロントエンドの言語</string>
+  <string name="grocy_language_demo">Grocyのデモサーバーは常にアドレスの言語を使用します</string>
+  <string name="stock_purchase">購入</string>
+  <string name="stock_consume">消費</string>
+  <string name="stock_transfer">保管場所を移動</string>
+  <string name="stock_inventory">ストック編集</string>
 </resources>

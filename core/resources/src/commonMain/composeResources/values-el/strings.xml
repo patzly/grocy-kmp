@@ -188,7 +188,7 @@
   <string name="settings_server">Διακομιστής</string>
   <string name="settings_user">Ρυθμίσεις χρήστη</string>
   <string name="settings_user_synced">Αποθηκεύονται στον διακομιστή</string>
-  <string name="settings_user_synced_hint">Το Grocy αποθηκεύει αυτές τις ρυθμίσεις για τον χρήστη σας, οπότε ισχύουν και στη διεπαφή ιστού του και στις άλλες συσκευές σας</string>
+  <string name="settings_user_synced_hint">Το Grocy αποθηκεύει αυτές τις ρυθμίσεις για τον χρήστη σας, οπότε ισχύουν και στη διεπαφή ιστού του Grocy και στις άλλες συσκευές σας</string>
   <string name="settings_network">Δίκτυο</string>
   <string name="settings_behavior">Συμπεριφορά</string>
   <string name="settings_scanner">Σαρωτής</string>
@@ -832,4 +832,32 @@
     <item quantity="one">%1$d έτος</item>
     <item quantity="other">%1$d έτη</item>
   </plurals>
+  <string name="settings_grocy">Ρυθμίσεις Grocy</string>
+  <string name="settings_shopping_list">Ρυθμίσεις λίστας αγορών</string>
+  <string name="settings_recipes">Ρυθμίσεις συνταγών</string>
+  <string name="settings_chores">Ρυθμίσεις μικροδουλειών</string>
+  <string name="settings_tasks">Ρυθμίσεις εργασιών</string>
+  <string name="settings_batteries">Ρυθμίσεις μπαταριών</string>
+  <string name="shopping_list_settings_calendar">Εμφάνιση ημερολογίου μηνιαίας προβολής</string>
+  <string name="shopping_list_settings_round_up">Στρογγυλοποίηση των ποσοτήτων προς τα πάνω στον πλησιέστερο ακέραιο</string>
+  <string name="shopping_list_settings_auto_add">Αυτόματη προσθήκη στη λίστα αγορών των προϊόντων που είναι κάτω από το ελάχιστο απόθεμά τους</string>
+  <string name="shopping_list_settings_workflow">Λίστα αγορών σε απόθεμα ροής εργασίας</string>
+  <string name="shopping_list_settings_auto_submit">Αυτόματη καταχώριση με την τελευταία τιμή και την ποσότητα του στοιχείου της λίστας αγορών, αν το προϊόν έχει ορισμένες "Προεπιλεγμένες ημέρες λήξης"</string>
+  <string name="recipes_settings_side_by_side">Εμφάνιση της λίστας συνταγών και της συνταγής δίπλα-δίπλα</string>
+  <string name="recipes_settings_ingredient_checkbox">Εμφάνιση ενός μικρού πλαισίου ελέγχου δίπλα σε κάθε συστατικό για να σημειωθεί ως ολοκληρωμένο</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">Το συστατικό διαγράφεται με ένα κλικ· η κατάσταση δεν αποθηκεύεται, δηλαδή επαναφέρεται όταν φορτωθεί ξανά η σελίδα</string>
+  <string name="recipes_settings_card">Κάρτα συνταγής</string>
+  <string name="recipes_settings_group_ingredients">Ομαδοποιήστε τα συστατικά ανά ομάδα προϊόντων</string>
+  <string name="chores_settings_overview">Επισκόπηση μικροδουλειών</string>
+  <string name="chores_settings_swap_buttons">Εναλλαγή των κουμπιών καταγραφής επόμενου προγραμματισμού / καταγραφής τώρα</string>
+  <string name="batteries_settings_overview">Επισκόπηση μπαταριών</string>
+  <string name="settings_due_soon_days_hint">Ορίστε 0 για απόκρυψη των φίλτρων/επισημάνσεων για όσα λήγουν σύντομα</string>
+  <string name="grocy_language_default">Προεπιλογή</string>
+  <string name="grocy_language_default_description">Το Grocy χρησιμοποιεί τη γλώσσα του προγράμματος περιήγησής σας</string>
+  <string name="grocy_language_info">Η γλώσσα της διεπαφής ιστού του Grocy για τον χρήστη σας</string>
+  <string name="grocy_language_demo">Οι διακομιστές επίδειξης του Grocy χρησιμοποιούν πάντα τη γλώσσα της διεύθυνσής τους</string>
+  <string name="stock_purchase">Αγορά</string>
+  <string name="stock_consume">Καταναλώνω</string>
+  <string name="stock_transfer">Μεταφορά</string>
+  <string name="stock_inventory">Καταγραφή εμπορευμάτων</string>
 </resources>

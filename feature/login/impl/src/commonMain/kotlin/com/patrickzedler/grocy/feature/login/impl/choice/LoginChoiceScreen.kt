@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.GrocyTheme
+import com.patrickzedler.grocy.core.design.component.GrocyLogo
 import com.patrickzedler.grocy.core.design.component.InsetLazyColumn
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
@@ -40,7 +41,6 @@ import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.design.component.verticalScrollbar
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_dns
-import com.patrickzedler.grocy.core.resources.ic_rounded_home
 import com.patrickzedler.grocy.core.resources.ic_rounded_science
 import com.patrickzedler.grocy.core.resources.login_choice_demo_server
 import com.patrickzedler.grocy.core.resources.login_choice_demo_server_description
@@ -146,13 +146,7 @@ private fun LoginChoiceHeader(modifier: Modifier = Modifier) {
             .padding(start = 8.dp, end = 8.dp, bottom = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        // Placeholder until the app logo exists
-        Icon(
-            painter = painterResource(Res.drawable.ic_rounded_home),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(LOGO_SIZE),
-        )
+        GrocyLogo(size = LOGO_SIZE)
         Text(
             text = stringResource(Res.string.login_choice_title),
             style = MaterialTheme.typography.headlineLarge,

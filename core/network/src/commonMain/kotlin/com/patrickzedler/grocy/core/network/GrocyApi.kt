@@ -454,6 +454,7 @@ class GrocyApi(
             is UserSettingValue.Flag -> JsonPrimitive(value.value)
             is UserSettingValue.Whole -> JsonPrimitive(value.value)
             is UserSettingValue.Number -> JsonPrimitive(value.value)
+            is UserSettingValue.Text -> JsonPrimitive(value.value)
         }
         execute(
             connection,

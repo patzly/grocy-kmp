@@ -2,9 +2,7 @@
 
 package com.patrickzedler.grocy.feature.masterdata.impl.stockoverview
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -13,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemDefaults
@@ -51,6 +48,7 @@ import com.patrickzedler.grocy.core.model.stock.StockOverviewField
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.model.text.formatDate
 import com.patrickzedler.grocy.core.model.text.formatRelativeTime
+import com.patrickzedler.grocy.core.model.text.formatRelativeTimeLabel
 import com.patrickzedler.grocy.core.model.text.timeSpanBetween
 import com.patrickzedler.grocy.core.model.text.todayEpochDay
 import com.patrickzedler.grocy.core.resources.Res
@@ -67,6 +65,7 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_location_on
 import com.patrickzedler.grocy.core.resources.ic_rounded_payments
 import com.patrickzedler.grocy.core.resources.ic_rounded_restaurant
 import com.patrickzedler.grocy.core.resources.ic_rounded_sell
+import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_cart
 import com.patrickzedler.grocy.core.resources.ic_rounded_storefront
 import com.patrickzedler.grocy.core.resources.product_edit
 import com.patrickzedler.grocy.core.resources.product_overview_add_to_shopping_list
@@ -202,7 +201,7 @@ internal fun StockOverviewListItem(
     }
 }
 
-/** The name, with a small blue dot after it while the product is on a shopping list. */
+/** The name, with Grocy's cart icon in blue after it while the product is on a shopping list. */
 @Composable
 private fun Title(item: StockOverviewItem) {
     if (!item.onShoppingList) {
@@ -210,17 +209,19 @@ private fun Title(item: StockOverviewItem) {
         return
     }
     val onShoppingList = stringResource(Res.string.stock_overview_on_shopping_list)
-    val dotColor = rememberStatusColors().info.color
     Row(
-        horizontalArrangement = Arrangement.spacedBy(ShoppingListDotGap),
+        horizontalArrangement = Arrangement.spacedBy(ShoppingListIconGap),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(item.name, modifier = Modifier.weight(1f, fill = false))
-        Box(
-            Modifier
-                .size(ShoppingListDotSize)
-                .background(dotColor, CircleShape)
-                // As text like the chips, so screen readers still read the name
+        Icon(
+            painter = painterResource(Res.drawable.ic_rounded_shopping_cart),
+            contentDescription = null,
+            tint = rememberStatusColors().info.color,
+            modifier = Modifier
+                .size(ShoppingListIconSize)
+                // As text like the chips: a description would replace the item's name for
+                // screen readers, which read a merged item's descriptions instead of its texts
                 .clearAndSetSemantics { text = AnnotatedString(onShoppingList) },
         )
     }
@@ -336,9 +337,10 @@ private fun fieldChips(item: StockOverviewItem, style: StockOverviewItemStyle): 
                 chips += FieldChip(it, it, Res.drawable.ic_rounded_local_fire_department)
             }
             StockOverviewField.LAST_PURCHASED -> item.lastPurchasedDay?.let { day ->
-                val relative = formatRelativeTime(timeSpanBetween(today, day))
+                val span = timeSpanBetween(today, day)
+                val relative = formatRelativeTime(span)
                 chips += FieldChip(
-                    text = relative,
+                    text = formatRelativeTimeLabel(span),
                     description = labelled(label, "${formatDate(day)}, $relative"),
                     icon = Res.drawable.ic_rounded_add_shopping_cart,
                 )
@@ -418,7 +420,8 @@ private fun dueChip(
         return FieldChip(text, labelled(label, text))
     }
     val day = item.dueDay ?: return null
-    val relative = formatRelativeTime(timeSpanBetween(today, day))
+    val span = timeSpanBetween(today, day)
+    val relative = formatRelativeTime(span)
     val statusText = when (item.dueStatus) {
         DueStatus.DUE_SOON -> stringResource(Res.string.stock_entry_due_soon)
         DueStatus.OVERDUE -> stringResource(Res.string.stock_entry_overdue)
@@ -426,7 +429,7 @@ private fun dueChip(
         null -> null
     }
     return FieldChip(
-        text = relative,
+        text = formatRelativeTimeLabel(span),
         description = labelled(
             label,
             listOfNotNull(formatDate(day), relative, statusText).joinToString(", "),
@@ -486,8 +489,8 @@ private fun FieldChipView(chip: FieldChip) {
 
 private const val DESCRIPTION_LINES = 2
 
-private val ShoppingListDotSize = 4.dp
-private val ShoppingListDotGap = 6.dp
+private val ShoppingListIconSize = 18.dp
+private val ShoppingListIconGap = 6.dp
 
 // Material's chip height and icon size
 private val ChipHeight = 32.dp

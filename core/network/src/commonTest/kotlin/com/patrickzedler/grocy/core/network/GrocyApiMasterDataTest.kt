@@ -7,6 +7,8 @@ import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductOverview
 import com.patrickzedler.grocy.core.model.masterdata.UserfieldType
 import com.patrickzedler.grocy.core.model.server.ProductPresets
+import com.patrickzedler.grocy.core.model.server.UserSettingValue
+import com.patrickzedler.grocy.core.model.server.UserSettings
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
 import io.ktor.client.engine.mock.respond
@@ -233,6 +235,59 @@ class GrocyApiMasterDataTest {
         assertFalse(settings.showWarningOnPurchaseWhenDueDateIsEarlierThanNext)
         assertEquals(3, settings.stockDecimalPlacesPricesInput)
         assertTrue(settings.stockAutoDecimalSeparatorPrices)
+    }
+
+    @Test
+    fun userSettingsReadTheSettingsOfGrocysOtherPages() = runTest {
+        val api = api {
+            json(
+                """{"shopping_list_show_calendar":"1","shopping_list_round_up":true,""" +
+                    """"shopping_list_auto_add_below_min_stock_amount":"1",""" +
+                    """"shopping_list_auto_add_below_min_stock_amount_list_id":"3",""" +
+                    """"shopping_list_to_stock_workflow_auto_submit_when_prefilled":1,""" +
+                    """"recipes_show_list_side_by_side":"0",""" +
+                    """"recipes_show_ingredient_checkbox":"1",""" +
+                    """"recipe_ingredients_group_by_product_group":"1",""" +
+                    """"chores_due_soon_days":"0","chores_overview_swap_tracking_buttons":"1",""" +
+                    """"tasks_due_soon_days":"3","batteries_due_soon_days":9,"locale":"de"}""",
+            )
+        }
+
+        val settings = api.userSettings(CONNECTION)
+
+        assertTrue(settings.shoppingListShowCalendar)
+        assertTrue(settings.shoppingListRoundUp)
+        assertTrue(settings.shoppingListAutoAddBelowMinStock)
+        assertEquals(3, settings.shoppingListAutoAddListId)
+        assertTrue(settings.shoppingListToStockAutoSubmit)
+        assertFalse(settings.recipesShowListSideBySide)
+        assertTrue(settings.recipesShowIngredientCheckbox)
+        assertTrue(settings.recipeIngredientsGroupByProductGroup)
+        assertEquals(0, settings.choresDueSoonDays)
+        assertTrue(settings.choresOverviewSwapTrackingButtons)
+        assertEquals(3, settings.tasksDueSoonDays)
+        assertEquals(9, settings.batteriesDueSoonDays)
+        assertEquals("de", settings.locale)
+    }
+
+    @Test
+    fun missingSettingsOfGrocysOtherPagesKeepItsDefaults() = runTest {
+        val api = api { json("""{"locale":null}""") }
+
+        val settings = api.userSettings(CONNECTION)
+
+        assertEquals(UserSettings(), settings)
+    }
+
+    @Test
+    fun textSettingsAreSentAsText() = runTest {
+        val api = api { json("", HttpStatusCode.NoContent) }
+
+        api.saveUserSetting(CONNECTION, "locale", UserSettingValue.Text("pt_BR"))
+
+        val request = requests.single()
+        assertEquals("/api/user/settings/locale", request.url.encodedPath)
+        assertEquals("pt_BR", request.json["value"]?.jsonPrimitive?.content)
     }
 
     @Test

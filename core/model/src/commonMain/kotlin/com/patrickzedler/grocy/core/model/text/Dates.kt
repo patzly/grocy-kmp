@@ -79,6 +79,15 @@ expect fun formatDate(epochDay: Long): String
 /** [span] relative to now in the app language, e.g. "yesterday" or "in 3 months". */
 expect fun formatRelativeTime(span: TimeSpan): String
 
+/**
+ * [span] like [formatRelativeTime] as a label of its own, e.g. "Tomorrow" in a chip: the
+ * platforms format it for the middle of a sentence ("morgen" in German).
+ */
+fun formatRelativeTimeLabel(span: TimeSpan): String = capitalizeStart(formatRelativeTime(span))
+
+/** [text] with its first letter capitalized, e.g. "in 3 Tagen" as "In 3 Tagen". */
+internal fun capitalizeStart(text: String): String = text.replaceFirstChar { it.titlecase() }
+
 /** [span] as duration in the app language, e.g. "2 months". */
 expect fun formatDuration(span: TimeSpan): String
 

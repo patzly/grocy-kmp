@@ -1,5 +1,7 @@
 package com.patrickzedler.grocy.feature.start.impl
 
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
@@ -14,6 +16,7 @@ import com.patrickzedler.grocy.core.resources.start_select_hint
 import com.patrickzedler.grocy.feature.about.api.AboutRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StockOverviewRoute
+import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import org.jetbrains.compose.resources.painterResource
@@ -31,6 +34,7 @@ fun EntryProviderScope<NavKey>.startEntry(
             )
         },
     ) {
+        val server by dependencies.server.collectAsStateWithLifecycle()
         StartScreen(
             viewModel = viewModel {
                 StartViewModel(
@@ -39,10 +43,15 @@ fun EntryProviderScope<NavKey>.startEntry(
                     dependencies.serverConfig,
                 )
             },
+            isDemoServer = server?.isDemo == true,
             isBesideDetail = showsDetailBesideList(),
             shownSection = startSectionOf(navigator.currentRoute),
             onSectionClick = { section -> navigator.openDetail(section.route) },
             onSettingsClick = { navigator.navigate(SettingsRoute) },
+            // Like reached through the settings, back returns there
+            onDemoWarningClick = {
+                navigator.navigateAll(listOf(SettingsRoute, ServerSettingsRoute))
+            },
             onAboutClick = { navigator.navigate(AboutRoute) },
         )
     }

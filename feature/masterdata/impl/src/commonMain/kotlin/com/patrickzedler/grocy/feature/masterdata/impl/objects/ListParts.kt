@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Button
@@ -53,6 +54,8 @@ import com.patrickzedler.grocy.core.resources.action_search
 import com.patrickzedler.grocy.core.resources.data_load_failed
 import com.patrickzedler.grocy.core.resources.data_offline
 import com.patrickzedler.grocy.core.resources.ic_rounded_close
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -97,6 +100,21 @@ internal fun LazyListScope.searchItem(
                     ),
                 )
             }
+        }
+    }
+}
+
+/**
+ * Opens the search at the top of the list, once the list scrolled up: a search opened while
+ * scrolling took the focus when the list passed it, and bringing the field into view stopped
+ * the scrolling short of the top.
+ */
+internal fun CoroutineScope.showSearchAtTop(listState: LazyListState, showSearch: () -> Unit) {
+    launch {
+        try {
+            listState.animateScrollToItem(0)
+        } finally {
+            showSearch()
         }
     }
 }

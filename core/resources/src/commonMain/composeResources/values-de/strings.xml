@@ -188,7 +188,7 @@
   <string name="settings_server">Server</string>
   <string name="settings_user">Benutzereinstellungen</string>
   <string name="settings_user_synced">Auf dem Server gespeichert</string>
-  <string name="settings_user_synced_hint">Grocy speichert diese Einstellungen für deinen Benutzer, deshalb gelten sie auch in seiner Weboberfläche und auf deinen anderen Geräten</string>
+  <string name="settings_user_synced_hint">Grocy speichert diese Einstellungen für deinen Benutzer, deshalb gelten sie auch in der Weboberfläche von Grocy und auf deinen anderen Geräten</string>
   <string name="settings_network">Netzwerk</string>
   <string name="settings_behavior">Verhalten</string>
   <string name="settings_scanner">Scanner</string>
@@ -832,4 +832,32 @@
     <item quantity="one">%1$d Jahr</item>
     <item quantity="other">%1$d Jahre</item>
   </plurals>
+  <string name="settings_grocy">Grocy-Einstellungen</string>
+  <string name="settings_shopping_list">Einkaufszetteleinstellungen</string>
+  <string name="settings_recipes">Rezepteinstellungen</string>
+  <string name="settings_chores">Hausarbeiteneinstellungen</string>
+  <string name="settings_tasks">Aufgabeneinstellungen</string>
+  <string name="settings_batteries">Batterieeinstellungen</string>
+  <string name="shopping_list_settings_calendar">Einen Kalender (Monatsansicht) anzeigen</string>
+  <string name="shopping_list_settings_round_up">Mengen auf die nächste ganze Zahl aufrunden</string>
+  <string name="shopping_list_settings_auto_add">Produkte unter Mindestbestand automatisch zum Einkaufszettel hinzufügen</string>
+  <string name="shopping_list_settings_workflow">Einkaufszettel -&gt; Bestand Workflow</string>
+  <string name="shopping_list_settings_auto_submit">Buchung automatisch ausführen, wenn das Produkt Standardfälligkeitstage hinterlegt hat (als Preis wird der letzte Preis verwendet)</string>
+  <string name="recipes_settings_side_by_side">Die Rezeptliste und das Rezept nebeneinander anzeigen</string>
+  <string name="recipes_settings_ingredient_checkbox">Ein kleines Häkchen neben jeder Zutat anzeigen, um sie als erledigt zu markieren</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">Die Zutat wird durchgestrichen, wenn das Häkchen angeklickt wird, der Zustand wird nicht gespeichert, d. h. beim Neuladen der Seite zurückgesetzt</string>
+  <string name="recipes_settings_card">Rezeptkarte</string>
+  <string name="recipes_settings_group_ingredients">Zutaten nach Produktgruppe gruppieren</string>
+  <string name="chores_settings_overview">Hausarbeitenübersicht</string>
+  <string name="chores_settings_swap_buttons">Die Buttons "Nächste geplante Ausführung erfassen" / "Ausführung jetzt erfassen" tauschen</string>
+  <string name="batteries_settings_overview">Batterienübersicht</string>
+  <string name="settings_due_soon_days_hint">Auf 0 setzen, um "Bald fällig" Filter/Hervorhebungen zu deaktivieren</string>
+  <string name="grocy_language_default">Standard</string>
+  <string name="grocy_language_default_description">Grocy verwendet die Sprache deines Browsers</string>
+  <string name="grocy_language_info">Die Sprache der Weboberfläche von Grocy für deinen Benutzer</string>
+  <string name="grocy_language_demo">Die Demo-Server von Grocy verwenden immer die Sprache ihrer Adresse</string>
+  <string name="stock_purchase">Einkauf</string>
+  <string name="stock_consume">Verbrauch</string>
+  <string name="stock_transfer">Umlagern</string>
+  <string name="stock_inventory">Inventur</string>
 </resources>

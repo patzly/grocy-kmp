@@ -832,4 +832,32 @@
     <item quantity="one">%1$d aasta</item>
     <item quantity="other">%1$d aastat</item>
   </plurals>
+  <string name="settings_grocy">Grocy seaded</string>
+  <string name="settings_shopping_list">Ostunimekirja seaded</string>
+  <string name="settings_recipes">Retseptide seaded</string>
+  <string name="settings_chores">Majapidamistööde seaded</string>
+  <string name="settings_tasks">Ülesannete seaded</string>
+  <string name="settings_batteries">Patareide seaded</string>
+  <string name="shopping_list_settings_calendar">Näita kuuvaate kalendrit</string>
+  <string name="shopping_list_settings_round_up">Ümarda kogused üles lähima täisarvuni</string>
+  <string name="shopping_list_settings_auto_add">Automaatselt lisa tooted ostunimekirja, mis on alla nende määratud minimaalkoguse</string>
+  <string name="shopping_list_settings_workflow">Ostunimekirjast varudesse töövoog</string>
+  <string name="shopping_list_settings_auto_submit">Tehke broneering automaatselt, kasutades ostunimekirja kauba viimast hinda ja summat, kui tootele on määratud "Vaikimisi tähtpäevad"</string>
+  <string name="recipes_settings_side_by_side">Näita retseptide nimekirja ja retsepti kõrvuti</string>
+  <string name="recipes_settings_ingredient_checkbox">Näidake iga koostisosa kõrval väikest märkeruutu, et märkida see valmis</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">Klõpsamisel kriipsutatakse koostisosa läbi, olekut ei salvestata, tähendab lähtestamist lehe uuesti laadimisel</string>
+  <string name="recipes_settings_card">Retseptikaart</string>
+  <string name="recipes_settings_group_ingredients">Grupita koostisosasid nende toodete grupi järgi</string>
+  <string name="chores_settings_overview">Kodutööde ülevaade</string>
+  <string name="chores_settings_swap_buttons">Vaheta nupud „Registreeri järgmine plaaniline täitmine” / „Registreeri kohe”</string>
+  <string name="batteries_settings_overview">Patareide ülevaade</string>
+  <string name="settings_due_soon_days_hint">Varsti tähtaegsete filtrite/esiletõstmise peitmiseks määra väärtuseks 0</string>
+  <string name="grocy_language_default">Vaikimisi</string>
+  <string name="grocy_language_default_description">Grocy kasutab sinu brauseri keelt</string>
+  <string name="grocy_language_info">Grocy veebiliidese keel sinu kasutajale</string>
+  <string name="grocy_language_demo">Grocy demoserverid kasutavad alati oma aadressi keelt</string>
+  <string name="stock_purchase">Osta</string>
+  <string name="stock_consume">Tarbi</string>
+  <string name="stock_transfer">Üleviimine</string>
+  <string name="stock_inventory">Inventuur</string>
 </resources>

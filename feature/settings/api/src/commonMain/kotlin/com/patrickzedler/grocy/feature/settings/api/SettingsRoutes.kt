@@ -23,16 +23,19 @@ data object GeneralSettingsRoute : DetailRoute
 @SerialName("settings/server")
 data object ServerSettingsRoute : DetailRoute
 
-/** The settings Grocy stores per user on the server, a page per area. */
+/**
+ * Grocy's settings, the pages of its "Settings" menu: the ones it stores per user on the
+ * server, a page per area, then its user settings.
+ */
 @Serializable
-@SerialName("settings/user")
-data object UserSettingsRoute : DetailRoute
+@SerialName("settings/grocy")
+data object GrocySettingsRoute : DetailRoute
 
 /**
  * Grocy's stock settings of the user, "Presets for new products" first; [inSettings] when
- * opened from the user settings, so it shows beside the categories in wide windows.
- * [backLeavesSettings] when another screen opened it there together with the categories and the
- * user settings below it, so back returns to that screen in one step.
+ * opened from Grocy's settings, so it shows beside the categories in wide windows.
+ * [backLeavesSettings] when another screen opened it there together with the categories and
+ * Grocy's settings below it, so back returns to that screen in one step.
  */
 @Serializable
 @SerialName("settings/stock")
@@ -40,6 +43,20 @@ data class StockSettingsRoute(
     val inSettings: Boolean = false,
     val backLeavesSettings: Boolean = false,
 ) : DetailRoute
+
+/** The other pages of Grocy's settings menu with settings of the user, by their feature. */
+@Serializable
+enum class GrocySettingsPage { SHOPPING_LIST, RECIPES, CHORES, TASKS, BATTERIES }
+
+/** One of Grocy's [GrocySettingsPage]s, beside the categories like [StockSettingsRoute]. */
+@Serializable
+@SerialName("settings/grocy/page")
+data class GrocySettingsPageRoute(val page: GrocySettingsPage) : DetailRoute
+
+/** Grocy's own "User settings" page: the user's language on the server. */
+@Serializable
+@SerialName("settings/user")
+data object UserSettingsRoute : DetailRoute
 
 /** Recent errors of the app: logcat on Android, the errors the web app recorded. */
 @Serializable
@@ -51,6 +68,8 @@ val settingsRouteSerializers = SerializersModule {
         subclass(SettingsRoute::class, SettingsRoute.serializer())
         subclass(GeneralSettingsRoute::class, GeneralSettingsRoute.serializer())
         subclass(ServerSettingsRoute::class, ServerSettingsRoute.serializer())
+        subclass(GrocySettingsRoute::class, GrocySettingsRoute.serializer())
+        subclass(GrocySettingsPageRoute::class, GrocySettingsPageRoute.serializer())
         subclass(UserSettingsRoute::class, UserSettingsRoute.serializer())
         subclass(StockSettingsRoute::class, StockSettingsRoute.serializer())
         subclass(LogRoute::class, LogRoute.serializer())

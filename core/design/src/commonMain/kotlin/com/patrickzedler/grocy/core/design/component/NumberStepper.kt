@@ -54,7 +54,8 @@ data class NumberStepper(val min: Double? = null, val max: Double? = null) {
  * icon buttons in a standard button group, so a value can be changed by one without the
  * keyboard. [field] fills the width
  * the buttons leave; its [error] shows below both like the field's supporting text, so the
- * buttons stay centered on the field when it grows with a wrapped label.
+ * buttons stay centered on the field when it grows with a wrapped label, and so does a
+ * [supportingText] while there is no error.
  */
 @Composable
 fun NumberStepperField(
@@ -63,6 +64,7 @@ fun NumberStepperField(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     error: String? = null,
+    supportingText: String? = null,
     field: @Composable (Modifier) -> Unit,
 ) {
     Column(modifier = modifier) {
@@ -82,6 +84,13 @@ fun NumberStepperField(
                 modifier = Modifier
                     .padding(SupportingTextPadding)
                     .semantics { liveRegion = LiveRegionMode.Polite },
+            )
+        } else if (supportingText != null) {
+            Text(
+                text = supportingText,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(SupportingTextPadding),
             )
         }
     }

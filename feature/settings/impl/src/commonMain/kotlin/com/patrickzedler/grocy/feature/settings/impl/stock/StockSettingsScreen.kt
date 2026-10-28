@@ -4,24 +4,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.component.ConnectedButtonGroup
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.NumberStepper
-import com.patrickzedler.grocy.core.design.component.NumberStepperField
-import com.patrickzedler.grocy.core.design.component.RoundedTextField
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SearchableDropdownField
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
@@ -31,13 +23,8 @@ import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.data_location
 import com.patrickzedler.grocy.core.resources.data_none
-import com.patrickzedler.grocy.core.resources.data_number_invalid
-import com.patrickzedler.grocy.core.resources.data_number_range_invalid
 import com.patrickzedler.grocy.core.resources.data_product_group
 import com.patrickzedler.grocy.core.resources.data_quantity_unit
-import com.patrickzedler.grocy.core.resources.data_save_failed
-import com.patrickzedler.grocy.core.resources.data_save_failed_details
-import com.patrickzedler.grocy.core.resources.data_save_offline
 import com.patrickzedler.grocy.core.resources.product_stock_label
 import com.patrickzedler.grocy.core.resources.product_stock_label_none
 import com.patrickzedler.grocy.core.resources.product_stock_label_per_unit
@@ -65,11 +52,12 @@ import com.patrickzedler.grocy.core.resources.stock_settings_show_icon
 import com.patrickzedler.grocy.core.resources.stock_settings_show_purchased_date
 import com.patrickzedler.grocy.core.resources.stock_settings_show_purchased_date_hint
 import com.patrickzedler.grocy.core.resources.stock_settings_use_quick_consume
+import com.patrickzedler.grocy.feature.settings.impl.SettingNumberItem
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuActions
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuViewModel
 import com.patrickzedler.grocy.feature.settings.impl.SettingsScaffold
+import com.patrickzedler.grocy.feature.settings.impl.UserSettingEventEffect
 import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -88,21 +76,7 @@ internal fun StockSettingsScreen(
     val options by viewModel.options.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(viewModel) {
-        viewModel.events.collect { event ->
-            snackbarHostState.showSnackbar(
-                when (event) {
-                    StockSettingsEvent.Offline -> getString(Res.string.data_save_offline)
-                    is StockSettingsEvent.Failed -> listOfNotNull(
-                        getString(Res.string.data_save_failed),
-                        event.serverMessage?.let {
-                            getString(Res.string.data_save_failed_details, it)
-                        },
-                    ).joinToString("\n")
-                },
-            )
-        }
-    }
+    UserSettingEventEffect(viewModel.events, snackbarHostState)
 
     SettingsScaffold(
         title = stringResource(Res.string.settings_stock),
@@ -336,55 +310,15 @@ private fun NumberItem(
     count: Int,
     enabled: Boolean = true,
 ) {
-    val error = form.errors[setting]?.let { errorText(it) }
-    val state = form.numbers.getValue(setting)
-    SegmentedContainer(index = index, count = count) {
-        NumberStepperField(
-            state = state,
-            stepper = NumberStepper(min = setting.min, max = setting.max),
-            modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            error = error,
-        ) { fieldModifier ->
-            NumberField(state, label, isError = error != null, enabled, modifier = fieldModifier)
-        }
-    }
-}
-
-@Composable
-private fun NumberField(
-    state: TextFieldState,
-    label: StringResource,
-    isError: Boolean,
-    enabled: Boolean,
-    modifier: Modifier = Modifier,
-) {
-    // The stepper shows the error below its buttons, so they stay centered on the field
-    RoundedTextField(
-        state = state,
-        modifier = modifier,
+    SettingNumberItem(
+        label = stringResource(label),
+        state = form.numbers.getValue(setting),
+        stepper = NumberStepper(min = setting.min, max = setting.max),
+        error = form.errors[setting],
+        index = index,
+        count = count,
         enabled = enabled,
-        label = { Text(stringResource(label)) },
-        isError = isError,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Decimal,
-            imeAction = ImeAction.Next,
-        ),
     )
-}
-
-@Composable
-private fun errorText(error: SettingError): String = when (error) {
-    is SettingError.InvalidNumber -> if (error.max == null) {
-        stringResource(Res.string.data_number_invalid, error.min, error.decimals.toString())
-    } else {
-        stringResource(
-            Res.string.data_number_range_invalid,
-            error.min,
-            error.max,
-            error.decimals.toString(),
-        )
-    }
 }
 
 @Composable

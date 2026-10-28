@@ -1,6 +1,9 @@
 package com.patrickzedler.grocy.feature.settings.impl
 
 import com.patrickzedler.grocy.feature.settings.api.GeneralSettingsRoute
+import com.patrickzedler.grocy.feature.settings.api.GrocySettingsPage
+import com.patrickzedler.grocy.feature.settings.api.GrocySettingsPageRoute
+import com.patrickzedler.grocy.feature.settings.api.GrocySettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.LogRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
@@ -16,22 +19,27 @@ class SettingsCategoryTest {
     fun categoriesWithPageOpenIt() {
         assertEquals(GeneralSettingsRoute, SettingsCategory.GENERAL.route)
         assertEquals(ServerSettingsRoute, SettingsCategory.SERVER.route)
-        assertEquals(UserSettingsRoute, SettingsCategory.USER.route)
+        assertEquals(GrocySettingsRoute, SettingsCategory.GROCY.route)
     }
 
     @Test
     fun shownPageMarksItsCategory() {
         assertEquals(SettingsCategory.GENERAL, settingsCategoryOf(GeneralSettingsRoute))
         assertEquals(SettingsCategory.SERVER, settingsCategoryOf(ServerSettingsRoute))
-        assertEquals(SettingsCategory.USER, settingsCategoryOf(UserSettingsRoute))
+        assertEquals(SettingsCategory.GROCY, settingsCategoryOf(GrocySettingsRoute))
     }
 
     @Test
     fun pageOpenedFromACategoryMarksIt() {
         assertEquals(
-            SettingsCategory.USER,
+            SettingsCategory.GROCY,
             settingsCategoryOf(StockSettingsRoute(inSettings = true)),
         )
+        assertEquals(
+            SettingsCategory.GROCY,
+            settingsCategoryOf(GrocySettingsPageRoute(GrocySettingsPage.TASKS)),
+        )
+        assertEquals(SettingsCategory.GROCY, settingsCategoryOf(UserSettingsRoute))
     }
 
     @Test

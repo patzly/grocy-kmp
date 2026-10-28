@@ -51,6 +51,8 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.patrickzedler.grocy.core.design.component.ChartMarker
+import com.patrickzedler.grocy.core.design.component.chartMarkerOf
 import com.patrickzedler.grocy.core.design.component.rememberChartColors
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.model.text.formatDate
@@ -110,6 +112,7 @@ internal fun PriceHistoryChart(
             Legend(
                 names = storeNames,
                 colors = history.series.map { colors[it.colorIndex] },
+                markers = history.series.map { chartMarkerOf(it.colorIndex) },
                 showTrend = history.trend != null,
             )
         }
@@ -252,8 +255,8 @@ private fun PlotArea(
             drawSeries(plot, series, colors[series.colorIndex], surface)
         }
         selected?.let { points.getOrNull(it) }?.let { point ->
-            val color = colors[history.series[point.seriesIndex].colorIndex]
-            drawSelection(plot, point, color, surface, gridColor)
+            val colorIndex = history.series[point.seriesIndex].colorIndex
+            drawSelection(plot, point, colorIndex, colors[colorIndex], surface, gridColor)
             drawTooltip(
                 anchor = plot.offset(point.point.epochDay, point.point.price),
                 text = textMeasurer.measure(describe(point), tooltipStyle),
@@ -265,7 +268,12 @@ private fun PlotArea(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun Legend(names: List<String>, colors: List<Color>, showTrend: Boolean) {
+private fun Legend(
+    names: List<String>,
+    colors: List<Color>,
+    markers: List<ChartMarker>,
+    showTrend: Boolean,
+) {
     val trendColor = MaterialTheme.colorScheme.onSurfaceVariant
     FlowRow(
         modifier = Modifier.fillMaxWidth(),
@@ -273,7 +281,10 @@ private fun Legend(names: List<String>, colors: List<Color>, showTrend: Boolean)
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         names.forEachIndexed { index, name ->
-            LegendItem(text = name) { drawLegendLine(colors[index], dotted = false) }
+            LegendItem(text = name) {
+                drawLegendLine(colors[index], dotted = false)
+                drawMarker(markers[index], center, PointRadius.toPx(), colors[index])
+            }
         }
         if (showTrend) {
             LegendItem(text = stringResource(Res.string.product_overview_trend)) {
@@ -289,7 +300,7 @@ private fun LegendItem(text: String, swatch: DrawScope.() -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        Canvas(Modifier.size(width = 16.dp, height = 8.dp), onDraw = swatch)
+        Canvas(Modifier.size(width = 20.dp, height = 10.dp), onDraw = swatch)
         Text(
             text = text,
             style = MaterialTheme.typography.bodySmall,
@@ -378,15 +389,57 @@ private fun DrawScope.drawSeries(
         )
     }
     // A ring of the surface keeps crossing points apart
+    val marker = chartMarkerOf(series.colorIndex)
     offsets.forEach {
-        drawCircle(surface, radius = PointRadius.toPx() + RingWidth.toPx(), center = it)
-        drawCircle(color, radius = PointRadius.toPx(), center = it)
+        drawMarker(marker, it, PointRadius.toPx() + RingWidth.toPx(), surface)
+        drawMarker(marker, it, PointRadius.toPx(), color)
+    }
+}
+
+/**
+ * A point of [marker]'s shape around [center], as large as a circle of [radius]: series also
+ * differ by shape, harmonized colors alone can be too close for color blind users.
+ */
+private fun DrawScope.drawMarker(
+    marker: ChartMarker,
+    center: Offset,
+    radius: Float,
+    color: Color,
+) {
+    when (marker) {
+        ChartMarker.Circle -> drawCircle(color, radius = radius, center = center)
+        ChartMarker.Square -> {
+            val half = radius * SQUARE_HALF_SIDE
+            drawRect(color, topLeft = center - Offset(half, half), size = Size(half * 2, half * 2))
+        }
+        ChartMarker.Diamond -> drawPath(
+            Path().apply {
+                val half = radius * DIAMOND_HALF_DIAGONAL
+                moveTo(center.x, center.y - half)
+                lineTo(center.x + half, center.y)
+                lineTo(center.x, center.y + half)
+                lineTo(center.x - half, center.y)
+                close()
+            },
+            color,
+        )
+        ChartMarker.Triangle -> drawPath(
+            Path().apply {
+                val circumradius = radius * TRIANGLE_CIRCUMRADIUS
+                moveTo(center.x, center.y - circumradius)
+                lineTo(center.x + circumradius * SIN_60, center.y + circumradius / 2)
+                lineTo(center.x - circumradius * SIN_60, center.y + circumradius / 2)
+                close()
+            },
+            color,
+        )
     }
 }
 
 private fun DrawScope.drawSelection(
     plot: ChartGeometry,
     point: ChartPoint,
+    colorIndex: Int,
     color: Color,
     surface: Color,
     lineColor: Color,
@@ -398,8 +451,9 @@ private fun DrawScope.drawSelection(
         end = Offset(center.x, plot.bottom),
         strokeWidth = LineWidth.toPx(),
     )
-    drawCircle(surface, radius = SelectedRadius.toPx() + RingWidth.toPx(), center = center)
-    drawCircle(color, radius = SelectedRadius.toPx(), center = center)
+    val marker = chartMarkerOf(colorIndex)
+    drawMarker(marker, center, SelectedRadius.toPx() + RingWidth.toPx(), surface)
+    drawMarker(marker, center, SelectedRadius.toPx(), color)
 }
 
 private fun DrawScope.drawTooltip(
@@ -496,3 +550,9 @@ private val SelectedRadius = 6.dp
 private val RingWidth = 2.dp
 private val TrendDotGap = 6.dp
 private val TouchRadius = 24.dp
+
+// Sizes of markers with the area of a circle of radius 1
+private const val SQUARE_HALF_SIDE = 0.886f
+private const val DIAMOND_HALF_DIAGONAL = 1.253f
+private const val TRIANGLE_CIRCUMRADIUS = 1.555f
+private const val SIN_60 = 0.866f

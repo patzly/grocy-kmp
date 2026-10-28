@@ -38,6 +38,9 @@ import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_close
 import com.patrickzedler.grocy.core.resources.action_learn_more
 import com.patrickzedler.grocy.core.resources.app_translate
+import com.patrickzedler.grocy.core.resources.grocy_language_default
+import com.patrickzedler.grocy.core.resources.grocy_language_default_description
+import com.patrickzedler.grocy.core.resources.grocy_language_info
 import com.patrickzedler.grocy.core.resources.settings_language
 import com.patrickzedler.grocy.core.resources.settings_language_info
 import com.patrickzedler.grocy.core.resources.settings_language_system
@@ -60,6 +63,9 @@ internal fun LanguageDialog(
             languages = AppLanguages,
             // The system language may be regional ("de-CH"), its translation is the selected one
             selectedLanguage = resolveAppLanguage(selectedLanguage) ?: selectedLanguage,
+            subtitle = stringResource(Res.string.settings_language_info),
+            defaultName = stringResource(Res.string.settings_language_system),
+            defaultDescription = stringResource(Res.string.settings_language_system_description),
             onLanguageClick = { tag ->
                 haptic.confirm()
                 onDismissRequest()
@@ -77,20 +83,57 @@ internal fun LanguageDialog(
     }
 }
 
+/**
+ * Single choice between Grocy's default and the [languages] Grocy has, for Grocy's own
+ * language of the user: Grocy's codes ("pt_BR"), named in their language like the app's.
+ */
+@Composable
+internal fun GrocyLanguageDialog(
+    languages: List<String>,
+    selectedLanguage: String?,
+    onLanguageSelected: (String?) -> Unit,
+    onDismissRequest: () -> Unit,
+) {
+    val haptic = LocalHapticFeedback.current
+
+    ScrollableAlertDialog(onDismissRequest = onDismissRequest) {
+        LanguageDialogContent(
+            languages = languages,
+            selectedLanguage = selectedLanguage,
+            subtitle = stringResource(Res.string.grocy_language_info),
+            defaultName = stringResource(Res.string.grocy_language_default),
+            defaultDescription = stringResource(Res.string.grocy_language_default_description),
+            onLanguageClick = { code ->
+                haptic.confirm()
+                onDismissRequest()
+                if (code != selectedLanguage) onLanguageSelected(code)
+            },
+            onLearnMoreClick = null,
+            onCloseClick = {
+                haptic.confirm()
+                onDismissRequest()
+            },
+        )
+    }
+}
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun LanguageDialogContent(
     languages: List<String>,
     selectedLanguage: String?,
+    subtitle: String,
+    defaultName: String,
+    defaultDescription: String,
     modifier: Modifier = Modifier,
     onLanguageClick: (String?) -> Unit = {},
-    onLearnMoreClick: () -> Unit = {},
+    onLearnMoreClick: (() -> Unit)? = {},
     onCloseClick: () -> Unit = {},
 ) {
     ScrollableAlertDialogContent(
         modifier = modifier,
         title = { Text(stringResource(Res.string.settings_language)) },
-        subtitle = { Text(stringResource(Res.string.settings_language_info)) },
+        subtitle = { Text(subtitle) },
         confirmButton = {
             TextButton(
                 onClick = onCloseClick,
@@ -100,13 +143,15 @@ private fun LanguageDialogContent(
                 Text(stringResource(Res.string.action_close))
             }
         },
-        extraButton = {
-            TextButton(
-                onClick = onLearnMoreClick,
-                modifier = Modifier.clickCursor(),
-                shapes = ButtonDefaults.shapes(),
-            ) {
-                Text(stringResource(Res.string.action_learn_more))
+        extraButton = onLearnMoreClick?.let { onClick ->
+            @Composable {
+                TextButton(
+                    onClick = onClick,
+                    modifier = Modifier.clickCursor(),
+                    shapes = ButtonDefaults.shapes(),
+                ) {
+                    Text(stringResource(Res.string.action_learn_more))
+                }
             }
         },
         isScrollableControlledByContent = true,
@@ -115,7 +160,8 @@ private fun LanguageDialogContent(
         val count = languages.size + 1
         val namedLanguages = remember(languages) {
             languages
-                .map { it to languageName(it) }
+                // Grocy's codes separate the region with "_"
+                .map { it to languageName(it.replace('_', '-')) }
                 .sortedWith(compareBy(languageNameComparator()) { (_, name) -> name })
         }
 
@@ -139,8 +185,8 @@ private fun LanguageDialogContent(
         ) {
             item(key = "system") {
                 LanguageItem(
-                    name = stringResource(Res.string.settings_language_system),
-                    description = stringResource(Res.string.settings_language_system_description),
+                    name = defaultName,
+                    description = defaultDescription,
                     selected = selectedLanguage == null,
                     index = 0,
                     count = count,
@@ -199,6 +245,12 @@ private fun LanguageItem(
 @Composable
 private fun LanguageDialogPreview() {
     GrocyTheme {
-        LanguageDialogContent(languages = listOf("de", "en"), selectedLanguage = "en")
+        LanguageDialogContent(
+            languages = listOf("de", "en"),
+            selectedLanguage = "en",
+            subtitle = stringResource(Res.string.settings_language_info),
+            defaultName = stringResource(Res.string.settings_language_system),
+            defaultDescription = stringResource(Res.string.settings_language_system_description),
+        )
     }
 }

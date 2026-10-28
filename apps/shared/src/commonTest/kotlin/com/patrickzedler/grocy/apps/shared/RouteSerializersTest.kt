@@ -19,9 +19,9 @@ import com.patrickzedler.grocy.feature.masterdata.api.ProductsRoute
 import com.patrickzedler.grocy.feature.masterdata.api.QuantityUnitRoute
 import com.patrickzedler.grocy.feature.masterdata.api.QuantityUnitsRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StockEntriesRoute
-import com.patrickzedler.grocy.feature.masterdata.api.StockOverviewRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StockJournalRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StockJournalSummaryRoute
+import com.patrickzedler.grocy.feature.masterdata.api.StockOverviewRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StoreRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StoresRoute
 import com.patrickzedler.grocy.feature.masterdata.api.TaskCategoriesRoute
@@ -31,6 +31,9 @@ import com.patrickzedler.grocy.feature.masterdata.api.UserentityRoute
 import com.patrickzedler.grocy.feature.masterdata.api.UserfieldRoute
 import com.patrickzedler.grocy.feature.masterdata.api.UserfieldsRoute
 import com.patrickzedler.grocy.feature.settings.api.GeneralSettingsRoute
+import com.patrickzedler.grocy.feature.settings.api.GrocySettingsPage
+import com.patrickzedler.grocy.feature.settings.api.GrocySettingsPageRoute
+import com.patrickzedler.grocy.feature.settings.api.GrocySettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.LogRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
@@ -86,6 +89,8 @@ class RouteSerializersTest {
         UserfieldRoute(id = 3),
         UserentitiesRoute,
         UserentityRoute(id = 3),
+        GrocySettingsRoute,
+        GrocySettingsPageRoute(GrocySettingsPage.CHORES),
         UserSettingsRoute,
         StockSettingsRoute(),
         StockSettingsRoute(inSettings = true),

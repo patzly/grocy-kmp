@@ -62,12 +62,14 @@ import com.patrickzedler.grocy.core.resources.stock_overview_total_value
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.emptyListItem
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.searchItem
+import com.patrickzedler.grocy.feature.masterdata.impl.objects.showSearchAtTop
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductLinks
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewHost
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintEffect
+import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.related.actionMessage
 import com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist.AddToShoppingListViewModel
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
@@ -94,6 +96,7 @@ internal fun StockOverviewScreen(
     viewModel: StockOverviewViewModel,
     overviewViewModel: ProductOverviewViewModel,
     shoppingList: AddToShoppingListViewModel,
+    labels: LabelPrintViewModel,
     productLinks: ProductLinks,
     links: StockOverviewLinks,
     itemActions: StockOverviewItemActions,
@@ -105,6 +108,7 @@ internal fun StockOverviewScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val refresh by viewModel.refresh.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    LabelPrintEffect(labels, snackbarHostState)
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
@@ -170,8 +174,7 @@ internal fun StockOverviewScreen(
                     painter = painterResource(Res.drawable.ic_rounded_search),
                     contentDescription = stringResource(Res.string.action_search),
                     onClick = {
-                        viewModel.showSearch()
-                        scope.launch { listState.animateScrollToItem(0) }
+                        scope.showSearchAtTop(listState, viewModel::showSearch)
                     },
                 )
             }
@@ -209,6 +212,7 @@ internal fun StockOverviewScreen(
     ProductOverviewHost(
         overview = overviewViewModel,
         shoppingList = shoppingList,
+        labels = labels,
         snackbarHostState = snackbarHostState,
         links = productLinks,
         nameOf = { id ->

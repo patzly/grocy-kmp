@@ -204,7 +204,7 @@
   <string name="settings_server">Server</string>
   <string name="settings_user">Nastavenia používateľa</string>
   <string name="settings_user_synced">Uložené na serveri</string>
-  <string name="settings_user_synced_hint">Grocy ukladá tieto nastavenia pre vášho používateľa, takže platia aj v jeho webovom rozhraní a na vašich ďalších zariadeniach</string>
+  <string name="settings_user_synced_hint">Grocy ukladá tieto nastavenia pre vášho používateľa, takže platia aj vo webovom rozhraní Grocy a na vašich ďalších zariadeniach</string>
   <string name="settings_network">Sieť</string>
   <string name="settings_behavior">Správanie</string>
   <string name="settings_scanner">Skener</string>
@@ -886,4 +886,32 @@
     <item quantity="many">%1$d roka</item>
     <item quantity="other">%1$d rokov</item>
   </plurals>
+  <string name="settings_grocy">Nastavenia Grocy</string>
+  <string name="settings_shopping_list">Nastavenia nákupného zoznamu</string>
+  <string name="settings_recipes">Nastavenia receptov</string>
+  <string name="settings_chores">Nastavenia povinností</string>
+  <string name="settings_tasks">Nastavenia úloh</string>
+  <string name="settings_batteries">Nastavenie batérií</string>
+  <string name="shopping_list_settings_calendar">Zobraziť kalendár s mesiacmi</string>
+  <string name="shopping_list_settings_round_up">Zaokrúhliť množstvá nahor na najbližšie celé číslo</string>
+  <string name="shopping_list_settings_auto_add">Automaticky pridávať výrobky, ktorých zásoba je pod minimálnym skladovým množstvom do nákupného zoznamu</string>
+  <string name="shopping_list_settings_workflow">Nákupný zoznam do výberu zásob</string>
+  <string name="shopping_list_settings_auto_submit">Automaticky vykonať zaúčtovanie s poslednou cenou a množstvom položky nákupného zoznamu, ak má výrobok nastavený "Predvolený počet dní na spotrebu"</string>
+  <string name="recipes_settings_side_by_side">Zobraziť zoznam receptov a recept vedľa seba</string>
+  <string name="recipes_settings_ingredient_checkbox">Zobraziť malé začiarkavacie políčko pri každej surovine na jej označenie ako hotovej</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">Surovina sa po kliknutí prečiarkne, stav sa neukladá, teda sa po opätovnom načítaní stránky obnoví</string>
+  <string name="recipes_settings_card">Karta s receptom</string>
+  <string name="recipes_settings_group_ingredients">Zoskupiť suroviny podľa skupiny výrobkov</string>
+  <string name="chores_settings_overview">Prehľad povinností</string>
+  <string name="chores_settings_swap_buttons">Vymeniť tlačidlá zaznamenania ďalšieho plánovaného vykonania / zaznamenania teraz</string>
+  <string name="batteries_settings_overview">Prehľad batérií</string>
+  <string name="settings_due_soon_days_hint">Nastavte 0 na skrytie filtrov a zvýraznenia blížiaceho sa termínu</string>
+  <string name="grocy_language_default">Predvolené</string>
+  <string name="grocy_language_default_description">Grocy použije jazyk vášho prehliadača</string>
+  <string name="grocy_language_info">Jazyk webového rozhrania Grocy pre vášho používateľa</string>
+  <string name="grocy_language_demo">Demo servery Grocy vždy používajú jazyk svojej adresy</string>
+  <string name="stock_purchase">Nakúpiť</string>
+  <string name="stock_consume">Spotrebovať</string>
+  <string name="stock_transfer">Presun</string>
+  <string name="stock_inventory">Zásoba</string>
 </resources>

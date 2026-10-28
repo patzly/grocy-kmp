@@ -188,7 +188,7 @@
   <string name="settings_server">Szerver</string>
   <string name="settings_user">Felhasználói beállítások</string>
   <string name="settings_user_synced">A szerveren tárolva</string>
-  <string name="settings_user_synced_hint">A Grocy ezeket a beállításokat a felhasználódhoz tárolja, így a webes felületén és a többi eszközödön is érvényesek</string>
+  <string name="settings_user_synced_hint">A Grocy ezeket a beállításokat a felhasználódhoz tárolja, így a Grocy webes felületén és a többi eszközödön is érvényesek</string>
   <string name="settings_network">Hálózat</string>
   <string name="settings_behavior">Viselkedés</string>
   <string name="settings_scanner">Vonalkódolvasó</string>
@@ -832,4 +832,32 @@
     <item quantity="one">%1$d év</item>
     <item quantity="other">%1$d év</item>
   </plurals>
+  <string name="settings_grocy">Grocy beállítások</string>
+  <string name="settings_shopping_list">Bevásárlólista beállítások</string>
+  <string name="settings_recipes">Recept beállítások</string>
+  <string name="settings_chores">Házimunka beállítások</string>
+  <string name="settings_tasks">Feladat beállítások</string>
+  <string name="settings_batteries">Elem beállítások</string>
+  <string name="shopping_list_settings_calendar">Havi-nézet naptár megjelenítése</string>
+  <string name="shopping_list_settings_round_up">Mennyiségek felfelé kerekítése a legközelebbi egész számra</string>
+  <string name="shopping_list_settings_auto_add">Automatikusan adja hozzá a minimum készlet mennyiség alatti termékeket az alábbi bevásárlólistához</string>
+  <string name="shopping_list_settings_workflow">Bevásárlólistából készletbe munkafolyamat</string>
+  <string name="shopping_list_settings_auto_submit">Automatán készletezze a termékeket az utolsó ismert ár és bevásárlólistán szereplő mennyiség alapján, ha a termék "Alapértelmezett lejárati ideje" be van állítva</string>
+  <string name="recipes_settings_side_by_side">Mutassa a receptlistát és a recepteket egymás mellett</string>
+  <string name="recipes_settings_ingredient_checkbox">Mutasson minden hozzávaló mellett egy jelölőt a megjelöléshez</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">A hozzávaló áthúzott lesz a bejelölésnél, de az állapot nem kerül mentésre, vagyis az oldal újratöltésénél eltűnnek a jelölések</string>
+  <string name="recipes_settings_card">Receptkártya</string>
+  <string name="recipes_settings_group_ingredients">A hozzávalók csoportosítása a beállított termékcsoportok alapján</string>
+  <string name="chores_settings_overview">Házimunkák áttekintése</string>
+  <string name="chores_settings_swap_buttons">A „következő ütemezett végrehajtás rögzítése” / „rögzítés most” gombok felcserélése</string>
+  <string name="batteries_settings_overview">Elemek áttekintése</string>
+  <string name="settings_due_soon_days_hint">Állítsd 0-ra az esedékességi filter/kiemelés elrejtéséhez</string>
+  <string name="grocy_language_default">Alapértelmezett</string>
+  <string name="grocy_language_default_description">A Grocy a böngésződ nyelvét használja</string>
+  <string name="grocy_language_info">A Grocy webes felületének nyelve a felhasználód számára</string>
+  <string name="grocy_language_demo">A Grocy bemutató szerverei mindig a címük nyelvét használják</string>
+  <string name="stock_purchase">Vásárlás</string>
+  <string name="stock_consume">Felhasználás</string>
+  <string name="stock_transfer">Áthelyezés</string>
+  <string name="stock_inventory">Leltár</string>
 </resources>

@@ -188,7 +188,7 @@
   <string name="settings_server">Sunucu</string>
   <string name="settings_user">Kullanıcı ayarları</string>
   <string name="settings_user_synced">Sunucuda kaydedilir</string>
-  <string name="settings_user_synced_hint">Grocy bu ayarları kullanıcın için saklar, bu yüzden web arayüzünde ve diğer cihazlarında da geçerlidir</string>
+  <string name="settings_user_synced_hint">Grocy bu ayarları kullanıcın için saklar, bu yüzden Grocy'nin web arayüzünde ve diğer cihazlarında da geçerlidir</string>
   <string name="settings_network">Ağ</string>
   <string name="settings_behavior">Davranış</string>
   <string name="settings_scanner">Barkod okuyucu</string>
@@ -831,4 +831,32 @@
     <item quantity="one">%1$d yıl</item>
     <item quantity="other">%1$d yıl</item>
   </plurals>
+  <string name="settings_grocy">Grocy ayarları</string>
+  <string name="settings_shopping_list">Alışveriş listesi seçenekleri</string>
+  <string name="settings_recipes">Tarif seçenekleri</string>
+  <string name="settings_chores">Ev işleri seçenekleri</string>
+  <string name="settings_tasks">Yapılacaklar seçenekleri</string>
+  <string name="settings_batteries">Pil seçenekleri</string>
+  <string name="shopping_list_settings_calendar">Aylık görünüm takvimini göster</string>
+  <string name="shopping_list_settings_round_up">Miktarları en yakın tam sayıya yukarı yuvarla</string>
+  <string name="shopping_list_settings_auto_add">Tanımlanan minimum değerin altında olan ürünleri otomatik olarak ekleyin. alışveriş listesine eklenecek stok tutarı</string>
+  <string name="shopping_list_settings_workflow">Alışveriş listesinden stok akışına</string>
+  <string name="shopping_list_settings_auto_submit">Üründe "Varsayılan vade günleri" ayarlanmışsa, alışveriş listesi öğesinin son fiyatını ve tutarını kullanarak rezervasyonu otomatik olarak yapın</string>
+  <string name="recipes_settings_side_by_side">Tarif listesini ve tarifi yan yana göster</string>
+  <string name="recipes_settings_ingredient_checkbox">Tamamlandı olarak işaretlemek için her bir malzemenin yanında küçük bir onay kutusu gösterin</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">Tıklandığında içeriğin üzeri çizilir, durum kaydedilmez, sayfa yeniden yüklendiğinde sıfırlandığı anlamına gelir</string>
+  <string name="recipes_settings_card">Tarif kartı</string>
+  <string name="recipes_settings_group_ingredients">İçerikleri ürün gruplarına göre gruplandır</string>
+  <string name="chores_settings_overview">Ev işlerine genel bakış</string>
+  <string name="chores_settings_swap_buttons">Sonraki planlanmış yürütmeyi kaydet / şimdi kaydet düğmelerinin yerini değiştir</string>
+  <string name="batteries_settings_overview">Pillere genel bakış</string>
+  <string name="settings_due_soon_days_hint">Yakında filtrelerini/vurgulamayı gizlemek için 0 olarak ayarlayın</string>
+  <string name="grocy_language_default">Varsayılan</string>
+  <string name="grocy_language_default_description">Grocy tarayıcının dilini kullanır</string>
+  <string name="grocy_language_info">Kullanıcın için Grocy web arayüzünün dili</string>
+  <string name="grocy_language_demo">Grocy'nin demo sunucuları her zaman adreslerinin dilini kullanır</string>
+  <string name="stock_purchase">Satın al</string>
+  <string name="stock_consume">Tüket</string>
+  <string name="stock_transfer">Taşı</string>
+  <string name="stock_inventory">Envanter</string>
 </resources>

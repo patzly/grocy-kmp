@@ -204,7 +204,7 @@
   <string name="settings_server">Serwer</string>
   <string name="settings_user">Ustawienia użytkownika</string>
   <string name="settings_user_synced">Zapisane na serwerze</string>
-  <string name="settings_user_synced_hint">Grocy zapisuje te ustawienia dla Twojego użytkownika, więc obowiązują też w jego interfejsie webowym i na Twoich innych urządzeniach</string>
+  <string name="settings_user_synced_hint">Grocy zapisuje te ustawienia dla Twojego użytkownika, więc obowiązują też w interfejsie webowym Grocy i na Twoich innych urządzeniach</string>
   <string name="settings_network">Sieć</string>
   <string name="settings_behavior">Zachowanie</string>
   <string name="settings_scanner">Skaner</string>
@@ -886,4 +886,32 @@
     <item quantity="many">%1$d lat</item>
     <item quantity="other">%1$d roku</item>
   </plurals>
+  <string name="settings_grocy">Ustawienia Grocy</string>
+  <string name="settings_shopping_list">Ustawienia listy zakupów</string>
+  <string name="settings_recipes">Ustawienia przepisów</string>
+  <string name="settings_chores">Ustawienia obowiązków</string>
+  <string name="settings_tasks">Ustawienia zadań</string>
+  <string name="settings_batteries">Ustawienia przeglądów</string>
+  <string name="shopping_list_settings_calendar">Zobacz miesięczny widok kalendarza</string>
+  <string name="shopping_list_settings_round_up">Zaokrąglij ilość w górę</string>
+  <string name="shopping_list_settings_auto_add">Automatyczne dodawanie do listy zakupów produktów, których stan magazynowy jest niższy od zdefiniowanego minimum.</string>
+  <string name="shopping_list_settings_workflow">Lista zakupów do przepływu pracy zapasów</string>
+  <string name="shopping_list_settings_auto_submit">Automatycznie dokonaj rezerwacji przy użyciu ostatniej ceny i kwoty pozycji listy zakupów, jeśli produkt ma ustawioną opcję „Domyślna ilość dni minimalnej trwałości”</string>
+  <string name="recipes_settings_side_by_side">Pokaż listę przepisów i przepis obok siebie</string>
+  <string name="recipes_settings_ingredient_checkbox">Pokaż mały checkbox obok każdego składnika, aby oznaczyć go jako zrobiony</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">Składnik jest przekreślany po kliknięciu, status nie jest zapisywany, czyli resetowany po ponownym załadowaniu strony</string>
+  <string name="recipes_settings_card">Karta przepisu</string>
+  <string name="recipes_settings_group_ingredients">Grupuj składniki według przepisanych im grup produktów</string>
+  <string name="chores_settings_overview">Przegląd obowiązków</string>
+  <string name="chores_settings_swap_buttons">Zamień przyciski wykonania czynności</string>
+  <string name="batteries_settings_overview">Przegląd baterii</string>
+  <string name="settings_due_soon_days_hint">Ustaw na 0, aby ukryć filtry/podświetlania niedługiego przeterminowania</string>
+  <string name="grocy_language_default">Domyślne</string>
+  <string name="grocy_language_default_description">Grocy używa języka Twojej przeglądarki</string>
+  <string name="grocy_language_info">Język interfejsu webowego Grocy dla Twojego użytkownika</string>
+  <string name="grocy_language_demo">Serwery demonstracyjne Grocy zawsze używają języka swojego adresu</string>
+  <string name="stock_purchase">Zakup</string>
+  <string name="stock_consume">Zużyj</string>
+  <string name="stock_transfer">Przenieś</string>
+  <string name="stock_inventory">Inwentarz</string>
 </resources>

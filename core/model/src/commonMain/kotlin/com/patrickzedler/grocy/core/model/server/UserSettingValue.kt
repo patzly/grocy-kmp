@@ -10,4 +10,7 @@ sealed interface UserSettingValue {
 
     /** A number with decimal places, e.g. an amount. */
     data class Number(val value: Double) : UserSettingValue
+
+    /** A text, e.g. the user's language. */
+    data class Text(val value: String) : UserSettingValue
 }

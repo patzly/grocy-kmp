@@ -9,6 +9,7 @@ import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -87,6 +88,55 @@ fun ListItemOverflowMenu(
     modifier: Modifier = Modifier,
     interactionSource: MutableInteractionSource? = null,
 ) {
+    NarrowOverflowMenu(groups, modifier) { description, onClick ->
+        IconButton(
+            onClick = onClick,
+            modifier = smallIconButtonSize(IconButtonDefaults.IconButtonWidthOption.Narrow)
+                .clickCursor(),
+            shapes = IconButtonDefaults.shapes(),
+            interactionSource = interactionSource,
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_rounded_more_vert),
+                contentDescription = description,
+            )
+        }
+    }
+}
+
+/**
+ * [ListItemOverflowMenu] as filled tonal button (`secondaryContainer`), for a button group of
+ * filled buttons whose less important actions it holds, e.g. the product overview's.
+ */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun TonalOverflowMenu(
+    groups: List<List<AppBarMenuItem>>,
+    modifier: Modifier = Modifier,
+    interactionSource: MutableInteractionSource? = null,
+) {
+    NarrowOverflowMenu(groups, modifier) { description, onClick ->
+        FilledTonalIconButton(
+            onClick = onClick,
+            modifier = smallIconButtonSize(IconButtonDefaults.IconButtonWidthOption.Narrow)
+                .clickCursor(),
+            shapes = IconButtonDefaults.shapes(),
+            interactionSource = interactionSource,
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_rounded_more_vert),
+                contentDescription = description,
+            )
+        }
+    }
+}
+
+@Composable
+private fun NarrowOverflowMenu(
+    groups: List<List<AppBarMenuItem>>,
+    modifier: Modifier,
+    button: @Composable (description: String, onClick: () -> Unit) -> Unit,
+) {
     val shownGroups = groups.filter { it.isNotEmpty() }
     if (shownGroups.isEmpty()) return
     val haptic = LocalHapticFeedback.current
@@ -96,20 +146,9 @@ fun ListItemOverflowMenu(
     // A box of its own, so the menu opens at the button; the button takes the width it is given
     Box(modifier, propagateMinConstraints = true) {
         HapticTooltipBox(text = description) {
-            IconButton(
-                onClick = {
-                    haptic.confirm()
-                    showMenu = true
-                },
-                modifier = smallIconButtonSize(IconButtonDefaults.IconButtonWidthOption.Narrow)
-                    .clickCursor(),
-                shapes = IconButtonDefaults.shapes(),
-                interactionSource = interactionSource,
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_rounded_more_vert),
-                    contentDescription = description,
-                )
+            button(description) {
+                haptic.confirm()
+                showMenu = true
             }
         }
         OverflowMenuPopup(

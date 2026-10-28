@@ -16,6 +16,8 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_settings
 import com.patrickzedler.grocy.core.resources.settings_select_hint
 import com.patrickzedler.grocy.feature.about.api.AboutRoute
 import com.patrickzedler.grocy.feature.settings.api.GeneralSettingsRoute
+import com.patrickzedler.grocy.feature.settings.api.GrocySettingsPageRoute
+import com.patrickzedler.grocy.feature.settings.api.GrocySettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.LogRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
@@ -23,6 +25,11 @@ import com.patrickzedler.grocy.feature.settings.api.StockSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.UserSettingsRoute
 import com.patrickzedler.grocy.feature.settings.impl.general.GeneralSettingsScreen
 import com.patrickzedler.grocy.feature.settings.impl.general.GeneralSettingsViewModel
+import com.patrickzedler.grocy.feature.settings.impl.grocy.GrocySettingsLinks
+import com.patrickzedler.grocy.feature.settings.impl.grocy.GrocySettingsPageScreen
+import com.patrickzedler.grocy.feature.settings.impl.grocy.GrocySettingsPageViewModel
+import com.patrickzedler.grocy.feature.settings.impl.grocy.GrocySettingsScreen
+import com.patrickzedler.grocy.feature.settings.impl.grocy.GrocySettingsViewModel
 import com.patrickzedler.grocy.feature.settings.impl.log.LogScreen
 import com.patrickzedler.grocy.feature.settings.impl.log.LogViewModel
 import com.patrickzedler.grocy.feature.settings.impl.server.ServerSettingsScreen
@@ -99,21 +106,54 @@ fun EntryProviderScope<NavKey>.settingsEntries(
         )
     }
 
-    entry<UserSettingsRoute>(metadata = detailPaneMetadata(SettingsRoute)) {
-        UserSettingsScreen(
+    entry<GrocySettingsRoute>(metadata = detailPaneMetadata(SettingsRoute)) {
+        GrocySettingsScreen(
             viewModel = viewModel {
-                UserSettingsViewModel(dependencies.serverRepository.serverConfig)
+                GrocySettingsViewModel(dependencies.serverRepository.serverConfig)
             },
             menuViewModel = settingsMenuViewModel(dependencies),
             menuActions = menuActions,
+            // The pages take this page's place beside the categories, back returns to it
+            links = GrocySettingsLinks(
+                onStockSettingsClick = {
+                    navigator.navigate(StockSettingsRoute(inSettings = true))
+                },
+                onPageClick = { navigator.navigate(GrocySettingsPageRoute(it)) },
+                onUserSettingsClick = { navigator.navigate(UserSettingsRoute) },
+            ),
             onBackClick = navigator::goBack,
-            // Takes the user settings' place beside the categories, back returns to them
-            onStockSettingsClick = { navigator.navigate(StockSettingsRoute(inSettings = true)) },
             pane = ScreenPane.Detail.takeIf { showsDetailBesideList() },
         )
     }
 
-    // Beside the categories when opened from the user settings, or from the products in wide
+    entry<GrocySettingsPageRoute>(metadata = detailPaneMetadata(SettingsRoute)) { route ->
+        GrocySettingsPageScreen(
+            viewModel = viewModel {
+                GrocySettingsPageViewModel(dependencies.masterDataRepository, route.page)
+            },
+            menuViewModel = settingsMenuViewModel(dependencies),
+            menuActions = menuActions,
+            onBackClick = navigator::goBack,
+            pane = ScreenPane.Detail.takeIf { showsDetailBesideList() },
+        )
+    }
+
+    entry<UserSettingsRoute>(metadata = detailPaneMetadata(SettingsRoute)) {
+        UserSettingsScreen(
+            viewModel = viewModel {
+                UserSettingsViewModel(
+                    dependencies.masterDataRepository,
+                    dependencies.serverRepository.server,
+                )
+            },
+            menuViewModel = settingsMenuViewModel(dependencies),
+            menuActions = menuActions,
+            onBackClick = navigator::goBack,
+            pane = ScreenPane.Detail.takeIf { showsDetailBesideList() },
+        )
+    }
+
+    // Beside the categories when opened from Grocy's settings, or from the products in wide
     // windows together with both; a screen of its own from the products in narrow ones
     entry<StockSettingsRoute>(
         metadata = { route ->
@@ -153,13 +193,14 @@ internal val SettingsCategory.route: DetailRoute?
     get() = when (this) {
         SettingsCategory.GENERAL -> GeneralSettingsRoute
         SettingsCategory.SERVER -> ServerSettingsRoute
-        SettingsCategory.USER -> UserSettingsRoute
+        SettingsCategory.GROCY -> GrocySettingsRoute
         else -> null
     }
 
 /** The category whose page [route] is or was opened from, null for other routes. */
 internal fun settingsCategoryOf(route: NavKey): SettingsCategory? = when {
-    route is StockSettingsRoute && route.inSettings -> SettingsCategory.USER
+    route is StockSettingsRoute && route.inSettings -> SettingsCategory.GROCY
+    route is GrocySettingsPageRoute || route == UserSettingsRoute -> SettingsCategory.GROCY
     else -> SettingsCategory.entries.firstOrNull { it.route != null && it.route == route }
 }
 

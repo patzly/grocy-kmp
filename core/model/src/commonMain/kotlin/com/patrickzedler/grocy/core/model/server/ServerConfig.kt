@@ -61,6 +61,23 @@ data class UserSettings(
     val showWarningOnPurchaseWhenDueDateIsEarlierThanNext: Boolean = true,
     val stockDefaultConsumeAmount: Double = 1.0,
     val stockDefaultConsumeAmountUseQuickConsumeAmount: Boolean = false,
+    val shoppingListShowCalendar: Boolean = false,
+    val shoppingListRoundUp: Boolean = false,
+    /** Products below their min. stock amount go to [shoppingListAutoAddListId] by themselves. */
+    val shoppingListAutoAddBelowMinStock: Boolean = false,
+    val shoppingListAutoAddListId: Int = 1,
+    /** Shopping list items are booked into the stock without the form when it is prefilled. */
+    val shoppingListToStockAutoSubmit: Boolean = false,
+    val recipesShowListSideBySide: Boolean = true,
+    val recipesShowIngredientCheckbox: Boolean = false,
+    val recipeIngredientsGroupByProductGroup: Boolean = false,
+    /** Chores due within these days are "due soon", 0 hides it. */
+    val choresDueSoonDays: Int = 5,
+    val choresOverviewSwapTrackingButtons: Boolean = false,
+    val tasksDueSoonDays: Int = 5,
+    val batteriesDueSoonDays: Int = 5,
+    /** Grocy's language for the user, empty for its default (the browser's language). */
+    val locale: String = "",
 )
 
 /**

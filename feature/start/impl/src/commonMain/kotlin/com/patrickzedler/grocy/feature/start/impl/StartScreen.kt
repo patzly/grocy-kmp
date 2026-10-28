@@ -18,6 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.AppBarLogo
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
+import com.patrickzedler.grocy.core.design.component.DemoServerWarning
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
@@ -76,17 +77,20 @@ internal fun availableSections(config: ServerConfig?): List<StartSection> =
 
 /**
  * The first screen after login; grows with the app's sections (stock overview and master data so
- * far) and leads to the settings in a group of their own below them. Beside the sections' pages
+ * far) and leads to the settings in a group of their own below them. On Grocy's public demo
+ * ([isDemoServer]) its warning comes first and opens the server settings. Beside the sections' pages
  * ([isBesideDetail]) it is the start [ScreenPane.List] of the layout and its sections a single
  * choice marking the [shownSection]; the settings open as a screen of their own.
  */
 @Composable
 internal fun StartScreen(
     viewModel: StartViewModel,
+    isDemoServer: Boolean,
     isBesideDetail: Boolean,
     shownSection: StartSection?,
     onSectionClick: (StartSection) -> Unit,
     onSettingsClick: () -> Unit,
+    onDemoWarningClick: () -> Unit,
     onAboutClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -107,6 +111,7 @@ internal fun StartScreen(
 
     StartContent(
         sections = availableSections(config),
+        isDemoServer = isDemoServer,
         state = state,
         isRefreshing = refresh.isRefreshing,
         snackbarHostState = snackbarHostState,
@@ -115,6 +120,7 @@ internal fun StartScreen(
         shownSection = shownSection,
         onSectionClick = onSectionClick,
         onSettingsClick = onSettingsClick,
+        onDemoWarningClick = onDemoWarningClick,
         menuItems = appMenu.items,
         modifier = modifier,
     )
@@ -123,6 +129,7 @@ internal fun StartScreen(
 @Composable
 private fun StartContent(
     sections: List<StartSection>,
+    isDemoServer: Boolean,
     state: StartUiState?,
     isRefreshing: Boolean,
     snackbarHostState: SnackbarHostState,
@@ -131,6 +138,7 @@ private fun StartContent(
     shownSection: StartSection?,
     onSectionClick: (StartSection) -> Unit,
     onSettingsClick: () -> Unit,
+    onDemoWarningClick: () -> Unit,
     menuItems: List<AppBarMenuItem>,
     modifier: Modifier = Modifier,
 ) {
@@ -145,6 +153,12 @@ private fun StartContent(
         isRefreshing = isRefreshing,
         onRefresh = onRefresh,
     ) {
+        // Above everything, the server settings it opens tell more and switch the demo
+        if (isDemoServer) {
+            segmentedGroup(key = "demo") {
+                DemoServerWarning(onClick = onDemoWarningClick)
+            }
+        }
         sections.forEach { section ->
             segmentedGroup(key = section.name) {
                 SectionItem(
@@ -341,6 +355,7 @@ private fun StartScreenPreview() {
     GrocyTheme {
         StartContent(
             sections = StartSection.entries,
+            isDemoServer = true,
             state = null,
             isRefreshing = false,
             snackbarHostState = remember { SnackbarHostState() },
@@ -349,6 +364,7 @@ private fun StartScreenPreview() {
             shownSection = null,
             onSectionClick = {},
             onSettingsClick = {},
+            onDemoWarningClick = {},
             menuItems = emptyList(),
         )
     }

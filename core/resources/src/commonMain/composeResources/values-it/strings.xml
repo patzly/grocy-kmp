@@ -196,7 +196,7 @@
   <string name="settings_server">Server</string>
   <string name="settings_user">Impostazioni utente</string>
   <string name="settings_user_synced">Salvate sul server</string>
-  <string name="settings_user_synced_hint">Grocy salva queste impostazioni per il tuo utente, quindi valgono anche nella sua interfaccia web e sugli altri tuoi dispositivi</string>
+  <string name="settings_user_synced_hint">Grocy salva queste impostazioni per il tuo utente, quindi valgono anche nell'interfaccia web di Grocy e sugli altri tuoi dispositivi</string>
   <string name="settings_network">Rete</string>
   <string name="settings_behavior">Comportamento</string>
   <string name="settings_scanner">Scanner</string>
@@ -859,4 +859,32 @@
     <item quantity="many">%1$d anni</item>
     <item quantity="other">%1$d anni</item>
   </plurals>
+  <string name="settings_grocy">Impostazioni di Grocy</string>
+  <string name="settings_shopping_list">Impostazioni Lista della Spesa</string>
+  <string name="settings_recipes">Impostazioni Ricette</string>
+  <string name="settings_chores">Impostazioni delle faccende</string>
+  <string name="settings_tasks">Impostazioni compiti</string>
+  <string name="settings_batteries">Impostazioni batterie</string>
+  <string name="shopping_list_settings_calendar">Mostra un calendario con vista mensile</string>
+  <string name="shopping_list_settings_round_up">Arrotondare gli importi delle quantità al numero intero più vicino</string>
+  <string name="shopping_list_settings_auto_add">Aggiungi automaticamente alla lista della spesa i prodotti che sono al di sotto della loro quantià minima definita</string>
+  <string name="shopping_list_settings_workflow">Flusso di lavoro dalla lista della spesa alla dispensa</string>
+  <string name="shopping_list_settings_auto_submit">Effettua automaticamente la prenotazione utilizzando l'ultimo prezzo e l'importo dell'articolo della lista della spesa, se il prodotto ha impostato "Giorni di scadenza predefiniti"</string>
+  <string name="recipes_settings_side_by_side">Mostra l'elenco delle ricette e la ricetta fianco a fianco</string>
+  <string name="recipes_settings_ingredient_checkbox">Mostra una piccola casella di controllo accanto a ciascun ingrediente per segnarlo come gestito</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">L'ingrediente è barrato quando ci si clicca sopra, lo stato non è salvato, cioè viene ripristinato quando la pagina viene ricaricata</string>
+  <string name="recipes_settings_card">Scheda ricetta</string>
+  <string name="recipes_settings_group_ingredients">Raggruppa gli ingredienti per il loro gruppo di prodotti</string>
+  <string name="chores_settings_overview">Riepilogo delle faccende</string>
+  <string name="chores_settings_swap_buttons">Scambia la traccia successiva nella programmazione / Pulsanti traccia ora</string>
+  <string name="batteries_settings_overview">Riepilogo delle batterie</string>
+  <string name="settings_due_soon_days_hint">Impostare su 0 per nascondere filtri/evidenziazioni a breve</string>
+  <string name="grocy_language_default">Predefinito</string>
+  <string name="grocy_language_default_description">Grocy usa la lingua del tuo browser</string>
+  <string name="grocy_language_info">La lingua dell'interfaccia web di Grocy per il tuo utente</string>
+  <string name="grocy_language_demo">I server demo di Grocy usano sempre la lingua del loro indirizzo</string>
+  <string name="stock_purchase">Acquista</string>
+  <string name="stock_consume">Consuma</string>
+  <string name="stock_transfer">Trasferisci</string>
+  <string name="stock_inventory">Inventario</string>
 </resources>

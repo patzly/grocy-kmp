@@ -180,7 +180,7 @@
   <string name="settings_server">服务器</string>
   <string name="settings_user">用户设置</string>
   <string name="settings_user_synced">保存在服务器上</string>
-  <string name="settings_user_synced_hint">Grocy 为你的用户保存这些设置，因此它们也适用于其网页界面和你的其他设备</string>
+  <string name="settings_user_synced_hint">Grocy 为你的用户保存这些设置，因此它们也适用于 Grocy 的网页界面和你的其他设备</string>
   <string name="settings_network">网络</string>
   <string name="settings_behavior">行为</string>
   <string name="settings_scanner">扫描器</string>
@@ -804,4 +804,32 @@
   <plurals name="journal_years">
     <item quantity="other">%1$d 年</item>
   </plurals>
+  <string name="settings_grocy">Grocy 设置</string>
+  <string name="settings_shopping_list">购物清单设置</string>
+  <string name="settings_recipes">菜谱设置</string>
+  <string name="settings_chores">家务设置</string>
+  <string name="settings_tasks">任务设置</string>
+  <string name="settings_batteries">电池设置</string>
+  <string name="shopping_list_settings_calendar">显示月视图的日历</string>
+  <string name="shopping_list_settings_round_up">将数量向上取整为最接近的整数</string>
+  <string name="shopping_list_settings_auto_add">低于安全库存的产品自动添加到购物清单中</string>
+  <string name="shopping_list_settings_workflow">购物清单到库存的工作流程</string>
+  <string name="shopping_list_settings_auto_submit">如果产品设置了“默认到期日”，则使用最新价格和购物清单项目的数量自动进行预订</string>
+  <string name="recipes_settings_side_by_side">并排显示菜谱和菜谱清单</string>
+  <string name="recipes_settings_ingredient_checkbox">在每个食材旁边显示复选框，可将其标记为完成状态</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">点击复选框为食材添加删除线，此状态不会保存，页面重载时失效</string>
+  <string name="recipes_settings_card">菜谱卡片</string>
+  <string name="recipes_settings_group_ingredients">按产品组对食材进行分组</string>
+  <string name="chores_settings_overview">家务总览</string>
+  <string name="chores_settings_swap_buttons">交换“记录下次计划执行”/“立即记录”按钮</string>
+  <string name="batteries_settings_overview">电池总览</string>
+  <string name="settings_due_soon_days_hint">设为0则隐藏即将到期的筛选功能和高亮显示</string>
+  <string name="grocy_language_default">默认</string>
+  <string name="grocy_language_default_description">Grocy 使用你的浏览器语言</string>
+  <string name="grocy_language_info">Grocy 网页界面为你的用户显示的语言</string>
+  <string name="grocy_language_demo">Grocy 的演示服务器始终使用其地址对应的语言</string>
+  <string name="stock_purchase">采购</string>
+  <string name="stock_consume">消耗</string>
+  <string name="stock_transfer">转移</string>
+  <string name="stock_inventory">库存</string>
 </resources>

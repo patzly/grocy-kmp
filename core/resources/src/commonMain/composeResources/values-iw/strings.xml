@@ -196,7 +196,7 @@
   <string name="settings_server">שרת</string>
   <string name="settings_user">הגדרות המשתמש</string>
   <string name="settings_user_synced">נשמרות בשרת</string>
-  <string name="settings_user_synced_hint">Grocy שומר את ההגדרות האלה עבור המשתמש שלך, ולכן הן חלות גם בממשק האינטרנט שלו ובמכשירים האחרים שלך</string>
+  <string name="settings_user_synced_hint">Grocy שומר את ההגדרות האלה עבור המשתמש שלך, ולכן הן חלות גם בממשק האינטרנט של Grocy ובמכשירים האחרים שלך</string>
   <string name="settings_network">רשת</string>
   <string name="settings_behavior">התנהגות</string>
   <string name="settings_scanner">סורק</string>
@@ -859,4 +859,32 @@
     <item quantity="two">שנתיים</item>
     <item quantity="other">%1$d שנים</item>
   </plurals>
+  <string name="settings_grocy">הגדרות Grocy</string>
+  <string name="settings_shopping_list">הגדרות רשימת קניות</string>
+  <string name="settings_recipes">הגדרות מתכונים</string>
+  <string name="settings_chores">הגדרות מטלות</string>
+  <string name="settings_tasks">הגדרות משימות</string>
+  <string name="settings_batteries">הגדרות סוללות</string>
+  <string name="shopping_list_settings_calendar">לוח שנה בתצוגת חודש</string>
+  <string name="shopping_list_settings_round_up">עיגול כמויות למספר השלם הקרוב ביותר</string>
+  <string name="shopping_list_settings_auto_add">להוסיף אוטומטית מוצרים שמתחת לכמות המלאי המזערית שלהם לרשימת הקניות</string>
+  <string name="shopping_list_settings_workflow">רצף מרשימת קניות למלאי</string>
+  <string name="shopping_list_settings_auto_submit">לבצע את ההזמנה אוטומטית עם המחיר האחרון ועם כמות הפריט לקנייה, אם למוצר מוגדרים „ימי תוקף כבררת מחדל”</string>
+  <string name="recipes_settings_side_by_side">להציג את רשימת המתכונים ואת המתכון זה לצד זה</string>
+  <string name="recipes_settings_ingredient_checkbox">להציג תיבת סימון קטנה ליד כל רכיב כדי לסיים שבוצע</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">הרכיב יורד מהרשימה בלחיצה עליו, המצב לא נשמר, כלומר זה יאופס עם רענון העמוד</string>
+  <string name="recipes_settings_card">כרטיס מתכון</string>
+  <string name="recipes_settings_group_ingredients">קיבוץ רכיבים לפי קבוצת המוצר שלהם</string>
+  <string name="chores_settings_overview">סקירת מטלות</string>
+  <string name="chores_settings_swap_buttons">החלפה בין כפתורי מעקב אחר התזמון הבא / מעקב עכשיו</string>
+  <string name="batteries_settings_overview">סקירת סוללות</string>
+  <string name="settings_due_soon_days_hint">0 מסתיר את סינון/הדגשת סיום קרב</string>
+  <string name="grocy_language_default">בררת מחדל</string>
+  <string name="grocy_language_default_description">Grocy משתמש בשפה של הדפדפן שלך</string>
+  <string name="grocy_language_info">השפה של ממשק האינטרנט של Grocy עבור המשתמש שלך</string>
+  <string name="grocy_language_demo">שרתי ההדגמה של Grocy תמיד משתמשים בשפה של הכתובת שלהם</string>
+  <string name="stock_purchase">רכישה</string>
+  <string name="stock_consume">צריכה</string>
+  <string name="stock_transfer">העברה</string>
+  <string name="stock_inventory">מצאי</string>
 </resources>

@@ -196,7 +196,7 @@
   <string name="settings_server">Servidor</string>
   <string name="settings_user">Configuració d’usuari</string>
   <string name="settings_user_synced">Desat al servidor</string>
-  <string name="settings_user_synced_hint">El Grocy desa aquesta configuració per al teu usuari, de manera que també s'aplica a la seva interfície web i als teus altres dispositius</string>
+  <string name="settings_user_synced_hint">El Grocy desa aquesta configuració per al teu usuari, de manera que també s'aplica a la interfície web de Grocy i als teus altres dispositius</string>
   <string name="settings_network">Xarxa</string>
   <string name="settings_behavior">Comportament</string>
   <string name="settings_scanner">Escàner</string>
@@ -859,4 +859,32 @@
     <item quantity="many">%1$d anys</item>
     <item quantity="other">%1$d anys</item>
   </plurals>
+  <string name="settings_grocy">Ajustaments de Grocy</string>
+  <string name="settings_shopping_list">Configuració de la llista de la compra</string>
+  <string name="settings_recipes">Configuració de receptes</string>
+  <string name="settings_chores">Configuració de tasques</string>
+  <string name="settings_tasks">Configuració de tasques</string>
+  <string name="settings_batteries">Configuració de bateries</string>
+  <string name="shopping_list_settings_calendar">Mostra la vista mensual de calendari</string>
+  <string name="shopping_list_settings_round_up">Arrodoneix les quantitats al nombre enter més proper</string>
+  <string name="shopping_list_settings_auto_add">Afegeix automàticament els productes que estiguin per sota el seu valor d'existències mínim definit a la llista de compra</string>
+  <string name="shopping_list_settings_workflow">Llista de la compra al fluxe d'existències</string>
+  <string name="shopping_list_settings_auto_submit">Fes la reserva automàticament amb l'últim preu i la quantitat de l'element de la llista de la compra, si el producte té definits els "Dies per al consum per defecte"</string>
+  <string name="recipes_settings_side_by_side">Mostra la llista de receptes i la recepta una al costat de l'altra</string>
+  <string name="recipes_settings_ingredient_checkbox">Mostra una petita casella al costat de cada ingredient per marcar-lo com a fet</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">L'ingredient es ratlla en fer-hi clic; l'estat no es desa, és a dir, es restableix en tornar a carregar la pàgina</string>
+  <string name="recipes_settings_card">Targeta de recepta</string>
+  <string name="recipes_settings_group_ingredients">Agrupa ingredients per grup de producte</string>
+  <string name="chores_settings_overview">Resum de feines de casa</string>
+  <string name="chores_settings_swap_buttons">Intercanvia els botons de registrar la següent execució programada / registrar ara</string>
+  <string name="batteries_settings_overview">Resum de bateries</string>
+  <string name="settings_due_soon_days_hint">Posa 0 per amagar els filtres i el ressaltat de propers a caducar</string>
+  <string name="grocy_language_default">Per defecte</string>
+  <string name="grocy_language_default_description">Grocy fa servir l'idioma del teu navegador</string>
+  <string name="grocy_language_info">L'idioma de la interfície web de Grocy per al teu usuari</string>
+  <string name="grocy_language_demo">Els servidors de demostració de Grocy sempre fan servir l'idioma de la seva adreça</string>
+  <string name="stock_purchase">Compra</string>
+  <string name="stock_consume">Consum</string>
+  <string name="stock_transfer">Transfereix</string>
+  <string name="stock_inventory">Inventari</string>
 </resources>

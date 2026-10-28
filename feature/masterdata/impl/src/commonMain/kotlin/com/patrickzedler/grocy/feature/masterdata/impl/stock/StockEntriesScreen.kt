@@ -180,6 +180,7 @@ internal fun StockEntriesScreen(
     ProductOverviewHost(
         overview = actions.overview,
         shoppingList = actions.shoppingList,
+        labels = actions.labels,
         snackbarHostState = snackbarHostState,
         links = actions.links,
         nameOf = { id ->

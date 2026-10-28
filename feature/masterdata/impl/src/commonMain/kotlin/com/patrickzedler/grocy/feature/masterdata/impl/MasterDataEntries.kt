@@ -82,9 +82,9 @@ import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.StockOvervi
 import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.StockOverviewLinks
 import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.StockOverviewScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.StockOverviewViewModel
+import com.patrickzedler.grocy.feature.settings.api.GrocySettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.StockSettingsRoute
-import com.patrickzedler.grocy.feature.settings.api.UserSettingsRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -122,6 +122,7 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
                 ProductOverviewViewModel(repository, language = language)
             },
             shoppingList = shoppingListViewModel(dependencies),
+            labels = viewModel { LabelPrintViewModel(dependencies.stockRepository) },
             objectActions = viewModel {
                 ObjectActionsViewModel(MasterDataRepository.PRODUCTS, repository)
             },
@@ -133,13 +134,13 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
             onAddClick = { navigator.openDetail(ProductRoute()) },
             onConfigureUserfieldsClick = { openUserfields(MasterDataRepository.PRODUCTS) },
             // Grocy's button leads to the stock settings, its presets first; wide windows show
-            // them like the settings do, beside the categories as page of the user settings
+            // them like the settings do, beside the categories as page of Grocy's settings
             onPresetsClick = {
                 if (isBesideDetail) {
                     navigator.navigateAll(
                         listOf(
                             SettingsRoute,
-                            UserSettingsRoute,
+                            GrocySettingsRoute,
                             StockSettingsRoute(inSettings = true, backLeavesSettings = true),
                         ),
                     )
@@ -173,6 +174,7 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
             viewModel = stockOverview,
             overviewViewModel = overview,
             shoppingList = shoppingList,
+            labels = viewModel { LabelPrintViewModel(dependencies.stockRepository) },
             productLinks = ProductLinks(
                 onEditClick = openProduct,
                 onStockEntriesClick = { navigator.navigate(StockEntriesRoute(it)) },

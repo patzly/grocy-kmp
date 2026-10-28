@@ -217,8 +217,7 @@ private fun ObjectListContent(
                     painter = painterResource(Res.drawable.ic_rounded_search),
                     contentDescription = stringResource(Res.string.action_search),
                     onClick = {
-                        actions.onSearchClick()
-                        scope.launch { listState.animateScrollToItem(0) }
+                        scope.showSearchAtTop(listState, actions.onSearchClick)
                     },
                 )
             }

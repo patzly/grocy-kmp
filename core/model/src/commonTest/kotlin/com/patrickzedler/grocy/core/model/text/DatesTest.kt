@@ -96,4 +96,18 @@ class DatesTest {
         assertNull(timeOfDayOf("2026-10-24 24:00:00"))
         assertNull(timeOfDayOf("08:30"))
     }
+
+    @Test
+    fun labelsStartWithACapitalLetter() {
+        assertEquals("Morgen", capitalizeStart("morgen"))
+        assertEquals("In 3 Tagen", capitalizeStart("in 3 Tagen"))
+        assertEquals("Вчера", capitalizeStart("вчера"))
+    }
+
+    @Test
+    fun labelsWithoutLetterCaseStayTheSame() {
+        assertEquals("3 gün sonra", capitalizeStart("3 gün sonra"))
+        assertEquals("明天", capitalizeStart("明天"))
+        assertEquals("", capitalizeStart(""))
+    }
 }

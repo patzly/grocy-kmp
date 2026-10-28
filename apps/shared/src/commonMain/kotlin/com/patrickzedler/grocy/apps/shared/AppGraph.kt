@@ -7,6 +7,7 @@ import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.scanner.ScannerRepository
 import com.patrickzedler.grocy.core.data.server.GROCY_GITHUB_REPOSITORY
 import com.patrickzedler.grocy.core.data.server.ServerRepository
+import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.settings.StockOverviewOptionsRepository
@@ -143,6 +144,8 @@ class AppGraph(
             get() = this@AppGraph.stockRepository
         override val serverConfig: StateFlow<ServerConfig?>
             get() = serverRepository.serverConfig
+        override val server: StateFlow<ServerState?>
+            get() = serverRepository.server
     }
 
     internal val masterDataDependencies: MasterDataDependencies = object : MasterDataDependencies {

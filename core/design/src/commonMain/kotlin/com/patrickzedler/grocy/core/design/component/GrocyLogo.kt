@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.materialkolor.ktx.harmonize
 import com.patrickzedler.grocy.core.resources.Res
@@ -32,10 +33,10 @@ import org.jetbrains.compose.resources.painterResource
  * Decorative, the text beside it names the app.
  */
 @Composable
-fun GrocyLogo(modifier: Modifier = Modifier) {
+fun GrocyLogo(modifier: Modifier = Modifier, size: Dp = GrocyLogoSize) {
     val colorScheme = MaterialTheme.colorScheme
     val colors = remember(colorScheme) { grocyLogoColors(colorScheme) }
-    Box(modifier = modifier.size(GrocyLogoSize)) {
+    Box(modifier = modifier.size(size)) {
         LogoLayer(Res.drawable.ic_logo_citrus, colors.citrus)
         LogoLayer(Res.drawable.ic_logo_tomatoes, colors.tomatoes)
         LogoLayer(Res.drawable.ic_logo_melon, colors.melon)

@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.objects
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -8,9 +9,9 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -26,17 +27,34 @@ import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.addOutline
+import androidx.compose.ui.graphics.drawOutline
+import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.graphics.layer.drawLayer
+import androidx.compose.ui.graphics.layer.setOutline
+import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
 import com.patrickzedler.grocy.core.design.component.EdgeToEdgeRow
@@ -53,6 +71,7 @@ import com.patrickzedler.grocy.core.resources.products_filter_clear
 import com.patrickzedler.grocy.core.resources.products_filter_show_disabled
 import com.patrickzedler.grocy.core.resources.products_sort_ascending
 import com.patrickzedler.grocy.core.resources.products_sort_descending
+import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -260,7 +279,8 @@ internal fun <T> MultiSelectChip(
 
 /**
  * [groupCount] menu groups with Material's gap between them, scrolling together when they are
- * higher than [MenuMaxHeight].
+ * higher than [MenuMaxHeight]. The groups' shapes and shadows stay inside the visible part
+ * ([ScrollingMenuGroup]), only the items scroll.
  */
 @Composable
 private fun ScrollingMenuGroups(
@@ -273,16 +293,84 @@ private fun ScrollingMenuGroups(
             .heightIn(max = MenuMaxHeight)
             .verticalScrollbar(scrollState)
             .extendVertically(MenuShadowRoom)
-            .verticalScroll(scrollState)
-            .padding(vertical = MenuShadowRoom),
+            .verticalScroll(scrollState),
     ) {
+        // Inside the scrolling, so the groups' positions in their column are those in the content
+        Spacer(Modifier.height(MenuShadowRoom))
         repeat(groupCount) { index ->
             if (index > 0) Spacer(Modifier.height(MenuDefaults.GroupSpacing))
-            DropdownMenuGroup(shapes = MenuDefaults.groupShape(index = index, count = groupCount)) {
-                group(index)
-            }
+            ScrollingMenuGroup(index, groupCount, scrollState) { group(index) }
         }
+        Spacer(Modifier.height(MenuShadowRoom))
     }
+}
+
+/**
+ * A menu group of [ScrollingMenuGroups] that draws its container and shadow only where it is
+ * visible: a group the scrolling cuts off ends at the menu's edge with the menu's outer
+ * corners, so the menu keeps its shape and shadow while its items scroll, and a gap scrolling
+ * out lets the next group take that edge.
+ */
+@Composable
+private fun ScrollingMenuGroup(
+    index: Int,
+    count: Int,
+    scrollState: ScrollState,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    val shape = MenuDefaults.groupShape(index = index, count = count).shape
+    val edgeShape = MenuDefaults.groupShape(index = 0, count = 1).shape
+    val color = MenuDefaults.groupStandardContainerColor
+    val layer = rememberGraphicsLayer()
+    var top by remember { mutableIntStateOf(0) }
+
+    DropdownMenuGroup(
+        shapes = MenuDefaults.groupShape(index = index, count = count),
+        containerColor = Color.Transparent,
+        tonalElevation = 0.dp,
+        shadowElevation = 0.dp,
+        modifier = Modifier
+            .onPlaced { top = it.positionInParent().y.roundToInt() }
+            .drawWithContent {
+                val room = MenuShadowRoom.toPx()
+                // The visible part of the content without the shadows' room, in this group
+                val visibleTop = scrollState.value + room - top
+                val visibleBottom = visibleTop + scrollState.viewportSize - 2 * room
+                val frameTop = visibleTop.coerceAtLeast(0f)
+                val frameBottom = visibleBottom.coerceAtMost(size.height)
+                if (frameBottom <= frameTop) return@drawWithContent
+                val frameShape = shape.withEdges(
+                    edgeShape,
+                    cutTop = visibleTop > 0,
+                    cutBottom = visibleBottom < size.height,
+                )
+                val frameSize = Size(size.width, frameBottom - frameTop)
+                val outline = frameShape.createOutline(frameSize, layoutDirection, this)
+                layer.shadowElevation = MenuDefaults.ShadowElevation.toPx()
+                layer.setOutline(outline)
+                layer.topLeft = IntOffset(0, frameTop.roundToInt())
+                val layerSize = IntSize(size.width.roundToInt(), frameSize.height.roundToInt())
+                layer.record(layerSize) { drawOutline(outline, color) }
+                drawLayer(layer)
+                val clip = Path().apply {
+                    addOutline(outline)
+                    translate(Offset(0f, frameTop))
+                }
+                clipPath(clip) { this@drawWithContent.drawContent() }
+            },
+        content = content,
+    )
+}
+
+/** [this] with the corners of [edge] where the scrolling cuts the group off. */
+private fun Shape.withEdges(edge: Shape, cutTop: Boolean, cutBottom: Boolean): Shape {
+    if (this !is CornerBasedShape || edge !is CornerBasedShape) return this
+    return copy(
+        topStart = if (cutTop) edge.topStart else topStart,
+        topEnd = if (cutTop) edge.topEnd else topEnd,
+        bottomEnd = if (cutBottom) edge.bottomEnd else bottomEnd,
+        bottomStart = if (cutBottom) edge.bottomStart else bottomStart,
+    )
 }
 
 /**

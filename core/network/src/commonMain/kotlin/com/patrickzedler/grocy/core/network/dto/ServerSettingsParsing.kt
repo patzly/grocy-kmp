@@ -103,6 +103,35 @@ internal fun JsonObject.toUserSettings(): UserSettings {
             "stock_default_consume_amount_use_quick_consume_amount",
             defaults.stockDefaultConsumeAmountUseQuickConsumeAmount,
         ),
+        shoppingListShowCalendar =
+            flag("shopping_list_show_calendar", defaults.shoppingListShowCalendar),
+        shoppingListRoundUp = flag("shopping_list_round_up", defaults.shoppingListRoundUp),
+        shoppingListAutoAddBelowMinStock = flag(
+            "shopping_list_auto_add_below_min_stock_amount",
+            defaults.shoppingListAutoAddBelowMinStock,
+        ),
+        shoppingListAutoAddListId = int("shopping_list_auto_add_below_min_stock_amount_list_id")
+            ?: defaults.shoppingListAutoAddListId,
+        shoppingListToStockAutoSubmit = flag(
+            "shopping_list_to_stock_workflow_auto_submit_when_prefilled",
+            defaults.shoppingListToStockAutoSubmit,
+        ),
+        recipesShowListSideBySide =
+            flag("recipes_show_list_side_by_side", defaults.recipesShowListSideBySide),
+        recipesShowIngredientCheckbox =
+            flag("recipes_show_ingredient_checkbox", defaults.recipesShowIngredientCheckbox),
+        recipeIngredientsGroupByProductGroup = flag(
+            "recipe_ingredients_group_by_product_group",
+            defaults.recipeIngredientsGroupByProductGroup,
+        ),
+        choresDueSoonDays = int("chores_due_soon_days") ?: defaults.choresDueSoonDays,
+        choresOverviewSwapTrackingButtons = flag(
+            "chores_overview_swap_tracking_buttons",
+            defaults.choresOverviewSwapTrackingButtons,
+        ),
+        tasksDueSoonDays = int("tasks_due_soon_days") ?: defaults.tasksDueSoonDays,
+        batteriesDueSoonDays = int("batteries_due_soon_days") ?: defaults.batteriesDueSoonDays,
+        locale = primitive("locale")?.content ?: defaults.locale,
         productPresets = ProductPresets(
             locationId = id("product_presets_location_id"),
             productGroupId = id("product_presets_product_group_id"),

@@ -188,7 +188,7 @@
   <string name="settings_server">Server</string>
   <string name="settings_user">Användarinställningar</string>
   <string name="settings_user_synced">Sparas på servern</string>
-  <string name="settings_user_synced_hint">Grocy sparar de här inställningarna för din användare, så de gäller även i webbgränssnittet och på dina andra enheter</string>
+  <string name="settings_user_synced_hint">Grocy sparar de här inställningarna för din användare, så de gäller även i Grocys webbgränssnitt och på dina andra enheter</string>
   <string name="settings_network">Nätverk</string>
   <string name="settings_behavior">Beteende</string>
   <string name="settings_scanner">Skanner</string>
@@ -831,4 +831,32 @@
     <item quantity="one">%1$d år</item>
     <item quantity="other">%1$d år</item>
   </plurals>
+  <string name="settings_grocy">Grocy-inställningar</string>
+  <string name="settings_shopping_list">Inställningar för inköpslistan</string>
+  <string name="settings_recipes">Receptinställningar</string>
+  <string name="settings_chores">Inställningar för sysslor</string>
+  <string name="settings_tasks">Inställningar för uppgifter</string>
+  <string name="settings_batteries">Inställningar för batterier</string>
+  <string name="shopping_list_settings_calendar">Visa månadsvy i kalender</string>
+  <string name="shopping_list_settings_round_up">Avrunda mängder uppåt till närmaste heltal</string>
+  <string name="shopping_list_settings_auto_add">Lägg automatiskt till produkter som understiger sitt angivna minsta lagersaldo på inköpslistan</string>
+  <string name="shopping_list_settings_workflow">Arbetsflöde för inköpslista till lager</string>
+  <string name="shopping_list_settings_auto_submit">Bokför automatiskt med det senaste priset och mängden för posten på inköpslistan om produkten har "Standardantal dagar till förfallodatum" angivet</string>
+  <string name="recipes_settings_side_by_side">Visa receptlistan och valt recept bredvid varandra</string>
+  <string name="recipes_settings_ingredient_checkbox">Visa en liten kryssruta bredvid varje ingrediens för att kunna bocka av dem vid tillagning av recept</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">Ingrediensen stryks över när du klickar på den. Statusen sparas inte utan återställs när sidan läses in på nytt</string>
+  <string name="recipes_settings_card">Receptkort</string>
+  <string name="recipes_settings_group_ingredients">Gruppera ingredienser efter produktgrupp</string>
+  <string name="chores_settings_overview">Översikt över sysslor</string>
+  <string name="chores_settings_swap_buttons">Byt plats på knapparna "Registrera nästa schemalagda utförande" och "Registrera sysslan som utförd nu"</string>
+  <string name="batteries_settings_overview">Översikt över batterier</string>
+  <string name="settings_due_soon_days_hint">Ange 0 för att dölja filter och markering för sådant som snart förfaller</string>
+  <string name="grocy_language_default">Standard</string>
+  <string name="grocy_language_default_description">Grocy använder språket i din webbläsare</string>
+  <string name="grocy_language_info">Språket i Grocys webbgränssnitt för din användare</string>
+  <string name="grocy_language_demo">Grocys demoservrar använder alltid språket i sin adress</string>
+  <string name="stock_purchase">Inköp</string>
+  <string name="stock_consume">Förbruka</string>
+  <string name="stock_transfer">Överför</string>
+  <string name="stock_inventory">Inventera</string>
 </resources>

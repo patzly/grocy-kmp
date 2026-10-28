@@ -188,7 +188,7 @@
   <string name="settings_server">Server</string>
   <string name="settings_user">Brukerinnstillinger</string>
   <string name="settings_user_synced">Lagret på serveren</string>
-  <string name="settings_user_synced_hint">Grocy lagrer disse innstillingene for brukeren din, så de gjelder også i nettgrensesnittet og på de andre enhetene dine</string>
+  <string name="settings_user_synced_hint">Grocy lagrer disse innstillingene for brukeren din, så de gjelder også i Grocys nettgrensesnitt og på de andre enhetene dine</string>
   <string name="settings_network">Nettverk</string>
   <string name="settings_behavior">Atferd</string>
   <string name="settings_scanner">Skanner</string>
@@ -832,4 +832,32 @@
     <item quantity="one">%1$d år</item>
     <item quantity="other">%1$d år</item>
   </plurals>
+  <string name="settings_grocy">Grocy-innstillinger</string>
+  <string name="settings_shopping_list">Handleliste - innstillinger</string>
+  <string name="settings_recipes">Oppskrifter - innstillinger</string>
+  <string name="settings_chores">Husarbeid - innstillinger</string>
+  <string name="settings_tasks">Oppgaver - innstillinger</string>
+  <string name="settings_batteries">Batteri - innstillinger</string>
+  <string name="shopping_list_settings_calendar">Vis månedsoverblikk for kalenderen</string>
+  <string name="shopping_list_settings_round_up">Rund opp mengder til nærmeste hele tall</string>
+  <string name="shopping_list_settings_auto_add">Automatisk legg produkter som er under minimums beholdning til handlelisten</string>
+  <string name="shopping_list_settings_workflow">Arbeidsflyt fra handleliste til beholding</string>
+  <string name="shopping_list_settings_auto_submit">Gjør gjennomføringen automatisk med den siste prisen og beløpet på handlelistpunktet, hvis produktet er satt til "Standard forfallsdato"</string>
+  <string name="recipes_settings_side_by_side">Vis oppskriften og oppskrifts listen ved siden av hverandre</string>
+  <string name="recipes_settings_ingredient_checkbox">Vis en avkryssningsboks ved siden av ingrediensene</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">Ingrediensen blir markert når du klikker på den. Statusen blir ikke lagret og blir nullstilt hvis du oppdaterer siden.</string>
+  <string name="recipes_settings_card">Oppskrift kort</string>
+  <string name="recipes_settings_group_ingredients">Gruppér ingredienser ut fra deres produktgruppe</string>
+  <string name="chores_settings_overview">Husarbeidsoversikt</string>
+  <string name="chores_settings_swap_buttons">Bytt om knappene for å registrere neste planlagte utførelse / registrere nå</string>
+  <string name="batteries_settings_overview">Batterioversikt</string>
+  <string name="settings_due_soon_days_hint">Set til 0 for å skjule utgår snart filter/utheving</string>
+  <string name="grocy_language_default">Standard</string>
+  <string name="grocy_language_default_description">Grocy bruker språket i nettleseren din</string>
+  <string name="grocy_language_info">Språket i Grocys nettgrensesnitt for brukeren din</string>
+  <string name="grocy_language_demo">Grocys demoservere bruker alltid språket i adressen sin</string>
+  <string name="stock_purchase">Innkjøp</string>
+  <string name="stock_consume">Forbruk produkt</string>
+  <string name="stock_transfer">Flytte produkt</string>
+  <string name="stock_inventory">Beholdning</string>
 </resources>

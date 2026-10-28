@@ -56,7 +56,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.design.GrocyTheme
-import com.patrickzedler.grocy.core.design.component.ButtonGroupOverflowIndicator
+import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
@@ -64,6 +64,7 @@ import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogConten
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.design.component.TonalOverflowMenu
 import com.patrickzedler.grocy.core.design.component.animatedItem
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
@@ -82,6 +83,9 @@ import com.patrickzedler.grocy.core.resources.action_more_options
 import com.patrickzedler.grocy.core.resources.action_retry
 import com.patrickzedler.grocy.core.resources.data_load_failed
 import com.patrickzedler.grocy.core.resources.data_offline
+import com.patrickzedler.grocy.core.resources.grocycode_download_of
+import com.patrickzedler.grocy.core.resources.grocycode_print_of
+import com.patrickzedler.grocy.core.resources.grocycode_product
 import com.patrickzedler.grocy.core.resources.ic_rounded_add_shopping_cart
 import com.patrickzedler.grocy.core.resources.ic_rounded_calculate
 import com.patrickzedler.grocy.core.resources.ic_rounded_delete
@@ -125,6 +129,11 @@ import com.patrickzedler.grocy.core.resources.product_picture
 import com.patrickzedler.grocy.core.resources.product_picture_load_failed
 import com.patrickzedler.grocy.core.resources.product_stock_entries
 import com.patrickzedler.grocy.core.resources.product_stock_journal
+import com.patrickzedler.grocy.core.resources.product_stock_journal_summary
+import com.patrickzedler.grocy.core.resources.stock_consume
+import com.patrickzedler.grocy.core.resources.stock_inventory
+import com.patrickzedler.grocy.core.resources.stock_purchase
+import com.patrickzedler.grocy.core.resources.stock_transfer
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.decodeToImageBitmap
@@ -141,10 +150,7 @@ internal fun ProductOverviewDialog(
     productId: Int,
     name: String,
     viewModel: ProductOverviewViewModel,
-    onEditClick: (productId: Int) -> Unit,
-    onAddToShoppingListClick: (productId: Int) -> Unit,
-    onStockEntriesClick: (productId: Int) -> Unit,
-    onStockJournalClick: (productId: Int) -> Unit,
+    actions: OverviewActions,
     onDismissRequest: () -> Unit,
 ) {
     // Right after opening it may still be the previously opened product's
@@ -162,10 +168,7 @@ internal fun ProductOverviewDialog(
             refresh = refresh,
             loadPicture = viewModel::picture,
             onRetryClick = viewModel::refresh,
-            onEditClick = { onEditClick(productId) },
-            onAddToShoppingListClick = { onAddToShoppingListClick(productId) },
-            onStockEntriesClick = { onStockEntriesClick(productId) },
-            onStockJournalClick = { onStockJournalClick(productId) },
+            actions = actions.of(productId),
             onCloseClick = onDismissRequest,
         )
     }
@@ -178,10 +181,7 @@ private fun ProductOverviewContent(
     refresh: RefreshState,
     loadPicture: suspend (fileName: String) -> ByteArray?,
     onRetryClick: () -> Unit,
-    onEditClick: () -> Unit,
-    onAddToShoppingListClick: () -> Unit,
-    onStockEntriesClick: () -> Unit,
-    onStockJournalClick: () -> Unit,
+    actions: ProductActions,
     onCloseClick: () -> Unit,
 ) {
     val haptic = LocalHapticFeedback.current
@@ -206,13 +206,7 @@ private fun ProductOverviewContent(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(SegmentedListDefaults.GroupSpacing),
         ) {
-            ActionGroup(
-                showShoppingList = state?.showShoppingList == true,
-                onEditClick = onEditClick,
-                onAddToShoppingListClick = onAddToShoppingListClick,
-                onStockEntriesClick = onStockEntriesClick,
-                onStockJournalClick = onStockJournalClick,
-            )
+            ActionGroup(state = state, actions = actions)
             if (details != null && refresh.error != null) {
                 Text(
                     text = stringResource(
@@ -261,139 +255,144 @@ private fun ProductOverviewContent(
     }
 }
 
-/** One button of Grocy's card header. */
-private class OverviewAction(
-    val icon: DrawableResource,
-    val label: StringResource,
-    val onClick: () -> Unit,
+/** What the product overview's actions do with the product [of] gets. */
+internal class OverviewActions(
+    val onEditClick: (productId: Int) -> Unit,
+    val onAddToShoppingListClick: (productId: Int) -> Unit,
+    val onStockEntriesClick: (productId: Int) -> Unit,
+    val onStockJournalClick: (productId: Int) -> Unit,
+    val onStockJournalSummaryClick: (productId: Int) -> Unit,
+    val onGrocycodeDownload: (productId: Int, twoDimensional: Boolean) -> Unit,
+    val onGrocycodePrint: (productId: Int) -> Unit,
+) {
+    fun of(productId: Int) = ProductActions(
+        onEditClick = { onEditClick(productId) },
+        onAddToShoppingListClick = { onAddToShoppingListClick(productId) },
+        onStockEntriesClick = { onStockEntriesClick(productId) },
+        onStockJournalClick = { onStockJournalClick(productId) },
+        onStockJournalSummaryClick = { onStockJournalSummaryClick(productId) },
+        onGrocycodeDownload = { onGrocycodeDownload(productId, it) },
+        onGrocycodePrint = { onGrocycodePrint(productId) },
+    )
+}
+
+/** [OverviewActions] of the shown product. */
+internal class ProductActions(
+    val onEditClick: () -> Unit,
+    val onAddToShoppingListClick: () -> Unit,
+    val onStockEntriesClick: () -> Unit,
+    val onStockJournalClick: () -> Unit,
+    val onStockJournalSummaryClick: () -> Unit,
+    val onGrocycodeDownload: (twoDimensional: Boolean) -> Unit,
+    val onGrocycodePrint: () -> Unit,
 )
 
-/** The buttons of Grocy's card header as button group, the pressed one widens. */
+/**
+ * The buttons of Grocy's card header as button group, the pressed one widens: editing and the
+ * shopping list as wide buttons, the stock pages, Grocy's bookings and the grocycode in the
+ * menu of a narrow tonal button after them.
+ */
 @Composable
-private fun ActionGroup(
-    showShoppingList: Boolean,
-    onEditClick: () -> Unit,
-    onAddToShoppingListClick: () -> Unit,
-    onStockEntriesClick: () -> Unit,
-    onStockJournalClick: () -> Unit,
-) {
-    // Most important first: narrow dialogs move the last ones into the overflow menu
-    val actions = buildList {
-        add(OverviewAction(Res.drawable.ic_rounded_edit, Res.string.product_edit, onEditClick))
-        if (showShoppingList) {
-            add(
-                OverviewAction(
-                    Res.drawable.ic_rounded_add_shopping_cart,
-                    Res.string.product_overview_add_to_shopping_list,
-                    onAddToShoppingListClick,
-                ),
-            )
-        }
-        add(
-            OverviewAction(
-                Res.drawable.ic_rounded_inventory_2,
-                Res.string.product_stock_entries,
-                onStockEntriesClick,
-            ),
-        )
-        add(
-            OverviewAction(
-                Res.drawable.ic_rounded_receipt_long,
-                Res.string.product_stock_journal,
-                onStockJournalClick,
-            ),
-        )
-    }
+private fun ActionGroup(state: ProductOverviewUiState?, actions: ProductActions) {
+    val menuGroups = actionMenuGroups(state, actions)
 
+    // Always fits, a dialog is at least 280.dp wide
     ButtonGroup(
-        overflowIndicator = { menuState ->
-            ButtonGroupOverflowIndicator { ActionOverflowIndicator(menuState) }
-        },
+        overflowIndicator = {},
         // The guidelines' 12.dp between buttons of a small standard group
         horizontalArrangement = ButtonGroupDefaults.HorizontalArrangement,
     ) {
-        actions.fastForEachIndexed { index, action ->
-            animatedItem(
-                menuContent = { menuState ->
-                    ActionMenuItem(
-                        action = action,
-                        index = index,
-                        count = actions.size,
-                        onDismiss = menuState::dismiss,
-                    )
-                },
-            ) { itemModifier, interactionSource ->
-                ActionButton(action, itemModifier, interactionSource)
+        animatedItem { itemModifier, interactionSource ->
+            ActionButton(
+                icon = Res.drawable.ic_rounded_edit,
+                label = stringResource(Res.string.product_edit),
+                onClick = actions.onEditClick,
+                modifier = itemModifier,
+                interactionSource = interactionSource,
+            )
+        }
+        if (state?.showShoppingList == true) {
+            animatedItem { itemModifier, interactionSource ->
+                ActionButton(
+                    icon = Res.drawable.ic_rounded_add_shopping_cart,
+                    label = stringResource(Res.string.product_overview_add_to_shopping_list),
+                    onClick = actions.onAddToShoppingListClick,
+                    modifier = itemModifier,
+                    interactionSource = interactionSource,
+                )
             }
+        }
+        animatedItem { itemModifier, interactionSource ->
+            TonalOverflowMenu(
+                groups = menuGroups,
+                modifier = itemModifier,
+                interactionSource = interactionSource,
+            )
         }
     }
 }
 
+/**
+ * The menu of the product overview: the stock pages, Grocy's bookings (their pages do not
+ * exist yet, so they are disabled) and the grocycode like Grocy's product card menu.
+ */
+@Composable
+private fun actionMenuGroups(
+    state: ProductOverviewUiState?,
+    actions: ProductActions,
+): List<List<AppBarMenuItem>> {
+    val product = stringResource(Res.string.grocycode_product)
+    return listOf(
+        listOf(
+            AppBarMenuItem(stringResource(Res.string.product_stock_entries)) {
+                actions.onStockEntriesClick()
+            },
+            AppBarMenuItem(stringResource(Res.string.product_stock_journal)) {
+                actions.onStockJournalClick()
+            },
+            AppBarMenuItem(stringResource(Res.string.product_stock_journal_summary)) {
+                actions.onStockJournalSummaryClick()
+            },
+        ),
+        listOf(
+            Res.string.stock_purchase,
+            Res.string.stock_consume,
+            Res.string.stock_transfer,
+            Res.string.stock_inventory,
+        ).map { AppBarMenuItem(stringResource(it), enabled = false) {} },
+        listOfNotNull(
+            AppBarMenuItem(stringResource(Res.string.grocycode_download_of, product)) {
+                actions.onGrocycodeDownload(state?.grocycode2D == true)
+            },
+            AppBarMenuItem(stringResource(Res.string.grocycode_print_of, product)) {
+                actions.onGrocycodePrint()
+            }.takeIf { state?.showLabelPrinter == true },
+        ),
+    )
+}
+
 @Composable
 private fun ActionButton(
-    action: OverviewAction,
+    icon: DrawableResource,
+    label: String,
+    onClick: () -> Unit,
     modifier: Modifier,
     interactionSource: MutableInteractionSource,
 ) {
     val haptic = LocalHapticFeedback.current
-    val label = stringResource(action.label)
 
     HapticTooltipBox(text = label, modifier = modifier) {
         FilledIconButton(
             onClick = {
                 haptic.confirm()
-                action.onClick()
+                onClick()
             },
             modifier = smallIconButtonSize(IconButtonDefaults.IconButtonWidthOption.Wide)
                 .clickCursor(),
             shapes = IconButtonDefaults.shapes(),
             interactionSource = interactionSource,
         ) {
-            Icon(painter = painterResource(action.icon), contentDescription = label)
-        }
-    }
-}
-
-@Composable
-private fun ActionMenuItem(
-    action: OverviewAction,
-    index: Int,
-    count: Int,
-    onDismiss: () -> Unit,
-) {
-    val haptic = LocalHapticFeedback.current
-
-    DropdownMenuItem(
-        text = { Text(stringResource(action.label)) },
-        onClick = {
-            haptic.confirm()
-            onDismiss()
-            action.onClick()
-        },
-        modifier = Modifier.clickCursor(),
-        leadingIcon = { Icon(painter = painterResource(action.icon), contentDescription = null) },
-        shape = MenuDefaults.itemShape(index = index, count = count).shape,
-    )
-}
-
-@Composable
-private fun ActionOverflowIndicator(menuState: ButtonGroupMenuState) {
-    val haptic = LocalHapticFeedback.current
-    val description = stringResource(Res.string.action_more_options)
-
-    HapticTooltipBox(text = description) {
-        FilledIconButton(
-            onClick = {
-                haptic.confirm()
-                if (menuState.isShowing) menuState.dismiss() else menuState.show()
-            },
-            modifier = smallIconButtonSize().clickCursor(),
-            shapes = IconButtonDefaults.shapes(),
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_rounded_more_vert),
-                contentDescription = description,
-            )
+            Icon(painter = painterResource(icon), contentDescription = label)
         }
     }
 }
@@ -741,9 +740,7 @@ private val PlaceholderHeight = 160.dp
 private fun ProductOverviewPreview() {
     GrocyTheme {
         ProductOverviewContent(
-            onAddToShoppingListClick = {},
-            onStockEntriesClick = {},
-            onStockJournalClick = {},
+            actions = ProductActions({}, {}, {}, {}, {}, {}, {}),
             name = "Milk",
             state = ProductOverviewUiState(
                 productId = 1,
@@ -752,6 +749,8 @@ private fun ProductOverviewPreview() {
                 pictureFileName = null,
                 locationName = "Fridge",
                 showShoppingList = true,
+                showLabelPrinter = false,
+                grocycode2D = true,
                 showPrices = true,
                 showLocation = true,
                 showShelfLife = true,
@@ -787,7 +786,6 @@ private fun ProductOverviewPreview() {
             refresh = RefreshState(),
             loadPicture = { null },
             onRetryClick = {},
-            onEditClick = {},
             onCloseClick = {},
         )
     }

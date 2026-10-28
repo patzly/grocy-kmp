@@ -196,7 +196,7 @@
   <string name="settings_server">Serveur</string>
   <string name="settings_user">Paramètres utilisateur</string>
   <string name="settings_user_synced">Enregistrés sur le serveur</string>
-  <string name="settings_user_synced_hint">Grocy enregistre ces paramètres pour votre utilisateur, ils s'appliquent donc aussi dans son interface web et sur vos autres appareils</string>
+  <string name="settings_user_synced_hint">Grocy enregistre ces paramètres pour votre utilisateur, ils s'appliquent donc aussi dans l'interface web de Grocy et sur vos autres appareils</string>
   <string name="settings_network">Réseau</string>
   <string name="settings_behavior">Comportement</string>
   <string name="settings_scanner">Scanner</string>
@@ -859,4 +859,32 @@
     <item quantity="many">%1$d ans</item>
     <item quantity="other">%1$d ans</item>
   </plurals>
+  <string name="settings_grocy">Paramètres de Grocy</string>
+  <string name="settings_shopping_list">Paramètres de la liste de courses</string>
+  <string name="settings_recipes">Paramètres des recettes</string>
+  <string name="settings_chores">Paramètres des corvées</string>
+  <string name="settings_tasks">Paramètres des tâches</string>
+  <string name="settings_batteries">Paramètres des piles</string>
+  <string name="shopping_list_settings_calendar">Afficher le calendrier en vue mensuelle</string>
+  <string name="shopping_list_settings_round_up">Arrondir la quantité au nombre entier le plus proche</string>
+  <string name="shopping_list_settings_auto_add">Ajouter automatiquement à la liste de courses les produits qui sont en dessous de leur stock minimum</string>
+  <string name="shopping_list_settings_workflow">Transition de la liste de courses vers le stock</string>
+  <string name="shopping_list_settings_auto_submit">Réaliser automatiquement les achats en utilisant le dernier prix connu et la quantité indiquée dans la liste, si le premier a une date de péremption par défaut renseignée</string>
+  <string name="recipes_settings_side_by_side">Afficher la liste de recettes et la recette côte à côte</string>
+  <string name="recipes_settings_ingredient_checkbox">Afficher une petite case à côté de chaque ingrédient pour le marquer comme terminé</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">L'ingrédient est barré au clic, le statut n'est pas enregistré, cela signifie qu'il sera réinitialisé au rechargement de la page</string>
+  <string name="recipes_settings_card">Fiche de recette</string>
+  <string name="recipes_settings_group_ingredients">Regrouper les ingrédients par groupe de produits</string>
+  <string name="chores_settings_overview">Aperçu des corvées</string>
+  <string name="chores_settings_swap_buttons">Inverser les boutons « Suivre la prochaine planification » / « Suivre maintenant »</string>
+  <string name="batteries_settings_overview">Aperçu des piles</string>
+  <string name="settings_due_soon_days_hint">Définir sur 0 pour masquer les filtres/mises en surbrillance des échéances proches</string>
+  <string name="grocy_language_default">Par défaut</string>
+  <string name="grocy_language_default_description">Grocy utilise la langue de votre navigateur</string>
+  <string name="grocy_language_info">La langue de l'interface web de Grocy pour votre utilisateur</string>
+  <string name="grocy_language_demo">Les serveurs de démonstration de Grocy utilisent toujours la langue de leur adresse</string>
+  <string name="stock_purchase">Acheter</string>
+  <string name="stock_consume">Consommer</string>
+  <string name="stock_transfer">Transfert</string>
+  <string name="stock_inventory">Inventaire</string>
 </resources>

@@ -17,10 +17,10 @@ import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettingValue
 import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
-import com.patrickzedler.grocy.core.network.GrocyApiException
-import kotlin.coroutines.cancellation.CancellationException
+import com.patrickzedler.grocy.feature.settings.impl.SettingError
+import com.patrickzedler.grocy.feature.settings.impl.UserSettingEvent
+import com.patrickzedler.grocy.feature.settings.impl.UserSettingSaver
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -28,11 +28,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 
 /** The choices of the presets, from the database. */
 internal data class StockSettingsOptions(
@@ -59,12 +56,6 @@ internal class StockSettingsForm(settings: UserSettings, decimalSeparator: Char)
     var errors by mutableStateOf<Map<StockNumberSetting, SettingError>>(emptyMap())
 }
 
-internal sealed interface StockSettingsEvent {
-    data object Offline : StockSettingsEvent
-
-    data class Failed(val serverMessage: String?) : StockSettingsEvent
-}
-
 /**
  * Grocy's stock settings of the user, "Presets for new products" first. Online only: each
  * change is saved right away; offline it returns to the stored value with a message.
@@ -88,10 +79,8 @@ internal class StockSettingsViewModel(
         private set
 
     private var stored = UserSettings()
-    private val saving = Mutex()
-
-    private val eventChannel = Channel<StockSettingsEvent>(Channel.BUFFERED)
-    val events: Flow<StockSettingsEvent> = eventChannel.receiveAsFlow()
+    private val saver = UserSettingSaver(repository, viewModelScope)
+    val events: Flow<UserSettingEvent> = saver.events
 
     init {
         viewModelScope.launch {
@@ -161,29 +150,8 @@ internal class StockSettingsViewModel(
         }
     }
 
-    /** Saves one setting after the ones before it; [revert] shows the stored value again. */
-    private fun save(key: String, value: UserSettingValue, revert: () -> Unit) {
-        viewModelScope.launch {
-            val event = saving.withLock {
-                try {
-                    repository.saveUserSetting(key, value)
-                    null
-                } catch (e: CancellationException) {
-                    throw e
-                } catch (_: GrocyApiException.Unreachable) {
-                    StockSettingsEvent.Offline
-                } catch (e: GrocyApiException.HttpError) {
-                    StockSettingsEvent.Failed(e.serverMessage)
-                } catch (_: GrocyApiException) {
-                    StockSettingsEvent.Failed(serverMessage = null)
-                }
-            }
-            if (event != null) {
-                revert()
-                eventChannel.send(event)
-            }
-        }
-    }
+    private fun save(key: String, value: UserSettingValue, revert: () -> Unit) =
+        saver.save(key, value, revert)
 
     private companion object {
         const val TYPING_DELAY_MILLIS = 800L

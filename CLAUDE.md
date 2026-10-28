@@ -6,7 +6,9 @@ Compose Multiplatform. Targets: Android (phone, Wear OS) and Web (Kotlin/Wasm). 
 
 Current state: login (demo server, QR code of Grocy's API key page, manual Grocy URL + API key,
 Home Assistant ingress on Android), the reusable barcode scanner (`core:scanner`), update checks
-on every platform, the start screen (sections, each a group of its own: the stock overview (only
+on every platform, the start screen (on Grocy's public demo first its warning as a group of its
+own, `DemoServerWarning` of `core:design` like the server settings show it, a tap opens them
+through the settings categories; then sections, each a group of its own: the stock overview (only
 with the stock feature, `StartSection.isAvailable`) and Master data so far, each telling about
 its data as supporting text (`SupportingBulletList` of `core:design`, numbers of 0 left out;
 `StartViewModel` downloads master data and stock overview when it opens): the products in stock
@@ -58,11 +60,15 @@ Stock overview (`stockoverview/` of `feature:masterdata`, it opens the product o
   options (`StockOverviewOptions` of `core:model` in `SettingsStore`, read at app start by
   `StockOverviewOptionsRepository`); hiding the field the list is sorted by sorts it by Grocy's
   default again (next due date, the name while that is hidden). Search like the products.
-- Each product is a segmented item: the name as title (a 4.dp dot in the harmonized blue after
-  it while on a shopping list, Grocy's cart icon), the shown fields as chips that wrap below it
+- Each product is a segmented item: the name as title (Grocy's cart icon at 18.dp in the
+  harmonized blue after it while on a shopping list, centered on the title, read as text like
+  the chips: a description would replace the item's name for screen readers), the shown fields
+  as chips that wrap below it
   (`FieldChips`: surfaceContainer, no outline or elevation; the amount blue below the min. stock
   amount, the amount with sub products with the "functions" icon as Grocy's sigma, the next due
-  date yellow when due soon and red when overdue or expired: `rememberStatusColors` of
+  date relative and capitalized as a label of its own (`formatRelativeTimeLabel`: "Tomorrow",
+  "Morgen"; ICU and Intl write the middle of a sentence), yellow when due soon and red when
+  overdue or expired: `rememberStatusColors` of
   `core:design`, Material's custom color roles of fixed hues harmonized with primary), the
   description as text, the picture as thumbnail. A tap opens the product overview. Grocy's
   buttons in front of a row are swipe actions (`SwipeActionBox` of `core:design`, like Gmail's: a
@@ -117,7 +123,7 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   content looks the same in every window size (`paneMargin`, `paneSurface`;
   `DetailPlaceholder` draws the same surface below the bar's height). Beside its list a form has no back button (the list's leaves both). Forms are `DetailRoute`s opened with `Navigator.openDetail` (replaces the form beside
   the list, and the details opened from it), lists leave with `goBack(from = route)`. A detail
-  opened from a detail (`navigate`, e.g. the stock settings from the user settings) takes its
+  opened from a detail (`navigate`, e.g. the stock settings from Grocy's settings) takes its
   place beside the list and back returns to it (`NestedDetailSceneStrategy`: Material's scene
   goes back until its panes change, which left the list); Material's other option, an extra
   pane that pushes the list out, is for supplementary content of a detail, not for pages. A form with unsaved changes asks
@@ -162,7 +168,10 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   menu as a standard `ButtonGroup`, 12.dp apart, see "Button groups"). The filter chips
   (`FilterChipRow`, `DropdownFilterChip`, `ShowDisabledChip`, `SortChip`, `ClearFilterChip`;
   their menus scroll their groups together and leave room for the groups' shadows inside the
-  scrolling, which clips at its bounds), the search item and the empty states (`ListParts.kt`)
+  scrolling, which clips at its bounds; each group draws its container and shadow only for its
+  visible part, so the menu keeps its outer shape and shadow while only the items scroll, a cut
+  off group ends at the edge with the menu's outer corners: `ScrollingMenuGroup`), the search
+  item and the empty states (`ListParts.kt`)
   are shared with the product list; a list without search (stock entries) keeps the same gap
   below the chips (`filterGapItem`).
 - Forms of the other categories build on `ObjectFormViewModel` (load, refresh for unknown ids,
@@ -214,7 +223,9 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   up to the screen's edges, the padding scrolls along) and, while open, the search as its own
   segmented item below it (full width, opens with Material's spatial spring from its top edge,
   so it can be focused, keyboard included, right away without scrolling the list; closing
-  clears the focus at its start).
+  clears the focus at its start; `showSearchAtTop` opens it only once the list scrolled to the
+  top: opened while scrolling, the field took the focus when the list passed it and bringing it
+  into view stopped the scrolling short of the top).
   `ProductFilterBar` has outlined Material 3 chips with a `surfaceContainerLow` container (they
   lie on the background) and no elevation in any state, one per filter: product group and status
   as dropdown filter chips that are selected and show the value while not "All", "Show
@@ -232,11 +243,14 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
 - `ProductOverviewDialog` (`overview/`) is Grocy's "Product overview" card, opened from the
   first group of each active product item's overflow menu (Grocy computes no overview for
   disabled products). The title is "Product overview"; on top of the scrolling
-  content the card header's buttons as an expressive `ButtonGroup` of wide filled (primary)
-  icon buttons with `animateWidth` and its default 12.dp spacing, the last ones in its overflow
-  menu when the dialog is too narrow, so they are ordered by importance (unlike Grocy): Edit
-  product, Add to shopping list (only with the shopping list feature), Stock entries and Stock
-  journal; only Edit leads somewhere so far. Then every
+  content the card header's buttons as an expressive `ButtonGroup` (`animatedItem`, 12.dp
+  apart, it always fits): Edit product and Add to shopping list (only with the shopping list
+  feature) as wide filled (primary) icon buttons, then the narrow tonal menu button
+  (`TonalOverflowMenu`, `secondaryContainer`) with Stock entries, Stock journal and Stock
+  journal summary, then Grocy's Purchase, Consume, Transfer and Inventory (disabled, their pages
+  do not exist yet), then "Download Product Grocycode" and "Print Product Grocycode on label
+  printer" (only when the server runs the webhook; `OverviewActions`, the host prints through
+  the screen's `LabelPrintViewModel`). Then every
   value of the card in its order, all as items with the label as text and the value as
   supporting text, the product name first in the stock group (with the loading indicator of a
   download over stored values), hidden like in Grocy by feature flag (prices: stock value, last/average price and
@@ -250,14 +264,15 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
 - `PriceHistoryChart`: Canvas line chart after the dataviz rules: one 2.dp line per store with
   surface-ringed points, Grocy's dotted least squares trend, y axis from zero in round steps
   (`priceAxis`), first and last date below, legend from two series or with a trend. Colors come
-  from `rememberChartColors` (`core:design`): a validated color blind safe categorical palette
-  in fixed order with light and dark steps, harmonized with the theme's primary color: it
-  starts at its color closest to primary (the order stays), then the strongest hue rotation (up
-  to 30 degrees, Material's 15 alone looked foreign) and tone shift towards primary that still
-  passes the dataviz validator's checks (`isValidPalette`: lightness band and chroma floor of
-  the mode, neighbours apart with normal vision and simulated protanopia/deuteranopia in OKLab).
-  A palette generated from primary failed those checks for many hues (the dark band is
-  narrow), so keep the validated one. Every other color outside the color scheme must be
+  from `rememberChartColors` (`core:design`): a validated categorical palette in fixed order
+  with light and dark steps (the tests check it with the dataviz validator, `PaletteValidator`),
+  starting at its color closest to primary (the order stays), every color harmonized with
+  MaterialKolor's `harmonize` like the status colors and Material's custom colors. A search for
+  the strongest harmonization that kept the validator's color blind checks ended without any
+  for most themes, so the colors stayed unharmonized; harmonized hues can come close for color
+  blind users instead, so every series also has its own point shape (`ChartMarker`: circle,
+  square, diamond, triangle; neighbours never share one), in the legend too. Every other color
+  outside the color scheme must be
   harmonized with primary as well (codes such as the grocycode stay black on white); stores
   keep their color by id,
   stores beyond eight are drawn together as "Other stores". Tap, sideways drag, mouse hover and
@@ -320,15 +335,18 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   save (and leave once saved), discard, or cancel.
 
 Settings plan: the overview lists the categories General (language, theme, contrast), Server
-(server URL, Grocy version, reload configuration, logout), User settings (loaded from the
-server: stock, shopping list), Network (loading timeout, Tor with Orbot, HTTP proxy), Behavior
+(server URL, Grocy version, reload configuration, logout), Grocy settings (loaded from the
+server, Grocy's "Settings" menu), Network (loading timeout, Tor with Orbot, HTTP proxy), Behavior
 (navigation, date and keyboard settings, Open Food Facts / Open Beauty Facts), Scanner (engine,
 front camera, 2D formats, barcode formats, external scanners) and Notifications (stock, chores)
 as one group (`SettingsCategory`), then "Backup and restore" and "Reset all" as a second group.
-Built so far: the overview, General (language, theme, contrast), Server, User settings (a
-note that Grocy keeps them for the user on the server, then a page per area: the stock settings
-so far, hidden without the stock feature) and the stock settings (`StockSettingsRoute`, also
-opened by "Presets for new products": in wide windows the products open the categories, the user
+Built so far: the overview, General (language, theme, contrast), Server, Grocy settings
+(`GrocySettingsRoute`, the wrench icon of Grocy's menu: a note that Grocy keeps them for the user
+on the server, then the pages of Grocy's settings menu with settings of the user in its order:
+stock settings (always, like Grocy), shopping list, recipes, chores, tasks and batteries
+settings (hidden like Grocy's entries by feature flag), then Grocy's "User settings" as a group
+of its own) and the stock settings (`StockSettingsRoute`, also
+opened by "Presets for new products": in wide windows the products open the categories, Grocy's
 settings and the stock settings at once (`Navigator.navigateAll`), so they look like reached
 through the settings, and back (`StockSettingsRoute.backLeavesSettings`, a
 `detailPaneMetadata(backLeavesScene)` that `NestedDetailSceneStrategy` lets leave the whole
@@ -344,7 +362,18 @@ scene, and the page's back button) returns to the products in one step). The oth
 - Stock settings (`stock/`): every setting of Grocy's stock settings page in its groups, hidden
   by feature flag; each change is saved at once (`MasterDataRepository.saveUserSetting`,
   `UserSettingValue`), typed numbers once typing pauses and only when valid (Grocy's ranges,
-  `StockNumberSetting`); a failed save returns to the stored value with a message.
+  `StockNumberSetting`); a failed save returns to the stored value with a message
+  (`UserSettingSaver`, `UserSettingEventEffect`, shared by every page of Grocy's settings).
+- The other pages (`grocy/`, `GrocySettingsPageRoute(GrocySettingsPage)`): one generic page
+  described as data (`GrocySettingsPage.groups`: Grocy's headings, checkboxes as switches with
+  Grocy's help texts, "Due soon days" from 0 as number picker with its help below the buttons,
+  the shopping list for products below their min. stock amount only with several lists and
+  enabled like Grocy's choice), saved like the stock settings.
+- Grocy's "User settings" (`user/`, `UserSettingsRoute`): the user's language in Grocy
+  (`locale`, Grocy's codes such as "pt_BR" of its `localization` folders, `GrocyLanguages`,
+  empty for its default, the browser's language), chosen in the language dialog of General
+  (`GrocyLanguageDialog`, names in their language); disabled on demos, which always show the
+  language of their address.
 
 - Server (`ServerSettingsScreen`): on the demo server first a group of its own with one
   non-clickable item in `error`/`onError` (warning icon, "Public demo server", supporting text
@@ -923,7 +952,8 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   (kept out of public APIs: `HapticTooltipBox` takes its own `TooltipPosition`). Compose 1.13
   needs compileSdk 37.1 or newer (`android-compileSdkMinor`). Material's adaptive libraries
   (`adaptive-navigation3`, list-detail scenes) follow the same rule: newest alpha.
-- `GrocyLogo` (`core:design`, 30.dp; `AppBarLogo` in the start screen's app bar, in the place of
+- `GrocyLogo` (`core:design`, 30.dp by default, 100.dp above the login choices; `AppBarLogo` in
+  the start screen's app bar, in the place of
   the navigation button the first screen has none of, the title stays centered) stacks the logo's layers (`ic_logo_*`, one color each) and
   tints them like the API 34 splash screen with the theme's roles instead of the system's
   (`onSurface` outlines, `primaryContainer` basket, `onPrimaryContainer` letter at 80 %), the

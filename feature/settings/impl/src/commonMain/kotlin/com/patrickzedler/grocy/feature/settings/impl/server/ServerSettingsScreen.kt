@@ -9,7 +9,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -34,6 +33,7 @@ import com.patrickzedler.grocy.core.data.server.GrocyVersionCheck
 import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.core.design.GrocyTheme
+import com.patrickzedler.grocy.core.design.component.DemoServerWarning
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
@@ -51,11 +51,8 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_dns
 import com.patrickzedler.grocy.core.resources.ic_rounded_info
 import com.patrickzedler.grocy.core.resources.ic_rounded_logout
 import com.patrickzedler.grocy.core.resources.ic_rounded_refresh
-import com.patrickzedler.grocy.core.resources.ic_rounded_warning
 import com.patrickzedler.grocy.core.resources.settings_server
-import com.patrickzedler.grocy.core.resources.settings_server_demo
 import com.patrickzedler.grocy.core.resources.settings_server_demo_switch_failed
-import com.patrickzedler.grocy.core.resources.settings_server_demo_warning
 import com.patrickzedler.grocy.core.resources.settings_server_logout
 import com.patrickzedler.grocy.core.resources.settings_server_logout_description
 import com.patrickzedler.grocy.core.resources.settings_server_logout_message
@@ -199,7 +196,7 @@ private fun LazyListScope.serverSettings(
 ) {
     if (server.isDemo) {
         segmentedGroup(key = "demo") {
-            DemoWarningItem()
+            DemoServerWarning()
         }
     }
     segmentedGroup(key = "server") {
@@ -259,32 +256,6 @@ private fun LazyListScope.serverSettings(
             onClick = onLogoutClick,
         )
     }
-}
-
-/**
- * Grocy's public demo: everything entered there is public until the daily reset. A group of
- * its own above the server, in the error colors, so the warning cannot be overlooked or taken
- * for a setting.
- */
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-private fun DemoWarningItem() {
-    val containerColor = MaterialTheme.colorScheme.error
-    val contentColor = MaterialTheme.colorScheme.onError
-
-    ListItem(
-        modifier = Modifier.fillMaxWidth(),
-        leadingContent = { SettingIcon(Res.drawable.ic_rounded_warning) },
-        supportingContent = { Text(stringResource(Res.string.settings_server_demo_warning)) },
-        shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
-        colors = ListItemDefaults.segmentedColors(
-            containerColor = containerColor,
-            contentColor = contentColor,
-            leadingContentColor = contentColor,
-            supportingContentColor = contentColor,
-        ),
-        content = { Text(stringResource(Res.string.settings_server_demo)) },
-    )
 }
 
 /** A value of the server, clickable if [onClick] is given, with a loading indicator at its end. */

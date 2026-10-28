@@ -66,9 +66,12 @@ import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectActionsView
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.emptyListItem
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.objectActionItems
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.searchItem
+import com.patrickzedler.grocy.feature.masterdata.impl.objects.showSearchAtTop
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductLinks
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewHost
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintEffect
+import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist.AddToShoppingListViewModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -80,6 +83,7 @@ internal fun ProductsScreen(
     viewModel: ProductsViewModel,
     overviewViewModel: ProductOverviewViewModel,
     shoppingList: AddToShoppingListViewModel,
+    labels: LabelPrintViewModel,
     objectActions: ObjectActionsViewModel,
     /** Where the product overview leads, its form is [onProductClick]. */
     links: ProductLinks,
@@ -98,6 +102,7 @@ internal fun ProductsScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val refresh by viewModel.refresh.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    LabelPrintEffect(labels, snackbarHostState)
 
     // With saved data a failed download is only a note, without it the list explains itself
     RefreshErrorEffect(
@@ -143,6 +148,7 @@ internal fun ProductsScreen(
     ProductOverviewHost(
         overview = overviewViewModel,
         shoppingList = shoppingList,
+        labels = labels,
         snackbarHostState = snackbarHostState,
         links = links,
         nameOf = { id -> state?.items?.find { it.id == id }?.name.orEmpty() },
@@ -219,8 +225,7 @@ private fun ProductsContent(
                     painter = painterResource(Res.drawable.ic_rounded_search),
                     contentDescription = stringResource(Res.string.action_search),
                     onClick = {
-                        onSearchClick()
-                        scope.launch { listState.animateScrollToItem(0) }
+                        scope.showSearchAtTop(listState, onSearchClick)
                     },
                 )
             }

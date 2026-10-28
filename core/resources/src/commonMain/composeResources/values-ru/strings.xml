@@ -204,7 +204,7 @@
   <string name="settings_server">Сервер</string>
   <string name="settings_user">Пользовательские настройки</string>
   <string name="settings_user_synced">Сохраняются на сервере</string>
-  <string name="settings_user_synced_hint">Grocy хранит эти настройки для вашего пользователя, поэтому они действуют и в его веб-интерфейсе, и на ваших других устройствах</string>
+  <string name="settings_user_synced_hint">Grocy хранит эти настройки для вашего пользователя, поэтому они действуют и в веб-интерфейсе Grocy, и на ваших других устройствах</string>
   <string name="settings_network">Сеть</string>
   <string name="settings_behavior">Поведение</string>
   <string name="settings_scanner">Сканер</string>
@@ -886,4 +886,32 @@
     <item quantity="many">%1$d лет</item>
     <item quantity="other">%1$d года</item>
   </plurals>
+  <string name="settings_grocy">Настройки Grocy</string>
+  <string name="settings_shopping_list">Настройки списка покупок</string>
+  <string name="settings_recipes">Настройки рецептов</string>
+  <string name="settings_chores">Настройки работ по дому</string>
+  <string name="settings_tasks">Настройки задач</string>
+  <string name="settings_batteries">Настройки батарей</string>
+  <string name="shopping_list_settings_calendar">Показать календарь на месяц</string>
+  <string name="shopping_list_settings_round_up">Округлять количество вверх до целого числа</string>
+  <string name="shopping_list_settings_auto_add">Автоматически добавлять продукты, которые находятся ниже определенного минимального уровня запасов, в список покупок</string>
+  <string name="shopping_list_settings_workflow">Способ передачи продуктов из списка покупок в запас</string>
+  <string name="shopping_list_settings_auto_submit">Автоматически выполнять действие, используя последнюю цену и количество товара в списке покупок, если для продукта установлены "Дни выполнения по умолчанию"</string>
+  <string name="recipes_settings_side_by_side">Показать список рецептов и рецепт рядом</string>
+  <string name="recipes_settings_ingredient_checkbox">Показывайте рядом с каждым ингредиентом небольшой флажок, чтобы отметить его как выполненный</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">Ингредиент перечеркивается при нажатии, статус не сохраняется, что означает сброс при перезагрузке страницы</string>
+  <string name="recipes_settings_card">Карточка рецепта</string>
+  <string name="recipes_settings_group_ingredients">Сгруппировать ингредиенты по группам продуктов</string>
+  <string name="chores_settings_overview">Обзор работ</string>
+  <string name="chores_settings_swap_buttons">Поменять местами кнопки «Отметить следующее запланированное выполнение» / «Отметить выполнение сейчас»</string>
+  <string name="batteries_settings_overview">Обзор батареек</string>
+  <string name="settings_due_soon_days_hint">Установите значение 0, чтобы скрыть фильтры/выделение, связанные с скорым сроком</string>
+  <string name="grocy_language_default">По умолчанию</string>
+  <string name="grocy_language_default_description">Grocy использует язык вашего браузера</string>
+  <string name="grocy_language_info">Язык веб-интерфейса Grocy для вашего пользователя</string>
+  <string name="grocy_language_demo">Демо-серверы Grocy всегда используют язык своего адреса</string>
+  <string name="stock_purchase">Покупка</string>
+  <string name="stock_consume">Использовать</string>
+  <string name="stock_transfer">Переместить</string>
+  <string name="stock_inventory">Ревизия</string>
 </resources>

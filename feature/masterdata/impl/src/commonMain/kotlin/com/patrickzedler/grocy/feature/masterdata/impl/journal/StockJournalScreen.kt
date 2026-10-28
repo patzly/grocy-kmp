@@ -5,6 +5,7 @@ package com.patrickzedler.grocy.feature.masterdata.impl.journal
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -15,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -90,6 +92,7 @@ import com.patrickzedler.grocy.feature.masterdata.impl.objects.DropdownFilterChi
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.FilterChipRow
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.emptyListItem
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.searchItem
+import com.patrickzedler.grocy.feature.masterdata.impl.objects.showSearchAtTop
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewHost
 import com.patrickzedler.grocy.feature.masterdata.impl.related.ItemButton
 import com.patrickzedler.grocy.feature.masterdata.impl.related.ItemButtons
@@ -118,6 +121,8 @@ internal fun StockJournalScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val refresh by viewModel.refresh.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
     val downloadGrocycode = rememberGrocycodeDownload(snackbarHostState)
 
     RefreshErrorEffect(
@@ -164,7 +169,7 @@ internal fun StockJournalScreen(
                         if (viewModel.isSearchVisible) {
                             viewModel.hideSearch()
                         } else {
-                            viewModel.showSearch()
+                            scope.showSearchAtTop(listState, viewModel::showSearch)
                         }
                     },
                     modifier = actionModifier,
@@ -176,6 +181,7 @@ internal fun StockJournalScreen(
         snackbarHostState = snackbarHostState,
         isRefreshing = refresh.isRefreshing && state?.hasBookings == true,
         onRefresh = viewModel::refresh,
+        listState = listState,
         itemSpacing = ListItemDefaults.SegmentedGap,
     ) {
         val current = state ?: return@SegmentedListScreen
@@ -207,6 +213,7 @@ internal fun StockJournalScreen(
     ProductOverviewHost(
         overview = actions.overview,
         shoppingList = actions.shoppingList,
+        labels = actions.labels,
         snackbarHostState = snackbarHostState,
         links = actions.links,
         nameOf = { id -> state?.products?.firstOrNull { it.id == id }?.name.orEmpty() },

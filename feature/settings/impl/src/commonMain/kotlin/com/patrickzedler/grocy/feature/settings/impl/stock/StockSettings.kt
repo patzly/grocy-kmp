@@ -2,9 +2,10 @@ package com.patrickzedler.grocy.feature.settings.impl.stock
 
 import com.patrickzedler.grocy.core.model.server.UserSettingValue
 import com.patrickzedler.grocy.core.model.server.UserSettings
-import com.patrickzedler.grocy.core.model.text.decimalPlaces
 import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.parseDecimal
+import com.patrickzedler.grocy.feature.settings.impl.SettingError
+import com.patrickzedler.grocy.feature.settings.impl.numberSettingError
 
 /**
  * A number of Grocy's stock settings, [key] its user setting: at least [min], at most [max]
@@ -93,31 +94,12 @@ internal enum class StockPresetSetting(val key: String) {
 
 internal const val LABEL_TYPE_KEY = "product_presets_default_stock_label_type"
 
-/** Why a number of the stock settings is not saved. */
-internal sealed interface SettingError {
-    /** Grocy's number message: at least [min] (at most [max]), up to [decimals] places. */
-    data class InvalidNumber(val min: String, val max: String?, val decimals: Int) : SettingError
-}
-
 /**
  * Checks a typed number of [setting] like Grocy's number picker, which also names the range
  * for an empty field; null when it is fine.
  */
-internal fun StockNumberSetting.errorOf(text: String, settings: UserSettings): SettingError? {
-    val places = decimals(settings)
-    val value = parseDecimal(text)
-    val invalid = value == null || value < min || max?.let { value > it } == true ||
-        decimalPlaces(text) > places
-    return if (invalid) {
-        SettingError.InvalidNumber(
-            min = formatDecimal(min, places),
-            max = max?.let { formatDecimal(it, 0) },
-            decimals = places,
-        )
-    } else {
-        null
-    }
-}
+internal fun StockNumberSetting.errorOf(text: String, settings: UserSettings): SettingError? =
+    numberSettingError(text, min, max, decimals(settings))
 
 /** What Grocy stores for a valid typed number of [setting]: integers without fraction. */
 internal fun StockNumberSetting.valueOf(text: String, settings: UserSettings): UserSettingValue {

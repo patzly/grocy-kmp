@@ -152,6 +152,19 @@ class ProductOverviewStateTest {
     }
 
     @Test
+    fun labelPrinterOnlyWhenTheServerRunsItsWebhook() {
+        val onServer = build(config = ServerConfig(labelPrinter = true, grocycode2D = false))
+        val inBrowser = build(
+            config = ServerConfig(labelPrinter = true, labelPrinterRunsOnServer = false),
+        )
+
+        assertTrue(onServer.showLabelPrinter)
+        assertFalse(onServer.grocycode2D)
+        assertFalse(inBrowser.showLabelPrinter)
+        assertFalse(build(config = ServerConfig()).showLabelPrinter)
+    }
+
+    @Test
     fun priceHistoryHasOneSeriesPerStoreOldestFirst() {
         val history = buildPriceHistory(
             entries = listOf(

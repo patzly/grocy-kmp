@@ -27,6 +27,10 @@ internal data class ProductOverviewUiState(
     val pictureFileName: String?,
     val locationName: String?,
     val showShoppingList: Boolean,
+    /** Grocy's label printer, only when the server runs its webhook itself. */
+    val showLabelPrinter: Boolean,
+    /** Grocycodes as DataMatrix, otherwise Code 128. */
+    val grocycode2D: Boolean,
     val showPrices: Boolean,
     val showLocation: Boolean,
     val showShelfLife: Boolean,
@@ -186,6 +190,8 @@ internal fun buildProductOverview(
         pictureFileName = product.pictureFileName,
         locationName = product.locationId?.let { id -> locations.find { it.id == id }?.name },
         showShoppingList = config.shoppingList,
+        showLabelPrinter = config.labelPrinter && config.labelPrinterRunsOnServer,
+        grocycode2D = config.grocycode2D,
         showPrices = config.stockPriceTracking,
         showLocation = config.stockLocationTracking,
         showShelfLife = config.stockBestBeforeDateTracking,

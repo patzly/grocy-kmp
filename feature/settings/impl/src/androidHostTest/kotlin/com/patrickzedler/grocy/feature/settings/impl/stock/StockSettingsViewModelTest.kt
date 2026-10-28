@@ -7,6 +7,7 @@ import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.database.createInMemoryGrocyDatabase
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.testing.FakeGrocyServer
+import com.patrickzedler.grocy.feature.settings.impl.UserSettingEvent
 import io.ktor.http.HttpMethod
 import io.ktor.http.content.TextContent
 import kotlin.test.AfterTest
@@ -101,7 +102,7 @@ class StockSettingsViewModelTest {
             viewModel.setSwitch(StockSwitchSetting.SHOW_PURCHASED_DATE, true)
             advanceUntilIdle()
 
-            assertEquals(StockSettingsEvent.Offline, awaitItem())
+            assertEquals(UserSettingEvent.Offline, awaitItem())
         }
         assertFalse(viewModel.form!!.switches.getValue(StockSwitchSetting.SHOW_PURCHASED_DATE))
     }

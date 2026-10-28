@@ -188,7 +188,7 @@
   <string name="settings_server">Server</string>
   <string name="settings_user">Gebruikersinstellingen</string>
   <string name="settings_user_synced">Opgeslagen op de server</string>
-  <string name="settings_user_synced_hint">Grocy slaat deze instellingen op voor je gebruiker, dus ze gelden ook in de webinterface en op je andere apparaten</string>
+  <string name="settings_user_synced_hint">Grocy slaat deze instellingen op voor je gebruiker, dus ze gelden ook in de webinterface van Grocy en op je andere apparaten</string>
   <string name="settings_network">Netwerk</string>
   <string name="settings_behavior">Gedrag</string>
   <string name="settings_scanner">Scanner</string>
@@ -832,4 +832,32 @@
     <item quantity="one">%1$d jaar</item>
     <item quantity="other">%1$d jaar</item>
   </plurals>
+  <string name="settings_grocy">Grocy-instellingen</string>
+  <string name="settings_shopping_list">Instellingen voor het boodschappenlijstje</string>
+  <string name="settings_recipes">Recept instellingen</string>
+  <string name="settings_chores">Klusjesinstellingen</string>
+  <string name="settings_tasks">Taakinstellingen</string>
+  <string name="settings_batteries">Batterij instellingen</string>
+  <string name="shopping_list_settings_calendar">Toon de maandkalender</string>
+  <string name="shopping_list_settings_round_up">Rond de hoeveelheid af naar het dichtstbijzijnde gehele getal</string>
+  <string name="shopping_list_settings_auto_add">Voeg automatisch producten toe die onder hun gedefinieerde min. voorraadbedrag toe aan het boodschappenlijstje</string>
+  <string name="shopping_list_settings_workflow">Boodschappenlijst voor voorraad workflow</string>
+  <string name="shopping_list_settings_auto_submit">Voer de boeking automatisch uit met behulp van de vorige prijs en het hoeveelheid van het artikel op de boodschappenlijst, als voor het product 'standaard vervaldagen' is ingesteld</string>
+  <string name="recipes_settings_side_by_side">Toon de receptenlijst en het recept naast elkaar</string>
+  <string name="recipes_settings_ingredient_checkbox">Toon een klein selectievakje naast elk ingrediënt om het als klaar te markeren</string>
+  <string name="recipes_settings_ingredient_checkbox_hint">Het ingrediënt wordt doorgestreept wanneer erop wordt geklikt, de status wordt niet opgeslagen, dit betekent gereset wanneer de pagina opnieuw wordt geladen</string>
+  <string name="recipes_settings_card">Receptkaart</string>
+  <string name="recipes_settings_group_ingredients">Groepeer ingrediënten per productcategorie</string>
+  <string name="chores_settings_overview">Klusjes</string>
+  <string name="chores_settings_swap_buttons">Wissel de knoppen voor volgende geplande uitvoering vastleggen / nu vastleggen om</string>
+  <string name="batteries_settings_overview">Batterijen</string>
+  <string name="settings_due_soon_days_hint">Stel in op 0 om binnenkort vervalt filters/markeringen te verbergen</string>
+  <string name="grocy_language_default">Standaard</string>
+  <string name="grocy_language_default_description">Grocy gebruikt de taal van je browser</string>
+  <string name="grocy_language_info">De taal van de webinterface van Grocy voor je gebruiker</string>
+  <string name="grocy_language_demo">De demoservers van Grocy gebruiken altijd de taal van hun adres</string>
+  <string name="stock_purchase">Aankoop</string>
+  <string name="stock_consume">Verbruiken</string>
+  <string name="stock_transfer">Overdragen</string>
+  <string name="stock_inventory">Voorraad</string>
 </resources>
