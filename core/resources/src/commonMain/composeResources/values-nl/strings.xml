@@ -952,5 +952,6 @@
   <string name="shopping_list_notes_empty">Nog geen notities</string>
   <string name="shopping_list_status_done">%1$d afgerond</string>
   <string name="shopping_list_status_undone">%1$d niet afgerond</string>
-  <string name="shopping_list_pending">Nog niet naar de server verzonden: %1$d</string>
+  <string name="shopping_list_item_sending">Wordt naar de server verzonden</string>
+  <string name="shopping_list_item_not_sent">Nog niet naar de server verzonden, wordt automatisch opnieuw geprobeerd</string>
 </resources>

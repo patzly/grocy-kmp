@@ -25,12 +25,14 @@ internal class MasterDataTestEnvironment(dispatcher: TestDispatcher) {
         connection = connection,
     )
 
-    // Check offs are sent on the test dispatcher too, so advanceUntilIdle finishes them
+    // Check offs are sent on the test dispatcher too, so advanceUntilIdle finishes them; retries
+    // would keep it from ever being idle while offline
     val shoppingListRepository = ShoppingListRepository(
         api = server.api,
         database = database,
         scope = CoroutineScope(dispatcher),
         connection = connection,
+        firstRetryDelay = null,
     )
 
     fun close() = database.close()

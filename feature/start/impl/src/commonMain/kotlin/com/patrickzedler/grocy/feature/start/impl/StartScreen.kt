@@ -1,14 +1,15 @@
 package com.patrickzedler.grocy.feature.start.impl
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -18,7 +19,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.GrocyTheme
@@ -41,7 +44,6 @@ import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.app_name
 import com.patrickzedler.grocy.core.resources.ic_rounded_database
 import com.patrickzedler.grocy.core.resources.ic_rounded_kitchen
-import com.patrickzedler.grocy.core.resources.ic_rounded_settings
 import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_cart
 import com.patrickzedler.grocy.core.resources.masterdata_title
 import com.patrickzedler.grocy.core.resources.shopping_list_list
@@ -62,7 +64,6 @@ import com.patrickzedler.grocy.core.resources.start_stock_within_days
 import com.patrickzedler.grocy.core.resources.start_summary_intro_end
 import com.patrickzedler.grocy.core.resources.start_summary_intro_list
 import com.patrickzedler.grocy.core.resources.stock_overview_title
-import com.patrickzedler.grocy.core.resources.title_settings
 import com.patrickzedler.grocy.core.ui.AppMenuDialogs
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
 import com.patrickzedler.grocy.core.ui.rememberAppMenu
@@ -108,7 +109,7 @@ internal fun availableSections(config: ServerConfig?): List<StartSection> =
 
 /**
  * The first screen after login; grows with the app's sections (stock overview, shopping list and
- * master data so far) and leads to the settings in a group of their own below them. On Grocy's
+ * master data so far), the settings are the first item of its app menu. On Grocy's
  * public demo ([isDemoServer]) its warning comes first and opens the server settings. Beside the
  * sections' pages ([isBesideDetail]) it is the start [ScreenPane.List] of the layout and its
  * sections a single choice marking the [shownSection]; the settings and the shopping list (a
@@ -132,8 +133,7 @@ internal fun StartScreen(
     val config by viewModel.serverConfig.collectAsStateWithLifecycle()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    // Settings are an item of the list here, not of the menu
-    val appMenu = rememberAppMenu(onAboutClick = onAboutClick)
+    val appMenu = rememberAppMenu(onSettingsClick = onSettingsClick, onAboutClick = onAboutClick)
     AppMenuDialogs(appMenu)
 
     RefreshErrorEffect(
@@ -154,7 +154,6 @@ internal fun StartScreen(
         isBesideDetail = isBesideDetail,
         shownSection = shownSection,
         onSectionClick = onSectionClick,
-        onSettingsClick = onSettingsClick,
         onDemoWarningClick = onDemoWarningClick,
         onStockActionClick = onStockActionClick,
         onShoppingListAddClick = { onShoppingListAddClick(viewModel.quickAddListId()) },
@@ -175,7 +174,6 @@ private fun StartContent(
     isBesideDetail: Boolean,
     shownSection: StartSection?,
     onSectionClick: (StartSection) -> Unit,
-    onSettingsClick: () -> Unit,
     onDemoWarningClick: () -> Unit,
     onStockActionClick: (StockAction) -> Unit,
     onShoppingListAddClick: () -> Unit,
@@ -210,46 +208,27 @@ private fun StartContent(
                         onClick = { onSectionClick(section) },
                         selected = if (isBesideDetail) shownSection == section else null,
                         below = when (section) {
-                            StartSection.STOCK_OVERVIEW -> {
-                                { StockActionButtons(stockActions, onStockActionClick) }
+                            StartSection.STOCK_OVERVIEW -> SectionButtons(0.dp) {
+                                StockActionButtons(stockActions, onStockActionClick)
                             }
-                            StartSection.SHOPPING_LIST -> {
-                                { ShoppingListAddButton(onShoppingListAddClick) }
-                            }
+                            StartSection.SHOPPING_LIST ->
+                                SectionButtons(ShoppingListAddButtonRoom) {
+                                    ShoppingListAddButton(onShoppingListAddClick)
+                                }
                             StartSection.MASTER_DATA -> null
                         },
                     )
                 }
             }
         }
-        segmentedGroup(key = "settings") {
-            SettingsItem(onClick = onSettingsClick)
-        }
     }
 }
 
-/** Opens the settings, which never show beside the start screen, so a plain item always. */
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-private fun SettingsItem(onClick: () -> Unit) {
-    val haptic = LocalHapticFeedback.current
-    SegmentedListItem(
-        onClick = {
-            haptic.confirm()
-            onClick()
-        },
-        shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
-        colors = SegmentedListDefaults.colors(),
-        modifier = Modifier.fillMaxWidth().clickCursor(),
-        verticalAlignment = Alignment.CenterVertically,
-        leadingContent = {
-            LeadingTrailingContentWrapper {
-                Icon(painterResource(Res.drawable.ic_rounded_settings), contentDescription = null)
-            }
-        },
-        content = { SectionTitle(stringResource(Res.string.title_settings)) },
-    )
-}
+/**
+ * Buttons below a section's summary; [room] is the space they keep below their visible
+ * containers for touch targets, which counts towards the item's bottom padding.
+ */
+private class SectionButtons(val room: Dp, val content: @Composable () -> Unit)
 
 /** What a section tells about its data: an introduction and a list, both optional. */
 private class SectionSummary(val intro: String?, val bullets: List<String>)
@@ -385,7 +364,7 @@ private fun SectionItem(
     count: Int,
     onClick: () -> Unit,
     selected: Boolean?,
-    below: (@Composable () -> Unit)? = null,
+    below: SectionButtons? = null,
 ) {
     val haptic = LocalHapticFeedback.current
     val click = {
@@ -400,18 +379,14 @@ private fun SectionItem(
             Icon(painterResource(section.icon), contentDescription = null)
         }
     }
-    val title = @Composable { SectionTitle(stringResource(section.title)) }
+    val title = @Composable { Text(stringResource(section.title)) }
     val supporting: (@Composable () -> Unit)? = if (summary != null || below != null) {
         {
             Column {
-                summary?.let {
-                    ProvideTextStyle(MaterialTheme.typography.bodyLarge) {
-                        SupportingBulletList(intro = it.intro, bullets = it.bullets)
-                    }
-                }
+                summary?.let { SupportingBulletList(intro = it.intro, bullets = it.bullets) }
                 below?.let {
                     if (summary != null) Spacer(Modifier.height(BelowSummarySpacing))
-                    it()
+                    it.content()
                 }
             }
         }
@@ -420,6 +395,8 @@ private fun SectionItem(
     }
     // Several lines keep the icon at the top like Material's three line items
     val alignment = if (supporting != null) Alignment.Top else Alignment.CenterVertically
+    val contentPadding = below?.let { buttonsContentPadding(it.room) }
+        ?: ListItemDefaults.ContentPadding
 
     // Beside a page a single choice marking it, without page a plain item (no radio semantics)
     if (selected != null) {
@@ -432,6 +409,7 @@ private fun SectionItem(
             verticalAlignment = alignment,
             leadingContent = leading,
             supportingContent = supporting,
+            contentPadding = contentPadding,
             content = title,
         )
     } else {
@@ -443,22 +421,33 @@ private fun SectionItem(
             verticalAlignment = alignment,
             leadingContent = leading,
             supportingContent = supporting,
+            contentPadding = contentPadding,
             content = title,
         )
     }
 }
 
+/**
+ * Material's padding with [ButtonsBottomSpacing] below buttons that keep [room] below their
+ * containers: the item's own bottom padding is too tight below a button group.
+ */
+@Composable
+private fun buttonsContentPadding(room: Dp): PaddingValues {
+    val direction = LocalLayoutDirection.current
+    val default = ListItemDefaults.ContentPadding
+    return PaddingValues(
+        start = default.calculateStartPadding(direction),
+        top = default.calculateTopPadding(),
+        end = default.calculateEndPadding(direction),
+        bottom = (ButtonsBottomSpacing - room).coerceAtLeast(0.dp),
+    )
+}
+
 // Between a section's summary and its buttons
 private val BelowSummarySpacing = 12.dp
 
-/**
- * A title of the start screen, larger than a list item's, so its data reads at a glance with its
- * supporting text in `bodyLarge`.
- */
-@Composable
-private fun SectionTitle(text: String) {
-    Text(text, style = MaterialTheme.typography.titleLarge)
-}
+// Between the visible buttons of a section and the item's bottom edge
+private val ButtonsBottomSpacing = 16.dp
 
 @Preview
 @Composable
@@ -475,7 +464,6 @@ private fun StartScreenPreview() {
             isBesideDetail = false,
             shownSection = null,
             onSectionClick = {},
-            onSettingsClick = {},
             onDemoWarningClick = {},
             onStockActionClick = {},
             onShoppingListAddClick = {},

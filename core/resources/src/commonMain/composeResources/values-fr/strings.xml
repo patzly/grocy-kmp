@@ -980,5 +980,6 @@
   <string name="shopping_list_notes_empty">Aucune note pour l’instant</string>
   <string name="shopping_list_status_done">%1$d terminé(s)</string>
   <string name="shopping_list_status_undone">%1$d non terminé(s)</string>
-  <string name="shopping_list_pending">Pas encore envoyé(s) au serveur : %1$d</string>
+  <string name="shopping_list_item_sending">Envoi au serveur en cours</string>
+  <string name="shopping_list_item_not_sent">Pas encore envoyé au serveur, nouvel essai automatique</string>
 </resources>

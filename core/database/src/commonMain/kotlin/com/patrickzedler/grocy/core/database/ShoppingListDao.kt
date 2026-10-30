@@ -50,8 +50,8 @@ interface ShoppingListDao {
     @Query("SELECT * FROM pending_shopping_list_done")
     suspend fun pendingDone(): List<PendingShoppingListDoneEntity>
 
-    @Query("SELECT COUNT(*) FROM pending_shopping_list_done")
-    fun observePendingDoneCount(): Flow<Int>
+    @Query("SELECT * FROM pending_shopping_list_done")
+    fun observePendingDone(): Flow<List<PendingShoppingListDoneEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertPendingDone(pending: PendingShoppingListDoneEntity)

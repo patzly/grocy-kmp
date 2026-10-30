@@ -5,6 +5,7 @@ import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListCount
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItemSync
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import com.patrickzedler.grocy.core.testing.FakeGrocyServer
 import com.patrickzedler.grocy.core.testing.MasterDataJson
@@ -17,9 +18,12 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
 
 class ShoppingListRepositoryTest {
@@ -30,11 +34,14 @@ class ShoppingListRepositoryTest {
     private val database = createInMemoryGrocyDatabase(queryContext = dispatcher)
     private val connection = { ServerConnection.ApiKey("https://grocy.test", "k") }
 
+    private val networkAvailable = MutableSharedFlow<Unit>()
+
     private fun TestScope.repository() = ShoppingListRepository(
         api = server.api,
         database = database,
         scope = backgroundScope,
         connection = connection,
+        networkAvailable = networkAvailable,
     )
 
     @AfterTest
@@ -91,7 +98,7 @@ class ShoppingListRepositoryTest {
         repository.setDone(5, done = true)
 
         assertEquals(listOf("""{"done":1}"""), doneRequests(5))
-        assertEquals(0, repository.pendingCount.first())
+        assertEquals(emptyMap(), repository.syncStates.first())
     }
 
     @Test
@@ -103,7 +110,7 @@ class ShoppingListRepositoryTest {
         repository.setDone(5, done = true)
 
         assertTrue(repository.items.first().first { it.id == 5 }.done)
-        assertEquals(1, repository.pendingCount.first())
+        assertEquals(mapOf(5 to ShoppingListItemSync.FAILED), repository.syncStates.first())
     }
 
     @Test
@@ -134,7 +141,7 @@ class ShoppingListRepositoryTest {
 
         assertEquals(listOf("""{"done":0}"""), doneRequests(5))
         assertEquals(listOf("""{"done":0}"""), doneRequests(6))
-        assertEquals(0, repository.pendingCount.first())
+        assertEquals(emptyMap(), repository.syncStates.first())
     }
 
     @Test
@@ -159,7 +166,7 @@ class ShoppingListRepositoryTest {
         repository.refresh()
 
         assertEquals(listOf(6), repository.items.first().map { it.id })
-        assertEquals(0, repository.pendingCount.first())
+        assertEquals(emptyMap(), repository.syncStates.first())
     }
 
     @Test
@@ -195,7 +202,7 @@ class ShoppingListRepositoryTest {
 
         repository.setDone(5, done = true)
 
-        assertEquals(1, repository.pendingCount.first())
+        assertEquals(mapOf(5 to ShoppingListItemSync.FAILED), repository.syncStates.first())
     }
 
     @Test
@@ -210,7 +217,60 @@ class ShoppingListRepositoryTest {
         repository.sendPendingDoneInBackground()
 
         assertEquals(listOf("""{"done":0}"""), doneRequests(6))
-        assertEquals(0, repository.pendingCount.first())
+        assertEquals(emptyMap(), repository.syncStates.first())
+    }
+
+    @Test
+    fun queuedCheckOffIsSendingUntilItsFirstAttemptFails() = runTest(dispatcher) {
+        val repository = repository()
+        repository.refresh()
+        server.unreachable = true
+        repository.setDone(5, done = true)
+        // The app starts again, nothing was tried yet in this process
+        val restarted = repository()
+
+        assertEquals(mapOf(5 to ShoppingListItemSync.SENDING), restarted.syncStates.first())
+    }
+
+    @Test
+    fun failedCheckOffIsSentOnceTheDeviceIsOnlineAgain() = runTest(dispatcher) {
+        val repository = repository()
+        repository.refresh()
+        server.unreachable = true
+        repository.setDone(5, done = true)
+        server.unreachable = false
+        server.requests.clear()
+
+        networkAvailable.emit(Unit)
+
+        assertEquals(listOf("""{"done":1}"""), doneRequests(5))
+        assertEquals(emptyMap(), repository.syncStates.first())
+    }
+
+    @Test
+    fun failedCheckOffIsRetriedByItselfEverLessOften() = runTest(dispatcher) {
+        val repository = repository()
+        repository.refresh()
+        server.respond(
+            path = "/api/objects/shopping_list/5",
+            status = HttpStatusCode.InternalServerError,
+            method = HttpMethod.Put,
+        )
+        repository.setDone(5, done = true)
+
+        advanceTimeBy(ShoppingListRepository.FIRST_RETRY_DELAY + 1.milliseconds)
+        assertEquals(2, doneRequests(5).size)
+        advanceTimeBy(ShoppingListRepository.FIRST_RETRY_DELAY + 1.milliseconds)
+        assertEquals(2, doneRequests(5).size)
+        server.respond(
+            path = "/api/objects/shopping_list/5",
+            status = HttpStatusCode.NoContent,
+            method = HttpMethod.Put,
+        )
+        advanceTimeBy(ShoppingListRepository.FIRST_RETRY_DELAY)
+
+        assertEquals(3, doneRequests(5).size)
+        assertEquals(emptyMap(), repository.syncStates.first())
     }
 
     @Test
@@ -228,7 +288,7 @@ class ShoppingListRepositoryTest {
 
         assertEquals(1, server.requestsTo("/api/objects/shopping_list/6", HttpMethod.Delete).size)
         assertEquals(listOf(5), repository.items.first().map { it.id })
-        assertEquals(0, repository.pendingCount.first())
+        assertEquals(emptyMap(), repository.syncStates.first())
     }
 
     @Test

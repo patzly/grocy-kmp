@@ -952,5 +952,6 @@
   <string name="shopping_list_notes_empty">Noch keine Notizen</string>
   <string name="shopping_list_status_done">%1$d erledigt</string>
   <string name="shopping_list_status_undone">%1$d unerledigt</string>
-  <string name="shopping_list_pending">Noch nicht an den Server gesendet: %1$d</string>
+  <string name="shopping_list_item_sending">Wird an den Server gesendet</string>
+  <string name="shopping_list_item_not_sent">Noch nicht an den Server gesendet, wird automatisch erneut versucht</string>
 </resources>

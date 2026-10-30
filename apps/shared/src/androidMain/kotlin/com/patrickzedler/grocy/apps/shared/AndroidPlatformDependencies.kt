@@ -3,6 +3,8 @@ package com.patrickzedler.grocy.apps.shared
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.Network
 import android.net.Uri
 import com.patrickzedler.grocy.core.data.credentials.AndroidCredentialStore
 import com.patrickzedler.grocy.core.data.credentials.CredentialStore
@@ -18,6 +20,9 @@ import com.patrickzedler.grocy.core.data.update.GitHubAppUpdater
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 /**
  * [additionalBarcodeDecoders] are engines an app module adds, e.g. ML Kit in the Play app,
@@ -48,6 +53,18 @@ class AndroidPlatformDependencies(
 
     override val barcodeDecoders: Map<ScannerEngine, BarcodeDecoderFactory> =
         mapOf(ScannerEngine.ZXING to BarcodeDecoderFactory.Zxing) + additionalBarcodeDecoders
+
+    // The default network of the device, also when it switches from one network to another
+    override val networkAvailable: Flow<Unit> = callbackFlow {
+        val connectivityManager = appContext.getSystemService(ConnectivityManager::class.java)
+        val callback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                trySend(Unit)
+            }
+        }
+        connectivityManager.registerDefaultNetworkCallback(callback)
+        awaitClose { connectivityManager.unregisterNetworkCallback(callback) }
+    }
 
     override val versionName: String by lazy {
         appContext.packageManager.packageInfoOrNull(appContext.packageName)

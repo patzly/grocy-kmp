@@ -952,5 +952,6 @@
   <string name="shopping_list_notes_empty">Még nincsenek jegyzetek</string>
   <string name="shopping_list_status_done">%1$d kész</string>
   <string name="shopping_list_status_undone">%1$d nincs kész</string>
-  <string name="shopping_list_pending">Még nincs elküldve a szervernek: %1$d</string>
+  <string name="shopping_list_item_sending">Küldés a szervernek</string>
+  <string name="shopping_list_item_not_sent">Még nincs elküldve a szervernek, automatikusan újrapróbálkozik</string>
 </resources>

@@ -29,6 +29,7 @@ import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItemSync
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
 import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
@@ -82,8 +83,8 @@ internal data class ShoppingListUiState(
     val settings: UserSettings,
     /** The list's notes as plain text. */
     val notes: String,
-    /** Check offs the server has not taken yet. */
-    val pendingCount: Int,
+    /** The items whose check off the server has not taken yet, by id. */
+    val syncStates: Map<Int, ShoppingListItemSync>,
     /** False until a download stored any list. */
     val hasData: Boolean,
 ) {
@@ -234,8 +235,8 @@ internal class ShoppingListViewModel(
     private val listsPart = combine(
         shoppingLists.lists,
         shoppingLists.selectedListId,
-        shoppingLists.pendingCount,
-    ) { lists, selectedId, pending -> ListsPart(lists, selectedId, pending) }
+        shoppingLists.syncStates,
+    ) { lists, selectedId, sync -> ListsPart(lists, selectedId, sync) }
 
     private val options = combine(
         masterData.serverConfig,
@@ -288,7 +289,7 @@ internal class ShoppingListViewModel(
                 config = config,
                 settings = options.settings,
                 notes = list?.description?.let(::htmlToPlainText).orEmpty(),
-                pendingCount = lists.pendingCount,
+                syncStates = lists.syncStates,
                 hasData = lists.lists.isNotEmpty() || data.items.isNotEmpty(),
             )
         }
@@ -564,7 +565,7 @@ internal class ShoppingListViewModel(
     private data class ListsPart(
         val lists: List<ShoppingList>,
         val selectedId: Int?,
-        val pendingCount: Int,
+        val syncStates: Map<Int, ShoppingListItemSync>,
     )
 
     private data class ListOptions(

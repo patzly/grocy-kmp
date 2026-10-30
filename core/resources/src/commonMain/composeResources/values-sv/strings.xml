@@ -951,5 +951,6 @@
   <string name="shopping_list_notes_empty">Inga anteckningar ännu</string>
   <string name="shopping_list_status_done">%1$d klara</string>
   <string name="shopping_list_status_undone">%1$d ej klara</string>
-  <string name="shopping_list_pending">Inte skickade till servern ännu: %1$d</string>
+  <string name="shopping_list_item_sending">Skickas till servern</string>
+  <string name="shopping_list_item_not_sent">Inte skickad till servern ännu, försöker igen automatiskt</string>
 </resources>

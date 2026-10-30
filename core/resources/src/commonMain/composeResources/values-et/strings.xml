@@ -952,5 +952,6 @@
   <string name="shopping_list_notes_empty">Märkmeid veel pole</string>
   <string name="shopping_list_status_done">%1$d tehtud</string>
   <string name="shopping_list_status_undone">%1$d tegemata</string>
-  <string name="shopping_list_pending">Serverisse veel saatmata: %1$d</string>
+  <string name="shopping_list_item_sending">Saadetakse serverisse</string>
+  <string name="shopping_list_item_not_sent">Serverisse veel saatmata, proovitakse automaatselt uuesti</string>
 </resources>

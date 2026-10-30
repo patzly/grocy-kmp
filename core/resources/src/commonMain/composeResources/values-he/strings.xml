@@ -980,5 +980,6 @@
   <string name="shopping_list_notes_empty">אין הערות עדיין</string>
   <string name="shopping_list_status_done">%1$d בוצעו</string>
   <string name="shopping_list_status_undone">%1$d לא בוצעו</string>
-  <string name="shopping_list_pending">עדיין לא נשלחו לשרת: %1$d</string>
+  <string name="shopping_list_item_sending">נשלח לשרת</string>
+  <string name="shopping_list_item_not_sent">עדיין לא נשלח לשרת, יתבצע ניסיון חוזר אוטומטית</string>
 </resources>

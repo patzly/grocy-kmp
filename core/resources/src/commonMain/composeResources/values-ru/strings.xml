@@ -1008,5 +1008,6 @@
   <string name="shopping_list_notes_empty">Заметок пока нет</string>
   <string name="shopping_list_status_done">Выполнено: %1$d</string>
   <string name="shopping_list_status_undone">Не выполнено: %1$d</string>
-  <string name="shopping_list_pending">Ещё не отправлено на сервер: %1$d</string>
+  <string name="shopping_list_item_sending">Отправляется на сервер</string>
+  <string name="shopping_list_item_not_sent">Ещё не отправлено на сервер, повторная попытка будет выполнена автоматически</string>
 </resources>

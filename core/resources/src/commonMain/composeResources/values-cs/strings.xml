@@ -1011,5 +1011,6 @@
   <string name="shopping_list_notes_empty">Zatím žádné poznámky</string>
   <string name="shopping_list_status_done">Dokončené: %1$d</string>
   <string name="shopping_list_status_undone">Nedokončené: %1$d</string>
-  <string name="shopping_list_pending">Zatím neodesláno na server: %1$d</string>
+  <string name="shopping_list_item_sending">Odesílá se na server</string>
+  <string name="shopping_list_item_not_sent">Zatím neodesláno na server, zkusí se to znovu automaticky</string>
 </resources>

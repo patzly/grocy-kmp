@@ -952,5 +952,6 @@
   <string name="shopping_list_notes_empty">Ingen notater ennå</string>
   <string name="shopping_list_status_done">%1$d fullført</string>
   <string name="shopping_list_status_undone">%1$d ikke fullført</string>
-  <string name="shopping_list_pending">Ikke sendt til serveren ennå: %1$d</string>
+  <string name="shopping_list_item_sending">Sendes til serveren</string>
+  <string name="shopping_list_item_not_sent">Ikke sendt til serveren ennå, prøver igjen automatisk</string>
 </resources>

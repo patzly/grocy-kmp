@@ -5,6 +5,7 @@ import com.patrickzedler.grocy.core.data.settings.ShoppingListOptionsRepository
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItemSync
 import com.patrickzedler.grocy.core.testing.FakeSettingsStore
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
 import com.patrickzedler.grocy.feature.masterdata.impl.related.ChangeError
@@ -121,7 +122,10 @@ class ShoppingListViewModelTest {
         advanceUntilIdle()
 
         assertTrue(viewModel.rows.first { it.id == 5 }.done)
-        assertEquals(1, viewModel.state.value?.pendingCount)
+        assertEquals(
+            mapOf(5 to ShoppingListItemSync.FAILED),
+            viewModel.state.value?.syncStates,
+        )
 
         environment.server.unreachable = false
         environment.server.requests.clear()
@@ -129,7 +133,7 @@ class ShoppingListViewModelTest {
         advanceUntilIdle()
 
         assertEquals(listOf("""{"done":1}"""), doneRequests(5))
-        assertEquals(0, viewModel.state.value?.pendingCount)
+        assertEquals(emptyMap(), viewModel.state.value?.syncStates)
     }
 
     @Test

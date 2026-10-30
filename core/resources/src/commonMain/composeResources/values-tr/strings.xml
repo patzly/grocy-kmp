@@ -951,5 +951,6 @@
   <string name="shopping_list_notes_empty">Henüz not yok</string>
   <string name="shopping_list_status_done">%1$d tamamlandı</string>
   <string name="shopping_list_status_undone">%1$d tamamlanmadı</string>
-  <string name="shopping_list_pending">Henüz sunucuya gönderilmedi: %1$d</string>
+  <string name="shopping_list_item_sending">Sunucuya gönderiliyor</string>
+  <string name="shopping_list_item_not_sent">Henüz sunucuya gönderilmedi, otomatik olarak yeniden denenecek</string>
 </resources>

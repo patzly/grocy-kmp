@@ -980,5 +980,6 @@
   <string name="shopping_list_notes_empty">Encara no hi ha notes</string>
   <string name="shopping_list_status_done">%1$d completats</string>
   <string name="shopping_list_status_undone">%1$d no completats</string>
-  <string name="shopping_list_pending">Encara no enviats al servidor: %1$d</string>
+  <string name="shopping_list_item_sending">S'està enviant al servidor</string>
+  <string name="shopping_list_item_not_sent">Encara no s'ha enviat al servidor, es tornarà a provar automàticament</string>
 </resources>

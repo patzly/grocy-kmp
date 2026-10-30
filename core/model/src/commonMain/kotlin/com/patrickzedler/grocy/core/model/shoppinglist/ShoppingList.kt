@@ -31,6 +31,15 @@ data class ShoppingListItem(
     val userfields: Map<String, String?> = emptyMap(),
 )
 
+/** Where the user's own check off of an item stands while the server has not taken it yet. */
+enum class ShoppingListItemSync {
+    /** Being sent, or about to be. */
+    SENDING,
+
+    /** The last attempt failed (offline, the server down); it is sent again by itself. */
+    FAILED,
+}
+
 /** How many items one list has, for summaries such as the start screen's. */
 data class ShoppingListCount(
     val listId: Int,

@@ -16,6 +16,9 @@ import com.patrickzedler.grocy.core.data.update.ServiceWorkerAppUpdater
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 /** [buildId] tells deployments apart for updates, `DEV_BUILD_ID` outside CI. */
 class WebPlatformDependencies(
@@ -39,6 +42,12 @@ class WebPlatformDependencies(
     override val barcodeDecoders: Map<ScannerEngine, BarcodeDecoderFactory> =
         mapOf(ScannerEngine.ZXING to BarcodeDecoderFactory.Zxing)
 
+    // The browser's online event; it only tells a network exists, not that the server answers
+    override val networkAvailable: Flow<Unit> = callbackFlow {
+        val listener = addOnlineListener { trySend(Unit) }
+        awaitClose { removeOnlineListener(listener) }
+    }
+
     // The web app is deployed, not released; its service worker knows the newest version
     override fun createAppUpdater(gitHubReleases: GitHubReleases): AppUpdater =
         ServiceWorkerAppUpdater(buildId)
@@ -50,3 +59,17 @@ class WebPlatformDependencies(
 @OptIn(ExperimentalWasmJsInterop::class)
 @JsFun("() => location.reload()")
 private external fun reloadPage()
+
+@OptIn(ExperimentalWasmJsInterop::class)
+@JsFun(
+    """(callback) => {
+        const listener = () => callback();
+        window.addEventListener('online', listener);
+        return listener;
+    }""",
+)
+private external fun addOnlineListener(callback: () -> Unit): JsAny
+
+@OptIn(ExperimentalWasmJsInterop::class)
+@JsFun("(listener) => window.removeEventListener('online', listener)")
+private external fun removeOnlineListener(listener: JsAny)

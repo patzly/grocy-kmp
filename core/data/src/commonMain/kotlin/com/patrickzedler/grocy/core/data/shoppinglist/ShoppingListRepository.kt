@@ -9,20 +9,29 @@ import com.patrickzedler.grocy.core.database.toModel
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItemSync
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListSummary
 import com.patrickzedler.grocy.core.model.shoppinglist.shoppingListSummaryOf
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -30,18 +39,24 @@ import kotlinx.coroutines.sync.withLock
 /**
  * Grocy's shopping lists and their items, offline first. Checking items off works offline: the
  * user's choice is stored at once and queued, and sent once the server can be reached (the next
- * check off, refresh or app start). Only the item's `done` is sent and only while the item still
- * exists, so what others changed in the meantime stays. Every other change is online only.
+ * check off, refresh, app start, the device going online or a retry while sending failed). Only
+ * the item's `done` is sent and only while the item still exists, so what others changed in the
+ * meantime stays. Every other change is online only.
  *
  * @param scope where queued check offs are sent, the app's scope, so leaving a screen never
  *   stops them.
  * @param connection the logged in server, null after a logout.
+ * @param networkAvailable emits whenever the device gets a network, which sends the queue.
+ * @param firstRetryDelay how long a check off that failed waits for the next attempt, doubled
+ *   up to [MAX_RETRY_DELAY] while it keeps failing; null never retries by itself.
  */
 class ShoppingListRepository(
     private val api: GrocyApi,
     private val database: GrocyDatabase,
     private val scope: CoroutineScope,
     private val connection: suspend () -> ServerConnection?,
+    networkAvailable: Flow<Unit> = emptyFlow(),
+    firstRetryDelay: Duration? = FIRST_RETRY_DELAY,
 ) {
 
     private val dao = database.shoppingListDao()
@@ -59,8 +74,21 @@ class ShoppingListRepository(
     val items: Flow<List<ShoppingListItem>> =
         dao.observeItems().map { list -> list.map { it.toModel() } }
 
-    /** Check offs the server has not taken yet. */
-    val pendingCount: Flow<Int> = dao.observePendingDoneCount()
+    // Items whose queued check off could not be sent the last time it was tried
+    private val failedItemIds = MutableStateFlow(emptySet<Int>())
+
+    /** The items whose check off the server has not taken yet, by id. */
+    val syncStates: Flow<Map<Int, ShoppingListItemSync>> =
+        combine(dao.observePendingDone(), failedItemIds) { pending, failed ->
+            pending.associate { entry ->
+                val state = if (entry.itemId in failed) {
+                    ShoppingListItemSync.FAILED
+                } else {
+                    ShoppingListItemSync.SENDING
+                }
+                entry.itemId to state
+            }
+        }
 
     /** How many items each list has and how many are not done, e.g. for the start screen. */
     val summary: Flow<ShoppingListSummary> = combine(lists, items, ::shoppingListSummaryOf)
@@ -72,6 +100,25 @@ class ShoppingListRepository(
      * list); null until one was chosen in this process.
      */
     val selectedListId: StateFlow<Int?> = mutableSelectedListId.asStateFlow()
+
+    init {
+        scope.launch { networkAvailable.collect { sendPendingDoneInBackground() } }
+        // Also where the network stays but the server was down, ever less often
+        if (firstRetryDelay != null) {
+            scope.launch { retryWhileFailing(firstRetryDelay) }
+        }
+    }
+
+    private suspend fun retryWhileFailing(firstDelay: Duration) {
+        failedItemIds.map { it.isNotEmpty() }.distinctUntilChanged().collectLatest { failing ->
+            var wait = firstDelay
+            while (failing) {
+                delay(wait)
+                sendPendingDoneInBackground()
+                wait = (wait * 2).coerceAtMost(MAX_RETRY_DELAY)
+            }
+        }
+    }
 
     fun selectList(listId: Int) {
         mutableSelectedListId.value = listId
@@ -112,6 +159,8 @@ class ShoppingListRepository(
             dao.setItemDone(itemId, done)
             dao.upsertPendingDone(PendingShoppingListDoneEntity(itemId, done))
         }
+        // A new choice is being sent, whatever happened to the last one
+        failedItemIds.update { it - itemId }
         sendPendingDoneInBackground()
     }
 
@@ -133,14 +182,20 @@ class ShoppingListRepository(
      */
     private suspend fun sendPendingDone(connection: ServerConnection): Boolean {
         val pending = dao.pendingDone()
-        for (entry in pending) {
+        for ((index, entry) in pending.withIndex()) {
             try {
                 api.setShoppingListItemDone(connection, entry.itemId, entry.done)
-            } catch (e: GrocyApiException.HttpError) {
+            } catch (e: GrocyApiException) {
                 // Rejected for good, e.g. removed by someone else; the server may recover
-                if (e.statusCode >= HTTP_SERVER_ERROR) throw e
+                if (e !is GrocyApiException.HttpError || e.statusCode >= HTTP_SERVER_ERROR) {
+                    failedItemIds.update { failed ->
+                        failed + pending.drop(index).map { it.itemId }
+                    }
+                    throw e
+                }
             }
             dao.deletePendingDone(entry.itemId, entry.done)
+            failedItemIds.update { it - entry.itemId }
         }
         return pending.isNotEmpty()
     }
@@ -191,6 +246,7 @@ class ShoppingListRepository(
             dao.deleteItem(itemId)
             dao.deletePendingDoneOf(itemId)
         }
+        failedItemIds.update { it - itemId }
     }
 
     /**
@@ -285,6 +341,10 @@ class ShoppingListRepository(
         const val SHOPPING_LISTS = "shopping_lists"
 
         private const val HTTP_SERVER_ERROR = 500
+
+        // Retries of check offs that failed while the device kept its network
+        val FIRST_RETRY_DELAY = 15.seconds
+        val MAX_RETRY_DELAY = 5.minutes
     }
 }
 

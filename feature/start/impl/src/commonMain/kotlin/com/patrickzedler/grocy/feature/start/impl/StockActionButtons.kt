@@ -16,6 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.ButtonGroupOverflowIndicator
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.MenuTouchTarget
@@ -26,7 +28,7 @@ import com.patrickzedler.grocy.core.design.component.smallIconButtonSize
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_more_options
-import com.patrickzedler.grocy.core.resources.ic_rounded_add_shopping_cart
+import com.patrickzedler.grocy.core.resources.ic_rounded_add
 import com.patrickzedler.grocy.core.resources.ic_rounded_fact_check
 import com.patrickzedler.grocy.core.resources.ic_rounded_more_vert
 import com.patrickzedler.grocy.core.resources.ic_rounded_restaurant
@@ -133,7 +135,7 @@ private fun ActionButton(
 
 /**
  * Grocy's "Add item" of the shopping list as quick add, a wide tonal icon button like the stock
- * actions; the cart with a plus tells it apart from opening the list.
+ * actions.
  */
 @Composable
 internal fun ShoppingListAddButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
@@ -150,12 +152,17 @@ internal fun ShoppingListAddButton(onClick: () -> Unit, modifier: Modifier = Mod
             shapes = IconButtonDefaults.shapes(),
         ) {
             Icon(
-                painter = painterResource(Res.drawable.ic_rounded_add_shopping_cart),
+                painter = painterResource(Res.drawable.ic_rounded_add),
                 contentDescription = label,
             )
         }
     }
 }
+
+/** The room [ShoppingListAddButton] keeps above and below its container for its touch target. */
+internal val ShoppingListAddButtonRoom: Dp =
+    ((48.dp - IconButtonDefaults.smallContainerSize(IconButtonWidthOption.Wide).height) / 2)
+        .coerceAtLeast(0.dp)
 
 @Composable
 private fun OverflowButton(menuState: ButtonGroupMenuState) {

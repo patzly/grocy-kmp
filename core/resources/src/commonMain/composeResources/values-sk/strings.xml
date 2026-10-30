@@ -1008,5 +1008,6 @@
   <string name="shopping_list_notes_empty">Zatiaľ žiadne poznámky</string>
   <string name="shopping_list_status_done">Dokončené: %1$d</string>
   <string name="shopping_list_status_undone">Nedokončené: %1$d</string>
-  <string name="shopping_list_pending">Zatiaľ neodoslané na server: %1$d</string>
+  <string name="shopping_list_item_sending">Odosiela sa na server</string>
+  <string name="shopping_list_item_not_sent">Zatiaľ neodoslané na server, skúsi sa to znova automaticky</string>
 </resources>

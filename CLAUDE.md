@@ -4,543 +4,28 @@ Grocy KMP is a client for [Grocy](https://grocy.info), the self-hosted groceries
 management server. It is a full rewrite of the old Grocy Android app in Kotlin Multiplatform with
 Compose Multiplatform. Targets: Android (phone, Wear OS) and Web (Kotlin/Wasm). No iOS or desktop.
 
-Current state: login (demo server, QR code of Grocy's API key page, manual Grocy URL + API key,
-Home Assistant ingress on Android), the reusable barcode scanner (`core:scanner`), update checks
-on every platform, the start screen (on Grocy's public demo first its warning as a group of its
-own, `DemoServerWarning` of `core:design` like the server settings show it, a tap opens them
-through the settings categories; then sections grouped by `StartGroup`: the stock overview (only
-with the stock feature, `StartSection.isAvailable`) and the shopping list (also with the
-shopping list feature) as one group, then Master data, each telling about
-its data as supporting text (`SupportingBulletList` of `core:design`, numbers of 0 left out;
-`StartViewModel` downloads master data and stock overview when it opens): the products in stock
-and, with prices, their value, then as list Grocy's messages above its stock overview (due
-within the due soon days, overdue, expired, below min. stock amount with how many of them are
-on shopping lists; `stockSummaryOf` of `core:model`, counted like Grocy's messages; below them
-Grocy's Purchase, Consume, Transfer (with location tracking) and Inventory as a standard button
-group of wide tonal icon buttons, `StockActionButtons`, the last ones in the menu of a tonal
-overflow button when the item is too narrow), the items still to buy (with several lists
-holding some, per list as "Name (count)"; below it Grocy's "Add item" as one wide tonal icon
-button, the cart with a plus, opening `ShoppingListItemRoute` for the list the shopping list
-shows or Grocy's default list, `StartViewModel.quickAddListId`), and the
-objects of each master data category the server has in one line joined by commas
-(`MasterDataCount`, `start_list_join`); then Settings as a
-group of its own with the gear icon, a plain item opening the settings as their own scene, and the
-app menu without Settings; from
-Material's expanded width on a list-detail scene like the settings: `StartSection`, the
-section's page (`StockOverviewRoute`, `MasterDataRoute`, both `DetailRoute`s) opens beside it,
-`start_select_hint` until then; the shopping list is a list-detail scene of its own and opens
-on its own (`StartSection.route` is no `DetailRoute`), and a category of the master data still
-opens its list as a scene of its own with its forms beside it, never in place of the master
-data; back leaves the whole scene like every list-detail scene, from the start screen the app,
-it never closes the page beside it first, on purpose), an About
-screen, the Settings overview (`feature:settings`), Grocy's stock overview and the master data
-(`feature:masterdata`): the overview of Grocy's master data categories, the list and form of
-every category (products with their overview dialog, locations, stores, quantity units,
-product groups, chores, batteries, task categories, userfields, userentities), with the
-product's barcodes, grocycode and conversion overrides, the default conversions of units,
-Grocy's stock pages of products (stock entries, stock journal, journal summary), "Add to
-shopping list", the stock settings ("Presets for new products"), Grocy's stock bookings
-Purchase, Consume, Transfer and Inventory (see "Stock bookings") and Grocy's shopping list (see
-"Shopping list").
+Current state: login (demo, QR code, manual, Home Assistant ingress on Android), the barcode
+scanner, update checks, the start screen, About, the settings (General, Server, Grocy settings),
+Grocy's stock overview, master data with all their forms, the stock bookings and the shopping list.
 
-Titles of the start screen's items (not the demo warning) are `titleLarge` and their supporting
-text `bodyLarge`, so its data reads at a glance.
+## Details
 
-Stock bookings (`booking/` of `feature:masterdata`, routes `PurchaseRoute`, `ConsumeRoute`,
-`TransferRoute`, `InventoryRoute`, from the start screen's buttons and the product overview's
-menu):
-- One `BookingViewModel(kind)` and `BookingScreen` for Grocy's four pages, every field of
-  Grocy's form in its order as segmented groups (`BookingForm`), hidden by feature flag and
-  user setting like Grocy; the booking is the FAB, "Mark as opened" of the consume page a
-  toolbar button. The pure logic is tested: `bookableProducts` (purchase and inventory: active
-  with own stock; consume: in stock, sub products included; transfer: own stock in stock),
-  `matchCode` (barcode, grocycode `grcy:p:<id>[:<stock_id>]` of `ProductGrocycode`, a known
-  product the page does not offer is "not in stock", an unknown code asks Grocy's "Create or
-  assign product": add as barcode to the product chosen next, or as new product, the barcode
-  is saved with the booking), `pricePerStockUnit` (unit or total price, the tare weight left
-  out), `purchaseDueDate` (the product's default only into an empty field, a freezer's over
-  it), `amountLimits`/`validateBooking` (Grocy's number picker rules: smallest step, stock at
-  the location or the chosen entry as maximum, parents without maximum, gross weight above
-  container and stock, inventory not the current stock), `inventoryChange`,
-  `consumeLocation`/`transferSource`.
-- Prefills like Grocy's pages when a product is chosen: units of `productAmountUnits` (purchase
-  unit, consume unit, stock unit for transfer, inventory and tare weight), default amounts of
-  the user settings, store, location, due date, price from the last price, label type and
-  price type of the product, a barcode's amount, unit, store, last price (as total) and note;
-  the product's stock is loaded from the server (`StockRepository.productStockDetails`,
-  `productLocationAmounts`, `productStockEntries`; online only, offline the product shows the
-  offline message and nothing can be booked). Consume and transfer list only locations with
-  stock, the product's default one marked like Grocy's "(Default location)", and its entries
-  for "Use a specific stock item" (Grocy's text of an entry); a stock entry's grocycode chooses
-  that entry with its whole amount.
-- Bookings (`StockRepository.purchase/consume/open/transfer/inventory`, Grocy's endpoints,
-  amounts and prices sent in the stock unit) show Grocy's message with "Undo" (undoes the
-  transaction) and its warnings (due earlier than the stock, frozen, thawed, should not be
-  frozen, moved on opening); userfields of `stock` are saved under the transaction like
-  Grocy's pages (the server moves them to the new entries), the used barcode gets the typed
-  price as last price. The form resets like Grocy's page (each keeps what Grocy keeps).
-- Grocy's scan mode (user settings `scan_mode_purchase_enabled`/`_consume_enabled`, a switch
-  on the page): a scanned product is booked with one unit (a barcode's amount stays) once every
-  field is filled, the scanner stays open; otherwise Grocy's message.
-- From a shopping list item (`PurchaseRoute(productId, amount, quId, shoppingListItemId)`) the
-  purchase opens with the item's amount in its unit, books itself with
-  `shopping_list_to_stock_workflow_auto_submit_when_prefilled` when complete, removes the item
-  (`ShoppingListRepository.deleteItem`) and goes back.
+Read the matching file before working on one of these areas; CLAUDE.md keeps only what most
+tasks need.
 
-Shopping list (`shoppinglist/` of `feature:masterdata`, `ShoppingListRepository` of `core:data`):
-- `ShoppingListRoute(listId)` is the list pane of a list-detail scene of its own (scene key
-  "shoppinglist"), the item form `ShoppingListItemRoute(id, listId, productId)` and the list form
-  `ShoppingListFormRoute(id)` its details (`DetailRoute`s, also on their own as quick add); both
-  forms close after creating (`ObjectFormViewModel.closesWhenCreated`), a new item without list
-  goes to Grocy's first list by name, a list created in its form becomes the shown one
-  (`ShoppingListRepository.selectedListId`, kept for the process).
-- Rows: a checkbox checks off (done items struck through), a tap opens the item form, swipe
-  towards the end checks off, towards the start "Add this item to stock"; the menu has Product
-  overview, done/edit, add to stock and delete (no question, like Grocy). The amount chip is
-  blue below the min. stock amount. Chips: the list ("Name (count)"), status with counts, group
-  by (none, product group, default store) and the shown fields (amount, product group, last
-  price per unit and total, default store, barcodes, the userfields Grocy shows as columns),
-  kept in `SettingsStore` (`ShoppingListOptions`, `ShoppingListOptionsRepository`). The total
-  value counts only the shown list; "Ungrouped" and "Not set" groups come last.
-- The overflow menu has Grocy's list actions (new, edit, delete list, notes edited as plain text
-  in a dialog), clear list (asks) and clear done items, the stock actions (add products below
-  min. stock amount, overdue/expired ones, "Add all list items to stock") and Print (only
-  Grocy's thermal printer, `ServerConfig.thermalPrinter`). Left out on purpose: the month
-  calendar, browser printing, collapsing groups, sorting by other columns than the name, and
-  "create or assign product" for unknown barcodes (a scan only picks known products).
-- "Add this item to stock" opens `PurchaseRoute(productId, amount, quId, shoppingListItemId)`,
-  whose booking removes the item (`ShoppingListRepository.deleteItem`); "Add all list items to
-  stock" opens one purchase after the other: when the list shows again, a removed item opens the
-  next one, an item still there asks Grocy's "Adding shopping list item %s of %s" with Skip or
-  Cancel.
-- Checking off works offline (product requirement): `setDone` writes the local `done` and a
-  queued entry (`pending_shopping_list_done`, the item id as key) in one transaction and sends
-  it in the app scope; the replay PUTs only `{"done":0|1}`, drops the entry on a 4xx (the item is
-  gone or refused, it is never recreated), keeps it on a 5xx or offline, and removes it only
-  while its value is unchanged. Downloads put queued check offs on top of the server's state. The
-  queue is sent on the next check off, on refresh and at app start (`AppGraph` init); there is no
-  connectivity listener. The list's subtitle tells how many are not sent yet.
-- "Add to shopping list" and the item form share their fields (`ShoppingListItemInputs`,
-  `ShoppingListItemFields`); `ShoppingListRepository.addProduct` keeps Grocy's merge of
-  add-product.
-
-Stock overview (`stockoverview/` of `feature:masterdata`, it opens the product overview):
-- `StockOverviewScreen` is Grocy's stock overview page: the active products not hidden there
-  that are in stock or below their min. stock amount (every active one with the user setting
-  `stock_overview_show_all_out_of_stock_products`). Grocy computes the page in the view
-  `uihelper_stock_current_overview`, which the API does not expose, so
-  `StockRepository.refreshOverview` downloads its parts as the server computed them: `/stock`
-  (amounts, opened amounts, value, next due date; `StockAmount`), the missing products of
-  `/stock/volatile`, `products_last_purchased`, `products_average_price`,
-  `stock_current_locations` and the products on shopping lists (`product_stock_info` and
-  `stock_locations`, database version 6); the pure `buildStockOverview` only joins, filters,
-  sorts and groups them, like Grocy's page does in its template and JS (due status from the
-  date: `dueStatusOf` of `core:model`, unknown due dates sort as Grocy's 2888-12-31, never
-  overdue last).
-- Below the title (`SegmentedListScreen(subtitle)`, onSurfaceVariant) Grocy's "%s Products,
-  %s total value". The filter chips: status first (with the number of products of each in its
-  menu instead of Grocy's colored messages; "All", then a group with "not fresh" (due soon,
-  overdue or expired, not in Grocy), due soon, overdue, expired, then below min. stock amount,
-  in stock and opened (not in Grocy); `DropdownFilterChip(optionGroups, selectedLabel)`), then
-  location and product group, then Grocy's table options: sort (the name and the shown fields
-  but the picture), group by (Grocy's groupable columns; groups as group titles, rows without a
-  value last as "Not set") and the shown fields (`MultiSelectChip`, never selected: it chooses
-  the look, it filters nothing; only fields of features the server has, `availableFields`). Fields, grouping and sort are kept like Grocy keeps its table
-  options (`StockOverviewOptions` of `core:model` in `SettingsStore`, read at app start by
-  `StockOverviewOptionsRepository`); hiding the field the list is sorted by sorts it by Grocy's
-  default again (next due date, the name while that is hidden). Search like the products.
-- Each product is a segmented item: the name as title (Grocy's cart icon at 18.dp in the
-  harmonized blue after it while on a shopping list, centered on the title, read as text like
-  the chips: a description would replace the item's name for screen readers), the shown fields
-  as chips that wrap below it
-  (`FieldChips`: surfaceContainer, no outline or elevation; the amount blue below the min. stock
-  amount, the amount with sub products with the "functions" icon as Grocy's sigma, the next due
-  date relative and capitalized as a label of its own (`formatRelativeTimeLabel`: "Tomorrow",
-  "Morgen"; ICU and Intl write the middle of a sentence), yellow when due soon and red when
-  overdue or expired: `rememberStatusColors` of
-  `core:design`, Material's custom color roles of fixed hues harmonized with primary), the
-  description as text, the picture as thumbnail. A tap opens the product overview. Grocy's
-  buttons in front of a row are swipe actions (`SwipeActionBox` of `core:design`, like Gmail's: a
-  rounded primary surface opens from the screen's edge and uncovers the icon, which rests 16.dp
-  from that edge until the surface's middle reaches it and stays in the middle then; passing the
-  threshold ticks; letting go beyond it runs the action and the item springs back instead of
-  being swiped away, so no extra tap): towards the end "Consume" (the quick consume amount),
-  towards the start "Mark as opened" (the quick open amount, tertiary instead of primary, so
-  both sides differ: `SwipeAction(containerColor, contentColor)`); both are also the item's
-  accessibility actions and the first menu group (with "Consume all" and "Consume as spoiled"),
-  then "Add to shopping list" and "Search for recipes", then "Edit product"; actions that are
-  not possible are disabled (`AppBarMenuItem(enabled)`), like Grocy's buttons.
-- The bookings work like Grocy's row buttons (`StockRepository.consumeProduct`/`openProduct`:
-  `allow_subproduct_substitution`, amounts in the stock unit, "Consume all" the own amount, a
-  parent without own stock its sub products, the tare weight with tare weight handling), online
-  only; Grocy's message with "Undo" undoes the whole transaction (`undoTransaction`), and the
-  overview is downloaded again afterwards. A failed download after a booking never reports the
-  booking as failed (it would invite booking twice), the next refresh gets it.
-- The floating toolbar: Journal, Stock entries, Reports (with location or price tracking) and
-  Search, scanning as its FAB. Reports, scanning and recipes do nothing yet, their pages do not
-  exist.
-
-Master data (`feature:masterdata`), built after Grocy's web frontend:
-- `MasterDataScreen` (beside the start screen without back button and app menu, the start
-  screen's bar has it) lists the categories of Grocy's "Manage master data" menu in its order and
-  hides the ones whose feature flag is off (`MasterDataCategory.isAvailable`), from the eager
-  `ServerRepository.serverConfig` (`MasterDataDependencies.serverConfig`), so they show in the
-  first frame: on the web a refresh's write transaction keeps the single database connection
-  busy for seconds while animations run, and reads wait behind it; every category shows its
-  number of objects (`MasterDataCategory.count`, disabled ones included) once it is known (stored
-  objects or a finished download), without holding back the categories.
-- Lists and their forms are list-detail scenes of Navigation 3 (`listPaneMetadata` /
-  `detailPaneMetadata` of `core:navigation`, Material's `ListDetailSceneStrategy` in
-  `GrocyNavDisplay`): from Material's expanded window width on (840.dp, the default pane
-  directive) the form opens beside its list, before a choice `DetailPlaceholder` (`core:design`)
-  fills the detail pane with `objects_select_hint` (icon and text directly on the pane's
-  `surfaceContainer`, no card); narrower windows show list and form one after
-  the other. Both panes start half and half with Material's `VerticalDragHandle` between them
-  (`PaneAnchors` 1/2, 1/3, 2/3: drag, the screen reader's action or the arrow keys, a tick per
-  snap; `PaneBackgroundScene` measures the scene at least 48.dp wide, Material's scaffold throws
-  when it clamps the handle into a window narrower than its margins, e.g. the one pixel window
-  of headless browsers' screenshots); the pane expansion overrides the hinge avoidance, the middle lies on a book posture's
-  fold anyway. The scene never moves the focus into its destination pane
-  (`withoutAutoFocus`): browsers let items take the focus without keyboard, so after a reload
-  the first item of the list showed the focus state layer (grey) until the first click. Both panes are `SegmentedListScreen(pane = ScreenPane.List / Detail)`: on a
-  `surfaceContainerHighest` background like the scrolled app bars (`PaneBackgroundDecorator`, a
-  `SceneDecoratorStrategy` of `GrocyNavDisplay` for two-pane scenes of lists, so it also fills
-  the space between the panes) with 16.dp margin at the screen's start, end and bottom edges,
-  each with a small app bar in its scrolled color (buttons included) on that background, and
-  below it a `surfaceContainer` surface with
-  `extraLargeIncreased` corners that holds the list, the background of single screens, so the
-  content looks the same in every window size (`paneMargin`, `paneSurface`;
-  `DetailPlaceholder` draws the same surface below the bar's height). Beside its list a form has no back button (the list's leaves both). Forms are `DetailRoute`s opened with `Navigator.openDetail` (replaces the form beside
-  the list, and the details opened from it), lists leave with `goBack(from = route)`. A detail
-  opened from a detail (`navigate`, e.g. the stock settings from Grocy's settings) takes its
-  place beside the list and back returns to it (`NestedDetailSceneStrategy`: Material's scene
-  goes back until its panes change, which left the list); Material's other option, an extra
-  pane that pushes the list out, is for supplementary content of a detail, not for pages. A form with unsaved changes asks
-  (`UnsavedChangesDialog`) also when another item of the list beside it is chosen or the list is
-  left: `rememberLeaveGuard(route)` + `LeaveGuard.onLeaveRequest`. Beside a form
-  (`showsDetailBesideList`) list items are single choice items marking the shown object
-  (`ListDetailItem`), otherwise plain clickable items (no radio semantics in one pane).
-- Overflow menus act on objects like Grocy's buttons and table menus (`ObjectActionsViewModel`,
-  one per list and per form, `objectActionsOf`): every object can be deleted (Grocy's question,
-  with its warning for products), products copied (`stock/products/{id}/copy`, the copy opens)
-  and merged, chores merged (Grocy's merge dialog, the object preset as the one to keep, a
-  refresh afterwards). Every list item has the narrow three dots button (`ListItemOverflowMenu`
-  of `core:design`), products with "Product overview" as first group; forms put the actions as a
-  group before Help and Send feedback (`SegmentedListScreen(actionMenuItems)`, the app menu
-  without Settings and About: `rememberAppMenu()` without both). A deleted or merged away object
-  closes its form. Forms get menu, leave guard, back and actions as one `FormFrame`.
-- Date fields (date and datetime userfields, a chore's start date) have a calendar button
-  (`DatePickerButton`): Material's date picker, for date and time then its time picker (dial or
-  text input); the pure `withPickedDate`/`withPickedTime` write Grocy's format, typing still
-  works. Material's time picker dialog fills the window's height beside its dial (landscape
-  layout, e.g. desktop browsers), so it is capped at the specified 384.dp. The product's due
-  days fields have one too (`DueDaysPickerButton`): a date from today
-  on becomes the days until it (`dueDaysUntil`), e.g. the date printed on the first purchase.
-- Number fields are Grocy's number pickers: minus and plus after the field in the same item
-  (`NumberStepperField` of `core:design`, narrow filled `secondaryContainer` icon buttons in a
-  standard `ButtonGroup`, `TextItem(stepper)`; 12.dp between the buttons, to the field and, the
-  row reaching 4.dp into the item's end padding, to the item's end (see "Button groups"); the
-  buttons are centered on the field, which
-  grows with a wrapped label, so its error shows below the whole row through
-  `NumberStepperField(error)` instead of the field's supporting text), stepping by one within Grocy's range (`NumberStepper`,
-  `NumberStepper.Positive` for amounts above zero; the pure `steppedDecimal` of `core:model`
-  keeps the typed decimals and separator, an empty field becomes 1 or 0 like Grocy's).
-- The other categories share one list (`objects/`): `ObjectListKind` describes each like its
-  Grocy table (columns in Grocy's order to sort by, first column as default sort, e.g. Entity for
-  userfields, "Show disabled" where objects can be disabled, the entity of "Configure
-  userfields"), `ObjectListViewModel` turns the database into `ObjectRow`s (shown texts and
-  numeric sort values per `ObjectColumn`, enum labels through `ListTexts`, product count of
-  groups, charge cycle of batteries) and the pure `buildObjectList` filters, sorts (empty values
-  last, ties by name) and searches every column. Userfields filter by entity (Grocy's entity list:
-  OpenAPI's exposed entities, `userentity-<name>`, users; `UserfieldsRoute(entity)` from every
-  "Configure userfields"), userentities link to their fields (narrow icon button and the item's
-  menu as a standard `ButtonGroup`, 12.dp apart, see "Button groups"). The filter chips
-  (`FilterChipRow`, `DropdownFilterChip`, `ShowDisabledChip`, `SortChip`, `ClearFilterChip`;
-  their menus scroll their groups together and leave room for the groups' shadows inside the
-  scrolling, which clips at its bounds; each group draws its container and shadow only for its
-  visible part, so the menu keeps its outer shape and shadow while only the items scroll, a cut
-  off group ends at the edge with the menu's outer corners: `ScrollingMenuGroup`), the search
-  item and the empty states (`ListParts.kt`)
-  are shared with the product list; a list without search (stock entries) keeps the same gap
-  below the chips (`filterGapItem`).
-- Forms of the other categories build on `ObjectFormViewModel` (load, refresh for unknown ids,
-  validation, unsaved changes, userfields of `userfieldEntity`, `ObjectFormEvent`s) and
-  `ObjectFormScreen` (save FAB, Scroll to top, userfield group, leave guard). Fields and rules
-  follow Grocy's forms, each with pure `XxxValues.validate` and conversion tested:
-  `SimpleObjectViewModel` for locations (freezer only with freezing), stores, quantity units
-  (plural forms only for languages with more than two, `grocyPluralFormCount` of the app
-  language; default conversions as placeholder), product groups, batteries and task categories;
-  `ChoreViewModel` (Grocy's first period and assignment type for new chores, start now, hidden
-  period fields set like Grocy's JS, assignment only with `choresAssignments`, consumed product
-  with stock; saving lets Grocy calculate the next assignment), `UserfieldViewModel` (entity and
-  type start empty, options for preset types, "Now / today" for dates) and
-  `UserentityViewModel`. Saved objects close the form, created ones become their edit form.
-- List pictures are stored for offline use: `MasterDataRepository.productThumbnail` keeps them
-  in `product_thumbnails` (Grocy gives every new picture a new file name, so they never get
-  outdated), the product list downloads the missing ones after each refresh
-  (`downloadMissingThumbnails`), and a refresh deletes those no product shows anymore.
-- Every screen except About and the settings has the app menu in its overflow menu: Settings
-  (not on the start screen, which lists them), About, Help and Send feedback (`rememberAppMenu` + `AppMenuDialogs` of `core:ui`, the items go
-  to `SegmentedListScreen(menuItems)`, which puts "Reload" as a group of its own before them).
-  The feedback dialog reads the unlock state from `LocalUnlockState`, provided by `GrocyApp`.
-  Ripples of grouped menus follow the group's corners through
-  `menuItemShape(index, count, groupIndex, groupCount)`.
-- Every list screen (start, master data, products) has pull to refresh through
-  `SegmentedListScreen(isRefreshing, onRefresh)`: Material's own
-  `PullToRefreshDefaults.LoadingIndicator`, sliding out from below the app bar, and "Reload" in
-  the app bar's overflow menu (`AppBarOverflowMenu`, narrow three dots button) for keyboards and
-  screen readers. With a mouse or trackpad (`LocalPointerKind`, below) pulling is off (a wheel
-  only showed the indicator without refreshing) and "Reload" is a round icon button of the bar
-  instead (only the three dots are narrow). These screens use the small centered app bar with `pinnedScrollBehavior` (no
-  collapsing, which would fight with pulling), always in its scrolled color
-  (`surfaceContainerHighest`), so the indicator visibly comes from below it; the others keep
-  the large one, except while a mouse is used: its wheel has no gesture end the large bar could
-  settle on, so every screen gets the small centered bar then, changing only its color.
-  Menus opened from list items get `LocalMinimumInteractiveComponentSize` back to 48dp
-  (`MenuTouchTarget`): a list item's trailing slot lowers it by its padding and the popup
-  inherits it, so the items were 44dp with tighter padding than the app bar's menus.
-  Single items of a menu group use `menuItemShape(0, 1)`: Material's standalone item shape has
-  the small corners of middle items, so its ripple would not fill the rounded group. ViewModels run downloads through
-  `RefreshController` (`core:data`: one at a time, offline/failed errors, `loadedOnce`);
-  `RefreshErrorEffect` (`core:ui`) shows a failed download as snackbar.
-- `ProductsScreen`: one segmented item per product (`itemSpacing = SegmentedGap`, a product with
-  picture shows it at the item's end before the overflow menu button, `ProductThumbnail`, 56.dp with small corners, without
-  `LeadingTrailingContentWrapper`, whose padding only icons and switches need), first the
-  filter row directly on the background
-  (`edgeToEdgeItem` + `EdgeToEdgeRow` of `InsetLazyColumn`: centered on the screen while all
-  chips fit between its 16.dp margins, otherwise lined up with the items and scrolling sideways
-  up to the screen's edges, the padding scrolls along) and, while open, the search as its own
-  segmented item below it (full width, opens with Material's spatial spring from its top edge,
-  so it can be focused, keyboard included, right away without scrolling the list; closing
-  clears the focus at its start; `showSearchAtTop` opens it only once the list scrolled to the
-  top: opened while scrolling, the field took the focus when the list passed it and bringing it
-  into view stopped the scrolling short of the top).
-  `ProductFilterBar` has outlined Material 3 chips with a `surfaceContainerLow` container (they
-  lie on the background) and no elevation in any state, one per filter: product group and status
-  as dropdown filter chips that are selected and show the value while not "All", "Show
-  disabled" as toggle chip, a sort chip, and "Clear filter" as assist chip with a reset icon
-  at its start while a filter (not the search) is active; chips use the standard overloads with Material's 8.dp rounded rectangle, not the
-  morphing `shapes` overloads whose tokens are full round). Every chip, also the choices of
-  forms (weekdays, checklist userfields), has no elevation in any state
-  (`filterChipElevation`): the web draws the hover elevation of an outlined chip as a dark
-  frame. Back closes an open search first
-  (`NavigationBackHandler`, also the browser's back) and stays on the list
-  and a floating toolbar (Add as FAB, Configure userfields (the product userfields), Presets for
-  new products, Scroll to
-  top, Search last). Filtering, sorting and the fuzzy search are the pure `buildProductList`:
-  in stock means `amount_aggregated > 0` of an active product, like Grocy's `stock_current`.
-- `ProductOverviewDialog` (`overview/`) is Grocy's "Product overview" card, opened from the
-  first group of each active product item's overflow menu (Grocy computes no overview for
-  disabled products). The title is "Product overview"; on top of the scrolling
-  content the card header's buttons as an expressive `ButtonGroup` (`animatedItem`, 12.dp
-  apart, it always fits): Edit product and Add to shopping list (only with the shopping list
-  feature) as wide filled (primary) icon buttons, then the narrow tonal menu button
-  (`TonalOverflowMenu`, `secondaryContainer`) with Stock entries, Stock journal and Stock
-  journal summary, then Grocy's Purchase, Consume, Transfer (with location tracking) and
-  Inventory for the product, then "Download Product Grocycode" and "Print Product Grocycode on label
-  printer" (only when the server runs the webhook; `OverviewActions`, the host prints through
-  the screen's `LabelPrintViewModel`). Then every
-  value of the card in its order, all as items with the label as text and the value as
-  supporting text, the product name first in the stock group (with the loading indicator of a
-  download over stored values), hidden like in Grocy by feature flag (prices: stock value, last/average price and
-  price history; location: default location; best before dates: average shelf life),
-  description (three lines, "Show more"), picture (1200 px, offline the stored list picture)
-  and the price history. `ProductOverviewViewModel` is one per product list (`show`/`hide`, kept
-  across rotations), every opening downloads `/stock/products/{id}` plus its price history
-  (`MasterDataRepository.refreshProductOverview`, stored as JSON in `product_overviews`, so the
-  last overview shows offline). The pure `buildProductOverview` resolves units (prices per price
-  unit, per stock unit too when they differ), stores and the chart series.
-- `PriceHistoryChart`: Canvas line chart after the dataviz rules: one 2.dp line per store with
-  surface-ringed points, Grocy's dotted least squares trend, y axis from zero in round steps
-  (`priceAxis`), first and last date below, legend from two series or with a trend. Colors come
-  from `rememberChartColors` (`core:design`): a validated categorical palette in fixed order
-  with light and dark steps (the tests check it with the dataviz validator, `PaletteValidator`),
-  starting at its color closest to primary (the order stays), every color harmonized with
-  MaterialKolor's `harmonize` like the status colors and Material's custom colors. A search for
-  the strongest harmonization that kept the validator's color blind checks ended without any
-  for most themes, so the colors stayed unharmonized; harmonized hues can come close for color
-  blind users instead, so every series also has its own point shape (`ChartMarker`: circle,
-  square, diamond, triangle; neighbours never share one), in the legend too. Every other color
-  outside the color scheme must be
-  harmonized with primary as well (codes such as the grocycode stay black on white); stores
-  keep their color by id,
-  stores beyond eight are drawn together as "Other stores". Tap, sideways drag, mouse hover and
-  the arrow keys select a price (date, store, price as tooltip); screen readers get all prices.
-- Related objects of forms (`barcode/`, `conversion/`, `related/`): Grocy's popup forms are
-  `FormDialog`s (Save with loading indicator, Cancel, the server's error above the groups),
-  their state lives in a ViewModel (`ProductBarcodesViewModel`, `ConversionsViewModel`, shown
-  object set by `showProduct`/`showOwner`, so a just created product gets them), saving
-  online only (`changeErrorOf`). The product form shows after its userfields Grocy's right
-  column: barcodes (amount in the units the purchase unit converts into, `productAmountUnits`
-  from `quantity_unit_conversions_resolved`, "This equals" below), the grocycode, the product's
-  conversion overrides with "Show resolved conversions" (`ResolvedConversionsDialog`), the
-  picture; a quantity unit's form its default conversions (`from` fixed). Items edit on a tap
-  and delete through their menu (`ObjectActionsViewModel` of `product_barcodes` /
-  `quantity_unit_conversions`, Grocy's questions); a saved or deleted conversion downloads the
-  resolved ones again.
-- Grocycodes (`GrocycodeItem`): `grcy:p:<id>` (`:<stock_id>` for stock entries) written by
-  `core:scanner`'s own `DataMatrixWriter` (ECC 200, square up to 48x48) or `Code128Writer` for
-  Grocy's `GROCYCODE_TYPE` 1D (`ServerConfig.grocycode2D`), drawn black on white; "Download"
-  saves `Grocycode.png` (`PngWriter`, stored deflate blocks) through `rememberFileSaver` of
-  `core:ui` ("Save as" on Android, a download in browsers). "Print on label printer" calls
-  Grocy's `printlabel` and shows only when the server runs the webhook itself
-  (`labelPrinterRunsOnServer`), the app never stores webhook addresses.
-- Stock pages (`stock/`, `journal/`, routes `StockEntriesRoute`, `StockJournalRoute`,
-  `StockJournalSummaryRoute` of `feature:masterdata:api`, from the product form's toolbar and
-  the product overview's buttons; they live here because they open the product overview too).
-  `StockRepository` (`core:data`) stores the entries (`stock_entries`, with the amounts) and
-  the journal (`stock_log`, a download of a date range replaces the bookings of that range) for
-  offline use; bookings (consume, consume as spoiled, open, edit, undo) are online only and
-  download the entries again. Entries show Grocy's columns and due highlighting
-  (`dueStatusOf`: overdue/expired by due type, due soon by `stock_due_soon_days`), price per
-  price unit; their menu holds Grocy's other actions in its groups. Booking messages offer
-  "Undo" in the snackbar. The journal filters by product, type, location, user and Grocy's
-  date ranges (`journalSince`, SQLite month arithmetic), searches, undoes; the summary sums
-  every booking not undone per product, type and user (Grocy's view is not exposed).
-- "Add to shopping list" (`AddToShoppingListViewModel`/`AddToShoppingListHost`, from the
-  overview and the stock pages): Grocy's form with `updateexistingproduct`, the amount in the
-  product's units sent in the stock unit (`stock/shoppinglist/add-product`), the item's
-  userfields saved afterwards on the item found by product and list (Grocy forgets them).
-- Units are named like Grocy's `__n` for quantity units: `QuantityUnit.nameFor(amount,
-  language)` with the plural rules of Grocy's translations (`grocyPluralIndex`) and the unit's
-  `plural_forms` lines.
-- `ProductScreen` edits or creates (`ProductRoute(productId = null)`) a product with every field
-  of Grocy's form, in its order, grouped, fields of disabled features hidden
-  (`ProductFormFeatures`). The logic is pure and tested: `ProductFormValues.validate` (Grocy's
-  required fields and number ranges), `toProduct` (hidden fields keep their values, an
-  unchanged description keeps its HTML), `newProductValues` (presets), `linkedQuantityUnit`
-  (the other units follow the stock unit). Saving is online only: an edited product closes the
-  form like "Save & return", a created one turns the form into its edit form. Userfields are
-  edited by type (`UserfieldInput`, only changed ones are sent; files and images read only),
-  the picture through `ProductPictureDialog` (`rememberImagePicker` of `core:ui`; its item
-  shows the picture the product will have before its arrow, the stored list picture or the
-  picked one, `ProductViewModel.thumbnail`, and "No picture available" without one), the parent
-  product can also be scanned (barcode or grocycode `grcy:p:<id>`): the scanner opens inside the
-  field's item below it (`DropdownItem(below)`, small corners, text field color). Pickers whose
-  text names no option (`ProductFormState.unmatchedChoices`, `UserfieldInput.isUnmatched`) block
-  saving. Leaving with unsaved changes (`ProductViewModel.hasUnsavedChanges`: form values,
-  userfields, picture or unmatched text differ from the loaded or last saved state; back button,
-  back gesture and browser back) asks in `UnsavedChangesDialog` (saveable, survives rotation):
-  save (and leave once saved), discard, or cancel.
-
-Settings plan: the overview lists the categories General (language, theme, contrast), Server
-(server URL, Grocy version, reload configuration, logout), Grocy settings (loaded from the
-server, Grocy's "Settings" menu), Network (loading timeout, Tor with Orbot, HTTP proxy), Behavior
-(navigation, date and keyboard settings, Open Food Facts / Open Beauty Facts), Scanner (engine,
-front camera, 2D formats, barcode formats, external scanners) and Notifications (stock, chores)
-as one group (`SettingsCategory`), then "Backup and restore" and "Reset all" as a second group.
-Built so far: the overview, General (language, theme, contrast), Server, Grocy settings
-(`GrocySettingsRoute`, the wrench icon of Grocy's menu: a note that Grocy keeps them for the user
-on the server, then the pages of Grocy's settings menu with settings of the user in its order:
-stock settings (always, like Grocy), shopping list, recipes, chores, tasks and batteries
-settings (hidden like Grocy's entries by feature flag), then Grocy's "User settings" as a group
-of its own) and the stock settings (`StockSettingsRoute`, also
-opened by "Presets for new products": in wide windows the products open the categories, Grocy's
-settings and the stock settings at once (`Navigator.navigateAll`), so they look like reached
-through the settings, and back (`StockSettingsRoute.backLeavesSettings`, a
-`detailPaneMetadata(backLeavesScene)` that `NestedDetailSceneStrategy` lets leave the whole
-scene, and the page's back button) returns to the products in one step). The other category pages, backup and reset follow;
-`settingsEntries` wires their clicks to nothing until then.
-- Wide windows show the categories as list-detail scene like the master data: the detail pane
-  says to choose a category (`settings_select_hint`) until a page is open; the pages are
-  `DetailRoute`s opened with `openDetail`, the categories then single choice items marking the
-  shown page (`settingsCategoryOf`). A page beside them has neither back button nor menu (the
-  categories' bar has both). A page opened from a page (`StockSettingsRoute(inSettings =
-  true)`) takes its place beside the categories with a back button to it; opened from the
-  products (`inSettings = false`) it is a screen of its own.
-- Stock settings (`stock/`): every setting of Grocy's stock settings page in its groups, hidden
-  by feature flag; each change is saved at once (`MasterDataRepository.saveUserSetting`,
-  `UserSettingValue`), typed numbers once typing pauses and only when valid (Grocy's ranges,
-  `StockNumberSetting`); a failed save returns to the stored value with a message
-  (`UserSettingSaver`, `UserSettingEventEffect`, shared by every page of Grocy's settings).
-- The other pages (`grocy/`, `GrocySettingsPageRoute(GrocySettingsPage)`): one generic page
-  described as data (`GrocySettingsPage.groups`: Grocy's headings, checkboxes as switches with
-  Grocy's help texts, "Due soon days" from 0 as number picker with its help below the buttons,
-  the shopping list for products below their min. stock amount only with several lists and
-  enabled like Grocy's choice), saved like the stock settings.
-- Grocy's "User settings" (`user/`, `UserSettingsRoute`): the user's language in Grocy
-  (`locale`, Grocy's codes such as "pt_BR" of its `localization` folders, `GrocyLanguages`,
-  empty for its default, the browser's language), chosen in the language dialog of General
-  (`GrocyLanguageDialog`, names in their language); disabled on demos, which always show the
-  language of their address.
-
-- Server (`ServerSettingsScreen`): on the demo server first a group of its own with one
-  non-clickable item in `errorContainer`/`onErrorContainer` (warning icon, "Public demo server",
-  supporting text that everything entered is public until the demo resets its changes once a
-  day); then server
-  URL and Grocy version, then "Reload configuration" and "Logout". On a demo the URL opens
-  `DemoServerDialog`: all of Grocy's demos (`DemoServers` of `core:model`, the language menu the
-  demos show themselves, e.g. `https://de.demo.grocy.info`; `demoServerFor` maps app tags such as
-  "nb" and "iw"), named like the language dialog. `DemoServerSwitcher` checks the chosen demo
-  (`AuthRepository.verify`, a demo that is down never replaces a working one), logs in to it
-  (clears the data) and downloads its configuration. The version checks Grocy's newest GitHub
-  release (`ServerRepository.checkGrocyVersion`: the server's version downloaded anew, the
-  stored one offline, compared with `releases/latest` of `grocy/grocy`): up to date or a newer
-  version with a link to its release as `TextDialog`, a failed check as snackbar. `ServerRepository` (`core:data`, eager `StateFlow` in the app scope) combines the
-  stored connection with the stored `SystemInfo` (`server_values` key `system_info`, written by
-  every `MasterDataRepository.refresh`); opening the screen downloads the version again quietly
-  (an update of the server changes it). Reloading downloads version, `/system/config` and user
-  settings (`MasterDataRepository.reloadConfiguration`) and then asks whether to restart now
-  (`PlatformDependencies.restartApp`: a new process on Android, a page reload on the web, which
-  keeps the back stack); failures show as snackbar. Logout asks first (logging in again needs
-  address and API key) and goes through `AuthRepository.logout`; the screen keeps showing the
-  server while it slides out.
-
-- Every settings screen uses `SettingsScaffold` (`feature:settings:impl`): `SegmentedListScreen`
-  with back button and the same overflow menu (About, Help, Send feedback, Show logcat / Show
-  log) plus its dialogs. The menu item shapes (`itemShape(i, 4)` in the first group,
-  `itemShape(1, 2)` for the single log item) look wrong but are the only way the ripples of the
-  expressive menu groups come out right; keep them.
-- The log item opens `LogRoute`, named by `LogReader.source`, with reload and copy. Android
-  ("Logcat"): `LogcatReader` reads the newest 300 error lines of the app's own process
-  (`logcat *:E -t 300`). Web ("Log"): browsers do not let a page read its console, so
-  `BrowserErrorLog` (`core:data`, installed by `WebPlatformDependencies` at start) records
-  `console.error`, uncaught errors and unhandled rejections, logcat-like
-  (`MM-dd HH:mm:ss.SSS E ...`), the newest 300 lines in `sessionStorage` (survives a reload, not
-  closing the tab or app). `redactSecrets` removes API keys (the web sends them in the URL),
-  access tokens, Bearer tokens and ingress sessions before anything is stored.
-- Appearance (`AppearanceSettings`: theme, static/dynamic color, hue, palette style, contrast)
-  lives in `SettingsStore` (DataStore keys `theme`, `color`, `hue`, `style`, `contrast`;
-  `grocy.theme` etc. on the web), read once at app start by `AppearanceRepository` (eager `StateFlow` in the app scope of
-  `AppGraph`), which `GrocyApp` passes to `GrocyTheme(appearance)` and the General screen shows;
-  nothing is drawn until it is read, so no default flashes up. Dynamic color shows only where
-  `isDynamicColorAvailable` (Android 12+); its contrast follows the system from Android 14 on
-  (`dynamicColorFollowsSystemContrast`), so the contrast buttons are disabled with dynamic
-  color. `HueSlider` (`core:design`) is the rainbow slider, colored with the same chroma and
-  tone as the theme's seed; it vibrates exactly once per step (`SliderStepTracker`: drags
-  report a step on every move) and ignores the stored hue while it is dragged or pressed (the
-  value arrives late and would move the thumb back, which ticked twice). Below it a button group chooses MaterialKolor's `PaletteStyle`
-  (`AppPaletteStyle`: tonal spot, neutral, vibrant, rainbow, monochrome; the ones that do not
-  fit go into its overflow menu; stored styles that were removed fall back to tonal spot). Changing light/dark, color source, style or contrast fades the whole
-  app into the new colors (`animateColorScheme`: one animation blends every color of the
-  scheme); hue changes apply at once, so dragging the slider never piles up animations.
-- Language (`AppLanguageStore`, null = system language). The translations are the tags in
-  `AppLanguages` (core:model, English first as the base in `values/`); `locales_config.xml` of
-  apps:shared lists the same and the Android build reads its `localeFilters` from it;
-  `LocalesConfigTest` checks the lists, that every language has its `values-<tag>/strings.xml`
-  and that translations keep the placeholders of English. The dialog shows only the names, from
-  the platform in the language itself (`languageName`: `Locale.getDisplayName` /
-  `Intl.DisplayNames`), sorted by the collation of the app language
-  (`languageNameComparator`: `Collator` / `localeCompare`, so "Čeština" follows "Català"); it
-  opens scrolled to the chosen language, `DemoServerDialog` to the current demo; a regional system language resolves to its base translation
-  (`resolveAppLanguage`, "de-CH" uses "de"). Choosing a language in the app while logged in to
-  a demo first asks whether to switch to the demo in that language too (only if one exists and
-  it is not the current demo; "System default" means the language the app will show, from
-  `systemLanguageTag`: Android's system resources, on the web the browser language that
-  `index.html` keeps in `window.grocySystemLanguage` before overriding it). The question comes
-  before the language is applied, which restarts the screen; switching applies the language
-  only once the demo answered, "Keep current" or dismissing applies it right away. Changes from
-  Android's per-app language settings never ask. Compose Multiplatform takes the text language from
-  `Locale.getDefault()` on Android, so `AndroidAppLanguageStore` works like Tack: from Android 13
-  on `LocaleManager` (system settings show it, the system recreates the activity); before, the
-  tag is stored in a plain preference, `MainActivity.attachBaseContext` wraps the context and
-  sets `Locale.setDefault`, and a change recreates the activity. No AppCompat. Compose reads the
-  text language once, so the web keeps it in `localStorage` (`grocy.language`), `index.html`
-  overrides `navigator.language(s)` with it before the app starts, and a change reloads the
-  page (the `languagechange` event alone does not update Compose's texts).
-- Android only lists the app in the system's per-app language settings when the app manifests
-  (`android-foss`, `android-play`) declare `android:localeConfig`: the manifest merger rejects
-  the attribute from libraries such as `apps:shared`. `LocalesConfigTest` checks both manifests.
+- `docs/features/start-screen.md`: the start screen and the full list of what is built.
+- `docs/features/stock-bookings.md`: Purchase, Consume, Transfer, Inventory (`booking/`).
+- `docs/features/shopping-list.md`: the shopping list and its offline check offs.
+- `docs/features/stock-overview.md`: Grocy's stock overview page.
+- `docs/features/master-data.md`: master data lists and forms, list-detail scenes, menus, pull to
+  refresh, products, product overview, price chart, barcodes, grocycodes, stock pages.
+- `docs/features/settings.md`: settings categories, Grocy settings, server, appearance, language.
+- `docs/architecture/web-navigation.md`: browser history, entry decorators, navigationevent.
+- `docs/architecture/network.md`: API key placement, Home Assistant ingress.
+- `docs/architecture/database.md`: schema history, the web worker database.
+- `docs/architecture/updates.md`: update checks per platform, the web service worker.
+- `docs/architecture/scanner.md`: barcode scanner engines, camera and permissions.
+- `docs/ui.md`: logo, scrollbars, button groups, tooltips, pointer kind, web status bar, keyboard.
 
 ## Product requirements (binding)
 
@@ -815,37 +300,12 @@ both modules to `apps/shared/build.gradle.kts`, and add the new routes to `allRo
 - Every route must be registered in the feature's `SerializersModule` under
   `polymorphic(NavKey::class)`. Wasm has no reflection, so a missing registration breaks state
   saving at runtime, not at compile time.
-- `GrocyNavDisplay` gives every entry its own `LookaheadScope` (an entry decorator): a list
-  moving out of the list-detail scene when the window gets narrower otherwise had its items ask
-  the left scene's lookahead pass for text baselines, which threw (`NullPointerException` in
-  `LookaheadDelegate`) and broke the layout.
-- Android uses androidx `navigationevent` 1.2.0 (`apps:shared`, newer than the JetBrains 1.1.0
-  of the other platforms): older versions crashed when a popup (an item's menu) closed during a
-  predictive back gesture; `NavigationEventVersionTest` guards it.
 - Features only use `Navigator` (`navigate`, `goBack`, `replaceAll`, `openDetail`,
-  `goBack(from)`, `currentRoute`), never the back stack. List-detail: see "Master data".
+  `goBack(from)`, `currentRoute`), never the back stack. List-detail: see
+  `docs/features/master-data.md`; web history: `docs/architecture/web-navigation.md`.
 - Each feature exposes `fun EntryProviderScope<NavKey>.xxxEntries(dependencies, navigator)`.
   ViewModels are created there with `viewModel { XxxViewModel(...) }` and are scoped to the entry
   by `GrocyNavDisplay`.
-- Web: `BrowserHistoryInput` (a `NavigationEventInput`, installed by `GrocyNavDisplay` through
-  `BrowserBackIntegration`) mirrors the back stack into the browser history, one entry per
-  screen (`SceneInfo`) plus one for an open dialog or popup. Browser back and the Android back
-  gesture of the installed web app therefore go back inside the app and only leave it from the
-  first screen. Forward moves are reverted. Every entry stores `{ index, stack }` (the back stack
-  as JSON, `BackStackCodec`) and the URL shows the screen as hash: the route's `@SerialName` is
-  its path, its arguments not at their default the query (`#/settings/general`,
-  `#/masterdata/product?productId=5`, the first screen keeps the plain address;
-  `RouteSerializersTest` checks paths are URL-like and unique). A reload restores the entry's back stack
-  (`rememberNavigator`, only if it starts with the start route of the current login state) and
-  stays on its entry, whose index stays until the app's history says where it is (the back
-  stack's size does not tell, a two-pane scene shows two entries; guessing from it went back
-  past the app's first entry and left the page); on a dialog's entry it returns to the screen below. A pasted URL without
-  stored back stack starts on the first screen. When the first screen changes in place (login),
-  no handler reports it, so `onBackStackChanged` rewrites the entry. A back the
-  browser animated itself (`hasUAVisualTransition`) skips the app's pop transition. Browsers
-  expose no gesture progress, so the web cannot run Compose's predictive back animation.
-  From `beforeunload` until the next `pageshow` `WindowBrowserHistory` moves nothing: closing a
-  dialog while the page reloads (language change) would otherwise cancel the reload.
 - Login/logout is driven by `AuthRepository.authState`: saving or clearing credentials makes
   `GrocyApp` call `navigator.replaceAll(StartRoute | LoginChoiceRoute)`. Login screens therefore
   never navigate after success; they just call `authRepository.saveLogin(...)`.
@@ -877,22 +337,6 @@ both modules to `apps/shared/build.gradle.kts`, and add the new routes to `allRo
 - `GrocyApi` methods take the `ServerConnection` per call. `ServerConnection.serverUrl` is the
   base URL without `/api` and without trailing slash; build it with `ServerUrl.normalize`, which
   only accepts http(s) URLs with a real host and no whitespace.
-- API key placement (`sendApiKeyAsQueryParameter`, expect/actual): the `GROCY-API-KEY` header
-  on Android, a query parameter of the same name in browsers. Grocy checks the key before its
-  CORS middleware, so the preflight for a custom header fails with a 401 without CORS headers;
-  with the query parameter GET requests need no preflight. Consequence in browsers: a wrong key
-  looks like an unreachable server, because the 401 carries no CORS headers either.
-- Home Assistant ingress (`ServerConnection.HomeAssistant`, Android only,
-  `isHomeAssistantIngressSupported`): `WebSocketIngressSessionSource` authenticates on
-  `/api/websocket` with the long-lived token, reads `ingress_entry` of the add-on
-  (`supervisor/api` `/addons/<slug>/info`, default slug `a0d7b954_grocy`) and creates a session
-  (`/ingress/session`); the REST proxy does not allow these endpoints. Requests then go to
-  `<HA URL><ingress_entry>/api/...` with the cookie `ingress_session` plus the Grocy API key.
-  `HomeAssistantIngress` reuses a session for 10 minutes after its last use (the supervisor ends
-  it after 15) and `GrocyApi` retries a 401 once with a fresh session. Slug and ingress path are
-  validated, so a server answer can never redirect the API key to another host.
-- Browsers cannot use ingress at all (no CORS on ingress, session only as cookie, `Cookie` is a
-  forbidden header); the web login explains the add-on's network port as alternative.
 - Error handling: transport errors -> `Unreachable` (catches `Throwable`, Wasm fetch failures
   arrive as `Error`), 401 -> `Unauthorized`, other non-2xx -> `HttpError`, parse failures ->
   `NotGrocyServer`; Home Assistant: `HomeAssistantTokenRejected`, `AddonNotFound`,
@@ -909,13 +353,7 @@ both modules to `apps/shared/build.gradle.kts`, and add the new routes to `allRo
   only (`saveProduct`, `deleteProduct`, `saveLocation`, `saveChore`, ...: one `saveObject` per
   type posts or puts, sends changed userfields, then stores the object as the server returns it).
   `refresh()` downloads all master data at once; users need a permission of their own, a 403
-  keeps the stored ones instead of failing the refresh. Version 4 added chores, batteries, task
-  categories, userentities, users and the userfield values of the simple objects; version 5
-  quantity unit conversions (defined and resolved), shopping lists, stock entries, the stock
-  journal and the userfield values of barcodes; version 6 the stock overview (opened amounts,
-  value and next due date of `stock`, `product_stock_info`, `stock_locations`); version 7 the
-  shopping list items, the lists' description and userfields and the queue of offline check
-  offs (`pending_shopping_list_done`, `ShoppingListDao`), an AutoMigration.
+  keeps the stored ones instead of failing the refresh.
 - `AuthRepository` clears the database before a login and on logout (`clearLocalData`), so no
   screen shows the data of another server. The database file is excluded from backups.
 - Server configuration and user settings live as JSON in `server_values`; only the known feature
@@ -926,12 +364,6 @@ both modules to `apps/shared/build.gradle.kts`, and add the new routes to `allRo
 - Room 3.0.x via the `grocy.room` convention plugin (KSP per target, schemas exported to
   `core/database/schemas`). Every schema change needs a new version and a migration; check it
   against the exported schema.
-- Android: `BundledSQLiteDriver`, file `grocy.db`. Web: `WebWorkerSQLiteDriver` with the worker
-  `core/database/web-worker/worker.js` (npm package `grocy-sqlite-worker` on top of
-  `@sqlite.org/sqlite-wasm`, androidx's message protocol). It stores the database in OPFS with
-  the "opfs-sahpool" VFS, which needs no COOP/COEP headers (GitHub Pages); a second tab or a
-  browser without OPFS gets an in-memory database that the app fills from the server again.
-  Webpack bundles worker and `sqlite3.wasm`, `precache.json` lists them for offline use.
 - Grocy sends numbers as numbers or strings depending on version: DTOs use `FlexInt`,
   `FlexDouble`, `FlexBoolean`, `FlexString`. Writes send JSON with exactly `application/json`
   (Grocy compares the header as string and rejects a charset) and get `GrocyApiException.
@@ -968,72 +400,9 @@ the ML Kit scanner. Closed-source code only enters through `android-play`: it pa
 goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
 (`core:update-play`) through the `appUpdater` parameter.
 
-### Updates
-
-- `AppUpdater` (`core:data` `update`) per platform, created by
-  `PlatformDependencies.createAppUpdater`; `UpdateRepository` in `AppGraph` runs the checks.
-  Results are `UpdateCheck` (`UpToDate`, `Available(versionName?)`, `Failed`).
-- About has a "Check for updates" item below the version on every platform: it checks on tap and
-  shows `UpdateCheckDialog` (`core:ui`): the update dialog, or a `TextDialog` for up to date or a
-  failed check. Only the web app also checks by itself (`checksAutomatically`): at start, when it
-  returns to the foreground and every 4 hours; `GrocyApp` shows `UpdateAvailableDialog` for a
-  found update. "Later" (or dismissing) postpones that version for the session. Never reload or
-  install without the user's tap.
-- Android outside Google Play (FOSS, nightly, debug, downloaded APKs): `GitHubAppUpdater` asks
-  the public GitHub API (`GitHubReleases` in `core:network`, no credentials, release pages must
-  stay below `https://github.com/patzly/grocy-kmp/`). Regular builds compare their version with
-  the latest release (`isNewerVersion`), nightly builds (`-nightly+<short SHA>`) their commit
-  with the `nightly` release. Installing opens the release page; the app never installs APKs
-  itself (no `REQUEST_INSTALL_PACKAGES`).
-- Play app installed by the Play Store: `PlayAppUpdater` uses the in-app update API (immediate
-  flow from the resumed activity, `ResumedActivityTracker`), Play gives no version name. Other
-  installs of the Play app fall back to the GitHub updater.
-- Web: `ServiceWorkerAppUpdater` with `apps/web/src/wasmJsMain/resources/sw.js`. Every deployment
-  has a build id (`-Pgrocy.webBuildId`, the commit SHA in `nightly.yml`; version suffix through
-  `-Pgrocy.webVersionSuffix`), compiled into `BuildInfo.kt` and written with the file list into
-  `precache.json` by `wasmJsBrowserDistribution`. The app registers `sw.js?build=<id>`; that
-  worker caches exactly the files of its build (refusing to install if the server has another
-  one), serves them cache first (also offline) and deletes older caches when it activates. A
-  check fetches `precache.json` with `no-store`; for a new build it registers that build's worker,
-  which downloads the version in the background, and offers the update once installed. Updating
-  sends `skipWaiting` and reloads on `controllerchange`. Requests to other origins (Grocy
-  servers) are never cached. Builds without id (`dev`, also the dev server) register no worker
-  and do not check automatically, so local builds always run fresh code.
-
 ### Barcode scanner (`core:scanner`)
 
-- One component for the whole app: `BarcodeScanner(onBarcodeScanned, formats, shape, paused)`.
-  Pass the segmented item shape (`SegmentedListDefaults.shape(index, count)`) and place it as an
-  item of a group, never directly on the background. It is a landscape rectangle (16:10, at most
-  240.dp high, so wide windows such as desktop browsers get a strip) and
-  draws its own `surface` background and permission/error states inside. The torch button sits
-  in the bottom end corner with 12.dp margin.
-- Engines implement `BarcodeDecoder` (`decode(CameraFrame, formats): List<Barcode>`):
-  ZXing via `BarcodeDecoderFactory.Zxing` (zxing-core on Android, zxing-wasm in browsers) and
-  ML Kit via `MlKitBarcodeDecoderFactory` (`core:scanner-mlkit`). `CameraFrame` is an
-  expect class (ImageProxy / ImageData). All engines share `ScanResultFilter` (linear codes need
-  two identical reads in a row, a code in view is reported once) and the `BarcodeFormat` set, so
-  they behave the same. ZXing on Android decodes the upright image and a 90 degree turn for
-  linear codes, like ML Kit's orientation-independent detection.
-- Engine selection: `ScannerRepository.activeEngine` = setting if the platform has it and (for
-  ML Kit) `isUnlocked`, else ZXing. ZXing is always the default; unlocking (key installed, or the
-  key check turned off by 10 long presses on the key item in About) never switches the engine,
-  the user selects ML Kit themselves. `GrocyApp` provides the matching factory through
-  `LocalBarcodeDecoderFactory`, so screens only call `BarcodeScanner`. There is no settings
-  screen yet to change the engine.
-- Permission: asked only when the user taps the scanner's button (`rememberCameraAccess`);
-  granted cameras start right away. Android detects "denied for good" and opens the app settings;
-  browsers get a hint for the site settings. The camera stops when the scanner leaves the
-  composition or the lifecycle stops.
-- Android: CameraX `CameraXViewfinder` in `ImplementationMode.EMBEDDED` (TextureView, so the
-  rounded clip works), `ImageAnalysis` 1280x720 with KEEP_ONLY_LATEST, decoding on
-  `Dispatchers.Default`, torch button if the camera has a flash. The CAMERA permission and an
-  optional camera feature are declared in the module manifest.
-- Web: `HtmlElementView` with a `<video>` from `getUserMedia` (needs HTTPS); the element lies
-  above the Compose canvas, so its corners are rounded with CSS from the shape
-  (`toCssBorderRadius`) and Compose overlays cannot cover it. Frames are decoded every 120 ms.
-  `zxing_reader.wasm` is copied from node_modules into the web app (`copyZxingWasm` in
-  `apps/web`) and loaded from there instead of zxing-wasm's default CDN.
+- Always use `BarcodeScanner` as an item of a group; details in `docs/architecture/scanner.md`.
 
 ### Theming and UI
 
@@ -1046,20 +415,6 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   (kept out of public APIs: `HapticTooltipBox` takes its own `TooltipPosition`). Compose 1.13
   needs compileSdk 37.1 or newer (`android-compileSdkMinor`). Material's adaptive libraries
   (`adaptive-navigation3`, list-detail scenes) follow the same rule: newest alpha.
-- `GrocyLogo` (`core:design`, 30.dp by default, 100.dp above the login choices; `AppBarLogo` in
-  the start screen's app bar, in the place of
-  the navigation button the first screen has none of, the title stays centered) stacks the logo's layers (`ic_logo_*`, one color each) and
-  tints them like the API 34 splash screen with the theme's roles instead of the system's
-  (`onSurface` outlines, `primaryContainer` basket, `onPrimaryContainer` letter at 80 %), the
-  fruits' fixed colors harmonized with primary (`grocyLogoColors`).
-- Every vertically scrolling list, form, dialog and menu shows Material's
-  `nonInteractiveScrollbar` through `Modifier.verticalScrollbar` (`core:design`): no track, a
-  4.dp fully round thumb in Material's default `outline` at 70 % while scrolling, 4.dp from the
-  end edge and as far from the top and bottom (`ScrollbarInset`), where the rounded corners of
-  panes and menus cover it; `SegmentedListScreen` lays it between app bar and navigation bar
-  (beside side cutouts), dialogs 4.dp from their edge between the dividers, also lists that
-  scroll a dialog themselves (`dialogListScrollbar`, in the dialog's end padding). Material's
-  scrollbar cannot be dragged, on purpose no own one that can.
 - Colors of states outside the color scheme (Grocy's highlighted rows) come from
   `rememberStatusColors` (`core:design`): info (blue), warning (yellow), critical (red), fixed
   hues harmonized with primary and turned into container, content and color tones like
@@ -1068,26 +423,8 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   use `SwipeActionBox` (Gmail's look, the action runs on letting go beyond the threshold, the
   item springs back); every swipe action must also be in the item's menu and its accessibility
   actions.
-- Button groups of icon buttons (`ButtonGroupItems.kt` of `core:design`): Material's 12.dp lie
-  between the visible containers, the touch targets take no room in the group (48.dp targets
-  of narrow 32.dp buttons would leave 16.dp at least): Compose's hit test extends small
-  targets to 48.dp anyway and gives a touch in their overlap to the nearer button, each keeps
-  about 46 x 48.dp of its own. Items go in with `animatedItem` (the pressed one grows by
-  Material's ratio, its neighbours give way), icon buttons size themselves with
-  `smallIconButtonSize(width)`: in an item they fill the width the group animates (Material's
-  `TooltipBox` passes no minimum width on, so the button kept its size while only its slot
-  grew), on their own they keep the 48.dp room; overflow indicators go in
-  `ButtonGroupOverflowIndicator` (own width, hidden from screen readers until the group shows
-  it: the web announced the unplaced indicator as empty button). The groups' outer edges keep
-  the room of single buttons (`touchTargetRoom`), so they sit where single buttons would.
-  The top app bar's actions are such a group too (`SegmentedListScreen(actions:
-  List<AppBarAction>)` plus "Reload" and the overflow menu); a menu button in a group wraps
-  button and popup in one `Box`, the popup's anchor would be an item of its own.
 - Version numbers (app, Grocy) and other numbers read as columns use tabular figures
   (`TextStyle.withTabularNumbers()`), every digit equally wide.
-- Font is Google Sans Flex from Compose Resources. On web fonts load async;
-  `rememberResourcesReady()` (also every string and icon: browsers load them asynchronously, so a new screen would fill in its texts while sliding in) gates `onContentReady`, which removes the Android splash / the HTML
-  `#loading` element.
 - Reuse components from `core:design` (`SegmentedListScreen`, `segmentedGroup`,
   `SegmentedContainer`, `AppBarIconButton`, `InsetLazyColumn` + `insetItem` with max width
   640.dp, `RoundedTextField`, `ConnectedButtonGroup`, `NavigateBackButton`, `HapticTooltipBox`,
@@ -1116,44 +453,10 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   focus only while the keyboard is in use (`rememberKeyboardInput`: Android's input mode, on the
   web the last of `keydown` and `pointerdown`), because a screen opened by a click focuses its
   first button (the back button) by itself.
-- `LocalPointerKind` (`core:design`, provided and tracked by `GrocyApp` with
-  `trackPointerKind`): whether the user works with a mouse or trackpad right now. It starts with
-  the device (`(pointer: fine)` in browsers, `FEATURE_PC` on Android) and follows the pointer of
-  the last press or wheel turn; hover moves do not count, browsers emulate them after a tap.
 - Web pages show the hand cursor over clickable things, Compose does not: every button, item,
   chip, toggle, slider and link applies `Modifier.clickCursor(enabled)` (`core:design`, a no-op
   on Android, whose convention, also with a mouse on ChromeOS, keeps the arrow on buttons).
   New interactive components must apply it too.
-- `ScrollableAlertDialog` closes on a tap beside it through `detectTapGestures`, not
-  `clickable`, which would merge the dialog's pane title into one node (the web throws).
-- "Recommend" (`rememberRecommendAction`) opens the system share sheet; where there is none
-  (desktop browsers on Linux, `isTextSharingAvailable`) it shows `AppDialog.RECOMMEND` with the
-  text and "Copy to clipboard" (`plainTextClipEntry` of `core:ui`).
-- `GrocyApp` draws a `surfaceContainer` background below all screens, so fading transitions never
-  show the window or page behind them. On the web `SystemBarAppearance` also sets the page
-  background to `surfaceContainer`.
-- System bars of the installed web app (Chrome on Android): a page cannot draw behind them, not
-  even with `viewport-fit=cover`. Chrome paints the status bar in the page's `theme-color`, so
-  `SegmentedListScreen` reports its app bar color (`StatusBarColorEffect`, the same
-  `lerp(surfaceContainer, surfaceContainerHighest, FastOutLinearIn(collapsedFraction))` the large
-  app bar uses) and `StatusBarColorRequests` writes the newest screen's color into the meta tags
-  (`surfaceContainer` without app bar). The gesture bar takes the manifest's `theme_color`, which
-  has no dark variant; `manifest.webmanifest` therefore has none, so the bar follows the
-  system's light or dark mode. Never add `theme_color` back.
-- Keyboard: `WindowInsets.keyboard` (`core:design`) is `WindowInsets.ime` on Android (edge-to-edge
-  plus `adjustResize`, animated frame by frame). On the web `observeBrowserKeyboard` (called in
-  `main()`) measures it from the visual viewport, without animation: Chromium and Firefox
-  shrink the page above the keyboard themselves (`interactive-widget=resizes-content`), so
-  nothing is covered and the app lays out anew; Safari only shrinks the visual viewport, the
-  covered part applies at once. Browsers expose no keyboard animation; an own one (the old
-  VirtualKeyboard API with `overlaysContent`) never matched it and let the page background
-  flash above the keyboard, so never add one back. `SegmentedListScreen` pads the list by the keyboard and puts only
-  the uncovered part of the navigation bar below the content (`ScreenContentPadding`, read
-  during layout, so animations relayout without recomposing).
-- Web page (`index.html`): `viewport-fit=cover` and `interactive-widget=resizes-content`; the
-  page fills the screen (behind the gesture bar of an installed app) while `#composeApp` is
-  fixed inside `env(safe-area-inset-*)`, because Compose on the web knows no window insets.
-  Layout and colors of screens and dialogs: see "Screen and dialog design" above.
 - `UriHandler.tryOpenUri` instead of `openUri` when the target app might be missing.
 - Platform differences use `expect`/`actual` with files named `Xxx.android.kt` / `Xxx.wasmJs.kt`.
   Wasm JS interop uses `@JsFun` with `@OptIn(ExperimentalWasmJsInterop::class)`.
@@ -1163,6 +466,9 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
 - All UI strings, icons (`ic_rounded_*`), fonts and text files live in `core:resources`
   (`composeResources/`), accessed via `com.patrickzedler.grocy.core.resources.Res`. Do not add
   resources to feature modules.
+- Icons are Material Symbols Rounded in their outlined form only (`FILL 0`, the `<name>_24px.svg`
+  of `google/material-design-icons`, not `_fill1`), never filled variants; vectors use the
+  960 viewport with y shifted by 960 like the existing files.
 - Translations: English (`values/`) plus the languages of grocy-android's app resources (ca, cs,
   de, el, es, et, fr, he, hu, it, ja, nb, nl, pl, pt-BR, pt-PT, ru, sk, sv, tr, uk, zh-CN,
   zh-TW; regions as `values-pt-rBR`). Hebrew exists twice, `values-he` (browsers) and an
@@ -1286,7 +592,7 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
 - `checks.yml` (every push to `main`, every pull request): `./gradlew allTests`, uploads test
   reports on failure.
 - `nightly.yml` (daily 02:00 UTC, skipped without new commits): signed nightly APKs for FOSS and
-  Play, web app deployed to GitHub Pages (build id = commit SHA, see "Updates"), a reproducibility check that builds the unsigned FOSS
+  Play, web app deployed to GitHub Pages (build id = commit SHA, see `docs/architecture/updates.md`), a reproducibility check that builds the unsigned FOSS
   release twice and compares bytes, then replaces the `nightly` GitHub release.
 - `release.yml` (tag `v*`, must equal `v` + `grocy.versionName`): runs `allTests`, then signed
   FOSS APK + SHA256SUMS on the GitHub release, Play and Wear AABs as workflow artifacts.

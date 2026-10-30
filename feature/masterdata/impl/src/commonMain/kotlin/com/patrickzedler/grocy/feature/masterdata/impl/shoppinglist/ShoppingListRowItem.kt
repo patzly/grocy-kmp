@@ -2,38 +2,53 @@
 
 package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.text
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
+import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ListItemOverflowMenu
 import com.patrickzedler.grocy.core.design.component.SwipeAction
 import com.patrickzedler.grocy.core.design.component.SwipeActionBox
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.rememberStatusColors
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItemSync
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.data_amount
@@ -46,12 +61,16 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_label
 import com.patrickzedler.grocy.core.resources.ic_rounded_payments
 import com.patrickzedler.grocy.core.resources.ic_rounded_sell
 import com.patrickzedler.grocy.core.resources.ic_rounded_storefront
+import com.patrickzedler.grocy.core.resources.ic_rounded_sync
+import com.patrickzedler.grocy.core.resources.ic_rounded_sync_problem
 import com.patrickzedler.grocy.core.resources.product_barcodes
 import com.patrickzedler.grocy.core.resources.product_overview
 import com.patrickzedler.grocy.core.resources.products_sort_store
 import com.patrickzedler.grocy.core.resources.shopping_list_add_to_stock
 import com.patrickzedler.grocy.core.resources.shopping_list_delete_item
 import com.patrickzedler.grocy.core.resources.shopping_list_edit_item
+import com.patrickzedler.grocy.core.resources.shopping_list_item_not_sent
+import com.patrickzedler.grocy.core.resources.shopping_list_item_sending
 import com.patrickzedler.grocy.core.resources.shopping_list_last_price_total
 import com.patrickzedler.grocy.core.resources.shopping_list_last_price_unit
 import com.patrickzedler.grocy.core.resources.shopping_list_mark_done
@@ -62,6 +81,8 @@ import com.patrickzedler.grocy.feature.masterdata.impl.objects.ListDetailItem
 import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.FieldChip
 import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.FieldChipView
 import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.labelled
+import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -91,7 +112,7 @@ internal class ShoppingListRowStyle(
  * shown fields as chips below, blue amount below the min. stock amount like Grocy's row. A tap
  * edits the item. Swiping towards the end checks it off, towards the start adds it to the
  * stock, like Grocy's first and last button; both are also in the menu and the accessibility
- * actions.
+ * actions. A check off the server has not taken yet ([sync]) shows an icon after the title.
  *
  * @param selected beside the item's form: whether this one is shown there, null otherwise.
  */
@@ -100,6 +121,7 @@ internal fun ShoppingListRowItem(
     row: ShoppingListRow,
     style: ShoppingListRowStyle,
     selected: Boolean?,
+    sync: ShoppingListItemSync?,
     index: Int,
     count: Int,
     actions: ShoppingListRowActions,
@@ -148,20 +170,26 @@ internal fun ShoppingListRowItem(
                         }.takeIf { canAddToStock },
                     )
                 },
-            // The checkbox brings its touch target, which is room enough around it
+            // Keeps the checkbox clear of the top edge of items aligned to the top
             leadingContent = {
-                Checkbox(
-                    checked = row.done,
-                    onCheckedChange = {
-                        haptic.performHapticFeedback(
-                            if (it) HapticFeedbackType.ToggleOn else HapticFeedbackType.ToggleOff,
-                        )
-                        actions.onToggleDone(row)
-                    },
-                    modifier = Modifier
-                        .clickCursor()
-                        .semantics { contentDescription = doneText },
-                )
+                LeadingTrailingContentWrapper {
+                    Checkbox(
+                        checked = row.done,
+                        onCheckedChange = {
+                            haptic.performHapticFeedback(
+                                if (it) {
+                                    HapticFeedbackType.ToggleOn
+                                } else {
+                                    HapticFeedbackType.ToggleOff
+                                },
+                            )
+                            actions.onToggleDone(row)
+                        },
+                        modifier = Modifier
+                            .clickCursor()
+                            .semantics { contentDescription = doneText },
+                    )
+                }
             },
             supportingContent = supporting(row, style),
             trailingContent = {
@@ -177,24 +205,79 @@ internal fun ShoppingListRowItem(
                 )
             },
         ) {
-            Title(row)
+            Title(row, sync)
         }
     }
 }
 
-/** The product's name or the note, struck through and muted once done like Grocy's row. */
+/**
+ * The product's name or the note, struck through and muted once done like Grocy's row; after
+ * it the state of a check off still to send.
+ */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun Title(row: ShoppingListRow) {
-    Text(
-        text = row.title,
-        // Grocy writes notes in italics
-        fontStyle = if (row.productId == null) FontStyle.Italic else null,
-        textDecoration = if (row.done) TextDecoration.LineThrough else null,
-        color = if (row.done) {
-            MaterialTheme.colorScheme.onSurfaceVariant
-        } else {
-            LocalContentColor.current
-        },
+private fun Title(row: ShoppingListRow, sync: ShoppingListItemSync?) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = row.title,
+            modifier = Modifier.weight(1f, fill = false),
+            // Grocy writes notes in italics
+            fontStyle = if (row.productId == null) FontStyle.Italic else null,
+            textDecoration = if (row.done) TextDecoration.LineThrough else null,
+            color = if (row.done) {
+                MaterialTheme.colorScheme.onSurfaceVariant
+            } else {
+                LocalContentColor.current
+            },
+        )
+        Crossfade(
+            targetState = shownSync(sync),
+            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
+        ) { shown ->
+            shown?.let { SyncIcon(it) }
+        }
+    }
+}
+
+/**
+ * [sync] as it shows: sending only once it takes a moment, so a check off the server takes
+ * right away does not flash an icon; a failure shows at once.
+ */
+@Composable
+private fun shownSync(sync: ShoppingListItemSync?): ShoppingListItemSync? {
+    var shown by remember { mutableStateOf(sync.takeIf { it == ShoppingListItemSync.FAILED }) }
+    LaunchedEffect(sync) {
+        if (sync == ShoppingListItemSync.SENDING && shown == null) delay(SendingIconDelay)
+        shown = sync
+    }
+    return shown
+}
+
+/** Being sent in the muted color, failed in the error color, read as text like the chips. */
+@Composable
+private fun SyncIcon(sync: ShoppingListItemSync) {
+    val (icon, tint, label) = when (sync) {
+        ShoppingListItemSync.SENDING -> Triple(
+            Res.drawable.ic_rounded_sync,
+            MaterialTheme.colorScheme.onSurfaceVariant,
+            Res.string.shopping_list_item_sending,
+        )
+        ShoppingListItemSync.FAILED -> Triple(
+            Res.drawable.ic_rounded_sync_problem,
+            MaterialTheme.colorScheme.error,
+            Res.string.shopping_list_item_not_sent,
+        )
+    }
+    val description = stringResource(label)
+    Icon(
+        painter = painterResource(icon),
+        contentDescription = null,
+        tint = tint,
+        modifier = Modifier
+            .padding(start = SyncIconGap)
+            .size(SyncIconSize)
+            // A description would replace the item's name for screen readers
+            .clearAndSetSemantics { text = AnnotatedString(description) },
     )
 }
 
@@ -326,3 +409,9 @@ private fun fieldChips(row: ShoppingListRow, style: ShoppingListRowStyle): List<
 }
 
 private const val NOTE_LINES = 3
+
+// Like the cart icon after a product's name in the stock overview
+private val SyncIconSize = 18.dp
+private val SyncIconGap = 6.dp
+
+private val SendingIconDelay = 500.milliseconds

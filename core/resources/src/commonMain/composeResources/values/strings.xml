@@ -969,6 +969,7 @@
   <string name="shopping_list_notes_empty">No notes yet</string>
   <string name="shopping_list_status_done">%1$d done</string>
   <string name="shopping_list_status_undone">%1$d not done</string>
-  <string name="shopping_list_pending">Not yet sent to the server: %1$d</string>
+  <string name="shopping_list_item_sending">Being sent to the server</string>
+  <string name="shopping_list_item_not_sent">Not yet sent to the server, trying again by itself</string>
   <string name="shopping_list_list_with_count" translatable="false">%1$s (%2$d)</string>
 </resources>

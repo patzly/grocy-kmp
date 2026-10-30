@@ -64,7 +64,6 @@ import com.patrickzedler.grocy.core.resources.shopping_list_list
 import com.patrickzedler.grocy.core.resources.shopping_list_new
 import com.patrickzedler.grocy.core.resources.shopping_list_notes
 import com.patrickzedler.grocy.core.resources.shopping_list_notes_empty
-import com.patrickzedler.grocy.core.resources.shopping_list_pending
 import com.patrickzedler.grocy.core.resources.shopping_list_print
 import com.patrickzedler.grocy.core.resources.shopping_list_ungrouped
 import com.patrickzedler.grocy.core.resources.stock_overview_group_not_set
@@ -268,25 +267,15 @@ private fun ShoppingListEvents(
     }
 }
 
-/**
- * Grocy's text beside its title, the list's total value with prices, and the check offs still
- * to send, so it is clear they are not lost.
- */
+/** Grocy's text beside its title, the list's total value with prices. */
 @Composable
-private fun subtitle(state: ShoppingListUiState): String? {
-    val parts = listOfNotNull(
-        state.totalValue?.let { value ->
-            stringResource(
-                Res.string.stock_overview_total_value,
-                formatCurrency(value, state.currency, state.priceDecimals),
-            )
-        },
-        state.pendingCount.takeIf { it > 0 }?.let {
-            stringResource(Res.string.shopping_list_pending, it)
-        },
-    )
-    return parts.takeIf { it.isNotEmpty() }?.joinToString(", ")
-}
+private fun subtitle(state: ShoppingListUiState): String? =
+    state.totalValue?.let { value ->
+        stringResource(
+            Res.string.stock_overview_total_value,
+            formatCurrency(value, state.currency, state.priceDecimals),
+        )
+    }
 
 /** Grocy's "List actions", the list's clearing, its "Stock actions" and printing. */
 @Composable
@@ -411,6 +400,7 @@ private fun LazyListScope.rows(
                 row = row,
                 style = style,
                 selected = if (isBesideDetail) row.id == selectedItemId else null,
+                sync = state.syncStates[row.id],
                 index = index,
                 count = group.rows.size,
                 actions = actions,

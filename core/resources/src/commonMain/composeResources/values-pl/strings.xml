@@ -1008,5 +1008,6 @@
   <string name="shopping_list_notes_empty">Brak notatek</string>
   <string name="shopping_list_status_done">Zakończone: %1$d</string>
   <string name="shopping_list_status_undone">Niezakończone: %1$d</string>
-  <string name="shopping_list_pending">Jeszcze niewysłane na serwer: %1$d</string>
+  <string name="shopping_list_item_sending">Wysyłanie na serwer</string>
+  <string name="shopping_list_item_not_sent">Jeszcze niewysłane na serwer, ponowna próba nastąpi automatycznie</string>
 </resources>

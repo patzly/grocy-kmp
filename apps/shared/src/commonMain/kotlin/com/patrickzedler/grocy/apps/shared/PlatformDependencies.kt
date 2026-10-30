@@ -10,6 +10,7 @@ import com.patrickzedler.grocy.core.database.GrocyDatabase
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Everything the shared app needs from the platform it runs on.
@@ -30,6 +31,12 @@ interface PlatformDependencies {
     val unlockChecker: UnlockChecker?
 
     val versionName: String
+
+    /**
+     * Emits whenever the device gets a network connection, e.g. to send what waited offline;
+     * collected once in the app's scope.
+     */
+    val networkAvailable: Flow<Unit>
 
     /** Barcode engines of this platform; ZXing exists everywhere, ML Kit only in the Play app. */
     val barcodeDecoders: Map<ScannerEngine, BarcodeDecoderFactory>

@@ -45,7 +45,7 @@ class ShoppingListDaoTest {
 
         // The user checked it off again after the first was sent
         dao.deletePendingDone(itemId = 5, done = true)
-        assertEquals(1, dao.observePendingDoneCount().first())
+        assertEquals(1, dao.observePendingDone().first().size)
 
         dao.deletePendingDone(itemId = 5, done = false)
         assertEquals(emptyList(), dao.pendingDone())

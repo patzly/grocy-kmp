@@ -77,6 +77,7 @@ class AppGraph(
             database = platform.database,
             scope = appScope,
             connection = { platform.credentialStore.connection.first() },
+            networkAvailable = platform.networkAvailable,
         )
     }
 
@@ -181,7 +182,8 @@ class AppGraph(
     }
 
     init {
-        // Items checked off offline when the app was last used
+        // Items checked off offline when the app was last used; creating the repository also
+        // makes it send them whenever the device gets a network
         shoppingListRepository.sendPendingDoneInBackground()
     }
 
