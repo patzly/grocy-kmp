@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.channels.Channel
@@ -21,11 +22,13 @@ internal enum class ObjectAction { COPY, MERGE, DELETE }
 
 /**
  * The actions Grocy offers on objects of [entity]: every object can be deleted, products
- * copied, products and chores merged.
+ * copied, products and chores merged. Grocy's forms of shopping lists and their items have
+ * none, the shopping list page acts on them.
  */
 internal fun objectActionsOf(entity: String): List<ObjectAction> = when (entity) {
     MasterDataRepository.PRODUCTS -> ObjectAction.entries
     MasterDataRepository.CHORES -> listOf(ObjectAction.MERGE, ObjectAction.DELETE)
+    MasterDataRepository.SHOPPING_LIST, ShoppingListRepository.SHOPPING_LISTS -> emptyList()
     else -> listOf(ObjectAction.DELETE)
 }
 

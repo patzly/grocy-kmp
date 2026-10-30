@@ -9,6 +9,8 @@ import com.patrickzedler.grocy.feature.masterdata.api.BatteriesRoute
 import com.patrickzedler.grocy.feature.masterdata.api.BatteryRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ChoreRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ChoresRoute
+import com.patrickzedler.grocy.feature.masterdata.api.ConsumeRoute
+import com.patrickzedler.grocy.feature.masterdata.api.InventoryRoute
 import com.patrickzedler.grocy.feature.masterdata.api.LocationRoute
 import com.patrickzedler.grocy.feature.masterdata.api.LocationsRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
@@ -16,8 +18,12 @@ import com.patrickzedler.grocy.feature.masterdata.api.ProductGroupRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductGroupsRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductsRoute
+import com.patrickzedler.grocy.feature.masterdata.api.PurchaseRoute
 import com.patrickzedler.grocy.feature.masterdata.api.QuantityUnitRoute
 import com.patrickzedler.grocy.feature.masterdata.api.QuantityUnitsRoute
+import com.patrickzedler.grocy.feature.masterdata.api.ShoppingListFormRoute
+import com.patrickzedler.grocy.feature.masterdata.api.ShoppingListItemRoute
+import com.patrickzedler.grocy.feature.masterdata.api.ShoppingListRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StockEntriesRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StockJournalRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StockJournalSummaryRoute
@@ -26,6 +32,7 @@ import com.patrickzedler.grocy.feature.masterdata.api.StoreRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StoresRoute
 import com.patrickzedler.grocy.feature.masterdata.api.TaskCategoriesRoute
 import com.patrickzedler.grocy.feature.masterdata.api.TaskCategoryRoute
+import com.patrickzedler.grocy.feature.masterdata.api.TransferRoute
 import com.patrickzedler.grocy.feature.masterdata.api.UserentitiesRoute
 import com.patrickzedler.grocy.feature.masterdata.api.UserentityRoute
 import com.patrickzedler.grocy.feature.masterdata.api.UserfieldRoute
@@ -96,6 +103,21 @@ class RouteSerializersTest {
         StockSettingsRoute(inSettings = true),
         StockSettingsRoute(inSettings = true, backLeavesSettings = true),
         StockOverviewRoute,
+        PurchaseRoute(),
+        PurchaseRoute(productId = 7, amount = 2.5, quId = 3, shoppingListItemId = 9),
+        ConsumeRoute(),
+        ConsumeRoute(productId = 7, locationId = 2, stockId = "abc"),
+        TransferRoute(),
+        TransferRoute(productId = 7, locationId = 2, stockId = "abc"),
+        InventoryRoute(),
+        InventoryRoute(productId = 7),
+        ShoppingListRoute(),
+        ShoppingListRoute(listId = 2),
+        ShoppingListItemRoute(),
+        ShoppingListItemRoute(id = 5),
+        ShoppingListItemRoute(listId = 2, productId = 7),
+        ShoppingListFormRoute(),
+        ShoppingListFormRoute(id = 2),
         StockEntriesRoute(),
         StockEntriesRoute(productId = 7),
         StockJournalRoute(),

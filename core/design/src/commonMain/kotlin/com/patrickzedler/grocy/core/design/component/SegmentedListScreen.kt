@@ -84,7 +84,8 @@ import org.jetbrains.compose.resources.stringResource
  * [navigationIcon] is usually a [NavigateBackButton], [actions] are [AppBarIconButton]s or
  * menus, together with "Reload" and the overflow menu one standard button group whose pressed
  * button grows; [menuItems] go into the overflow menu at the end of the bar, after
- * [actionMenuItems] (the actions on the screen's object) as a group of their own.
+ * [actionMenuItems] (the actions on the screen's object) as a group of their own, which
+ * [actionMenuGroups] precede where a screen has several groups of actions.
  * [pane]: the screen is one of two panes of a list-detail layout ([ScreenPane]): a small bar in
  * the background's color that lines both bars up, the list on a rounded surface below it.
  * [floatingToolbar] (a [FloatingToolbarWithFab]) floats above the bottom edge and hides while
@@ -106,6 +107,7 @@ fun SegmentedListScreen(
     actions: List<AppBarAction> = emptyList(),
     menuItems: List<AppBarMenuItem> = emptyList(),
     actionMenuItems: List<AppBarMenuItem> = emptyList(),
+    actionMenuGroups: List<List<AppBarMenuItem>> = emptyList(),
     pane: ScreenPane? = null,
     listState: LazyListState = rememberLazyListState(),
     snackbarHostState: SnackbarHostState? = null,
@@ -219,7 +221,8 @@ fun SegmentedListScreen(
                 } else {
                     emptyList()
                 }
-                val menuGroups = listOf(reloadItems, actionMenuItems, menuItems)
+                val menuGroups =
+                    listOf(reloadItems) + actionMenuGroups + listOf(actionMenuItems, menuItems)
                 val shownActions = buildList {
                     addAll(actions)
                     if (onRefresh != null && usesMouse) {

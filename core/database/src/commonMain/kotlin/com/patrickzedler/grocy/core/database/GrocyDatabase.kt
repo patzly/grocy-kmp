@@ -36,8 +36,10 @@ import androidx.room3.RoomDatabaseConstructor
         ShoppingListEntity::class,
         ProductStockInfoEntity::class,
         StockLocationEntity::class,
+        ShoppingListItemEntity::class,
+        PendingShoppingListDoneEntity::class,
     ],
-    version = 6,
+    version = 7,
     autoMigrations = [
         // 2 adds product_thumbnails
         AutoMigration(from = 1, to = 2),
@@ -51,6 +53,9 @@ import androidx.room3.RoomDatabaseConstructor
         // 6 adds the stock overview: opened amounts, value and next due date of the stock,
         // product_stock_info and stock_locations
         AutoMigration(from = 5, to = 6),
+        // 7 adds the shopping list items, checked off items not sent yet and the notes and
+        // userfield values of shopping lists
+        AutoMigration(from = 6, to = 7),
     ],
 )
 @ConstructedBy(GrocyDatabaseConstructor::class)
@@ -58,6 +63,8 @@ abstract class GrocyDatabase : RoomDatabase() {
     abstract fun masterDataDao(): MasterDataDao
 
     abstract fun stockDao(): StockDao
+
+    abstract fun shoppingListDao(): ShoppingListDao
 }
 
 // Room generates the actual objects for every platform

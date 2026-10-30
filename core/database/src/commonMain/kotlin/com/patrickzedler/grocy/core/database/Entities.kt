@@ -171,6 +171,35 @@ data class StockLogEntity(
 data class ShoppingListEntity(
     @PrimaryKey val id: Int,
     val name: String,
+    /** The list's "Notes" as HTML. */
+    val description: String? = null,
+    /** Userfield values by name as JSON object. */
+    @ColumnInfo(defaultValue = "{}") val userfields: String = "{}",
+)
+
+/** An item of a shopping list as the server has it, [done] as the user last set it here. */
+@Entity(tableName = "shopping_list_items")
+data class ShoppingListItemEntity(
+    @PrimaryKey val id: Int,
+    @ColumnInfo(name = "shopping_list_id", index = true) val listId: Int,
+    @ColumnInfo(name = "product_id") val productId: Int?,
+    val note: String?,
+    /** In the product's stock unit. */
+    val amount: Double,
+    @ColumnInfo(name = "qu_id") val quId: Int?,
+    val done: Boolean,
+    /** Userfield values by name as JSON object. */
+    val userfields: String,
+)
+
+/**
+ * The user's own check off of an item, kept until the server took it: checking off works
+ * offline and is sent once the server can be reached again.
+ */
+@Entity(tableName = "pending_shopping_list_done")
+data class PendingShoppingListDoneEntity(
+    @PrimaryKey @ColumnInfo(name = "item_id") val itemId: Int,
+    val done: Boolean,
 )
 
 @Entity(tableName = "stock")

@@ -168,14 +168,18 @@ private fun deleteQuestionOf(entity: String): StringResource = when (entity) {
     else -> Res.string.objects_delete_userfield
 }
 
-/** Grocy's question before deleting, with its warning for products. */
+/**
+ * Grocy's question before deleting, with its warning for products; [confirmText] names what
+ * confirming does, e.g. emptying a list.
+ */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun DeleteDialog(
+internal fun DeleteDialog(
     question: String,
     hint: String?,
     onDelete: () -> Unit,
     onDismissRequest: () -> Unit,
+    confirmText: String = stringResource(Res.string.action_delete),
 ) {
     val haptic = LocalHapticFeedback.current
 
@@ -191,7 +195,7 @@ private fun DeleteDialog(
                     modifier = Modifier.clickCursor(),
                     shapes = ButtonDefaults.shapes(),
                 ) {
-                    Text(stringResource(Res.string.action_delete))
+                    Text(confirmText)
                 }
             },
             dismissButton = {

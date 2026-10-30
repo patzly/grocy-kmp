@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.start.impl
 
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.core.database.createInMemoryGrocyDatabase
@@ -34,10 +35,13 @@ class StartViewModelTest {
     private val repository = MasterDataRepository(server.api, database, connection)
     private val stock = StockRepository(server.api, database, connection)
     private val config = MutableStateFlow<ServerConfig?>(ServerConfig())
+    private lateinit var shoppingLists: ShoppingListRepository
 
     private fun TestScope.viewModel() = StartViewModel(
         repository = repository,
         stock = stock,
+        shoppingLists = ShoppingListRepository(server.api, database, backgroundScope, connection)
+            .also { shoppingLists = it },
         serverConfig = config,
         today = { epochDayOf("2026-10-25")!! },
     ).also { backgroundScope.launch { it.state.collect {} } }
@@ -113,5 +117,45 @@ class StartViewModelTest {
         advanceUntilIdle()
 
         assertEquals(RefreshError.OFFLINE, viewModel.refresh.value.error)
+    }
+
+    @Test
+    fun shoppingListSectionCountsTheItemsToBuy() = runTest(dispatcher) {
+        val viewModel = viewModel()
+
+        advanceUntilIdle()
+
+        // Milk is still to buy, the batteries are done
+        val lists = viewModel.state.value!!.shoppingLists!!
+        assertEquals(1, lists.undoneCount)
+        assertEquals(listOf("Hardware store", "Shopping list"), lists.lists.map { it.name })
+    }
+
+    @Test
+    fun quickAddUsesTheShownListOtherwiseGrocysDefault() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+
+        val default = viewModel.quickAddListId()
+        shoppingLists.selectList(2)
+        val shown = viewModel.quickAddListId()
+        shoppingLists.selectList(99)
+        val removed = viewModel.quickAddListId()
+
+        assertEquals(1, default)
+        assertEquals(2, shown)
+        assertEquals(1, removed)
+    }
+
+    @Test
+    fun shoppingListSectionNeedsTheShoppingListFeature() = runTest(dispatcher) {
+        config.value = ServerConfig(shoppingList = false)
+        val viewModel = viewModel()
+
+        advanceUntilIdle()
+
+        assertNull(viewModel.state.value!!.shoppingLists)
+        assertNull(viewModel.quickAddListId())
+        assertTrue("/api/objects/shopping_list" !in server.requestedPaths)
     }
 }

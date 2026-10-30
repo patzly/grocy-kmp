@@ -10,7 +10,9 @@ import com.patrickzedler.grocy.core.data.server.ServerRepository
 import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
+import com.patrickzedler.grocy.core.data.settings.ShoppingListOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.StockOverviewOptionsRepository
+import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
 import com.patrickzedler.grocy.core.data.update.UpdateRepository
@@ -68,6 +70,16 @@ class AppGraph(
         )
     }
 
+    /** Shopping lists, whose items can be checked off offline. */
+    internal val shoppingListRepository by lazy {
+        ShoppingListRepository(
+            api = grocyApi,
+            database = platform.database,
+            scope = appScope,
+            connection = { platform.credentialStore.connection.first() },
+        )
+    }
+
     /** The logged in server and its version, read right at app start. */
     private val serverRepository = ServerRepository(
         connection = platform.credentialStore.connection,
@@ -103,6 +115,9 @@ class AppGraph(
 
     private val stockOverviewOptionsRepository =
         StockOverviewOptionsRepository(platform.settingsStore, appScope)
+
+    private val shoppingListOptionsRepository =
+        ShoppingListOptionsRepository(platform.settingsStore, appScope)
 
     /** Decoders of the engine that scans right now, provided to every scanner by GrocyApp. */
     internal val barcodeDecoderFactory: Flow<BarcodeDecoderFactory> by lazy {
@@ -142,6 +157,8 @@ class AppGraph(
             get() = this@AppGraph.masterDataRepository
         override val stockRepository: StockRepository
             get() = this@AppGraph.stockRepository
+        override val shoppingListRepository: ShoppingListRepository
+            get() = this@AppGraph.shoppingListRepository
         override val serverConfig: StateFlow<ServerConfig?>
             get() = serverRepository.serverConfig
         override val server: StateFlow<ServerState?>
@@ -157,6 +174,15 @@ class AppGraph(
             get() = serverRepository.serverConfig
         override val stockOverviewOptions: StockOverviewOptionsRepository
             get() = stockOverviewOptionsRepository
+        override val shoppingListRepository: ShoppingListRepository
+            get() = this@AppGraph.shoppingListRepository
+        override val shoppingListOptions: ShoppingListOptionsRepository
+            get() = shoppingListOptionsRepository
+    }
+
+    init {
+        // Items checked off offline when the app was last used
+        shoppingListRepository.sendPendingDoneInBackground()
     }
 
     internal val aboutDependencies: AboutDependencies = object : AboutDependencies {

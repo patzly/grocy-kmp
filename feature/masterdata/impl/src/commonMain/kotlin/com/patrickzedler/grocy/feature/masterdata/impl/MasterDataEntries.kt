@@ -48,6 +48,8 @@ import com.patrickzedler.grocy.feature.masterdata.api.UserentityRoute
 import com.patrickzedler.grocy.feature.masterdata.api.UserfieldRoute
 import com.patrickzedler.grocy.feature.masterdata.api.UserfieldsRoute
 import com.patrickzedler.grocy.feature.masterdata.impl.barcode.ProductBarcodesViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.booking.bookingEntries
+import com.patrickzedler.grocy.feature.masterdata.impl.booking.bookingRoute
 import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionsViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.journal.StockJournalScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.journal.StockJournalViewModel
@@ -75,6 +77,7 @@ import com.patrickzedler.grocy.feature.masterdata.impl.products.ProductsScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.products.ProductsViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist.AddToShoppingListViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist.shoppingListEntries
 import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockEntriesScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockEntriesViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockPageActions
@@ -94,6 +97,7 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
     navigator: Navigator,
 ) {
     val repository = dependencies.masterDataRepository
+    bookingEntries(dependencies, navigator)
     // Opens the userfields of an entity, like Grocy's "Configure userfields"
     val openUserfields = { entity: String -> navigator.navigate(UserfieldsRoute(entity)) }
 
@@ -180,6 +184,7 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
                 onStockEntriesClick = { navigator.navigate(StockEntriesRoute(it)) },
                 onStockJournalClick = { navigator.navigate(StockJournalRoute(it)) },
                 onStockJournalSummaryClick = { navigator.navigate(StockJournalSummaryRoute(it)) },
+                onBookingClick = { id, kind -> navigator.navigate(bookingRoute(kind, id)) },
             ),
             // Grocy's reports, scanning and recipes do not exist in the app yet
             links = StockOverviewLinks(
@@ -373,6 +378,8 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
         )
     }
 
+    shoppingListEntries(dependencies, navigator)
+
     objectListEntry<UserentitiesRoute, UserentityRoute>(
         kind = ObjectListKind.USERENTITIES,
         detail = ::UserentityRoute,
@@ -479,7 +486,7 @@ private fun listActionDone(
  * as [detail] in its place.
  */
 @Composable
-private fun formFrame(
+internal fun formFrame(
     navigator: Navigator,
     route: DetailRoute,
     entity: String,
@@ -506,11 +513,12 @@ private fun productLinks(navigator: Navigator) = ProductLinks(
     onStockEntriesClick = { navigator.navigate(StockEntriesRoute(it)) },
     onStockJournalClick = { navigator.navigate(StockJournalRoute(it)) },
     onStockJournalSummaryClick = { navigator.navigate(StockJournalSummaryRoute(it)) },
+    onBookingClick = { id, kind -> navigator.navigate(bookingRoute(kind, id)) },
 )
 
 /** The product overview, shopping list and labels of a stock page. */
 @Composable
-private fun stockPageActions(
+internal fun stockPageActions(
     dependencies: MasterDataDependencies,
     navigator: Navigator,
 ): StockPageActions {
@@ -527,17 +535,21 @@ private fun stockPageActions(
             onStockEntriesClick = { navigator.navigate(StockEntriesRoute(it)) },
             onStockJournalClick = { navigator.navigate(StockJournalRoute(it)) },
             onStockJournalSummaryClick = { navigator.navigate(StockJournalSummaryRoute(it)) },
+            onBookingClick = { id, kind -> navigator.navigate(bookingRoute(kind, id)) },
         ),
     )
 }
 
 // The app language, a change restarts the app, so ViewModels keep it
 @Composable
-private fun appLanguage(): String = LocalLocale.current.toLanguageTag()
+internal fun appLanguage(): String = LocalLocale.current.toLanguageTag()
 
 @Composable
-private fun shoppingListViewModel(dependencies: MasterDataDependencies) = viewModel {
-    AddToShoppingListViewModel(dependencies.masterDataRepository, dependencies.stockRepository)
+internal fun shoppingListViewModel(dependencies: MasterDataDependencies) = viewModel {
+    AddToShoppingListViewModel(
+        dependencies.masterDataRepository,
+        dependencies.shoppingListRepository,
+    )
 }
 
 /** The detail pane beside a list until an item is chosen. */
@@ -566,7 +578,7 @@ private val MasterDataCategory.route: Route
 
 /** The menu of the app's screens with its dialogs, leading to the settings and About. */
 @Composable
-private fun appMenuItems(navigator: Navigator): List<AppBarMenuItem> {
+internal fun appMenuItems(navigator: Navigator): List<AppBarMenuItem> {
     val menu = rememberAppMenu(
         onSettingsClick = { navigator.navigate(SettingsRoute) },
         onAboutClick = { navigator.navigate(AboutRoute) },

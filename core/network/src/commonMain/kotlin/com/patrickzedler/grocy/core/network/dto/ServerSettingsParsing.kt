@@ -34,6 +34,7 @@ internal fun JsonObject.toServerConfig(): ServerConfig {
         grocycode2D = primitive("GROCYCODE_TYPE")?.content?.trim()?.uppercase()
             ?.let { it != "1D" }
             ?: defaults.grocycode2D,
+        thermalPrinter = flag("FEATURE_FLAG_THERMAL_PRINTER", defaults.thermalPrinter),
         stockPriceTracking = flag("FEATURE_FLAG_STOCK_PRICE_TRACKING", defaults.stockPriceTracking),
         stockLocationTracking =
             flag("FEATURE_FLAG_STOCK_LOCATION_TRACKING", defaults.stockLocationTracking),
@@ -116,6 +117,8 @@ internal fun JsonObject.toUserSettings(): UserSettings {
             "shopping_list_to_stock_workflow_auto_submit_when_prefilled",
             defaults.shoppingListToStockAutoSubmit,
         ),
+        shoppingListPrintShowHeader =
+            flag("shopping_list_print_show_header", defaults.shoppingListPrintShowHeader),
         recipesShowListSideBySide =
             flag("recipes_show_list_side_by_side", defaults.recipesShowListSideBySide),
         recipesShowIngredientCheckbox =
@@ -131,6 +134,8 @@ internal fun JsonObject.toUserSettings(): UserSettings {
         ),
         tasksDueSoonDays = int("tasks_due_soon_days") ?: defaults.tasksDueSoonDays,
         batteriesDueSoonDays = int("batteries_due_soon_days") ?: defaults.batteriesDueSoonDays,
+        scanModePurchase = flag("scan_mode_purchase_enabled", defaults.scanModePurchase),
+        scanModeConsume = flag("scan_mode_consume_enabled", defaults.scanModeConsume),
         locale = primitive("locale")?.content ?: defaults.locale,
         productPresets = ProductPresets(
             locationId = id("product_presets_location_id"),

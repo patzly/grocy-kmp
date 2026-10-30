@@ -2,7 +2,6 @@ package com.patrickzedler.grocy.core.network.dto
 
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnitConversion
 import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
-import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.model.stock.ProductPurchase
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
@@ -121,22 +120,6 @@ internal data class StockLogDto(
         note = note?.takeIf { it.isNotBlank() },
     )
 }
-
-@Serializable
-internal data class ShoppingListDto(
-    val id: Int,
-    val name: FlexString = null,
-) {
-    fun toModel() = ShoppingList(id, name.orEmpty())
-}
-
-/** An item of Grocy's `shopping_list`, the part that finds a product's item. */
-@Serializable
-internal data class ShoppingListItemDto(
-    val id: Int,
-    @SerialName("product_id") val productId: FlexInt = null,
-    @SerialName("shopping_list_id") val shoppingListId: FlexInt = null,
-)
 
 /** The part of Grocy's `/stock/volatile` its stock overview takes from there. */
 @Serializable

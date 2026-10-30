@@ -3,6 +3,7 @@ package com.patrickzedler.grocy.feature.start.impl
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.data.util.RefreshController
 import com.patrickzedler.grocy.core.data.util.RefreshState
@@ -10,6 +11,7 @@ import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListSummary
 import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
 import com.patrickzedler.grocy.core.model.stock.StockSummary
 import com.patrickzedler.grocy.core.model.stock.stockSummaryOf
@@ -67,6 +69,8 @@ internal data class StartUiState(
     val currency: String,
     val priceDecimals: Int,
     val dueSoonDays: Int,
+    /** Null without the shopping list feature or before the first download. */
+    val shoppingLists: ShoppingListSummary?,
     /** The objects of each available category, those without any left out. */
     val masterDataCounts: List<Pair<MasterDataCount, Int>>,
 )
@@ -79,6 +83,7 @@ internal data class StartUiState(
 internal class StartViewModel(
     private val repository: MasterDataRepository,
     private val stock: StockRepository,
+    private val shoppingLists: ShoppingListRepository,
     val serverConfig: StateFlow<ServerConfig?>,
     private val today: () -> Long = ::todayEpochDay,
 ) : ViewModel() {
@@ -88,6 +93,7 @@ internal class StartViewModel(
         coroutineScope {
             launch { repository.refresh() }
             if (config.stock) launch { stock.refreshOverview(config.shoppingList) }
+            if (config.stock && config.shoppingList) launch { shoppingLists.refresh() }
         }
     }
     val refresh: StateFlow<RefreshState> = refreshController.state
@@ -102,7 +108,8 @@ internal class StartViewModel(
         repository.products,
         repository.stock,
         stock.productStockInfo,
-    ) { products, amounts, info -> StockData(products, amounts, info) }
+        shoppingLists.summary,
+    ) { products, amounts, info, lists -> StockData(products, amounts, info, lists) }
 
     val state: StateFlow<StartUiState?> = combine(
         serverConfig.filterNotNull(),
@@ -121,6 +128,17 @@ internal class StartViewModel(
 
     fun onErrorShown() = refreshController.onErrorShown()
 
+    /**
+     * The list a quick add puts its item on: the one the shopping list shows (chosen there in this
+     * process), otherwise Grocy's default list; null before the lists are known.
+     */
+    fun quickAddListId(): Int? {
+        val lists = state.value?.shoppingLists ?: return null
+        val selected = shoppingLists.selectedListId.value
+        return selected?.takeIf { id -> lists.lists.any { it.listId == id } }
+            ?: lists.defaultList?.listId
+    }
+
     private fun stateOf(
         config: ServerConfig,
         settings: UserSettings,
@@ -128,7 +146,7 @@ internal class StartViewModel(
         counts: Map<MasterDataCount, Int>,
     ) = StartUiState(
         // Nothing to tell until the first download stored the products
-    stock = if (config.stock && stockData.products.isNotEmpty()) {
+        stock = if (config.stock && stockData.products.isNotEmpty()) {
             stockSummaryOf(
                 products = stockData.products,
                 stock = stockData.amounts,
@@ -139,6 +157,10 @@ internal class StartViewModel(
             )
         } else {
             null
+        },
+        // No lists before the first download, Grocy always has its first one
+        shoppingLists = stockData.shoppingLists.takeIf {
+            config.stock && config.shoppingList && it.lists.isNotEmpty()
         },
         currency = config.currency,
         priceDecimals = settings.stockDecimalPlacesPricesDisplay,
@@ -152,6 +174,7 @@ internal class StartViewModel(
         val products: List<Product>,
         val amounts: List<StockAmount>,
         val info: List<ProductStockInfo>,
+        val shoppingLists: ShoppingListSummary,
     )
 
     private companion object {

@@ -133,11 +133,28 @@ class FakeGrocyServer(
             status = HttpStatusCode.NoContent,
             method = HttpMethod.Post,
         )
-        respond(
-            path = "/api/stock/shoppinglist/add-product",
-            status = HttpStatusCode.NoContent,
-            method = HttpMethod.Post,
-        )
+        // The shopping list's actions, new items and lists
+        listOf(
+            "add-product",
+            "clear",
+            "add-missing-products",
+            "add-overdue-products",
+            "add-expired-products",
+        ).forEach { action ->
+            respond(
+                path = "/api/stock/shoppinglist/$action",
+                status = HttpStatusCode.NoContent,
+                method = HttpMethod.Post,
+            )
+        }
+        listOf("/api/objects/shopping_list", "/api/objects/shopping_lists").forEach { path ->
+            respond(
+                path = path,
+                body = """{"created_object_id":${MasterDataJson.CREATED_ID}}""",
+                method = HttpMethod.Post,
+            )
+        }
+        respond("/api/print/shoppinglist/thermal", body = """{"result":"OK"}""")
     }
 
     /** Answers requests to [path], only those with [method] if given. */

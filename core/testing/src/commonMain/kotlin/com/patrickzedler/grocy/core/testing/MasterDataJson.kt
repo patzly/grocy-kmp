@@ -11,7 +11,8 @@ package com.patrickzedler.grocy.core.testing
  * - chores Vacuum (1, weekly, assigned to Alice) and Old chore (2, disabled), battery Remote
  *   (1), task category Garden (1), userentity Books (1), users Alice (1) and Bob (2)
  * - the default conversion 1 Pack = 6 Pieces and what Grocy derives from it for Milk
- * - shopping lists Shopping list (1) and Hardware store (2), the item of Milk (5) on the first
+ * - shopping lists Shopping list (1, with notes) and Hardware store (2), on the first the item
+ *   of Milk (5: 6 pieces shown as Pack, note "Low fat") and the done note item Batteries (6)
  * - Milk's stock entries: 2 pieces in the Fridge (1) and 1 opened piece (2); its journal: a
  *   purchase, a consumption and an undone consumption; its last purchase (price 1) and average
  *   price (0.9)
@@ -138,9 +139,19 @@ object MasterDataJson {
             """{"id":5,"product_id":null,"from_qu_id":2,"to_qu_id":1,"factor":6}]"""
 
     const val SHOPPING_LISTS =
-        """[{"id":1,"name":"Shopping list"},{"id":"2","name":"Hardware store"}]"""
+        """[{"id":1,"name":"Shopping list","description":"<p>Bring bags</p>"},""" +
+            """{"id":"2","name":"Hardware store","description":null}]"""
 
-    const val SHOPPING_LIST_ITEMS = """[{"id":5,"product_id":"1","shopping_list_id":1}]"""
+    const val SHOPPING_LIST_ITEMS =
+        """[{"id":5,"product_id":"1","shopping_list_id":1,"note":"Low fat","amount":"6",""" +
+            """"qu_id":"2","done":0,"userfields":null},""" +
+            """{"id":6,"product_id":null,"shopping_list_id":"1","note":"Batteries",""" +
+            """"amount":"2","qu_id":null,"done":"1","userfields":null}]"""
+
+    /** `/objects/shopping_list/5`, the item of Milk. */
+    const val MILK_SHOPPING_LIST_ITEM =
+        """{"id":5,"product_id":"1","shopping_list_id":1,"note":"Low fat","amount":"6",""" +
+            """"qu_id":"2","done":0,"userfields":null}"""
 
     const val STOCK_ENTRIES =
         """[{"id":1,"product_id":1,"amount":"2","best_before_date":"2026-10-30",""" +
@@ -197,6 +208,10 @@ object MasterDataJson {
         "/api/objects/quantity_unit_conversions_resolved" to RESOLVED_QU_CONVERSIONS,
         "/api/objects/shopping_lists" to SHOPPING_LISTS,
         "/api/objects/shopping_list" to SHOPPING_LIST_ITEMS,
+        "/api/objects/shopping_list/5" to MILK_SHOPPING_LIST_ITEM,
+        "/api/objects/shopping_lists/1" to
+            """{"id":1,"name":"Shopping list","description":"<p>Bring bags</p>"}""",
+        "/api/objects/shopping_lists/2" to """{"id":2,"name":"Hardware store"}""",
         "/api/objects/stock" to STOCK_ENTRIES,
         "/api/objects/stock_log" to STOCK_LOG,
     )

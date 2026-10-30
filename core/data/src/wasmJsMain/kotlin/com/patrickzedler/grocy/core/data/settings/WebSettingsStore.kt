@@ -4,6 +4,7 @@ import com.patrickzedler.grocy.core.data.BrowserLocalStorage
 import com.patrickzedler.grocy.core.data.KeyValueStorage
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -78,6 +79,22 @@ class WebSettingsStore internal constructor(
         stockOverviewOptionsState.value = options
     }
 
+    private val shoppingListOptionsState = MutableStateFlow(
+        ShoppingListOptions.of(
+            fields = storage.get(SHOPPING_LIST_FIELDS),
+            grouping = storage.get(SHOPPING_LIST_GROUPING),
+        ),
+    )
+
+    override val shoppingListOptions: Flow<ShoppingListOptions> =
+        shoppingListOptionsState.asStateFlow()
+
+    override suspend fun setShoppingListOptions(options: ShoppingListOptions) {
+        storage.set(SHOPPING_LIST_FIELDS, ShoppingListOptions.storedFields(options.fields))
+        storage.set(SHOPPING_LIST_GROUPING, options.grouping.name)
+        shoppingListOptionsState.value = options
+    }
+
     internal companion object {
         const val CHECK_UNLOCK_KEY = "grocy.checkUnlockKey"
         const val SCANNER_ENGINE = "grocy.scannerEngine"
@@ -90,5 +107,7 @@ class WebSettingsStore internal constructor(
         const val STOCK_OVERVIEW_GROUPING = "grocy.stockOverviewGrouping"
         const val STOCK_OVERVIEW_SORT = "grocy.stockOverviewSort"
         const val STOCK_OVERVIEW_ASCENDING = "grocy.stockOverviewAscending"
+        const val SHOPPING_LIST_FIELDS = "grocy.shoppingListFields"
+        const val SHOPPING_LIST_GROUPING = "grocy.shoppingListGrouping"
     }
 }

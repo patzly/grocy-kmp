@@ -7,6 +7,9 @@ import com.patrickzedler.grocy.core.model.AppPaletteStyle
 import com.patrickzedler.grocy.core.model.AppTheme
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
 import com.patrickzedler.grocy.core.model.stock.StockOverviewField
 import com.patrickzedler.grocy.core.model.stock.StockOverviewGrouping
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
@@ -104,5 +107,18 @@ class WebSettingsStoreTest {
         WebSettingsStore(storage).setStockOverviewOptions(options)
 
         assertEquals(options, WebSettingsStore(storage).stockOverviewOptions.first())
+    }
+
+    @Test
+    fun shoppingListOptionsAreStoredAndRestored() = runTest {
+        val storage = InMemoryStorage()
+        val options = ShoppingListOptions(
+            fields = setOf(ShoppingListField.LAST_PRICE_TOTAL),
+            grouping = ShoppingListGrouping.DEFAULT_STORE,
+        )
+
+        WebSettingsStore(storage).setShoppingListOptions(options)
+
+        assertEquals(options, WebSettingsStore(storage).shoppingListOptions.first())
     }
 }

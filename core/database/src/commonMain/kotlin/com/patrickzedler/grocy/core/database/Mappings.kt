@@ -15,6 +15,7 @@ import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnitConversion
 import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
 import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
@@ -357,9 +358,33 @@ fun StockLogEntity.toModel() = StockLogEntry(
     note = note,
 )
 
-fun ShoppingList.toEntity() = ShoppingListEntity(id, name)
+fun ShoppingList.toEntity() =
+    ShoppingListEntity(id, name, description, encodeUserfieldValues(userfields))
 
-fun ShoppingListEntity.toModel() = ShoppingList(id, name)
+fun ShoppingListEntity.toModel() =
+    ShoppingList(id, name, description, decodeUserfieldValues(userfields))
+
+fun ShoppingListItem.toEntity() = ShoppingListItemEntity(
+    id = id,
+    listId = listId,
+    productId = productId,
+    note = note,
+    amount = amount,
+    quId = quId,
+    done = done,
+    userfields = encodeUserfieldValues(userfields),
+)
+
+fun ShoppingListItemEntity.toModel() = ShoppingListItem(
+    id = id,
+    listId = listId,
+    productId = productId,
+    note = note,
+    amount = amount,
+    quId = quId,
+    done = done,
+    userfields = decodeUserfieldValues(userfields),
+)
 
 fun StockAmount.toEntity() = StockEntity(
     productId = productId,

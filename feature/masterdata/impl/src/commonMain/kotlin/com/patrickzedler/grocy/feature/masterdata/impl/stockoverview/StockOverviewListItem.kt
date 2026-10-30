@@ -263,7 +263,7 @@ private fun menuGroups(
 )
 
 /** A field shown as chip: its text, how screen readers name it, its icon and colors. */
-private class FieldChip(
+internal class FieldChip(
     val text: String,
     val description: String,
     val icon: DrawableResource? = null,
@@ -443,7 +443,7 @@ private fun dueChip(
 }
 
 @Composable
-private fun labelled(label: String, value: String) =
+internal fun labelled(label: String, value: String) =
     stringResource(Res.string.stock_overview_field_value, label, value)
 
 /**
@@ -451,7 +451,7 @@ private fun labelled(label: String, value: String) =
  * status color otherwise.
  */
 @Composable
-private fun FieldChipView(chip: FieldChip) {
+internal fun FieldChipView(chip: FieldChip) {
     val container = chip.status?.container ?: MaterialTheme.colorScheme.surfaceContainer
     val content = chip.status?.content ?: MaterialTheme.colorScheme.onSurfaceVariant
     Surface(

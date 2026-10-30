@@ -249,7 +249,8 @@ class GrocyApiMasterDataTest {
                     """"recipes_show_ingredient_checkbox":"1",""" +
                     """"recipe_ingredients_group_by_product_group":"1",""" +
                     """"chores_due_soon_days":"0","chores_overview_swap_tracking_buttons":"1",""" +
-                    """"tasks_due_soon_days":"3","batteries_due_soon_days":9,"locale":"de"}""",
+                    """"tasks_due_soon_days":"3","batteries_due_soon_days":9,"locale":"de",""" +
+                    """"scan_mode_purchase_enabled":"1","scan_mode_consume_enabled":true}""",
             )
         }
 
@@ -268,6 +269,8 @@ class GrocyApiMasterDataTest {
         assertEquals(3, settings.tasksDueSoonDays)
         assertEquals(9, settings.batteriesDueSoonDays)
         assertEquals("de", settings.locale)
+        assertTrue(settings.scanModePurchase)
+        assertTrue(settings.scanModeConsume)
     }
 
     @Test

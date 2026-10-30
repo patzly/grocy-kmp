@@ -162,27 +162,6 @@ class StockRepositoryTest {
     }
 
     @Test
-    fun shoppingListItemGetsItsUserfieldsAfterTheProductWasAdded() = runTest {
-        repository.addToShoppingList(
-            productId = 1,
-            listId = 1,
-            amount = 6.0,
-            quId = 2,
-            note = null,
-            userfields = mapOf("urgent" to "1"),
-        )
-
-        assertEquals(1, server.requestsTo("/api/userfields/shopping_list/5", HttpMethod.Put).size)
-    }
-
-    @Test
-    fun shoppingListItemWithoutChangedUserfieldsIsNotWrittenAgain() = runTest {
-        repository.addToShoppingList(1, 1, 6.0, 2, note = null, userfields = emptyMap())
-
-        assertTrue(server.requestsTo("/api/userfields/shopping_list/5", HttpMethod.Put).isEmpty())
-    }
-
-    @Test
     fun rejectedBookingFails() = runTest {
         repository.refreshStockEntries()
         val entry = repository.stockEntries.first().first()

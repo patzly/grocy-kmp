@@ -541,7 +541,7 @@ internal data class PriceHistoryDto(
 }
 
 /** The date part of Grocy's "YYYY-MM-DD" or "YYYY-MM-DD HH:MM:SS". */
-private fun String.toIsoDate(): String? = take(ISO_DATE_LENGTH).takeIf { ISO_DATE.matches(it) }
+internal fun String.toIsoDate(): String? = take(ISO_DATE_LENGTH).takeIf { ISO_DATE.matches(it) }
 
 private const val ISO_DATE_LENGTH = 10
 private val ISO_DATE = Regex("""\d{4}-\d{2}-\d{2}""")

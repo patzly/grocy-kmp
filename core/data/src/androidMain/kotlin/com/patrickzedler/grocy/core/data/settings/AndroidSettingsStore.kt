@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -78,6 +79,17 @@ class AndroidSettingsStore(
         }
     }
 
+    override val shoppingListOptions: Flow<ShoppingListOptions> = preferences
+        .map { ShoppingListOptions.of(it[SHOPPING_LIST_FIELDS], it[SHOPPING_LIST_GROUPING]) }
+        .distinctUntilChanged()
+
+    override suspend fun setShoppingListOptions(options: ShoppingListOptions) {
+        dataStore.edit {
+            it[SHOPPING_LIST_FIELDS] = ShoppingListOptions.storedFields(options.fields)
+            it[SHOPPING_LIST_GROUPING] = options.grouping.name
+        }
+    }
+
     private companion object {
         const val FILE_NAME = "settings"
         val CHECK_UNLOCK_KEY = booleanPreferencesKey("check_unlock_key")
@@ -91,5 +103,7 @@ class AndroidSettingsStore(
         val STOCK_OVERVIEW_GROUPING = stringPreferencesKey("stock_overview_grouping")
         val STOCK_OVERVIEW_SORT = stringPreferencesKey("stock_overview_sort")
         val STOCK_OVERVIEW_ASCENDING = booleanPreferencesKey("stock_overview_ascending")
+        val SHOPPING_LIST_FIELDS = stringPreferencesKey("shopping_list_fields")
+        val SHOPPING_LIST_GROUPING = stringPreferencesKey("shopping_list_grouping")
     }
 }

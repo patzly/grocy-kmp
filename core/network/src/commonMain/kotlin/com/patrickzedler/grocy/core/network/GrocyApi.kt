@@ -22,10 +22,18 @@ import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettingValue
 import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
+import com.patrickzedler.grocy.core.model.stock.BookingResult
+import com.patrickzedler.grocy.core.model.stock.ConsumeBooking
+import com.patrickzedler.grocy.core.model.stock.InventoryBooking
+import com.patrickzedler.grocy.core.model.stock.OpenBooking
+import com.patrickzedler.grocy.core.model.stock.ProductLocationAmount
 import com.patrickzedler.grocy.core.model.stock.ProductPurchase
+import com.patrickzedler.grocy.core.model.stock.PurchaseBooking
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockLogEntry
+import com.patrickzedler.grocy.core.model.stock.TransferBooking
 import com.patrickzedler.grocy.core.network.dto.AveragePriceDto
 import com.patrickzedler.grocy.core.network.dto.BatteryDto
 import com.patrickzedler.grocy.core.network.dto.ChoreDto
@@ -38,8 +46,11 @@ import com.patrickzedler.grocy.core.network.dto.ProductBarcodeDto
 import com.patrickzedler.grocy.core.network.dto.ProductDetailsDto
 import com.patrickzedler.grocy.core.network.dto.ProductDto
 import com.patrickzedler.grocy.core.network.dto.ProductGroupDto
+import com.patrickzedler.grocy.core.network.dto.ProductLocationAmountDto
+import com.patrickzedler.grocy.core.network.dto.ProductStockDetailsDto
 import com.patrickzedler.grocy.core.network.dto.QuantityUnitConversionDto
 import com.patrickzedler.grocy.core.network.dto.QuantityUnitDto
+import com.patrickzedler.grocy.core.network.dto.RecipeDto
 import com.patrickzedler.grocy.core.network.dto.ResolvedQuantityUnitConversionDto
 import com.patrickzedler.grocy.core.network.dto.ShoppingListDto
 import com.patrickzedler.grocy.core.network.dto.ShoppingListItemDto
@@ -54,6 +65,7 @@ import com.patrickzedler.grocy.core.network.dto.UserDto
 import com.patrickzedler.grocy.core.network.dto.UserentityDto
 import com.patrickzedler.grocy.core.network.dto.UserfieldDto
 import com.patrickzedler.grocy.core.network.dto.VolatileStockDto
+import com.patrickzedler.grocy.core.network.dto.flag
 import com.patrickzedler.grocy.core.network.dto.toJson
 import com.patrickzedler.grocy.core.network.dto.toServerConfig
 import com.patrickzedler.grocy.core.network.dto.toUserSettings
@@ -289,6 +301,109 @@ class GrocyApi(
         ).firstOrNull()?.id
     }
 
+    /** Every item of every shopping list, with their userfields. */
+    suspend fun shoppingListItems(connection: ServerConnection): List<ShoppingListItem> =
+        get<List<ShoppingListItemDto>>(connection, "objects", SHOPPING_LIST_ITEMS)
+            .map { it.toModel() }
+
+    suspend fun shoppingListItem(connection: ServerConnection, id: Int): ShoppingListItem =
+        get<ShoppingListItemDto>(connection, "objects", SHOPPING_LIST_ITEMS, id.toString())
+            .toModel()
+
+    /** Creates the item (id [NEW_OBJECT_ID]) or saves it like Grocy's item form; returns its id. */
+    suspend fun saveShoppingListItem(connection: ServerConnection, item: ShoppingListItem): Int =
+        saveObject(connection, SHOPPING_LIST_ITEMS, item.id, item.toJson())
+
+    /**
+     * Checks the item off, or on again; only `done` is sent, so what others changed on the item
+     * in the meantime stays. [GrocyApiException.HttpError] once the item is gone.
+     */
+    suspend fun setShoppingListItemDone(connection: ServerConnection, id: Int, done: Boolean) {
+        execute(
+            connection,
+            HttpMethod.Put,
+            listOf("objects", SHOPPING_LIST_ITEMS, id.toString()),
+            body = jsonBody(buildJsonObject { put("done", flag(done)) }),
+        )
+    }
+
+    suspend fun shoppingList(connection: ServerConnection, id: Int): ShoppingList =
+        get<ShoppingListDto>(connection, "objects", SHOPPING_LISTS, id.toString()).toModel()
+
+    /** Creates the list (id [NEW_OBJECT_ID]) or renames it; returns its id. */
+    suspend fun saveShoppingList(connection: ServerConnection, list: ShoppingList): Int =
+        saveObject(connection, SHOPPING_LISTS, list.id, list.toJson())
+
+    /** Saves the list's "Notes" as HTML, which Grocy cleans up itself. */
+    suspend fun saveShoppingListDescription(
+        connection: ServerConnection,
+        listId: Int,
+        description: String,
+    ) {
+        execute(
+            connection,
+            HttpMethod.Put,
+            listOf("objects", SHOPPING_LISTS, listId.toString()),
+            body = jsonBody(buildJsonObject { put("description", description) }),
+        )
+    }
+
+    /** Removes the items of list [listId], only the done ones with [doneOnly]. */
+    suspend fun clearShoppingList(connection: ServerConnection, listId: Int, doneOnly: Boolean) {
+        execute(
+            connection,
+            HttpMethod.Post,
+            listOf("stock", "shoppinglist", "clear"),
+            body = jsonBody(
+                buildJsonObject {
+                    put("list_id", listId)
+                    put("done_only", doneOnly)
+                },
+            ),
+        )
+    }
+
+    /**
+     * Grocy's "Add products that are below defined min. stock amount": the server raises or
+     * adds the items of those products.
+     */
+    suspend fun addMissingProductsToShoppingList(connection: ServerConnection, listId: Int) {
+        shoppingListAction(connection, "add-missing-products", listId)
+    }
+
+    /** Adds the products with overdue stock that are on no list yet. */
+    suspend fun addOverdueProductsToShoppingList(connection: ServerConnection, listId: Int) {
+        shoppingListAction(connection, "add-overdue-products", listId)
+    }
+
+    /** Adds the products with expired stock that are on no list yet. */
+    suspend fun addExpiredProductsToShoppingList(connection: ServerConnection, listId: Int) {
+        shoppingListAction(connection, "add-expired-products", listId)
+    }
+
+    private suspend fun shoppingListAction(
+        connection: ServerConnection,
+        action: String,
+        listId: Int,
+    ) {
+        execute(
+            connection,
+            HttpMethod.Post,
+            listOf("stock", "shoppinglist", action),
+            body = jsonBody(buildJsonObject { put("list_id", listId) }),
+        )
+    }
+
+    /** Prints the list on the server's thermal printer, with Grocy's header if [printHeader]. */
+    suspend fun printShoppingList(connection: ServerConnection, listId: Int, printHeader: Boolean) {
+        execute(
+            connection,
+            HttpMethod.Get,
+            listOf("print", "shoppinglist", "thermal"),
+            query = listOf("list" to listId.toString(), "printHeader" to printHeader.toString()),
+        )
+    }
+
     /** Every stock entry of every product, with the userfields of entries. */
     suspend fun stockEntries(connection: ServerConnection): List<StockEntry> =
         get<List<StockEntryDto>>(connection, "objects", STOCK).map { it.toModel() }
@@ -404,6 +519,106 @@ class GrocyApi(
         )
         return decode<List<StockLogDto>>(response).firstOrNull()?.transactionId
     }
+
+    /** What Grocy's stock pages read of a product: amounts, last purchase, next due date. */
+    suspend fun productStockDetails(connection: ServerConnection, productId: Int) =
+        get<ProductStockDetailsDto>(connection, "stock", PRODUCTS, productId.toString())
+            .toModel(productId)
+
+    /**
+     * The locations where the product has stock, with [includeSubProducts] also those of its
+     * sub products, like Grocy's consume page.
+     */
+    suspend fun productLocationAmounts(
+        connection: ServerConnection,
+        productId: Int,
+        includeSubProducts: Boolean,
+    ): List<ProductLocationAmount> = get<List<ProductLocationAmountDto>>(
+        connection,
+        "stock",
+        PRODUCTS,
+        productId.toString(),
+        "locations",
+        query = subProductsQuery(includeSubProducts),
+    ).map { it.toModel() }
+
+    /** The product's stock entries in Grocy's consume order, see [productLocationAmounts]. */
+    suspend fun productStockEntries(
+        connection: ServerConnection,
+        productId: Int,
+        includeSubProducts: Boolean,
+    ): List<StockEntry> = get<List<StockEntryDto>>(
+        connection,
+        "stock",
+        PRODUCTS,
+        productId.toString(),
+        "entries",
+        query = subProductsQuery(includeSubProducts),
+    ).map { it.toModel() }
+
+    /** The normal recipes (no meal plan entries), id to name, for the consume page. */
+    suspend fun recipes(connection: ServerConnection): Map<Int, String> =
+        get<List<RecipeDto>>(
+            connection,
+            "objects",
+            "recipes",
+            query = listOf("query[]" to "type=normal"),
+        ).associate { it.id to it.name.orEmpty() }
+
+    /** Grocy's "Purchase" of the product; returns its transaction for undoing it. */
+    suspend fun purchaseProduct(
+        connection: ServerConnection,
+        productId: Int,
+        booking: PurchaseBooking,
+    ): BookingResult = bookProduct(connection, productId, "add", booking.toJson())
+
+    /** Grocy's "Consume" page's booking; returns its transaction for undoing it. */
+    suspend fun consumeProduct(
+        connection: ServerConnection,
+        productId: Int,
+        booking: ConsumeBooking,
+    ): BookingResult = bookProduct(connection, productId, "consume", booking.toJson())
+
+    /** Grocy's "Mark as opened" of the consume page; returns its transaction. */
+    suspend fun openProduct(
+        connection: ServerConnection,
+        productId: Int,
+        booking: OpenBooking,
+    ): BookingResult = bookProduct(connection, productId, "open", booking.toJson())
+
+    /** Grocy's "Transfer"; returns its transaction for undoing it. */
+    suspend fun transferProduct(
+        connection: ServerConnection,
+        productId: Int,
+        booking: TransferBooking,
+    ): BookingResult = bookProduct(connection, productId, "transfer", booking.toJson())
+
+    /** Grocy's "Inventory"; returns its transaction for undoing it. */
+    suspend fun inventoryProduct(
+        connection: ServerConnection,
+        productId: Int,
+        booking: InventoryBooking,
+    ): BookingResult = bookProduct(connection, productId, "inventory", booking.toJson())
+
+    /** Posts a booking of the product; Grocy answers with the stock log rows it wrote. */
+    private suspend fun bookProduct(
+        connection: ServerConnection,
+        productId: Int,
+        action: String,
+        body: JsonObject,
+    ): BookingResult {
+        val response = execute(
+            connection,
+            HttpMethod.Post,
+            listOf("stock", PRODUCTS, productId.toString(), action),
+            body = jsonBody(body),
+        )
+        val first = decode<List<StockLogDto>>(response).firstOrNull()
+        return BookingResult(first?.transactionId, first?.stockId)
+    }
+
+    private fun subProductsQuery(include: Boolean): List<Pair<String, String>> =
+        if (include) listOf("include_sub_products" to "true") else emptyList()
 
     /** Undoes every booking of the transaction [transactionId], like Grocy's "Undo" messages. */
     suspend fun undoTransaction(connection: ServerConnection, transactionId: String) {
@@ -819,6 +1034,8 @@ class GrocyApi(
         private const val PRODUCT_BARCODES = "product_barcodes"
         private const val QU_CONVERSIONS = "quantity_unit_conversions"
         private const val STOCK = "stock"
+        private const val SHOPPING_LIST_ITEMS = "shopping_list"
+        private const val SHOPPING_LISTS = "shopping_lists"
 
         private const val INGRESS_COOKIE = "ingress_session"
     }

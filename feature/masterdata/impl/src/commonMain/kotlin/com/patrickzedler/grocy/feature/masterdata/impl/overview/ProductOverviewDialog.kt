@@ -130,10 +130,8 @@ import com.patrickzedler.grocy.core.resources.product_picture_load_failed
 import com.patrickzedler.grocy.core.resources.product_stock_entries
 import com.patrickzedler.grocy.core.resources.product_stock_journal
 import com.patrickzedler.grocy.core.resources.product_stock_journal_summary
-import com.patrickzedler.grocy.core.resources.stock_consume
-import com.patrickzedler.grocy.core.resources.stock_inventory
-import com.patrickzedler.grocy.core.resources.stock_purchase
-import com.patrickzedler.grocy.core.resources.stock_transfer
+import com.patrickzedler.grocy.feature.masterdata.impl.booking.BookingKind
+import com.patrickzedler.grocy.feature.masterdata.impl.booking.title
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.decodeToImageBitmap
@@ -262,6 +260,7 @@ internal class OverviewActions(
     val onStockEntriesClick: (productId: Int) -> Unit,
     val onStockJournalClick: (productId: Int) -> Unit,
     val onStockJournalSummaryClick: (productId: Int) -> Unit,
+    val onBookingClick: (productId: Int, kind: BookingKind) -> Unit,
     val onGrocycodeDownload: (productId: Int, twoDimensional: Boolean) -> Unit,
     val onGrocycodePrint: (productId: Int) -> Unit,
 ) {
@@ -271,6 +270,7 @@ internal class OverviewActions(
         onStockEntriesClick = { onStockEntriesClick(productId) },
         onStockJournalClick = { onStockJournalClick(productId) },
         onStockJournalSummaryClick = { onStockJournalSummaryClick(productId) },
+        onBookingClick = { onBookingClick(productId, it) },
         onGrocycodeDownload = { onGrocycodeDownload(productId, it) },
         onGrocycodePrint = { onGrocycodePrint(productId) },
     )
@@ -283,6 +283,7 @@ internal class ProductActions(
     val onStockEntriesClick: () -> Unit,
     val onStockJournalClick: () -> Unit,
     val onStockJournalSummaryClick: () -> Unit,
+    val onBookingClick: (BookingKind) -> Unit,
     val onGrocycodeDownload: (twoDimensional: Boolean) -> Unit,
     val onGrocycodePrint: () -> Unit,
 )
@@ -333,8 +334,8 @@ private fun ActionGroup(state: ProductOverviewUiState?, actions: ProductActions)
 }
 
 /**
- * The menu of the product overview: the stock pages, Grocy's bookings (their pages do not
- * exist yet, so they are disabled) and the grocycode like Grocy's product card menu.
+ * The menu of the product overview: the stock pages, Grocy's bookings and the grocycode like
+ * Grocy's product card menu.
  */
 @Composable
 private fun actionMenuGroups(
@@ -354,12 +355,12 @@ private fun actionMenuGroups(
                 actions.onStockJournalSummaryClick()
             },
         ),
-        listOf(
-            Res.string.stock_purchase,
-            Res.string.stock_consume,
-            Res.string.stock_transfer,
-            Res.string.stock_inventory,
-        ).map { AppBarMenuItem(stringResource(it), enabled = false) {} },
+        BookingKind.entries
+            // Grocy's transfer needs locations
+            .filter { it != BookingKind.TRANSFER || state?.showLocation == true }
+            .map { kind ->
+                AppBarMenuItem(stringResource(kind.title)) { actions.onBookingClick(kind) }
+            },
         listOfNotNull(
             AppBarMenuItem(stringResource(Res.string.grocycode_download_of, product)) {
                 actions.onGrocycodeDownload(state?.grocycode2D == true)
@@ -740,7 +741,7 @@ private val PlaceholderHeight = 160.dp
 private fun ProductOverviewPreview() {
     GrocyTheme {
         ProductOverviewContent(
-            actions = ProductActions({}, {}, {}, {}, {}, {}, {}),
+            actions = ProductActions({}, {}, {}, {}, {}, {}, {}, {}),
             name = "Milk",
             state = ProductOverviewUiState(
                 productId = 1,

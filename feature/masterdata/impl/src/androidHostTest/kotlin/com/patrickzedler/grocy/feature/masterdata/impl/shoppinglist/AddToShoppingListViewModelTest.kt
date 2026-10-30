@@ -3,6 +3,7 @@ package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import app.cash.turbine.test
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
+import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectField
 import io.ktor.http.HttpMethod
 import io.ktor.http.content.TextContent
 import kotlin.test.AfterTest
@@ -43,11 +44,13 @@ class AddToShoppingListViewModelTest {
 
     private suspend fun TestScope.openedViewModel(): AddToShoppingListViewModel {
         environment.repository.refresh()
-        return AddToShoppingListViewModel(environment.repository, environment.stockRepository)
-            .also {
-                it.open(productId = 1)
-                advanceUntilIdle()
-            }
+        return AddToShoppingListViewModel(
+            environment.repository,
+            environment.shoppingListRepository,
+        ).also {
+            it.open(productId = 1)
+            advanceUntilIdle()
+        }
     }
 
     @Test
@@ -55,10 +58,10 @@ class AddToShoppingListViewModelTest {
         val viewModel = openedViewModel()
 
         val dialog = assertNotNull(viewModel.dialog)
-        assertEquals("1", dialog.amount.text.toString())
-        assertEquals(2, dialog.quId)
-        assertEquals(1, dialog.listId)
-        assertEquals(listOf("Hardware store", "Shopping list"), dialog.lists.map { it.name })
+        assertEquals("1", dialog.inputs.amount.text.toString())
+        assertEquals(2, dialog.inputs.quId)
+        assertEquals(1, dialog.inputs.listId)
+        assertEquals(listOf("Hardware store", "Shopping list"), dialog.inputs.lists.map { it.name })
     }
 
     @Test
@@ -70,8 +73,8 @@ class AddToShoppingListViewModelTest {
 
         val viewModel = openedViewModel()
 
-        assertTrue(viewModel.dialog!!.lists.isEmpty())
-        assertEquals(1, viewModel.dialog!!.listId)
+        assertTrue(viewModel.dialog!!.inputs.lists.isEmpty())
+        assertEquals(1, viewModel.dialog!!.inputs.listId)
     }
 
     @Test
@@ -79,7 +82,7 @@ class AddToShoppingListViewModelTest {
         val viewModel = openedViewModel()
 
         viewModel.added.test {
-            viewModel.dialog!!.amount.setTextAndPlaceCursorAtEnd("2")
+            viewModel.dialog!!.inputs.amount.setTextAndPlaceCursorAtEnd("2")
             viewModel.save()
             advanceUntilIdle()
 
@@ -102,11 +105,11 @@ class AddToShoppingListViewModelTest {
     fun invalidAmountIsNotSent() = runTest(dispatcher) {
         val viewModel = openedViewModel()
 
-        viewModel.dialog!!.amount.setTextAndPlaceCursorAtEnd("-1")
+        viewModel.dialog!!.inputs.amount.setTextAndPlaceCursorAtEnd("-1")
         viewModel.save()
         advanceUntilIdle()
 
-        assertNotNull(viewModel.dialog!!.errors[ShoppingListItemField.AMOUNT])
+        assertNotNull(viewModel.dialog!!.errors[ObjectField.AMOUNT])
         assertTrue(
             environment.server.requestsTo("/api/stock/shoppinglist/add-product", HttpMethod.Post)
                 .isEmpty(),

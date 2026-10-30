@@ -8,32 +8,121 @@ Current state: login (demo server, QR code of Grocy's API key page, manual Grocy
 Home Assistant ingress on Android), the reusable barcode scanner (`core:scanner`), update checks
 on every platform, the start screen (on Grocy's public demo first its warning as a group of its
 own, `DemoServerWarning` of `core:design` like the server settings show it, a tap opens them
-through the settings categories; then sections, each a group of its own: the stock overview (only
-with the stock feature, `StartSection.isAvailable`) and Master data so far, each telling about
+through the settings categories; then sections grouped by `StartGroup`: the stock overview (only
+with the stock feature, `StartSection.isAvailable`) and the shopping list (also with the
+shopping list feature) as one group, then Master data, each telling about
 its data as supporting text (`SupportingBulletList` of `core:design`, numbers of 0 left out;
 `StartViewModel` downloads master data and stock overview when it opens): the products in stock
 and, with prices, their value, then as list Grocy's messages above its stock overview (due
 within the due soon days, overdue, expired, below min. stock amount with how many of them are
-on shopping lists; `stockSummaryOf` of `core:model`, counted like Grocy's messages), and the
+on shopping lists; `stockSummaryOf` of `core:model`, counted like Grocy's messages; below them
+Grocy's Purchase, Consume, Transfer (with location tracking) and Inventory as a standard button
+group of wide tonal icon buttons, `StockActionButtons`, the last ones in the menu of a tonal
+overflow button when the item is too narrow), the items still to buy (with several lists
+holding some, per list as "Name (count)"; below it Grocy's "Add item" as one wide tonal icon
+button, the cart with a plus, opening `ShoppingListItemRoute` for the list the shopping list
+shows or Grocy's default list, `StartViewModel.quickAddListId`), and the
 objects of each master data category the server has in one line joined by commas
 (`MasterDataCount`, `start_list_join`); then Settings as a
 group of its own with the gear icon, a plain item opening the settings as their own scene, and the
 app menu without Settings; from
 Material's expanded width on a list-detail scene like the settings: `StartSection`, the
-section's page (`StockOverviewRoute`, `MasterDataRoute`, both `DetailRoute`s) opens beside it, `start_select_hint` until
-then, and a category of the master data still opens its list as a scene of its own with its
-forms beside it, never in place of the master data; back leaves the whole scene like every
-list-detail scene, from the start screen the app, it never closes the page beside it first, on
-purpose), an About
+section's page (`StockOverviewRoute`, `MasterDataRoute`, both `DetailRoute`s) opens beside it,
+`start_select_hint` until then; the shopping list is a list-detail scene of its own and opens
+on its own (`StartSection.route` is no `DetailRoute`), and a category of the master data still
+opens its list as a scene of its own with its forms beside it, never in place of the master
+data; back leaves the whole scene like every list-detail scene, from the start screen the app,
+it never closes the page beside it first, on purpose), an About
 screen, the Settings overview (`feature:settings`), Grocy's stock overview and the master data
 (`feature:masterdata`): the overview of Grocy's master data categories, the list and form of
 every category (products with their overview dialog, locations, stores, quantity units,
 product groups, chores, batteries, task categories, userfields, userentities), with the
 product's barcodes, grocycode and conversion overrides, the default conversions of units,
 Grocy's stock pages of products (stock entries, stock journal, journal summary), "Add to
-shopping list" and the stock settings ("Presets for new products"). Grocy's purchase,
-consume, transfer and inventory pages do not exist yet, so the stock pages leave out their
-links.
+shopping list", the stock settings ("Presets for new products"), Grocy's stock bookings
+Purchase, Consume, Transfer and Inventory (see "Stock bookings") and Grocy's shopping list (see
+"Shopping list").
+
+Titles of the start screen's items (not the demo warning) are `titleLarge` and their supporting
+text `bodyLarge`, so its data reads at a glance.
+
+Stock bookings (`booking/` of `feature:masterdata`, routes `PurchaseRoute`, `ConsumeRoute`,
+`TransferRoute`, `InventoryRoute`, from the start screen's buttons and the product overview's
+menu):
+- One `BookingViewModel(kind)` and `BookingScreen` for Grocy's four pages, every field of
+  Grocy's form in its order as segmented groups (`BookingForm`), hidden by feature flag and
+  user setting like Grocy; the booking is the FAB, "Mark as opened" of the consume page a
+  toolbar button. The pure logic is tested: `bookableProducts` (purchase and inventory: active
+  with own stock; consume: in stock, sub products included; transfer: own stock in stock),
+  `matchCode` (barcode, grocycode `grcy:p:<id>[:<stock_id>]` of `ProductGrocycode`, a known
+  product the page does not offer is "not in stock", an unknown code asks Grocy's "Create or
+  assign product": add as barcode to the product chosen next, or as new product, the barcode
+  is saved with the booking), `pricePerStockUnit` (unit or total price, the tare weight left
+  out), `purchaseDueDate` (the product's default only into an empty field, a freezer's over
+  it), `amountLimits`/`validateBooking` (Grocy's number picker rules: smallest step, stock at
+  the location or the chosen entry as maximum, parents without maximum, gross weight above
+  container and stock, inventory not the current stock), `inventoryChange`,
+  `consumeLocation`/`transferSource`.
+- Prefills like Grocy's pages when a product is chosen: units of `productAmountUnits` (purchase
+  unit, consume unit, stock unit for transfer, inventory and tare weight), default amounts of
+  the user settings, store, location, due date, price from the last price, label type and
+  price type of the product, a barcode's amount, unit, store, last price (as total) and note;
+  the product's stock is loaded from the server (`StockRepository.productStockDetails`,
+  `productLocationAmounts`, `productStockEntries`; online only, offline the product shows the
+  offline message and nothing can be booked). Consume and transfer list only locations with
+  stock, the product's default one marked like Grocy's "(Default location)", and its entries
+  for "Use a specific stock item" (Grocy's text of an entry); a stock entry's grocycode chooses
+  that entry with its whole amount.
+- Bookings (`StockRepository.purchase/consume/open/transfer/inventory`, Grocy's endpoints,
+  amounts and prices sent in the stock unit) show Grocy's message with "Undo" (undoes the
+  transaction) and its warnings (due earlier than the stock, frozen, thawed, should not be
+  frozen, moved on opening); userfields of `stock` are saved under the transaction like
+  Grocy's pages (the server moves them to the new entries), the used barcode gets the typed
+  price as last price. The form resets like Grocy's page (each keeps what Grocy keeps).
+- Grocy's scan mode (user settings `scan_mode_purchase_enabled`/`_consume_enabled`, a switch
+  on the page): a scanned product is booked with one unit (a barcode's amount stays) once every
+  field is filled, the scanner stays open; otherwise Grocy's message.
+- From a shopping list item (`PurchaseRoute(productId, amount, quId, shoppingListItemId)`) the
+  purchase opens with the item's amount in its unit, books itself with
+  `shopping_list_to_stock_workflow_auto_submit_when_prefilled` when complete, removes the item
+  (`ShoppingListRepository.deleteItem`) and goes back.
+
+Shopping list (`shoppinglist/` of `feature:masterdata`, `ShoppingListRepository` of `core:data`):
+- `ShoppingListRoute(listId)` is the list pane of a list-detail scene of its own (scene key
+  "shoppinglist"), the item form `ShoppingListItemRoute(id, listId, productId)` and the list form
+  `ShoppingListFormRoute(id)` its details (`DetailRoute`s, also on their own as quick add); both
+  forms close after creating (`ObjectFormViewModel.closesWhenCreated`), a new item without list
+  goes to Grocy's first list by name, a list created in its form becomes the shown one
+  (`ShoppingListRepository.selectedListId`, kept for the process).
+- Rows: a checkbox checks off (done items struck through), a tap opens the item form, swipe
+  towards the end checks off, towards the start "Add this item to stock"; the menu has Product
+  overview, done/edit, add to stock and delete (no question, like Grocy). The amount chip is
+  blue below the min. stock amount. Chips: the list ("Name (count)"), status with counts, group
+  by (none, product group, default store) and the shown fields (amount, product group, last
+  price per unit and total, default store, barcodes, the userfields Grocy shows as columns),
+  kept in `SettingsStore` (`ShoppingListOptions`, `ShoppingListOptionsRepository`). The total
+  value counts only the shown list; "Ungrouped" and "Not set" groups come last.
+- The overflow menu has Grocy's list actions (new, edit, delete list, notes edited as plain text
+  in a dialog), clear list (asks) and clear done items, the stock actions (add products below
+  min. stock amount, overdue/expired ones, "Add all list items to stock") and Print (only
+  Grocy's thermal printer, `ServerConfig.thermalPrinter`). Left out on purpose: the month
+  calendar, browser printing, collapsing groups, sorting by other columns than the name, and
+  "create or assign product" for unknown barcodes (a scan only picks known products).
+- "Add this item to stock" opens `PurchaseRoute(productId, amount, quId, shoppingListItemId)`,
+  whose booking removes the item (`ShoppingListRepository.deleteItem`); "Add all list items to
+  stock" opens one purchase after the other: when the list shows again, a removed item opens the
+  next one, an item still there asks Grocy's "Adding shopping list item %s of %s" with Skip or
+  Cancel.
+- Checking off works offline (product requirement): `setDone` writes the local `done` and a
+  queued entry (`pending_shopping_list_done`, the item id as key) in one transaction and sends
+  it in the app scope; the replay PUTs only `{"done":0|1}`, drops the entry on a 4xx (the item is
+  gone or refused, it is never recreated), keeps it on a 5xx or offline, and removes it only
+  while its value is unchanged. Downloads put queued check offs on top of the server's state. The
+  queue is sent on the next check off, on refresh and at app start (`AppGraph` init); there is no
+  connectivity listener. The list's subtitle tells how many are not sent yet.
+- "Add to shopping list" and the item form share their fields (`ShoppingListItemInputs`,
+  `ShoppingListItemFields`); `ShoppingListRepository.addProduct` keeps Grocy's merge of
+  add-product.
 
 Stock overview (`stockoverview/` of `feature:masterdata`, it opens the product overview):
 - `StockOverviewScreen` is Grocy's stock overview page: the active products not hidden there
@@ -247,8 +336,8 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   apart, it always fits): Edit product and Add to shopping list (only with the shopping list
   feature) as wide filled (primary) icon buttons, then the narrow tonal menu button
   (`TonalOverflowMenu`, `secondaryContainer`) with Stock entries, Stock journal and Stock
-  journal summary, then Grocy's Purchase, Consume, Transfer and Inventory (disabled, their pages
-  do not exist yet), then "Download Product Grocycode" and "Print Product Grocycode on label
+  journal summary, then Grocy's Purchase, Consume, Transfer (with location tracking) and
+  Inventory for the product, then "Download Product Grocycode" and "Print Product Grocycode on label
   printer" (only when the server runs the webhook; `OverviewActions`, the host prints through
   the screen's `LabelPrintViewModel`). Then every
   value of the card in its order, all as items with the label as text and the value as
@@ -376,8 +465,9 @@ scene, and the page's back button) returns to the products in one step). The oth
   language of their address.
 
 - Server (`ServerSettingsScreen`): on the demo server first a group of its own with one
-  non-clickable item in `error`/`onError` (warning icon, "Public demo server", supporting text
-  that everything entered is public until the demo resets its changes once a day); then server
+  non-clickable item in `errorContainer`/`onErrorContainer` (warning icon, "Public demo server",
+  supporting text that everything entered is public until the demo resets its changes once a
+  day); then server
   URL and Grocy version, then "Reload configuration" and "Logout". On a demo the URL opens
   `DemoServerDialog`: all of Grocy's demos (`DemoServers` of `core:model`, the language menu the
   demos show themselves, e.g. `https://de.demo.grocy.info`; `demoServerFor` maps app tags such as
@@ -823,7 +913,9 @@ both modules to `apps/shared/build.gradle.kts`, and add the new routes to `allRo
   categories, userentities, users and the userfield values of the simple objects; version 5
   quantity unit conversions (defined and resolved), shopping lists, stock entries, the stock
   journal and the userfield values of barcodes; version 6 the stock overview (opened amounts,
-  value and next due date of `stock`, `product_stock_info`, `stock_locations`).
+  value and next due date of `stock`, `product_stock_info`, `stock_locations`); version 7 the
+  shopping list items, the lists' description and userfields and the queue of offline check
+  offs (`pending_shopping_list_done`, `ShoppingListDao`), an AutoMigration.
 - `AuthRepository` clears the database before a login and on logout (`clearLocalData`), so no
   screen shows the data of another server. The database file is excluded from backups.
 - Server configuration and user settings live as JSON in `server_values`; only the known feature
@@ -854,8 +946,10 @@ both modules to `apps/shared/build.gradle.kts`, and add the new routes to `allRo
   `ServerConnection` with `@SerialName` discriminators "demo" / "api_key" / "home_assistant").
 - `SettingsStore`: DataStore on Android, `localStorage` keys prefixed `grocy.` on web. Holds
   `checkUnlockKey` and `scannerEngine` (stored by enum name, unknown values fall back to ZXing),
-  the appearance and the stock overview's table options (`StockOverviewOptions.of`: unknown
-  values of a newer version fall back to the defaults).
+  the appearance, the stock overview's table options (`StockOverviewOptions.of`: unknown
+  values of a newer version fall back to the defaults) and the shopping list's
+  (`shopping_list_fields`/`shopping_list_grouping`, on the web `grocy.shoppingListFields`/
+  `grocy.shoppingListGrouping`).
 - Web stores access the browser only through `KeyValueStorage` (`BrowserLocalStorage` in
   production, an in-memory one in tests). Blocked or full browser storage must not crash the app:
   values are then kept for the session only.
@@ -1124,8 +1218,10 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   - `FakeGrocyServer` also serves the master data of `MasterDataJson` (Milk, Bread, a disabled
     product, a sub product, units, barcode, stock, userfield, config, settings, the product
     overview of Milk with two prices, chores Vacuum and a disabled one, a battery, a task
-    category, a userentity, users, a chore userfield), answers POST of the chores' next
-    assignments and
+    category, a userentity, users, a chore userfield, the shopping lists 1 "Shopping list" with
+    notes and 2 "Hardware store", item 5 (Milk, 6 pieces shown as a Pack, note "Low fat") and the
+    done note item 6 "Batteries"), answers POST of the chores' next assignments, of the shopping
+    list endpoints (new items and lists get ids) and
     `respond(..., method = HttpMethod.Post)` per method, accepts PUT and DELETE with 204 and lists
     them with `requestsTo(path, method)`.
 - Room needs a real SQLite: tests with a database live in `androidHostTest` (Node has no web

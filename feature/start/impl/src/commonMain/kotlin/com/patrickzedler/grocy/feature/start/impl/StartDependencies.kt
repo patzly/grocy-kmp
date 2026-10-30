@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.feature.start.impl
 
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.server.ServerState
+import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import kotlinx.coroutines.flow.StateFlow
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 interface StartDependencies {
     val masterDataRepository: MasterDataRepository
     val stockRepository: StockRepository
+    val shoppingListRepository: ShoppingListRepository
 
     /** The stored server configuration, read at app start (null for the moment until then). */
     val serverConfig: StateFlow<ServerConfig?>

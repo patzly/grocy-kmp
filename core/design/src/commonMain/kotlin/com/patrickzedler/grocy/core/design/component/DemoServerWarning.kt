@@ -28,10 +28,10 @@ import org.jetbrains.compose.resources.stringResource
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun DemoServerWarning(modifier: Modifier = Modifier, onClick: (() -> Unit)? = null) {
-    val contentColor = MaterialTheme.colorScheme.onError
+    val contentColor = MaterialTheme.colorScheme.onErrorContainer
     val shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1)
     val colors = ListItemDefaults.segmentedColors(
-        containerColor = MaterialTheme.colorScheme.error,
+        containerColor = MaterialTheme.colorScheme.errorContainer,
         contentColor = contentColor,
         leadingContentColor = contentColor,
         supportingContentColor = contentColor,

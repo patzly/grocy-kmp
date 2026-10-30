@@ -8,14 +8,21 @@ import androidx.navigation3.runtime.NavKey
 import com.patrickzedler.grocy.core.design.component.DetailPlaceholder
 import com.patrickzedler.grocy.core.navigation.DetailRoute
 import com.patrickzedler.grocy.core.navigation.Navigator
+import com.patrickzedler.grocy.core.navigation.Route
 import com.patrickzedler.grocy.core.navigation.listPaneMetadata
 import com.patrickzedler.grocy.core.navigation.showsDetailBesideList
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_home
 import com.patrickzedler.grocy.core.resources.start_select_hint
 import com.patrickzedler.grocy.feature.about.api.AboutRoute
+import com.patrickzedler.grocy.feature.masterdata.api.ConsumeRoute
+import com.patrickzedler.grocy.feature.masterdata.api.InventoryRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
+import com.patrickzedler.grocy.feature.masterdata.api.PurchaseRoute
+import com.patrickzedler.grocy.feature.masterdata.api.ShoppingListItemRoute
+import com.patrickzedler.grocy.feature.masterdata.api.ShoppingListRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StockOverviewRoute
+import com.patrickzedler.grocy.feature.masterdata.api.TransferRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
@@ -40,15 +47,35 @@ fun EntryProviderScope<NavKey>.startEntry(
                 StartViewModel(
                     dependencies.masterDataRepository,
                     dependencies.stockRepository,
+                    dependencies.shoppingListRepository,
                     dependencies.serverConfig,
                 )
             },
             isDemoServer = server?.isDemo == true,
             isBesideDetail = showsDetailBesideList(),
             shownSection = startSectionOf(navigator.currentRoute),
-            onSectionClick = { section -> navigator.openDetail(section.route) },
+            // The shopping list is a list-detail scene of its own, its forms open beside it
+            onSectionClick = { section ->
+                when (val route = section.route) {
+                    is DetailRoute -> navigator.openDetail(route)
+                    else -> navigator.navigate(route)
+                }
+            },
             onSettingsClick = { navigator.navigate(SettingsRoute) },
             // Like reached through the settings, back returns there
+            onStockActionClick = { action ->
+                navigator.navigate(
+                    when (action) {
+                        StockAction.PURCHASE -> PurchaseRoute()
+                        StockAction.CONSUME -> ConsumeRoute()
+                        StockAction.TRANSFER -> TransferRoute()
+                        StockAction.INVENTORY -> InventoryRoute()
+                    },
+                )
+            },
+            onShoppingListAddClick = { listId ->
+                navigator.navigate(ShoppingListItemRoute(listId = listId))
+            },
             onDemoWarningClick = {
                 navigator.navigateAll(listOf(SettingsRoute, ServerSettingsRoute))
             },
@@ -57,10 +84,11 @@ fun EntryProviderScope<NavKey>.startEntry(
     }
 }
 
-/** The page a section opens beside the start screen. */
-internal val StartSection.route: DetailRoute
+/** The page a section opens: beside the start screen for a [DetailRoute], else on its own. */
+internal val StartSection.route: Route
     get() = when (this) {
         StartSection.STOCK_OVERVIEW -> StockOverviewRoute
+        StartSection.SHOPPING_LIST -> ShoppingListRoute()
         StartSection.MASTER_DATA -> MasterDataRoute
     }
 

@@ -7,11 +7,19 @@ import com.patrickzedler.grocy.core.database.toEntity
 import com.patrickzedler.grocy.core.database.toModel
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
+import com.patrickzedler.grocy.core.model.stock.BookingResult
+import com.patrickzedler.grocy.core.model.stock.ConsumeBooking
+import com.patrickzedler.grocy.core.model.stock.InventoryBooking
+import com.patrickzedler.grocy.core.model.stock.OpenBooking
+import com.patrickzedler.grocy.core.model.stock.ProductLocationAmount
 import com.patrickzedler.grocy.core.model.stock.ProductPurchase
+import com.patrickzedler.grocy.core.model.stock.ProductStockDetails
 import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
+import com.patrickzedler.grocy.core.model.stock.PurchaseBooking
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockLogEntry
+import com.patrickzedler.grocy.core.model.stock.TransferBooking
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import kotlin.coroutines.cancellation.CancellationException
@@ -180,21 +188,84 @@ class StockRepository(
     }
 
     /**
-     * Puts [amount] (in the stock unit) of the product on shopping list [listId], shown in unit
-     * [quId], like Grocy's "Add to shopping list", then saves the item's changed [userfields].
+     * What Grocy's stock pages read of a product from the server, online only (the amounts
+     * change with every booking of anyone).
+     *
+     * @throws GrocyApiException e.g. [GrocyApiException.Unreachable] when offline.
      */
-    suspend fun addToShoppingList(
+    suspend fun productStockDetails(productId: Int): ProductStockDetails =
+        api.productStockDetails(requireConnection(), productId)
+
+    /** The product's stock per location, see [GrocyApi.productLocationAmounts]. */
+    suspend fun productLocationAmounts(
         productId: Int,
-        listId: Int,
-        amount: Double,
-        quId: Int?,
-        note: String?,
+        includeSubProducts: Boolean,
+    ): List<ProductLocationAmount> =
+        api.productLocationAmounts(requireConnection(), productId, includeSubProducts)
+
+    /** The product's stock entries in Grocy's consume order. */
+    suspend fun productStockEntries(productId: Int, includeSubProducts: Boolean): List<StockEntry> =
+        api.productStockEntries(requireConnection(), productId, includeSubProducts)
+
+    /** Grocy's normal recipes, id to name, for the statistics of consumed products. */
+    suspend fun recipes(): Map<Int, String> = api.recipes(requireConnection())
+
+    /**
+     * Books Grocy's "Purchase" of the product, then the [userfields] of the new stock entries
+     * (Grocy moves values saved for the transaction to them).
+     *
+     * @throws GrocyApiException if the server cannot be reached or rejects it.
+     */
+    suspend fun purchase(
+        productId: Int,
+        booking: PurchaseBooking,
+        userfields: Map<String, String?>,
+    ): BookingResult = book {
+        val result = api.purchaseProduct(it, productId, booking)
+        saveTransactionUserfields(it, result, userfields)
+        result
+    }
+
+    /** Books Grocy's "Consume"; see [purchase]. */
+    suspend fun consume(productId: Int, booking: ConsumeBooking): BookingResult =
+        book { api.consumeProduct(it, productId, booking) }
+
+    /** Books Grocy's "Mark as opened" of the consume page; see [purchase]. */
+    suspend fun open(productId: Int, booking: OpenBooking): BookingResult =
+        book { api.openProduct(it, productId, booking) }
+
+    /** Books Grocy's "Transfer"; see [purchase]. */
+    suspend fun transfer(productId: Int, booking: TransferBooking): BookingResult =
+        book { api.transferProduct(it, productId, booking) }
+
+    /** Books Grocy's "Inventory" with the [userfields] of what it adds; see [purchase]. */
+    suspend fun inventory(
+        productId: Int,
+        booking: InventoryBooking,
+        userfields: Map<String, String?>,
+    ): BookingResult = book {
+        val result = api.inventoryProduct(it, productId, booking)
+        saveTransactionUserfields(it, result, userfields)
+        result
+    }
+
+    /**
+     * Saves the userfields of the stock entries a booking created, under its transaction like
+     * Grocy's pages. The booking is done by then, so a failure here does not undo it.
+     */
+    private suspend fun saveTransactionUserfields(
+        connection: ServerConnection,
+        result: BookingResult,
         userfields: Map<String, String?>,
     ) {
-        val connection = requireConnection()
-        val itemId = api.addProductToShoppingList(connection, productId, listId, amount, quId, note)
-        if (itemId != null && userfields.isNotEmpty()) {
-            api.setUserfields(connection, MasterDataRepository.SHOPPING_LIST, itemId, userfields)
+        val transactionId = result.transactionId ?: return
+        if (userfields.isEmpty()) return
+        try {
+            api.setUserfields(connection, MasterDataRepository.STOCK, transactionId, userfields)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: GrocyApiException) {
+            // The stock entries keep their default values, like after a failed save in Grocy
         }
     }
 

@@ -26,6 +26,8 @@ data class ServerConfig(
     val labelPrinterRunsOnServer: Boolean = true,
     /** Grocycodes as 2D DataMatrix, otherwise as 1D Code 128 like Grocy's `GROCYCODE_TYPE`. */
     val grocycode2D: Boolean = true,
+    /** Grocy's thermal printer for shopping lists, which the server prints on. */
+    val thermalPrinter: Boolean = false,
     val stockPriceTracking: Boolean = true,
     val stockLocationTracking: Boolean = true,
     val stockBestBeforeDateTracking: Boolean = true,
@@ -68,6 +70,8 @@ data class UserSettings(
     val shoppingListAutoAddListId: Int = 1,
     /** Shopping list items are booked into the stock without the form when it is prefilled. */
     val shoppingListToStockAutoSubmit: Boolean = false,
+    /** The header of a printed shopping list, an option of Grocy's print dialog. */
+    val shoppingListPrintShowHeader: Boolean = true,
     val recipesShowListSideBySide: Boolean = true,
     val recipesShowIngredientCheckbox: Boolean = false,
     val recipeIngredientsGroupByProductGroup: Boolean = false,
@@ -76,6 +80,9 @@ data class UserSettings(
     val choresOverviewSwapTrackingButtons: Boolean = false,
     val tasksDueSoonDays: Int = 5,
     val batteriesDueSoonDays: Int = 5,
+    /** Purchases and consumptions book themselves once a scan filled every field. */
+    val scanModePurchase: Boolean = false,
+    val scanModeConsume: Boolean = false,
     /** Grocy's language for the user, empty for its default (the browser's language). */
     val locale: String = "",
 )

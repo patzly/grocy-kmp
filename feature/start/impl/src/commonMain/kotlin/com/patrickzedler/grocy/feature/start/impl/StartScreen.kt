@@ -1,9 +1,14 @@
 package com.patrickzedler.grocy.feature.start.impl
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -14,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.AppBarLogo
@@ -28,6 +34,7 @@ import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.model.server.ServerConfig
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListSummary
 import com.patrickzedler.grocy.core.model.stock.StockSummary
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.resources.Res
@@ -35,8 +42,13 @@ import com.patrickzedler.grocy.core.resources.app_name
 import com.patrickzedler.grocy.core.resources.ic_rounded_database
 import com.patrickzedler.grocy.core.resources.ic_rounded_kitchen
 import com.patrickzedler.grocy.core.resources.ic_rounded_settings
+import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_cart
 import com.patrickzedler.grocy.core.resources.masterdata_title
+import com.patrickzedler.grocy.core.resources.shopping_list_list
+import com.patrickzedler.grocy.core.resources.shopping_list_list_with_count
 import com.patrickzedler.grocy.core.resources.start_list_join
+import com.patrickzedler.grocy.core.resources.start_shopping_list_nothing
+import com.patrickzedler.grocy.core.resources.start_shopping_list_undone
 import com.patrickzedler.grocy.core.resources.start_stock_all_on_lists
 import com.patrickzedler.grocy.core.resources.start_stock_below_min
 import com.patrickzedler.grocy.core.resources.start_stock_due_soon
@@ -60,15 +72,34 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
-/** The sections of the start screen, in their order, each a group of its own. */
+/** The groups of the start screen's sections, in their order. */
+internal enum class StartGroup { STOCK, MASTER_DATA }
+
+/** The sections of the start screen, in their order, grouped by [group]. */
 internal enum class StartSection(
     val title: StringResource,
     val icon: DrawableResource,
+    val group: StartGroup,
     /** Hidden while the server turned the feature off, like Grocy's menu. */
     val isAvailable: (ServerConfig) -> Boolean = { true },
 ) {
-    STOCK_OVERVIEW(Res.string.stock_overview_title, Res.drawable.ic_rounded_kitchen, { it.stock }),
-    MASTER_DATA(Res.string.masterdata_title, Res.drawable.ic_rounded_database),
+    STOCK_OVERVIEW(
+        Res.string.stock_overview_title,
+        Res.drawable.ic_rounded_kitchen,
+        StartGroup.STOCK,
+        { it.stock },
+    ),
+    SHOPPING_LIST(
+        Res.string.shopping_list_list,
+        Res.drawable.ic_rounded_shopping_cart,
+        StartGroup.STOCK,
+        { it.stock && it.shoppingList },
+    ),
+    MASTER_DATA(
+        Res.string.masterdata_title,
+        Res.drawable.ic_rounded_database,
+        StartGroup.MASTER_DATA,
+    ),
 }
 
 /** The sections [config] allows, all of them until the configuration is read. */
@@ -76,11 +107,12 @@ internal fun availableSections(config: ServerConfig?): List<StartSection> =
     StartSection.entries.filter { config == null || it.isAvailable(config) }
 
 /**
- * The first screen after login; grows with the app's sections (stock overview and master data so
- * far) and leads to the settings in a group of their own below them. On Grocy's public demo
- * ([isDemoServer]) its warning comes first and opens the server settings. Beside the sections' pages
- * ([isBesideDetail]) it is the start [ScreenPane.List] of the layout and its sections a single
- * choice marking the [shownSection]; the settings open as a screen of their own.
+ * The first screen after login; grows with the app's sections (stock overview, shopping list and
+ * master data so far) and leads to the settings in a group of their own below them. On Grocy's
+ * public demo ([isDemoServer]) its warning comes first and opens the server settings. Beside the
+ * sections' pages ([isBesideDetail]) it is the start [ScreenPane.List] of the layout and its
+ * sections a single choice marking the [shownSection]; the settings and the shopping list (a
+ * list-detail scene of its own) open as screens of their own.
  */
 @Composable
 internal fun StartScreen(
@@ -91,6 +123,8 @@ internal fun StartScreen(
     onSectionClick: (StartSection) -> Unit,
     onSettingsClick: () -> Unit,
     onDemoWarningClick: () -> Unit,
+    onStockActionClick: (StockAction) -> Unit,
+    onShoppingListAddClick: (listId: Int?) -> Unit,
     onAboutClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -111,6 +145,7 @@ internal fun StartScreen(
 
     StartContent(
         sections = availableSections(config),
+        stockActions = StockAction.entries.filter { config?.let(it.isAvailable) != false },
         isDemoServer = isDemoServer,
         state = state,
         isRefreshing = refresh.isRefreshing,
@@ -121,6 +156,8 @@ internal fun StartScreen(
         onSectionClick = onSectionClick,
         onSettingsClick = onSettingsClick,
         onDemoWarningClick = onDemoWarningClick,
+        onStockActionClick = onStockActionClick,
+        onShoppingListAddClick = { onShoppingListAddClick(viewModel.quickAddListId()) },
         menuItems = appMenu.items,
         modifier = modifier,
     )
@@ -129,6 +166,7 @@ internal fun StartScreen(
 @Composable
 private fun StartContent(
     sections: List<StartSection>,
+    stockActions: List<StockAction>,
     isDemoServer: Boolean,
     state: StartUiState?,
     isRefreshing: Boolean,
@@ -139,6 +177,8 @@ private fun StartContent(
     onSectionClick: (StartSection) -> Unit,
     onSettingsClick: () -> Unit,
     onDemoWarningClick: () -> Unit,
+    onStockActionClick: (StockAction) -> Unit,
+    onShoppingListAddClick: () -> Unit,
     menuItems: List<AppBarMenuItem>,
     modifier: Modifier = Modifier,
 ) {
@@ -159,16 +199,27 @@ private fun StartContent(
                 DemoServerWarning(onClick = onDemoWarningClick)
             }
         }
-        sections.forEach { section ->
-            segmentedGroup(key = section.name) {
-                SectionItem(
-                    section = section,
-                    summary = state?.let { sectionSummary(section, it) },
-                    index = 0,
-                    count = 1,
-                    onClick = { onSectionClick(section) },
-                    selected = if (isBesideDetail) shownSection == section else null,
-                )
+        sections.groupBy { it.group }.forEach { (group, groupSections) ->
+            segmentedGroup(key = group.name) {
+                groupSections.forEachIndexed { index, section ->
+                    SectionItem(
+                        section = section,
+                        summary = state?.let { sectionSummary(section, it) },
+                        index = index,
+                        count = groupSections.size,
+                        onClick = { onSectionClick(section) },
+                        selected = if (isBesideDetail) shownSection == section else null,
+                        below = when (section) {
+                            StartSection.STOCK_OVERVIEW -> {
+                                { StockActionButtons(stockActions, onStockActionClick) }
+                            }
+                            StartSection.SHOPPING_LIST -> {
+                                { ShoppingListAddButton(onShoppingListAddClick) }
+                            }
+                            StartSection.MASTER_DATA -> null
+                        },
+                    )
+                }
             }
         }
         segmentedGroup(key = "settings") {
@@ -196,7 +247,7 @@ private fun SettingsItem(onClick: () -> Unit) {
                 Icon(painterResource(Res.drawable.ic_rounded_settings), contentDescription = null)
             }
         },
-        content = { Text(stringResource(Res.string.title_settings)) },
+        content = { SectionTitle(stringResource(Res.string.title_settings)) },
     )
 }
 
@@ -207,6 +258,7 @@ private class SectionSummary(val intro: String?, val bullets: List<String>)
 private fun sectionSummary(section: StartSection, state: StartUiState): SectionSummary? =
     when (section) {
         StartSection.STOCK_OVERVIEW -> state.stock?.let { stockSummary(it, state) }
+        StartSection.SHOPPING_LIST -> state.shoppingLists?.let { shoppingListSummary(it) }
         StartSection.MASTER_DATA -> state.masterDataCounts
             .map { (count, number) -> pluralStringResource(count.text, number, number) }
             .takeIf { it.isNotEmpty() }
@@ -276,6 +328,38 @@ private fun stockSummary(summary: StockSummary, state: StartUiState): SectionSum
     return SectionSummary(intro, bullets)
 }
 
+/**
+ * The items still to buy, with several lists holding some of them per list like Grocy's list
+ * chooser ("Name (count)"); lists without such items are left out.
+ */
+@Composable
+private fun shoppingListSummary(summary: ShoppingListSummary): SectionSummary {
+    val count = summary.undoneCount
+    if (count == 0) {
+        return SectionSummary(
+            intro = stringResource(
+                Res.string.start_summary_intro_end,
+                stringResource(Res.string.start_shopping_list_nothing),
+            ),
+            bullets = emptyList(),
+        )
+    }
+    val text = pluralStringResource(Res.plurals.start_shopping_list_undone, count, count)
+    val lists = summary.lists.filter { it.undoneCount > 0 }
+    if (lists.size < 2) {
+        return SectionSummary(
+            intro = stringResource(Res.string.start_summary_intro_end, text),
+            bullets = emptyList(),
+        )
+    }
+    return SectionSummary(
+        intro = stringResource(Res.string.start_summary_intro_list, text),
+        bullets = lists.map {
+            stringResource(Res.string.shopping_list_list_with_count, it.name, it.undoneCount)
+        },
+    )
+}
+
 /** The products below their min. stock amount and how many of them are on shopping lists. */
 @Composable
 private fun belowMinStock(summary: StockSummary): String {
@@ -301,6 +385,7 @@ private fun SectionItem(
     count: Int,
     onClick: () -> Unit,
     selected: Boolean?,
+    below: (@Composable () -> Unit)? = null,
 ) {
     val haptic = LocalHapticFeedback.current
     val click = {
@@ -315,12 +400,26 @@ private fun SectionItem(
             Icon(painterResource(section.icon), contentDescription = null)
         }
     }
-    val title = @Composable { Text(stringResource(section.title)) }
-    val supporting: (@Composable () -> Unit)? = summary?.let {
-        { SupportingBulletList(intro = it.intro, bullets = it.bullets) }
+    val title = @Composable { SectionTitle(stringResource(section.title)) }
+    val supporting: (@Composable () -> Unit)? = if (summary != null || below != null) {
+        {
+            Column {
+                summary?.let {
+                    ProvideTextStyle(MaterialTheme.typography.bodyLarge) {
+                        SupportingBulletList(intro = it.intro, bullets = it.bullets)
+                    }
+                }
+                below?.let {
+                    if (summary != null) Spacer(Modifier.height(BelowSummarySpacing))
+                    it()
+                }
+            }
+        }
+    } else {
+        null
     }
     // Several lines keep the icon at the top like Material's three line items
-    val alignment = if (summary != null) Alignment.Top else Alignment.CenterVertically
+    val alignment = if (supporting != null) Alignment.Top else Alignment.CenterVertically
 
     // Beside a page a single choice marking it, without page a plain item (no radio semantics)
     if (selected != null) {
@@ -349,12 +448,25 @@ private fun SectionItem(
     }
 }
 
+// Between a section's summary and its buttons
+private val BelowSummarySpacing = 12.dp
+
+/**
+ * A title of the start screen, larger than a list item's, so its data reads at a glance with its
+ * supporting text in `bodyLarge`.
+ */
+@Composable
+private fun SectionTitle(text: String) {
+    Text(text, style = MaterialTheme.typography.titleLarge)
+}
+
 @Preview
 @Composable
 private fun StartScreenPreview() {
     GrocyTheme {
         StartContent(
             sections = StartSection.entries,
+            stockActions = StockAction.entries,
             isDemoServer = true,
             state = null,
             isRefreshing = false,
@@ -365,6 +477,8 @@ private fun StartScreenPreview() {
             onSectionClick = {},
             onSettingsClick = {},
             onDemoWarningClick = {},
+            onStockActionClick = {},
+            onShoppingListAddClick = {},
             menuItems = emptyList(),
         )
     }

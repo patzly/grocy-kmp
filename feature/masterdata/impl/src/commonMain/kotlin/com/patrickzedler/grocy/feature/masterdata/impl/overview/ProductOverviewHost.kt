@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.scanner.writer.Grocycode
+import com.patrickzedler.grocy.feature.masterdata.impl.booking.BookingKind
 import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.related.rememberGrocycodeDownload
 import com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist.AddToShoppingListHost
@@ -16,6 +17,8 @@ internal class ProductLinks(
     val onStockEntriesClick: (productId: Int) -> Unit,
     val onStockJournalClick: (productId: Int) -> Unit,
     val onStockJournalSummaryClick: (productId: Int) -> Unit,
+    /** Grocy's stock pages for the product: purchase, consume, transfer, inventory. */
+    val onBookingClick: (productId: Int, kind: BookingKind) -> Unit,
 )
 
 /**
@@ -51,6 +54,10 @@ internal fun ProductOverviewHost(
                 onStockEntriesClick = leavingTo(links.onStockEntriesClick),
                 onStockJournalClick = leavingTo(links.onStockJournalClick),
                 onStockJournalSummaryClick = leavingTo(links.onStockJournalSummaryClick),
+                onBookingClick = { productId, kind ->
+                    overview.hide()
+                    links.onBookingClick(productId, kind)
+                },
                 onGrocycodeDownload = { productId, twoDimensional ->
                     downloadGrocycode(Grocycode.product(productId), twoDimensional)
                 },

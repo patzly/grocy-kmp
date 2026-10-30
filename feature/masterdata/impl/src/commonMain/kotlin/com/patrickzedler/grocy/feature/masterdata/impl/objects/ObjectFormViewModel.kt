@@ -32,6 +32,10 @@ internal enum class ObjectField {
     START_DATE,
     ASSIGNED_USERS,
     PRODUCT_AMOUNT,
+    SHOPPING_LIST,
+    PRODUCT,
+    AMOUNT,
+    NOTE,
 }
 
 /** The editable state of a form, which turns into its typed [values]. */
@@ -120,6 +124,14 @@ internal abstract class ObjectFormViewModel<V : Any, F : ObjectFormState<V>>(
     /** Grocy's entity of the object's userfields, null for objects without. */
     protected open val userfieldEntity: String? = null
 
+    /** A created object closes the form like a saved one, instead of becoming its edit form. */
+    protected open val closesWhenCreated: Boolean = false
+
+    /** Downloads the objects once more, when the form opened for an object not stored. */
+    protected open suspend fun refreshForUnknownObject() {
+        repository.refresh()
+    }
+
     protected abstract fun validate(form: F): Map<ObjectField, FieldError>
 
     /**
@@ -140,7 +152,7 @@ internal abstract class ObjectFormViewModel<V : Any, F : ObjectFormState<V>>(
         if (id != null && form == null) {
             // Opened from a link before the objects were downloaded
             try {
-                repository.refresh()
+                refreshForUnknownObject()
             } catch (e: CancellationException) {
                 throw e
             } catch (_: GrocyApiException) {
@@ -189,7 +201,11 @@ internal abstract class ObjectFormViewModel<V : Any, F : ObjectFormState<V>>(
                 objectId = id
                 savedValues = ready.form.values()
                 savedUserfields = ready.userfields.associate { it.userfield.name to it.value }
-                if (wasNew) ObjectFormEvent.Created else ObjectFormEvent.Saved
+                if (wasNew && !closesWhenCreated) {
+                    ObjectFormEvent.Created
+                } else {
+                    ObjectFormEvent.Saved
+                }
             } catch (e: CancellationException) {
                 throw e
             } catch (_: GrocyApiException.Unreachable) {
