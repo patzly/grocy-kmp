@@ -48,8 +48,6 @@ import org.jetbrains.compose.resources.stringResource
 internal enum class StockAction(
     val title: StringResource,
     val icon: DrawableResource,
-    /** The everyday bookings are wide, the rarer ones narrow. */
-    val width: IconButtonWidthOption = IconButtonWidthOption.Wide,
     /** Grocy's transfer needs locations. */
     val isAvailable: (ServerConfig) -> Boolean = { true },
 ) {
@@ -58,20 +56,15 @@ internal enum class StockAction(
     TRANSFER(
         Res.string.stock_transfer,
         Res.drawable.ic_rounded_swap_horiz,
-        IconButtonWidthOption.Narrow,
         { it.stockLocationTracking },
     ),
-    INVENTORY(
-        Res.string.stock_inventory,
-        Res.drawable.ic_rounded_fact_check,
-        IconButtonWidthOption.Narrow,
-    ),
+    INVENTORY(Res.string.stock_inventory, Res.drawable.ic_rounded_fact_check),
 }
 
 /**
- * The [actions] as a standard button group of filled icon buttons (primary, the rarer ones
- * narrow), the pressed one widens; where the item is too narrow the last ones move into the menu
- * of a filled overflow button.
+ * The [actions] as a standard button group of wide filled (primary) icon buttons, the pressed
+ * one widens; where the item is too narrow the last ones move into the menu of a filled overflow
+ * button.
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -132,7 +125,7 @@ private fun ActionButton(
                 haptic.confirm()
                 onClick(action)
             },
-            modifier = smallIconButtonSize(action.width).clickCursor(),
+            modifier = smallIconButtonSize(IconButtonWidthOption.Wide).clickCursor(),
             shapes = IconButtonDefaults.shapes(),
             interactionSource = interactionSource,
         ) {
