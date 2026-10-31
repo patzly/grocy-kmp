@@ -52,6 +52,7 @@ import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
+import com.patrickzedler.grocy.core.design.component.FilledOverflowMenu
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
@@ -59,7 +60,6 @@ import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogConten
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
-import com.patrickzedler.grocy.core.design.component.TonalOverflowMenu
 import com.patrickzedler.grocy.core.design.component.animatedItem
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
@@ -314,7 +314,7 @@ private fun ActionGroup(state: ProductOverviewUiState?, actions: ProductActions)
             }
         }
         animatedItem { itemModifier, interactionSource ->
-            TonalOverflowMenu(
+            FilledOverflowMenu(
                 groups = menuGroups,
                 modifier = itemModifier,
                 interactionSource = interactionSource,

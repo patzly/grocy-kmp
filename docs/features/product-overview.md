@@ -9,8 +9,8 @@ pages and the shopping list show it through `ProductOverviewHost`, whose ViewMod
   computes no overview for disabled products). The title is "Product overview"; on top of the scrolling
   content the card header's buttons as an expressive `ButtonGroup` (`animatedItem`, 12.dp
   apart, it always fits): Edit product and Add to shopping list (only with the shopping list
-  feature) as wide filled (primary) icon buttons, then the narrow tonal menu button
-  (`TonalOverflowMenu`, `secondaryContainer`) with Stock entries, Stock journal and Stock
+  feature) as wide filled (primary) icon buttons, then the narrow filled menu button
+  (`FilledOverflowMenu`, `primary` like them) with Stock entries, Stock journal and Stock
   journal summary, then Grocy's Purchase, Consume, Transfer (with location tracking) and
   Inventory for the product, then "Download Product Grocycode" and "Print Product Grocycode on label
   printer" (only when the server runs the webhook; `OverviewActions`, the host prints through

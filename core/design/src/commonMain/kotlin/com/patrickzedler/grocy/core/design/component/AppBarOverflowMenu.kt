@@ -9,7 +9,7 @@ import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -105,18 +105,18 @@ fun ListItemOverflowMenu(
 }
 
 /**
- * [ListItemOverflowMenu] as filled tonal button (`secondaryContainer`), for a button group of
+ * [ListItemOverflowMenu] as narrow filled button (`primary`), the last of a button group of
  * filled buttons whose less important actions it holds, e.g. the product overview's.
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun TonalOverflowMenu(
+fun FilledOverflowMenu(
     groups: List<List<AppBarMenuItem>>,
     modifier: Modifier = Modifier,
     interactionSource: MutableInteractionSource? = null,
 ) {
     NarrowOverflowMenu(groups, modifier) { description, onClick ->
-        FilledTonalIconButton(
+        FilledIconButton(
             onClick = onClick,
             modifier = smallIconButtonSize(IconButtonDefaults.IconButtonWidthOption.Narrow)
                 .clickCursor(),
