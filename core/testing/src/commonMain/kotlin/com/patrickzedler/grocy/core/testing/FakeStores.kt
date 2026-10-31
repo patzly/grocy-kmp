@@ -7,6 +7,7 @@ import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.ServerConnection
+import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
@@ -37,6 +38,7 @@ class FakeSettingsStore(
     stockOverviewOptions: StockOverviewOptions = StockOverviewOptions(),
     shoppingListOptions: ShoppingListOptions = ShoppingListOptions(),
     shoppingModeSettings: ShoppingModeSettings = ShoppingModeSettings(),
+    recipesOptions: RecipesOptions = RecipesOptions(),
 ) : SettingsStore {
 
     override val checkUnlockKey = MutableStateFlow(checkUnlockKey)
@@ -73,6 +75,12 @@ class FakeSettingsStore(
 
     override suspend fun setShoppingModeSettings(settings: ShoppingModeSettings) {
         shoppingModeSettings.value = settings
+    }
+
+    override val recipesOptions = MutableStateFlow(recipesOptions)
+
+    override suspend fun setRecipesOptions(options: RecipesOptions) {
+        recipesOptions.value = options
     }
 }
 

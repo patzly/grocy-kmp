@@ -56,5 +56,5 @@ Stock overview (`stockoverview/` of `feature:stock`, it opens the product overvi
   overview is downloaded again afterwards. A failed download after a booking never reports the
   booking as failed (it would invite booking twice), the next refresh gets it.
 - The floating toolbar: Journal, Stock entries, Reports (with location or price tracking) and
-  Search, scanning as its FAB. Reports, scanning and recipes do nothing yet, their pages do not
-  exist.
+  Search, scanning as its FAB. Reports and scanning do nothing yet, their pages do not exist;
+  "Search for recipes" opens the recipes searched for the product's name (`RecipesRoute`).

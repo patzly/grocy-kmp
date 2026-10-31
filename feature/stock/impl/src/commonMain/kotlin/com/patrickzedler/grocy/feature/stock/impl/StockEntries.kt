@@ -14,6 +14,7 @@ import com.patrickzedler.grocy.core.productcard.StockPageActions
 import com.patrickzedler.grocy.core.productcard.rememberStockPageActions
 import com.patrickzedler.grocy.core.ui.appMenuItems
 import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute
+import com.patrickzedler.grocy.feature.recipes.api.RecipesRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import com.patrickzedler.grocy.feature.stock.api.StockEntriesRoute
 import com.patrickzedler.grocy.feature.stock.api.StockJournalRoute
@@ -56,7 +57,7 @@ fun EntryProviderScope<NavKey>.stockEntries(
         StockOverviewScreen(
             viewModel = stockOverview,
             actions = actions,
-            // Grocy's reports, scanning and recipes do not exist in the app yet
+            // Grocy's reports and scanning do not exist in the app yet
             links = StockOverviewLinks(
                 onJournalClick = { navigator.navigate(StockJournalRoute()) },
                 onStockEntriesClick = { navigator.navigate(StockEntriesRoute()) },
@@ -70,7 +71,8 @@ fun EntryProviderScope<NavKey>.stockEntries(
                 onConsumeAll = stockOverview::consumeAll,
                 onConsumeSpoiled = stockOverview::consumeSpoiled,
                 onAddToShoppingList = { actions.shoppingList.open(it.productId) },
-                onSearchRecipes = {},
+                // Grocy's link searches the recipes for the product's name
+                onSearchRecipes = { navigator.navigate(RecipesRoute(search = it.name)) },
                 onEditProduct = { openProduct(it.productId) },
             ),
             menuItems = if (isBesideList) emptyList() else appMenuItems(),

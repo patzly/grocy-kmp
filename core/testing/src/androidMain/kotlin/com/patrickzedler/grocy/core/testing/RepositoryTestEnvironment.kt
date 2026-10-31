@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.core.testing
 
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.database.createInMemoryGrocyDatabase
@@ -22,6 +23,12 @@ class RepositoryTestEnvironment(dispatcher: TestDispatcher) {
         connection = connection,
     )
     val stockRepository = StockRepository(
+        api = server.api,
+        database = database,
+        connection = connection,
+    )
+
+    val recipesRepository = RecipesRepository(
         api = server.api,
         database = database,
         connection = connection,

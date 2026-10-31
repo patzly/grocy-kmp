@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.start.impl
 
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.data.util.RefreshError
@@ -42,6 +43,7 @@ class StartViewModelTest {
         stock = stock,
         shoppingLists = ShoppingListRepository(server.api, database, backgroundScope, connection)
             .also { shoppingLists = it },
+        recipes = RecipesRepository(server.api, database, connection),
         serverConfig = config,
         today = { epochDayOf("2026-10-25")!! },
     ).also { backgroundScope.launch { it.state.collect {} } }
@@ -157,5 +159,26 @@ class StartViewModelTest {
         assertNull(viewModel.state.value!!.shoppingLists)
         assertNull(viewModel.quickAddListId())
         assertTrue("/api/objects/shopping_list" !in server.requestedPaths)
+    }
+
+    @Test
+    fun recipesSectionCountsTheRecipesByTheirStock() = runTest(dispatcher) {
+        val viewModel = viewModel()
+
+        advanceUntilIdle()
+
+        // Pancakes miss Bread, which is on the shopping list; Soup has enough
+        assertEquals(RecipesSummary(2, 1, 1, 0), viewModel.state.value!!.recipes)
+    }
+
+    @Test
+    fun recipesSectionNeedsTheRecipesFeature() = runTest(dispatcher) {
+        config.value = ServerConfig(recipes = false)
+        val viewModel = viewModel()
+
+        advanceUntilIdle()
+
+        assertNull(viewModel.state.value!!.recipes)
+        assertTrue("/api/objects/recipes" !in server.requestedPaths)
     }
 }

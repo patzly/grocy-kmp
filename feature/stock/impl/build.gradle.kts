@@ -15,6 +15,7 @@ kotlin {
             implementation(projects.core.scanner)
             implementation(projects.core.ui)
             implementation(projects.feature.masterdata.api)
+            implementation(projects.feature.recipes.api)
             implementation(projects.feature.start.api)
             implementation(projects.feature.stock.api)
             implementation(libs.jetbrains.lifecycle.runtime.compose)

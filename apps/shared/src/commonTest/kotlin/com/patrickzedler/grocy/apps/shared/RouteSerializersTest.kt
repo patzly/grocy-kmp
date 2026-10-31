@@ -35,6 +35,9 @@ import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.StockSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.UserSettingsRoute
+import com.patrickzedler.grocy.feature.recipes.api.RecipeFormRoute
+import com.patrickzedler.grocy.feature.recipes.api.RecipeRoute
+import com.patrickzedler.grocy.feature.recipes.api.RecipesRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListFormRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListItemRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListRoute
@@ -118,6 +121,11 @@ class RouteSerializersTest {
         ShoppingListItemRoute(listId = 2, productId = 7),
         ShoppingListFormRoute(),
         ShoppingListFormRoute(id = 2),
+        RecipesRoute(),
+        RecipesRoute(search = "Milk"),
+        RecipeRoute(id = 3),
+        RecipeFormRoute(),
+        RecipeFormRoute(id = 3),
         StockEntriesRoute(),
         StockEntriesRoute(productId = 7),
         StockJournalRoute(),

@@ -183,7 +183,8 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   (the other units follow the stock unit). Saving is online only: an edited product closes the
   form like "Save & return", a created one turns the form into its edit form. Userfields are
   edited by type (`UserfieldInput`, only changed ones are sent; files and images read only),
-  the picture through `ProductPictureDialog` (`rememberImagePicker` of `core:ui`; its item
+  the picture through `PictureDialog` (`core:forms`, shared with the recipe form;
+  `rememberImagePicker` of `core:ui`; its item
   shows the picture the product will have before its arrow, the stored list picture or the
   picked one, `ProductViewModel.thumbnail`, and "No picture available" without one), the parent
   product can also be scanned (barcode or grocycode `grcy:p:<id>`): the scanner opens inside the

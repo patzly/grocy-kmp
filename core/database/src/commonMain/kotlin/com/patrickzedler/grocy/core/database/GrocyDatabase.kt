@@ -39,8 +39,14 @@ import androidx.room3.RoomDatabaseConstructor
         ShoppingListItemEntity::class,
         PendingShoppingListDoneEntity::class,
         PendingShoppingListNotesEntity::class,
+        RecipeEntity::class,
+        RecipeFulfillmentEntity::class,
+        RecipeIngredientEntity::class,
+        RecipeNestingEntity::class,
+        ResolvedRecipeIngredientEntity::class,
+        RecipePictureEntity::class,
     ],
-    version = 8,
+    version = 9,
     autoMigrations = [
         // 2 adds product_thumbnails
         AutoMigration(from = 1, to = 2),
@@ -59,6 +65,9 @@ import androidx.room3.RoomDatabaseConstructor
         AutoMigration(from = 6, to = 7),
         // 8 adds the notes of shopping lists edited offline and not sent yet
         AutoMigration(from = 7, to = 8),
+        // 9 adds the recipes, their fulfillment, ingredients (as defined and as resolved),
+        // included recipes and pictures
+        AutoMigration(from = 8, to = 9),
     ],
 )
 @ConstructedBy(GrocyDatabaseConstructor::class)
@@ -68,6 +77,8 @@ abstract class GrocyDatabase : RoomDatabase() {
     abstract fun stockDao(): StockDao
 
     abstract fun shoppingListDao(): ShoppingListDao
+
+    abstract fun recipeDao(): RecipeDao
 }
 
 // Room generates the actual objects for every platform

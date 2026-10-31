@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.data.settings
 
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
@@ -36,4 +37,9 @@ interface SettingsStore {
     val shoppingModeSettings: Flow<ShoppingModeSettings>
 
     suspend fun setShoppingModeSettings(settings: ShoppingModeSettings)
+
+    /** Fields, grouping, sort and view of the recipes, Grocy's defaults until changed. */
+    val recipesOptions: Flow<RecipesOptions>
+
+    suspend fun setRecipesOptions(options: RecipesOptions)
 }

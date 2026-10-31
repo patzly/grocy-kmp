@@ -16,6 +16,10 @@ package com.patrickzedler.grocy.core.testing
  * - Milk's stock entries: 2 pieces in the Fridge (1) and 1 opened piece (2); its journal: a
  *   purchase, a consumption and an undone consumption; its last purchase (price 1) and average
  *   price (0.9)
+ * - recipes Pancakes (1, 4 servings scaled to 2, with picture, 2 pieces of Milk and Bread in
+ *   the group "Topping", not enough in stock but on the shopping list) and Soup (2, 1 serving,
+ *   includes 2 servings of Pancakes, enough in stock), meal plan sections Breakfast (1) and the
+ *   default one
  */
 object MasterDataJson {
 
@@ -181,6 +185,86 @@ object MasterDataJson {
     const val BOOKING = """[{"id":10,"product_id":1,"amount":"-2","transaction_type":"consume",""" +
         """"transaction_id":"$TRANSACTION_ID"}]"""
 
+    const val RECIPES =
+        """[{"id":1,"name":"Pancakes","description":"<p>Mix and fry</p>",""" +
+            """"picture_file_name":"pancakes.jpg","base_servings":"4",""" +
+            """"desired_servings":"2","not_check_shoppinglist":"0","type":"normal",""" +
+            """"product_id":null,"userfields":{"vegan":"0"}},""" +
+            """{"id":"2","name":"Soup","description":null,"picture_file_name":null,""" +
+            """"base_servings":1,"desired_servings":1,"not_check_shoppinglist":1,""" +
+            """"type":"normal","product_id":"4","userfields":null}]"""
+
+    /** `/objects/recipes/1`, Pancakes. */
+    const val PANCAKES =
+        """{"id":1,"name":"Pancakes","description":"<p>Mix and fry</p>",""" +
+            """"picture_file_name":"pancakes.jpg","base_servings":"4",""" +
+            """"desired_servings":"2","not_check_shoppinglist":"0","type":"normal",""" +
+            """"product_id":null,"userfields":{"vegan":"0"}}"""
+
+    /** `/recipes/fulfillment`, a meal plan entry's recipe (-1) among them like Grocy has it. */
+    const val RECIPES_FULFILLMENT =
+        """[{"id":1,"recipe_id":"1","need_fulfilled":"0",""" +
+            """"need_fulfilled_with_shopping_list":"1","missing_products_count":"1",""" +
+            """"costs":"2.5","costs_per_serving":"1.25","calories":"350","due_score":"11",""" +
+            """"product_names_comma_separated":"Milk,Bread","prices_incomplete":"1"},""" +
+            """{"id":1,"recipe_id":2,"need_fulfilled":1,""" +
+            """"need_fulfilled_with_shopping_list":1,"missing_products_count":0,"costs":0,""" +
+            """"costs_per_serving":0,"calories":0,"due_score":0,""" +
+            """"product_names_comma_separated":null,"prices_incomplete":0},""" +
+            """{"id":1,"recipe_id":-1,"need_fulfilled":1,""" +
+            """"need_fulfilled_with_shopping_list":1,"missing_products_count":0}]"""
+
+    const val RECIPE_INGREDIENTS =
+        """[{"id":1,"recipe_id":1,"product_id":1,"amount":"4","qu_id":1,"note":"Cold",""" +
+            """"only_check_single_unit_in_stock":"0","ingredient_group":null,""" +
+            """"not_check_stock_fulfillment":0,"variable_amount":null,"price_factor":"1",""" +
+            """"round_up":"0"},""" +
+            """{"id":2,"recipe_id":"1","product_id":"2","amount":1,"qu_id":"1","note":null,""" +
+            """"only_check_single_unit_in_stock":0,"ingredient_group":"Topping",""" +
+            """"not_check_stock_fulfillment":0,"variable_amount":"a slice",""" +
+            """"price_factor":1,"round_up":0}]"""
+
+    /** `/objects/recipes_pos/1`, the Milk of Pancakes. */
+    const val PANCAKES_MILK =
+        """{"id":1,"recipe_id":1,"product_id":1,"amount":"4","qu_id":1,"note":"Cold",""" +
+            """"only_check_single_unit_in_stock":"0","ingredient_group":null,""" +
+            """"not_check_stock_fulfillment":0,"variable_amount":null,"price_factor":"1",""" +
+            """"round_up":"0"}"""
+
+    const val RECIPE_NESTINGS = """[{"id":1,"recipe_id":2,"includes_recipe_id":1,"servings":"2"}]"""
+
+    /** `/objects/recipes_pos_resolved`: Pancakes' ingredients for Pancakes and for Soup. */
+    const val RESOLVED_RECIPE_INGREDIENTS =
+        """[{"recipe_id":1,"recipe_pos_id":1,"product_id":1,"recipe_amount":"2",""" +
+            """"stock_amount":"3","need_fulfilled":"1","missing_amount":"0",""" +
+            """"amount_on_shopping_list":"6","need_fulfilled_with_shopping_list":"1",""" +
+            """"qu_id":1,"costs":"2","is_nested_recipe_pos":"0","ingredient_group":null,""" +
+            """"product_group":"Dairy","id":1,"recipe_type":"normal","child_recipe_id":1,""" +
+            """"note":"Cold","recipe_variable_amount":null,""" +
+            """"only_check_single_unit_in_stock":"0","calories":"100",""" +
+            """"product_active":1,"due_score":"1","product_id_effective":1,""" +
+            """"product_name":"Milk"},""" +
+            """{"recipe_id":"1","recipe_pos_id":"2","product_id":2,"recipe_amount":0.5,""" +
+            """"stock_amount":0,"need_fulfilled":0,"missing_amount":0.5,""" +
+            """"amount_on_shopping_list":0,"need_fulfilled_with_shopping_list":0,""" +
+            """"qu_id":1,"costs":0.5,"is_nested_recipe_pos":0,"ingredient_group":"Topping",""" +
+            """"product_group":null,"id":2,"recipe_type":"normal","child_recipe_id":1,""" +
+            """"note":null,"recipe_variable_amount":"a slice",""" +
+            """"only_check_single_unit_in_stock":0,"calories":250,"product_active":1,""" +
+            """"due_score":10,"product_id_effective":2,"product_name":"Bread"},""" +
+            """{"recipe_id":2,"recipe_pos_id":1,"product_id":1,"recipe_amount":1,""" +
+            """"stock_amount":3,"need_fulfilled":1,"missing_amount":0,""" +
+            """"amount_on_shopping_list":6,"need_fulfilled_with_shopping_list":1,"qu_id":1,""" +
+            """"costs":1,"is_nested_recipe_pos":1,"ingredient_group":null,""" +
+            """"product_group":"Dairy","id":1,"recipe_type":"normal","child_recipe_id":1,""" +
+            """"note":"Cold","recipe_variable_amount":null,""" +
+            """"only_check_single_unit_in_stock":0,"calories":50,"product_active":1,""" +
+            """"due_score":1,"product_id_effective":1,"product_name":"Milk"}]"""
+
+    const val MEAL_PLAN_SECTIONS =
+        """[{"id":"-1","name":"","sort_number":"-1"},""" +
+            """{"id":1,"name":"Breakfast","sort_number":"1"}]"""
+
     /** Paths and answers [FakeGrocyServer] serves from the start. */
     val defaults: Map<String, String> = mapOf(
         "/api/objects/products" to PRODUCTS,
@@ -214,5 +298,15 @@ object MasterDataJson {
         "/api/objects/shopping_lists/2" to """{"id":2,"name":"Hardware store"}""",
         "/api/objects/stock" to STOCK_ENTRIES,
         "/api/objects/stock_log" to STOCK_LOG,
+        "/api/objects/recipes" to RECIPES,
+        "/api/objects/recipes/1" to PANCAKES,
+        "/api/recipes/fulfillment" to RECIPES_FULFILLMENT,
+        "/api/objects/recipes_pos" to RECIPE_INGREDIENTS,
+        "/api/objects/recipes_pos/1" to PANCAKES_MILK,
+        "/api/objects/recipes_nestings" to RECIPE_NESTINGS,
+        "/api/objects/recipes_nestings/1" to
+            """{"id":1,"recipe_id":2,"includes_recipe_id":1,"servings":"2"}""",
+        "/api/objects/recipes_pos_resolved" to RESOLVED_RECIPE_INGREDIENTS,
+        "/api/objects/meal_plan_sections" to MEAL_PLAN_SECTIONS,
     )
 }

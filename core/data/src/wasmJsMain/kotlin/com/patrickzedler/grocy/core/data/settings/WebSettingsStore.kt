@@ -4,6 +4,7 @@ import com.patrickzedler.grocy.core.data.BrowserLocalStorage
 import com.patrickzedler.grocy.core.data.KeyValueStorage
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
@@ -116,6 +117,27 @@ class WebSettingsStore internal constructor(
         shoppingModeSettingsState.value = settings
     }
 
+    private val recipesOptionsState = MutableStateFlow(
+        RecipesOptions.of(
+            fields = storage.get(RECIPES_FIELDS),
+            grouping = storage.get(RECIPES_GROUPING),
+            sortField = storage.get(RECIPES_SORT),
+            ascending = storage.get(RECIPES_ASCENDING),
+            view = storage.get(RECIPES_VIEW),
+        ),
+    )
+
+    override val recipesOptions: Flow<RecipesOptions> = recipesOptionsState.asStateFlow()
+
+    override suspend fun setRecipesOptions(options: RecipesOptions) {
+        storage.set(RECIPES_FIELDS, RecipesOptions.storedFields(options.fields))
+        storage.set(RECIPES_GROUPING, options.grouping.name)
+        storage.set(RECIPES_SORT, options.sortField.name)
+        storage.set(RECIPES_ASCENDING, options.ascending.toString())
+        storage.set(RECIPES_VIEW, options.view.name)
+        recipesOptionsState.value = options
+    }
+
     internal companion object {
         const val CHECK_UNLOCK_KEY = "grocy.checkUnlockKey"
         const val SCANNER_ENGINE = "grocy.scannerEngine"
@@ -134,5 +156,10 @@ class WebSettingsStore internal constructor(
         const val SHOPPING_MODE_SYNC_INTERVAL = "grocy.shoppingModeSyncInterval"
         const val SHOPPING_MODE_KEEP_SCREEN_ON = "grocy.shoppingModeKeepScreenOn"
         const val SHOPPING_MODE_DONE_LAST = "grocy.shoppingModeDoneLast"
+        const val RECIPES_FIELDS = "grocy.recipesFields"
+        const val RECIPES_GROUPING = "grocy.recipesGrouping"
+        const val RECIPES_SORT = "grocy.recipesSort"
+        const val RECIPES_ASCENDING = "grocy.recipesAscending"
+        const val RECIPES_VIEW = "grocy.recipesView"
     }
 }

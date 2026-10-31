@@ -4,6 +4,7 @@ import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.navigation.DetailRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductsRoute
+import com.patrickzedler.grocy.feature.recipes.api.RecipesRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import com.patrickzedler.grocy.feature.stock.api.StockOverviewRoute
@@ -20,8 +21,10 @@ class StartSectionTest {
         assertEquals(StockOverviewRoute, StartSection.STOCK_OVERVIEW.route)
         assertEquals(ShoppingListRoute(), StartSection.SHOPPING_LIST.route)
         assertEquals(MasterDataRoute, StartSection.MASTER_DATA.route)
-        // A list-detail scene of its own, never beside the start screen
+        assertEquals(RecipesRoute(), StartSection.RECIPES.route)
+        // List-detail scenes of their own, never beside the start screen
         assertFalse(StartSection.SHOPPING_LIST.route is DetailRoute)
+        assertFalse(StartSection.RECIPES.route is DetailRoute)
     }
 
     @Test
@@ -36,17 +39,26 @@ class StartSectionTest {
             listOf(
                 StartSection.STOCK_OVERVIEW,
                 StartSection.SHOPPING_LIST,
+                StartSection.RECIPES,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig()),
         )
         assertEquals(
-            listOf(StartSection.STOCK_OVERVIEW, StartSection.MASTER_DATA),
+            listOf(StartSection.STOCK_OVERVIEW, StartSection.RECIPES, StartSection.MASTER_DATA),
             availableSections(ServerConfig(shoppingList = false)),
         )
         assertEquals(
-            listOf(StartSection.MASTER_DATA),
+            listOf(StartSection.RECIPES, StartSection.MASTER_DATA),
             availableSections(ServerConfig(stock = false)),
+        )
+        assertEquals(
+            listOf(
+                StartSection.STOCK_OVERVIEW,
+                StartSection.SHOPPING_LIST,
+                StartSection.MASTER_DATA,
+            ),
+            availableSections(ServerConfig(recipes = false)),
         )
     }
 
@@ -54,6 +66,15 @@ class StartSectionTest {
     fun shoppingListSharesTheStockOverviewsGroup() {
         assertEquals(StartSection.STOCK_OVERVIEW.group, StartSection.SHOPPING_LIST.group)
         assertTrue(StartSection.MASTER_DATA.group != StartSection.STOCK_OVERVIEW.group)
+    }
+
+    @Test
+    fun recipesAreAGroupOfTheirOwnBetweenStockAndMasterData() {
+        assertEquals(
+            listOf(StartGroup.STOCK, StartGroup.RECIPES, StartGroup.MASTER_DATA),
+            StartGroup.entries,
+        )
+        assertEquals(StartGroup.RECIPES, StartSection.RECIPES.group)
     }
 
     @Test

@@ -8,7 +8,9 @@ on every platform, the start screen (on Grocy's public demo first its warning as
 own, `DemoServerWarning` of `core:design` like the server settings show it, a tap opens them
 through the settings categories; then sections grouped by `StartGroup`: the stock overview (only
 with the stock feature, `StartSection.isAvailable`) and the shopping list (also with the
-shopping list feature) as one group, then Master data, each telling about
+shopping list feature) as one group, then the recipes (with the recipes feature, a group of
+their own like Grocy's menu; how many and how many the stock covers, see `recipes.md`), then
+Master data, each telling about
 its data as supporting text (`SupportingBulletList` of `core:design`, numbers of 0 left out;
 `StartViewModel` downloads master data and stock overview when it opens): the products in stock
 and, with prices, their value, then as list Grocy's messages above its stock overview (due
@@ -25,8 +27,8 @@ objects of each master data category the server has in one line joined by commas
 menu like on every other screen (Settings above About); from
 Material's expanded width on a list-detail scene like the settings: `StartSection`, the
 section's page (`StockOverviewRoute`, `MasterDataRoute`, both `DetailRoute`s) opens beside it,
-`start_select_hint` until then; the shopping list is a list-detail scene of its own and opens
-on its own (`StartSection.route` is no `DetailRoute`), and a category of the master data still
+`start_select_hint` until then; the shopping list and the recipes are list-detail scenes of
+their own and open on their own (`StartSection.route` is no `DetailRoute`), and a category of the master data still
 opens its list as a scene of its own with its forms beside it, never in place of the master
 data; back leaves the whole scene like every list-detail scene, from the start screen the app,
 it never closes the page beside it first, on purpose), an About
@@ -38,7 +40,8 @@ conversion overrides, the default conversions of units, "Add to shopping list", 
 settings ("Presets for new products"); Grocy's stock overview, stock pages of products (stock
 entries, stock journal, journal summary) and stock bookings Purchase, Consume, Transfer and
 Inventory (`feature:stock`, see `stock-bookings.md`) and Grocy's shopping list
-(`feature:shoppinglist`, see `shopping-list.md`).
+(`feature:shoppinglist`, see `shopping-list.md`) and Grocy's recipes with their cards, forms and
+meal plan dialog (`feature:recipes`, see `recipes.md`).
 
 The start screen's items use the segmented item's default text styles for title and supporting
 text. Items with buttons below their text (`SectionButtons`) keep 16.dp between the visible

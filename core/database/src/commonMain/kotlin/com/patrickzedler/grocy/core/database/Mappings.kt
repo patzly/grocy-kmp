@@ -14,12 +14,6 @@ import com.patrickzedler.grocy.core.model.masterdata.PurchasePriceType
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnitConversion
 import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
-import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
-import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
-import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
-import com.patrickzedler.grocy.core.model.stock.StockEntry
-import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
-import com.patrickzedler.grocy.core.model.stock.StockLogEntry
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.StockLabelType
 import com.patrickzedler.grocy.core.model.masterdata.Store
@@ -28,6 +22,17 @@ import com.patrickzedler.grocy.core.model.masterdata.Userentity
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
 import com.patrickzedler.grocy.core.model.masterdata.UserfieldType
 import com.patrickzedler.grocy.core.model.masterdata.Weekday
+import com.patrickzedler.grocy.core.model.recipes.Recipe
+import com.patrickzedler.grocy.core.model.recipes.RecipeFulfillment
+import com.patrickzedler.grocy.core.model.recipes.RecipeIngredient
+import com.patrickzedler.grocy.core.model.recipes.RecipeNesting
+import com.patrickzedler.grocy.core.model.recipes.ResolvedRecipeIngredient
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
+import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
+import com.patrickzedler.grocy.core.model.stock.StockEntry
+import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
+import com.patrickzedler.grocy.core.model.stock.StockLogEntry
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.builtins.nullable
@@ -454,4 +459,138 @@ fun UserfieldEntity.toModel() = Userfield(
     options = options.lines().filter { it.isNotEmpty() },
     defaultValue = defaultValue,
     sortNumber = sortNumber,
+)
+
+fun Recipe.toEntity() = RecipeEntity(
+    id = id,
+    name = name,
+    description = description,
+    pictureFileName = pictureFileName,
+    baseServings = baseServings,
+    desiredServings = desiredServings,
+    notCheckShoppingList = notCheckShoppingList,
+    productId = productId,
+    userfields = encodeUserfieldValues(userfields),
+)
+
+fun RecipeEntity.toModel() = Recipe(
+    id = id,
+    name = name,
+    description = description,
+    pictureFileName = pictureFileName,
+    baseServings = baseServings,
+    desiredServings = desiredServings,
+    notCheckShoppingList = notCheckShoppingList,
+    productId = productId,
+    userfields = decodeUserfieldValues(userfields),
+)
+
+fun RecipeFulfillment.toEntity() = RecipeFulfillmentEntity(
+    recipeId = recipeId,
+    needFulfilled = needFulfilled,
+    needFulfilledWithShoppingList = needFulfilledWithShoppingList,
+    missingProductsCount = missingProductsCount,
+    costs = costs,
+    costsPerServing = costsPerServing,
+    calories = calories,
+    dueScore = dueScore,
+    productNames = productNames,
+    pricesIncomplete = pricesIncomplete,
+)
+
+fun RecipeFulfillmentEntity.toModel() = RecipeFulfillment(
+    recipeId = recipeId,
+    needFulfilled = needFulfilled,
+    needFulfilledWithShoppingList = needFulfilledWithShoppingList,
+    missingProductsCount = missingProductsCount,
+    costs = costs,
+    costsPerServing = costsPerServing,
+    calories = calories,
+    dueScore = dueScore,
+    productNames = productNames,
+    pricesIncomplete = pricesIncomplete,
+)
+
+fun RecipeIngredient.toEntity() = RecipeIngredientEntity(
+    id = id,
+    recipeId = recipeId,
+    productId = productId,
+    amount = amount,
+    quId = quId,
+    note = note,
+    onlyCheckSingleUnitInStock = onlyCheckSingleUnitInStock,
+    ingredientGroup = ingredientGroup,
+    notCheckStockFulfillment = notCheckStockFulfillment,
+    variableAmount = variableAmount,
+    priceFactor = priceFactor,
+    roundUp = roundUp,
+)
+
+fun RecipeIngredientEntity.toModel() = RecipeIngredient(
+    id = id,
+    recipeId = recipeId,
+    productId = productId,
+    amount = amount,
+    quId = quId,
+    note = note,
+    onlyCheckSingleUnitInStock = onlyCheckSingleUnitInStock,
+    ingredientGroup = ingredientGroup,
+    notCheckStockFulfillment = notCheckStockFulfillment,
+    variableAmount = variableAmount,
+    priceFactor = priceFactor,
+    roundUp = roundUp,
+)
+
+fun RecipeNesting.toEntity() = RecipeNestingEntity(id, recipeId, includesRecipeId, servings)
+
+fun RecipeNestingEntity.toModel() = RecipeNesting(id, recipeId, includesRecipeId, servings)
+
+fun ResolvedRecipeIngredient.toEntity() = ResolvedRecipeIngredientEntity(
+    recipeId = recipeId,
+    ingredientId = ingredientId,
+    productId = productId,
+    recipeAmount = recipeAmount,
+    stockAmount = stockAmount,
+    needFulfilled = needFulfilled,
+    missingAmount = missingAmount,
+    amountOnShoppingList = amountOnShoppingList,
+    needFulfilledWithShoppingList = needFulfilledWithShoppingList,
+    quId = quId,
+    costs = costs,
+    isNested = isNested,
+    ingredientGroup = ingredientGroup,
+    productGroup = productGroup,
+    childRecipeId = childRecipeId,
+    note = note,
+    variableAmount = variableAmount,
+    onlyCheckSingleUnitInStock = onlyCheckSingleUnitInStock,
+    calories = calories,
+    productActive = productActive,
+    dueScore = dueScore,
+    productIdEffective = productIdEffective,
+)
+
+fun ResolvedRecipeIngredientEntity.toModel() = ResolvedRecipeIngredient(
+    recipeId = recipeId,
+    ingredientId = ingredientId,
+    productId = productId,
+    recipeAmount = recipeAmount,
+    stockAmount = stockAmount,
+    needFulfilled = needFulfilled,
+    missingAmount = missingAmount,
+    amountOnShoppingList = amountOnShoppingList,
+    needFulfilledWithShoppingList = needFulfilledWithShoppingList,
+    quId = quId,
+    costs = costs,
+    isNested = isNested,
+    ingredientGroup = ingredientGroup,
+    productGroup = productGroup,
+    childRecipeId = childRecipeId,
+    note = note,
+    variableAmount = variableAmount,
+    onlyCheckSingleUnitInStock = onlyCheckSingleUnitInStock,
+    calories = calories,
+    productActive = productActive,
+    dueScore = dueScore,
+    productIdEffective = productIdEffective,
 )

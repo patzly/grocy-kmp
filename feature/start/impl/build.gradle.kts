@@ -15,6 +15,7 @@ kotlin {
             implementation(libs.jetbrains.lifecycle.viewmodel.compose)
             implementation(projects.feature.about.api)
             implementation(projects.feature.masterdata.api)
+            implementation(projects.feature.recipes.api)
             implementation(projects.feature.settings.api)
             implementation(projects.feature.shoppinglist.api)
             implementation(projects.feature.start.api)

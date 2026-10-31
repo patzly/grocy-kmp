@@ -62,6 +62,7 @@ import com.patrickzedler.grocy.core.forms.ObjectAction
 import com.patrickzedler.grocy.core.forms.ObjectActionEvent
 import com.patrickzedler.grocy.core.forms.ObjectActionsHost
 import com.patrickzedler.grocy.core.forms.ObjectActionsViewModel
+import com.patrickzedler.grocy.core.forms.PictureDialog
 import com.patrickzedler.grocy.core.forms.ProductThumbnail
 import com.patrickzedler.grocy.core.forms.ScannerToggleButton
 import com.patrickzedler.grocy.core.forms.TextItem
@@ -412,7 +413,7 @@ internal fun ProductScreen(
     }
 
     if (showPictureDialog) {
-        ProductPictureDialog(
+        PictureDialog(
             savedFileName = viewModel.pictureFileName,
             change = viewModel.pictureChange,
             loadSavedPicture = { viewModel.loadPicture(maxWidth = PICTURE_WIDTH) },

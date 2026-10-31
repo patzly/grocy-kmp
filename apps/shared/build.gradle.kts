@@ -23,6 +23,8 @@ kotlin {
             implementation(projects.feature.login.impl)
             implementation(projects.feature.masterdata.api)
             implementation(projects.feature.masterdata.impl)
+            implementation(projects.feature.recipes.api)
+            implementation(projects.feature.recipes.impl)
             implementation(projects.feature.start.api)
             implementation(projects.feature.start.impl)
             implementation(projects.feature.about.api)

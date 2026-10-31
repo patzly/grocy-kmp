@@ -1,4 +1,4 @@
-package com.patrickzedler.grocy.feature.masterdata.impl.product
+package com.patrickzedler.grocy.core.forms
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -61,12 +61,12 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * Shows the product's picture and lets the user replace or delete it. Like in Grocy the change
- * is applied when the product is saved.
+ * Shows the picture of a product or recipe and lets the user replace or delete it. Like in
+ * Grocy the change is applied when the object is saved.
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun ProductPictureDialog(
+fun PictureDialog(
     savedFileName: String?,
     change: PictureChange,
     loadSavedPicture: suspend () -> ByteArray?,

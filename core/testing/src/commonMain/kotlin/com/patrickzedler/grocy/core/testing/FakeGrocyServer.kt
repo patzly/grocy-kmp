@@ -155,6 +155,27 @@ class FakeGrocyServer(
             )
         }
         respond("/api/print/shoppinglist/thermal", body = """{"result":"OK"}""")
+        // New recipes, ingredients and inclusions, copies, and the recipe page's actions
+        listOf(
+            "/api/objects/recipes",
+            "/api/objects/recipes_pos",
+            "/api/objects/recipes_nestings",
+            "/api/recipes/1/copy",
+        ).forEach { path ->
+            respond(
+                path = path,
+                body = """{"created_object_id":${MasterDataJson.CREATED_ID}}""",
+                method = HttpMethod.Post,
+            )
+        }
+        listOf(
+            "/api/recipes/1/consume",
+            "/api/recipes/1/add-not-fulfilled-products-to-shoppinglist",
+            "/api/objects/meal_plan",
+        ).forEach { path ->
+            respond(path = path, status = HttpStatusCode.NoContent, method = HttpMethod.Post)
+        }
+        respond("/api/recipes/1/printlabel", status = HttpStatusCode.NoContent)
     }
 
     /** Answers requests to [path], only those with [method] if given. */

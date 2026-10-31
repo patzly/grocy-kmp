@@ -11,6 +11,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
@@ -112,6 +113,28 @@ class AndroidSettingsStore(
         }
     }
 
+    override val recipesOptions: Flow<RecipesOptions> = preferences
+        .map {
+            RecipesOptions.of(
+                fields = it[RECIPES_FIELDS],
+                grouping = it[RECIPES_GROUPING],
+                sortField = it[RECIPES_SORT],
+                ascending = it[RECIPES_ASCENDING]?.toString(),
+                view = it[RECIPES_VIEW],
+            )
+        }
+        .distinctUntilChanged()
+
+    override suspend fun setRecipesOptions(options: RecipesOptions) {
+        dataStore.edit {
+            it[RECIPES_FIELDS] = RecipesOptions.storedFields(options.fields)
+            it[RECIPES_GROUPING] = options.grouping.name
+            it[RECIPES_SORT] = options.sortField.name
+            it[RECIPES_ASCENDING] = options.ascending
+            it[RECIPES_VIEW] = options.view.name
+        }
+    }
+
     private companion object {
         const val FILE_NAME = "settings"
         val CHECK_UNLOCK_KEY = booleanPreferencesKey("check_unlock_key")
@@ -131,5 +154,10 @@ class AndroidSettingsStore(
         val SHOPPING_MODE_SYNC_INTERVAL = intPreferencesKey("shopping_mode_sync_interval")
         val SHOPPING_MODE_KEEP_SCREEN_ON = booleanPreferencesKey("shopping_mode_keep_screen_on")
         val SHOPPING_MODE_DONE_LAST = booleanPreferencesKey("shopping_mode_done_last")
+        val RECIPES_FIELDS = stringPreferencesKey("recipes_fields")
+        val RECIPES_GROUPING = stringPreferencesKey("recipes_grouping")
+        val RECIPES_SORT = stringPreferencesKey("recipes_sort")
+        val RECIPES_ASCENDING = booleanPreferencesKey("recipes_ascending")
+        val RECIPES_VIEW = stringPreferencesKey("recipes_view")
     }
 }

@@ -45,11 +45,17 @@ import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.app_name
 import com.patrickzedler.grocy.core.resources.ic_rounded_database
 import com.patrickzedler.grocy.core.resources.ic_rounded_kitchen
+import com.patrickzedler.grocy.core.resources.ic_rounded_menu_book
 import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_cart
 import com.patrickzedler.grocy.core.resources.masterdata_title
+import com.patrickzedler.grocy.core.resources.recipes_title
 import com.patrickzedler.grocy.core.resources.shopping_list_list
 import com.patrickzedler.grocy.core.resources.shopping_list_list_with_count
 import com.patrickzedler.grocy.core.resources.start_list_join
+import com.patrickzedler.grocy.core.resources.start_recipes_count
+import com.patrickzedler.grocy.core.resources.start_recipes_enough
+import com.patrickzedler.grocy.core.resources.start_recipes_not_enough
+import com.patrickzedler.grocy.core.resources.start_recipes_on_list
 import com.patrickzedler.grocy.core.resources.start_shopping_list_nothing
 import com.patrickzedler.grocy.core.resources.start_shopping_list_undone
 import com.patrickzedler.grocy.core.resources.start_stock_all_on_lists
@@ -75,7 +81,7 @@ import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 /** The groups of the start screen's sections, in their order. */
-internal enum class StartGroup { STOCK, MASTER_DATA }
+internal enum class StartGroup { STOCK, RECIPES, MASTER_DATA }
 
 /** The sections of the start screen, in their order, grouped by [group]. */
 internal enum class StartSection(
@@ -97,6 +103,12 @@ internal enum class StartSection(
         StartGroup.STOCK,
         { it.stock && it.shoppingList },
     ),
+    RECIPES(
+        Res.string.recipes_title,
+        Res.drawable.ic_rounded_menu_book,
+        StartGroup.RECIPES,
+        { it.recipes },
+    ),
     MASTER_DATA(
         Res.string.masterdata_title,
         Res.drawable.ic_rounded_database,
@@ -109,12 +121,12 @@ internal fun availableSections(config: ServerConfig?): List<StartSection> =
     StartSection.entries.filter { config == null || it.isAvailable(config) }
 
 /**
- * The first screen after login; grows with the app's sections (stock overview, shopping list and
- * master data so far), the settings are the first item of its app menu. On Grocy's
+ * The first screen after login; grows with the app's sections (stock overview, shopping list,
+ * recipes and master data so far), the settings are the first item of its app menu. On Grocy's
  * public demo ([isDemoServer]) its warning comes first and opens the server settings. Beside the
  * sections' pages ([isBesideDetail]) it is the start [ScreenPane.List] of the layout and its
- * sections a single choice marking the [shownSection]; the settings and the shopping list (a
- * list-detail scene of its own) open as screens of their own.
+ * sections a single choice marking the [shownSection]; the settings, the shopping list and the
+ * recipes (list-detail scenes of their own) open as screens of their own.
  */
 @Composable
 internal fun StartScreen(
@@ -221,7 +233,7 @@ private fun StartContent(
                                     onShoppingModeClick = onShoppingModeClick,
                                 )
                             }
-                            StartSection.MASTER_DATA -> null
+                            StartSection.RECIPES, StartSection.MASTER_DATA -> null
                         },
                     )
                 }
@@ -244,6 +256,7 @@ private fun sectionSummary(section: StartSection, state: StartUiState): SectionS
     when (section) {
         StartSection.STOCK_OVERVIEW -> state.stock?.let { stockSummary(it, state) }
         StartSection.SHOPPING_LIST -> state.shoppingLists?.let { shoppingListSummary(it) }
+        StartSection.RECIPES -> state.recipes?.let { recipesSummary(it, state.checksRecipeStock) }
         StartSection.MASTER_DATA -> state.masterDataCounts
             .map { (count, number) -> pluralStringResource(count.text, number, number) }
             .takeIf { it.isNotEmpty() }
@@ -343,6 +356,37 @@ private fun shoppingListSummary(summary: ShoppingListSummary): SectionSummary {
             stringResource(Res.string.shopping_list_list_with_count, it.name, it.undoneCount)
         },
     )
+}
+
+/**
+ * How many recipes there are and, with the stock feature, how many of them the stock covers,
+ * like the counts of Grocy's status filter; numbers of 0 are left out.
+ */
+@Composable
+private fun recipesSummary(summary: RecipesSummary, checksStock: Boolean): SectionSummary {
+    val count = summary.count
+    val text = pluralStringResource(Res.plurals.start_recipes_count, count, count)
+    val bullets = if (checksStock) {
+        listOfNotNull(
+            summary.enoughInStock.takeIf { it > 0 }?.let {
+                pluralStringResource(Res.plurals.start_recipes_enough, it, it)
+            },
+            summary.onShoppingList.takeIf { it > 0 }?.let {
+                pluralStringResource(Res.plurals.start_recipes_on_list, it, it)
+            },
+            summary.notEnoughInStock.takeIf { it > 0 }?.let {
+                pluralStringResource(Res.plurals.start_recipes_not_enough, it, it)
+            },
+        )
+    } else {
+        emptyList()
+    }
+    val intro = if (bullets.isEmpty()) {
+        stringResource(Res.string.start_summary_intro_end, text)
+    } else {
+        stringResource(Res.string.start_summary_intro_list, text)
+    }
+    return SectionSummary(intro, bullets)
 }
 
 /** The products below their min. stock amount and how many of them are on shopping lists. */

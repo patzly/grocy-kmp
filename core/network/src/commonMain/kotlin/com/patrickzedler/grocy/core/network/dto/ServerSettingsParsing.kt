@@ -23,6 +23,7 @@ internal fun JsonObject.toServerConfig(): ServerConfig {
             defaults.shoppingListMultipleLists,
         ),
         recipes = flag("FEATURE_FLAG_RECIPES", defaults.recipes),
+        recipesMealPlan = flag("FEATURE_FLAG_RECIPES_MEALPLAN", defaults.recipesMealPlan),
         chores = flag("FEATURE_FLAG_CHORES", defaults.chores),
         choresAssignments =
             flag("FEATURE_FLAG_CHORES_ASSIGNMENTS", defaults.choresAssignments),

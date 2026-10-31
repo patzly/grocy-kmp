@@ -16,6 +16,7 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_home
 import com.patrickzedler.grocy.core.resources.start_select_hint
 import com.patrickzedler.grocy.feature.about.api.AboutRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
+import com.patrickzedler.grocy.feature.recipes.api.RecipesRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListItemRoute
@@ -46,16 +47,17 @@ fun EntryProviderScope<NavKey>.startEntry(
         StartScreen(
             viewModel = viewModel {
                 StartViewModel(
-                    dependencies.masterDataRepository,
-                    dependencies.stockRepository,
-                    dependencies.shoppingListRepository,
-                    dependencies.serverConfig,
+                    repository = dependencies.masterDataRepository,
+                    stock = dependencies.stockRepository,
+                    shoppingLists = dependencies.shoppingListRepository,
+                    recipes = dependencies.recipesRepository,
+                    serverConfig = dependencies.serverConfig,
                 )
             },
             isDemoServer = server?.isDemo == true,
             isBesideDetail = showsDetailBesideList(),
             shownSection = startSectionOf(navigator.currentRoute),
-            // The shopping list is a list-detail scene of its own, its forms open beside it
+            // The shopping list and the recipes are list-detail scenes of their own
             onSectionClick = { section ->
                 when (val route = section.route) {
                     is DetailRoute -> navigator.openDetail(route)
@@ -91,6 +93,7 @@ internal val StartSection.route: Route
     get() = when (this) {
         StartSection.STOCK_OVERVIEW -> StockOverviewRoute
         StartSection.SHOPPING_LIST -> ShoppingListRoute()
+        StartSection.RECIPES -> RecipesRoute()
         StartSection.MASTER_DATA -> MasterDataRoute
     }
 

@@ -7,7 +7,7 @@ Compose Multiplatform. Targets: Android (phone, Wear OS) and Web (Kotlin/Wasm). 
 Current state: login (demo, QR code, manual, Home Assistant ingress on Android), the barcode
 scanner, update checks, the start screen, About, the settings (General, Server, Grocy settings),
 Grocy's stock overview, master data with all their forms, the stock bookings, the shopping list
-and its shopping mode.
+and its shopping mode, the recipes with their cards and forms.
 
 ## Details
 
@@ -25,6 +25,8 @@ tasks need.
 - `docs/features/shopping-list.md`: the shopping list, its offline check offs and notes, the
   shopping mode.
 - `docs/features/stock-overview.md`: Grocy's stock overview page.
+- `docs/features/recipes.md`: the recipes list and gallery, the recipe card, its form and
+  dialogs, the meal plan dialog.
 - `docs/features/stock-pages.md`: stock entries, stock journal and journal summary.
 - `docs/features/product-overview.md`: the product overview card (`core:productcard`), price
   chart, grocycodes, "Add to shopping list".

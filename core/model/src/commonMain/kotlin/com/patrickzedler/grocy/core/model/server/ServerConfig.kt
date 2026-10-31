@@ -13,6 +13,8 @@ data class ServerConfig(
     /** Several shopping lists; without, everything goes to the first one. */
     val shoppingListMultipleLists: Boolean = true,
     val recipes: Boolean = true,
+    /** Grocy's meal plan, where recipes are planned for days. */
+    val recipesMealPlan: Boolean = true,
     val chores: Boolean = true,
     /** Chores can be assigned to users. */
     val choresAssignments: Boolean = true,

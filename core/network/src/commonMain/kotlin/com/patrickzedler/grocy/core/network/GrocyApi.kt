@@ -18,6 +18,12 @@ import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.masterdata.TaskCategory
 import com.patrickzedler.grocy.core.model.masterdata.Userentity
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
+import com.patrickzedler.grocy.core.model.recipes.MealPlanSection
+import com.patrickzedler.grocy.core.model.recipes.Recipe
+import com.patrickzedler.grocy.core.model.recipes.RecipeFulfillment
+import com.patrickzedler.grocy.core.model.recipes.RecipeIngredient
+import com.patrickzedler.grocy.core.model.recipes.RecipeNesting
+import com.patrickzedler.grocy.core.model.recipes.ResolvedRecipeIngredient
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettingValue
 import com.patrickzedler.grocy.core.model.server.UserSettings
@@ -41,6 +47,7 @@ import com.patrickzedler.grocy.core.network.dto.CreatedObjectDto
 import com.patrickzedler.grocy.core.network.dto.ErrorDto
 import com.patrickzedler.grocy.core.network.dto.LastPurchaseDto
 import com.patrickzedler.grocy.core.network.dto.LocationDto
+import com.patrickzedler.grocy.core.network.dto.MealPlanSectionDto
 import com.patrickzedler.grocy.core.network.dto.PriceHistoryDto
 import com.patrickzedler.grocy.core.network.dto.ProductBarcodeDto
 import com.patrickzedler.grocy.core.network.dto.ProductDetailsDto
@@ -51,7 +58,12 @@ import com.patrickzedler.grocy.core.network.dto.ProductStockDetailsDto
 import com.patrickzedler.grocy.core.network.dto.QuantityUnitConversionDto
 import com.patrickzedler.grocy.core.network.dto.QuantityUnitDto
 import com.patrickzedler.grocy.core.network.dto.RecipeDto
+import com.patrickzedler.grocy.core.network.dto.RecipeFulfillmentDto
+import com.patrickzedler.grocy.core.network.dto.RecipeIngredientDto
+import com.patrickzedler.grocy.core.network.dto.RecipeNestingDto
+import com.patrickzedler.grocy.core.network.dto.RecipeObjectDto
 import com.patrickzedler.grocy.core.network.dto.ResolvedQuantityUnitConversionDto
+import com.patrickzedler.grocy.core.network.dto.ResolvedRecipeIngredientDto
 import com.patrickzedler.grocy.core.network.dto.ShoppingListDto
 import com.patrickzedler.grocy.core.network.dto.ShoppingListItemDto
 import com.patrickzedler.grocy.core.network.dto.StockDto
@@ -90,6 +102,7 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.io.encoding.Base64
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
@@ -565,6 +578,177 @@ class GrocyApi(
             query = listOf("query[]" to "type=normal"),
         ).associate { it.id to it.name.orEmpty() }
 
+    /** Grocy's normal recipes with their userfields, meal plan entries left out. */
+    suspend fun recipeObjects(connection: ServerConnection): List<Recipe> =
+        get<List<RecipeObjectDto>>(
+            connection,
+            "objects",
+            RECIPES,
+            query = listOf("query[]" to "type=normal"),
+        ).map { it.toModel() }
+
+    suspend fun recipe(connection: ServerConnection, id: Int): Recipe =
+        get<RecipeObjectDto>(connection, "objects", RECIPES, id.toString()).toModel()
+
+    /** Creates the recipe (id [NEW_OBJECT_ID]) or saves it like Grocy's form; returns its id. */
+    suspend fun saveRecipe(connection: ServerConnection, recipe: Recipe): Int =
+        saveObject(connection, RECIPES, recipe.id, recipe.toJson())
+
+    /** Only the desired servings, like the servings field of Grocy's recipe page. */
+    suspend fun saveDesiredServings(connection: ServerConnection, recipeId: Int, servings: Double) {
+        execute(
+            connection,
+            HttpMethod.Put,
+            listOf("objects", RECIPES, recipeId.toString()),
+            body = jsonBody(buildJsonObject { put("desired_servings", servings) }),
+        )
+    }
+
+    /** What Grocy computed for every recipe at its desired servings. */
+    suspend fun recipesFulfillment(connection: ServerConnection): List<RecipeFulfillment> =
+        get<List<RecipeFulfillmentDto>>(connection, RECIPES, "fulfillment").map { it.toModel() }
+
+    suspend fun recipeIngredients(connection: ServerConnection): List<RecipeIngredient> =
+        get<List<RecipeIngredientDto>>(connection, "objects", RECIPE_INGREDIENTS)
+            .map { it.toModel() }
+
+    suspend fun recipeIngredient(connection: ServerConnection, id: Int): RecipeIngredient =
+        get<RecipeIngredientDto>(connection, "objects", RECIPE_INGREDIENTS, id.toString())
+            .toModel()
+
+    /** Creates the ingredient (id [NEW_OBJECT_ID]) or saves it; returns its id. */
+    suspend fun saveRecipeIngredient(
+        connection: ServerConnection,
+        ingredient: RecipeIngredient,
+    ): Int = saveObject(connection, RECIPE_INGREDIENTS, ingredient.id, ingredient.toJson())
+
+    suspend fun recipeNestings(connection: ServerConnection): List<RecipeNesting> =
+        get<List<RecipeNestingDto>>(connection, "objects", RECIPE_NESTINGS).map { it.toModel() }
+
+    suspend fun recipeNesting(connection: ServerConnection, id: Int): RecipeNesting =
+        get<RecipeNestingDto>(connection, "objects", RECIPE_NESTINGS, id.toString()).toModel()
+
+    /** Creates the included recipe (id [NEW_OBJECT_ID]) or saves it; returns its id. */
+    suspend fun saveRecipeNesting(connection: ServerConnection, nesting: RecipeNesting): Int =
+        saveObject(connection, RECIPE_NESTINGS, nesting.id, nesting.toJson())
+
+    /** The ingredients of the normal recipes as Grocy resolved them, included recipes' too. */
+    suspend fun resolvedRecipeIngredients(
+        connection: ServerConnection,
+    ): List<ResolvedRecipeIngredient> =
+        get<List<ResolvedRecipeIngredientDto>>(
+            connection,
+            "objects",
+            "recipes_pos_resolved",
+            query = listOf("query[]" to "recipe_type=normal"),
+        ).map { it.toModel() }
+
+    /** Copies the recipe like Grocy's "Copy" (named "Copy of ...") and returns the copy's id. */
+    suspend fun copyRecipe(connection: ServerConnection, id: Int): Int {
+        val response = execute(
+            connection,
+            HttpMethod.Post,
+            listOf(RECIPES, id.toString(), "copy"),
+            body = jsonBody(JsonObject(emptyMap())),
+        )
+        return decode<CreatedObjectDto>(response).createdObjectId
+            ?: throw GrocyApiException.NotGrocyServer()
+    }
+
+    /** Grocy's "Consume all ingredients needed by this recipe". */
+    suspend fun consumeRecipe(connection: ServerConnection, id: Int) {
+        execute(
+            connection,
+            HttpMethod.Post,
+            listOf(RECIPES, id.toString(), "consume"),
+            body = jsonBody(JsonObject(emptyMap())),
+        )
+    }
+
+    /** Grocy's "Put missing products on shopping list", but those of [excludedProductIds]. */
+    suspend fun addMissingRecipeProductsToShoppingList(
+        connection: ServerConnection,
+        id: Int,
+        excludedProductIds: List<Int>,
+    ) {
+        execute(
+            connection,
+            HttpMethod.Post,
+            listOf(RECIPES, id.toString(), "add-not-fulfilled-products-to-shoppinglist"),
+            body = jsonBody(
+                buildJsonObject {
+                    put("excludedProductIds", JsonArray(excludedProductIds.map(::JsonPrimitive)))
+                },
+            ),
+        )
+    }
+
+    /** Prints the recipe's grocycode on the label printer, from the server. */
+    suspend fun printRecipeLabel(connection: ServerConnection, id: Int) {
+        execute(connection, HttpMethod.Get, listOf(RECIPES, id.toString(), "printlabel"))
+    }
+
+    /** The sections of Grocy's meal plan, in their order. */
+    suspend fun mealPlanSections(connection: ServerConnection): List<MealPlanSection> =
+        get<List<MealPlanSectionDto>>(connection, "objects", "meal_plan_sections")
+            .map { it.toModel() }
+
+    /**
+     * Grocy's "Add to meal plan": [servings] of the recipe on [day] ("YYYY-MM-DD") in section
+     * [sectionId].
+     */
+    suspend fun addRecipeToMealPlan(
+        connection: ServerConnection,
+        recipeId: Int,
+        day: String,
+        servings: Double,
+        sectionId: Int,
+    ) {
+        execute(
+            connection,
+            HttpMethod.Post,
+            listOf("objects", "meal_plan"),
+            body = jsonBody(
+                buildJsonObject {
+                    put("day", day)
+                    put("type", "recipe")
+                    put("recipe_id", recipeId)
+                    put("recipe_servings", servings)
+                    put("section_id", sectionId)
+                },
+            ),
+        )
+    }
+
+    /** The recipe picture [fileName], scaled by Grocy to at most [maxWidth] pixels. */
+    suspend fun recipePicture(
+        connection: ServerConnection,
+        fileName: String,
+        maxWidth: Int,
+    ): ByteArray = picture(connection, RECIPE_PICTURES, fileName, maxWidth)
+
+    /** Uploads a recipe picture; Grocy never overwrites a file, so [fileName] must be new. */
+    suspend fun uploadRecipePicture(
+        connection: ServerConnection,
+        fileName: String,
+        bytes: ByteArray,
+    ) {
+        execute(
+            connection,
+            HttpMethod.Put,
+            listOf("files", RECIPE_PICTURES, Base64.encode(fileName.encodeToByteArray())),
+            body = ByteArrayContent(bytes, ContentType.Application.OctetStream),
+        )
+    }
+
+    suspend fun deleteRecipePicture(connection: ServerConnection, fileName: String) {
+        execute(
+            connection,
+            HttpMethod.Delete,
+            listOf("files", RECIPE_PICTURES, Base64.encode(fileName.encodeToByteArray())),
+        )
+    }
+
     /** Grocy's "Purchase" of the product; returns its transaction for undoing it. */
     suspend fun purchaseProduct(
         connection: ServerConnection,
@@ -883,11 +1067,18 @@ class GrocyApi(
         connection: ServerConnection,
         fileName: String,
         maxWidth: Int,
+    ): ByteArray = picture(connection, PRODUCT_PICTURES, fileName, maxWidth)
+
+    private suspend fun picture(
+        connection: ServerConnection,
+        group: String,
+        fileName: String,
+        maxWidth: Int,
     ): ByteArray {
         val response = execute(
             connection,
             HttpMethod.Get,
-            listOf("files", PRODUCT_PICTURES, Base64.encode(fileName.encodeToByteArray())),
+            listOf("files", group, Base64.encode(fileName.encodeToByteArray())),
             query = listOf("force_serve_as" to "picture", "best_fit_width" to maxWidth.toString()),
         )
         return response.bodyAsBytes()
@@ -1031,6 +1222,10 @@ class GrocyApi(
         private const val USERENTITIES = "userentities"
         private const val USERFIELDS = "userfields"
         private const val PRODUCT_PICTURES = "productpictures"
+        private const val RECIPES = "recipes"
+        private const val RECIPE_INGREDIENTS = "recipes_pos"
+        private const val RECIPE_NESTINGS = "recipes_nestings"
+        private const val RECIPE_PICTURES = "recipepictures"
         private const val PRODUCT_BARCODES = "product_barcodes"
         private const val QU_CONVERSIONS = "quantity_unit_conversions"
         private const val STOCK = "stock"

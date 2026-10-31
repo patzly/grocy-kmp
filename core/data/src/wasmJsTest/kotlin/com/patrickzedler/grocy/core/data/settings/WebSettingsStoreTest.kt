@@ -7,6 +7,10 @@ import com.patrickzedler.grocy.core.model.AppPaletteStyle
 import com.patrickzedler.grocy.core.model.AppTheme
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.recipes.RecipeField
+import com.patrickzedler.grocy.core.model.recipes.RecipeGrouping
+import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
+import com.patrickzedler.grocy.core.model.recipes.RecipesView
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
@@ -108,6 +112,22 @@ class WebSettingsStoreTest {
         WebSettingsStore(storage).setStockOverviewOptions(options)
 
         assertEquals(options, WebSettingsStore(storage).stockOverviewOptions.first())
+    }
+
+    @Test
+    fun recipesOptionsAreStoredAndRestored() = runTest {
+        val storage = InMemoryStorage()
+        val options = RecipesOptions(
+            fields = setOf(RecipeField.DESIRED_SERVINGS),
+            grouping = RecipeGrouping.DUE_SCORE,
+            sortField = RecipeField.DESIRED_SERVINGS,
+            ascending = false,
+            view = RecipesView.GALLERY,
+        )
+
+        WebSettingsStore(storage).setRecipesOptions(options)
+
+        assertEquals(options, WebSettingsStore(storage).recipesOptions.first())
     }
 
     @Test

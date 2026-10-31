@@ -3,11 +3,15 @@ package com.patrickzedler.grocy.feature.start.impl
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.data.util.RefreshController
 import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.model.masterdata.Product
+import com.patrickzedler.grocy.core.model.recipes.Recipe
+import com.patrickzedler.grocy.core.model.recipes.RecipeFulfillment
+import com.patrickzedler.grocy.core.model.recipes.RecipeStatus
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
@@ -62,6 +66,29 @@ internal enum class MasterDataCount(
     USERENTITIES(Res.plurals.masterdata_userentities_count),
 }
 
+/** The recipes and how many of them the stock covers, like Grocy's status filter counts. */
+internal data class RecipesSummary(
+    val count: Int,
+    val enoughInStock: Int,
+    val onShoppingList: Int,
+    val notEnoughInStock: Int,
+)
+
+/** [recipes] counted by what the server computed for them; unknown ones count only as recipes. */
+internal fun recipesSummaryOf(
+    recipes: List<Recipe>,
+    fulfillment: List<RecipeFulfillment>,
+): RecipesSummary {
+    val ids = recipes.map { it.id }.toSet()
+    val statuses = fulfillment.filter { it.recipeId in ids }.groupingBy { it.status }.eachCount()
+    return RecipesSummary(
+        count = recipes.size,
+        enoughInStock = statuses[RecipeStatus.ENOUGH_IN_STOCK] ?: 0,
+        onShoppingList = statuses[RecipeStatus.ON_SHOPPING_LIST] ?: 0,
+        notEnoughInStock = statuses[RecipeStatus.NOT_ENOUGH_IN_STOCK] ?: 0,
+    )
+}
+
 /** What the start screen's sections tell about the stored data. */
 internal data class StartUiState(
     /** Null without the stock feature or before the first download. */
@@ -73,6 +100,10 @@ internal data class StartUiState(
     val shoppingLists: ShoppingListSummary?,
     /** The objects of each available category, those without any left out. */
     val masterDataCounts: List<Pair<MasterDataCount, Int>>,
+    /** Null without the recipes feature or before the first download stored any recipe. */
+    val recipes: RecipesSummary? = null,
+    /** The recipes' stock status needs the stock feature. */
+    val checksRecipeStock: Boolean = true,
 )
 
 /**
@@ -84,6 +115,7 @@ internal class StartViewModel(
     private val repository: MasterDataRepository,
     private val stock: StockRepository,
     private val shoppingLists: ShoppingListRepository,
+    private val recipes: RecipesRepository,
     val serverConfig: StateFlow<ServerConfig?>,
     private val today: () -> Long = ::todayEpochDay,
 ) : ViewModel() {
@@ -94,6 +126,7 @@ internal class StartViewModel(
             launch { repository.refresh() }
             if (config.stock) launch { stock.refreshOverview(config.shoppingList) }
             if (config.stock && config.shoppingList) launch { shoppingLists.refresh() }
+            if (config.recipes) launch { recipes.refresh() }
         }
     }
     val refresh: StateFlow<RefreshState> = refreshController.state
@@ -111,13 +144,19 @@ internal class StartViewModel(
         shoppingLists.summary,
     ) { products, amounts, info, lists -> StockData(products, amounts, info, lists) }
 
+    private val recipesSummary = combine(recipes.recipes, recipes.fulfillment, ::recipesSummaryOf)
+
     val state: StateFlow<StartUiState?> = combine(
         serverConfig.filterNotNull(),
         repository.userSettings,
         stockData,
         counts,
-    ) { config, settings, stockData, counts ->
-        stateOf(config, settings, stockData, counts)
+        recipesSummary,
+    ) { config, settings, stockData, counts, recipes ->
+        stateOf(config, settings, stockData, counts).copy(
+            recipes = recipes.takeIf { config.recipes && it.count > 0 },
+            checksRecipeStock = config.stock,
+        )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), null)
 
     init {

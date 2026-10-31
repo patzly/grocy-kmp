@@ -10,6 +10,8 @@ import com.patrickzedler.grocy.core.data.server.ServerRepository
 import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
+import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
+import com.patrickzedler.grocy.core.data.settings.RecipesOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ShoppingListOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ShoppingModeSettingsRepository
 import com.patrickzedler.grocy.core.data.settings.StockOverviewOptionsRepository
@@ -26,6 +28,7 @@ import com.patrickzedler.grocy.feature.about.impl.AboutDependencies
 import com.patrickzedler.grocy.feature.login.impl.LoginDependencies
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataDependencies
 import com.patrickzedler.grocy.feature.settings.impl.SettingsDependencies
+import com.patrickzedler.grocy.feature.recipes.impl.RecipesDependencies
 import com.patrickzedler.grocy.feature.shoppinglist.impl.ShoppingListDependencies
 import com.patrickzedler.grocy.feature.start.impl.StartDependencies
 import com.patrickzedler.grocy.feature.stock.impl.StockDependencies
@@ -84,6 +87,15 @@ class AppGraph(
         )
     }
 
+    /** Recipes and what the server computes for them. */
+    private val recipesRepository by lazy {
+        RecipesRepository(
+            api = grocyApi,
+            database = platform.database,
+            connection = { platform.credentialStore.connection.first() },
+        )
+    }
+
     /** The logged in server and its version, read right at app start. */
     private val serverRepository = ServerRepository(
         connection = platform.credentialStore.connection,
@@ -126,6 +138,9 @@ class AppGraph(
     private val shoppingModeSettingsRepository =
         ShoppingModeSettingsRepository(platform.settingsStore, appScope)
 
+    private val recipesOptionsRepository =
+        RecipesOptionsRepository(platform.settingsStore, appScope)
+
     /** Decoders of the engine that scans right now, provided to every scanner by GrocyApp. */
     internal val barcodeDecoderFactory: Flow<BarcodeDecoderFactory> by lazy {
         scannerRepository.activeEngine.map {
@@ -164,6 +179,8 @@ class AppGraph(
     internal val startDependencies: StartDependencies = object : StartDependencies {
         override val masterDataRepository: MasterDataRepository
             get() = this@AppGraph.masterDataRepository
+        override val recipesRepository: RecipesRepository
+            get() = this@AppGraph.recipesRepository
         override val stockRepository: StockRepository
             get() = this@AppGraph.stockRepository
         override val shoppingListRepository: ShoppingListRepository
@@ -208,6 +225,19 @@ class AppGraph(
             get() = stockOverviewOptionsRepository
         override val shoppingListRepository: ShoppingListRepository
             get() = this@AppGraph.shoppingListRepository
+    }
+
+    internal val recipesDependencies: RecipesDependencies = object : RecipesDependencies {
+        override val masterDataRepository: MasterDataRepository
+            get() = this@AppGraph.masterDataRepository
+        override val recipesRepository: RecipesRepository
+            get() = this@AppGraph.recipesRepository
+        override val stockRepository: StockRepository
+            get() = this@AppGraph.stockRepository
+        override val shoppingListRepository: ShoppingListRepository
+            get() = this@AppGraph.shoppingListRepository
+        override val recipesOptions: RecipesOptionsRepository
+            get() = recipesOptionsRepository
     }
 
     init {
