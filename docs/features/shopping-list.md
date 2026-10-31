@@ -10,14 +10,15 @@ Shopping list (`feature:shoppinglist`, `ShoppingListRepository` of `core:data`):
   goes to Grocy's first list by name, a list created in its form becomes the shown one
   (`ShoppingListRepository.selectedListId`, kept for the process). The item form is titled
   "Add item" / "Edit item", Grocy's titles do not fit the app bar.
-- The app bar's title names the shown list; with several lists it is Grocy's list selector
-  (`SegmentedListScreen(onTitleClick)`, drop down arrow): `ShoppingListChoiceDialog`, single
-  choice like the language dialog, "Name (count)" like Grocy's options.
+- The app bar's title is always "Shopping list" with the total value as subtitle; the floating
+  toolbar starts with the shopping mode (`storefront`), then the stock, notes and search actions
+  and "Add item" as FAB.
 - Rows: a checkbox checks off (in `LeadingTrailingContentWrapper`, so it keeps its distance from
   the top edge of items aligned to the top; done items struck through), a tap opens the item form, swipe
   towards the end checks off, towards the start "Add this item to stock"; the menu has Product
   overview, done/edit, add to stock and delete (no question, like Grocy). The amount chip is
-  blue below the min. stock amount. Chips: status with counts, group by (none, product group,
+  blue below the min. stock amount. Chips: the list ("Name (count)", with several lists), status
+  with counts, group by (none, product group,
   default store) and the shown fields (amount, product group, last price per unit and total,
   default store, barcodes, the userfields Grocy shows as columns), kept in `SettingsStore`
   (`ShoppingListOptions`, `ShoppingListOptionsRepository`; the status only for the process,
@@ -59,15 +60,18 @@ Shopping list (`feature:shoppinglist`, `ShoppingListRepository` of `core:data`):
   unchanged, the same retries); downloads and saved lists keep queued notes on top. The notes
   item shows `notesSyncStates` like a row its check off.
 - Shopping mode (`ShoppingModeRoute`, `ShoppingModeScreen`, `ShoppingModeViewModel`), opened by
-  the start screen's `storefront` button: a screen of its own with a close button, the list's
-  name as title (Grocy's list selector with several lists), no subtitle, search or toolbar. Its
-  overflow menu holds "Reload" and the checkable "Auto sync" in one group, then "Shopping mode
-  settings". The shopping list's chips (status and table options are the same, not separate
-  settings) and rows in large type (`LocalChipSize` large: title medium chips; titles in
-  headline medium, wrapping; group titles in headline small emphasized), the total value below
-  on the background in headline small with prices. A tap anywhere on a row checks it off (no
-  swiping, no menu), sent at once where possible; done items move to the end of their group
-  with the setting (`buildShoppingList(doneLast)`). Pull to refresh; with auto sync
+  the start screen's `storefront` button and the shopping list's toolbar: a screen of its own
+  with a close button, "Shopping list" as title without subtitle, no search or toolbar. Its
+  overflow menu holds "Reload", then the checkable "Auto sync" and "Shopping mode settings" in
+  one group. The shopping list's chips (list, status and table options are the same, not
+  separate settings) and rows in large type (`LocalChipSize` large: title medium chips; titles
+  in headline small, wrapping; group titles in title large emphasized), the total value below on
+  the background in title large with prices. A tap anywhere on a row checks it off (no swiping,
+  no menu), sent at once where possible; with the setting done items move into a group "Done"
+  after all others, which exists only while an item is done (`buildShoppingList(doneGroup)`).
+  Rows, group titles and the total are animated items (`insetItems(animate = true)`, Compose's
+  `animateItem`: they move to their new place with its default spring). Pull to refresh; with
+  auto sync
   `syncWhileShown` downloads only the items (`ShoppingListRepository.refreshItemsOnly`, queued
   changes first) every interval while the screen is started, quietly offline, so several people
   can shop together. The screen stays on with the setting (`KeepScreenOn`).

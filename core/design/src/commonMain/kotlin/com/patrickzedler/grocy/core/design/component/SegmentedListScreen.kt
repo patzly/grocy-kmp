@@ -2,13 +2,10 @@ package com.patrickzedler.grocy.core.design.component
 
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -17,7 +14,6 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
@@ -27,7 +23,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -58,12 +53,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -73,7 +66,6 @@ import com.patrickzedler.grocy.core.design.LocalPointerKind
 import com.patrickzedler.grocy.core.design.StatusBarColorEffect
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_reload
-import com.patrickzedler.grocy.core.resources.ic_rounded_arrow_drop_down
 import com.patrickzedler.grocy.core.resources.ic_rounded_refresh
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.painterResource
@@ -89,15 +81,11 @@ import org.jetbrains.compose.resources.stringResource
  * The list shrinks with the keyboard, so a focused text field always stays above it.
  *
  * [subtitle] (e.g. a summary of the list) shows below the title in onSurfaceVariant.
- * [onTitleClick] makes the title a choice, e.g. of the shown list: a drop down arrow after it,
- * the whole room between navigation icon and actions opens it ([titleClickLabel] tells screen
- * readers what), always in the small bar.
  * [navigationIcon] is usually a [NavigateBackButton], [actions] are [AppBarIconButton]s or
  * menus, together with "Reload" and the overflow menu one standard button group whose pressed
  * button grows; [menuItems] go into the overflow menu at the end of the bar, after
  * [actionMenuItems] (the actions on the screen's object) as a group of their own, which
- * [actionMenuGroups] precede where a screen has several groups of actions. [refreshMenuItems]
- * join "Reload" in its group, e.g. options of how the screen downloads its data.
+ * [actionMenuGroups] precede where a screen has several groups of actions.
  * [pane]: the screen is one of two panes of a list-detail layout ([ScreenPane]): a small bar in
  * the background's color that lines both bars up, the list on a rounded surface below it.
  * [floatingToolbar] (a [FloatingToolbarWithFab]) floats above the bottom edge and hides while
@@ -120,9 +108,6 @@ fun SegmentedListScreen(
     menuItems: List<AppBarMenuItem> = emptyList(),
     actionMenuItems: List<AppBarMenuItem> = emptyList(),
     actionMenuGroups: List<List<AppBarMenuItem>> = emptyList(),
-    refreshMenuItems: List<AppBarMenuItem> = emptyList(),
-    onTitleClick: (() -> Unit)? = null,
-    titleClickLabel: String? = null,
     pane: ScreenPane? = null,
     listState: LazyListState = rememberLazyListState(),
     snackbarHostState: SnackbarHostState? = null,
@@ -135,7 +120,7 @@ fun SegmentedListScreen(
     val isRefreshable = onRefresh != null
     val usesMouse = LocalPointerKind.current.usesMouse
     // A mouse wheel has no gesture end the large bar could settle on, it stayed half collapsed
-    val isSmallBar = isRefreshable || usesMouse || pane != null || onTitleClick != null
+    val isSmallBar = isRefreshable || usesMouse || pane != null
     val scrollBehavior = if (isSmallBar) {
         TopAppBarDefaults.pinnedScrollBehavior(listState)
     } else {
@@ -232,9 +217,9 @@ fun SegmentedListScreen(
             val allActions: @Composable RowScope.() -> Unit = {
                 // Pulling is a gesture; the menu refreshes for keyboards and screen readers
                 val reloadItems = if (onRefresh != null && !usesMouse) {
-                    listOf(AppBarMenuItem(reload, onClick = onRefresh)) + refreshMenuItems
+                    listOf(AppBarMenuItem(reload, onClick = onRefresh))
                 } else {
-                    refreshMenuItems
+                    emptyList()
                 }
                 val menuGroups =
                     listOf(reloadItems) + actionMenuGroups + listOf(actionMenuItems, menuItems)
@@ -271,23 +256,7 @@ fun SegmentedListScreen(
                 containerColor = containerColor,
                 scrolledContainerColor = scrolledContainerColor,
             )
-            if (onTitleClick != null) {
-                // The subtitle belongs to the choice, so both are one target
-                CenterAlignedTopAppBar(
-                    title = {
-                        ChoiceTitle(
-                            title = title,
-                            subtitle = subtitle,
-                            onClick = onTitleClick,
-                            onClickLabel = titleClickLabel,
-                        )
-                    },
-                    navigationIcon = navigationIcon,
-                    actions = allActions,
-                    colors = colors,
-                    scrollBehavior = scrollBehavior,
-                )
-            } else if (isSmallBar && subtitleContent != null) {
+            if (isSmallBar && subtitleContent != null) {
                 TopAppBar(
                     title = titleContent,
                     subtitle = subtitleContent,
@@ -429,60 +398,6 @@ fun SegmentedListScreen(
         }
     }
 }
-
-/**
- * The title of a small bar as a choice: [title] with a drop down arrow, [subtitle] below, the
- * whole room between the bar's buttons clickable with a pill shaped ripple.
- */
-@Composable
-private fun ChoiceTitle(
-    title: String,
-    subtitle: String?,
-    onClick: () -> Unit,
-    onClickLabel: String?,
-) {
-    val haptic = LocalHapticFeedback.current
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = ChoiceTitleMinHeight)
-            .clip(CircleShape)
-            .clickable(onClickLabel = onClickLabel, role = Role.Button) {
-                haptic.confirm()
-                onClick()
-            }
-            .clickCursor()
-            .padding(horizontal = ChoiceTitlePadding),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = title,
-                modifier = Modifier.weight(1f, fill = false),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            Icon(
-                painter = painterResource(Res.drawable.ic_rounded_arrow_drop_down),
-                contentDescription = null,
-            )
-        }
-        subtitle?.let {
-            Text(
-                text = it,
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
-    }
-}
-
-// The title's touch target, and room so its ripple does not end right at the text
-private val ChoiceTitleMinHeight = 48.dp
-private val ChoiceTitlePadding = 12.dp
 
 /**
  * A button of a top app bar beside the overflow menu: [content] puts the modifier on its

@@ -50,19 +50,17 @@ import com.patrickzedler.grocy.core.design.component.insetItems
 import com.patrickzedler.grocy.core.forms.ChipSize
 import com.patrickzedler.grocy.core.forms.LocalChipSize
 import com.patrickzedler.grocy.core.forms.emptyListItem
+import com.patrickzedler.grocy.core.forms.filterGapItem
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItemSync
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_close
 import com.patrickzedler.grocy.core.resources.ic_rounded_close
-import com.patrickzedler.grocy.core.resources.shopping_list_choose
 import com.patrickzedler.grocy.core.resources.shopping_list_empty
 import com.patrickzedler.grocy.core.resources.shopping_list_empty_filtered
 import com.patrickzedler.grocy.core.resources.shopping_list_list
-import com.patrickzedler.grocy.core.resources.shopping_list_ungrouped
 import com.patrickzedler.grocy.core.resources.shopping_mode_auto_sync
 import com.patrickzedler.grocy.core.resources.shopping_mode_settings
-import com.patrickzedler.grocy.core.resources.stock_overview_group_not_set
 import com.patrickzedler.grocy.core.resources.stock_overview_total_value
 import com.patrickzedler.grocy.core.ui.KeepScreenOn
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
@@ -71,10 +69,10 @@ import org.jetbrains.compose.resources.stringResource
 
 /**
  * The shopping mode, for the store: the shown shopping list in large type, a tap checks an item
- * off (offline too), done items move to the end with the setting, the list's total value below
- * it. With auto sync the list is downloaded every few seconds while the screen is visible, so
- * everyone shopping together sees what the others checked off. The status filter and table
- * options are the shopping list's; no search, no toolbar, the list chosen in the title. The
+ * off (offline too), done items move into a "Done" group at the end with the setting, the
+ * list's total value below it. With auto sync the list is downloaded every few seconds while
+ * the screen is visible, so everyone shopping together sees what the others checked off. List,
+ * status filter and table options are the shopping list's chips; no search, no toolbar. The
  * screen stays on while shown if the user wants it.
  */
 @Composable
@@ -103,20 +101,9 @@ internal fun ShoppingModeScreen(
     )
 
     val current = state
-    if (viewModel.isChoosingList && current != null) {
-        ShoppingListChoiceDialog(
-            lists = current.lists,
-            selectedId = current.list?.id,
-            onSelect = viewModel::selectList,
-            onDismissRequest = viewModel::dismissListChoice,
-        )
-    }
-
     SegmentedListScreen(
-        title = current?.list?.name ?: stringResource(Res.string.shopping_list_list),
+        title = stringResource(Res.string.shopping_list_list),
         modifier = modifier,
-        onTitleClick = viewModel::chooseList.takeIf { current?.canChooseList == true },
-        titleClickLabel = stringResource(Res.string.shopping_list_choose),
         navigationIcon = {
             AppBarIconButton(
                 painter = painterResource(Res.drawable.ic_rounded_close),
@@ -124,17 +111,15 @@ internal fun ShoppingModeScreen(
                 onClick = onCloseClick,
             )
         },
-        refreshMenuItems = settings?.let {
-            listOf(
-                AppBarMenuItem(
-                    text = stringResource(Res.string.shopping_mode_auto_sync),
-                    checked = it.autoSync,
-                    onClick = { viewModel.setAutoSync(!it.autoSync) },
-                ),
-            )
-        }.orEmpty(),
         actionMenuGroups = listOf(
-            listOf(
+            listOfNotNull(
+                settings?.let {
+                    AppBarMenuItem(
+                        text = stringResource(Res.string.shopping_mode_auto_sync),
+                        checked = it.autoSync,
+                        onClick = { viewModel.setAutoSync(!it.autoSync) },
+                    )
+                },
                 AppBarMenuItem(
                     text = stringResource(Res.string.shopping_mode_settings),
                     onClick = onSettingsClick,
@@ -152,6 +137,7 @@ internal fun ShoppingModeScreen(
             CompositionLocalProvider(LocalChipSize provides ChipSize.LARGE) {
                 ShoppingListFilterBar(
                     state = current,
+                    onListSelect = viewModel::selectList,
                     onStatusChange = viewModel::setStatus,
                     onGroupingChange = viewModel::setGrouping,
                     onFieldShownChange = viewModel::setFieldShown,
@@ -160,6 +146,8 @@ internal fun ShoppingModeScreen(
                 )
             }
         }
+        // No search, but the same group gap below the chips as the shopping list
+        filterGapItem()
         shoppingModeRows(
             state = current,
             refresh = refresh,
@@ -167,13 +155,13 @@ internal fun ShoppingModeScreen(
             onRetryClick = viewModel::refresh,
         )
         current.totalValue?.takeIf { !current.isEmpty }?.let { value ->
-            insetItem(key = "total") {
+            insetItem(key = "total", animate = true) {
                 Text(
                     text = stringResource(
                         Res.string.stock_overview_total_value,
                         formatCurrency(value, current.currency, current.priceDecimals),
                     ),
-                    style = MaterialTheme.typography.headlineSmall,
+                    style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(top = GroupTitleTopPadding),
                 )
             }
@@ -206,15 +194,18 @@ private fun LazyListScope.shoppingModeRows(
     )
     state.groups.forEachIndexed { groupIndex, group ->
         group.title?.let { title ->
-            insetItem(key = "group-$title", contentType = "groupTitle") {
+            // Titles and rows move with a spring when items change groups, e.g. into "Done"
+            insetItem(key = "group-$title", contentType = "groupTitle", animate = true) {
                 GroupTitle(
                     text = groupTitleText(title),
-                    style = MaterialTheme.typography.headlineSmallEmphasized,
-                    modifier = if (groupIndex > 0) {
-                        Modifier.padding(top = GroupTitleTopPadding)
-                    } else {
-                        Modifier
-                    },
+                    style = MaterialTheme.typography.titleLargeEmphasized,
+                    modifier = Modifier.padding(
+                        top = if (groupIndex > 0) {
+                            GroupTitleTopPadding
+                        } else {
+                            FirstGroupTitleTopPadding
+                        },
+                    ),
                 )
             }
         }
@@ -222,6 +213,7 @@ private fun LazyListScope.shoppingModeRows(
             items = group.rows.withIndex().toList(),
             key = { it.value.id },
             contentType = { "item" },
+            animate = true,
         ) { (index, row) ->
             ShoppingModeRowItem(
                 row = row,
@@ -237,7 +229,7 @@ private fun LazyListScope.shoppingModeRows(
 
 /**
  * A row of the shopping mode: the checkbox shows whether the item is done, a tap anywhere checks
- * it off or on again; the title in headline medium wraps instead of being cut off, struck
+ * it off or on again; the title in headline small wraps instead of being cut off, struck
  * through once done; note and chips large below it.
  */
 @Composable
@@ -286,7 +278,7 @@ private fun ShoppingModeRowItem(
             Text(
                 text = row.title,
                 modifier = Modifier.weight(1f, fill = false),
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.headlineSmall,
                 // Grocy writes notes in italics
                 fontStyle = if (row.productId == null) FontStyle.Italic else null,
                 textDecoration = if (row.done) TextDecoration.LineThrough else null,
@@ -301,16 +293,12 @@ private fun ShoppingModeRowItem(
     }
 }
 
-@Composable
-private fun groupTitleText(title: ShoppingListGroupTitle): String = when (title) {
-    is ShoppingListGroupTitle.Text -> title.text
-    ShoppingListGroupTitle.Ungrouped -> stringResource(Res.string.shopping_list_ungrouped)
-    ShoppingListGroupTitle.NotSet -> stringResource(Res.string.stock_overview_group_not_set)
-}
-
 // The list puts the segmented gap between its items, the title adds the rest of a group gap
 private val GroupTitleTopPadding =
     SegmentedListDefaults.GroupSpacing - ListItemDefaults.SegmentedGap
+
+// The large first title needs more room below the chips than the filter gap alone gives
+private val FirstGroupTitleTopPadding = 8.dp
 
 // As large as the icons of the larger text
 private val SyncIconSize = 24.dp

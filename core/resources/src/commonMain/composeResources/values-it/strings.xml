@@ -944,7 +944,7 @@
   <string name="shopping_list_add_all_to_stock">Aggiungi tutti gli oggetti della lista alla dispensa</string>
   <string name="shopping_list_adding_item">Aggiunta alla lista della spesa dell'elemento %1$sdi %2$s</string>
   <string name="shopping_list_add_item">Aggiungi elemento</string>
-  <string name="shopping_list_choose">Scegli lista della spesa</string>
+  <string name="shopping_list_group_done">Fatto</string>
   <string name="shopping_list_item_not_booked">%1$s non è stato aggiunto alla dispensa. Saltarlo e continuare con il prossimo elemento, o annullare?</string>
   <string name="booking_shopping_list_hint">Controlla i dati e conferma l'acquisto. L'elemento viene poi rimosso dalla lista della spesa.</string>
   <string name="shopping_mode">Modalità spesa</string>

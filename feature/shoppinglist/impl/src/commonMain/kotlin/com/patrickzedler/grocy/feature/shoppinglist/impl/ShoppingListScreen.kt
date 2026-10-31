@@ -58,24 +58,26 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_add
 import com.patrickzedler.grocy.core.resources.ic_rounded_edit_note
 import com.patrickzedler.grocy.core.resources.ic_rounded_inventory_2
 import com.patrickzedler.grocy.core.resources.ic_rounded_search
+import com.patrickzedler.grocy.core.resources.ic_rounded_storefront
 import com.patrickzedler.grocy.core.resources.objects_delete_failed
 import com.patrickzedler.grocy.core.resources.shopping_list_add_all_to_stock
 import com.patrickzedler.grocy.core.resources.shopping_list_add_item
 import com.patrickzedler.grocy.core.resources.shopping_list_add_missing
 import com.patrickzedler.grocy.core.resources.shopping_list_add_overdue_expired
-import com.patrickzedler.grocy.core.resources.shopping_list_choose
 import com.patrickzedler.grocy.core.resources.shopping_list_clear
 import com.patrickzedler.grocy.core.resources.shopping_list_clear_done
 import com.patrickzedler.grocy.core.resources.shopping_list_delete
 import com.patrickzedler.grocy.core.resources.shopping_list_edit
 import com.patrickzedler.grocy.core.resources.shopping_list_empty
 import com.patrickzedler.grocy.core.resources.shopping_list_empty_filtered
+import com.patrickzedler.grocy.core.resources.shopping_list_group_done
 import com.patrickzedler.grocy.core.resources.shopping_list_list
 import com.patrickzedler.grocy.core.resources.shopping_list_new
 import com.patrickzedler.grocy.core.resources.shopping_list_notes
 import com.patrickzedler.grocy.core.resources.shopping_list_notes_empty
 import com.patrickzedler.grocy.core.resources.shopping_list_print
 import com.patrickzedler.grocy.core.resources.shopping_list_ungrouped
+import com.patrickzedler.grocy.core.resources.shopping_mode
 import com.patrickzedler.grocy.core.resources.stock_overview_group_not_set
 import com.patrickzedler.grocy.core.resources.stock_overview_total_value
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
@@ -89,6 +91,8 @@ internal class ShoppingListLinks(
     val onItemClick: (itemId: Int) -> Unit,
     val onNewListClick: () -> Unit,
     val onEditListClick: (listId: Int) -> Unit,
+    /** The shopping mode for the store, a screen of its own. */
+    val onShoppingModeClick: () -> Unit,
     /**
      * Grocy's purchase of an item, which removes the item once booked; with its progress while
      * "Add all list items to stock" books one after the other.
@@ -98,10 +102,10 @@ internal class ShoppingListLinks(
 
 /**
  * Grocy's "Shopping list": the items of the chosen list grouped by product group, checked off
- * with their checkbox (offline too), the status filter and table options as chips, the search,
- * the list's notes at the end (offline too). The title names the shown list, with several lists
- * it opens Grocy's list selector. The overflow menu holds Grocy's list and stock actions, the
- * floating toolbar "Add item" as its main action.
+ * with their checkbox (offline too), the list selector, status filter and table options as
+ * chips, the search, the list's notes at the end (offline too). The overflow menu holds Grocy's
+ * list and stock actions, the floating toolbar the shopping mode first and "Add item" as its
+ * main action.
  *
  * @param selectedItemId the item shown beside the list, marked in it while [isBesideDetail].
  * @param isShown whether the list is the screen the user sees, not one that only shows
@@ -143,15 +147,12 @@ internal fun ShoppingListScreen(
         isBackEnabled = viewModel.isSearchVisible,
         onBackCompleted = viewModel::hideSearch,
     )
-    val current = state
-    ShoppingListDialogs(viewModel, current)
+    ShoppingListDialogs(viewModel)
 
-    val chooseLabel = stringResource(Res.string.shopping_list_choose)
+    val current = state
     SegmentedListScreen(
-        title = current?.list?.name ?: stringResource(Res.string.shopping_list_list),
+        title = stringResource(Res.string.shopping_list_list),
         subtitle = current?.let { subtitle(it) },
-        onTitleClick = viewModel::chooseList.takeIf { current?.canChooseList == true },
-        titleClickLabel = chooseLabel,
         modifier = modifier,
         navigationIcon = { NavigateBackButton(onClick = onBackClick) },
         menuItems = menuItems,
@@ -174,6 +175,11 @@ internal fun ShoppingListScreen(
                     links.onAddItemClick(current?.list?.id ?: ShoppingList.DEFAULT_ID)
                 },
             ) {
+                FloatingToolbarIconButton(
+                    painter = painterResource(Res.drawable.ic_rounded_storefront),
+                    contentDescription = stringResource(Res.string.shopping_mode),
+                    onClick = links.onShoppingModeClick,
+                )
                 if (current?.config?.stock == true) {
                     FloatingToolbarIconButton(
                         painter = painterResource(Res.drawable.ic_rounded_inventory_2),
@@ -202,6 +208,7 @@ internal fun ShoppingListScreen(
         edgeToEdgeItem(key = "filters") { contentPadding ->
             ShoppingListFilterBar(
                 state = current,
+                onListSelect = viewModel::selectList,
                 onStatusChange = viewModel::setStatus,
                 onGroupingChange = viewModel::setGrouping,
                 onFieldShownChange = viewModel::setFieldShown,
@@ -465,11 +472,13 @@ private fun LazyListScope.notes(state: ShoppingListUiState, onClick: () -> Unit)
     }
 }
 
+/** The name of a group, e.g. "Ungrouped" for items without product group. */
 @Composable
-private fun groupTitleText(title: ShoppingListGroupTitle): String = when (title) {
+internal fun groupTitleText(title: ShoppingListGroupTitle): String = when (title) {
     is ShoppingListGroupTitle.Text -> title.text
     ShoppingListGroupTitle.Ungrouped -> stringResource(Res.string.shopping_list_ungrouped)
     ShoppingListGroupTitle.NotSet -> stringResource(Res.string.stock_overview_group_not_set)
+    ShoppingListGroupTitle.Done -> stringResource(Res.string.shopping_list_group_done)
 }
 
 // The list puts the segmented gap between its items, the title adds the rest of a group gap

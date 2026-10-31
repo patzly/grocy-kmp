@@ -15,7 +15,6 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Dispatchers
@@ -79,11 +78,13 @@ class ShoppingModeViewModelTest {
         environment.server.requestsTo("/api/objects/shopping_list", HttpMethod.Get).size
 
     @Test
-    fun doneItemsComeLastWithTheSetting() = runTest(dispatcher) {
+    fun doneItemsComeLastInTheirOwnGroupWithTheSetting() = runTest(dispatcher) {
         val viewModel = viewModel()
 
         // Batteries are done, Milk is not
-        assertEquals(listOf("Milk", "Batteries"), viewModel.rows.map { it.title })
+        val groups = viewModel.state.value!!.groups
+        assertEquals(listOf(null, ShoppingListGroupTitle.Done), groups.map { it.title })
+        assertEquals(listOf("Batteries"), groups.last().rows.map { it.title })
     }
 
     @Test
@@ -92,6 +93,7 @@ class ShoppingModeViewModelTest {
         val viewModel = viewModel()
 
         assertEquals(listOf("Batteries", "Milk"), viewModel.rows.map { it.title })
+        assertEquals(1, viewModel.state.value!!.groups.size)
     }
 
     @Test
@@ -161,15 +163,12 @@ class ShoppingModeViewModelTest {
     }
 
     @Test
-    fun listSelectorClosesWithTheChoice() = runTest(dispatcher) {
+    fun anotherListIsShownWhenChosen() = runTest(dispatcher) {
         val viewModel = viewModel()
 
-        viewModel.chooseList()
-        assertTrue(viewModel.isChoosingList)
         viewModel.selectList(2)
         advanceUntilIdle()
 
-        assertFalse(viewModel.isChoosingList)
         assertEquals("Hardware store", viewModel.state.value?.list?.name)
     }
 }

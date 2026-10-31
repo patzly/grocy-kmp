@@ -915,7 +915,7 @@
   <string name="shopping_list_add_all_to_stock">Bütün liste maddelerini stoğa ekle</string>
   <string name="shopping_list_adding_item">%2$s alışveriş listesi maddelerinin %1$s i ekleniyor</string>
   <string name="shopping_list_add_item">Ürün ekle</string>
-  <string name="shopping_list_choose">Alışveriş listesi seç</string>
+  <string name="shopping_list_group_done">Tamamlandı</string>
   <string name="shopping_list_item_not_booked">%1$s stoğa eklenmedi. Atlayıp sonraki ürünle devam edilsin mi, yoksa iptal mi edilsin?</string>
   <string name="booking_shopping_list_hint">Bilgileri kontrol edin ve satın almayı onaylayın. Ürün ardından alışveriş listesinden kaldırılır.</string>
   <string name="shopping_mode">Alışveriş modu</string>

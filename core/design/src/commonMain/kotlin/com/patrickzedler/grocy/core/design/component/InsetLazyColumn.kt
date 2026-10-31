@@ -121,17 +121,20 @@ internal class ScreenContentPadding(
 }
 
 /**
- * An item in an [InsetLazyColumn] that is automatically constrained to 640.dp.
+ * An item in an [InsetLazyColumn] that is automatically constrained to 640.dp. With [animate]
+ * (needs [key]) it fades in and out and moves with Compose's default spring.
  */
 fun LazyListScope.insetItem(
     key: Any? = null,
     contentType: Any? = null,
     maxWidth: Dp = 640.dp,
+    animate: Boolean = false,
     content: @Composable LazyItemScope.() -> Unit,
 ) {
     item(key = key, contentType = contentType) {
         Box(
             modifier = Modifier
+                .then(if (animate) Modifier.animateItem() else Modifier)
                 .widthIn(max = maxWidth)
                 .fillMaxWidth(),
             contentAlignment = Alignment.CenterStart,
@@ -245,13 +248,16 @@ internal fun edgeToEdgeRowPlacement(
     }
 
 /**
- * Multiple items in an [InsetLazyColumn] that are automatically constrained to 640.dp.
+ * Multiple items in an [InsetLazyColumn] that are automatically constrained to 640.dp. With
+ * [animate] (needs [key]) they fade in and out and move to new places with Compose's default
+ * spring, e.g. between groups.
  */
 fun <T> LazyListScope.insetItems(
     items: List<T>,
     key: ((item: T) -> Any)? = null,
     contentType: (item: T) -> Any? = { null },
     maxWidth: Dp = 640.dp,
+    animate: Boolean = false,
     itemContent: @Composable LazyItemScope.(item: T) -> Unit,
 ) {
     items(
@@ -261,6 +267,7 @@ fun <T> LazyListScope.insetItems(
         itemContent = { item ->
             Box(
                 modifier = Modifier
+                    .then(if (animate) Modifier.animateItem() else Modifier)
                     .widthIn(max = maxWidth)
                     .fillMaxWidth(),
                 contentAlignment = Alignment.CenterStart,

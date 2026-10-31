@@ -916,7 +916,7 @@
   <string name="shopping_list_add_all_to_stock">Lisa kõik nimekirja esemed varudesse</string>
   <string name="shopping_list_adding_item">Toode %1$s %2$s-st lisatud ostunimekirja</string>
   <string name="shopping_list_add_item">Lisa toode</string>
-  <string name="shopping_list_choose">Vali ostunimekiri</string>
+  <string name="shopping_list_group_done">Tehtud</string>
   <string name="shopping_list_item_not_booked">%1$s ei lisatud varudesse. Kas jätta see vahele ja jätkata järgmise tootega või tühistada?</string>
   <string name="booking_shopping_list_hint">Kontrolli andmeid ja kinnita ost. Seejärel eemaldatakse toode ostunimekirjast.</string>
   <string name="shopping_mode">Poerežiim</string>

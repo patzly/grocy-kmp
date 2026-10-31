@@ -70,9 +70,6 @@ internal sealed interface ShoppingListDialog {
 
     data class DeleteList(val listId: Int, val name: String) : ShoppingListDialog
 
-    /** Grocy's list selector: the lists to choose from. */
-    data object ChooseList : ShoppingListDialog
-
     /** A purchase of "Add all list items to stock" was left without booking. */
     data class StockItemSkipped(val position: Int, val count: Int, val name: String) :
         ShoppingListDialog
@@ -170,13 +167,7 @@ internal class ShoppingListViewModel(
     fun onErrorShown() = refreshController.onErrorShown()
 
     fun selectList(listId: Int) {
-        dialog = null
         shoppingLists.selectList(listId)
-    }
-
-    /** Grocy's list selector, offered with several lists. */
-    fun chooseList() {
-        if (state.value?.canChooseList == true) dialog = ShoppingListDialog.ChooseList
     }
 
     fun setStatus(status: ShoppingListStatus?) {

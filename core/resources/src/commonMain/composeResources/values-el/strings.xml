@@ -916,7 +916,7 @@
   <string name="shopping_list_add_all_to_stock">Προσθήκη όλων των στοιχείων λίστας στο απόθεμα</string>
   <string name="shopping_list_adding_item">Προσθήκη στοιχείου λίστας αγορών %1$s από %2$s</string>
   <string name="shopping_list_add_item">Πρόσθεσε είδος</string>
-  <string name="shopping_list_choose">Επιλογή λίστας με τα ψώνια</string>
+  <string name="shopping_list_group_done">Ολοκληρώθηκε</string>
   <string name="shopping_list_item_not_booked">Το %1$s δεν προστέθηκε στο απόθεμα. Παράλειψη και συνέχεια με το επόμενο είδος ή ακύρωση;</string>
   <string name="booking_shopping_list_hint">Ελέγξτε τα στοιχεία και επιβεβαιώστε την αγορά. Στη συνέχεια το είδος αφαιρείται από τη λίστα με τα ψώνια.</string>
   <string name="shopping_mode">Λειτουργία αγορών</string>

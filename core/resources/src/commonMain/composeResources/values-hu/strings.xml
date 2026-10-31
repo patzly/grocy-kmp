@@ -916,7 +916,7 @@
   <string name="shopping_list_add_all_to_stock">Összes tétel készletre vétele</string>
   <string name="shopping_list_adding_item">%1$s készletre véve a(z) %2$s bevásárlólistán lévőből</string>
   <string name="shopping_list_add_item">Hozzáadás</string>
-  <string name="shopping_list_choose">Bevásárlólista kiválasztása</string>
+  <string name="shopping_list_group_done">Kész</string>
   <string name="shopping_list_item_not_booked">%1$s nem került készletre. Kihagyod, és folytatod a következő tétellel, vagy megszakítod?</string>
   <string name="booking_shopping_list_hint">Ellenőrizd az adatokat, és erősítsd meg a vásárlást. Ezután a tétel lekerül a bevásárlólistáról.</string>
   <string name="shopping_mode">Bevásárló mód</string>

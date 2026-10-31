@@ -69,10 +69,6 @@ internal data class ShoppingListUiState(
     val isEmpty: Boolean
         get() = groups.isEmpty()
 
-    /** Whether the user can choose another list, Grocy's list selector. */
-    val canChooseList: Boolean
-        get() = config.shoppingListMultipleLists && list != null
-
     /** Product items shown right now, which "Add all list items to stock" books like Grocy. */
     val purchases: List<ShoppingListPurchase>
         get() = groups.flatMap { group -> group.rows.mapNotNull { it.purchase } }
@@ -81,7 +77,7 @@ internal data class ShoppingListUiState(
 /**
  * The shown list as the shopping list and the shopping mode show it, from the database: the
  * chosen list, Grocy's table options and the status filter they share, searched by [query].
- * [doneLast] moves done items to the end of their group.
+ * [doneGroup] moves done items into a group of their own at the end.
  */
 internal fun shoppingListState(
     masterData: MasterDataRepository,
@@ -92,7 +88,7 @@ internal fun shoppingListState(
     decimalSeparator: Char,
     language: String,
     query: Flow<String> = flowOf(""),
-    doneLast: Flow<Boolean> = flowOf(false),
+    doneGroup: Flow<Boolean> = flowOf(false),
 ): Flow<ShoppingListUiState> {
     val masterDataPart = combine(
         masterData.products,
@@ -132,7 +128,7 @@ internal fun shoppingListState(
         masterData.userSettings,
         optionsRepository.options.filterNotNull(),
         optionsRepository.status,
-        combine(query, doneLast, ::ListView),
+        combine(query, doneGroup, ::ListView),
     ) { config, settings, options, status, view ->
         ListOptions(config, settings, options, status, view)
     }
@@ -153,7 +149,7 @@ internal fun shoppingListState(
             settings = options.settings,
             decimalSeparator = decimalSeparator,
             language = language,
-            doneLast = options.view.doneLast,
+            doneGroup = options.view.doneGroup,
         )
         val available = availableShoppingListFields(config)
         val counts = data.items.groupingBy { it.listId }.eachCount()
@@ -223,7 +219,7 @@ private data class ListsPart(
     val notesSyncStates: Map<Int, ShoppingListItemSync>,
 )
 
-private data class ListView(val query: String, val doneLast: Boolean)
+private data class ListView(val query: String, val doneGroup: Boolean)
 
 private data class ListOptions(
     val config: ServerConfig,

@@ -888,7 +888,7 @@
   <string name="shopping_list_add_all_to_stock">リスト内の全項目をストックに追加</string>
   <string name="shopping_list_adding_item">買い物リストの項目 %2$s の %1$s を追加しています</string>
   <string name="shopping_list_add_item">項目を追加</string>
-  <string name="shopping_list_choose">買い物リストを選択</string>
+  <string name="shopping_list_group_done">完了</string>
   <string name="shopping_list_item_not_booked">%1$s はストックに追加されませんでした。スキップして次の項目に進みますか、それともキャンセルしますか？</string>
   <string name="booking_shopping_list_hint">内容を確認して購入を確定してください。その後、項目は買い物リストから削除されます。</string>
   <string name="shopping_mode">買い物モード</string>

@@ -887,7 +887,7 @@
   <string name="shopping_list_add_all_to_stock">清单中产品全部入库</string>
   <string name="shopping_list_adding_item">添加%2$s条购物清单的第%1$s条</string>
   <string name="shopping_list_add_item">添加产品</string>
-  <string name="shopping_list_choose">选择购物清单</string>
+  <string name="shopping_list_group_done">已完成</string>
   <string name="shopping_list_item_not_booked">%1$s 未加入库存。跳过它并继续下一个产品，还是取消？</string>
   <string name="booking_shopping_list_hint">请检查信息并确认购买。之后该产品将从购物清单中移除。</string>
   <string name="shopping_mode">购物模式</string>

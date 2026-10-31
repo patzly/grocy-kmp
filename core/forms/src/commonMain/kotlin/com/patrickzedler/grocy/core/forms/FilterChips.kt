@@ -41,7 +41,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.addOutline
 import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.clipPath
-import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.layer.setOutline
 import androidx.compose.ui.graphics.rememberGraphicsLayer
@@ -333,35 +332,18 @@ private fun ScrollingMenuGroup(
     scrollState: ScrollState,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    val layer = rememberGraphicsLayer()
-    var top by remember { mutableIntStateOf(0) }
-
-    // The group's position in the scrolling column: Material puts the group's modifier on its
-    // inner column, whose position in the group is always 0, so the frame lay one shadow room
-    // too low and covered the group's top padding
-    Box(Modifier.onPlaced { top = it.positionInParent().y.roundToInt() }) {
-        ScrollingMenuGroupContent(index, count, top, scrollState, layer, content)
-    }
-}
-
-@Composable
-private fun ScrollingMenuGroupContent(
-    index: Int,
-    count: Int,
-    top: Int,
-    scrollState: ScrollState,
-    layer: GraphicsLayer,
-    content: @Composable ColumnScope.() -> Unit,
-) {
     val shape = MenuDefaults.groupShape(index = index, count = count).shape
     val edgeShape = MenuDefaults.groupShape(index = 0, count = 1).shape
     val color = MenuDefaults.groupStandardContainerColor
-    DropdownMenuGroup(
-        shapes = MenuDefaults.groupShape(index = index, count = count),
-        containerColor = Color.Transparent,
-        tonalElevation = 0.dp,
-        shadowElevation = 0.dp,
-        modifier = Modifier
+    val layer = rememberGraphicsLayer()
+    var top by remember { mutableIntStateOf(0) }
+
+    // Container and shadow are drawn around the group, not by its modifier: Material puts that on
+    // the column inside its surface, whose position in the group is always 0 and whose surface
+    // clips everything drawn there to the group's shape, the shadow too
+    Box(
+        Modifier
+            .onPlaced { top = it.positionInParent().y.roundToInt() }
             .drawWithContent {
                 val room = MenuShadowRoom.toPx()
                 // The visible part of the content without the shadows' room, in this group
@@ -389,8 +371,15 @@ private fun ScrollingMenuGroupContent(
                 }
                 clipPath(clip) { this@drawWithContent.drawContent() }
             },
-        content = content,
-    )
+    ) {
+        DropdownMenuGroup(
+            shapes = MenuDefaults.groupShape(index = index, count = count),
+            containerColor = Color.Transparent,
+            tonalElevation = 0.dp,
+            shadowElevation = 0.dp,
+            content = content,
+        )
+    }
 }
 
 /** [this] with the corners of [edge] where the scrolling cuts the group off. */

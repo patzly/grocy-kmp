@@ -975,7 +975,7 @@
   <string name="shopping_list_add_all_to_stock">Přidat všechny položky seznamu do zásob</string>
   <string name="shopping_list_adding_item">Přidána položka nákupního seznamu %1$s z %2$s</string>
   <string name="shopping_list_add_item">Přidat produkt</string>
-  <string name="shopping_list_choose">Vybrat nákupní seznam</string>
+  <string name="shopping_list_group_done">Hotovo</string>
   <string name="shopping_list_item_not_booked">%1$s nebylo přidáno do zásob. Přeskočit a pokračovat další položkou, nebo zrušit?</string>
   <string name="booking_shopping_list_hint">Zkontrolujte údaje a potvrďte nákup. Položka se pak odebere z nákupního seznamu.</string>
   <string name="shopping_mode">Nákupní režim</string>

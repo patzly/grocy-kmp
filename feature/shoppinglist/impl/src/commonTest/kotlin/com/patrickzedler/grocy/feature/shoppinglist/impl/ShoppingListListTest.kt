@@ -81,7 +81,7 @@ class ShoppingListListTest {
         config: ServerConfig = ServerConfig(),
         settings: UserSettings = UserSettings(stockDecimalPlacesAmounts = 2),
         listId: Int = 1,
-        doneLast: Boolean = false,
+        doneGroup: Boolean = false,
     ) = buildShoppingList(
         data = data,
         listId = listId,
@@ -92,7 +92,7 @@ class ShoppingListListTest {
         settings = settings,
         decimalSeparator = '.',
         language = "en",
-        doneLast = doneLast,
+        doneGroup = doneGroup,
     )
 
     private fun ShoppingListContent.rows() = groups.flatMap { it.rows }
@@ -125,13 +125,33 @@ class ShoppingListListTest {
     }
 
     @Test
-    fun doneItemsMoveToTheEndOfTheirGroupWhenAsked() {
-        val list = build(grouping = ShoppingListGrouping.NONE, doneLast = true)
+    fun doneItemsGetAGroupOfTheirOwnAfterUngroupedWhenAsked() {
+        val list = build(doneGroup = true)
 
         assertEquals(
-            listOf("bread", "Milk", "Apples", "Batteries"),
-            list.rows().map { it.title },
+            listOf(
+                ShoppingListGroupTitle.Text("Dairy"),
+                ShoppingListGroupTitle.Ungrouped,
+                ShoppingListGroupTitle.Done,
+            ),
+            list.groups.map { it.title },
         )
+        // Apples were Fruit's only item, the group is gone with it
+        assertEquals(listOf("Apples", "Batteries"), list.groups.last().rows.map { it.title })
+    }
+
+    @Test
+    fun withoutGroupingTheDoneGroupFollowsTheUntitledOne() {
+        val list = build(grouping = ShoppingListGrouping.NONE, doneGroup = true)
+
+        assertEquals(listOf(null, ShoppingListGroupTitle.Done), list.groups.map { it.title })
+    }
+
+    @Test
+    fun withoutDoneItemsThereIsNoDoneGroup() {
+        val list = build(status = ShoppingListStatus.UNDONE, doneGroup = true)
+
+        assertTrue(list.groups.none { it.title == ShoppingListGroupTitle.Done })
     }
 
     @Test

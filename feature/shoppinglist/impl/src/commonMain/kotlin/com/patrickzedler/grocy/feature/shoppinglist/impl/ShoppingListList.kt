@@ -36,6 +36,9 @@ internal sealed interface ShoppingListGroupTitle {
 
     /** Items without the other value they are grouped by, the default store. */
     data object NotSet : ShoppingListGroupTitle
+
+    /** The done items of the shopping mode, last of all. */
+    data object Done : ShoppingListGroupTitle
 }
 
 /** What adding an item to the stock books: its amount in the stock unit, shown in [quId]. */
@@ -127,7 +130,8 @@ internal fun availableShoppingListStatuses(config: ServerConfig): List<ShoppingL
 /**
  * Grocy's shopping list [listId]: every item, done ones too, by product name (or note), in
  * groups of [grouping]; filtered by [status] and searched in every column, like Grocy's table.
- * [doneLast] moves done items to the end of their group, e.g. while shopping.
+ * [doneGroup] moves done items into a group of their own after all others, e.g. while
+ * shopping; it exists only while an item is done.
  */
 internal fun buildShoppingList(
     data: ShoppingListData,
@@ -139,20 +143,18 @@ internal fun buildShoppingList(
     settings: UserSettings,
     decimalSeparator: Char,
     language: String,
-    doneLast: Boolean = false,
+    doneGroup: Boolean = false,
 ): ShoppingListContent {
     val context = RowContext(data, config, settings, decimalSeparator, language)
     val items = data.items.filter { it.listId == listId }
     val rows = items.map(context::row)
-        .sortedWith(
-            compareBy({ doneLast && it.done }, { it.title.normalizedForSearch() }, { it.id }),
-        )
+        .sortedWith(compareBy({ it.title.normalizedForSearch() }, { it.id }))
     val statusCounts = availableShoppingListStatuses(config).associateWith { candidate ->
         rows.count { it.hasStatus(candidate) }
     }
     val filtered = rows.filter { status == null || it.hasStatus(status) }
     return ShoppingListContent(
-        groups = group(search(filtered, query), grouping),
+        groups = groups(search(filtered, query), grouping, doneGroup),
         statusCounts = statusCounts,
         itemCount = items.size,
         // The list's own items only, unlike Grocy, whose request sums every list
@@ -292,6 +294,18 @@ private fun search(rows: List<ShoppingListRow>, query: String): List<ShoppingLis
 }
 
 /** The rows in groups of [grouping] by name, the rows without a value last. */
+/** The rows in groups of [grouping], with [doneGroup] the done ones last in a group of theirs. */
+private fun groups(
+    rows: List<ShoppingListRow>,
+    grouping: ShoppingListGrouping,
+    doneGroup: Boolean,
+): List<ShoppingListGroup> {
+    if (!doneGroup) return group(rows, grouping)
+    val (done, undone) = rows.partition { it.done }
+    if (done.isEmpty()) return group(undone, grouping)
+    return group(undone, grouping) + ShoppingListGroup(ShoppingListGroupTitle.Done, done)
+}
+
 private fun group(
     rows: List<ShoppingListRow>,
     grouping: ShoppingListGrouping,

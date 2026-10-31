@@ -944,7 +944,7 @@
   <string name="shopping_list_add_all_to_stock">Adicionar todos os itens da lista ao estoque</string>
   <string name="shopping_list_adding_item">Adicionando item a lista de compra %1$s de %2$s</string>
   <string name="shopping_list_add_item">Adicionar item</string>
-  <string name="shopping_list_choose">Escolher lista de compras</string>
+  <string name="shopping_list_group_done">Concluído</string>
   <string name="shopping_list_item_not_booked">%1$s não foi adicionado ao estoque. Pular e continuar com o próximo item, ou cancelar?</string>
   <string name="booking_shopping_list_hint">Confira os dados e confirme a compra. Depois, o item é removido da lista de compras.</string>
   <string name="shopping_mode">Modo compras</string>

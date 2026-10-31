@@ -915,7 +915,7 @@
   <string name="shopping_list_add_all_to_stock">Lägg till alla listposter i lagret</string>
   <string name="shopping_list_adding_item">Lägger till %1$s av %2$s i lagret</string>
   <string name="shopping_list_add_item">Lägg till vara</string>
-  <string name="shopping_list_choose">Välj inköpslista</string>
+  <string name="shopping_list_group_done">Klart</string>
   <string name="shopping_list_item_not_booked">%1$s lades inte till i lagret. Hoppa över den och fortsätta med nästa vara, eller avbryta?</string>
   <string name="booking_shopping_list_hint">Kontrollera uppgifterna och bekräfta köpet. Varan tas sedan bort från inköpslistan.</string>
   <string name="shopping_mode">Handlingsläge</string>

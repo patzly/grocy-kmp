@@ -74,6 +74,7 @@ fun EntryProviderScope<NavKey>.shoppingListEntries(
                 onItemClick = { navigator.openDetail(ShoppingListItemRoute(id = it)) },
                 onNewListClick = { navigator.openDetail(ShoppingListFormRoute()) },
                 onEditListClick = { navigator.openDetail(ShoppingListFormRoute(it)) },
+                onShoppingModeClick = { navigator.navigate(ShoppingModeRoute) },
                 onPurchase = { purchase, progress ->
                     navigator.navigate(
                         PurchaseRoute(

@@ -268,19 +268,6 @@ class ShoppingListViewModelTest {
     }
 
     @Test
-    fun listSelectorOpensAndClosesWithTheChoice() = runTest(dispatcher) {
-        val viewModel = viewModel()
-
-        viewModel.chooseList()
-        assertEquals(ShoppingListDialog.ChooseList, viewModel.dialog)
-        viewModel.selectList(2)
-        advanceUntilIdle()
-
-        assertNull(viewModel.dialog)
-        assertEquals(2, viewModel.state.value?.list?.id)
-    }
-
-    @Test
     fun statusFilterIsTheOneTheShoppingModeShares() = runTest(dispatcher) {
         val viewModel = viewModel()
 

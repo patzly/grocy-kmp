@@ -5,7 +5,7 @@ import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.ButtonGroupMenuState
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.IconButtonDefaults.IconButtonWidthOption
@@ -48,6 +48,8 @@ import org.jetbrains.compose.resources.stringResource
 internal enum class StockAction(
     val title: StringResource,
     val icon: DrawableResource,
+    /** The everyday bookings are wide, the rarer ones narrow. */
+    val width: IconButtonWidthOption = IconButtonWidthOption.Wide,
     /** Grocy's transfer needs locations. */
     val isAvailable: (ServerConfig) -> Boolean = { true },
 ) {
@@ -56,14 +58,20 @@ internal enum class StockAction(
     TRANSFER(
         Res.string.stock_transfer,
         Res.drawable.ic_rounded_swap_horiz,
+        IconButtonWidthOption.Narrow,
         { it.stockLocationTracking },
     ),
-    INVENTORY(Res.string.stock_inventory, Res.drawable.ic_rounded_fact_check),
+    INVENTORY(
+        Res.string.stock_inventory,
+        Res.drawable.ic_rounded_fact_check,
+        IconButtonWidthOption.Narrow,
+    ),
 }
 
 /**
- * The [actions] as a standard button group of wide tonal icon buttons, the pressed one widens;
- * where the item is too narrow the last ones move into the menu of a tonal overflow button.
+ * The [actions] as a standard button group of filled icon buttons (primary, the rarer ones
+ * narrow), the pressed one widens; where the item is too narrow the last ones move into the menu
+ * of a filled overflow button.
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -119,12 +127,12 @@ private fun ActionButton(
     val label = stringResource(action.title)
 
     HapticTooltipBox(text = label, modifier = modifier) {
-        FilledTonalIconButton(
+        FilledIconButton(
             onClick = {
                 haptic.confirm()
                 onClick(action)
             },
-            modifier = smallIconButtonSize(IconButtonWidthOption.Wide).clickCursor(),
+            modifier = smallIconButtonSize(action.width).clickCursor(),
             shapes = IconButtonDefaults.shapes(),
             interactionSource = interactionSource,
         ) {
@@ -134,7 +142,7 @@ private fun ActionButton(
 }
 
 /**
- * The shopping list's quick actions as a standard button group of wide tonal icon buttons like
+ * The shopping list's quick actions as a standard button group of filled icon buttons like
  * the stock actions: Grocy's "Add item" and the shopping mode.
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -178,7 +186,7 @@ private fun QuickIconButton(
     val label = stringResource(button.label)
 
     HapticTooltipBox(text = label, modifier = modifier) {
-        FilledTonalIconButton(
+        FilledIconButton(
             onClick = {
                 haptic.confirm()
                 button.onClick()
@@ -198,7 +206,7 @@ private fun OverflowButton(menuState: ButtonGroupMenuState) {
     val description = stringResource(Res.string.action_more_options)
 
     HapticTooltipBox(text = description) {
-        FilledTonalIconButton(
+        FilledIconButton(
             onClick = {
                 haptic.confirm()
                 if (menuState.isShowing) menuState.dismiss() else menuState.show()

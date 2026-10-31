@@ -887,7 +887,7 @@
   <string name="shopping_list_add_all_to_stock">將所有列表項目加到庫存中</string>
   <string name="shopping_list_adding_item">將 %2$s 的 %1$s 加到購物清單項目</string>
   <string name="shopping_list_add_item">新增項目</string>
-  <string name="shopping_list_choose">選擇購物清單</string>
+  <string name="shopping_list_group_done">已完成</string>
   <string name="shopping_list_item_not_booked">%1$s 未加入庫存。要略過並繼續下一個項目，還是取消？</string>
   <string name="booking_shopping_list_hint">請檢查資料並確認購買。之後此項目會從購物清單中移除。</string>
   <string name="shopping_mode">購物模式</string>

@@ -916,7 +916,7 @@
   <string name="shopping_list_add_all_to_stock">Alle Einträge zum Bestand hinzufügen</string>
   <string name="shopping_list_adding_item">Bearbeite Einkaufszetteleintrag %1$s von %2$s</string>
   <string name="shopping_list_add_item">Eintrag hinzufügen</string>
-  <string name="shopping_list_choose">Einkaufszettel auswählen</string>
+  <string name="shopping_list_group_done">Erledigt</string>
   <string name="shopping_list_item_not_booked">%1$s wurde nicht zum Bestand hinzugefügt. Überspringen und mit dem nächsten Eintrag weitermachen oder abbrechen?</string>
   <string name="booking_shopping_list_hint">Prüfe die Angaben und bestätige den Einkauf. Danach wird der Eintrag vom Einkaufszettel entfernt.</string>
   <string name="shopping_mode">Einkaufsmodus</string>

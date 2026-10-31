@@ -15,10 +15,10 @@ and, with prices, their value, then as list Grocy's messages above its stock ove
 within the due soon days, overdue, expired, below min. stock amount with how many of them are
 on shopping lists; `stockSummaryOf` of `core:model`, counted like Grocy's messages; below them
 Grocy's Purchase, Consume, Transfer (with location tracking) and Inventory as a standard button
-group of wide tonal icon buttons, `StockActionButtons`, the last ones in the menu of a tonal
-overflow button when the item is too narrow), the items still to buy (with several lists
-holding some, per list as "Name (count)"; below it a standard button group of two wide tonal
-icon buttons, `ShoppingListButtons`: Grocy's "Add item", a plain plus, opening
+group of filled (primary) icon buttons, Purchase and Consume wide, Transfer and Inventory narrow,
+`StockActionButtons`, the last ones in the menu of a filled overflow button when the item is too narrow), the items still to buy (with several lists
+holding some, per list as "Name (count)"; below it a standard button group of two wide filled
+(primary) icon buttons, `ShoppingListButtons`: Grocy's "Add item", a plain plus, opening
 `ShoppingListItemRoute` for the list the shopping list shows or Grocy's default list
 (`StartViewModel.quickAddListId`), and the shopping mode (`storefront`, `ShoppingModeRoute`)), and the
 objects of each master data category the server has in one line joined by commas

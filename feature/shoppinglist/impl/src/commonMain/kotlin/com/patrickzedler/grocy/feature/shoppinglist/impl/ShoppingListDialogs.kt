@@ -39,7 +39,7 @@ import org.jetbrains.compose.resources.stringResource
 
 /** The questions of [viewModel] and the forms it opens over the list. */
 @Composable
-internal fun ShoppingListDialogs(viewModel: ShoppingListViewModel, state: ShoppingListUiState?) {
+internal fun ShoppingListDialogs(viewModel: ShoppingListViewModel) {
     when (val dialog = viewModel.dialog) {
         is ShoppingListDialog.ClearList -> DeleteDialog(
             question = if (dialog.name != null) {
@@ -58,14 +58,6 @@ internal fun ShoppingListDialogs(viewModel: ShoppingListViewModel, state: Shoppi
             onDelete = { viewModel.deleteList(dialog.listId) },
             onDismissRequest = viewModel::dismissDialog,
         )
-        ShoppingListDialog.ChooseList -> state?.let { current ->
-            ShoppingListChoiceDialog(
-                lists = current.lists,
-                selectedId = current.list?.id,
-                onSelect = viewModel::selectList,
-                onDismissRequest = viewModel::dismissDialog,
-            )
-        }
         is ShoppingListDialog.StockItemSkipped -> StockItemSkippedDialog(
             dialog = dialog,
             onSkip = viewModel::skipStockItem,

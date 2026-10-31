@@ -1,8 +1,5 @@
 package com.patrickzedler.grocy.feature.shoppinglist.impl
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
@@ -53,10 +50,6 @@ internal class ShoppingModeViewModel(
     /** Read at app start, so the screen knows them in its first frame. */
     val settings: StateFlow<ShoppingModeSettings?> = settingsRepository.settings
 
-    /** Whether Grocy's list selector is open. */
-    var isChoosingList by mutableStateOf(false)
-        private set
-
     private val refreshController = RefreshController(viewModelScope) {
         refreshShoppingList(masterData, stock, shoppingLists)
     }
@@ -70,7 +63,7 @@ internal class ShoppingModeViewModel(
         computeDispatcher = computeDispatcher,
         decimalSeparator = decimalSeparator,
         language = language,
-        doneLast = settings.filterNotNull().map { it.doneItemsLast }.distinctUntilChanged(),
+        doneGroup = settings.filterNotNull().map { it.doneItemsLast }.distinctUntilChanged(),
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), null)
 
     init {
@@ -114,17 +107,7 @@ internal class ShoppingModeViewModel(
         viewModelScope.launch { shoppingLists.setDone(row.id, !row.done) }
     }
 
-    /** Grocy's list selector, offered with several lists. */
-    fun chooseList() {
-        if (state.value?.canChooseList == true) isChoosingList = true
-    }
-
-    fun dismissListChoice() {
-        isChoosingList = false
-    }
-
     fun selectList(listId: Int) {
-        isChoosingList = false
         shoppingLists.selectList(listId)
     }
 

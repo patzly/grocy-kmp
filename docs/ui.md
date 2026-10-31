@@ -34,10 +34,9 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
   `ConnectedButtonGroup` centers its overflow indicator in the touch target height of its toggle
   buttons: the group lines its items up at the top, so the smaller indicator sat higher.
 - Overflow menus: `AppBarMenuItem(checked = ...)` is a checkable item (check mark while on, the
-  menu stays open, `ToggleOn`/`ToggleOff` haptics). `SegmentedListScreen(refreshMenuItems)` puts
-  items into the group of "Reload" (e.g. the shopping mode's auto sync), `onTitleClick` makes the
-  title a choice (drop down arrow after it, the whole room between navigation icon and actions
-  is one pill shaped target with the subtitle, always the small bar; e.g. Grocy's list selector).
+  menu stays open, `ToggleOn`/`ToggleOff` haptics), e.g. the shopping mode's auto sync.
+- `insetItem`/`insetItems(animate = true)` (with keys) apply `animateItem`: items fade in and
+  out and move to their new place with the default spring, e.g. between groups.
 - Chips: `LocalChipSize` (`core:forms`) provides `ChipSize.LARGE` for field and filter chips
   readable at arm's length (title medium, 40.dp high, 20.dp icons), e.g. the shopping mode.
 - `KeepScreenOn(enabled)` (`core:ui`): the window's `keepScreenOn` on Android, a screen wake lock

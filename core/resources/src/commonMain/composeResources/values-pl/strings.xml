@@ -972,7 +972,7 @@
   <string name="shopping_list_add_all_to_stock">Dodaj wszystkie pozycje z listy do zapasów</string>
   <string name="shopping_list_adding_item">%2$s - %1$s - dodaję pozycję do listy zakupów</string>
   <string name="shopping_list_add_item">Dodaj pozycję</string>
-  <string name="shopping_list_choose">Wybierz listę zakupów</string>
+  <string name="shopping_list_group_done">Zrobione</string>
   <string name="shopping_list_item_not_booked">%1$s nie zostało dodane do zapasów. Pominąć i przejść do następnej pozycji, czy anulować?</string>
   <string name="booking_shopping_list_hint">Sprawdź dane i potwierdź zakup. Następnie pozycja zostanie usunięta z listy zakupów.</string>
   <string name="shopping_mode">Tryb zakupów</string>
