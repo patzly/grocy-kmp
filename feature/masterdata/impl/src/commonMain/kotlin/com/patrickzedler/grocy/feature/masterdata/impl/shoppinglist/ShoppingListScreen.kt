@@ -46,6 +46,9 @@ import com.patrickzedler.grocy.core.forms.searchItem
 import com.patrickzedler.grocy.core.forms.showSearchAtTop
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.model.text.formatCurrency
+import com.patrickzedler.grocy.core.productcard.LabelPrintEffect
+import com.patrickzedler.grocy.core.productcard.ProductOverviewHost
+import com.patrickzedler.grocy.core.productcard.StockPageActions
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_search
 import com.patrickzedler.grocy.core.resources.data_save_failed
@@ -73,11 +76,6 @@ import com.patrickzedler.grocy.core.resources.shopping_list_ungrouped
 import com.patrickzedler.grocy.core.resources.stock_overview_group_not_set
 import com.patrickzedler.grocy.core.resources.stock_overview_total_value
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
-import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductLinks
-import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewHost
-import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintEffect
-import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -103,10 +101,7 @@ internal class ShoppingListLinks(
 @Composable
 internal fun ShoppingListScreen(
     viewModel: ShoppingListViewModel,
-    overviewViewModel: ProductOverviewViewModel,
-    shoppingList: AddToShoppingListViewModel,
-    labels: LabelPrintViewModel,
-    productLinks: ProductLinks,
+    actions: StockPageActions,
     links: ShoppingListLinks,
     menuItems: List<AppBarMenuItem>,
     onBackClick: () -> Unit,
@@ -119,7 +114,7 @@ internal fun ShoppingListScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-    LabelPrintEffect(labels, snackbarHostState)
+    LabelPrintEffect(actions.labels, snackbarHostState)
 
     // With saved data a failed download is only a note, without it the list explains itself
     RefreshErrorEffect(
@@ -217,7 +212,7 @@ internal fun ShoppingListScreen(
                 onToggleDone = viewModel::toggleDone,
                 onDelete = viewModel::delete,
                 onAddToStock = viewModel::addToStock,
-                onProductOverview = overviewViewModel::show,
+                onProductOverview = actions.overview::show,
             ),
             onRetryClick = viewModel::refresh,
         )
@@ -225,11 +220,11 @@ internal fun ShoppingListScreen(
     }
 
     ProductOverviewHost(
-        overview = overviewViewModel,
-        shoppingList = shoppingList,
-        labels = labels,
+        overview = actions.overview,
+        shoppingList = actions.shoppingList,
+        labels = actions.labels,
         snackbarHostState = snackbarHostState,
-        links = productLinks,
+        links = actions.links,
         nameOf = { id ->
             state?.groups?.firstNotNullOfOrNull { group ->
                 group.rows.firstOrNull { it.productId == id }

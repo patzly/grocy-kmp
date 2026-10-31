@@ -1,4 +1,4 @@
-package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
+package com.patrickzedler.grocy.core.productcard
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -59,16 +59,16 @@ internal data class AddedToShoppingList(
  * Grocy's "Add to shopping list" of a product as dialog ([dialog]): the amount in one of its
  * units, added to an item of the product on that list. Online only.
  */
-internal class AddToShoppingListViewModel(
+class AddToShoppingListViewModel(
     private val masterData: MasterDataRepository,
     private val shoppingLists: ShoppingListRepository,
 ) : ViewModel() {
 
-    var dialog by mutableStateOf<AddToShoppingListState?>(null)
+    internal var dialog by mutableStateOf<AddToShoppingListState?>(null)
         private set
 
     private val addedChannel = Channel<AddedToShoppingList>(Channel.BUFFERED)
-    val added: Flow<AddedToShoppingList> = addedChannel.receiveAsFlow()
+    internal val added: Flow<AddedToShoppingList> = addedChannel.receiveAsFlow()
 
     fun open(productId: Int) {
         viewModelScope.launch {

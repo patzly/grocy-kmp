@@ -24,12 +24,8 @@ import com.patrickzedler.grocy.feature.masterdata.api.StockJournalSummaryRoute
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataDependencies
 import com.patrickzedler.grocy.feature.masterdata.impl.appLanguage
 import com.patrickzedler.grocy.feature.masterdata.impl.appMenuItems
-import com.patrickzedler.grocy.feature.masterdata.impl.booking.bookingRoute
 import com.patrickzedler.grocy.feature.masterdata.impl.formFrame
-import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductLinks
-import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.shoppingListViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.stockPageActions
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -67,19 +63,8 @@ internal fun EntryProviderScope<NavKey>.shoppingListEntries(
                     language = language,
                 )
             },
-            overviewViewModel = viewModel {
-                ProductOverviewViewModel(repository, language = language)
-            },
-            shoppingList = shoppingListViewModel(dependencies),
-            labels = viewModel { LabelPrintViewModel(dependencies.stockRepository) },
             // Outside the product list the product's pages open on their own
-            productLinks = ProductLinks(
-                onEditClick = { navigator.navigate(ProductRoute(it)) },
-                onStockEntriesClick = { navigator.navigate(StockEntriesRoute(it)) },
-                onStockJournalClick = { navigator.navigate(StockJournalRoute(it)) },
-                onStockJournalSummaryClick = { navigator.navigate(StockJournalSummaryRoute(it)) },
-                onBookingClick = { id, kind -> navigator.navigate(bookingRoute(kind, id)) },
-            ),
+            actions = stockPageActions(dependencies, navigator),
             links = ShoppingListLinks(
                 onAddItemClick = { navigator.openDetail(ShoppingListItemRoute(listId = it)) },
                 onItemClick = { navigator.openDetail(ShoppingListItemRoute(id = it)) },

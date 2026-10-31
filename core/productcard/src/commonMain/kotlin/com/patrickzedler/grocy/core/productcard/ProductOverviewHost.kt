@@ -1,18 +1,13 @@
-package com.patrickzedler.grocy.feature.masterdata.impl.overview
+package com.patrickzedler.grocy.core.productcard
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.scanner.writer.Grocycode
-import com.patrickzedler.grocy.feature.masterdata.impl.booking.BookingKind
-import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.related.rememberGrocycodeDownload
-import com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist.AddToShoppingListHost
-import com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist.AddToShoppingListViewModel
 
 /** Where Grocy's product pages lead: its form, its stock entries and its journal. */
-internal class ProductLinks(
+class ProductLinks(
     val onEditClick: (productId: Int) -> Unit,
     val onStockEntriesClick: (productId: Int) -> Unit,
     val onStockJournalClick: (productId: Int) -> Unit,
@@ -28,7 +23,7 @@ internal class ProductLinks(
  * the first frame.
  */
 @Composable
-internal fun ProductOverviewHost(
+fun ProductOverviewHost(
     overview: ProductOverviewViewModel,
     shoppingList: AddToShoppingListViewModel,
     labels: LabelPrintViewModel,

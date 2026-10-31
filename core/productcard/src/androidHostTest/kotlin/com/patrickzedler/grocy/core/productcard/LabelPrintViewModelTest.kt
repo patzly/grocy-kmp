@@ -1,4 +1,4 @@
-package com.patrickzedler.grocy.feature.masterdata.impl.related
+package com.patrickzedler.grocy.core.productcard
 
 import app.cash.turbine.test
 import com.patrickzedler.grocy.core.forms.ChangeError

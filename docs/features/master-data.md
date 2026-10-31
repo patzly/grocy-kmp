@@ -4,7 +4,9 @@ Master data lists and forms, list-detail scenes, menus, refresh, products, grocy
 
 The building blocks it shares with the stock pages and the shopping list (fields, userfields,
 `ObjectFormViewModel`/`ObjectFormScreen`, object actions, filter chips, list parts, `ChangeError`)
-live in `core:forms`.
+live in `core:forms`. The product overview with "Add to shopping list", grocycodes and label
+printing, which the products, the stock pages and the shopping list open, lives in
+`core:productcard` (`rememberStockPageActions` creates its ViewModels for a page).
 
 Master data (`feature:masterdata`), built after Grocy's web frontend:
 - `MasterDataScreen` (beside the start screen without back button and app menu, the start

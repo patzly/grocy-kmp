@@ -1,4 +1,4 @@
-package com.patrickzedler.grocy.feature.masterdata.impl.overview
+package com.patrickzedler.grocy.core.productcard
 
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.PriceHistoryEntry

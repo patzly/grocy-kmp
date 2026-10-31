@@ -39,6 +39,7 @@ import com.patrickzedler.grocy.core.model.text.isoDateOf
 import com.patrickzedler.grocy.core.model.text.parseDecimal
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
 import com.patrickzedler.grocy.core.model.text.todayEpochDay
+import com.patrickzedler.grocy.core.productcard.BookingKind
 import kotlin.math.abs
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel

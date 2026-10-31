@@ -38,6 +38,9 @@ import com.patrickzedler.grocy.core.forms.searchItem
 import com.patrickzedler.grocy.core.forms.showSearchAtTop
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.model.text.formatDate
+import com.patrickzedler.grocy.core.productcard.LabelPrintEffect
+import com.patrickzedler.grocy.core.productcard.ProductOverviewHost
+import com.patrickzedler.grocy.core.productcard.StockPageActions
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_search
 import com.patrickzedler.grocy.core.resources.action_undo
@@ -64,12 +67,6 @@ import com.patrickzedler.grocy.core.resources.stock_overview_scan
 import com.patrickzedler.grocy.core.resources.stock_overview_title
 import com.patrickzedler.grocy.core.resources.stock_overview_total_value
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
-import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductLinks
-import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewHost
-import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintEffect
-import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist.AddToShoppingListViewModel
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
@@ -94,10 +91,7 @@ internal class StockOverviewLinks(
 @Composable
 internal fun StockOverviewScreen(
     viewModel: StockOverviewViewModel,
-    overviewViewModel: ProductOverviewViewModel,
-    shoppingList: AddToShoppingListViewModel,
-    labels: LabelPrintViewModel,
-    productLinks: ProductLinks,
+    actions: StockPageActions,
     links: StockOverviewLinks,
     itemActions: StockOverviewItemActions,
     menuItems: List<AppBarMenuItem>,
@@ -108,7 +102,7 @@ internal fun StockOverviewScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val refresh by viewModel.refresh.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    LabelPrintEffect(labels, snackbarHostState)
+    LabelPrintEffect(actions.labels, snackbarHostState)
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
@@ -210,11 +204,11 @@ internal fun StockOverviewScreen(
     }
 
     ProductOverviewHost(
-        overview = overviewViewModel,
-        shoppingList = shoppingList,
-        labels = labels,
+        overview = actions.overview,
+        shoppingList = actions.shoppingList,
+        labels = actions.labels,
         snackbarHostState = snackbarHostState,
-        links = productLinks,
+        links = actions.links,
         nameOf = { id ->
             state?.groups?.firstNotNullOfOrNull { group ->
                 group.items.firstOrNull { it.productId == id }

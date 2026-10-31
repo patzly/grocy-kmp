@@ -8,9 +8,7 @@ import com.patrickzedler.grocy.core.model.stock.ProductGrocycode
 import com.patrickzedler.grocy.core.model.stock.ProductLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.text.isoDateOf
-
-/** Grocy's four stock booking pages. */
-internal enum class BookingKind { PURCHASE, CONSUME, TRANSFER, INVENTORY }
+import com.patrickzedler.grocy.core.productcard.BookingKind
 
 /**
  * The products Grocy's page of [kind] offers: active ones with own stock to purchase or count,

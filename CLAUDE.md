@@ -244,6 +244,8 @@ core/
   ui/            cross-feature UI: AppDialog/AppDialogHost, feedback/help/unlock dialogs, share
   forms/         form and list building blocks of the features: TextItem, DropdownItem,
                  userfields, ObjectFormViewModel/Screen, object actions, filter chips, ChangeError
+  productcard/   Grocy's product overview (productcard) of every stock page: ProductOverviewHost,
+                 "Add to shopping list", grocycodes and labels, rememberStockPageActions
   scanner/       BarcodeScanner composable, BarcodeDecoder interface, ZXing on Android + Web
   scanner-mlkit/ ML Kit implementation of BarcodeDecoder, closed source, only for android-play
   update-play/   Google Play in-app updates (PlayAppUpdater), closed source, only for android-play

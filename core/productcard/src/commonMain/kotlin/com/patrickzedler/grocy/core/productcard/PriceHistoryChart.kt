@@ -1,4 +1,4 @@
-package com.patrickzedler.grocy.feature.masterdata.impl.overview
+package com.patrickzedler.grocy.core.productcard
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.focusable

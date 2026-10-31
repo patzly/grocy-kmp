@@ -61,6 +61,11 @@ import com.patrickzedler.grocy.core.model.text.formatDate
 import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.parseDecimal
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
+import com.patrickzedler.grocy.core.productcard.BookingKind
+import com.patrickzedler.grocy.core.productcard.LabelPrintEffect
+import com.patrickzedler.grocy.core.productcard.ProductOverviewHost
+import com.patrickzedler.grocy.core.productcard.StockPageActions
+import com.patrickzedler.grocy.core.productcard.title
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_cancel
 import com.patrickzedler.grocy.core.resources.action_scroll_to_top
@@ -148,23 +153,11 @@ import com.patrickzedler.grocy.core.resources.stock_overview_default_location
 import com.patrickzedler.grocy.core.resources.stock_purchase
 import com.patrickzedler.grocy.core.resources.stock_transfer
 import com.patrickzedler.grocy.core.scanner.BarcodeScanner
-import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewHost
-import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintEffect
-import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockPageActions
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-
-/** The title of the page of [this] kind, like Grocy's. */
-internal val BookingKind.title: StringResource
-    get() = when (this) {
-        BookingKind.PURCHASE -> Res.string.stock_purchase
-        BookingKind.CONSUME -> Res.string.stock_consume
-        BookingKind.TRANSFER -> Res.string.stock_transfer
-        BookingKind.INVENTORY -> Res.string.stock_inventory
-    }
 
 /**
  * One of Grocy's stock pages: the form in Grocy's field order as segmented groups, the product

@@ -10,6 +10,7 @@ kotlin {
             api(projects.core.data)
             implementation(projects.core.design)
             implementation(projects.core.forms)
+            implementation(projects.core.productcard)
             implementation(projects.core.resources)
             implementation(projects.core.scanner)
             implementation(projects.core.ui)
@@ -20,10 +21,10 @@ kotlin {
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(libs.jetbrains.navigationevent.compose)
             implementation(libs.jetbrains.lifecycle.viewmodel.compose)
-            implementation(libs.kotlinx.serialization.json)
         }
         commonTest.dependencies {
             implementation(projects.core.testing)
+            implementation(libs.kotlinx.serialization.json)
         }
     }
 }

@@ -16,8 +16,10 @@ import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FieldError
 import com.patrickzedler.grocy.core.forms.FormFrame
 import com.patrickzedler.grocy.core.forms.ObjectField
+import com.patrickzedler.grocy.core.forms.ObjectFormScreen
 import com.patrickzedler.grocy.core.forms.ScannerToggleButton
 import com.patrickzedler.grocy.core.forms.fieldErrorText
+import com.patrickzedler.grocy.core.productcard.ShoppingListItemFields
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.data_product
 import com.patrickzedler.grocy.core.resources.product_parent_not_found
@@ -25,7 +27,6 @@ import com.patrickzedler.grocy.core.resources.shopping_list_item_create
 import com.patrickzedler.grocy.core.resources.shopping_list_item_edit
 import com.patrickzedler.grocy.core.resources.shopping_list_product_or_note_required
 import com.patrickzedler.grocy.core.scanner.BarcodeScanner
-import com.patrickzedler.grocy.core.forms.ObjectFormScreen
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource

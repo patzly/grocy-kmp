@@ -77,6 +77,10 @@ import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.StockLabelType
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.server.ServerConfig
+import com.patrickzedler.grocy.core.productcard.GrocycodeItem
+import com.patrickzedler.grocy.core.productcard.LabelPrintEffect
+import com.patrickzedler.grocy.core.productcard.LabelPrintViewModel
+import com.patrickzedler.grocy.core.productcard.rememberGrocycodeDownload
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_save
 import com.patrickzedler.grocy.core.resources.data_save_failed
@@ -191,12 +195,8 @@ import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionItem
 import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionOwner
 import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionsViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ResolvedConversionsDialog
-import com.patrickzedler.grocy.feature.masterdata.impl.related.GrocycodeItem
-import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintEffect
-import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.related.barcodesGroup
 import com.patrickzedler.grocy.feature.masterdata.impl.related.conversionsGroup
-import com.patrickzedler.grocy.feature.masterdata.impl.related.rememberGrocycodeDownload
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString

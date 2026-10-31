@@ -6,6 +6,7 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.patrickzedler.grocy.core.navigation.Navigator
 import com.patrickzedler.grocy.core.navigation.Route
+import com.patrickzedler.grocy.core.productcard.BookingKind
 import com.patrickzedler.grocy.feature.masterdata.api.ConsumeRoute
 import com.patrickzedler.grocy.feature.masterdata.api.InventoryRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute

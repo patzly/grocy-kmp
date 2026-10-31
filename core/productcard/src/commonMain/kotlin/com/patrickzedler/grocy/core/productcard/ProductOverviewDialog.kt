@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
 
-package com.patrickzedler.grocy.feature.masterdata.impl.overview
+package com.patrickzedler.grocy.core.productcard
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -129,8 +129,6 @@ import com.patrickzedler.grocy.core.resources.product_picture_load_failed
 import com.patrickzedler.grocy.core.resources.product_stock_entries
 import com.patrickzedler.grocy.core.resources.product_stock_journal
 import com.patrickzedler.grocy.core.resources.product_stock_journal_summary
-import com.patrickzedler.grocy.feature.masterdata.impl.booking.BookingKind
-import com.patrickzedler.grocy.feature.masterdata.impl.booking.title
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.decodeToImageBitmap

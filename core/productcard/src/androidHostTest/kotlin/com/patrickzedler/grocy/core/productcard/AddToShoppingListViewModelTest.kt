@@ -1,4 +1,4 @@
-package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
+package com.patrickzedler.grocy.core.productcard
 
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import app.cash.turbine.test

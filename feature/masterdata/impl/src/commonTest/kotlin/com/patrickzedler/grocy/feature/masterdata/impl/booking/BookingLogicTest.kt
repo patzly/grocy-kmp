@@ -8,6 +8,7 @@ import com.patrickzedler.grocy.core.model.stock.ProductLocationAmount
 import com.patrickzedler.grocy.core.model.stock.ProductStockDetails
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.text.epochDayOf
+import com.patrickzedler.grocy.core.productcard.BookingKind
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs

@@ -55,6 +55,10 @@ import com.patrickzedler.grocy.core.model.text.formatRelativeTime
 import com.patrickzedler.grocy.core.model.text.timeOfDayOf
 import com.patrickzedler.grocy.core.model.text.timeSpanBetween
 import com.patrickzedler.grocy.core.model.text.todayEpochDay
+import com.patrickzedler.grocy.core.productcard.LabelPrintEffect
+import com.patrickzedler.grocy.core.productcard.ProductOverviewHost
+import com.patrickzedler.grocy.core.productcard.StockPageActions
+import com.patrickzedler.grocy.core.productcard.rememberGrocycodeDownload
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_search
 import com.patrickzedler.grocy.core.resources.data_all
@@ -96,10 +100,6 @@ import com.patrickzedler.grocy.core.resources.transaction_transfer_from
 import com.patrickzedler.grocy.core.resources.transaction_transfer_to
 import com.patrickzedler.grocy.core.scanner.writer.Grocycode
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
-import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewHost
-import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintEffect
-import com.patrickzedler.grocy.feature.masterdata.impl.related.rememberGrocycodeDownload
-import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockPageActions
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource

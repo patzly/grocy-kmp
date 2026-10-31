@@ -6,6 +6,7 @@ import com.patrickzedler.grocy.core.model.stock.ProductStockDetails
 import com.patrickzedler.grocy.core.model.text.decimalPlaces
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.model.text.parseDecimal
+import com.patrickzedler.grocy.core.productcard.BookingKind
 import kotlin.math.abs
 
 /** The fields of Grocy's stock pages that can be wrong. */

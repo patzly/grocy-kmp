@@ -17,6 +17,14 @@ import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
+import com.patrickzedler.grocy.core.productcard.ShoppingListItemInputs
+import com.patrickzedler.grocy.core.productcard.ShoppingListItemValues
+import com.patrickzedler.grocy.core.productcard.defaultItemQuId
+import com.patrickzedler.grocy.core.productcard.itemAmountText
+import com.patrickzedler.grocy.core.productcard.itemUnits
+import com.patrickzedler.grocy.core.productcard.productIdForCode
+import com.patrickzedler.grocy.core.productcard.toItem
+import com.patrickzedler.grocy.core.productcard.validate
 import kotlinx.coroutines.flow.first
 
 /**

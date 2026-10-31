@@ -1,4 +1,4 @@
-package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
+package com.patrickzedler.grocy.core.productcard
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Composable
@@ -42,7 +42,7 @@ import org.jetbrains.compose.resources.stringResource
  *   lists, everything goes to the first one then.
  */
 @Stable
-internal class ShoppingListItemInputs(
+class ShoppingListItemInputs(
     val lists: List<ShoppingList>,
     initialListId: Int?,
     units: List<AmountUnit>,
@@ -88,7 +88,7 @@ internal class ShoppingListItemInputs(
  * a product is chosen, and the note.
  */
 @Composable
-internal fun ShoppingListItemFields(
+fun ShoppingListItemFields(
     inputs: ShoppingListItemInputs,
     errors: Map<ObjectField, FieldError>,
     product: GroupItem? = null,

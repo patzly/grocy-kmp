@@ -21,6 +21,7 @@ import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
 import com.patrickzedler.grocy.core.model.text.FuzzySearch
 import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.normalizedForSearch
+import com.patrickzedler.grocy.core.productcard.itemUnits
 import kotlin.math.ceil
 import kotlin.math.pow
 import kotlin.math.roundToLong

@@ -1,4 +1,4 @@
-package com.patrickzedler.grocy.feature.masterdata.impl.overview
+package com.patrickzedler.grocy.core.productcard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -36,7 +36,7 @@ import kotlinx.coroutines.plus
  * offline), the server's current one downloaded every time it opens.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-internal class ProductOverviewViewModel(
+class ProductOverviewViewModel(
     private val repository: MasterDataRepository,
     private val timeSource: TimeSource = TimeSource.Monotonic,
     private val decimalSeparator: Char = platformDecimalSeparator(),
@@ -53,7 +53,7 @@ internal class ProductOverviewViewModel(
      * Null while closed, while the database is read and when the product does not exist
      * (anymore); briefly the previous product's after [show], so compare [productId].
      */
-    val state: StateFlow<ProductOverviewUiState?> = shownProductId
+    internal val state: StateFlow<ProductOverviewUiState?> = shownProductId
         .flatMapLatest { id -> if (id == null) flowOf(null) else overview(id) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), null)
 

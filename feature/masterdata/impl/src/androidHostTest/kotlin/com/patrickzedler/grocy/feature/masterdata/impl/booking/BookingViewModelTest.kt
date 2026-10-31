@@ -3,6 +3,7 @@ package com.patrickzedler.grocy.feature.masterdata.impl.booking
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import app.cash.turbine.test
 import com.patrickzedler.grocy.core.model.text.epochDayOf
+import com.patrickzedler.grocy.core.productcard.BookingKind
 import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
 import io.ktor.http.HttpMethod
 import io.ktor.http.content.TextContent

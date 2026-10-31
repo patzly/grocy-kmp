@@ -10,17 +10,18 @@ import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.forms.FieldError
 import com.patrickzedler.grocy.core.forms.FormFrame
 import com.patrickzedler.grocy.core.forms.ObjectField
+import com.patrickzedler.grocy.core.forms.ObjectFormScreen
 import com.patrickzedler.grocy.core.forms.ObjectFormState
 import com.patrickzedler.grocy.core.forms.ObjectFormViewModel
 import com.patrickzedler.grocy.core.forms.TextItem
 import com.patrickzedler.grocy.core.forms.fieldErrorText
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
+import com.patrickzedler.grocy.core.productcard.validate
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.product_name
 import com.patrickzedler.grocy.core.resources.product_name_required
 import com.patrickzedler.grocy.core.resources.shopping_list_create
 import com.patrickzedler.grocy.core.resources.shopping_list_edit
-import com.patrickzedler.grocy.core.forms.ObjectFormScreen
 import kotlinx.coroutines.flow.first
 import org.jetbrains.compose.resources.stringResource
 

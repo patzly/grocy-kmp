@@ -1,4 +1,4 @@
-package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
+package com.patrickzedler.grocy.core.productcard
 
 import com.patrickzedler.grocy.core.forms.AmountUnit
 import com.patrickzedler.grocy.core.forms.FieldError

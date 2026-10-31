@@ -1,4 +1,4 @@
-package com.patrickzedler.grocy.feature.masterdata.impl.related
+package com.patrickzedler.grocy.core.productcard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,10 +21,10 @@ internal sealed interface LabelPrintResult {
  * Prints grocycodes and stock entry labels on the server's label printer, like Grocy's "Print
  * on label printer"; results arrive as [results].
  */
-internal class LabelPrintViewModel(private val repository: StockRepository) : ViewModel() {
+class LabelPrintViewModel(private val repository: StockRepository) : ViewModel() {
 
     private val resultChannel = Channel<LabelPrintResult>(Channel.BUFFERED)
-    val results: Flow<LabelPrintResult> = resultChannel.receiveAsFlow()
+    internal val results: Flow<LabelPrintResult> = resultChannel.receiveAsFlow()
 
     fun printProduct(productId: Int) = print { repository.printProductLabel(productId) }
 

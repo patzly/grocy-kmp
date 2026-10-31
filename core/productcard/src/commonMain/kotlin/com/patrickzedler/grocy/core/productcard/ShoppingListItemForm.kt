@@ -1,4 +1,4 @@
-package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
+package com.patrickzedler.grocy.core.productcard
 
 import com.patrickzedler.grocy.core.forms.AmountUnit
 import com.patrickzedler.grocy.core.forms.FieldError
@@ -15,7 +15,7 @@ import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.parseDecimal
 
 /** The inputs of Grocy's shopping list item form. */
-internal data class ShoppingListItemValues(
+data class ShoppingListItemValues(
     val listId: Int?,
     val productId: Int?,
     val amount: String,
@@ -27,7 +27,7 @@ internal data class ShoppingListItemValues(
  * Grocy's rules: a list, an amount of at least zero with the allowed decimal places, and a
  * product or a note (one message on both).
  */
-internal fun ShoppingListItemValues.validate(decimals: Int): Map<ObjectField, FieldError> =
+fun ShoppingListItemValues.validate(decimals: Int): Map<ObjectField, FieldError> =
     buildMap {
         if (listId == null) put(ObjectField.SHOPPING_LIST, FieldError.Required)
         numberError(amount, 0.0, decimals, required = true)
@@ -51,7 +51,7 @@ internal fun ShoppingListItemValues.stockAmount(unit: AmountUnit?): Double {
  * The item as Grocy's form saves it: the amount in the stock unit with the chosen unit for
  * products, the plain number without; [done] stays as it is.
  */
-internal fun ShoppingListItemValues.toItem(
+fun ShoppingListItemValues.toItem(
     id: Int,
     done: Boolean,
     unit: AmountUnit?,
@@ -68,7 +68,7 @@ internal fun ShoppingListItemValues.toItem(
 )
 
 /** The units an item of [product] can be shown in, converted from its stock unit. */
-internal fun itemUnits(
+fun itemUnits(
     product: Product?,
     resolved: List<ResolvedQuantityUnitConversion>,
     units: List<QuantityUnit>,
@@ -80,12 +80,12 @@ internal fun itemUnits(
  * The unit a newly chosen product starts with, like Grocy: its purchase unit if it converts
  * into it, otherwise its stock unit.
  */
-internal fun defaultItemQuId(product: Product?, units: List<AmountUnit>): Int? =
+fun defaultItemQuId(product: Product?, units: List<AmountUnit>): Int? =
     units.firstOrNull { it.unit.id == product?.quIdPurchase }?.unit?.id
         ?: product?.quIdStock
 
 /** The amount of a stored item as the form shows it: in its unit, or the plain number. */
-internal fun itemAmountText(
+fun itemAmountText(
     item: ShoppingListItem,
     units: List<AmountUnit>,
     decimals: Int,
@@ -96,7 +96,7 @@ internal fun itemAmountText(
 }
 
 /** The product a scanned [code] stands for: a grocycode ("grcy:p:12") or a known barcode. */
-internal fun productIdForCode(code: String, barcodes: List<ProductBarcode>): Int? {
+fun productIdForCode(code: String, barcodes: List<ProductBarcode>): Int? {
     val trimmed = code.trim()
     return GROCYCODE.matchEntire(trimmed)?.groupValues?.get(1)?.toIntOrNull()
         ?: barcodes.firstOrNull { it.barcode == trimmed }?.productId

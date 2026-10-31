@@ -20,6 +20,10 @@ import com.patrickzedler.grocy.core.navigation.detailPaneMetadata
 import com.patrickzedler.grocy.core.navigation.listPaneMetadata
 import com.patrickzedler.grocy.core.navigation.rememberLeaveGuard
 import com.patrickzedler.grocy.core.navigation.showsDetailBesideList
+import com.patrickzedler.grocy.core.productcard.LabelPrintViewModel
+import com.patrickzedler.grocy.core.productcard.ProductLinks
+import com.patrickzedler.grocy.core.productcard.StockPageActions
+import com.patrickzedler.grocy.core.productcard.rememberStockPageActions
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.objects_select_hint
 import com.patrickzedler.grocy.core.ui.AppMenuDialogs
@@ -68,19 +72,14 @@ import com.patrickzedler.grocy.feature.masterdata.impl.objects.UserentityViewMod
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.UserfieldScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.UserfieldViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.entity
-import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductLinks
-import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.product.ProductRelated
 import com.patrickzedler.grocy.feature.masterdata.impl.product.ProductScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.product.ProductViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.products.ProductsScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.products.ProductsViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist.AddToShoppingListViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist.shoppingListEntries
 import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockEntriesScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockEntriesViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockPageActions
 import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.StockOverviewItemActions
 import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.StockOverviewLinks
 import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.StockOverviewScreen
@@ -122,15 +121,10 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
         ProductsScreen(
             menuItems = appMenuItems(navigator),
             viewModel = viewModel { ProductsViewModel(repository, language = language) },
-            overviewViewModel = viewModel {
-                ProductOverviewViewModel(repository, language = language)
-            },
-            shoppingList = shoppingListViewModel(dependencies),
-            labels = viewModel { LabelPrintViewModel(dependencies.stockRepository) },
+            actions = stockPageActions(dependencies, productLinks(navigator)),
             objectActions = viewModel {
                 ObjectActionsViewModel(MasterDataRepository.PRODUCTS, repository)
             },
-            links = productLinks(navigator),
             selectedId = (navigator.currentRoute as? ProductRoute)?.productId,
             isBesideDetail = isBesideDetail,
             onBackClick = { navigator.goBack(from = route) },
@@ -162,8 +156,7 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
     entry<StockOverviewRoute>(metadata = detailPaneMetadata(StartRoute)) {
         val isBesideList = showsDetailBesideList()
         val language = appLanguage()
-        val overview = viewModel { ProductOverviewViewModel(repository, language = language) }
-        val shoppingList = shoppingListViewModel(dependencies)
+        val actions = stockPageActions(dependencies, navigator)
         // Outside the product list the form opens on its own
         val openProduct = { id: Int -> navigator.navigate(ProductRoute(id)) }
         val stockOverview = viewModel {
@@ -176,16 +169,7 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
         }
         StockOverviewScreen(
             viewModel = stockOverview,
-            overviewViewModel = overview,
-            shoppingList = shoppingList,
-            labels = viewModel { LabelPrintViewModel(dependencies.stockRepository) },
-            productLinks = ProductLinks(
-                onEditClick = openProduct,
-                onStockEntriesClick = { navigator.navigate(StockEntriesRoute(it)) },
-                onStockJournalClick = { navigator.navigate(StockJournalRoute(it)) },
-                onStockJournalSummaryClick = { navigator.navigate(StockJournalSummaryRoute(it)) },
-                onBookingClick = { id, kind -> navigator.navigate(bookingRoute(kind, id)) },
-            ),
+            actions = actions,
             // Grocy's reports, scanning and recipes do not exist in the app yet
             links = StockOverviewLinks(
                 onJournalClick = { navigator.navigate(StockJournalRoute()) },
@@ -194,12 +178,12 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
                 onScanClick = {},
             ),
             itemActions = StockOverviewItemActions(
-                onClick = { overview.show(it.productId) },
+                onClick = { actions.overview.show(it.productId) },
                 onConsume = stockOverview::consume,
                 onOpen = stockOverview::open,
                 onConsumeAll = stockOverview::consumeAll,
                 onConsumeSpoiled = stockOverview::consumeSpoiled,
-                onAddToShoppingList = { shoppingList.open(it.productId) },
+                onAddToShoppingList = { actions.shoppingList.open(it.productId) },
                 onSearchRecipes = {},
                 onEditProduct = { openProduct(it.productId) },
             ),
@@ -521,36 +505,30 @@ private fun productLinks(navigator: Navigator) = ProductLinks(
 internal fun stockPageActions(
     dependencies: MasterDataDependencies,
     navigator: Navigator,
-): StockPageActions {
-    val language = appLanguage()
-    return StockPageActions(
-        overview = viewModel {
-            ProductOverviewViewModel(dependencies.masterDataRepository, language = language)
-        },
-        shoppingList = shoppingListViewModel(dependencies),
-        labels = viewModel { LabelPrintViewModel(dependencies.stockRepository) },
-        links = ProductLinks(
-            // Outside the product list the form opens on its own
-            onEditClick = { navigator.navigate(ProductRoute(it)) },
-            onStockEntriesClick = { navigator.navigate(StockEntriesRoute(it)) },
-            onStockJournalClick = { navigator.navigate(StockJournalRoute(it)) },
-            onStockJournalSummaryClick = { navigator.navigate(StockJournalSummaryRoute(it)) },
-            onBookingClick = { id, kind -> navigator.navigate(bookingRoute(kind, id)) },
-        ),
+): StockPageActions = stockPageActions(
+    dependencies,
+    ProductLinks(
+        // Outside the product list the form opens on its own
+        onEditClick = { navigator.navigate(ProductRoute(it)) },
+        onStockEntriesClick = { navigator.navigate(StockEntriesRoute(it)) },
+        onStockJournalClick = { navigator.navigate(StockJournalRoute(it)) },
+        onStockJournalSummaryClick = { navigator.navigate(StockJournalSummaryRoute(it)) },
+        onBookingClick = { id, kind -> navigator.navigate(bookingRoute(kind, id)) },
+    ),
+)
+
+@Composable
+private fun stockPageActions(dependencies: MasterDataDependencies, links: ProductLinks) =
+    rememberStockPageActions(
+        masterData = dependencies.masterDataRepository,
+        stock = dependencies.stockRepository,
+        shoppingLists = dependencies.shoppingListRepository,
+        links = links,
     )
-}
 
 // The app language, a change restarts the app, so ViewModels keep it
 @Composable
 internal fun appLanguage(): String = LocalLocale.current.toLanguageTag()
-
-@Composable
-internal fun shoppingListViewModel(dependencies: MasterDataDependencies) = viewModel {
-    AddToShoppingListViewModel(
-        dependencies.masterDataRepository,
-        dependencies.shoppingListRepository,
-    )
-}
 
 /** The detail pane beside a list until an item is chosen. */
 @Composable

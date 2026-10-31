@@ -49,6 +49,10 @@ import com.patrickzedler.grocy.core.model.text.formatDate
 import com.patrickzedler.grocy.core.model.text.formatRelativeTime
 import com.patrickzedler.grocy.core.model.text.timeSpanBetween
 import com.patrickzedler.grocy.core.model.text.todayEpochDay
+import com.patrickzedler.grocy.core.productcard.LabelPrintEffect
+import com.patrickzedler.grocy.core.productcard.ProductOverviewHost
+import com.patrickzedler.grocy.core.productcard.StockPageActions
+import com.patrickzedler.grocy.core.productcard.rememberGrocycodeDownload
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_undo
 import com.patrickzedler.grocy.core.resources.data_all
@@ -89,24 +93,9 @@ import com.patrickzedler.grocy.core.resources.stock_entry_spoiled
 import com.patrickzedler.grocy.core.resources.stock_entry_updated
 import com.patrickzedler.grocy.core.scanner.writer.Grocycode
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
-import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductLinks
-import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewHost
-import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintEffect
-import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.related.rememberGrocycodeDownload
-import com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist.AddToShoppingListViewModel
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-
-/** What the stock pages open besides their own content. */
-internal class StockPageActions(
-    val overview: ProductOverviewViewModel,
-    val shoppingList: AddToShoppingListViewModel,
-    val labels: LabelPrintViewModel,
-    val links: ProductLinks,
-)
 
 /**
  * Grocy's "Stock entries": the entries of every product (one product's, opened from it) with

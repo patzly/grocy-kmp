@@ -1,4 +1,4 @@
-package com.patrickzedler.grocy.feature.masterdata.impl.related
+package com.patrickzedler.grocy.core.productcard
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -65,7 +65,7 @@ import org.jetbrains.compose.resources.stringResource
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun GrocycodeItem(
+fun GrocycodeItem(
     code: String,
     objectName: String,
     twoDimensional: Boolean,
@@ -183,7 +183,7 @@ internal fun GrocycodeImage(
  * [snackbarHostState].
  */
 @Composable
-internal fun rememberGrocycodeDownload(
+fun rememberGrocycodeDownload(
     snackbarHostState: SnackbarHostState,
 ): (code: String, twoDimensional: Boolean) -> Unit {
     val scope = rememberCoroutineScope()
@@ -214,7 +214,7 @@ internal fun rememberGrocycodeDownload(
 
 /** Shows the results of [labels] in [snackbarHostState]. */
 @Composable
-internal fun LabelPrintEffect(labels: LabelPrintViewModel, snackbarHostState: SnackbarHostState) {
+fun LabelPrintEffect(labels: LabelPrintViewModel, snackbarHostState: SnackbarHostState) {
     LaunchedEffect(labels) {
         labels.results.collect { result ->
             snackbarHostState.showSnackbar(
