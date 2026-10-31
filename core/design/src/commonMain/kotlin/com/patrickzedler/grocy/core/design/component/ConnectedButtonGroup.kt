@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.design.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.ButtonGroupDefaults
@@ -10,6 +11,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SelectableDropdownMenuItem
@@ -18,9 +20,12 @@ import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.ToggleButtonShapes
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.takeOrElse
 import androidx.compose.ui.util.fastForEachIndexed
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_more_options
@@ -117,24 +122,32 @@ private fun OverflowIndicator(
     val haptic = LocalHapticFeedback.current
     val contentDescription = stringResource(Res.string.action_more_options)
 
-    HapticTooltipBox(text = contentDescription) {
-        FilledIconButton(
-            onClick = {
-                haptic.confirm()
-                if (menuState.isShowing) menuState.dismiss() else menuState.show()
-            },
-            enabled = enabled,
-            modifier = smallIconButtonSize().clickCursor(enabled = enabled),
-            colors = IconButtonDefaults.filledIconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            ),
-            shapes = IconButtonDefaults.shapes(),
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_rounded_more_vert),
-                contentDescription = contentDescription,
-            )
+    // The toggle buttons are as high as their touch targets and the group lines its items up at
+    // the top, so the smaller indicator is centered in that height to sit level with them
+    val touchTarget = LocalMinimumInteractiveComponentSize.current.takeOrElse { 0.dp }
+    Box(
+        modifier = Modifier.heightIn(min = touchTarget),
+        contentAlignment = Alignment.Center,
+    ) {
+        HapticTooltipBox(text = contentDescription) {
+            FilledIconButton(
+                onClick = {
+                    haptic.confirm()
+                    if (menuState.isShowing) menuState.dismiss() else menuState.show()
+                },
+                enabled = enabled,
+                modifier = smallIconButtonSize().clickCursor(enabled = enabled),
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                ),
+                shapes = IconButtonDefaults.shapes(),
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_rounded_more_vert),
+                    contentDescription = contentDescription,
+                )
+            }
         }
     }
 }

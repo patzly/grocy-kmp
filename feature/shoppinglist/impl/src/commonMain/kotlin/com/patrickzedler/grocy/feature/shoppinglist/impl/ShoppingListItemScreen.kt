@@ -23,7 +23,7 @@ import com.patrickzedler.grocy.core.productcard.ShoppingListItemFields
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.data_product
 import com.patrickzedler.grocy.core.resources.product_parent_not_found
-import com.patrickzedler.grocy.core.resources.shopping_list_item_create
+import com.patrickzedler.grocy.core.resources.shopping_list_add_item
 import com.patrickzedler.grocy.core.resources.shopping_list_item_edit
 import com.patrickzedler.grocy.core.resources.shopping_list_product_or_note_required
 import com.patrickzedler.grocy.core.scanner.BarcodeScanner
@@ -32,8 +32,9 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * Grocy's "Create shopping list item" / "Edit shopping list item" form: list, product (typed,
- * chosen or scanned inside its item), amount with its unit, note and the item's userfields.
+ * Grocy's shopping list item form, titled "Add item" / "Edit item" (Grocy's long titles do not
+ * fit the app bar): list, product (typed, chosen or scanned inside its item), amount with its
+ * unit, note and the item's userfields.
  */
 @Composable
 internal fun ShoppingListItemScreen(
@@ -44,7 +45,7 @@ internal fun ShoppingListItemScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     ObjectFormScreen(
         title = if (viewModel.isNew) {
-            stringResource(Res.string.shopping_list_item_create)
+            stringResource(Res.string.shopping_list_add_item)
         } else {
             stringResource(Res.string.shopping_list_item_edit)
         },

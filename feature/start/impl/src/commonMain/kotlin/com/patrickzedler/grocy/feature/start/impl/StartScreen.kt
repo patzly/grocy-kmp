@@ -2,9 +2,9 @@ package com.patrickzedler.grocy.feature.start.impl
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -126,6 +126,7 @@ internal fun StartScreen(
     onDemoWarningClick: () -> Unit,
     onStockActionClick: (StockAction) -> Unit,
     onShoppingListAddClick: (listId: Int?) -> Unit,
+    onShoppingModeClick: () -> Unit,
     onAboutClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -157,6 +158,7 @@ internal fun StartScreen(
         onDemoWarningClick = onDemoWarningClick,
         onStockActionClick = onStockActionClick,
         onShoppingListAddClick = { onShoppingListAddClick(viewModel.quickAddListId()) },
+        onShoppingModeClick = onShoppingModeClick,
         menuItems = appMenu.items,
         modifier = modifier,
     )
@@ -177,6 +179,7 @@ private fun StartContent(
     onDemoWarningClick: () -> Unit,
     onStockActionClick: (StockAction) -> Unit,
     onShoppingListAddClick: () -> Unit,
+    onShoppingModeClick: () -> Unit,
     menuItems: List<AppBarMenuItem>,
     modifier: Modifier = Modifier,
 ) {
@@ -211,10 +214,12 @@ private fun StartContent(
                             StartSection.STOCK_OVERVIEW -> SectionButtons(0.dp) {
                                 StockActionButtons(stockActions, onStockActionClick)
                             }
-                            StartSection.SHOPPING_LIST ->
-                                SectionButtons(ShoppingListAddButtonRoom) {
-                                    ShoppingListAddButton(onShoppingListAddClick)
-                                }
+                            StartSection.SHOPPING_LIST -> SectionButtons(0.dp) {
+                                ShoppingListButtons(
+                                    onAddClick = onShoppingListAddClick,
+                                    onShoppingModeClick = onShoppingModeClick,
+                                )
+                            }
                             StartSection.MASTER_DATA -> null
                         },
                     )
@@ -467,6 +472,7 @@ private fun StartScreenPreview() {
             onDemoWarningClick = {},
             onStockActionClick = {},
             onShoppingListAddClick = {},
+            onShoppingModeClick = {},
             menuItems = emptyList(),
         )
     }

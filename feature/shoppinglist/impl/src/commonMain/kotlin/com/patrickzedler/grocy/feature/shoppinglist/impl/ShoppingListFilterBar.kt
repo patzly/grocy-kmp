@@ -8,6 +8,7 @@ import com.patrickzedler.grocy.core.forms.FilterChipRow
 import com.patrickzedler.grocy.core.forms.MultiSelectChip
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListStatus
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.data_all
 import com.patrickzedler.grocy.core.resources.data_amount
@@ -19,7 +20,6 @@ import com.patrickzedler.grocy.core.resources.products_filter_status
 import com.patrickzedler.grocy.core.resources.products_sort_store
 import com.patrickzedler.grocy.core.resources.shopping_list_last_price_total
 import com.patrickzedler.grocy.core.resources.shopping_list_last_price_unit
-import com.patrickzedler.grocy.core.resources.shopping_list_list_with_count
 import com.patrickzedler.grocy.core.resources.shopping_list_only_done
 import com.patrickzedler.grocy.core.resources.shopping_list_only_undone
 import com.patrickzedler.grocy.core.resources.shopping_list_status_done
@@ -33,14 +33,13 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * The shopping list's chips: Grocy's list selector (with several lists, "Name (count)" like its
- * options), the status filter with the number of items of each, then its table options:
- * grouping and the shown fields. "Clear filter" while a status is chosen.
+ * The shopping list's chips: the status filter with the number of items of each, then Grocy's
+ * table options: grouping and the shown fields. "Clear filter" while a status is chosen. Grocy's
+ * list selector is the title of the app bar.
  */
 @Composable
 internal fun ShoppingListFilterBar(
     state: ShoppingListUiState,
-    onListSelect: (Int) -> Unit,
     onStatusChange: (ShoppingListStatus?) -> Unit,
     onGroupingChange: (ShoppingListGrouping) -> Unit,
     onFieldShownChange: (ShoppingListField, Boolean) -> Unit,
@@ -49,25 +48,6 @@ internal fun ShoppingListFilterBar(
 ) {
     val all = stringResource(Res.string.data_all)
     FilterChipRow(contentPadding = contentPadding) {
-        val list = state.list
-        if (state.config.shoppingListMultipleLists && list != null) {
-            DropdownFilterChip(
-                // Always the chosen list's name, there is no list to leave unchosen
-                label = list.name,
-                options = state.lists.map { it.id },
-                selected = list.id,
-                isDefault = { true },
-                optionLabel = { id ->
-                    val choice = state.lists.first { it.id == id }
-                    stringResource(
-                        Res.string.shopping_list_list_with_count,
-                        choice.name,
-                        choice.itemCount,
-                    )
-                },
-                onSelect = onListSelect,
-            )
-        }
         DropdownFilterChip(
             label = stringResource(Res.string.products_filter_status),
             optionGroups = listOf(listOf<ShoppingListStatus?>(null), state.availableStatuses),

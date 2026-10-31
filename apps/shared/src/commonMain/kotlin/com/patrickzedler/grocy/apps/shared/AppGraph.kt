@@ -11,6 +11,7 @@ import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.settings.ShoppingListOptionsRepository
+import com.patrickzedler.grocy.core.data.settings.ShoppingModeSettingsRepository
 import com.patrickzedler.grocy.core.data.settings.StockOverviewOptionsRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
@@ -122,6 +123,9 @@ class AppGraph(
     private val shoppingListOptionsRepository =
         ShoppingListOptionsRepository(platform.settingsStore, appScope)
 
+    private val shoppingModeSettingsRepository =
+        ShoppingModeSettingsRepository(platform.settingsStore, appScope)
+
     /** Decoders of the engine that scans right now, provided to every scanner by GrocyApp. */
     internal val barcodeDecoderFactory: Flow<BarcodeDecoderFactory> by lazy {
         scannerRepository.activeEngine.map {
@@ -151,6 +155,8 @@ class AppGraph(
             get() = this@AppGraph.authRepository
         override val masterDataRepository: MasterDataRepository
             get() = this@AppGraph.masterDataRepository
+        override val shoppingModeSettings: ShoppingModeSettingsRepository
+            get() = shoppingModeSettingsRepository
 
         override fun restartApp() = platform.restartApp()
     }
@@ -189,6 +195,8 @@ class AppGraph(
                 get() = this@AppGraph.shoppingListRepository
             override val shoppingListOptions: ShoppingListOptionsRepository
                 get() = shoppingListOptionsRepository
+            override val shoppingModeSettings: ShoppingModeSettingsRepository
+                get() = shoppingModeSettingsRepository
         }
 
     internal val stockDependencies: StockDependencies = object : StockDependencies {
@@ -203,9 +211,9 @@ class AppGraph(
     }
 
     init {
-        // Items checked off offline when the app was last used; creating the repository also
-        // makes it send them whenever the device gets a network
-        shoppingListRepository.sendPendingDoneInBackground()
+        // Items checked off and notes edited offline when the app was last used; creating the
+        // repository also makes it send them whenever the device gets a network
+        shoppingListRepository.sendPendingInBackground()
     }
 
     internal val aboutDependencies: AboutDependencies = object : AboutDependencies {

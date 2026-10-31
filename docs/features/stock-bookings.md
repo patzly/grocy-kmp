@@ -41,4 +41,7 @@ of them, from the start screen's buttons and the product overview's menu):
 - From a shopping list item (`PurchaseRoute(productId, amount, quId, shoppingListItemId)`) the
   purchase opens with the item's amount in its unit, books itself with
   `shopping_list_to_stock_workflow_auto_submit_when_prefilled` when complete, removes the item
-  (`ShoppingListRepository.deleteItem`) and goes back.
+  (`ShoppingListRepository.deleteItem`) and goes back. A note in `secondaryContainer` at the top
+  (`BookingViewModel.shoppingListItem`) says what happens: Grocy's "Add this item to stock", or
+  "Adding shopping list item %s of %s" for "Add all list items to stock"
+  (`shoppingListPosition`, `shoppingListCount` of the route), and that booking removes the item.

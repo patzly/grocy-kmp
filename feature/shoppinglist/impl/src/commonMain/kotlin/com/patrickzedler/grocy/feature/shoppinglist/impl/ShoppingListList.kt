@@ -17,6 +17,7 @@ import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListStatus
 import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
 import com.patrickzedler.grocy.core.model.text.FuzzySearch
 import com.patrickzedler.grocy.core.model.text.formatDecimal
@@ -25,12 +26,6 @@ import com.patrickzedler.grocy.core.productcard.itemUnits
 import kotlin.math.ceil
 import kotlin.math.pow
 import kotlin.math.roundToLong
-
-/**
- * Grocy's status filter of the shopping list: its products below their min. stock amount, only
- * done or only undone items.
- */
-internal enum class ShoppingListStatus { BELOW_MIN_STOCK, DONE, UNDONE }
 
 /** What a group of rows is named by; the rows without a value come last. */
 internal sealed interface ShoppingListGroupTitle {
@@ -132,6 +127,7 @@ internal fun availableShoppingListStatuses(config: ServerConfig): List<ShoppingL
 /**
  * Grocy's shopping list [listId]: every item, done ones too, by product name (or note), in
  * groups of [grouping]; filtered by [status] and searched in every column, like Grocy's table.
+ * [doneLast] moves done items to the end of their group, e.g. while shopping.
  */
 internal fun buildShoppingList(
     data: ShoppingListData,
@@ -143,11 +139,14 @@ internal fun buildShoppingList(
     settings: UserSettings,
     decimalSeparator: Char,
     language: String,
+    doneLast: Boolean = false,
 ): ShoppingListContent {
     val context = RowContext(data, config, settings, decimalSeparator, language)
     val items = data.items.filter { it.listId == listId }
     val rows = items.map(context::row)
-        .sortedWith(compareBy({ it.title.normalizedForSearch() }, { it.id }))
+        .sortedWith(
+            compareBy({ doneLast && it.done }, { it.title.normalizedForSearch() }, { it.id }),
+        )
     val statusCounts = availableShoppingListStatuses(config).associateWith { candidate ->
         rows.count { it.hasStatus(candidate) }
     }

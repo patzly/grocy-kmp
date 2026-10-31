@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -22,6 +26,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLocale
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -32,6 +38,7 @@ import com.patrickzedler.grocy.core.design.component.ConnectedButtonGroup
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
+import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
@@ -105,6 +112,7 @@ import com.patrickzedler.grocy.core.resources.booking_recipe_hint
 import com.patrickzedler.grocy.core.resources.booking_scan_mode
 import com.patrickzedler.grocy.core.resources.booking_scan_mode_hint
 import com.patrickzedler.grocy.core.resources.booking_scan_mode_incomplete
+import com.patrickzedler.grocy.core.resources.booking_shopping_list_hint
 import com.patrickzedler.grocy.core.resources.booking_should_not_be_frozen
 import com.patrickzedler.grocy.core.resources.booking_tare_info
 import com.patrickzedler.grocy.core.resources.booking_thawed
@@ -138,12 +146,15 @@ import com.patrickzedler.grocy.core.resources.grocycode_stock_entry
 import com.patrickzedler.grocy.core.resources.ic_rounded_box
 import com.patrickzedler.grocy.core.resources.ic_rounded_check
 import com.patrickzedler.grocy.core.resources.ic_rounded_info
+import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_cart
 import com.patrickzedler.grocy.core.resources.ic_rounded_vertical_align_top
 import com.patrickzedler.grocy.core.resources.product_overview
 import com.patrickzedler.grocy.core.resources.product_stock_label_none
 import com.patrickzedler.grocy.core.resources.product_stock_label_per_unit
 import com.patrickzedler.grocy.core.resources.product_stock_label_single
 import com.patrickzedler.grocy.core.resources.product_userfields
+import com.patrickzedler.grocy.core.resources.shopping_list_add_to_stock
+import com.patrickzedler.grocy.core.resources.shopping_list_adding_item
 import com.patrickzedler.grocy.core.resources.stock_booking_failed
 import com.patrickzedler.grocy.core.resources.stock_entry_opened
 import com.patrickzedler.grocy.core.resources.stock_entry_spoiled
@@ -269,6 +280,9 @@ private fun LazyListScope.bookingForm(
 ) {
     val kind = viewModel.kind
     val form = viewModel.form
+    viewModel.shoppingListItem?.let { item ->
+        segmentedGroup(key = "shopping-list-item") { ShoppingListItemHint(item) }
+    }
     if (kind == BookingKind.PURCHASE || kind == BookingKind.CONSUME) {
         segmentedGroup(key = "scan-mode") {
             SegmentedSwitchItem(
@@ -799,6 +813,49 @@ private fun locationItem(viewModel: BookingViewModel, options: BookingOptions): 
             optional = viewModel.kind == BookingKind.PURCHASE,
             index = index,
             count = count,
+        )
+    }
+}
+
+/**
+ * What a purchase from the shopping list does: Grocy's "Adding shopping list item 1 of 4" (or
+ * "Add this item to stock" for one item) and that booking it removes the item from the list.
+ * Not clickable, in the secondary container colors, so it reads as note and not as setting.
+ */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun ShoppingListItemHint(item: ShoppingListItemPurchase) {
+    val contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+    ListItem(
+        modifier = Modifier.fillMaxWidth(),
+        leadingContent = {
+            LeadingTrailingContentWrapper {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_rounded_shopping_cart),
+                    contentDescription = null,
+                )
+            }
+        },
+        supportingContent = { Text(stringResource(Res.string.booking_shopping_list_hint)) },
+        shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
+        colors = ListItemDefaults.segmentedColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = contentColor,
+            leadingContentColor = contentColor,
+            supportingContentColor = contentColor,
+        ),
+    ) {
+        Text(
+            text = if (item.position != null && item.count != null) {
+                stringResource(
+                    Res.string.shopping_list_adding_item,
+                    item.position.toString(),
+                    item.count.toString(),
+                )
+            } else {
+                stringResource(Res.string.shopping_list_add_to_stock)
+            },
+            modifier = Modifier.semantics { heading() },
         )
     }
 }

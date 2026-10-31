@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -89,10 +90,11 @@ fun SegmentedGroup(
 fun GroupTitle(
     text: String,
     modifier: Modifier = Modifier,
+    style: TextStyle = MaterialTheme.typography.titleSmall,
 ) {
     Text(
         text = text,
-        style = MaterialTheme.typography.titleSmall,
+        style = style,
         color = MaterialTheme.colorScheme.secondary,
         modifier = modifier
             .padding(bottom = 8.dp)

@@ -58,6 +58,14 @@ data class GrocySettingsPageRoute(val page: GrocySettingsPage) : DetailRoute
 @SerialName("settings/user")
 data object UserSettingsRoute : DetailRoute
 
+/**
+ * How the shopping mode syncs and shows the list; [inSettings] beside the categories, opened
+ * from the shopping mode a screen of its own.
+ */
+@Serializable
+@SerialName("settings/shopping-mode")
+data class ShoppingModeSettingsRoute(val inSettings: Boolean = true) : DetailRoute
+
 /** Recent errors of the app: logcat on Android, the errors the web app recorded. */
 @Serializable
 @SerialName("settings/log")
@@ -72,6 +80,7 @@ val settingsRouteSerializers = SerializersModule {
         subclass(GrocySettingsPageRoute::class, GrocySettingsPageRoute.serializer())
         subclass(UserSettingsRoute::class, UserSettingsRoute.serializer())
         subclass(StockSettingsRoute::class, StockSettingsRoute.serializer())
+        subclass(ShoppingModeSettingsRoute::class, ShoppingModeSettingsRoute.serializer())
         subclass(LogRoute::class, LogRoute.serializer())
     }
 }

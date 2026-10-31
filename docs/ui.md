@@ -31,6 +31,17 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
   The top app bar's actions are such a group too (`SegmentedListScreen(actions:
   List<AppBarAction>)` plus "Reload" and the overflow menu); a menu button in a group wraps
   button and popup in one `Box`, the popup's anchor would be an item of its own.
+  `ConnectedButtonGroup` centers its overflow indicator in the touch target height of its toggle
+  buttons: the group lines its items up at the top, so the smaller indicator sat higher.
+- Overflow menus: `AppBarMenuItem(checked = ...)` is a checkable item (check mark while on, the
+  menu stays open, `ToggleOn`/`ToggleOff` haptics). `SegmentedListScreen(refreshMenuItems)` puts
+  items into the group of "Reload" (e.g. the shopping mode's auto sync), `onTitleClick` makes the
+  title a choice (drop down arrow after it, the whole room between navigation icon and actions
+  is one pill shaped target with the subtitle, always the small bar; e.g. Grocy's list selector).
+- Chips: `LocalChipSize` (`core:forms`) provides `ChipSize.LARGE` for field and filter chips
+  readable at arm's length (title medium, 40.dp high, 20.dp icons), e.g. the shopping mode.
+- `KeepScreenOn(enabled)` (`core:ui`): the window's `keepScreenOn` on Android, a screen wake lock
+  in browsers that offer one (requested again whenever the page becomes visible).
 - Font is Google Sans Flex from Compose Resources. On web fonts load async;
   `rememberResourcesReady()` (also every string and icon: browsers load them asynchronously, so a new screen would fill in its texts while sliding in) gates `onContentReady`, which removes the Android splash / the HTML
   `#loading` element.

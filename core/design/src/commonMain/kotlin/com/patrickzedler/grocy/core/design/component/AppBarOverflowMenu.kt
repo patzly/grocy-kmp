@@ -4,7 +4,9 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.material3.CheckableDropdownMenuItem
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
@@ -16,6 +18,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MenuAnchorPosition
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.MenuItemShapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -27,20 +30,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_more_options
+import com.patrickzedler.grocy.core.resources.ic_rounded_check
 import com.patrickzedler.grocy.core.resources.ic_rounded_more_vert
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-/** An item of an overflow menu; a disabled one shows that its action is not possible now. */
+/**
+ * An item of an overflow menu; a disabled one shows that its action is not possible now. A
+ * [checked] one turns an option on and off (a check mark while on) and keeps the menu open.
+ */
 @Immutable
 class AppBarMenuItem(
     val text: String,
     val enabled: Boolean = true,
+    val checked: Boolean? = null,
     val onClick: () -> Unit,
 )
 
@@ -196,22 +205,55 @@ private fun MenuGroups(
             shapes = MenuDefaults.groupShape(index = groupIndex, count = groups.size),
         ) {
             items.forEachIndexed { index, item ->
-                DropdownMenuItem(
-                    text = { Text(item.text) },
-                    modifier = Modifier.clickCursor(item.enabled),
-                    enabled = item.enabled,
-                    onClick = {
-                        haptic.confirm()
-                        onDismissRequest()
-                        item.onClick()
-                    },
-                    shape = menuItemShape(
-                        index = index,
-                        count = items.size,
-                        groupIndex = groupIndex,
-                        groupCount = groups.size,
-                    ),
+                val shape = menuItemShape(
+                    index = index,
+                    count = items.size,
+                    groupIndex = groupIndex,
+                    groupCount = groups.size,
                 )
+                val checked = item.checked
+                if (checked != null) {
+                    CheckableDropdownMenuItem(
+                        checked = checked,
+                        onCheckedChange = { isChecked ->
+                            haptic.performHapticFeedback(
+                                if (isChecked) {
+                                    HapticFeedbackType.ToggleOn
+                                } else {
+                                    HapticFeedbackType.ToggleOff
+                                },
+                            )
+                            item.onClick()
+                        },
+                        text = { Text(item.text) },
+                        shapes = MenuItemShapes(
+                            shape = shape,
+                            selectedShape = MenuDefaults.itemShape(index, items.size)
+                                .selectedShape,
+                        ),
+                        modifier = Modifier.clickCursor(item.enabled),
+                        enabled = item.enabled,
+                        checkedLeadingIcon = {
+                            Icon(
+                                painter = painterResource(Res.drawable.ic_rounded_check),
+                                contentDescription = null,
+                                modifier = Modifier.size(MenuDefaults.LeadingIconSize),
+                            )
+                        },
+                    )
+                } else {
+                    DropdownMenuItem(
+                        text = { Text(item.text) },
+                        modifier = Modifier.clickCursor(item.enabled),
+                        enabled = item.enabled,
+                        onClick = {
+                            haptic.confirm()
+                            onDismissRequest()
+                            item.onClick()
+                        },
+                        shape = shape,
+                    )
+                }
             }
         }
     }

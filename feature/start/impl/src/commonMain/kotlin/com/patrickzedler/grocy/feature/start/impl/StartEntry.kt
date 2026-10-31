@@ -20,6 +20,7 @@ import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListItemRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListRoute
+import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingModeRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import com.patrickzedler.grocy.feature.stock.api.ConsumeRoute
 import com.patrickzedler.grocy.feature.stock.api.InventoryRoute
@@ -76,6 +77,7 @@ fun EntryProviderScope<NavKey>.startEntry(
             onShoppingListAddClick = { listId ->
                 navigator.navigate(ShoppingListItemRoute(listId = listId))
             },
+            onShoppingModeClick = { navigator.navigate(ShoppingModeRoute) },
             onDemoWarningClick = {
                 navigator.navigateAll(listOf(SettingsRoute, ServerSettingsRoute))
             },

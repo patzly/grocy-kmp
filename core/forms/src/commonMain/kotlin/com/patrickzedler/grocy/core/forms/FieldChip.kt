@@ -55,7 +55,7 @@ fun FieldChipView(chip: FieldChip) {
     ) {
         Row(
             modifier = Modifier
-                .heightIn(min = ChipHeight)
+                .heightIn(min = chipHeight())
                 .padding(start = if (chip.icon != null) 8.dp else 12.dp, end = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -64,13 +64,13 @@ fun FieldChipView(chip: FieldChip) {
                 Icon(
                     painter = painterResource(it),
                     contentDescription = null,
-                    modifier = Modifier.size(ChipIconSize),
+                    modifier = Modifier.size(chipIconSize(ChipIconSize)),
                     tint = content,
                 )
             }
             Text(
                 text = chip.text,
-                style = MaterialTheme.typography.labelLarge,
+                style = chipTextStyle(MaterialTheme.typography.labelLarge),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -78,6 +78,5 @@ fun FieldChipView(chip: FieldChip) {
     }
 }
 
-// Material's chip height and icon size
-private val ChipHeight = 32.dp
+// Material's chip icon size
 private val ChipIconSize = 18.dp

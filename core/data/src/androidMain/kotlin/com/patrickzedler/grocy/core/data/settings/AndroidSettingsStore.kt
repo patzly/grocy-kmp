@@ -6,11 +6,13 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -90,6 +92,26 @@ class AndroidSettingsStore(
         }
     }
 
+    override val shoppingModeSettings: Flow<ShoppingModeSettings> = preferences
+        .map {
+            ShoppingModeSettings.of(
+                autoSync = it[SHOPPING_MODE_AUTO_SYNC],
+                syncIntervalSeconds = it[SHOPPING_MODE_SYNC_INTERVAL],
+                keepScreenOn = it[SHOPPING_MODE_KEEP_SCREEN_ON],
+                doneItemsLast = it[SHOPPING_MODE_DONE_LAST],
+            )
+        }
+        .distinctUntilChanged()
+
+    override suspend fun setShoppingModeSettings(settings: ShoppingModeSettings) {
+        dataStore.edit {
+            it[SHOPPING_MODE_AUTO_SYNC] = settings.autoSync
+            it[SHOPPING_MODE_SYNC_INTERVAL] = settings.syncIntervalSeconds
+            it[SHOPPING_MODE_KEEP_SCREEN_ON] = settings.keepScreenOn
+            it[SHOPPING_MODE_DONE_LAST] = settings.doneItemsLast
+        }
+    }
+
     private companion object {
         const val FILE_NAME = "settings"
         val CHECK_UNLOCK_KEY = booleanPreferencesKey("check_unlock_key")
@@ -105,5 +127,9 @@ class AndroidSettingsStore(
         val STOCK_OVERVIEW_ASCENDING = booleanPreferencesKey("stock_overview_ascending")
         val SHOPPING_LIST_FIELDS = stringPreferencesKey("shopping_list_fields")
         val SHOPPING_LIST_GROUPING = stringPreferencesKey("shopping_list_grouping")
+        val SHOPPING_MODE_AUTO_SYNC = booleanPreferencesKey("shopping_mode_auto_sync")
+        val SHOPPING_MODE_SYNC_INTERVAL = intPreferencesKey("shopping_mode_sync_interval")
+        val SHOPPING_MODE_KEEP_SCREEN_ON = booleanPreferencesKey("shopping_mode_keep_screen_on")
+        val SHOPPING_MODE_DONE_LAST = booleanPreferencesKey("shopping_mode_done_last")
     }
 }

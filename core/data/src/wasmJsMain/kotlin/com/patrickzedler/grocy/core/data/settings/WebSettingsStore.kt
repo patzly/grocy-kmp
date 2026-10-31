@@ -5,6 +5,7 @@ import com.patrickzedler.grocy.core.data.KeyValueStorage
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -95,6 +96,26 @@ class WebSettingsStore internal constructor(
         shoppingListOptionsState.value = options
     }
 
+    private val shoppingModeSettingsState = MutableStateFlow(
+        ShoppingModeSettings.of(
+            autoSync = storage.get(SHOPPING_MODE_AUTO_SYNC)?.toBooleanStrictOrNull(),
+            syncIntervalSeconds = storage.get(SHOPPING_MODE_SYNC_INTERVAL)?.toIntOrNull(),
+            keepScreenOn = storage.get(SHOPPING_MODE_KEEP_SCREEN_ON)?.toBooleanStrictOrNull(),
+            doneItemsLast = storage.get(SHOPPING_MODE_DONE_LAST)?.toBooleanStrictOrNull(),
+        ),
+    )
+
+    override val shoppingModeSettings: Flow<ShoppingModeSettings> =
+        shoppingModeSettingsState.asStateFlow()
+
+    override suspend fun setShoppingModeSettings(settings: ShoppingModeSettings) {
+        storage.set(SHOPPING_MODE_AUTO_SYNC, settings.autoSync.toString())
+        storage.set(SHOPPING_MODE_SYNC_INTERVAL, settings.syncIntervalSeconds.toString())
+        storage.set(SHOPPING_MODE_KEEP_SCREEN_ON, settings.keepScreenOn.toString())
+        storage.set(SHOPPING_MODE_DONE_LAST, settings.doneItemsLast.toString())
+        shoppingModeSettingsState.value = settings
+    }
+
     internal companion object {
         const val CHECK_UNLOCK_KEY = "grocy.checkUnlockKey"
         const val SCANNER_ENGINE = "grocy.scannerEngine"
@@ -109,5 +130,9 @@ class WebSettingsStore internal constructor(
         const val STOCK_OVERVIEW_ASCENDING = "grocy.stockOverviewAscending"
         const val SHOPPING_LIST_FIELDS = "grocy.shoppingListFields"
         const val SHOPPING_LIST_GROUPING = "grocy.shoppingListGrouping"
+        const val SHOPPING_MODE_AUTO_SYNC = "grocy.shoppingModeAutoSync"
+        const val SHOPPING_MODE_SYNC_INTERVAL = "grocy.shoppingModeSyncInterval"
+        const val SHOPPING_MODE_KEEP_SCREEN_ON = "grocy.shoppingModeKeepScreenOn"
+        const val SHOPPING_MODE_DONE_LAST = "grocy.shoppingModeDoneLast"
     }
 }

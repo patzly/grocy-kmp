@@ -202,6 +202,16 @@ data class PendingShoppingListDoneEntity(
     val done: Boolean,
 )
 
+/**
+ * The user's own "Notes" of a list as HTML, kept until the server took them: editing them works
+ * offline and they are sent once the server can be reached again.
+ */
+@Entity(tableName = "pending_shopping_list_notes")
+data class PendingShoppingListNotesEntity(
+    @PrimaryKey @ColumnInfo(name = "list_id") val listId: Int,
+    val description: String,
+)
+
 @Entity(tableName = "stock")
 data class StockEntity(
     @PrimaryKey @ColumnInfo(name = "product_id") val productId: Int,

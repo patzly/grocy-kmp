@@ -7,8 +7,8 @@ import androidx.room3.Query
 import kotlinx.coroutines.flow.Flow
 
 /**
- * The items of Grocy's shopping lists as last downloaded, plus the user's check offs the server
- * has not taken yet, which keep the list working offline.
+ * The items of Grocy's shopping lists as last downloaded, plus the user's check offs and notes
+ * the server has not taken yet, which keep the list working offline.
  */
 @Dao
 interface ShoppingListDao {
@@ -40,6 +40,9 @@ interface ShoppingListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertList(list: ShoppingListEntity)
 
+    @Query("UPDATE shopping_lists SET description = :description WHERE id = :id")
+    suspend fun setListDescription(id: Int, description: String)
+
     /** Removes the list and its items, like Grocy's trigger does on the server. */
     @Query("DELETE FROM shopping_lists WHERE id = :id")
     suspend fun deleteList(id: Int)
@@ -65,4 +68,23 @@ interface ShoppingListDao {
 
     @Query("DELETE FROM pending_shopping_list_done WHERE item_id = :itemId")
     suspend fun deletePendingDoneOf(itemId: Int)
+
+    @Query("SELECT * FROM pending_shopping_list_notes")
+    suspend fun pendingNotes(): List<PendingShoppingListNotesEntity>
+
+    @Query("SELECT * FROM pending_shopping_list_notes")
+    fun observePendingNotes(): Flow<List<PendingShoppingListNotesEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertPendingNotes(pending: PendingShoppingListNotesEntity)
+
+    /** Forgets notes the server took; only if the user did not change them again since. */
+    @Query(
+        "DELETE FROM pending_shopping_list_notes " +
+            "WHERE list_id = :listId AND description = :description",
+    )
+    suspend fun deletePendingNotes(listId: Int, description: String)
+
+    @Query("DELETE FROM pending_shopping_list_notes WHERE list_id = :listId")
+    suspend fun deletePendingNotesOf(listId: Int)
 }

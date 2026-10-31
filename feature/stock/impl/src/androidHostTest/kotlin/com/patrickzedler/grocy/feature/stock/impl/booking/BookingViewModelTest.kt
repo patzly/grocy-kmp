@@ -221,6 +221,27 @@ class BookingViewModelTest {
     }
 
     @Test
+    fun aPurchaseFromTheShoppingListKnowsItsPlaceInTheWorkflow() = runTest(dispatcher) {
+        val viewModel = viewModel(
+            BookingKind.PURCHASE,
+            BookingPreset(
+                productId = 1,
+                shoppingListItemId = 5,
+                shoppingListPosition = 2,
+                shoppingListCount = 4,
+            ),
+        )
+
+        assertEquals(ShoppingListItemPurchase(position = 2, count = 4), viewModel.shoppingListItem)
+    }
+
+    @Test
+    fun otherBookingsHaveNoShoppingListHint() = runTest(dispatcher) {
+        assertNull(viewModel(BookingKind.PURCHASE, BookingPreset(productId = 1)).shoppingListItem)
+        assertNull(viewModel(BookingKind.CONSUME).shoppingListItem)
+    }
+
+    @Test
     fun aShoppingListItemIsRemovedOnceItIsInStock() = runTest(dispatcher) {
         val viewModel = viewModel(
             BookingKind.PURCHASE,

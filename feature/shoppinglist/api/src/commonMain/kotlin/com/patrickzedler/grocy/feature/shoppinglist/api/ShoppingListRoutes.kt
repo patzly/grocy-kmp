@@ -31,10 +31,19 @@ data class ShoppingListItemRoute(
 @SerialName("shoppinglist/list")
 data class ShoppingListFormRoute(val id: Int? = null) : DetailRoute
 
+/**
+ * The shopping mode: the shown shopping list in large type for the store, checked off with a
+ * tap and synced while people shop together; a screen of its own.
+ */
+@Serializable
+@SerialName("shoppinglist/shopping-mode")
+data object ShoppingModeRoute : Route
+
 val shoppingListRouteSerializers = SerializersModule {
     polymorphic(NavKey::class) {
         subclass(ShoppingListRoute::class, ShoppingListRoute.serializer())
         subclass(ShoppingListItemRoute::class, ShoppingListItemRoute.serializer())
         subclass(ShoppingListFormRoute::class, ShoppingListFormRoute.serializer())
+        subclass(ShoppingModeRoute::class, ShoppingModeRoute.serializer())
     }
 }

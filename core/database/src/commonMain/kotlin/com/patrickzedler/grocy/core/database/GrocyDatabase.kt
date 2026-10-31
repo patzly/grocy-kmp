@@ -38,8 +38,9 @@ import androidx.room3.RoomDatabaseConstructor
         StockLocationEntity::class,
         ShoppingListItemEntity::class,
         PendingShoppingListDoneEntity::class,
+        PendingShoppingListNotesEntity::class,
     ],
-    version = 7,
+    version = 8,
     autoMigrations = [
         // 2 adds product_thumbnails
         AutoMigration(from = 1, to = 2),
@@ -56,6 +57,8 @@ import androidx.room3.RoomDatabaseConstructor
         // 7 adds the shopping list items, checked off items not sent yet and the notes and
         // userfield values of shopping lists
         AutoMigration(from = 6, to = 7),
+        // 8 adds the notes of shopping lists edited offline and not sent yet
+        AutoMigration(from = 7, to = 8),
     ],
 )
 @ConstructedBy(GrocyDatabaseConstructor::class)

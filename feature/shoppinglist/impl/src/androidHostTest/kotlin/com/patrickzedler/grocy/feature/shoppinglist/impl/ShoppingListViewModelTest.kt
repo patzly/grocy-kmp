@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.feature.shoppinglist.impl
 
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import app.cash.turbine.test
 import com.patrickzedler.grocy.core.data.settings.ShoppingListOptionsRepository
 import com.patrickzedler.grocy.core.data.util.RefreshError
@@ -7,6 +8,7 @@ import com.patrickzedler.grocy.core.forms.ChangeError
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItemSync
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListStatus
 import com.patrickzedler.grocy.core.testing.FakeSettingsStore
 import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
 import io.ktor.http.HttpMethod
@@ -48,12 +50,15 @@ class ShoppingListViewModelTest {
         Dispatchers.resetMain()
     }
 
+    private var options: ShoppingListOptionsRepository? = null
+
     private fun TestScope.viewModel(listId: Int? = null): ShoppingListViewModel {
         val options = ShoppingListOptionsRepository(
             settingsStore,
             // Unconfined, so the options are read right away like at app start
             backgroundScope + UnconfinedTestDispatcher(testScheduler),
         )
+        this@ShoppingListViewModelTest.options = options
         return ShoppingListViewModel(
             listId = listId,
             masterData = environment.repository,
@@ -244,6 +249,49 @@ class ShoppingListViewModelTest {
     }
 
     @Test
+    fun notesOfflineCloseTheirDialogAndAreSentOnceOnline() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        environment.server.unreachable = true
+
+        viewModel.editNotes()
+        viewModel.notes!!.text.setTextAndPlaceCursorAtEnd("Bring bags\nand coins")
+        viewModel.saveNotes()
+        advanceUntilIdle()
+
+        assertNull(viewModel.notes)
+        assertEquals("Bring bags\nand coins", viewModel.state.value?.notes)
+        assertEquals(ShoppingListItemSync.FAILED, viewModel.state.value?.notesSync)
+        environment.server.unreachable = false
+        viewModel.refresh()
+        advanceUntilIdle()
+        assertNull(viewModel.state.value?.notesSync)
+    }
+
+    @Test
+    fun listSelectorOpensAndClosesWithTheChoice() = runTest(dispatcher) {
+        val viewModel = viewModel()
+
+        viewModel.chooseList()
+        assertEquals(ShoppingListDialog.ChooseList, viewModel.dialog)
+        viewModel.selectList(2)
+        advanceUntilIdle()
+
+        assertNull(viewModel.dialog)
+        assertEquals(2, viewModel.state.value?.list?.id)
+    }
+
+    @Test
+    fun statusFilterIsTheOneTheShoppingModeShares() = runTest(dispatcher) {
+        val viewModel = viewModel()
+
+        viewModel.setStatus(ShoppingListStatus.DONE)
+        advanceUntilIdle()
+
+        assertEquals(ShoppingListStatus.DONE, options?.status?.value)
+        assertEquals(listOf(6), viewModel.rows.map { it.id })
+    }
+
+    @Test
     fun notesAreSavedAsHtml() = runTest(dispatcher) {
         val viewModel = viewModel()
 
@@ -287,8 +335,9 @@ class ShoppingListViewModelTest {
             viewModel.addAllToStock()
             advanceUntilIdle()
             // Dairy first, then the ungrouped Bread
-            val first = assertIs<ShoppingListEvent.OpenPurchase>(awaitItem()).purchase
-            assertEquals(ShoppingListPurchase(5, 1, 6.0, 2), first)
+            val first = assertIs<ShoppingListEvent.OpenPurchase>(awaitItem())
+            assertEquals(ShoppingListPurchase(5, 1, 6.0, 2), first.purchase)
+            assertEquals(PurchaseProgress(position = 1, count = 2), first.progress)
 
             // Booked: the purchase removed the item, the next one opens
             environment.shoppingListRepository.deleteItem(5)

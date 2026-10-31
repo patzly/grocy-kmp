@@ -214,7 +214,7 @@ class ShoppingListRepositoryTest {
         server.unreachable = false
         server.requests.clear()
 
-        repository.sendPendingDoneInBackground()
+        repository.sendPendingInBackground()
 
         assertEquals(listOf("""{"done":0}"""), doneRequests(6))
         assertEquals(emptyMap(), repository.syncStates.first())
@@ -379,18 +379,131 @@ class ShoppingListRepositoryTest {
         assertTrue(repository.items.first().isEmpty())
     }
 
+    private fun notesRequests(listId: Int) =
+        server.requestsTo("/api/objects/shopping_lists/$listId", HttpMethod.Put)
+            .map { (it.body as TextContent).text }
+
     @Test
-    fun notesAreSavedAndStoredAsTheServerHasThem() = runTest(dispatcher) {
+    fun notesOnlineAreSentAndStoredAsTheServerCleanedThemUp() = runTest(dispatcher) {
         val repository = repository()
         repository.refresh()
         server.respond(
-            "/api/objects/shopping_lists/2",
-            body = """{"id":2,"name":"Hardware store","description":"<p>Nails</p>"}""",
+            "/api/objects/shopping_lists",
+            body = """[{"id":2,"name":"Hardware store","description":"<p>Nails</p>"}]""",
         )
+
+        repository.saveNotes(2, "<p>Nails")
+
+        assertEquals(listOf("""{"description":"<p>Nails"}"""), notesRequests(2))
+        assertEquals("<p>Nails</p>", repository.list(2).first()?.description)
+        assertEquals(emptyMap(), repository.notesSyncStates.first())
+    }
+
+    @Test
+    fun notesOfflineAreStoredAndQueued() = runTest(dispatcher) {
+        val repository = repository()
+        repository.refresh()
+        server.unreachable = true
 
         repository.saveNotes(2, "<p>Nails</p>")
 
         assertEquals("<p>Nails</p>", repository.list(2).first()?.description)
+        assertEquals(mapOf(2 to ShoppingListItemSync.FAILED), repository.notesSyncStates.first())
+    }
+
+    @Test
+    fun queuedNotesAreSentOnceTheDeviceIsOnlineAgain() = runTest(dispatcher) {
+        val repository = repository()
+        repository.refresh()
+        server.unreachable = true
+        repository.saveNotes(2, "<p>Nails</p>")
+        repository.saveNotes(2, "<p>Screws</p>")
+        server.unreachable = false
+        server.requests.clear()
+
+        networkAvailable.emit(Unit)
+
+        assertEquals(listOf("""{"description":"<p>Screws</p>"}"""), notesRequests(2))
+        assertEquals(emptyMap(), repository.notesSyncStates.first())
+    }
+
+    @Test
+    fun replayDropsTheNotesOfAListSomeoneElseRemoved() = runTest(dispatcher) {
+        val repository = repository()
+        repository.refresh()
+        server.unreachable = true
+        repository.saveNotes(2, "<p>Nails</p>")
+        server.unreachable = false
+        server.respond(
+            path = "/api/objects/shopping_lists/2",
+            status = HttpStatusCode.BadRequest,
+            body = """{"error_message":"Object not found"}""",
+            method = HttpMethod.Put,
+        )
+        server.respond(
+            "/api/objects/shopping_lists",
+            body = """[{"id":1,"name":"Shopping list"}]""",
+        )
+
+        repository.refresh()
+
+        assertEquals(listOf(1), repository.lists.first().map { it.id })
+        assertEquals(emptyMap(), repository.notesSyncStates.first())
+    }
+
+    @Test
+    fun queuedNotesStayAboveARenameOfTheList() = runTest(dispatcher) {
+        val repository = repository()
+        repository.refresh()
+        server.respond(
+            path = "/api/objects/shopping_lists/2",
+            status = HttpStatusCode.InternalServerError,
+            method = HttpMethod.Put,
+        )
+        repository.saveNotes(2, "<p>Nails</p>")
+        server.respond(
+            path = "/api/objects/shopping_lists/2",
+            status = HttpStatusCode.NoContent,
+            method = HttpMethod.Put,
+        )
+        server.respond(
+            "/api/objects/shopping_lists/2",
+            body = """{"id":2,"name":"DIY store"}""",
+        )
+
+        repository.saveList(ShoppingList(2, "DIY store"), userfields = emptyMap())
+
+        assertEquals(
+            ShoppingList(2, "DIY store", "<p>Nails</p>"),
+            repository.list(2).first(),
+        )
+    }
+
+    @Test
+    fun deletedListTakesItsQueuedNotesAlong() = runTest(dispatcher) {
+        val repository = repository()
+        repository.refresh()
+        server.respond(
+            path = "/api/objects/shopping_lists/2",
+            status = HttpStatusCode.InternalServerError,
+            method = HttpMethod.Put,
+        )
+        repository.saveNotes(2, "<p>Nails</p>")
+
+        repository.deleteList(2)
+
+        assertEquals(emptyMap(), repository.notesSyncStates.first())
+    }
+
+    @Test
+    fun quickRefreshDownloadsOnlyTheItems() = runTest(dispatcher) {
+        val repository = repository()
+        repository.refresh()
+        server.requests.clear()
+
+        repository.refreshItemsOnly()
+
+        assertEquals(listOf("/api/objects/shopping_list"), server.requestedPaths)
     }
 
     @Test

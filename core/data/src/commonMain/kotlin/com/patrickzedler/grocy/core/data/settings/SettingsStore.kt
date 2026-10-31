@@ -3,6 +3,7 @@ package com.patrickzedler.grocy.core.data.settings
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import kotlinx.coroutines.flow.Flow
 
@@ -30,4 +31,9 @@ interface SettingsStore {
     val shoppingListOptions: Flow<ShoppingListOptions>
 
     suspend fun setShoppingListOptions(options: ShoppingListOptions)
+
+    /** How the shopping mode syncs and shows the list, the defaults until changed. */
+    val shoppingModeSettings: Flow<ShoppingModeSettings>
+
+    suspend fun setShoppingModeSettings(settings: ShoppingModeSettings)
 }

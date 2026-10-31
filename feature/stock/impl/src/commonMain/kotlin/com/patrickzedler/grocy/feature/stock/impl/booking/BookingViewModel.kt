@@ -63,7 +63,16 @@ internal data class BookingPreset(
     val stockId: String? = null,
     /** The shopping list item this purchase puts into stock, removed once it is booked. */
     val shoppingListItemId: Int? = null,
+    /** "Add all list items to stock" books item [shoppingListPosition] of [shoppingListCount]. */
+    val shoppingListPosition: Int? = null,
+    val shoppingListCount: Int? = null,
 )
+
+/**
+ * A purchase that puts a shopping list item into stock, explained on the page; item [position]
+ * of [count] while "Add all list items to stock" books one after the other.
+ */
+internal data class ShoppingListItemPurchase(val position: Int?, val count: Int?)
 
 /** What a booking says afterwards, Grocy's messages; amounts in the stock unit. */
 internal sealed interface BookingEvent {
@@ -125,6 +134,11 @@ internal class BookingViewModel(
     private val today: () -> Long = ::todayEpochDay,
     private val decimalSeparator: Char = platformDecimalSeparator(),
 ) : ViewModel() {
+
+    /** Set while this purchase puts a shopping list item into stock. */
+    val shoppingListItem: ShoppingListItemPurchase? = preset.takeIf {
+        kind == BookingKind.PURCHASE && it.shoppingListItemId != null
+    }?.let { ShoppingListItemPurchase(it.shoppingListPosition, it.shoppingListCount) }
 
     val options: StateFlow<BookingOptions?> = combine(
         combine(

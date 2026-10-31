@@ -944,6 +944,17 @@
   <string name="shopping_list_add_all_to_stock">Afegeix tots els elements de la llista a les existències</string>
   <string name="shopping_list_adding_item">Afegint l'element de la llista de la compra %1$s de %2$s</string>
   <string name="shopping_list_add_item">Afegir element</string>
+  <string name="shopping_list_choose">Tria la llista de la compra</string>
+  <string name="shopping_list_item_not_booked">%1$s no s'ha afegit a les existències. Vols ometre'l i continuar amb el següent element, o cancel·lar?</string>
+  <string name="booking_shopping_list_hint">Comprova les dades i confirma la compra. Després, l'element s'elimina de la llista de la compra.</string>
+  <string name="shopping_mode">Mode compra</string>
+  <string name="shopping_mode_settings">Configuració del mode compra</string>
+  <string name="shopping_mode_auto_sync">Sincronització automàtica</string>
+  <string name="shopping_mode_auto_sync_hint">Torna a carregar la llista regularment perquè tothom que compra junt vegi el que han marcat els altres</string>
+  <string name="shopping_mode_sync_interval">Interval de sincronització en segons</string>
+  <string name="shopping_mode_keep_screen_on">Mantén la pantalla encesa</string>
+  <string name="shopping_mode_keep_screen_on_hint">En el mode compra</string>
+  <string name="shopping_mode_done_last">Mostra els elements marcats al final</string>
   <string name="shopping_list_add_missing">Afegeix productes que estan per sota de les existències mínimes</string>
   <string name="shopping_list_add_overdue_expired">Afegeix productes caducats</string>
   <string name="shopping_list_add_to_stock">Afegeix aquest element a les existències</string>
@@ -957,8 +968,7 @@
   <string name="shopping_list_delete_question">Segur que vols esborrar la llista de la compra "%1$s"?</string>
   <string name="shopping_list_edit">Editar llista de la compra</string>
   <string name="shopping_list_edit_item">Editar aquest element</string>
-  <string name="shopping_list_item_create">Afegir article a la llista de la compra</string>
-  <string name="shopping_list_item_edit">Editar article de llista de la compra</string>
+  <string name="shopping_list_item_edit">Edita l'element</string>
   <string name="shopping_list_last_price_total">Últim preu (total)</string>
   <string name="shopping_list_last_price_unit">Últim preu (unitat)</string>
   <string name="shopping_list_mark_done">Marcar aquest element com a fet</string>

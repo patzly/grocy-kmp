@@ -28,6 +28,8 @@ internal fun EntryProviderScope<NavKey>.bookingEntries(
                 amount = route.amount,
                 quId = route.quId,
                 shoppingListItemId = route.shoppingListItemId,
+                shoppingListPosition = route.shoppingListPosition,
+                shoppingListCount = route.shoppingListCount,
             ),
             dependencies = dependencies,
             navigator = navigator,

@@ -28,6 +28,7 @@ import com.patrickzedler.grocy.core.resources.shopping_list_clear
 import com.patrickzedler.grocy.core.resources.shopping_list_clear_question
 import com.patrickzedler.grocy.core.resources.shopping_list_clear_question_single
 import com.patrickzedler.grocy.core.resources.shopping_list_delete_question
+import com.patrickzedler.grocy.core.resources.shopping_list_item_not_booked
 import com.patrickzedler.grocy.core.resources.shopping_list_notes
 import com.patrickzedler.grocy.core.resources.shopping_list_print_failed
 import com.patrickzedler.grocy.core.resources.shopping_list_print_options
@@ -38,7 +39,7 @@ import org.jetbrains.compose.resources.stringResource
 
 /** The questions of [viewModel] and the forms it opens over the list. */
 @Composable
-internal fun ShoppingListDialogs(viewModel: ShoppingListViewModel) {
+internal fun ShoppingListDialogs(viewModel: ShoppingListViewModel, state: ShoppingListUiState?) {
     when (val dialog = viewModel.dialog) {
         is ShoppingListDialog.ClearList -> DeleteDialog(
             question = if (dialog.name != null) {
@@ -57,6 +58,14 @@ internal fun ShoppingListDialogs(viewModel: ShoppingListViewModel) {
             onDelete = { viewModel.deleteList(dialog.listId) },
             onDismissRequest = viewModel::dismissDialog,
         )
+        ShoppingListDialog.ChooseList -> state?.let { current ->
+            ShoppingListChoiceDialog(
+                lists = current.lists,
+                selectedId = current.list?.id,
+                onSelect = viewModel::selectList,
+                onDismissRequest = viewModel::dismissDialog,
+            )
+        }
         is ShoppingListDialog.StockItemSkipped -> StockItemSkippedDialog(
             dialog = dialog,
             onSkip = viewModel::skipStockItem,
@@ -89,10 +98,11 @@ private fun NotesDialog(
     onDismissRequest: () -> Unit,
 ) {
     val title = stringResource(Res.string.shopping_list_notes)
+    // Saved offline too, so there is nothing to wait for
     FormDialog(
         title = title,
-        isSaving = editor.isSaving,
-        error = editor.error?.saveMessage(),
+        isSaving = false,
+        error = null,
         onSave = onSave,
         onDismissRequest = onDismissRequest,
     ) {
@@ -194,7 +204,7 @@ private fun StockItemSkippedDialog(
             },
             content = {
                 Text(
-                    text = dialog.name,
+                    text = stringResource(Res.string.shopping_list_item_not_booked, dialog.name),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

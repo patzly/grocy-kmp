@@ -6,9 +6,15 @@ Settings plan: the overview lists the categories General (language, theme, contr
 (server URL, Grocy version, reload configuration, logout), Grocy settings (loaded from the
 server, Grocy's "Settings" menu), Network (loading timeout, Tor with Orbot, HTTP proxy), Behavior
 (navigation, date and keyboard settings, Open Food Facts / Open Beauty Facts), Scanner (engine,
-front camera, 2D formats, barcode formats, external scanners) and Notifications (stock, chores)
-as one group (`SettingsCategory`), then "Backup and restore" and "Reset all" as a second group.
-Built so far: the overview, General (language, theme, contrast), Server, Grocy settings
+front camera, 2D formats, barcode formats, external scanners), Notifications (stock, chores)
+and Shopping mode settings (`storefront`) as one group (`SettingsCategory`), then "Backup and restore" and "Reset all" as a second group.
+Built so far: the overview, General (language, theme, contrast), Server, Shopping mode settings
+(`ShoppingModeSettingsRoute`, also opened by the shopping mode's menu as a screen of its own
+with `inSettings = false`: auto sync with its interval in seconds, at least
+`ShoppingModeSettings.MIN_SYNC_INTERVAL_SECONDS`, saved once typing pauses and only when valid,
+"Keep screen on" and "Show checked items at the bottom"; kept on the device in `SettingsStore`
+(DataStore keys `shopping_mode_*`, `grocy.shoppingMode*` on the web), read at app start by
+`ShoppingModeSettingsRepository`), Grocy settings
 (`GrocySettingsRoute`, the wrench icon of Grocy's menu: a note that Grocy keeps them for the user
 on the server, then the pages of Grocy's settings menu with settings of the user in its order:
 stock settings (always, like Grocy), shopping list, recipes, chores, tasks and batteries

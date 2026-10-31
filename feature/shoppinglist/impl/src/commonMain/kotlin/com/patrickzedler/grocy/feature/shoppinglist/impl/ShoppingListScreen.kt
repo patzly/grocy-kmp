@@ -2,6 +2,7 @@
 
 package com.patrickzedler.grocy.feature.shoppinglist.impl
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
@@ -19,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -61,6 +63,7 @@ import com.patrickzedler.grocy.core.resources.shopping_list_add_all_to_stock
 import com.patrickzedler.grocy.core.resources.shopping_list_add_item
 import com.patrickzedler.grocy.core.resources.shopping_list_add_missing
 import com.patrickzedler.grocy.core.resources.shopping_list_add_overdue_expired
+import com.patrickzedler.grocy.core.resources.shopping_list_choose
 import com.patrickzedler.grocy.core.resources.shopping_list_clear
 import com.patrickzedler.grocy.core.resources.shopping_list_clear_done
 import com.patrickzedler.grocy.core.resources.shopping_list_delete
@@ -86,17 +89,23 @@ internal class ShoppingListLinks(
     val onItemClick: (itemId: Int) -> Unit,
     val onNewListClick: () -> Unit,
     val onEditListClick: (listId: Int) -> Unit,
-    /** Grocy's purchase of an item, which removes the item once booked. */
-    val onPurchase: (ShoppingListPurchase) -> Unit,
+    /**
+     * Grocy's purchase of an item, which removes the item once booked; with its progress while
+     * "Add all list items to stock" books one after the other.
+     */
+    val onPurchase: (ShoppingListPurchase, PurchaseProgress?) -> Unit,
 )
 
 /**
  * Grocy's "Shopping list": the items of the chosen list grouped by product group, checked off
- * with their checkbox (offline too), the list selector, status filter and table options as
- * chips, the search, the list's notes at the end. The overflow menu holds Grocy's list and
- * stock actions, the floating toolbar "Add item" as its main action.
+ * with their checkbox (offline too), the status filter and table options as chips, the search,
+ * the list's notes at the end (offline too). The title names the shown list, with several lists
+ * it opens Grocy's list selector. The overflow menu holds Grocy's list and stock actions, the
+ * floating toolbar "Add item" as its main action.
  *
  * @param selectedItemId the item shown beside the list, marked in it while [isBesideDetail].
+ * @param isShown whether the list is the screen the user sees, not one that only shows
+ *   during a back gesture.
  */
 @Composable
 internal fun ShoppingListScreen(
@@ -108,6 +117,7 @@ internal fun ShoppingListScreen(
     modifier: Modifier = Modifier,
     selectedItemId: Int? = null,
     isBesideDetail: Boolean = false,
+    isShown: Boolean = true,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val refresh by viewModel.refresh.collectAsStateWithLifecycle()
@@ -124,20 +134,24 @@ internal fun ShoppingListScreen(
         onErrorShown = viewModel::onErrorShown,
     )
     ShoppingListEvents(viewModel, snackbarHostState, links.onPurchase)
-    // Back from a purchase of "Add all list items to stock" goes on with the next item
-    LaunchedEffect(viewModel) { viewModel.onShown() }
+    // Back from a purchase of "Add all list items to stock" goes on with the next item, only
+    // once back is done: a back gesture shows the list before it may still be cancelled
+    LaunchedEffect(viewModel, isShown) { if (isShown) viewModel.onShown() }
     // Back closes the search first and stays on the list
     NavigationBackHandler(
         state = rememberNavigationEventState(NavigationEventInfo.None),
         isBackEnabled = viewModel.isSearchVisible,
         onBackCompleted = viewModel::hideSearch,
     )
-    ShoppingListDialogs(viewModel)
-
     val current = state
+    ShoppingListDialogs(viewModel, current)
+
+    val chooseLabel = stringResource(Res.string.shopping_list_choose)
     SegmentedListScreen(
-        title = stringResource(Res.string.shopping_list_list),
+        title = current?.list?.name ?: stringResource(Res.string.shopping_list_list),
         subtitle = current?.let { subtitle(it) },
+        onTitleClick = viewModel::chooseList.takeIf { current?.canChooseList == true },
+        titleClickLabel = chooseLabel,
         modifier = modifier,
         navigationIcon = { NavigateBackButton(onClick = onBackClick) },
         menuItems = menuItems,
@@ -188,7 +202,6 @@ internal fun ShoppingListScreen(
         edgeToEdgeItem(key = "filters") { contentPadding ->
             ShoppingListFilterBar(
                 state = current,
-                onListSelect = viewModel::selectList,
                 onStatusChange = viewModel::setStatus,
                 onGroupingChange = viewModel::setGrouping,
                 onFieldShownChange = viewModel::setFieldShown,
@@ -238,13 +251,14 @@ internal fun ShoppingListScreen(
 private fun ShoppingListEvents(
     viewModel: ShoppingListViewModel,
     snackbarHostState: SnackbarHostState,
-    onPurchase: (ShoppingListPurchase) -> Unit,
+    onPurchase: (ShoppingListPurchase, PurchaseProgress?) -> Unit,
 ) {
     val currentOnPurchase by rememberUpdatedState(onPurchase)
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
-                is ShoppingListEvent.OpenPurchase -> currentOnPurchase(event.purchase)
+                is ShoppingListEvent.OpenPurchase ->
+                    currentOnPurchase(event.purchase, event.progress)
                 is ShoppingListEvent.Failed -> snackbarHostState.showSnackbar(
                     event.error.actionMessage(
                         when (event.action) {
@@ -404,7 +418,10 @@ private fun LazyListScope.rows(
     }
 }
 
-/** Grocy's "Notes" below its table, edited in a dialog. */
+/**
+ * Grocy's "Notes" below its table, edited in a dialog; notes the server has not taken yet show
+ * the state of sending them like a checked off item.
+ */
 private fun LazyListScope.notes(state: ShoppingListUiState, onClick: () -> Unit) {
     if (state.list == null) return
     insetItem(key = "notes-title") {
@@ -432,13 +449,17 @@ private fun LazyListScope.notes(state: ShoppingListUiState, onClick: () -> Unit)
                 }
             },
         ) {
-            if (state.notes.isBlank()) {
-                Text(
-                    text = stringResource(Res.string.shopping_list_notes_empty),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            } else {
-                Text(state.notes)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (state.notes.isBlank()) {
+                    Text(
+                        text = stringResource(Res.string.shopping_list_notes_empty),
+                        modifier = Modifier.weight(1f, fill = false),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                } else {
+                    Text(state.notes, modifier = Modifier.weight(1f, fill = false))
+                }
+                SyncIndicator(state.notesSync)
             }
         }
     }

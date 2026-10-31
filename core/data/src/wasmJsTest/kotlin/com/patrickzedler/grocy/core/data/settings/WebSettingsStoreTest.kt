@@ -10,6 +10,7 @@ import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.model.stock.StockOverviewField
 import com.patrickzedler.grocy.core.model.stock.StockOverviewGrouping
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
@@ -120,5 +121,39 @@ class WebSettingsStoreTest {
         WebSettingsStore(storage).setShoppingListOptions(options)
 
         assertEquals(options, WebSettingsStore(storage).shoppingListOptions.first())
+    }
+
+    @Test
+    fun shoppingModeSettingsAreStoredAndRestored() = runTest {
+        val storage = InMemoryStorage()
+        val settings = ShoppingModeSettings(
+            autoSync = false,
+            syncIntervalSeconds = 45,
+            keepScreenOn = false,
+            doneItemsLast = false,
+        )
+
+        WebSettingsStore(storage).setShoppingModeSettings(settings)
+
+        assertEquals(settings, WebSettingsStore(storage).shoppingModeSettings.first())
+    }
+
+    @Test
+    fun storedShoppingModeSettingsStayReadable() = runTest {
+        val storage = InMemoryStorage()
+        storage.set(WebSettingsStore.SHOPPING_MODE_AUTO_SYNC, "false")
+        storage.set(WebSettingsStore.SHOPPING_MODE_SYNC_INTERVAL, "20")
+        storage.set(WebSettingsStore.SHOPPING_MODE_KEEP_SCREEN_ON, "true")
+        storage.set(WebSettingsStore.SHOPPING_MODE_DONE_LAST, "false")
+
+        assertEquals(
+            ShoppingModeSettings(
+                autoSync = false,
+                syncIntervalSeconds = 20,
+                keepScreenOn = true,
+                doneItemsLast = false,
+            ),
+            WebSettingsStore(storage).shoppingModeSettings.first(),
+        )
     }
 }

@@ -8,6 +8,7 @@ import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,6 +36,7 @@ class FakeSettingsStore(
     appearance: AppearanceSettings = AppearanceSettings(),
     stockOverviewOptions: StockOverviewOptions = StockOverviewOptions(),
     shoppingListOptions: ShoppingListOptions = ShoppingListOptions(),
+    shoppingModeSettings: ShoppingModeSettings = ShoppingModeSettings(),
 ) : SettingsStore {
 
     override val checkUnlockKey = MutableStateFlow(checkUnlockKey)
@@ -65,6 +67,12 @@ class FakeSettingsStore(
 
     override suspend fun setShoppingListOptions(options: ShoppingListOptions) {
         shoppingListOptions.value = options
+    }
+
+    override val shoppingModeSettings = MutableStateFlow(shoppingModeSettings)
+
+    override suspend fun setShoppingModeSettings(settings: ShoppingModeSettings) {
+        shoppingModeSettings.value = settings
     }
 }
 

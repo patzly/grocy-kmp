@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.addOutline
 import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.layer.setOutline
 import androidx.compose.ui.graphics.rememberGraphicsLayer
@@ -96,12 +97,17 @@ fun ShowDisabledChip(selected: Boolean, onSelectedChange: (Boolean) -> Unit) {
     val haptic = LocalHapticFeedback.current
     FilterChip(
         selected = selected,
-        modifier = Modifier.clickCursor(),
+        modifier = Modifier.chipMinHeight().clickCursor(),
         onClick = {
             haptic.confirm()
             onSelectedChange(!selected)
         },
-        label = { Text(stringResource(Res.string.products_filter_show_disabled)) },
+        label = {
+            Text(
+                stringResource(Res.string.products_filter_show_disabled),
+                style = chipTextStyle(),
+            )
+        },
         colors = filterChipColors(),
         elevation = filterChipElevation(),
         leadingIcon = if (selected) {
@@ -121,8 +127,10 @@ fun ClearFilterChip(onClick: () -> Unit) {
             haptic.confirm()
             onClick()
         },
-        modifier = Modifier.clickCursor(),
-        label = { Text(stringResource(Res.string.products_filter_clear)) },
+        modifier = Modifier.chipMinHeight().clickCursor(),
+        label = {
+            Text(stringResource(Res.string.products_filter_clear), style = chipTextStyle())
+        },
         colors = AssistChipDefaults.assistChipColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         ),
@@ -138,7 +146,7 @@ fun ClearFilterChip(onClick: () -> Unit) {
             Icon(
                 painter = painterResource(Res.drawable.ic_rounded_filter_list_off),
                 contentDescription = null,
-                modifier = Modifier.size(AssistChipDefaults.IconSize),
+                modifier = Modifier.size(chipIconSize(AssistChipDefaults.IconSize)),
             )
         },
     )
@@ -193,9 +201,16 @@ fun <T> DropdownFilterChip(
                 haptic.confirm()
                 expanded = true
             },
-            label = { Text(if (active) selectedLabel(selected) else label, maxLines = 1) },
+            label = {
+                Text(
+                    text = if (active) selectedLabel(selected) else label,
+                    style = chipTextStyle(),
+                    maxLines = 1,
+                )
+            },
             // It opens a menu, so it is announced as button with the filter's name
             modifier = Modifier
+                .chipMinHeight()
                 .semantics {
                     role = Role.Button
                     if (active) stateDescription = label
@@ -250,8 +265,8 @@ fun <T> MultiSelectChip(
                 haptic.confirm()
                 expanded = true
             },
-            label = { Text(label, maxLines = 1) },
-            modifier = Modifier.semantics { role = Role.Button }.clickCursor(),
+            label = { Text(label, style = chipTextStyle(), maxLines = 1) },
+            modifier = Modifier.chipMinHeight().semantics { role = Role.Button }.clickCursor(),
             trailingIcon = { ChipIcon(Res.drawable.ic_rounded_arrow_drop_down) },
             colors = filterChipColors(),
             elevation = filterChipElevation(),
@@ -318,19 +333,35 @@ private fun ScrollingMenuGroup(
     scrollState: ScrollState,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    val shape = MenuDefaults.groupShape(index = index, count = count).shape
-    val edgeShape = MenuDefaults.groupShape(index = 0, count = 1).shape
-    val color = MenuDefaults.groupStandardContainerColor
     val layer = rememberGraphicsLayer()
     var top by remember { mutableIntStateOf(0) }
 
+    // The group's position in the scrolling column: Material puts the group's modifier on its
+    // inner column, whose position in the group is always 0, so the frame lay one shadow room
+    // too low and covered the group's top padding
+    Box(Modifier.onPlaced { top = it.positionInParent().y.roundToInt() }) {
+        ScrollingMenuGroupContent(index, count, top, scrollState, layer, content)
+    }
+}
+
+@Composable
+private fun ScrollingMenuGroupContent(
+    index: Int,
+    count: Int,
+    top: Int,
+    scrollState: ScrollState,
+    layer: GraphicsLayer,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    val shape = MenuDefaults.groupShape(index = index, count = count).shape
+    val edgeShape = MenuDefaults.groupShape(index = 0, count = 1).shape
+    val color = MenuDefaults.groupStandardContainerColor
     DropdownMenuGroup(
         shapes = MenuDefaults.groupShape(index = index, count = count),
         containerColor = Color.Transparent,
         tonalElevation = 0.dp,
         shadowElevation = 0.dp,
         modifier = Modifier
-            .onPlaced { top = it.positionInParent().y.roundToInt() }
             .drawWithContent {
                 val room = MenuShadowRoom.toPx()
                 // The visible part of the content without the shadows' room, in this group
@@ -416,8 +447,8 @@ fun <F> SortChip(
                 haptic.confirm()
                 expanded = true
             },
-            label = { Text(fieldLabel(field), maxLines = 1) },
-            modifier = Modifier.semantics {
+            label = { Text(fieldLabel(field), style = chipTextStyle(), maxLines = 1) },
+            modifier = Modifier.chipMinHeight().semantics {
                 role = Role.Button
                 stateDescription = sortDescription
             }.clickCursor(),
@@ -533,7 +564,7 @@ fun ChipIcon(icon: DrawableResource) {
     Icon(
         painter = painterResource(icon),
         contentDescription = null,
-        modifier = Modifier.size(FilterChipDefaults.IconSize),
+        modifier = Modifier.size(chipIconSize(FilterChipDefaults.IconSize)),
     )
 }
 

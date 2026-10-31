@@ -16,8 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.ButtonGroupOverflowIndicator
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.MenuTouchTarget
@@ -33,8 +31,10 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_fact_check
 import com.patrickzedler.grocy.core.resources.ic_rounded_more_vert
 import com.patrickzedler.grocy.core.resources.ic_rounded_restaurant
 import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_basket
+import com.patrickzedler.grocy.core.resources.ic_rounded_storefront
 import com.patrickzedler.grocy.core.resources.ic_rounded_swap_horiz
 import com.patrickzedler.grocy.core.resources.shopping_list_add_item
+import com.patrickzedler.grocy.core.resources.shopping_mode
 import com.patrickzedler.grocy.core.resources.stock_consume
 import com.patrickzedler.grocy.core.resources.stock_inventory
 import com.patrickzedler.grocy.core.resources.stock_purchase
@@ -134,35 +134,63 @@ private fun ActionButton(
 }
 
 /**
- * Grocy's "Add item" of the shopping list as quick add, a wide tonal icon button like the stock
- * actions.
+ * The shopping list's quick actions as a standard button group of wide tonal icon buttons like
+ * the stock actions: Grocy's "Add item" and the shopping mode.
  */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun ShoppingListAddButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+internal fun ShoppingListButtons(
+    onAddClick: () -> Unit,
+    onShoppingModeClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val buttons = listOf(
+        QuickButton(Res.string.shopping_list_add_item, Res.drawable.ic_rounded_add, onAddClick),
+        QuickButton(
+            Res.string.shopping_mode,
+            Res.drawable.ic_rounded_storefront,
+            onShoppingModeClick,
+        ),
+    )
+    // Both always fit, the group only makes the pressed one grow
+    ButtonGroup(overflowIndicator = {}, modifier = modifier) {
+        buttons.forEach { button ->
+            animatedItem { itemModifier, interactionSource ->
+                QuickIconButton(button, itemModifier, interactionSource)
+            }
+        }
+    }
+}
+
+private class QuickButton(
+    val label: StringResource,
+    val icon: DrawableResource,
+    val onClick: () -> Unit,
+)
+
+@Composable
+private fun QuickIconButton(
+    button: QuickButton,
+    modifier: Modifier,
+    interactionSource: MutableInteractionSource,
+) {
     val haptic = LocalHapticFeedback.current
-    val label = stringResource(Res.string.shopping_list_add_item)
+    val label = stringResource(button.label)
 
     HapticTooltipBox(text = label, modifier = modifier) {
         FilledTonalIconButton(
             onClick = {
                 haptic.confirm()
-                onClick()
+                button.onClick()
             },
             modifier = smallIconButtonSize(IconButtonWidthOption.Wide).clickCursor(),
             shapes = IconButtonDefaults.shapes(),
+            interactionSource = interactionSource,
         ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_rounded_add),
-                contentDescription = label,
-            )
+            Icon(painter = painterResource(button.icon), contentDescription = label)
         }
     }
 }
-
-/** The room [ShoppingListAddButton] keeps above and below its container for its touch target. */
-internal val ShoppingListAddButtonRoom: Dp =
-    ((48.dp - IconButtonDefaults.smallContainerSize(IconButtonWidthOption.Wide).height) / 2)
-        .coerceAtLeast(0.dp)
 
 @Composable
 private fun OverflowButton(menuState: ButtonGroupMenuState) {

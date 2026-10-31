@@ -35,7 +35,8 @@ data class StockJournalSummaryRoute(val productId: Int? = null) : Route
 /**
  * Grocy's "Purchase", the product [productId] preselected if given. From a shopping list item
  * ([shoppingListItemId]) with its [amount] (stock unit) in the unit [quId]; the item is removed
- * once the purchase is booked, like Grocy's "Add this item to stock".
+ * once the purchase is booked, like Grocy's "Add this item to stock". "Add all list items to
+ * stock" books item [shoppingListPosition] of [shoppingListCount].
  */
 @Serializable
 @SerialName("purchase")
@@ -44,6 +45,8 @@ data class PurchaseRoute(
     val amount: Double? = null,
     val quId: Int? = null,
     val shoppingListItemId: Int? = null,
+    val shoppingListPosition: Int? = null,
+    val shoppingListCount: Int? = null,
 ) : Route
 
 /** Grocy's "Consume"; [locationId] and [stockId] preselect a location and a stock entry. */

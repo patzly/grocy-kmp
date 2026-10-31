@@ -30,6 +30,7 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_network_manage
 import com.patrickzedler.grocy.core.resources.ic_rounded_notifications
 import com.patrickzedler.grocy.core.resources.ic_rounded_reset_settings
 import com.patrickzedler.grocy.core.resources.ic_rounded_settings_backup_restore
+import com.patrickzedler.grocy.core.resources.ic_rounded_storefront
 import com.patrickzedler.grocy.core.resources.ic_rounded_tune
 import com.patrickzedler.grocy.core.resources.settings_backup
 import com.patrickzedler.grocy.core.resources.settings_backup_description
@@ -42,6 +43,7 @@ import com.patrickzedler.grocy.core.resources.settings_reset
 import com.patrickzedler.grocy.core.resources.settings_reset_description
 import com.patrickzedler.grocy.core.resources.settings_scanner
 import com.patrickzedler.grocy.core.resources.settings_server
+import com.patrickzedler.grocy.core.resources.shopping_mode_settings
 import com.patrickzedler.grocy.core.resources.title_settings
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
@@ -80,6 +82,10 @@ internal enum class SettingsCategory(
     NOTIFICATIONS(
         title = Res.string.settings_notifications,
         icon = Res.drawable.ic_rounded_notifications,
+    ),
+    SHOPPING_MODE(
+        title = Res.string.shopping_mode_settings,
+        icon = Res.drawable.ic_rounded_storefront,
     ),
 }
 

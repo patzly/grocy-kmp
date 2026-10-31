@@ -17,9 +17,10 @@ on shopping lists; `stockSummaryOf` of `core:model`, counted like Grocy's messag
 Grocy's Purchase, Consume, Transfer (with location tracking) and Inventory as a standard button
 group of wide tonal icon buttons, `StockActionButtons`, the last ones in the menu of a tonal
 overflow button when the item is too narrow), the items still to buy (with several lists
-holding some, per list as "Name (count)"; below it Grocy's "Add item" as one wide tonal icon
-button, a plain plus, opening `ShoppingListItemRoute` for the list the shopping list
-shows or Grocy's default list, `StartViewModel.quickAddListId`), and the
+holding some, per list as "Name (count)"; below it a standard button group of two wide tonal
+icon buttons, `ShoppingListButtons`: Grocy's "Add item", a plain plus, opening
+`ShoppingListItemRoute` for the list the shopping list shows or Grocy's default list
+(`StartViewModel.quickAddListId`), and the shopping mode (`storefront`, `ShoppingModeRoute`)), and the
 objects of each master data category the server has in one line joined by commas
 (`MasterDataCount`, `start_list_join`); the settings open as their own scene from the app
 menu like on every other screen (Settings above About); from
@@ -43,5 +44,5 @@ Inventory (`feature:stock`, see `stock-bookings.md`) and Grocy's shopping list
 The start screen's items use the segmented item's default text styles for title and supporting
 text. Items with buttons below their text (`SectionButtons`) keep 16.dp between the visible
 buttons and the item's bottom edge (`buttonsContentPadding`; Material's bottom padding is too
-tight there): the room a standalone button keeps for its touch target counts towards it
-(`ShoppingListAddButtonRoom`).
+tight there): the room a standalone button keeps for its touch target counts towards it (0.dp
+for button groups, whose items take no touch target room).

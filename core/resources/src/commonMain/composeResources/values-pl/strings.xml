@@ -972,6 +972,17 @@
   <string name="shopping_list_add_all_to_stock">Dodaj wszystkie pozycje z listy do zapasów</string>
   <string name="shopping_list_adding_item">%2$s - %1$s - dodaję pozycję do listy zakupów</string>
   <string name="shopping_list_add_item">Dodaj pozycję</string>
+  <string name="shopping_list_choose">Wybierz listę zakupów</string>
+  <string name="shopping_list_item_not_booked">%1$s nie zostało dodane do zapasów. Pominąć i przejść do następnej pozycji, czy anulować?</string>
+  <string name="booking_shopping_list_hint">Sprawdź dane i potwierdź zakup. Następnie pozycja zostanie usunięta z listy zakupów.</string>
+  <string name="shopping_mode">Tryb zakupów</string>
+  <string name="shopping_mode_settings">Ustawienia trybu zakupów</string>
+  <string name="shopping_mode_auto_sync">Automatyczna synchronizacja</string>
+  <string name="shopping_mode_auto_sync_hint">Regularnie odświeża listę, aby wszyscy robiący wspólnie zakupy widzieli, co odhaczyli inni</string>
+  <string name="shopping_mode_sync_interval">Interwał synchronizacji w sekundach</string>
+  <string name="shopping_mode_keep_screen_on">Nie wyłączaj ekranu</string>
+  <string name="shopping_mode_keep_screen_on_hint">W trybie zakupów</string>
+  <string name="shopping_mode_done_last">Pokazuj odhaczone pozycje na dole</string>
   <string name="shopping_list_add_missing">Dodaj produkty poniżej zdefiniowanej minimalnej ilości</string>
   <string name="shopping_list_add_overdue_expired">Dodaj przeterminowane produkty</string>
   <string name="shopping_list_add_to_stock">Dodaj tę pozycję do zapasów</string>
@@ -985,8 +996,7 @@
   <string name="shopping_list_delete_question">Czy jesteś pewien, że chcesz usunąć listę zakupów "%1$s"?</string>
   <string name="shopping_list_edit">Edytuj listę zakupów</string>
   <string name="shopping_list_edit_item">Edytuj tą pozycję</string>
-  <string name="shopping_list_item_create">Dodaj pozycję na liście zakupów</string>
-  <string name="shopping_list_item_edit">Edytuj przedmiot na liście zakupów</string>
+  <string name="shopping_list_item_edit">Edytuj pozycję</string>
   <string name="shopping_list_last_price_total">Ostatnia cena (Suma)</string>
   <string name="shopping_list_last_price_unit">Ostatnia cena (Jednostka)</string>
   <string name="shopping_list_mark_done">Oznacz tę pozycję jako ukończoną</string>

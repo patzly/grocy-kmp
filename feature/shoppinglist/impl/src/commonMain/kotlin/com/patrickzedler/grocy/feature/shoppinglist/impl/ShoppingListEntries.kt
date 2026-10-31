@@ -21,9 +21,11 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_cart
 import com.patrickzedler.grocy.core.resources.objects_select_hint
 import com.patrickzedler.grocy.core.ui.appMenuItems
 import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute
+import com.patrickzedler.grocy.feature.settings.api.ShoppingModeSettingsRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListFormRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListItemRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListRoute
+import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingModeRoute
 import com.patrickzedler.grocy.feature.stock.api.PurchaseRoute
 import com.patrickzedler.grocy.feature.stock.api.StockEntriesRoute
 import com.patrickzedler.grocy.feature.stock.api.StockJournalRoute
@@ -72,13 +74,15 @@ fun EntryProviderScope<NavKey>.shoppingListEntries(
                 onItemClick = { navigator.openDetail(ShoppingListItemRoute(id = it)) },
                 onNewListClick = { navigator.openDetail(ShoppingListFormRoute()) },
                 onEditListClick = { navigator.openDetail(ShoppingListFormRoute(it)) },
-                onPurchase = { purchase ->
+                onPurchase = { purchase, progress ->
                     navigator.navigate(
                         PurchaseRoute(
                             productId = purchase.productId,
                             amount = purchase.amount,
                             quId = purchase.quId,
                             shoppingListItemId = purchase.itemId,
+                            shoppingListPosition = progress?.position,
+                            shoppingListCount = progress?.count,
                         ),
                     )
                 },
@@ -87,6 +91,31 @@ fun EntryProviderScope<NavKey>.shoppingListEntries(
             onBackClick = { navigator.goBack(from = route) },
             selectedItemId = (navigator.currentRoute as? ShoppingListItemRoute)?.id,
             isBesideDetail = showsDetailBesideList(),
+            // The back stack changes once a back gesture is done, not while it shows the list
+            isShown = navigator.currentRoute.let {
+                it == route || it is ShoppingListItemRoute || it is ShoppingListFormRoute
+            },
+        )
+    }
+
+    // A screen of its own, the store needs the whole window
+    entry<ShoppingModeRoute> {
+        val language = appLanguage()
+        ShoppingModeScreen(
+            viewModel = viewModel {
+                ShoppingModeViewModel(
+                    masterData = repository,
+                    stock = dependencies.stockRepository,
+                    shoppingLists = shoppingLists,
+                    optionsRepository = dependencies.shoppingListOptions,
+                    settingsRepository = dependencies.shoppingModeSettings,
+                    language = language,
+                )
+            },
+            onCloseClick = navigator::goBack,
+            onSettingsClick = {
+                navigator.navigate(ShoppingModeSettingsRoute(inSettings = false))
+            },
         )
     }
 

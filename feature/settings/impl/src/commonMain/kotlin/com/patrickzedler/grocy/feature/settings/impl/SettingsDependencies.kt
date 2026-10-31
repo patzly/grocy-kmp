@@ -7,6 +7,7 @@ import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.server.ServerRepository
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
+import com.patrickzedler.grocy.core.data.settings.ShoppingModeSettingsRepository
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
 
 interface SettingsDependencies {
@@ -23,6 +24,9 @@ interface SettingsDependencies {
 
     /** The user's settings on the server and the objects of their presets. */
     val masterDataRepository: MasterDataRepository
+
+    /** How the shopping mode syncs and shows the list, read at app start. */
+    val shoppingModeSettings: ShoppingModeSettingsRepository
 
     /** After the configuration was reloaded, so every screen reads it anew. */
     fun restartApp()

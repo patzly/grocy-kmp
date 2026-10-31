@@ -4,6 +4,7 @@ import androidx.room3.withWriteTransaction
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.database.GrocyDatabase
 import com.patrickzedler.grocy.core.database.PendingShoppingListDoneEntity
+import com.patrickzedler.grocy.core.database.PendingShoppingListNotesEntity
 import com.patrickzedler.grocy.core.database.toEntity
 import com.patrickzedler.grocy.core.database.toModel
 import com.patrickzedler.grocy.core.model.ServerConnection
@@ -37,11 +38,12 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 /**
- * Grocy's shopping lists and their items, offline first. Checking items off works offline: the
- * user's choice is stored at once and queued, and sent once the server can be reached (the next
- * check off, refresh, app start, the device going online or a retry while sending failed). Only
- * the item's `done` is sent and only while the item still exists, so what others changed in the
- * meantime stays. Every other change is online only.
+ * Grocy's shopping lists and their items, offline first. Checking items off and editing a list's
+ * notes work offline: the user's choice is stored at once and queued, and sent once the server
+ * can be reached (the next change, refresh, app start, the device going online or a retry while
+ * sending failed). Only the item's `done` or the list's notes are sent and only while the item
+ * or list still exists, so what others changed in the meantime stays. Every other change is
+ * online only.
  *
  * @param scope where queued check offs are sent, the app's scope, so leaving a screen never
  *   stops them.
@@ -77,6 +79,9 @@ class ShoppingListRepository(
     // Items whose queued check off could not be sent the last time it was tried
     private val failedItemIds = MutableStateFlow(emptySet<Int>())
 
+    // Lists whose queued notes could not be sent the last time they were tried
+    private val failedListIds = MutableStateFlow(emptySet<Int>())
+
     /** The items whose check off the server has not taken yet, by id. */
     val syncStates: Flow<Map<Int, ShoppingListItemSync>> =
         combine(dao.observePendingDone(), failedItemIds) { pending, failed ->
@@ -87,6 +92,19 @@ class ShoppingListRepository(
                     ShoppingListItemSync.SENDING
                 }
                 entry.itemId to state
+            }
+        }
+
+    /** The lists whose notes the server has not taken yet, by id. */
+    val notesSyncStates: Flow<Map<Int, ShoppingListItemSync>> =
+        combine(dao.observePendingNotes(), failedListIds) { pending, failed ->
+            pending.associate { entry ->
+                val state = if (entry.listId in failed) {
+                    ShoppingListItemSync.FAILED
+                } else {
+                    ShoppingListItemSync.SENDING
+                }
+                entry.listId to state
             }
         }
 
@@ -102,7 +120,7 @@ class ShoppingListRepository(
     val selectedListId: StateFlow<Int?> = mutableSelectedListId.asStateFlow()
 
     init {
-        scope.launch { networkAvailable.collect { sendPendingDoneInBackground() } }
+        scope.launch { networkAvailable.collect { sendPendingInBackground() } }
         // Also where the network stays but the server was down, ever less often
         if (firstRetryDelay != null) {
             scope.launch { retryWhileFailing(firstRetryDelay) }
@@ -110,11 +128,13 @@ class ShoppingListRepository(
     }
 
     private suspend fun retryWhileFailing(firstDelay: Duration) {
-        failedItemIds.map { it.isNotEmpty() }.distinctUntilChanged().collectLatest { failing ->
+        combine(failedItemIds, failedListIds) { items, lists ->
+            items.isNotEmpty() || lists.isNotEmpty()
+        }.distinctUntilChanged().collectLatest { failing ->
             var wait = firstDelay
             while (failing) {
                 delay(wait)
-                sendPendingDoneInBackground()
+                sendPendingInBackground()
                 wait = (wait * 2).coerceAtMost(MAX_RETRY_DELAY)
             }
         }
@@ -129,25 +149,35 @@ class ShoppingListRepository(
     fun list(id: Int): Flow<ShoppingList?> = dao.observeList(id).map { it?.toModel() }
 
     /**
-     * Sends the queued check offs, then downloads the lists and items and replaces the stored
-     * ones; check offs still queued stay as the user chose them.
+     * Sends the queued check offs and notes, then downloads the lists and items and replaces the
+     * stored ones; check offs and notes still queued stay as the user chose them.
      *
      * @throws GrocyApiException e.g. [GrocyApiException.Unreachable] when offline; the stored
      *   lists stay as they were.
      */
     suspend fun refresh(): Unit = mutex.withLock {
         val connection = requireConnection()
-        sendPendingDone(connection)
+        sendPending(connection)
         val (lists, items) = coroutineScope {
             val lists = async { api.shoppingLists(connection) }
             val items = async { api.shoppingListItems(connection) }
             lists.await() to items.await()
         }
         database.withWriteTransaction {
-            masterDataDao.deleteShoppingLists()
-            masterDataDao.insertShoppingLists(lists.map { it.toEntity() })
+            storeLists(lists)
             storeItems(items)
         }
+    }
+
+    /**
+     * Downloads only the items, quick enough to run every few seconds while people shop
+     * together; queued check offs are sent first.
+     */
+    suspend fun refreshItemsOnly(): Unit = mutex.withLock {
+        val connection = requireConnection()
+        sendPending(connection)
+        val items = api.shoppingListItems(connection)
+        database.withWriteTransaction { storeItems(items) }
     }
 
     /**
@@ -161,18 +191,42 @@ class ShoppingListRepository(
         }
         // A new choice is being sent, whatever happened to the last one
         failedItemIds.update { it - itemId }
-        sendPendingDoneInBackground()
+        sendPendingInBackground()
     }
 
-    /** Sends the queued check offs in the background, e.g. at app start; offline they wait. */
-    fun sendPendingDoneInBackground() {
+    /**
+     * Saves the list's "Notes" as HTML, offline too: stored at once, sent in the background,
+     * queued until the server can be reached.
+     */
+    suspend fun saveNotes(listId: Int, html: String) {
+        database.withWriteTransaction {
+            dao.setListDescription(listId, html)
+            dao.upsertPendingNotes(PendingShoppingListNotesEntity(listId, html))
+        }
+        failedListIds.update { it - listId }
+        sendPendingInBackground()
+    }
+
+    /**
+     * Sends the queued check offs and notes in the background, e.g. at app start; offline they
+     * wait.
+     */
+    fun sendPendingInBackground() {
         scope.launch {
             ignoringServerErrors {
-                val sent = mutex.withLock { sendPendingDone(requireConnection()) }
-                // What others changed meanwhile shows too
-                if (sent) refreshItems()
+                val sent = mutex.withLock { sendPending(requireConnection()) }
+                // What others changed meanwhile shows too, notes as Grocy cleaned them up
+                if (sent.notes) refreshLists()
+                if (sent.doneItems || sent.notes) refreshItems()
             }
         }
+    }
+
+    /** Sends the queued check offs, then the queued notes. */
+    private suspend fun sendPending(connection: ServerConnection): SentChanges {
+        val doneItems = sendPendingDone(connection)
+        val notes = sendPendingNotes(connection)
+        return SentChanges(doneItems = doneItems, notes = notes)
     }
 
     /**
@@ -198,6 +252,46 @@ class ShoppingListRepository(
             failedItemIds.update { it - entry.itemId }
         }
         return pending.isNotEmpty()
+    }
+
+    /**
+     * Replays the user's own notes: each list gets the notes the user wrote last; a list that is
+     * gone (Grocy refuses it) drops them. Returns whether anything was sent.
+     */
+    private suspend fun sendPendingNotes(connection: ServerConnection): Boolean {
+        val pending = dao.pendingNotes()
+        for ((index, entry) in pending.withIndex()) {
+            try {
+                api.saveShoppingListDescription(connection, entry.listId, entry.description)
+            } catch (e: GrocyApiException) {
+                if (e !is GrocyApiException.HttpError || e.statusCode >= HTTP_SERVER_ERROR) {
+                    failedListIds.update { failed ->
+                        failed + pending.drop(index).map { it.listId }
+                    }
+                    throw e
+                }
+            }
+            dao.deletePendingNotes(entry.listId, entry.description)
+            failedListIds.update { it - entry.listId }
+        }
+        return pending.isNotEmpty()
+    }
+
+    /** Downloads the lists again, e.g. after notes were sent. */
+    private suspend fun refreshLists(): Unit = mutex.withLock {
+        val lists = api.shoppingLists(requireConnection())
+        database.withWriteTransaction { storeLists(lists) }
+    }
+
+    /** Replaces the stored lists by [lists] with the notes still to send on top. */
+    private suspend fun storeLists(lists: List<ShoppingList>) {
+        val pending = dao.pendingNotes().associate { it.listId to it.description }
+        masterDataDao.deleteShoppingLists()
+        masterDataDao.insertShoppingLists(
+            lists.map { list ->
+                list.copy(description = pending[list.id] ?: list.description).toEntity()
+            },
+        )
     }
 
     /** Downloads the items again, e.g. after a change on the server. */
@@ -300,7 +394,11 @@ class ShoppingListRepository(
         if (userfields.isNotEmpty()) {
             api.setUserfields(connection, SHOPPING_LISTS, id, userfields)
         }
-        dao.upsertList(api.shoppingList(connection, id).toEntity())
+        val saved = api.shoppingList(connection, id)
+        mutex.withLock {
+            val pending = dao.pendingNotes().firstOrNull { it.listId == id }?.description
+            dao.upsertList(saved.copy(description = pending ?: saved.description).toEntity())
+        }
         return id
     }
 
@@ -310,14 +408,9 @@ class ShoppingListRepository(
         database.withWriteTransaction {
             dao.deleteList(listId)
             dao.deleteItemsOfList(listId)
+            dao.deletePendingNotesOf(listId)
         }
-    }
-
-    /** Saves the list's "Notes" as HTML. */
-    suspend fun saveNotes(listId: Int, html: String) {
-        val connection = requireConnection()
-        api.saveShoppingListDescription(connection, listId, html)
-        dao.upsertList(api.shoppingList(connection, listId).toEntity())
+        failedListIds.update { it - listId }
     }
 
     /** Prints the list on the server's thermal printer. */
@@ -342,10 +435,13 @@ class ShoppingListRepository(
 
         private const val HTTP_SERVER_ERROR = 500
 
-        // Retries of check offs that failed while the device kept its network
+        // Retries of changes that failed while the device kept its network
         val FIRST_RETRY_DELAY = 15.seconds
         val MAX_RETRY_DELAY = 5.minutes
     }
+
+    /** What a replay sent, so only that is downloaded again. */
+    private data class SentChanges(val doneItems: Boolean, val notes: Boolean)
 }
 
 /** Runs [block]; a server that cannot be reached or refuses leaves things for later. */
@@ -355,6 +451,6 @@ private suspend fun ignoringServerErrors(block: suspend () -> Unit) {
     } catch (e: CancellationException) {
         throw e
     } catch (_: GrocyApiException) {
-        // The next refresh or check off tries again
+        // The next refresh or change tries again
     }
 }

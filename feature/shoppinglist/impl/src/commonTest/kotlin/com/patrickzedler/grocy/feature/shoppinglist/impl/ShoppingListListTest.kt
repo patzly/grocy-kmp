@@ -16,6 +16,7 @@ import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListStatus
 import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -80,6 +81,7 @@ class ShoppingListListTest {
         config: ServerConfig = ServerConfig(),
         settings: UserSettings = UserSettings(stockDecimalPlacesAmounts = 2),
         listId: Int = 1,
+        doneLast: Boolean = false,
     ) = buildShoppingList(
         data = data,
         listId = listId,
@@ -90,6 +92,7 @@ class ShoppingListListTest {
         settings = settings,
         decimalSeparator = '.',
         language = "en",
+        doneLast = doneLast,
     )
 
     private fun ShoppingListContent.rows() = groups.flatMap { it.rows }
@@ -117,6 +120,16 @@ class ShoppingListListTest {
         assertNull(list.groups.single().title)
         assertEquals(
             listOf("Apples", "Batteries", "bread", "Milk"),
+            list.rows().map { it.title },
+        )
+    }
+
+    @Test
+    fun doneItemsMoveToTheEndOfTheirGroupWhenAsked() {
+        val list = build(grouping = ShoppingListGrouping.NONE, doneLast = true)
+
+        assertEquals(
+            listOf("bread", "Milk", "Apples", "Batteries"),
             list.rows().map { it.title },
         )
     }

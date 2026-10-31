@@ -39,6 +39,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
@@ -230,12 +231,21 @@ private fun Title(row: ShoppingListRow, sync: ShoppingListItemSync?) {
                 LocalContentColor.current
             },
         )
-        Crossfade(
-            targetState = shownSync(sync),
-            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
-        ) { shown ->
-            shown?.let { SyncIcon(it) }
-        }
+        SyncIndicator(sync)
+    }
+}
+
+/**
+ * The state of a change the server has not taken yet ([sync]) after a title, faded in and out.
+ */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+internal fun SyncIndicator(sync: ShoppingListItemSync?, iconSize: Dp = SyncIconSize) {
+    Crossfade(
+        targetState = shownSync(sync),
+        animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
+    ) { shown ->
+        shown?.let { SyncIcon(it, iconSize) }
     }
 }
 
@@ -255,7 +265,7 @@ private fun shownSync(sync: ShoppingListItemSync?): ShoppingListItemSync? {
 
 /** Being sent in the muted color, failed in the error color, read as text like the chips. */
 @Composable
-private fun SyncIcon(sync: ShoppingListItemSync) {
+private fun SyncIcon(sync: ShoppingListItemSync, size: Dp) {
     val (icon, tint, label) = when (sync) {
         ShoppingListItemSync.SENDING -> Triple(
             Res.drawable.ic_rounded_sync,
@@ -275,7 +285,7 @@ private fun SyncIcon(sync: ShoppingListItemSync) {
         tint = tint,
         modifier = Modifier
             .padding(start = SyncIconGap)
-            .size(SyncIconSize)
+            .size(size)
             // A description would replace the item's name for screen readers
             .clearAndSetSemantics { text = AnnotatedString(description) },
     )
@@ -321,7 +331,7 @@ private fun menuGroups(
  * chips, Material sizes the item by the baselines of this slot.
  */
 @Composable
-private fun supporting(
+internal fun supporting(
     row: ShoppingListRow,
     style: ShoppingListRowStyle,
 ): (@Composable () -> Unit)? {

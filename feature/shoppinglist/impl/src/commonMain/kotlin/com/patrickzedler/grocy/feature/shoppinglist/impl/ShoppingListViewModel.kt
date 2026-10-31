@@ -17,84 +17,30 @@ import com.patrickzedler.grocy.core.data.util.RefreshController
 import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.forms.ChangeError
 import com.patrickzedler.grocy.core.forms.changeErrorOf
-import com.patrickzedler.grocy.core.forms.htmlToPlainText
 import com.patrickzedler.grocy.core.forms.plainTextToHtml
-import com.patrickzedler.grocy.core.model.masterdata.Product
-import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
-import com.patrickzedler.grocy.core.model.masterdata.ProductGroup
-import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
-import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
-import com.patrickzedler.grocy.core.model.masterdata.Store
-import com.patrickzedler.grocy.core.model.masterdata.Userfield
-import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettingValue
-import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
-import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
-import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItemSync
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
-import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListStatus
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-/** A list of the list selector: Grocy's "Name (count)". */
-internal data class ShoppingListChoice(val id: Int, val name: String, val itemCount: Int)
-
-/** What the shopping list shows; built from the database, never waits for the server. */
-internal data class ShoppingListUiState(
-    /** Every list by name, the selector's choices; one without multiple lists. */
-    val lists: List<ShoppingListChoice>,
-    /** The shown list, null until the lists were downloaded. */
-    val list: ShoppingList?,
-    val groups: List<ShoppingListGroup>,
-    val statusCounts: Map<ShoppingListStatus, Int>,
-    val itemCount: Int,
-    /** Null without price tracking. */
-    val totalValue: Double?,
-    val currency: String,
-    val priceDecimals: Int,
-    val status: ShoppingListStatus?,
-    /** The shown fields, in Grocy's order. */
-    val fields: List<ShoppingListField>,
-    val availableFields: List<ShoppingListField>,
-    val grouping: ShoppingListGrouping,
-    val availableGroupings: List<ShoppingListGrouping>,
-    val availableStatuses: List<ShoppingListStatus>,
-    val config: ServerConfig,
-    val settings: UserSettings,
-    /** The list's notes as plain text. */
-    val notes: String,
-    /** The items whose check off the server has not taken yet, by id. */
-    val syncStates: Map<Int, ShoppingListItemSync>,
-    /** False until a download stored any list. */
-    val hasData: Boolean,
-) {
-    val isEmpty: Boolean
-        get() = groups.isEmpty()
-
-    /** Product items shown right now, which "Add all list items to stock" books like Grocy. */
-    val purchases: List<ShoppingListPurchase>
-        get() = groups.flatMap { group -> group.rows.mapNotNull { it.purchase } }
-}
+/** Which item of "Add all list items to stock" a purchase books: [position] of [count]. */
+internal data class PurchaseProgress(val position: Int, val count: Int)
 
 /** What failed, for Grocy's messages. */
 internal enum class ShoppingListAction {
@@ -105,8 +51,14 @@ internal enum class ShoppingListAction {
 }
 
 internal sealed interface ShoppingListEvent {
-    /** Opens Grocy's purchase of [purchase], whose booking removes the item. */
-    data class OpenPurchase(val purchase: ShoppingListPurchase) : ShoppingListEvent
+    /**
+     * Opens Grocy's purchase of [purchase], whose booking removes the item; [progress] while
+     * "Add all list items to stock" books one after the other.
+     */
+    data class OpenPurchase(
+        val purchase: ShoppingListPurchase,
+        val progress: PurchaseProgress? = null,
+    ) : ShoppingListEvent
 
     data class Failed(val action: ShoppingListAction, val error: ChangeError) : ShoppingListEvent
 }
@@ -118,6 +70,9 @@ internal sealed interface ShoppingListDialog {
 
     data class DeleteList(val listId: Int, val name: String) : ShoppingListDialog
 
+    /** Grocy's list selector: the lists to choose from. */
+    data object ChooseList : ShoppingListDialog
+
     /** A purchase of "Add all list items to stock" was left without booking. */
     data class StockItemSkipped(val position: Int, val count: Int, val name: String) :
         ShoppingListDialog
@@ -127,8 +82,6 @@ internal sealed interface ShoppingListDialog {
 @Stable
 internal class NotesEditor(val listId: Int, text: String) {
     val text = TextFieldState(text)
-    var isSaving by mutableStateOf(false)
-    var error by mutableStateOf<ChangeError?>(null)
 }
 
 /** Grocy's print options of the thermal printer. */
@@ -142,9 +95,10 @@ internal class PrintOptions(val listId: Int, showHeader: Boolean) {
 /**
  * Grocy's shopping list page: shows the stored list at once and downloads the master data,
  * what the stock adds (below min. stock amount, last prices) and the lists in the background.
- * Checking items off works offline ([ShoppingListRepository.setDone]), everything else is
- * online only. Fields and grouping are kept like Grocy's table options, the status filter and
- * the search only here.
+ * Checking items off and the notes work offline ([ShoppingListRepository.setDone],
+ * [ShoppingListRepository.saveNotes]), everything else is online only. Fields and grouping are
+ * kept like Grocy's table options, the status filter for the process (the shopping mode shares
+ * both), the search only here.
  *
  * @param listId the list to show (Grocy's `list`), the last shown or first one without.
  */
@@ -179,8 +133,6 @@ internal class ShoppingListViewModel(
     var isChanging by mutableStateOf(false)
         private set
 
-    private val status = MutableStateFlow<ShoppingListStatus?>(null)
-
     private val eventChannel = Channel<ShoppingListEvent>(Channel.BUFFERED)
     val events: Flow<ShoppingListEvent> = eventChannel.receiveAsFlow()
 
@@ -188,113 +140,25 @@ internal class ShoppingListViewModel(
     private var stockWorkflow: StockWorkflow? = null
 
     private val refreshController = RefreshController(viewModelScope) {
-        val config = masterData.serverConfig.first()
-        coroutineScope {
-            launch { masterData.refresh() }
-            launch { shoppingLists.refresh() }
-            // Below min. stock amount and the last prices come with the stock overview
-            if (config.stock) launch { stock.refreshOverview(withShoppingLists = true) }
-        }
+        refreshShoppingList(masterData, stock, shoppingLists)
     }
     val refresh: StateFlow<RefreshState> = refreshController.state
-
-    private val masterDataPart = combine(
-        masterData.products,
-        masterData.productGroups,
-        masterData.quantityUnits,
-        masterData.stores,
-        masterData.productBarcodes,
-        masterData.resolvedQuantityUnitConversions,
-        masterData.allUserfields,
-    ) { values ->
-        @Suppress("UNCHECKED_CAST")
-        ShoppingListData(
-            products = values[0] as List<Product>,
-            productGroups = values[1] as List<ProductGroup>,
-            quantityUnits = values[2] as List<QuantityUnit>,
-            stores = values[3] as List<Store>,
-            barcodes = values[4] as List<ProductBarcode>,
-            resolvedConversions = values[5] as List<ResolvedQuantityUnitConversion>,
-            userfields = values[6] as List<Userfield>,
-        )
-    }
-
-    private val data = combine(
-        masterDataPart,
-        shoppingLists.items,
-        stock.productStockInfo,
-    ) { part: ShoppingListData, items: List<ShoppingListItem>, info: List<ProductStockInfo> ->
-        part.copy(items = items, info = info)
-    }
 
     // Typing stays smooth with long lists: the list follows after a short pause
     private val query = snapshotFlow { searchState.text.toString() }
         .distinctUntilChanged()
         .debounce { if (it.isEmpty()) 0L else SEARCH_DELAY_MILLIS }
 
-    private val listsPart = combine(
-        shoppingLists.lists,
-        shoppingLists.selectedListId,
-        shoppingLists.syncStates,
-    ) { lists, selectedId, sync -> ListsPart(lists, selectedId, sync) }
-
-    private val options = combine(
-        masterData.serverConfig,
-        masterData.userSettings,
-        optionsRepository.options.filterNotNull(),
-        status,
-        query,
-    ) { config, settings, options, status, query ->
-        ListOptions(config, settings, options, status, query)
-    }
-
-    val state: StateFlow<ShoppingListUiState?> =
-        combine(data, listsPart, options) { data, lists, options ->
-            val config = options.config
-            val list = shownList(lists.lists, lists.selectedId, config)
-            val shownId = list?.id ?: ShoppingList.DEFAULT_ID
-            val grouping = options.options.grouping
-                .takeIf { it in availableShoppingListGroupings(config) }
-                ?: ShoppingListGrouping.NONE
-            val content = buildShoppingList(
-                data = data,
-                listId = shownId,
-                status = options.status,
-                query = options.query,
-                grouping = grouping,
-                config = config,
-                settings = options.settings,
-                decimalSeparator = decimalSeparator,
-                language = language,
-            )
-            val available = availableShoppingListFields(config)
-            val counts = data.items.groupingBy { it.listId }.eachCount()
-            ShoppingListUiState(
-                lists = lists.lists
-                    .filter { config.shoppingListMultipleLists || it.id == list?.id }
-                    .map { ShoppingListChoice(it.id, it.name, counts[it.id] ?: 0) },
-                list = list,
-                groups = content.groups,
-                statusCounts = content.statusCounts,
-                itemCount = content.itemCount,
-                totalValue = content.totalValue.takeIf { config.stockPriceTracking },
-                currency = config.currency,
-                priceDecimals = options.settings.stockDecimalPlacesPricesDisplay,
-                status = options.status,
-                fields = available.filter { it in options.options.fields },
-                availableFields = available,
-                grouping = grouping,
-                availableGroupings = availableShoppingListGroupings(config),
-                availableStatuses = availableShoppingListStatuses(config),
-                config = config,
-                settings = options.settings,
-                notes = list?.description?.let(::htmlToPlainText).orEmpty(),
-                syncStates = lists.syncStates,
-                hasData = lists.lists.isNotEmpty() || data.items.isNotEmpty(),
-            )
-        }
-            .flowOn(computeDispatcher)
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), null)
+    val state: StateFlow<ShoppingListUiState?> = shoppingListState(
+        masterData = masterData,
+        stock = stock,
+        shoppingLists = shoppingLists,
+        optionsRepository = optionsRepository,
+        computeDispatcher = computeDispatcher,
+        decimalSeparator = decimalSeparator,
+        language = language,
+        query = query,
+    ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), null)
 
     init {
         listId?.let(shoppingLists::selectList)
@@ -306,16 +170,22 @@ internal class ShoppingListViewModel(
     fun onErrorShown() = refreshController.onErrorShown()
 
     fun selectList(listId: Int) {
+        dialog = null
         shoppingLists.selectList(listId)
     }
 
+    /** Grocy's list selector, offered with several lists. */
+    fun chooseList() {
+        if (state.value?.canChooseList == true) dialog = ShoppingListDialog.ChooseList
+    }
+
     fun setStatus(status: ShoppingListStatus?) {
-        this.status.value = status
+        optionsRepository.setStatus(status)
     }
 
     /** Like Grocy's "Clear filter": the status and the search, not the table options. */
     fun clearFilter() {
-        status.value = null
+        optionsRepository.setStatus(null)
         searchState.clearText()
         isSearchVisible = false
     }
@@ -397,27 +267,18 @@ internal class ShoppingListViewModel(
         notes = NotesEditor(list.id, current.notes)
     }
 
-    /** Saves the notes, Grocy's "Clear" saves them empty. Online only. */
+    /** Saves the notes, Grocy's "Clear" saves them empty; offline too, sent once online. */
     fun saveNotes(clear: Boolean = false) {
         val editor = notes ?: return
-        if (editor.isSaving) return
         if (clear) editor.text.clearText()
-        editor.isSaving = true
-        editor.error = null
+        notes = null
         viewModelScope.launch {
-            val html = plainTextToHtml(editor.text.text.toString())
-            val error = changeErrorOf { shoppingLists.saveNotes(editor.listId, html) }
-            editor.isSaving = false
-            if (error == null) {
-                if (notes === editor) notes = null
-            } else {
-                editor.error = error
-            }
+            shoppingLists.saveNotes(editor.listId, plainTextToHtml(editor.text.text.toString()))
         }
     }
 
     fun dismissNotes() {
-        if (notes?.isSaving != true) notes = null
+        notes = null
     }
 
     fun openPrint() {
@@ -523,7 +384,8 @@ internal class ShoppingListViewModel(
         val workflow = stockWorkflow ?: return
         workflow.isAwaitingPurchase = true
         viewModelScope.launch {
-            eventChannel.send(ShoppingListEvent.OpenPurchase(workflow.current))
+            val progress = PurchaseProgress(workflow.index + 1, workflow.purchases.size)
+            eventChannel.send(ShoppingListEvent.OpenPurchase(workflow.current, progress))
         }
     }
 
@@ -562,37 +424,9 @@ internal class ShoppingListViewModel(
             get() = purchases[index]
     }
 
-    private data class ListsPart(
-        val lists: List<ShoppingList>,
-        val selectedId: Int?,
-        val syncStates: Map<Int, ShoppingListItemSync>,
-    )
-
-    private data class ListOptions(
-        val config: ServerConfig,
-        val settings: UserSettings,
-        val options: ShoppingListOptions,
-        val status: ShoppingListStatus?,
-        val query: String,
-    )
-
     private companion object {
         const val SEARCH_DELAY_MILLIS = 150L
         const val STOP_TIMEOUT_MILLIS = 5_000L
         const val PRINT_SHOW_HEADER = "shopping_list_print_show_header"
     }
-}
-
-/**
- * The list the page shows: the chosen one while it exists, otherwise Grocy's first list (or
- * the first by name); always the first one without multiple lists.
- */
-internal fun shownList(
-    lists: List<ShoppingList>,
-    selectedId: Int?,
-    config: ServerConfig,
-): ShoppingList? {
-    val first = lists.firstOrNull { it.id == ShoppingList.DEFAULT_ID } ?: lists.firstOrNull()
-    if (!config.shoppingListMultipleLists) return first
-    return lists.firstOrNull { it.id == selectedId } ?: first
 }

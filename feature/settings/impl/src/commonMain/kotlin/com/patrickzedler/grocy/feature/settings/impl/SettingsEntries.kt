@@ -21,6 +21,7 @@ import com.patrickzedler.grocy.feature.settings.api.GrocySettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.LogRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
+import com.patrickzedler.grocy.feature.settings.api.ShoppingModeSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.StockSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.UserSettingsRoute
 import com.patrickzedler.grocy.feature.settings.impl.general.GeneralSettingsScreen
@@ -34,6 +35,8 @@ import com.patrickzedler.grocy.feature.settings.impl.log.LogScreen
 import com.patrickzedler.grocy.feature.settings.impl.log.LogViewModel
 import com.patrickzedler.grocy.feature.settings.impl.server.ServerSettingsScreen
 import com.patrickzedler.grocy.feature.settings.impl.server.ServerSettingsViewModel
+import com.patrickzedler.grocy.feature.settings.impl.shoppingmode.ShoppingModeSettingsScreen
+import com.patrickzedler.grocy.feature.settings.impl.shoppingmode.ShoppingModeSettingsViewModel
 import com.patrickzedler.grocy.feature.settings.impl.stock.StockSettingsScreen
 import com.patrickzedler.grocy.feature.settings.impl.stock.StockSettingsViewModel
 import com.patrickzedler.grocy.feature.settings.impl.user.UserSettingsScreen
@@ -179,6 +182,23 @@ fun EntryProviderScope<NavKey>.settingsEntries(
         )
     }
 
+    // Beside the categories, or from the shopping mode a screen of its own
+    entry<ShoppingModeSettingsRoute>(
+        metadata = { route ->
+            if (route.inSettings) detailPaneMetadata(SettingsRoute) else emptyMap()
+        },
+    ) { route ->
+        ShoppingModeSettingsScreen(
+            viewModel = viewModel {
+                ShoppingModeSettingsViewModel(dependencies.shoppingModeSettings)
+            },
+            menuViewModel = settingsMenuViewModel(dependencies),
+            menuActions = menuActions,
+            onBackClick = navigator::goBack,
+            pane = ScreenPane.Detail.takeIf { route.inSettings && showsDetailBesideList() },
+        )
+    }
+
     entry<LogRoute> {
         LogScreen(
             viewModel = viewModel { LogViewModel(dependencies.logReader) },
@@ -194,6 +214,7 @@ internal val SettingsCategory.route: DetailRoute?
         SettingsCategory.GENERAL -> GeneralSettingsRoute
         SettingsCategory.SERVER -> ServerSettingsRoute
         SettingsCategory.GROCY -> GrocySettingsRoute
+        SettingsCategory.SHOPPING_MODE -> ShoppingModeSettingsRoute()
         else -> null
     }
 

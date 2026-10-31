@@ -8,7 +8,8 @@ Schema history and the web database driver. Moved from CLAUDE.md.
   journal and the userfield values of barcodes; version 6 the stock overview (opened amounts,
   value and next due date of `stock`, `product_stock_info`, `stock_locations`); version 7 the
   shopping list items, the lists' description and userfields and the queue of offline check
-  offs (`pending_shopping_list_done`, `ShoppingListDao`), an AutoMigration.
+  offs (`pending_shopping_list_done`, `ShoppingListDao`), an AutoMigration; version 8 the queue
+  of notes edited offline (`pending_shopping_list_notes`), an AutoMigration too.
 - Android: `BundledSQLiteDriver`, file `grocy.db`. Web: `WebWorkerSQLiteDriver` with the worker
   `core/database/web-worker/worker.js` (npm package `grocy-sqlite-worker` on top of
   `@sqlite.org/sqlite-wasm`, androidx's message protocol). It stores the database in OPFS with

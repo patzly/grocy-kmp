@@ -12,6 +12,12 @@ enum class ShoppingListField {
     USERFIELDS,
 }
 
+/**
+ * Grocy's status filter of the shopping list: its products below their min. stock amount, only
+ * done or only undone items.
+ */
+enum class ShoppingListStatus { BELOW_MIN_STOCK, DONE, UNDONE }
+
 /** The columns Grocy's "Table options" can group the shopping list by. */
 enum class ShoppingListGrouping {
     NONE,

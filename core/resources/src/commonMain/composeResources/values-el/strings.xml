@@ -916,6 +916,17 @@
   <string name="shopping_list_add_all_to_stock">Προσθήκη όλων των στοιχείων λίστας στο απόθεμα</string>
   <string name="shopping_list_adding_item">Προσθήκη στοιχείου λίστας αγορών %1$s από %2$s</string>
   <string name="shopping_list_add_item">Πρόσθεσε είδος</string>
+  <string name="shopping_list_choose">Επιλογή λίστας με τα ψώνια</string>
+  <string name="shopping_list_item_not_booked">Το %1$s δεν προστέθηκε στο απόθεμα. Παράλειψη και συνέχεια με το επόμενο είδος ή ακύρωση;</string>
+  <string name="booking_shopping_list_hint">Ελέγξτε τα στοιχεία και επιβεβαιώστε την αγορά. Στη συνέχεια το είδος αφαιρείται από τη λίστα με τα ψώνια.</string>
+  <string name="shopping_mode">Λειτουργία αγορών</string>
+  <string name="shopping_mode_settings">Ρυθμίσεις λειτουργίας αγορών</string>
+  <string name="shopping_mode_auto_sync">Αυτόματος συγχρονισμός</string>
+  <string name="shopping_mode_auto_sync_hint">Φορτώνει ξανά τη λίστα τακτικά, ώστε όλοι όσοι ψωνίζουν μαζί να βλέπουν τι έχουν τσεκάρει οι άλλοι</string>
+  <string name="shopping_mode_sync_interval">Διάστημα συγχρονισμού σε δευτερόλεπτα</string>
+  <string name="shopping_mode_keep_screen_on">Η οθόνη να μένει ανοιχτή</string>
+  <string name="shopping_mode_keep_screen_on_hint">Στη λειτουργία αγορών</string>
+  <string name="shopping_mode_done_last">Εμφάνιση των τσεκαρισμένων ειδών στο τέλος</string>
   <string name="shopping_list_add_missing">Το προϊόν% s λήγειΠροσθέστε προϊόντα που είναι κάτω από τα καθορισμένα ελάχιστα. ποσό αποθέματος</string>
   <string name="shopping_list_add_overdue_expired">Προσθήκη ληξιπρόθεσμων/ληγμένων προϊόντων</string>
   <string name="shopping_list_add_to_stock">Προσθήκη αυτού του στοιχείου στο απόθεμα</string>
@@ -929,8 +940,7 @@
   <string name="shopping_list_delete_question">Είστε βέβαιοι ότι θέλετε να διαγράψετε τη λίστα αγορών "%1$s";</string>
   <string name="shopping_list_edit">Επεξεργασία λίστας αγορών</string>
   <string name="shopping_list_edit_item">Επεξεργαστείτε αυτό το αντικείμενο</string>
-  <string name="shopping_list_item_create">Δημιουργία στοιχείου λίστας αγορών</string>
-  <string name="shopping_list_item_edit">Επεξεργασία στοιχείου λίστας αγορών</string>
+  <string name="shopping_list_item_edit">Επεξεργασία είδους</string>
   <string name="shopping_list_last_price_total">Τελευταία τιμή (Σύνολο)</string>
   <string name="shopping_list_last_price_unit">Τελευταία τιμή (Μονάδα)</string>
   <string name="shopping_list_mark_done">Επισημάνετε αυτό το στοιχείο ως ολοκληρωμένο</string>
