@@ -25,6 +25,7 @@ import com.patrickzedler.grocy.feature.about.impl.AboutDependencies
 import com.patrickzedler.grocy.feature.login.impl.LoginDependencies
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataDependencies
 import com.patrickzedler.grocy.feature.settings.impl.SettingsDependencies
+import com.patrickzedler.grocy.feature.shoppinglist.impl.ShoppingListDependencies
 import com.patrickzedler.grocy.feature.start.impl.StartDependencies
 import com.patrickzedler.grocy.feature.stock.impl.StockDependencies
 import kotlinx.coroutines.CoroutineScope
@@ -176,9 +177,19 @@ class AppGraph(
             get() = serverRepository.serverConfig
         override val shoppingListRepository: ShoppingListRepository
             get() = this@AppGraph.shoppingListRepository
-        override val shoppingListOptions: ShoppingListOptionsRepository
-            get() = shoppingListOptionsRepository
     }
+
+    internal val shoppingListDependencies: ShoppingListDependencies =
+        object : ShoppingListDependencies {
+            override val masterDataRepository: MasterDataRepository
+                get() = this@AppGraph.masterDataRepository
+            override val stockRepository: StockRepository
+                get() = this@AppGraph.stockRepository
+            override val shoppingListRepository: ShoppingListRepository
+                get() = this@AppGraph.shoppingListRepository
+            override val shoppingListOptions: ShoppingListOptionsRepository
+                get() = shoppingListOptionsRepository
+        }
 
     internal val stockDependencies: StockDependencies = object : StockDependencies {
         override val masterDataRepository: MasterDataRepository

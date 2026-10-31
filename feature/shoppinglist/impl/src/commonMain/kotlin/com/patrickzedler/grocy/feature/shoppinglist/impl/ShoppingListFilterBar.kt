@@ -1,4 +1,4 @@
-package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
+package com.patrickzedler.grocy.feature.shoppinglist.impl
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable

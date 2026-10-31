@@ -6,13 +6,13 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.patrickzedler.grocy.core.model.stock.BookingKind
 import com.patrickzedler.grocy.core.navigation.Navigator
+import com.patrickzedler.grocy.core.ui.appMenuItems
 import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute
 import com.patrickzedler.grocy.feature.stock.api.ConsumeRoute
 import com.patrickzedler.grocy.feature.stock.api.InventoryRoute
 import com.patrickzedler.grocy.feature.stock.api.PurchaseRoute
 import com.patrickzedler.grocy.feature.stock.api.TransferRoute
 import com.patrickzedler.grocy.feature.stock.impl.StockDependencies
-import com.patrickzedler.grocy.feature.stock.impl.appMenuItems
 import com.patrickzedler.grocy.feature.stock.impl.stockPageActions
 
 /** Grocy's stock pages Purchase, Consume, Transfer and Inventory, each a screen of its own. */
@@ -86,7 +86,7 @@ private fun BookingEntry(
             )
         },
         actions = stockPageActions(dependencies, navigator),
-        menuItems = appMenuItems(navigator),
+        menuItems = appMenuItems(),
         onBackClick = navigator::goBack,
         // Grocy's "Add as new product": the barcode waits for the product to be chosen
         onNewProductClick = { navigator.navigate(ProductRoute()) },

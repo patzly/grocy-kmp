@@ -2,7 +2,7 @@
 
 Grocy's shopping list, including offline check offs. Moved from CLAUDE.md.
 
-Shopping list (`shoppinglist/` of `feature:masterdata`, `ShoppingListRepository` of `core:data`):
+Shopping list (`feature:shoppinglist`, `ShoppingListRepository` of `core:data`):
 - `ShoppingListRoute(listId)` is the list pane of a list-detail scene of its own (scene key
   "shoppinglist"), the item form `ShoppingListItemRoute(id, listId, productId)` and the list form
   `ShoppingListFormRoute(id)` its details (`DetailRoute`s, also on their own as quick add); both

@@ -5,7 +5,6 @@ import androidx.compose.ui.platform.LocalLocale
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.navigation.Navigator
 import com.patrickzedler.grocy.core.navigation.detailPaneMetadata
@@ -13,11 +12,8 @@ import com.patrickzedler.grocy.core.navigation.showsDetailBesideList
 import com.patrickzedler.grocy.core.productcard.ProductLinks
 import com.patrickzedler.grocy.core.productcard.StockPageActions
 import com.patrickzedler.grocy.core.productcard.rememberStockPageActions
-import com.patrickzedler.grocy.core.ui.AppMenuDialogs
-import com.patrickzedler.grocy.core.ui.rememberAppMenu
-import com.patrickzedler.grocy.feature.about.api.AboutRoute
+import com.patrickzedler.grocy.core.ui.appMenuItems
 import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute
-import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import com.patrickzedler.grocy.feature.stock.api.StockEntriesRoute
 import com.patrickzedler.grocy.feature.stock.api.StockJournalRoute
@@ -77,7 +73,7 @@ fun EntryProviderScope<NavKey>.stockEntries(
                 onSearchRecipes = {},
                 onEditProduct = { openProduct(it.productId) },
             ),
-            menuItems = if (isBesideList) emptyList() else appMenuItems(navigator),
+            menuItems = if (isBesideList) emptyList() else appMenuItems(),
             onBackClick = navigator::goBack,
             pane = ScreenPane.Detail.takeIf { isBesideList },
         )
@@ -96,7 +92,7 @@ fun EntryProviderScope<NavKey>.stockEntries(
                 )
             },
             actions = stockPageActions(dependencies, navigator),
-            menuItems = appMenuItems(navigator),
+            menuItems = appMenuItems(),
             onBackClick = navigator::goBack,
         )
     }
@@ -127,7 +123,7 @@ private fun StockJournalEntry(
             )
         },
         actions = stockPageActions(dependencies, navigator),
-        menuItems = appMenuItems(navigator),
+        menuItems = appMenuItems(),
         onBackClick = navigator::goBack,
     )
 }
@@ -153,14 +149,3 @@ internal fun stockPageActions(
 // The app language, a change restarts the app, so ViewModels keep it
 @Composable
 internal fun appLanguage(): String = LocalLocale.current.toLanguageTag()
-
-/** The menu of the app's screens with its dialogs, leading to the settings and About. */
-@Composable
-internal fun appMenuItems(navigator: Navigator): List<AppBarMenuItem> {
-    val menu = rememberAppMenu(
-        onSettingsClick = { navigator.navigate(SettingsRoute) },
-        onAboutClick = { navigator.navigate(AboutRoute) },
-    )
-    AppMenuDialogs(menu)
-    return menu.items
-}

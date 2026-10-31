@@ -24,9 +24,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
+import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
@@ -35,7 +37,11 @@ import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.navigation.DetailRoute
 import com.patrickzedler.grocy.core.navigation.LeaveGuard
+import com.patrickzedler.grocy.core.navigation.Navigator
+import com.patrickzedler.grocy.core.navigation.rememberLeaveGuard
+import com.patrickzedler.grocy.core.navigation.showsDetailBesideList
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_save
 import com.patrickzedler.grocy.core.resources.action_scroll_to_top
@@ -46,6 +52,8 @@ import com.patrickzedler.grocy.core.resources.data_saved
 import com.patrickzedler.grocy.core.resources.ic_rounded_save
 import com.patrickzedler.grocy.core.resources.ic_rounded_vertical_align_top
 import com.patrickzedler.grocy.core.resources.product_userfields
+import com.patrickzedler.grocy.core.ui.AppMenuDialogs
+import com.patrickzedler.grocy.core.ui.rememberAppMenu
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
@@ -69,6 +77,33 @@ class FormFrame(
     val onBackClick: () -> Unit,
     val onActionDone: (ObjectActionEvent) -> Unit,
 )
+
+/**
+ * The frame of the form of [route] (an object of [entity]): the app menu without the settings
+ * and About, whose place the actions on the object take, and the list beside it. A copy opens
+ * as [detail] in its place.
+ */
+@Composable
+fun formFrame(
+    navigator: Navigator,
+    route: DetailRoute,
+    entity: String,
+    repository: MasterDataRepository,
+    detail: (id: Int) -> DetailRoute,
+): FormFrame {
+    val menu = rememberAppMenu()
+    AppMenuDialogs(menu)
+    return FormFrame(
+        menuItems = menu.items,
+        leaveGuard = navigator.rememberLeaveGuard(route),
+        isBesideList = showsDetailBesideList(),
+        objectActions = viewModel { ObjectActionsViewModel(entity, repository) },
+        onBackClick = navigator::goBack,
+        onActionDone = { event ->
+            if (event is ObjectActionEvent.Copied) navigator.openDetail(detail(event.id))
+        },
+    )
+}
 
 /**
  * The screen of a master data form like the product form: [content] adds the groups of the

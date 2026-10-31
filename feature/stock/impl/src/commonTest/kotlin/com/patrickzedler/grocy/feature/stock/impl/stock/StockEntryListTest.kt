@@ -9,7 +9,6 @@ import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConvers
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
-import com.patrickzedler.grocy.core.model.stock.DueStatus
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import kotlin.test.Test

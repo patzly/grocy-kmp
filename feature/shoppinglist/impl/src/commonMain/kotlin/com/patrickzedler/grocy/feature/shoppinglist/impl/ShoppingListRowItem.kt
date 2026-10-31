@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalLayoutApi::class)
 
-package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
+package com.patrickzedler.grocy.feature.shoppinglist.impl
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement

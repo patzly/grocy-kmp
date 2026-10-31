@@ -1,4 +1,4 @@
-package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
+package com.patrickzedler.grocy.feature.shoppinglist.impl
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState

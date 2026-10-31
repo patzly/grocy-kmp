@@ -6,19 +6,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
-import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.DetailPlaceholder
 import com.patrickzedler.grocy.core.design.component.ScreenPane
-import com.patrickzedler.grocy.core.forms.FormFrame
 import com.patrickzedler.grocy.core.forms.ObjectActionEvent
 import com.patrickzedler.grocy.core.forms.ObjectActionsViewModel
+import com.patrickzedler.grocy.core.forms.formFrame
 import com.patrickzedler.grocy.core.model.masterdata.grocyPluralFormCount
 import com.patrickzedler.grocy.core.navigation.DetailRoute
 import com.patrickzedler.grocy.core.navigation.Navigator
 import com.patrickzedler.grocy.core.navigation.Route
 import com.patrickzedler.grocy.core.navigation.detailPaneMetadata
 import com.patrickzedler.grocy.core.navigation.listPaneMetadata
-import com.patrickzedler.grocy.core.navigation.rememberLeaveGuard
 import com.patrickzedler.grocy.core.navigation.showsDetailBesideList
 import com.patrickzedler.grocy.core.productcard.LabelPrintViewModel
 import com.patrickzedler.grocy.core.productcard.ProductLinks
@@ -26,9 +24,7 @@ import com.patrickzedler.grocy.core.productcard.StockPageActions
 import com.patrickzedler.grocy.core.productcard.rememberStockPageActions
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.objects_select_hint
-import com.patrickzedler.grocy.core.ui.AppMenuDialogs
-import com.patrickzedler.grocy.core.ui.rememberAppMenu
-import com.patrickzedler.grocy.feature.about.api.AboutRoute
+import com.patrickzedler.grocy.core.ui.appMenuItems
 import com.patrickzedler.grocy.feature.masterdata.api.BatteriesRoute
 import com.patrickzedler.grocy.feature.masterdata.api.BatteryRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ChoreRoute
@@ -69,7 +65,6 @@ import com.patrickzedler.grocy.feature.masterdata.impl.product.ProductScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.product.ProductViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.products.ProductsScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.products.ProductsViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist.shoppingListEntries
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.StockSettingsRoute
@@ -94,7 +89,7 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
         val isBesideList = showsDetailBesideList()
         MasterDataScreen(
             // Beside the start screen its bar has the app menu
-            menuItems = if (isBesideList) emptyList() else appMenuItems(navigator),
+            menuItems = if (isBesideList) emptyList() else appMenuItems(),
             viewModel = viewModel { MasterDataViewModel(repository, dependencies.serverConfig) },
             onBackClick = navigator::goBack,
             onCategoryClick = { category -> navigator.navigate(category.route) },
@@ -108,9 +103,9 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
         val isBesideDetail = showsDetailBesideList()
         val language = appLanguage()
         ProductsScreen(
-            menuItems = appMenuItems(navigator),
+            menuItems = appMenuItems(),
             viewModel = viewModel { ProductsViewModel(repository, language = language) },
-            actions = stockPageActions(dependencies, productLinks(navigator)),
+            actions = stockPageActions(dependencies, navigator),
             objectActions = viewModel {
                 ObjectActionsViewModel(MasterDataRepository.PRODUCTS, repository)
             },
@@ -230,7 +225,7 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
         },
     ) { route ->
         ObjectListScreen(
-            menuItems = appMenuItems(navigator),
+            menuItems = appMenuItems(),
             viewModel = viewModel {
                 ObjectListViewModel(ObjectListKind.USERFIELDS, repository, entity = route.entity)
             },
@@ -258,7 +253,6 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
         )
     }
 
-    shoppingListEntries(dependencies, navigator)
 
     objectListEntry<UserentitiesRoute, UserentityRoute>(
         kind = ObjectListKind.USERENTITIES,
@@ -326,7 +320,7 @@ private inline fun <reified L : Route, reified D : DetailRoute> EntryProviderSco
 ) {
     entry<L>(metadata = listPaneMetadata(kind) { SelectHint(kind.category) }) { route ->
         ObjectListScreen(
-            menuItems = appMenuItems(navigator),
+            menuItems = appMenuItems(),
             viewModel = viewModel { ObjectListViewModel(kind, repository) },
             objectActions = viewModel { ObjectActionsViewModel(kind.entity, repository) },
             selectedId = (navigator.currentRoute as? D)?.let(detailId),
@@ -360,52 +354,17 @@ private fun listActionDone(
     }
 }
 
-/**
- * The frame of the form of [route] (an object of [entity]): the app menu without the settings
- * and About, whose place the actions on the object take, and the list beside it. A copy opens
- * as [detail] in its place.
- */
+/** The product overview of the products with what it opens, the form as detail beside them. */
 @Composable
-internal fun formFrame(
-    navigator: Navigator,
-    route: DetailRoute,
-    entity: String,
-    repository: MasterDataRepository,
-    detail: (id: Int) -> DetailRoute,
-): FormFrame {
-    val menu = rememberAppMenu()
-    AppMenuDialogs(menu)
-    return FormFrame(
-        menuItems = menu.items,
-        leaveGuard = navigator.rememberLeaveGuard(route),
-        isBesideList = showsDetailBesideList(),
-        objectActions = viewModel { ObjectActionsViewModel(entity, repository) },
-        onBackClick = navigator::goBack,
-        onActionDone = { event ->
-            if (event is ObjectActionEvent.Copied) navigator.openDetail(detail(event.id))
-        },
-    )
-}
-
-/** Where Grocy's product pages lead, the form opening as detail beside the products. */
-private fun productLinks(navigator: Navigator) = ProductLinks(
-    onEditClick = { navigator.openDetail(ProductRoute(it)) },
-    onStockEntriesClick = { navigator.navigate(StockEntriesRoute(it)) },
-    onStockJournalClick = { navigator.navigate(StockJournalRoute(it)) },
-    onStockJournalSummaryClick = { navigator.navigate(StockJournalSummaryRoute(it)) },
-    onBookingClick = { id, kind -> navigator.navigate(bookingRoute(kind, id)) },
-)
-
-/** The product overview, shopping list and labels of a stock page. */
-@Composable
-internal fun stockPageActions(
+private fun stockPageActions(
     dependencies: MasterDataDependencies,
     navigator: Navigator,
-): StockPageActions = stockPageActions(
-    dependencies,
-    ProductLinks(
-        // Outside the product list the form opens on its own
-        onEditClick = { navigator.navigate(ProductRoute(it)) },
+): StockPageActions = rememberStockPageActions(
+    masterData = dependencies.masterDataRepository,
+    stock = dependencies.stockRepository,
+    shoppingLists = dependencies.shoppingListRepository,
+    links = ProductLinks(
+        onEditClick = { navigator.openDetail(ProductRoute(it)) },
         onStockEntriesClick = { navigator.navigate(StockEntriesRoute(it)) },
         onStockJournalClick = { navigator.navigate(StockJournalRoute(it)) },
         onStockJournalSummaryClick = { navigator.navigate(StockJournalSummaryRoute(it)) },
@@ -413,18 +372,9 @@ internal fun stockPageActions(
     ),
 )
 
-@Composable
-private fun stockPageActions(dependencies: MasterDataDependencies, links: ProductLinks) =
-    rememberStockPageActions(
-        masterData = dependencies.masterDataRepository,
-        stock = dependencies.stockRepository,
-        shoppingLists = dependencies.shoppingListRepository,
-        links = links,
-    )
-
 // The app language, a change restarts the app, so ViewModels keep it
 @Composable
-internal fun appLanguage(): String = LocalLocale.current.toLanguageTag()
+private fun appLanguage(): String = LocalLocale.current.toLanguageTag()
 
 /** The detail pane beside a list until an item is chosen. */
 @Composable
@@ -449,14 +399,3 @@ private val MasterDataCategory.route: Route
         MasterDataCategory.USERFIELDS -> UserfieldsRoute()
         MasterDataCategory.USERENTITIES -> UserentitiesRoute
     }
-
-/** The menu of the app's screens with its dialogs, leading to the settings and About. */
-@Composable
-internal fun appMenuItems(navigator: Navigator): List<AppBarMenuItem> {
-    val menu = rememberAppMenu(
-        onSettingsClick = { navigator.navigate(SettingsRoute) },
-        onAboutClick = { navigator.navigate(AboutRoute) },
-    )
-    AppMenuDialogs(menu)
-    return menu.items
-}

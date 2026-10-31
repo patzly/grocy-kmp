@@ -18,8 +18,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.ButtonGroupDefaults
-import androidx.compose.material3.ButtonGroupMenuState
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -28,7 +26,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -50,7 +47,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.fastForEachIndexed
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.core.data.util.RefreshState
@@ -79,7 +75,6 @@ import com.patrickzedler.grocy.core.model.text.timeSpanBetween
 import com.patrickzedler.grocy.core.model.text.todayEpochDay
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_close
-import com.patrickzedler.grocy.core.resources.action_more_options
 import com.patrickzedler.grocy.core.resources.action_retry
 import com.patrickzedler.grocy.core.resources.data_load_failed
 import com.patrickzedler.grocy.core.resources.data_offline
@@ -95,10 +90,8 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_hourglass_empty
 import com.patrickzedler.grocy.core.resources.ic_rounded_inventory_2
 import com.patrickzedler.grocy.core.resources.ic_rounded_label
 import com.patrickzedler.grocy.core.resources.ic_rounded_location_on
-import com.patrickzedler.grocy.core.resources.ic_rounded_more_vert
 import com.patrickzedler.grocy.core.resources.ic_rounded_no_photography
 import com.patrickzedler.grocy.core.resources.ic_rounded_payments
-import com.patrickzedler.grocy.core.resources.ic_rounded_receipt_long
 import com.patrickzedler.grocy.core.resources.ic_rounded_sell
 import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_cart
 import com.patrickzedler.grocy.core.resources.product_edit
@@ -131,7 +124,6 @@ import com.patrickzedler.grocy.core.resources.product_stock_entries
 import com.patrickzedler.grocy.core.resources.product_stock_journal
 import com.patrickzedler.grocy.core.resources.product_stock_journal_summary
 import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.decodeToImageBitmap
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

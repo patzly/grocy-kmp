@@ -1,4 +1,4 @@
-package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
+package com.patrickzedler.grocy.feature.shoppinglist.impl
 
 import app.cash.turbine.test
 import com.patrickzedler.grocy.core.data.settings.ShoppingListOptionsRepository

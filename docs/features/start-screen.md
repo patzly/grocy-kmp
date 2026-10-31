@@ -30,15 +30,15 @@ on its own (`StartSection.route` is no `DetailRoute`), and a category of the mas
 opens its list as a scene of its own with its forms beside it, never in place of the master
 data; back leaves the whole scene like every list-detail scene, from the start screen the app,
 it never closes the page beside it first, on purpose), an About
-screen, the Settings overview (`feature:settings`), Grocy's stock overview (`feature:stock`)
-and the master data (`feature:masterdata`): the overview of Grocy's master data categories, the list and form of
-every category (products with their overview dialog, locations, stores, quantity units,
-product groups, chores, batteries, task categories, userfields, userentities), with the
-product's barcodes, grocycode and conversion overrides, the default conversions of units,
-Grocy's stock pages of products (stock entries, stock journal, journal summary), "Add to
-shopping list", the stock settings ("Presets for new products"), Grocy's stock bookings
-Purchase, Consume, Transfer and Inventory (see `stock-bookings.md`) and Grocy's shopping list (see
-`shopping-list.md`).
+screen, the Settings overview (`feature:settings`), the master data (`feature:masterdata`): the
+overview of Grocy's master data categories, the list and form of every category (products with
+their overview dialog, locations, stores, quantity units, product groups, chores, batteries,
+task categories, userfields, userentities), with the product's barcodes, grocycode and
+conversion overrides, the default conversions of units, "Add to shopping list", the stock
+settings ("Presets for new products"); Grocy's stock overview, stock pages of products (stock
+entries, stock journal, journal summary) and stock bookings Purchase, Consume, Transfer and
+Inventory (`feature:stock`, see `stock-bookings.md`) and Grocy's shopping list
+(`feature:shoppinglist`, see `shopping-list.md`).
 
 The start screen's items use the segmented item's default text styles for title and supporting
 text. Items with buttons below their text (`SectionButtons`) keep 16.dp between the visible

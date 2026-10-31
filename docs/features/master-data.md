@@ -1,6 +1,7 @@
 # Master data
 
-Master data lists and forms, list-detail scenes, menus, refresh, products, grocycodes and stock pages. Moved from CLAUDE.md.
+Master data lists and forms, list-detail scenes, menus, refresh, products, barcodes and
+conversions. Moved from CLAUDE.md.
 
 The building blocks it shares with the stock pages and the shopping list (fields, userfields,
 `ObjectFormViewModel`/`ObjectFormScreen`, object actions, filter chips, list parts, `ChangeError`)
@@ -108,8 +109,10 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   outdated), the product list downloads the missing ones after each refresh
   (`downloadMissingThumbnails`), and a refresh deletes those no product shows anymore.
 - Every screen except About and the settings has the app menu in its overflow menu: Settings,
-  About, Help and Send feedback (`rememberAppMenu` + `AppMenuDialogs` of `core:ui`, the items go
-  to `SegmentedListScreen(menuItems)`, which puts "Reload" as a group of its own before them).
+  About, Help and Send feedback (`appMenuItems()` of `core:ui`, Settings and About leading to
+  the `LocalAppMenuLinks` of `GrocyApp`; forms use `rememberAppMenu` + `AppMenuDialogs` without
+  them; the items go to `SegmentedListScreen(menuItems)`, which puts "Reload" as a group of its
+  own before them).
   The feedback dialog reads the unlock state from `LocalUnlockState`, provided by `GrocyApp`.
   Ripples of grouped menus follow the group's corners through
   `menuItemShape(index, count, groupIndex, groupCount)`.
@@ -157,43 +160,6 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   new products, Scroll to
   top, Search last). Filtering, sorting and the fuzzy search are the pure `buildProductList`:
   in stock means `amount_aggregated > 0` of an active product, like Grocy's `stock_current`.
-- `ProductOverviewDialog` (`overview/`) is Grocy's "Product overview" card, opened from the
-  first group of each active product item's overflow menu (Grocy computes no overview for
-  disabled products). The title is "Product overview"; on top of the scrolling
-  content the card header's buttons as an expressive `ButtonGroup` (`animatedItem`, 12.dp
-  apart, it always fits): Edit product and Add to shopping list (only with the shopping list
-  feature) as wide filled (primary) icon buttons, then the narrow tonal menu button
-  (`TonalOverflowMenu`, `secondaryContainer`) with Stock entries, Stock journal and Stock
-  journal summary, then Grocy's Purchase, Consume, Transfer (with location tracking) and
-  Inventory for the product, then "Download Product Grocycode" and "Print Product Grocycode on label
-  printer" (only when the server runs the webhook; `OverviewActions`, the host prints through
-  the screen's `LabelPrintViewModel`). Then every
-  value of the card in its order, all as items with the label as text and the value as
-  supporting text, the product name first in the stock group (with the loading indicator of a
-  download over stored values), hidden like in Grocy by feature flag (prices: stock value, last/average price and
-  price history; location: default location; best before dates: average shelf life),
-  description (three lines, "Show more"), picture (1200 px, offline the stored list picture)
-  and the price history. `ProductOverviewViewModel` is one per product list (`show`/`hide`, kept
-  across rotations), every opening downloads `/stock/products/{id}` plus its price history
-  (`MasterDataRepository.refreshProductOverview`, stored as JSON in `product_overviews`, so the
-  last overview shows offline). The pure `buildProductOverview` resolves units (prices per price
-  unit, per stock unit too when they differ), stores and the chart series.
-- `PriceHistoryChart`: Canvas line chart after the dataviz rules: one 2.dp line per store with
-  surface-ringed points, Grocy's dotted least squares trend, y axis from zero in round steps
-  (`priceAxis`), first and last date below, legend from two series or with a trend. Colors come
-  from `rememberChartColors` (`core:design`): a validated categorical palette in fixed order
-  with light and dark steps (the tests check it with the dataviz validator, `PaletteValidator`),
-  starting at its color closest to primary (the order stays), every color harmonized with
-  MaterialKolor's `harmonize` like the status colors and Material's custom colors. A search for
-  the strongest harmonization that kept the validator's color blind checks ended without any
-  for most themes, so the colors stayed unharmonized; harmonized hues can come close for color
-  blind users instead, so every series also has its own point shape (`ChartMarker`: circle,
-  square, diamond, triangle; neighbours never share one), in the legend too. Every other color
-  outside the color scheme must be
-  harmonized with primary as well (codes such as the grocycode stay black on white); stores
-  keep their color by id,
-  stores beyond eight are drawn together as "Other stores". Tap, sideways drag, mouse hover and
-  the arrow keys select a price (date, store, price as tooltip); screen readers get all prices.
 - Related objects of forms (`barcode/`, `conversion/`, `related/`): Grocy's popup forms are
   `FormDialog`s (Save with loading indicator, Cancel, the server's error above the groups),
   their state lives in a ViewModel (`ProductBarcodesViewModel`, `ConversionsViewModel`, shown
@@ -206,29 +172,6 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   and delete through their menu (`ObjectActionsViewModel` of `product_barcodes` /
   `quantity_unit_conversions`, Grocy's questions); a saved or deleted conversion downloads the
   resolved ones again.
-- Grocycodes (`GrocycodeItem`): `grcy:p:<id>` (`:<stock_id>` for stock entries) written by
-  `core:scanner`'s own `DataMatrixWriter` (ECC 200, square up to 48x48) or `Code128Writer` for
-  Grocy's `GROCYCODE_TYPE` 1D (`ServerConfig.grocycode2D`), drawn black on white; "Download"
-  saves `Grocycode.png` (`PngWriter`, stored deflate blocks) through `rememberFileSaver` of
-  `core:ui` ("Save as" on Android, a download in browsers). "Print on label printer" calls
-  Grocy's `printlabel` and shows only when the server runs the webhook itself
-  (`labelPrinterRunsOnServer`), the app never stores webhook addresses.
-- Stock pages (`stock/`, `journal/` of `feature:stock`, routes `StockEntriesRoute`,
-  `StockJournalRoute`, `StockJournalSummaryRoute` of `feature:stock:api`, from the product form's toolbar and
-  the product overview's buttons).
-  `StockRepository` (`core:data`) stores the entries (`stock_entries`, with the amounts) and
-  the journal (`stock_log`, a download of a date range replaces the bookings of that range) for
-  offline use; bookings (consume, consume as spoiled, open, edit, undo) are online only and
-  download the entries again. Entries show Grocy's columns and due highlighting
-  (`dueStatusOf`: overdue/expired by due type, due soon by `stock_due_soon_days`), price per
-  price unit; their menu holds Grocy's other actions in its groups. Booking messages offer
-  "Undo" in the snackbar. The journal filters by product, type, location, user and Grocy's
-  date ranges (`journalSince`, SQLite month arithmetic), searches, undoes; the summary sums
-  every booking not undone per product, type and user (Grocy's view is not exposed).
-- "Add to shopping list" (`AddToShoppingListViewModel`/`AddToShoppingListHost`, from the
-  overview and the stock pages): Grocy's form with `updateexistingproduct`, the amount in the
-  product's units sent in the stock unit (`stock/shoppinglist/add-product`), the item's
-  userfields saved afterwards on the item found by product and list (Grocy forgets them).
 - Units are named like Grocy's `__n` for quantity units: `QuantityUnit.nameFor(amount,
   language)` with the plural rules of Grocy's translations (`grocyPluralIndex`) and the unit's
   `plural_forms` lines.

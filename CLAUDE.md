@@ -17,8 +17,11 @@ tasks need.
 - `docs/features/stock-bookings.md`: Purchase, Consume, Transfer, Inventory (`booking/`).
 - `docs/features/shopping-list.md`: the shopping list and its offline check offs.
 - `docs/features/stock-overview.md`: Grocy's stock overview page.
+- `docs/features/stock-pages.md`: stock entries, stock journal and journal summary.
+- `docs/features/product-overview.md`: the product overview card (`core:productcard`), price
+  chart, grocycodes, "Add to shopping list".
 - `docs/features/master-data.md`: master data lists and forms, list-detail scenes, menus, pull to
-  refresh, products, product overview, price chart, barcodes, grocycodes, stock pages.
+  refresh, products, barcodes, conversions.
 - `docs/features/settings.md`: settings categories, Grocy settings, server, appearance, language.
 - `docs/architecture/web-navigation.md`: browser history, entry decorators, navigationevent.
 - `docs/architecture/network.md`: API key placement, Home Assistant ingress.

@@ -11,6 +11,7 @@ kotlin {
             implementation(projects.core.design)
             implementation(projects.core.navigation)
             implementation(projects.core.resources)
+            implementation(projects.core.ui)
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(libs.jetbrains.navigationevent.compose)
             implementation(libs.kotlinx.serialization.json)

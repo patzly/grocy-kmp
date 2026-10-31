@@ -43,6 +43,7 @@ class WebPlatformDependencies(
         mapOf(ScannerEngine.ZXING to BarcodeDecoderFactory.Zxing)
 
     // The browser's online event; it only tells a network exists, not that the server answers
+    @OptIn(ExperimentalWasmJsInterop::class)
     override val networkAvailable: Flow<Unit> = callbackFlow {
         val listener = addOnlineListener { trySend(Unit) }
         awaitClose { removeOnlineListener(listener) }

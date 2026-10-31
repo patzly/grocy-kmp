@@ -22,6 +22,15 @@ import org.jetbrains.compose.resources.stringResource
 /** The app's [UnlockState] for dialogs that show the Play extras, provided at the app's root. */
 val LocalUnlockState = staticCompositionLocalOf<UnlockState?> { null }
 
+/** Where the app menu's Settings and About lead, the app's own screens. */
+class AppMenuLinks(
+    val onSettingsClick: () -> Unit,
+    val onAboutClick: () -> Unit,
+)
+
+/** The [AppMenuLinks] of [appMenuItems], provided at the app's root. */
+val LocalAppMenuLinks = staticCompositionLocalOf<AppMenuLinks?> { null }
+
 /** The overflow menu of the app's screens and its open dialog; see [rememberAppMenu]. */
 @Stable
 class AppMenu internal constructor(
@@ -73,4 +82,19 @@ fun AppMenuDialogs(menu: AppMenu) {
         unlockState = LocalUnlockState.current,
         onDialogChange = { dialog = it },
     )
+}
+
+/**
+ * The full app menu of a screen, Settings and About leading to [LocalAppMenuLinks], with the
+ * dialogs of Help and Send feedback.
+ */
+@Composable
+fun appMenuItems(): List<AppBarMenuItem> {
+    val links = LocalAppMenuLinks.current
+    val menu = rememberAppMenu(
+        onSettingsClick = links?.onSettingsClick,
+        onAboutClick = links?.onAboutClick,
+    )
+    AppMenuDialogs(menu)
+    return menu.items
 }

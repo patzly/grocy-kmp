@@ -9,6 +9,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -25,8 +26,11 @@ import com.patrickzedler.grocy.core.navigation.GrocyNavDisplay
 import com.patrickzedler.grocy.core.navigation.rememberNavigator
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.core.scanner.LocalBarcodeDecoderFactory
+import com.patrickzedler.grocy.core.ui.AppMenuLinks
+import com.patrickzedler.grocy.core.ui.LocalAppMenuLinks
 import com.patrickzedler.grocy.core.ui.LocalUnlockState
 import com.patrickzedler.grocy.core.ui.dialog.UpdateAvailableDialog
+import com.patrickzedler.grocy.feature.about.api.AboutRoute
 import com.patrickzedler.grocy.feature.about.api.aboutRouteSerializers
 import com.patrickzedler.grocy.feature.about.impl.aboutEntries
 import com.patrickzedler.grocy.feature.login.api.LoginChoiceRoute
@@ -34,9 +38,11 @@ import com.patrickzedler.grocy.feature.login.api.loginRouteSerializers
 import com.patrickzedler.grocy.feature.login.impl.loginEntries
 import com.patrickzedler.grocy.feature.masterdata.api.masterDataRouteSerializers
 import com.patrickzedler.grocy.feature.masterdata.impl.masterDataEntries
+import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.settingsRouteSerializers
 import com.patrickzedler.grocy.feature.settings.impl.settingsEntries
 import com.patrickzedler.grocy.feature.shoppinglist.api.shoppingListRouteSerializers
+import com.patrickzedler.grocy.feature.shoppinglist.impl.shoppingListEntries
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import com.patrickzedler.grocy.feature.start.api.startRouteSerializers
 import com.patrickzedler.grocy.feature.start.impl.startEntry
@@ -120,13 +126,23 @@ private fun GrocyNavigation(
         }
     }
 
-    GrocyNavDisplay(navigator) {
-        loginEntries(graph.loginDependencies, navigator)
-        startEntry(graph.startDependencies, navigator)
-        aboutEntries(graph.aboutDependencies, navigator)
-        settingsEntries(graph.settingsDependencies, navigator)
-        masterDataEntries(graph.masterDataDependencies, navigator)
-        stockEntries(graph.stockDependencies, navigator)
+    // The app menu of the features' screens leads to the settings and About
+    val appMenuLinks = remember(navigator) {
+        AppMenuLinks(
+            onSettingsClick = { navigator.navigate(SettingsRoute) },
+            onAboutClick = { navigator.navigate(AboutRoute) },
+        )
+    }
+    CompositionLocalProvider(LocalAppMenuLinks provides appMenuLinks) {
+        GrocyNavDisplay(navigator) {
+            loginEntries(graph.loginDependencies, navigator)
+            startEntry(graph.startDependencies, navigator)
+            aboutEntries(graph.aboutDependencies, navigator)
+            settingsEntries(graph.settingsDependencies, navigator)
+            masterDataEntries(graph.masterDataDependencies, navigator)
+            stockEntries(graph.stockDependencies, navigator)
+            shoppingListEntries(graph.shoppingListDependencies, navigator)
+        }
     }
 }
 
