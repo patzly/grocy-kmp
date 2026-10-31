@@ -214,8 +214,8 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   Grocy's `printlabel` and shows only when the server runs the webhook itself
   (`labelPrinterRunsOnServer`), the app never stores webhook addresses.
 - Stock pages (`stock/`, `journal/`, routes `StockEntriesRoute`, `StockJournalRoute`,
-  `StockJournalSummaryRoute` of `feature:masterdata:api`, from the product form's toolbar and
-  the product overview's buttons; they live here because they open the product overview too).
+  `StockJournalSummaryRoute` of `feature:stock:api`, from the product form's toolbar and
+  the product overview's buttons).
   `StockRepository` (`core:data`) stores the entries (`stock_entries`, with the amounts) and
   the journal (`stock_log`, a download of a date range replaces the bookings of that range) for
   offline use; bookings (consume, consume as spoiled, open, edit, undo) are online only and

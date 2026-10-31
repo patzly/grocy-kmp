@@ -42,10 +42,6 @@ import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductsRoute
 import com.patrickzedler.grocy.feature.masterdata.api.QuantityUnitRoute
 import com.patrickzedler.grocy.feature.masterdata.api.QuantityUnitsRoute
-import com.patrickzedler.grocy.feature.masterdata.api.StockEntriesRoute
-import com.patrickzedler.grocy.feature.masterdata.api.StockJournalRoute
-import com.patrickzedler.grocy.feature.masterdata.api.StockJournalSummaryRoute
-import com.patrickzedler.grocy.feature.masterdata.api.StockOverviewRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StoreRoute
 import com.patrickzedler.grocy.feature.masterdata.api.StoresRoute
 import com.patrickzedler.grocy.feature.masterdata.api.TaskCategoriesRoute
@@ -88,6 +84,10 @@ import com.patrickzedler.grocy.feature.settings.api.GrocySettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.StockSettingsRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
+import com.patrickzedler.grocy.feature.stock.api.StockEntriesRoute
+import com.patrickzedler.grocy.feature.stock.api.StockJournalRoute
+import com.patrickzedler.grocy.feature.stock.api.StockJournalSummaryRoute
+import com.patrickzedler.grocy.feature.stock.api.StockOverviewRoute
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

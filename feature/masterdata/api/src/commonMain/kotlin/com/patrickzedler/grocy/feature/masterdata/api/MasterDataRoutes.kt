@@ -102,95 +102,6 @@ data object UserentitiesRoute : Route
 @SerialName("masterdata/userentity")
 data class UserentityRoute(val id: Int? = null) : DetailRoute
 
-// Grocy's stock pages its master data leads to
-
-/**
- * Grocy's "Stock overview": every product in stock or below its min. stock amount; a detail of
- * the start screen, beside it where the window is wide enough.
- */
-@Serializable
-@SerialName("stockoverview")
-data object StockOverviewRoute : DetailRoute
-
-/** Grocy's "Stock entries", only those of [productId] if given. */
-@Serializable
-@SerialName("stockentries")
-data class StockEntriesRoute(val productId: Int? = null) : Route
-
-/** Grocy's "Stock journal", only the bookings of [productId] if given. */
-@Serializable
-@SerialName("stockjournal")
-data class StockJournalRoute(val productId: Int? = null) : Route
-
-/** Grocy's "Stock journal summary", only of [productId] if given. */
-@Serializable
-@SerialName("stockjournal/summary")
-data class StockJournalSummaryRoute(val productId: Int? = null) : Route
-
-// Grocy's stock bookings
-
-/**
- * Grocy's "Purchase", the product [productId] preselected if given. From a shopping list item
- * ([shoppingListItemId]) with its [amount] (stock unit) in the unit [quId]; the item is removed
- * once the purchase is booked, like Grocy's "Add this item to stock".
- */
-@Serializable
-@SerialName("purchase")
-data class PurchaseRoute(
-    val productId: Int? = null,
-    val amount: Double? = null,
-    val quId: Int? = null,
-    val shoppingListItemId: Int? = null,
-) : Route
-
-/** Grocy's "Consume"; [locationId] and [stockId] preselect a location and a stock entry. */
-@Serializable
-@SerialName("consume")
-data class ConsumeRoute(
-    val productId: Int? = null,
-    val locationId: Int? = null,
-    val stockId: String? = null,
-) : Route
-
-/** Grocy's "Transfer"; [locationId] and [stockId] preselect the source and a stock entry. */
-@Serializable
-@SerialName("transfer")
-data class TransferRoute(
-    val productId: Int? = null,
-    val locationId: Int? = null,
-    val stockId: String? = null,
-) : Route
-
-/** Grocy's "Inventory", the product [productId] preselected if given. */
-@Serializable
-@SerialName("inventory")
-data class InventoryRoute(val productId: Int? = null) : Route
-
-// Grocy's shopping list
-
-/** Grocy's "Shopping list", the list [listId] (the first one without). */
-@Serializable
-@SerialName("shoppinglist")
-data class ShoppingListRoute(val listId: Int? = null) : Route
-
-/**
- * Grocy's shopping list item form: edits item [id], or creates an item on list [listId] (the
- * first one without) with product [productId] preselected if given; beside its list where the
- * window is wide enough, on its own e.g. as quick add from the start screen.
- */
-@Serializable
-@SerialName("shoppinglist/item")
-data class ShoppingListItemRoute(
-    val id: Int? = null,
-    val listId: Int? = null,
-    val productId: Int? = null,
-) : DetailRoute
-
-/** Grocy's shopping list form: renames list [id], or creates a list without. */
-@Serializable
-@SerialName("shoppinglist/list")
-data class ShoppingListFormRoute(val id: Int? = null) : DetailRoute
-
 val masterDataRouteSerializers = SerializersModule {
     polymorphic(NavKey::class) {
         subclass(MasterDataRoute::class, MasterDataRoute.serializer())
@@ -214,16 +125,5 @@ val masterDataRouteSerializers = SerializersModule {
         subclass(UserfieldRoute::class, UserfieldRoute.serializer())
         subclass(UserentitiesRoute::class, UserentitiesRoute.serializer())
         subclass(UserentityRoute::class, UserentityRoute.serializer())
-        subclass(PurchaseRoute::class, PurchaseRoute.serializer())
-        subclass(ConsumeRoute::class, ConsumeRoute.serializer())
-        subclass(TransferRoute::class, TransferRoute.serializer())
-        subclass(InventoryRoute::class, InventoryRoute.serializer())
-        subclass(ShoppingListRoute::class, ShoppingListRoute.serializer())
-        subclass(ShoppingListItemRoute::class, ShoppingListItemRoute.serializer())
-        subclass(ShoppingListFormRoute::class, ShoppingListFormRoute.serializer())
-        subclass(StockOverviewRoute::class, StockOverviewRoute.serializer())
-        subclass(StockEntriesRoute::class, StockEntriesRoute.serializer())
-        subclass(StockJournalRoute::class, StockJournalRoute.serializer())
-        subclass(StockJournalSummaryRoute::class, StockJournalSummaryRoute.serializer())
     }
 }

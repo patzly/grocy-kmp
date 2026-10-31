@@ -16,7 +16,9 @@ kotlin {
             implementation(projects.feature.about.api)
             implementation(projects.feature.masterdata.api)
             implementation(projects.feature.settings.api)
+            implementation(projects.feature.shoppinglist.api)
             implementation(projects.feature.start.api)
+            implementation(projects.feature.stock.api)
         }
         commonTest.dependencies {
             implementation(projects.core.testing)

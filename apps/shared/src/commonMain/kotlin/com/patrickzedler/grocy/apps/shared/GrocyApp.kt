@@ -36,15 +36,18 @@ import com.patrickzedler.grocy.feature.masterdata.api.masterDataRouteSerializers
 import com.patrickzedler.grocy.feature.masterdata.impl.masterDataEntries
 import com.patrickzedler.grocy.feature.settings.api.settingsRouteSerializers
 import com.patrickzedler.grocy.feature.settings.impl.settingsEntries
+import com.patrickzedler.grocy.feature.shoppinglist.api.shoppingListRouteSerializers
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import com.patrickzedler.grocy.feature.start.api.startRouteSerializers
 import com.patrickzedler.grocy.feature.start.impl.startEntry
+import com.patrickzedler.grocy.feature.stock.api.stockRouteSerializers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.modules.plus
 
 internal val routeSerializers =
     startRouteSerializers + loginRouteSerializers + aboutRouteSerializers +
-        settingsRouteSerializers + masterDataRouteSerializers
+        settingsRouteSerializers + masterDataRouteSerializers + stockRouteSerializers +
+        shoppingListRouteSerializers
 
 /**
  * Shared entry point of the Android and web apps.

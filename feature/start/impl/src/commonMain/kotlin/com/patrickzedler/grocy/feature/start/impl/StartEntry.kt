@@ -15,17 +15,17 @@ import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_home
 import com.patrickzedler.grocy.core.resources.start_select_hint
 import com.patrickzedler.grocy.feature.about.api.AboutRoute
-import com.patrickzedler.grocy.feature.masterdata.api.ConsumeRoute
-import com.patrickzedler.grocy.feature.masterdata.api.InventoryRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
-import com.patrickzedler.grocy.feature.masterdata.api.PurchaseRoute
-import com.patrickzedler.grocy.feature.masterdata.api.ShoppingListItemRoute
-import com.patrickzedler.grocy.feature.masterdata.api.ShoppingListRoute
-import com.patrickzedler.grocy.feature.masterdata.api.StockOverviewRoute
-import com.patrickzedler.grocy.feature.masterdata.api.TransferRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
+import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListItemRoute
+import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
+import com.patrickzedler.grocy.feature.stock.api.ConsumeRoute
+import com.patrickzedler.grocy.feature.stock.api.InventoryRoute
+import com.patrickzedler.grocy.feature.stock.api.PurchaseRoute
+import com.patrickzedler.grocy.feature.stock.api.StockOverviewRoute
+import com.patrickzedler.grocy.feature.stock.api.TransferRoute
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

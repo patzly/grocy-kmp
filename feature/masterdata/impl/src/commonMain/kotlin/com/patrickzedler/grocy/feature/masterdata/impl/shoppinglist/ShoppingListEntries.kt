@@ -14,18 +14,18 @@ import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_cart
 import com.patrickzedler.grocy.core.resources.objects_select_hint
 import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute
-import com.patrickzedler.grocy.feature.masterdata.api.PurchaseRoute
-import com.patrickzedler.grocy.feature.masterdata.api.ShoppingListFormRoute
-import com.patrickzedler.grocy.feature.masterdata.api.ShoppingListItemRoute
-import com.patrickzedler.grocy.feature.masterdata.api.ShoppingListRoute
-import com.patrickzedler.grocy.feature.masterdata.api.StockEntriesRoute
-import com.patrickzedler.grocy.feature.masterdata.api.StockJournalRoute
-import com.patrickzedler.grocy.feature.masterdata.api.StockJournalSummaryRoute
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataDependencies
 import com.patrickzedler.grocy.feature.masterdata.impl.appLanguage
 import com.patrickzedler.grocy.feature.masterdata.impl.appMenuItems
 import com.patrickzedler.grocy.feature.masterdata.impl.formFrame
 import com.patrickzedler.grocy.feature.masterdata.impl.stockPageActions
+import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListFormRoute
+import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListItemRoute
+import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListRoute
+import com.patrickzedler.grocy.feature.stock.api.PurchaseRoute
+import com.patrickzedler.grocy.feature.stock.api.StockEntriesRoute
+import com.patrickzedler.grocy.feature.stock.api.StockJournalRoute
+import com.patrickzedler.grocy.feature.stock.api.StockJournalSummaryRoute
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

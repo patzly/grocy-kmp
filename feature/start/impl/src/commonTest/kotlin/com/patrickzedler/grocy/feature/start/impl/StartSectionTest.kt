@@ -4,9 +4,9 @@ import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.navigation.DetailRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductsRoute
-import com.patrickzedler.grocy.feature.masterdata.api.ShoppingListRoute
-import com.patrickzedler.grocy.feature.masterdata.api.StockOverviewRoute
+import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
+import com.patrickzedler.grocy.feature.stock.api.StockOverviewRoute
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

@@ -7,14 +7,14 @@ import androidx.navigation3.runtime.NavKey
 import com.patrickzedler.grocy.core.navigation.Navigator
 import com.patrickzedler.grocy.core.navigation.Route
 import com.patrickzedler.grocy.core.productcard.BookingKind
-import com.patrickzedler.grocy.feature.masterdata.api.ConsumeRoute
-import com.patrickzedler.grocy.feature.masterdata.api.InventoryRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute
-import com.patrickzedler.grocy.feature.masterdata.api.PurchaseRoute
-import com.patrickzedler.grocy.feature.masterdata.api.TransferRoute
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataDependencies
 import com.patrickzedler.grocy.feature.masterdata.impl.appMenuItems
 import com.patrickzedler.grocy.feature.masterdata.impl.stockPageActions
+import com.patrickzedler.grocy.feature.stock.api.ConsumeRoute
+import com.patrickzedler.grocy.feature.stock.api.InventoryRoute
+import com.patrickzedler.grocy.feature.stock.api.PurchaseRoute
+import com.patrickzedler.grocy.feature.stock.api.TransferRoute
 
 /** The route of the stock page of [kind] for the product [productId]. */
 internal fun bookingRoute(kind: BookingKind, productId: Int?): Route = when (kind) {
