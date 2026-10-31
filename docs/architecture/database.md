@@ -15,3 +15,28 @@ Schema history and the web database driver. Moved from CLAUDE.md.
   the "opfs-sahpool" VFS, which needs no COOP/COEP headers (GitHub Pages); a second tab or a
   browser without OPFS gets an in-memory database that the app fills from the server again.
   Webpack bundles worker and `sqlite3.wasm`, `precache.json` lists them for offline use.
+
+## Repositories and data rules
+
+- Offline first: screens read `GrocyDatabase` through repositories (`MasterDataRepository` in
+  `core:data`), `refresh()` downloads everything a screen shows in parallel and replaces the
+  tables in one `withWriteTransaction`, so readers never see half an update. Changes are online
+  only (`saveProduct`, `deleteProduct`, `saveLocation`, `saveChore`, ...: one `saveObject` per
+  type posts or puts, sends changed userfields, then stores the object as the server returns it).
+  `refresh()` downloads all master data at once; users need a permission of their own, a 403
+  keeps the stored ones instead of failing the refresh.
+- `AuthRepository` clears the database before a login and on logout (`clearLocalData`), so no
+  screen shows the data of another server. The database file is excluded from backups.
+- Server configuration and user settings live as JSON in `server_values`; only the known feature
+  flags are kept (`ServerConfig`), the rest of `/system/config` (e.g. webhooks) never is stored.
+- What only the server computes (product overviews: averages, spoil rate, price history) is
+  stored as the last downloaded JSON per object (`product_overviews`, version 3), never derived
+  from the other tables; a refresh deletes the ones of removed products.
+- Room 3.0.x via the `grocy.room` convention plugin (KSP per target, schemas exported to
+  `core/database/schemas`). Every schema change needs a new version and a migration; check it
+  against the exported schema.
+- Grocy sends numbers as numbers or strings depending on version: DTOs use `FlexInt`,
+  `FlexDouble`, `FlexBoolean`, `FlexString`. Writes send JSON with exactly `application/json`
+  (Grocy compares the header as string and rejects a charset) and get `GrocyApiException.
+  HttpError.serverMessage` from Grocy's `error_message`. Browsers can write too: the preflight
+  carries the API key in the query and Grocy answers it.

@@ -67,4 +67,51 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
 - Web page (`index.html`): `viewport-fit=cover` and `interactive-widget=resizes-content`; the
   page fills the screen (behind the gesture bar of an installed app) while `#composeApp` is
   fixed inside `env(safe-area-inset-*)`, because Compose on the web knows no window insets.
-  Layout and colors of screens and dialogs: see "Screen and dialog design" in CLAUDE.md.
+  Layout and colors of screens and dialogs: see `docs/design.md`.
+
+## Components of `core:design`
+
+- Colors of states outside the color scheme (Grocy's highlighted rows) come from
+  `rememberStatusColors` (`core:design`): info (blue), warning (yellow), critical (red), fixed
+  hues harmonized with primary and turned into container, content and color tones like
+  Material's custom colors (90/10/40 light, 30/90/80 dark; `color` for small marks such as
+  dots), always together with a text. Gestures on list items
+  use `SwipeActionBox` (Gmail's look, the action runs on letting go beyond the threshold, the
+  item springs back); every swipe action must also be in the item's menu and its accessibility
+  actions.
+- Reuse components from `core:design` (`SegmentedListScreen`, `segmentedGroup`,
+  `SegmentedContainer`, `AppBarIconButton`, `InsetLazyColumn` + `insetItem` with max width
+  640.dp, `RoundedTextField`, `ConnectedButtonGroup`, `NavigateBackButton`, `HapticTooltipBox`,
+  `TextDialog`, `FormattedText`, `FloatingToolbarWithFab` + `FloatingToolbarIconButton` for the
+  floatingToolbar slot of `SegmentedListScreen` (snackbars never cover it: they lie above it
+  and follow it while it slides out and back in, `snackbarLift`), `SegmentedSwitchItem`,
+  `SupportingLines` for every multi-line supporting content in lazy lists (Material sizes items
+  by the slot's baselines, a reused column kept those of its former line count, so items stayed
+  too high), `SupportingBulletList` for a text with a bulleted list in that slot (wrapping
+  lines; `FormattedText`'s lists bring paragraph spacing a list item does not want), `SearchableDropdownField` for every choice of objects, a combobox like Grocy's pickers: the
+  text is the value (a text naming an option chooses it, an empty one chooses nothing, other
+  text shows "Choose an entry from the list" once no suggestion is open and is reported through
+  `onUnmatchedChange`, so forms refuse to save); the menu only suggests (fuzzy, no check marks,
+  optional fields offer "None"), opens through its arrow or while typing and closes on a choice
+  or once the text names an option completely;
+  a tap on the field or its trailing action (scan) only focuses, the arrow never does (choosing
+  needs no keyboard); its menu is one expressive menu group in a `DropdownMenuPopup`, not
+  `ExposedDropdownMenu`, whose old menu padding sits outside the scrolling and cuts the items
+  off, and no `ExposedDropdownMenuBox` either: it focuses the field whenever its menu opens), units of text fields go in the
+  `suffix` slot of `RoundedTextField`. `SegmentedSwitchItem` is Material's checkable segmented item: while on it takes the selected
+  shape and color (`secondaryContainer`) of the segmented defaults. Clicks trigger `haptic.confirm()`. `HapticTooltipBox`
+  puts its modifier on an outer `Box`, because Material's `TooltipBox` loses parent data such as `align`.
+  Tooltips show on long press, mouse hover and keyboard focus, never after a plain tap or click:
+  Compose on the web focuses a clicked button, so `TooltipPressTracker` tells a pointer focus
+  (`TooltipTrigger.PointerFocus`) from keyboard focus and long press. Focus counts as keyboard
+  focus only while the keyboard is in use (`rememberKeyboardInput`: Android's input mode, on the
+  web the last of `keydown` and `pointerdown`), because a screen opened by a click focuses its
+  first button (the back button) by itself.
+
+## `FormattedText` markup
+
+Long texts (changelog, licenses) are files in `composeResources/files/`, rendered by
+`FormattedText`, which has its own markup: paragraphs split by blank lines, `#` headlines
+(`#_` for tabular numbers), `__` subtitles, `**bold**` / `<b>`, `=> ` / `> ` link lines,
+`? ` note and `! ` warning boxes in the size of the surrounding paragraphs (`bodyMedium` in
+dialogs), `?- ` / `!- ` boxes with small text (`bodySmall`).

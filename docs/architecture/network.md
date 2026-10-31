@@ -18,3 +18,18 @@ API key placement and Home Assistant ingress. Moved from CLAUDE.md.
   validated, so a server answer can never redirect the API key to another host.
 - Browsers cannot use ingress at all (no CORS on ingress, session only as cookie, `Cookie` is a
   forbidden header); the web login explains the add-on's network port as alternative.
+
+## Client and errors
+
+- One `HttpClient` per process (`createGrocyHttpClient()`), OkHttp on Android, Js engine on Wasm,
+  JSON with `ignoreUnknownKeys = true`.
+- `GrocyApi` methods take the `ServerConnection` per call. `ServerConnection.serverUrl` is the
+  base URL without `/api` and without trailing slash; build it with `ServerUrl.normalize`, which
+  only accepts http(s) URLs with a real host and no whitespace.
+- Error handling: transport errors -> `Unreachable` (catches `Throwable`, Wasm fetch failures
+  arrive as `Error`), 401 -> `Unauthorized`, other non-2xx -> `HttpError`, parse failures ->
+  `NotGrocyServer`; Home Assistant: `HomeAssistantTokenRejected`, `AddonNotFound`,
+  `NotHomeAssistant`.
+- DTOs are `internal` in `core.network.dto` with a `toModel()` mapping into `core:model`.
+- Android allows cleartext HTTP and user CAs on purpose (self-hosted servers), see
+  `network_security_config.xml`.

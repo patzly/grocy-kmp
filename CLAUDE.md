@@ -13,6 +13,12 @@ Grocy's stock overview, master data with all their forms, the stock bookings and
 Read the matching file before working on one of these areas; CLAUDE.md keeps only what most
 tasks need.
 
+- `docs/design.md`: binding layout and color rules of screens and dialogs.
+- `docs/ui.md`: logo, scrollbars, button groups, tooltips, pointer kind, web status bar, keyboard,
+  the `core:design` components (`SearchableDropdownField`, `SupportingLines`, `SwipeActionBox`,
+  status colors), `FormattedText` markup.
+- `docs/translations.md`: languages and the rules for writing a translation.
+- `docs/testing.md`: `FakeGrocyServer` and its data, Room tests, formatter caveats, decoders.
 - `docs/features/start-screen.md`: the start screen and the full list of what is built.
 - `docs/features/stock-bookings.md`: Purchase, Consume, Transfer, Inventory (`booking/`).
 - `docs/features/shopping-list.md`: the shopping list and its offline check offs.
@@ -23,12 +29,15 @@ tasks need.
 - `docs/features/master-data.md`: master data lists and forms, list-detail scenes, menus, pull to
   refresh, products, barcodes, conversions.
 - `docs/features/settings.md`: settings categories, Grocy settings, server, appearance, language.
+- `docs/architecture/build.md`: build logic, yarn.lock, convention plugins, adding a feature.
 - `docs/architecture/web-navigation.md`: browser history, entry decorators, navigationevent.
-- `docs/architecture/network.md`: API key placement, Home Assistant ingress.
-- `docs/architecture/database.md`: schema history, the web worker database.
+- `docs/architecture/network.md`: HTTP client, error mapping, API key placement, Home Assistant
+  ingress.
+- `docs/architecture/database.md`: repositories, refresh, schema history, the web worker database.
+- `docs/architecture/storage-and-variants.md`: credential and settings stores, FOSS vs Play.
 - `docs/architecture/updates.md`: update checks per platform, the web service worker.
 - `docs/architecture/scanner.md`: barcode scanner engines, camera and permissions.
-- `docs/ui.md`: logo, scrollbars, button groups, tooltips, pointer kind, web status bar, keyboard.
+- `docs/architecture/ci.md`: workflows, signing, reproducible builds.
 
 ## Product requirements (binding)
 
@@ -59,10 +68,8 @@ Composables must be finished work that leaves nothing to improve:
   it fits better. The shared components of `core:design` (`AppBarIconButton`,
   `ConnectedButtonGroup`, `VerticalButtonGroup`, `FormattedText` links, ...) vibrate themselves;
   wrappers around raw Material components must do it too. Long presses get `LongPress` from
-  `combinedClickable` already. The web app has no haptics at all: browsers only offer
-  `navigator.vibrate` at full strength without amplitude control, which feels like a cheap buzz
-  (Compose's `Confirm` even vibrates twice there), so `apps/web` provides a silent
-  `LocalHapticFeedback`.
+  `combinedClickable` already. The web app has no haptics (silent `LocalHapticFeedback`, see
+  `docs/design.md`).
 - Text input never hides behind the keyboard, on every platform and in every window size: the
   scrolling container shrinks with the keyboard (padding from `WindowInsets.keyboard`, not
   content padding), so Compose keeps the focused field in view; on Android the change is
@@ -71,53 +78,11 @@ Composables must be finished work that leaves nothing to improve:
 
 ### Screen and dialog design
 
-Every screen should look as polished as `AboutScreen` (with its own content). Reference
-implementations: `AboutScreen` and the login screens for screens, `FeedbackDialog` for dialogs.
-
-Build screens with the shared components of `core:design`, which already apply every rule below:
-`SegmentedListScreen` (scaffold, colored large app bar, `InsetLazyColumn`), `segmentedGroup`
-(group with optional title as `StringResource`), `SegmentedContainer` (non-clickable item for
-text fields, buttons, text or a scanner), `SegmentedListDefaults.colors()`/`.shape(index, count)`
-for `SegmentedListItem`s, and `AppBarIconButton` for app bar actions.
-
-- Screen background is always `surfaceContainer` (`Scaffold(containerColor = ...)`).
-- Top app bar: `LargeFlexibleTopAppBar` (Material 3 Expressive) with the expanded title at the
-  start and the collapsed one centered. Compose aligns both rows alike, so `SegmentedListScreen`
-  centers them and lets the expanded row's title fill its width (text at its start), which puts
-  it exactly where a start aligned title would be; the row is told apart by its text style.
-- Top app bar: `surfaceContainer` while not scrolled, `surfaceContainerHighest` when scrolled
-  (`TopAppBarDefaults.topAppBarColors(containerColor = surfaceContainer,
-  scrolledContainerColor = surfaceContainerHighest)` plus a scroll behavior connected via
-  `nestedScroll`).
-- App bar actions (navigation icon included) are `FilledIconButton`s with `contentColor =
-  onSurface` inside a `HapticTooltipBox`: `AppBarIconButton`, which `NavigateBackButton` and
-  `AppBarOverflowMenu` use. Their container is always `surfaceContainerHighest`: it stands out
-  on the `surfaceContainer` bar (`surfaceContainerHigh` was a single tone step above it, too
-  faint) and becomes one with the scrolled bar.
-- Nothing except group titles sits directly on the `surfaceContainer` background. Exceptions: the
-  header of `LoginChoiceScreen` (logo, welcome title, subtitle, centered above the choices) and
-  the primary action button that ends a form (`LoginManualScreen`'s Connect, full list width in
-  an `insetItem`). A heading or explanation that belongs to one control goes inside its item as
-  `SegmentedTexts` (list item headline/supporting styles), not as group title. All other
-  content (text, values, text fields, buttons, switches, data, ...) lives inside Material 3
-  Expressive segmented list items, logically grouped:
-  - `InsetLazyColumn` with `insetItem` per group, `consumeWindowInsets(padding)` and content
-    padding of the scaffold padding + 16.dp top and bottom; 16.dp between groups. Screens with
-    text input also need the keyboard handling of `SegmentedListScreen`.
-  - A group is a `Column` with `Arrangement.spacedBy(ListItemDefaults.SegmentedGap)`.
-  - Items use `SegmentedListItem` (clickable) or `ListItem` with the content-lambda overload
-    and `shapes` (non-clickable), shapes from `ListItemDefaults.segmentedShapes(index, count)`, colors from
-    `SegmentedListDefaults.colors()`, which is Material's default `segmentedColors()` with the
-    `surface` container (`SegmentedListDefaults.containerColor` for custom items).
-  - Leading icons go in `LeadingContentWrapper`.
-  - Group titles: `titleSmall`, color `secondary`, `semantics { heading() }`, 8.dp below.
-- Dialogs, except the plain text dialog (`TextDialog`), are segmented lists too: build them with
-  `ScrollableAlertDialog` + `ScrollableAlertDialogContent` from `core:design`, a short
-  `bodyMedium`/`onSurfaceVariant` message on top if needed, then groups of segmented items in
-  `surface` with 16.dp between groups, like `FeedbackDialog`.
-- Always prefer the project's own components from `core:design` (`ScrollableAlertDialog`,
-  `InsetLazyColumn`, `RoundedTextField`, `ConnectedButtonGroup`, `NavigateBackButton`,
-  `HapticTooltipBox`, `LeadingContentWrapper`, ...) over raw Material components when they fit.
+Every screen should look as polished as `AboutScreen`, every dialog like `FeedbackDialog`. Build
+them with `core:design` (`SegmentedListScreen`, `segmentedGroup`, `SegmentedContainer`,
+`ScrollableAlertDialog`, `AppBarIconButton`), which already applies the binding layout and color
+rules of `docs/design.md`; read it before building a screen or dialog. Nothing except group
+titles sits directly on the `surfaceContainer` background.
 
 ### Adaptive layouts and platforms
 
@@ -208,21 +173,12 @@ once the SDK licenses are accepted. On Linux the Node.js that Kotlin/Wasm downlo
 Test reports: `<module>/build/reports/tests/`. There is no lint/detekt/ktlint setup yet. Before a
 step is done, run `allTests` and build the apps whose code changed.
 
-- Configuration cache, build cache and parallel builds are on (`gradle.properties`). Keep build
-  logic configuration-cache compatible (use `providers`, no `project` access at execution time).
-- `kotlin-js-store/wasm/yarn.lock` updates itself locally; with `CI` set an outdated lock fails
-  the build, so npm dependencies only change through a reviewed commit. Commit lock file changes
-  after changing npm dependencies. The local lock must equal the one a clean CI checkout computes:
-  every workspace `package.json` is regenerated on each build (the Compose convention plugin
-  disables Wasm test tasks but keeps the `PackageJson` tasks, stale ones kept old versions in the
-  lock). On a failed check `checks.yml` prints the lock diff to commit.
-- Node.js, Yarn and Binaryen downloads come only from the repositories in `settings.gradle.kts`
-  (`downloadBaseUrl = null` in the root build and `useDeclaredWasmToolingRepositories()` in the
-  convention plugins), so Kotlin adds no project repositories. The remaining Gradle deprecation
-  warning (`Configuration.setVisible`, removal in Gradle 11) comes from AGP itself.
-- App version lives only in root `gradle.properties` (`grocy.versionName`, `grocy.versionCode`),
-  shared by all apps. The web app gets it through a generated `BuildInfo.kt`
-  (`apps/web/build.gradle.kts`). Wear adds `1_000_000` to the version code.
+Apply the `grocy.*` convention plugins instead of raw plugins; new modules go in
+`settings.gradle.kts`, all versions in `gradle/libs.versions.toml`; `api(...)` only when a type
+of the dependency is in the module's public API, with a comment why. Keep build logic
+configuration-cache compatible. Reproducible FOSS builds: never add build inputs that vary per
+machine, path or time. Build logic, yarn.lock, adding a feature: `docs/architecture/build.md`;
+CI and releases: `docs/architecture/ci.md`.
 
 ## Module layout
 
@@ -262,28 +218,6 @@ Dependency direction: `apps` -> `feature:*:impl` -> `feature:*:api` / `core:*`.
 `impl` modules never depend on other `impl` modules; to navigate to another feature, depend on
 its `api` module (e.g. `feature:start:impl` uses `AboutRoute` from `feature:about:api`).
 
-### Convention plugins (`build-logic/convention`)
-
-Apply these instead of raw plugins; IDs are aliased in `gradle/libs.versions.toml`:
-
-| Alias | Use for | Does |
-|---|---|---|
-| `grocy.kmp.library` | non-UI KMP modules | KMP + `com.android.kotlin.multiplatform.library`, Android + `wasmJs { browser() }`, JVM 21, tests on JVM and Wasm |
-| `grocy.kmp.compose` | KMP modules with Compose | above + Compose MPP + compiler, adds runtime/foundation/ui/preview, tests on JVM only |
-| `grocy.android.application` | Android apps | AGP 9 built-in Kotlin, applicationId, signing, release/nightly types |
-| `grocy.web.application` | the web app | wasmJs executable, output `grocy.js` |
-
-- Android namespace is derived from the Gradle path: `:core:design` ->
-  `com.patrickzedler.grocy.core.design` (`-` becomes `.`). Kotlin packages follow the same scheme.
-- All Android apps share `applicationId = "com.patrickzedler.grocy"` (phone and watch must match
-  for the Wear Data Layer). FOSS and Play are separate apps with the same ID, not flavors.
-- Modules that ship Android resources/assets (`apps:shared`, `core:resources`) need
-  `androidResources.enable = true` in the `kotlin { android { } }` block.
-- Use `api(...)` only when a type of the dependency appears in the module's public API; such
-  lines carry a comment explaining why. Everything else is `implementation(...)`.
-- New modules must be added to `settings.gradle.kts`; reference them via type-safe accessors
-  (`projects.core.data`). All versions go into `gradle/libs.versions.toml`.
-
 ## Architecture
 
 ### Dependency injection
@@ -293,12 +227,6 @@ lazily, once per process (Android `Application`, web `main()`). Each feature `im
 small `XxxDependencies` interface listing what it needs; `AppGraph` implements it as an anonymous
 object. Platform specifics come in through `PlatformDependencies` (`AndroidPlatformDependencies`,
 `WebPlatformDependencies`).
-
-To add a feature: create `feature/<name>/api` + `impl`, add routes and a `SerializersModule`,
-add a `Dependencies` interface if needed, wire it in `AppGraph`, register the serializers in
-`routeSerializers` and the entries in `GrocyNavigation` (`apps/shared/.../GrocyApp.kt`), add
-both modules to `apps/shared/build.gradle.kts`, and add the new routes to `allRoutes` in
-`RouteSerializersTest` (`apps/shared/src/commonTest`).
 
 ### Navigation (Navigation 3)
 
@@ -337,78 +265,18 @@ both modules to `apps/shared/build.gradle.kts`, and add the new routes to `allRo
   directly instead of their own `stateIn(WhileSubscribed, null)`. Data from the network shows a
   loading state instead.
 
-### Network
+### Network, database, storage
 
-- One `HttpClient` per process (`createGrocyHttpClient()`), OkHttp on Android, Js engine on Wasm,
-  JSON with `ignoreUnknownKeys = true`.
-- `GrocyApi` methods take the `ServerConnection` per call. `ServerConnection.serverUrl` is the
-  base URL without `/api` and without trailing slash; build it with `ServerUrl.normalize`, which
-  only accepts http(s) URLs with a real host and no whitespace.
-- Error handling: transport errors -> `Unreachable` (catches `Throwable`, Wasm fetch failures
-  arrive as `Error`), 401 -> `Unauthorized`, other non-2xx -> `HttpError`, parse failures ->
-  `NotGrocyServer`; Home Assistant: `HomeAssistantTokenRejected`, `AddonNotFound`,
-  `NotHomeAssistant`.
-- DTOs are `internal` in `core.network.dto` with a `toModel()` mapping into `core:model`.
-- Android allows cleartext HTTP and user CAs on purpose (self-hosted servers), see
-  `network_security_config.xml`.
-
-### Local database (`core:database`, Room 3)
-
-- Offline first: screens read `GrocyDatabase` through repositories (`MasterDataRepository` in
-  `core:data`), `refresh()` downloads everything a screen shows in parallel and replaces the
-  tables in one `withWriteTransaction`, so readers never see half an update. Changes are online
-  only (`saveProduct`, `deleteProduct`, `saveLocation`, `saveChore`, ...: one `saveObject` per
-  type posts or puts, sends changed userfields, then stores the object as the server returns it).
-  `refresh()` downloads all master data at once; users need a permission of their own, a 403
-  keeps the stored ones instead of failing the refresh.
-- `AuthRepository` clears the database before a login and on logout (`clearLocalData`), so no
-  screen shows the data of another server. The database file is excluded from backups.
-- Server configuration and user settings live as JSON in `server_values`; only the known feature
-  flags are kept (`ServerConfig`), the rest of `/system/config` (e.g. webhooks) never is stored.
-- What only the server computes (product overviews: averages, spoil rate, price history) is
-  stored as the last downloaded JSON per object (`product_overviews`, version 3), never derived
-  from the other tables; a refresh deletes the ones of removed products.
-- Room 3.0.x via the `grocy.room` convention plugin (KSP per target, schemas exported to
-  `core/database/schemas`). Every schema change needs a new version and a migration; check it
-  against the exported schema.
-- Grocy sends numbers as numbers or strings depending on version: DTOs use `FlexInt`,
-  `FlexDouble`, `FlexBoolean`, `FlexString`. Writes send JSON with exactly `application/json`
-  (Grocy compares the header as string and rejects a charset) and get `GrocyApiException.
-  HttpError.serverMessage` from Grocy's `error_message`. Browsers can write too: the preflight
-  carries the API key in the query and Grocy answers it.
-
-### Storage
-
-- `CredentialStore`: Android uses DataStore with values AES-GCM encrypted by an Android Keystore
-  key (`KeystoreCipher`); the credentials file is excluded from backups. Web uses `localStorage`
-  (no secure storage available). Both serialize via `ServerConnectionCodec` (JSON, polymorphic
-  `ServerConnection` with `@SerialName` discriminators "demo" / "api_key" / "home_assistant").
-- `SettingsStore`: DataStore on Android, `localStorage` keys prefixed `grocy.` on web. Holds
-  `checkUnlockKey` and `scannerEngine` (stored by enum name, unknown values fall back to ZXing),
-  the appearance, the stock overview's table options (`StockOverviewOptions.of`: unknown
-  values of a newer version fall back to the defaults) and the shopping list's
-  (`shopping_list_fields`/`shopping_list_grouping`, on the web `grocy.shoppingListFields`/
-  `grocy.shoppingListGrouping`).
-- Web stores access the browser only through `KeyValueStorage` (`BrowserLocalStorage` in
-  production, an in-memory one in tests). Blocked or full browser storage must not crash the app:
-  values are then kept for the session only.
-- `ServerConnection.ApiKey`/`HomeAssistant.toString()` mask the secrets; keep secrets out of
-  `toString`/logs.
-
-### FOSS vs Play variant
-
-Behaviour differences are expressed through nullability, not build flags: `unlockChecker` is
-non-null only in the Play app, which makes `UnlockState` non-null and shows the unlock key
-section, Play links, and "Recommend" pointing to Google Play. FOSS and web hide all of that.
-`UnlockState.isUnlocked` (key installed or the check turned off) unlocks the extras, currently
-the ML Kit scanner. Closed-source code only enters through `android-play`: it passes
-`additionalBarcodeDecoders = mapOf(ML_KIT to MlKitBarcodeDecoderFactory)` to
-`AndroidPlatformDependencies`; `apps:shared` never depends on `core:scanner-mlkit`. The same
-goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
-(`core:update-play`) through the `appUpdater` parameter.
-
-### Barcode scanner (`core:scanner`)
-
+- One `HttpClient` per process; `GrocyApi` methods take the `ServerConnection` per call, whose
+  URL comes from `ServerUrl.normalize`. DTOs are `internal` with a `toModel()` mapping. Details
+  and error mapping: `docs/architecture/network.md`.
+- Screens read `GrocyDatabase` through repositories; changes are online only and store the
+  object as the server returns it. Every schema change needs a new version and a migration.
+  DTOs use `FlexInt`, `FlexDouble`, `FlexBoolean`, `FlexString`. Details:
+  `docs/architecture/database.md`.
+- Secrets are encrypted at rest and kept out of `toString` and logs. FOSS and Play differ only
+  through nullability (`unlockChecker`), never build flags; closed-source code only enters
+  through `android-play`. Details: `docs/architecture/storage-and-variants.md`.
 - Always use `BarcodeScanner` as an item of a group; details in `docs/architecture/scanner.md`.
 
 ### Theming and UI
@@ -422,44 +290,13 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   (kept out of public APIs: `HapticTooltipBox` takes its own `TooltipPosition`). Compose 1.13
   needs compileSdk 37.1 or newer (`android-compileSdkMinor`). Material's adaptive libraries
   (`adaptive-navigation3`, list-detail scenes) follow the same rule: newest alpha.
-- Colors of states outside the color scheme (Grocy's highlighted rows) come from
-  `rememberStatusColors` (`core:design`): info (blue), warning (yellow), critical (red), fixed
-  hues harmonized with primary and turned into container, content and color tones like
-  Material's custom colors (90/10/40 light, 30/90/80 dark; `color` for small marks such as
-  dots), always together with a text. Gestures on list items
-  use `SwipeActionBox` (Gmail's look, the action runs on letting go beyond the threshold, the
-  item springs back); every swipe action must also be in the item's menu and its accessibility
-  actions.
+- Reuse the components of `core:design` (list in `docs/ui.md`), e.g. `SearchableDropdownField`
+  for every choice of objects, `SupportingLines` for multi-line supporting content in lazy
+  lists, `SwipeActionBox` for gestures (every swipe action also in the item's menu and its
+  accessibility actions), `rememberStatusColors` for Grocy's highlighted rows (always together
+  with a text).
 - Version numbers (app, Grocy) and other numbers read as columns use tabular figures
   (`TextStyle.withTabularNumbers()`), every digit equally wide.
-- Reuse components from `core:design` (`SegmentedListScreen`, `segmentedGroup`,
-  `SegmentedContainer`, `AppBarIconButton`, `InsetLazyColumn` + `insetItem` with max width
-  640.dp, `RoundedTextField`, `ConnectedButtonGroup`, `NavigateBackButton`, `HapticTooltipBox`,
-  `TextDialog`, `FormattedText`, `FloatingToolbarWithFab` + `FloatingToolbarIconButton` for the
-  floatingToolbar slot of `SegmentedListScreen` (snackbars never cover it: they lie above it
-  and follow it while it slides out and back in, `snackbarLift`), `SegmentedSwitchItem`,
-  `SupportingLines` for every multi-line supporting content in lazy lists (Material sizes items
-  by the slot's baselines, a reused column kept those of its former line count, so items stayed
-  too high), `SupportingBulletList` for a text with a bulleted list in that slot (wrapping
-  lines; `FormattedText`'s lists bring paragraph spacing a list item does not want), `SearchableDropdownField` for every choice of objects, a combobox like Grocy's pickers: the
-  text is the value (a text naming an option chooses it, an empty one chooses nothing, other
-  text shows "Choose an entry from the list" once no suggestion is open and is reported through
-  `onUnmatchedChange`, so forms refuse to save); the menu only suggests (fuzzy, no check marks,
-  optional fields offer "None"), opens through its arrow or while typing and closes on a choice
-  or once the text names an option completely;
-  a tap on the field or its trailing action (scan) only focuses, the arrow never does (choosing
-  needs no keyboard); its menu is one expressive menu group in a `DropdownMenuPopup`, not
-  `ExposedDropdownMenu`, whose old menu padding sits outside the scrolling and cuts the items
-  off, and no `ExposedDropdownMenuBox` either: it focuses the field whenever its menu opens), units of text fields go in the
-  `suffix` slot of `RoundedTextField`. `SegmentedSwitchItem` is Material's checkable segmented item: while on it takes the selected
-  shape and color (`secondaryContainer`) of the segmented defaults. Clicks trigger `haptic.confirm()`. `HapticTooltipBox`
-  puts its modifier on an outer `Box`, because Material's `TooltipBox` loses parent data such as `align`.
-  Tooltips show on long press, mouse hover and keyboard focus, never after a plain tap or click:
-  Compose on the web focuses a clicked button, so `TooltipPressTracker` tells a pointer focus
-  (`TooltipTrigger.PointerFocus`) from keyboard focus and long press. Focus counts as keyboard
-  focus only while the keyboard is in use (`rememberKeyboardInput`: Android's input mode, on the
-  web the last of `keydown` and `pointerdown`), because a screen opened by a click focuses its
-  first button (the back button) by itself.
 - Web pages show the hand cursor over clickable things, Compose does not: every button, item,
   chip, toggle, slider and link applies `Modifier.clickCursor(enabled)` (`core:design`, a no-op
   on Android, whose convention, also with a mouse on ChromeOS, keeps the arrow on buttons).
@@ -476,31 +313,10 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
 - Icons are Material Symbols Rounded in their outlined form only (`FILL 0`, the `<name>_24px.svg`
   of `google/material-design-icons`, not `_fill1`), never filled variants; vectors use the
   960 viewport with y shifted by 960 like the existing files.
-- Translations: English (`values/`) plus the languages of grocy-android's app resources (ca, cs,
-  de, el, es, et, fr, he, hu, it, ja, nb, nl, pl, pt-BR, pt-PT, ru, sk, sv, tr, uk, zh-CN,
-  zh-TW; regions as `values-pt-rBR`). Hebrew exists twice, `values-he` (browsers) and an
-  identical `values-iw` (Android still reports the old code, Compose Resources match exactly);
-  the Android `localeFilters` include `iw` too. Android lays RTL languages out right to left by
-  itself, the web app sets `LocalLayoutDirection` and `<html dir>` from `isRightToLeft`
-  (core:model). Claude writes the translations, they are
-  uploaded to Transifex as "to review" and native speakers correct them there; corrections come
-  back into the repository. Rules for writing one:
-  - Use the terms of Grocy's own web frontend, from its translation in the Grocy repository
-    (`localization/<language>/*.po`, e.g. "API-Schlüssel verwalten", "Bestand",
-    "Hausarbeiten", "Einkaufszettel"), so the app and the web UI say the same.
-  - Address the user like Grocy does in that language (German "du", French "vous", ...).
-    The slogan "ERP beyond your fridge" stays English, so does Home Assistant's "Long-lived
-    access token" (German "Long-Lived-Access-Token"). German "theme" is "Farbschema".
-  - Keep every placeholder (`%1$s`); leave out `translatable="false"` strings.
-  - A new language: `values-<tag>/strings.xml`, its tag in `AppLanguages` and in
-    `locales_config.xml`; `LocalesConfigTest` fails until all three match.
-  - Long texts in `files/` (changelog, licenses) have no language qualifiers and stay English.
-- Mark URLs and names `translatable="false"`.
+- Mark URLs and names `translatable="false"`. Read `docs/translations.md` before writing a
+  translation.
 - Long texts (changelog, licenses) are files in `composeResources/files/`, rendered by
-  `FormattedText`, which has its own markup: paragraphs split by blank lines, `#` headlines
-  (`#_` for tabular numbers), `__` subtitles, `**bold**` / `<b>`, `=> ` / `> ` link lines,
-  `? ` note and `! ` warning boxes in the size of the surrounding paragraphs (`bodyMedium` in
-  dialogs), `?- ` / `!- ` boxes with small text (`bodySmall`).
+  `FormattedText` with its own markup (`docs/ui.md`).
 - Android-only resources (launcher icon, splash, themes, `app_name_nightly`) are in
   `apps/shared/src/androidMain/res`.
 
@@ -514,51 +330,10 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   on Wasm needs Skiko in a browser; their Wasm test tasks are disabled entirely (linking those
   binaries costs minutes and gigabytes of memory). Keep platform-sensitive logic out of Compose
   modules when it can live elsewhere.
-- JVM tests of Android code run against stubbed Android classes: avoid Android graphics types
-  (e.g. outlines with a `Path`) and test plain data instead (`RoundRect.toCssBorderRadius`).
-- Every module gets `kotlin-test`, `kotlinx-coroutines-test` and Turbine via the convention
-  plugin; `ExperimentalCoroutinesApi` is opted in for test source sets. Add `projects.core.testing`
-  to `commonTest` when fakes are needed.
-- Fakes over mocks, there is no mocking library. `core:testing` provides:
-  - `FakeGrocyServer`: Ktor `MockEngine` behind the real `GrocyApi`, answers like a healthy Grocy
-    (shapes from the official `grocy.openapi.json`). Change answers with `respond(path, status,
-    body)`, simulate network loss with `unreachable = true` or per scheme with
-    `unreachableSchemes`, Home Assistant errors with `ingressFailure`; inspect
-    `requests`/`requestedPaths`. Home Assistant connections get a fake ingress session and reach
-    the same responses below `INGRESS_PATH`. It sends the key as header on every platform.
-  - `FakeCredentialStore`, `FakeSettingsStore`, `FakeUnlockChecker`, `FakeAppUpdater`,
-    `FakeAppLanguageStore`.
-  - `FakeGrocyServer` also serves the master data of `MasterDataJson` (Milk, Bread, a disabled
-    product, a sub product, units, barcode, stock, userfield, config, settings, the product
-    overview of Milk with two prices, chores Vacuum and a disabled one, a battery, a task
-    category, a userentity, users, a chore userfield, the shopping lists 1 "Shopping list" with
-    notes and 2 "Hardware store", item 5 (Milk, 6 pieces shown as a Pack, note "Low fat") and the
-    done note item 6 "Batteries"), answers POST of the chores' next assignments, of the shopping
-    list endpoints (new items and lists get ids) and
-    `respond(..., method = HttpMethod.Post)` per method, accepts PUT and DELETE with 204 and lists
-    them with `requestsTo(path, method)`.
-- Room needs a real SQLite: tests with a database live in `androidHostTest` (Node has no web
-  worker) and use `createInMemoryGrocyDatabase(queryContext = testDispatcher)`; modules running
-  them apply `grocy.sqlite.host.tests`, which loads the desktop SQLite library for the JVM.
-  `RepositoryTestEnvironment` (`core:testing`, Android only) puts the repositories of the screens
-  on `FakeGrocyServer` and such a database.
-- `snapshotFlow` over a `TextFieldState` in a ViewModel needs `Snapshot.sendApplyNotifications()`
-  in tests, which the frame clock does in the app.
-- Dates, durations, currencies and percents of the app language are formatted by the platform
-  in `core:model` `text` (`formatDate`, `formatRelativeTime`, `formatDuration`,
-  `formatCurrency`, `formatPercent`: ICU and `java.text` on Android, `Intl` in browsers); the
-  rounding (`timeSpanBetween`, `durationOf`, moment.js's thresholds like Grocy) and `epochDayOf`
-  are common code. Android's ICU is stubbed in JVM tests, so tests never call the relative and
-  duration formatters. Prices use the server's `CURRENCY` (`ServerConfig.currency`) and the
-  user setting `stock_decimal_places_prices_display`.
-- ViewModels get the app language as parameter (`appLanguage()` of the entries,
-  `LocalLocale`; a change restarts the app), composables read `LocalLocale`: Compose
-  deprecated `Locale.current`, which no state backs. Builds have no compiler warnings of the
-  project's own code.
-- Fuzzy search (`FuzzySearch`) and number formatting (`formatDecimal`, `parseDecimal`,
-  `platformDecimalSeparator`) live in `core:model`, so they are tested on JVM and Wasm.
-- Network code is tested against `MockEngine` via `createGrocyHttpClient(engine)`, which uses the
-  same configuration as production.
+- Fakes over mocks, there is no mocking library. `core:testing` provides `FakeGrocyServer`
+  (`MockEngine` behind the real `GrocyApi`, serving `MasterDataJson`), `FakeCredentialStore`,
+  `FakeSettingsStore` and more; add `projects.core.testing` to `commonTest` when fakes are
+  needed. Details and database tests: `docs/testing.md`.
 - Coroutines: wrap tests in `runTest`. Inject dispatchers (`UnlockRepository(checkDispatcher)`)
   and time sources (`withMinimumDuration(timeSource)`) instead of using globals; pass
   `testTimeSource` / test dispatchers in tests. Assert flows with Turbine (`flow.test {}`).
@@ -570,13 +345,12 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   is there right away like at app start (work in plain `backgroundScope` does not run under
   `advanceUntilIdle`). Compose state and `TextFieldState`
   work directly in tests (`setTextAndPlaceCursorAtEnd`).
+- ViewModels get the app language as parameter (`appLanguage()` of the entries,
+  `LocalLocale`; a change restarts the app), composables read `LocalLocale`: Compose
+  deprecated `Locale.current`, which no state backs. Builds have no compiler warnings of the
+  project's own code.
 - Logic inside composables (parsing, mapping) is extracted into plain `internal` functions and
   tested there, e.g. `parseFormattedText` for `FormattedText`.
-- Protocols with sockets are tested through a small message interface, e.g. the Home Assistant
-  handshake with scripted `WebSocketMessages` (`IngressSessionHandshakeTest`).
-- Decoders are tested with real codes: `ZxingBarcodeDecoderTest` renders QR and EAN codes with
-  ZXing's writer (white quiet zone around them, linear codes need it) and decodes them, also
-  turned by 90 degrees. Camera, permissions and ML Kit itself need a device and are not tested.
 - Test names describe behaviour (`rejectedKeyShowsErrorAndAllowsRetry`); one behaviour per test;
   given/when/then separated by blank lines.
 - Persisted formats get a test that decodes a fixed literal (see `ServerConnectionCodecTest`), so
@@ -595,18 +369,3 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   `kotlin/` are silently not compiled.
 - `internal` by default for screens, ViewModels, DTOs and helpers; public only what other modules
   use.
-
-## CI and releases (`.github/workflows`)
-
-- `checks.yml` (every push to `main`, every pull request): `./gradlew allTests`, uploads test
-  reports on failure.
-- `nightly.yml` (daily 02:00 UTC, skipped without new commits): signed nightly APKs for FOSS and
-  Play, web app deployed to GitHub Pages (build id = commit SHA, see `docs/architecture/updates.md`), a reproducibility check that builds the unsigned FOSS
-  release twice and compares bytes, then replaces the `nightly` GitHub release.
-- `release.yml` (tag `v*`, must equal `v` + `grocy.versionName`): runs `allTests`, then signed
-  FOSS APK + SHA256SUMS on the GitHub release, Play and Wear AABs as workflow artifacts.
-- Signing reads `RELEASE_*` / `NIGHTLY_*` env vars (`KEYSTORE_PATH`, `KEYSTORE_PASSWORD`,
-  `KEY_ALIAS`, `KEY_PASSWORD`); without them builds are unsigned, never debug-signed.
-- Reproducible FOSS builds matter (F-Droid/IzzyOnDroid): `vcsInfo` and the dependency info block
-  are disabled. Do not add build inputs that vary per machine, path or time.
-- Actions are pinned by commit SHA; Dependabot updates them weekly.
