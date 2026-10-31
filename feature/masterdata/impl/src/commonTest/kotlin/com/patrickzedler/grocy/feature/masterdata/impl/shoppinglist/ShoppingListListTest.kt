@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
 
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.forms.EntryPrice
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.ProductGroup
@@ -16,7 +17,6 @@ import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
 import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
-import com.patrickzedler.grocy.feature.masterdata.impl.stock.EntryPrice
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

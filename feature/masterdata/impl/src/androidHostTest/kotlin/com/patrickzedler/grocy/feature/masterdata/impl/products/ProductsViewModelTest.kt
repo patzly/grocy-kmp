@@ -3,7 +3,7 @@ package com.patrickzedler.grocy.feature.masterdata.impl.products
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.snapshots.Snapshot
 import com.patrickzedler.grocy.core.data.util.RefreshError
-import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
+import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -23,7 +23,7 @@ import kotlinx.coroutines.test.setMain
 class ProductsViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
-    private val environment = MasterDataTestEnvironment(dispatcher)
+    private val environment = RepositoryTestEnvironment(dispatcher)
 
     @BeforeTest
     fun setUp() {

@@ -10,6 +10,15 @@ import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.text.input.KeyboardType
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.NumberStepper
+import com.patrickzedler.grocy.core.forms.AmountUnit
+import com.patrickzedler.grocy.core.forms.DropdownItem
+import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.GroupItem
+import com.patrickzedler.grocy.core.forms.GroupItems
+import com.patrickzedler.grocy.core.forms.ObjectField
+import com.patrickzedler.grocy.core.forms.TextItem
+import com.patrickzedler.grocy.core.forms.destinationAmount
+import com.patrickzedler.grocy.core.forms.fieldErrorText
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.nameFor
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
@@ -23,15 +32,6 @@ import com.patrickzedler.grocy.core.resources.data_this_equals
 import com.patrickzedler.grocy.core.resources.shopping_list_list
 import com.patrickzedler.grocy.core.resources.shopping_list_product_or_note_required
 import com.patrickzedler.grocy.core.resources.shopping_list_required
-import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectField
-import com.patrickzedler.grocy.feature.masterdata.impl.product.DropdownItem
-import com.patrickzedler.grocy.feature.masterdata.impl.product.FieldError
-import com.patrickzedler.grocy.feature.masterdata.impl.product.GroupItem
-import com.patrickzedler.grocy.feature.masterdata.impl.product.GroupItems
-import com.patrickzedler.grocy.feature.masterdata.impl.product.TextItem
-import com.patrickzedler.grocy.feature.masterdata.impl.product.fieldErrorText
-import com.patrickzedler.grocy.feature.masterdata.impl.related.AmountUnit
-import com.patrickzedler.grocy.feature.masterdata.impl.related.destinationAmount
 import org.jetbrains.compose.resources.stringResource
 
 /**

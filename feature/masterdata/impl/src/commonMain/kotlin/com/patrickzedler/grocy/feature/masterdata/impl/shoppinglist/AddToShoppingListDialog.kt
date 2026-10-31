@@ -5,15 +5,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalLocale
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
+import com.patrickzedler.grocy.core.forms.FormDialog
+import com.patrickzedler.grocy.core.forms.UserfieldItem
+import com.patrickzedler.grocy.core.forms.saveMessage
 import com.patrickzedler.grocy.core.model.masterdata.nameFor
 import com.patrickzedler.grocy.core.model.text.parseDecimal
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.product_overview_add_to_shopping_list
 import com.patrickzedler.grocy.core.resources.product_userfields
 import com.patrickzedler.grocy.core.resources.shopping_list_added
-import com.patrickzedler.grocy.feature.masterdata.impl.product.UserfieldItem
-import com.patrickzedler.grocy.feature.masterdata.impl.related.FormDialog
-import com.patrickzedler.grocy.feature.masterdata.impl.related.saveMessage
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 

@@ -7,16 +7,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
+import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.ObjectField
+import com.patrickzedler.grocy.core.forms.ObjectFormState
+import com.patrickzedler.grocy.core.forms.ObjectFormViewModel
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
-import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectField
-import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectFormState
-import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectFormViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.product.FieldError
 import kotlinx.coroutines.flow.first
 
 /**

@@ -7,10 +7,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.ObjectField
+import com.patrickzedler.grocy.core.forms.ObjectFormState
+import com.patrickzedler.grocy.core.forms.ObjectFormViewModel
 import com.patrickzedler.grocy.core.model.masterdata.Userentity
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
 import com.patrickzedler.grocy.core.model.masterdata.UserfieldType
-import com.patrickzedler.grocy.feature.masterdata.impl.product.FieldError
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first

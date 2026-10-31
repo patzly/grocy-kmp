@@ -2,6 +2,10 @@
 
 Master data lists and forms, list-detail scenes, menus, refresh, products, grocycodes and stock pages. Moved from CLAUDE.md.
 
+The building blocks it shares with the stock pages and the shopping list (fields, userfields,
+`ObjectFormViewModel`/`ObjectFormScreen`, object actions, filter chips, list parts, `ChangeError`)
+live in `core:forms`.
+
 Master data (`feature:masterdata`), built after Grocy's web frontend:
 - `MasterDataScreen` (beside the start screen without back button and app menu, the start
   screen's bar has it) lists the categories of Grocy's "Manage master data" menu in its order and

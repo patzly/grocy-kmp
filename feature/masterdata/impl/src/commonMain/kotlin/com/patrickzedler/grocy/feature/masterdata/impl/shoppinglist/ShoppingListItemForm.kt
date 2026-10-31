@@ -1,5 +1,10 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
 
+import com.patrickzedler.grocy.core.forms.AmountUnit
+import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.ObjectField
+import com.patrickzedler.grocy.core.forms.numberError
+import com.patrickzedler.grocy.core.forms.productAmountUnits
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
@@ -8,11 +13,6 @@ import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
 import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.parseDecimal
-import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectField
-import com.patrickzedler.grocy.feature.masterdata.impl.product.FieldError
-import com.patrickzedler.grocy.feature.masterdata.impl.related.AmountUnit
-import com.patrickzedler.grocy.feature.masterdata.impl.related.numberError
-import com.patrickzedler.grocy.feature.masterdata.impl.related.productAmountUnits
 
 /** The inputs of Grocy's shopping list item form. */
 internal data class ShoppingListItemValues(

@@ -1,12 +1,13 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.objects
 
+import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.ObjectField
 import com.patrickzedler.grocy.core.model.masterdata.Chore
 import com.patrickzedler.grocy.core.model.masterdata.ChoreAssignmentType
 import com.patrickzedler.grocy.core.model.masterdata.ChorePeriodType
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.UserfieldType
 import com.patrickzedler.grocy.core.model.masterdata.Weekday
-import com.patrickzedler.grocy.feature.masterdata.impl.product.FieldError
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

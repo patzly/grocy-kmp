@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.stock
 
+import com.patrickzedler.grocy.core.forms.EntryPrice
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
@@ -41,9 +42,6 @@ internal data class StockEntryItem(
     /** Grocy's open button: tracked, not opened yet, and the product can be opened. */
     val canOpen: Boolean,
 )
-
-/** A price per unit, e.g. 6 per Pack; formatted by the screen. */
-internal data class EntryPrice(val price: Double, val unit: String)
 
 /** What the page shows: the filtered rows and what the filters offer. */
 internal data class StockEntriesUiState(

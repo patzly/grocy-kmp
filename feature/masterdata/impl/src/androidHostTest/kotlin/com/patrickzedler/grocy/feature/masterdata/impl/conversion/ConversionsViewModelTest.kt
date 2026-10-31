@@ -1,9 +1,9 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.conversion
 
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import com.patrickzedler.grocy.core.forms.ChangeError
 import com.patrickzedler.grocy.core.testing.MasterDataJson
-import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
-import com.patrickzedler.grocy.feature.masterdata.impl.related.ChangeError
+import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
 import io.ktor.http.HttpMethod
 import io.ktor.http.content.TextContent
 import kotlin.test.AfterTest
@@ -25,7 +25,7 @@ import kotlinx.coroutines.test.setMain
 class ConversionsViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
-    private val environment = MasterDataTestEnvironment(dispatcher)
+    private val environment = RepositoryTestEnvironment(dispatcher)
 
     @BeforeTest
     fun setUp() {

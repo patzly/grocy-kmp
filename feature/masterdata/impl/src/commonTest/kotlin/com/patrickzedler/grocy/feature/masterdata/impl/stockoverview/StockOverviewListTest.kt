@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.stockoverview
 
+import com.patrickzedler.grocy.core.forms.EntryPrice
 import com.patrickzedler.grocy.core.model.masterdata.DueType
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
@@ -18,7 +19,6 @@ import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockOverviewField
 import com.patrickzedler.grocy.core.model.stock.StockOverviewGrouping
 import com.patrickzedler.grocy.core.model.text.epochDayOf
-import com.patrickzedler.grocy.feature.masterdata.impl.stock.EntryPrice
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

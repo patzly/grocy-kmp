@@ -3,12 +3,12 @@ package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
 import app.cash.turbine.test
 import com.patrickzedler.grocy.core.data.settings.ShoppingListOptionsRepository
 import com.patrickzedler.grocy.core.data.util.RefreshError
+import com.patrickzedler.grocy.core.forms.ChangeError
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItemSync
 import com.patrickzedler.grocy.core.testing.FakeSettingsStore
-import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
-import com.patrickzedler.grocy.feature.masterdata.impl.related.ChangeError
+import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.TextContent
@@ -34,7 +34,7 @@ import kotlinx.coroutines.test.setMain
 class ShoppingListViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
-    private val environment = MasterDataTestEnvironment(dispatcher)
+    private val environment = RepositoryTestEnvironment(dispatcher)
     private val settingsStore = FakeSettingsStore()
 
     @BeforeTest

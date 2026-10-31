@@ -3,6 +3,8 @@ package com.patrickzedler.grocy.feature.masterdata.impl.related
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.stock.StockRepository
+import com.patrickzedler.grocy.core.forms.ChangeError
+import com.patrickzedler.grocy.core.forms.changeErrorOf
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow

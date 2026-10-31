@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.booking
 
+import com.patrickzedler.grocy.core.forms.minimumAmount
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.stock.ProductStockDetails
 import com.patrickzedler.grocy.core.model.text.decimalPlaces

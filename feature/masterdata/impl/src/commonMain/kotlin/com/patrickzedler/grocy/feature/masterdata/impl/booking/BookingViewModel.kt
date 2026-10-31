@@ -9,6 +9,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
+import com.patrickzedler.grocy.core.forms.ChangeError
+import com.patrickzedler.grocy.core.forms.changeErrorOf
+import com.patrickzedler.grocy.core.forms.changedValues
+import com.patrickzedler.grocy.core.forms.productAmountUnits
+import com.patrickzedler.grocy.core.forms.userfieldInputs
+import com.patrickzedler.grocy.core.forms.validationErrors
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
@@ -33,12 +39,6 @@ import com.patrickzedler.grocy.core.model.text.isoDateOf
 import com.patrickzedler.grocy.core.model.text.parseDecimal
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
 import com.patrickzedler.grocy.core.model.text.todayEpochDay
-import com.patrickzedler.grocy.feature.masterdata.impl.related.ChangeError
-import com.patrickzedler.grocy.feature.masterdata.impl.related.changeErrorOf
-import com.patrickzedler.grocy.feature.masterdata.impl.related.changedValues
-import com.patrickzedler.grocy.feature.masterdata.impl.related.productAmountUnits
-import com.patrickzedler.grocy.feature.masterdata.impl.related.userfieldInputs
-import com.patrickzedler.grocy.feature.masterdata.impl.related.validationErrors
 import kotlin.math.abs
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel

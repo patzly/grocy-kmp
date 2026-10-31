@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.stock
 
+import com.patrickzedler.grocy.core.forms.EntryPrice
 import com.patrickzedler.grocy.core.model.masterdata.DueType
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product

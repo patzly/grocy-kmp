@@ -8,7 +8,6 @@ import com.patrickzedler.grocy.core.model.stock.ProductGrocycode
 import com.patrickzedler.grocy.core.model.stock.ProductLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.text.isoDateOf
-import kotlin.math.pow
 
 /** Grocy's four stock booking pages. */
 internal enum class BookingKind { PURCHASE, CONSUME, TRANSFER, INVENTORY }
@@ -71,10 +70,6 @@ internal fun matchCode(
         ?: return if (all.any { it.id == productId }) CodeMatch.NotOffered else CodeMatch.Unknown
     return CodeMatch.Found(product, barcode, grocycode?.stockId)
 }
-
-/** Grocy's smallest amount of its number pickers: 1 without decimal places, else 10^-places. */
-internal fun minimumAmount(decimals: Int): Double =
-    if (decimals <= 0) 1.0 else 10.0.pow(-decimals)
 
 /**
  * The price per stock unit Grocy books for a [price] typed for a unit with [factor] (that

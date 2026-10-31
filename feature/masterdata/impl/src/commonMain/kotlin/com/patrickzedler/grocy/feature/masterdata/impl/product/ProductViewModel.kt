@@ -7,6 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.masterdata.PictureChange
+import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.UserfieldError
+import com.patrickzedler.grocy.core.forms.UserfieldInput
+import com.patrickzedler.grocy.core.forms.defaultUserfieldValue
+import com.patrickzedler.grocy.core.forms.ignoringServerErrors
+import com.patrickzedler.grocy.core.forms.validateUserfield
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
@@ -16,7 +22,6 @@ import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
 import com.patrickzedler.grocy.core.network.GrocyApiException
-import com.patrickzedler.grocy.feature.masterdata.impl.products.ignoringServerErrors
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

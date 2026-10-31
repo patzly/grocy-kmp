@@ -217,3 +217,17 @@ private val ExposedEntities = listOf(
     "recipes_pos_resolved", "battery_charge_cycles", "product_barcodes_view",
     "permission_hierarchy", "uihelper_shopping_list", "sessions",
 )
+
+/** Grocy's entity of the objects of the list, the name of their API path. */
+internal val ObjectListKind.entity: String
+    get() = when (this) {
+        ObjectListKind.LOCATIONS -> MasterDataRepository.LOCATIONS
+        ObjectListKind.STORES -> MasterDataRepository.STORES
+        ObjectListKind.QUANTITY_UNITS -> MasterDataRepository.QUANTITY_UNITS
+        ObjectListKind.PRODUCT_GROUPS -> MasterDataRepository.PRODUCT_GROUPS
+        ObjectListKind.CHORES -> MasterDataRepository.CHORES
+        ObjectListKind.BATTERIES -> MasterDataRepository.BATTERIES
+        ObjectListKind.TASK_CATEGORIES -> MasterDataRepository.TASK_CATEGORIES
+        ObjectListKind.USERFIELDS -> MasterDataRepository.USERFIELDS
+        ObjectListKind.USERENTITIES -> MasterDataRepository.USERENTITIES
+    }

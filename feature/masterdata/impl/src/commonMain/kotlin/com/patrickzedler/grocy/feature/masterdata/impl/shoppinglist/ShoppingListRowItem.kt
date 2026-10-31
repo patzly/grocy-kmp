@@ -47,6 +47,10 @@ import com.patrickzedler.grocy.core.design.component.SwipeAction
 import com.patrickzedler.grocy.core.design.component.SwipeActionBox
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.rememberStatusColors
+import com.patrickzedler.grocy.core.forms.FieldChip
+import com.patrickzedler.grocy.core.forms.FieldChipView
+import com.patrickzedler.grocy.core.forms.ListDetailItem
+import com.patrickzedler.grocy.core.forms.labelled
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItemSync
 import com.patrickzedler.grocy.core.model.text.formatCurrency
@@ -77,10 +81,6 @@ import com.patrickzedler.grocy.core.resources.shopping_list_mark_done
 import com.patrickzedler.grocy.core.resources.shopping_list_mark_undone
 import com.patrickzedler.grocy.core.resources.stock_entry_price
 import com.patrickzedler.grocy.core.resources.stock_overview_below_min_stock
-import com.patrickzedler.grocy.feature.masterdata.impl.objects.ListDetailItem
-import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.FieldChip
-import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.FieldChipView
-import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.labelled
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource

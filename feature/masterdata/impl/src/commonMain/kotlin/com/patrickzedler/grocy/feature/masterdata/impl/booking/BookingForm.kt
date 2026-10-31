@@ -5,6 +5,10 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.patrickzedler.grocy.core.forms.AmountUnit
+import com.patrickzedler.grocy.core.forms.ChangeError
+import com.patrickzedler.grocy.core.forms.UserfieldError
+import com.patrickzedler.grocy.core.forms.UserfieldInput
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
@@ -18,10 +22,6 @@ import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.stock.ProductLocationAmount
 import com.patrickzedler.grocy.core.model.stock.ProductStockDetails
 import com.patrickzedler.grocy.core.model.stock.StockEntry
-import com.patrickzedler.grocy.feature.masterdata.impl.product.UserfieldError
-import com.patrickzedler.grocy.feature.masterdata.impl.product.UserfieldInput
-import com.patrickzedler.grocy.feature.masterdata.impl.related.AmountUnit
-import com.patrickzedler.grocy.feature.masterdata.impl.related.ChangeError
 
 /** What the stock pages choose from, from the database. */
 internal data class BookingOptions(

@@ -16,6 +16,11 @@ import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.forms.ChangeError
+import com.patrickzedler.grocy.core.forms.DeleteDialog
+import com.patrickzedler.grocy.core.forms.FormDialog
+import com.patrickzedler.grocy.core.forms.TextItem
+import com.patrickzedler.grocy.core.forms.saveMessage
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_cancel
 import com.patrickzedler.grocy.core.resources.shopping_list_adding_item
@@ -29,11 +34,6 @@ import com.patrickzedler.grocy.core.resources.shopping_list_print_options
 import com.patrickzedler.grocy.core.resources.shopping_list_print_show_header
 import com.patrickzedler.grocy.core.resources.shopping_list_skip
 import com.patrickzedler.grocy.core.resources.shopping_list_thermal_printer
-import com.patrickzedler.grocy.feature.masterdata.impl.objects.DeleteDialog
-import com.patrickzedler.grocy.feature.masterdata.impl.product.TextItem
-import com.patrickzedler.grocy.feature.masterdata.impl.related.ChangeError
-import com.patrickzedler.grocy.feature.masterdata.impl.related.FormDialog
-import com.patrickzedler.grocy.feature.masterdata.impl.related.saveMessage
 import org.jetbrains.compose.resources.stringResource
 
 /** The questions of [viewModel] and the forms it opens over the list. */

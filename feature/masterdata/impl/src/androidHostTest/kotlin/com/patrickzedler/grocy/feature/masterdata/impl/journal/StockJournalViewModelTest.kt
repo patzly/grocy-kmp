@@ -3,7 +3,7 @@ package com.patrickzedler.grocy.feature.masterdata.impl.journal
 import app.cash.turbine.test
 import com.patrickzedler.grocy.core.model.stock.StockTransactionType
 import com.patrickzedler.grocy.core.model.text.epochDayOf
-import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
+import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import kotlin.test.AfterTest
@@ -23,7 +23,7 @@ import kotlinx.coroutines.test.setMain
 class StockJournalViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
-    private val environment = MasterDataTestEnvironment(dispatcher)
+    private val environment = RepositoryTestEnvironment(dispatcher)
 
     @BeforeTest
     fun setUp() {

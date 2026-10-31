@@ -1,13 +1,13 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.conversion
 
+import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.minimumAmount
+import com.patrickzedler.grocy.core.forms.numberError
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnitConversion
 import com.patrickzedler.grocy.core.model.masterdata.nameFor
 import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.parseDecimal
-import com.patrickzedler.grocy.feature.masterdata.impl.product.FieldError
-import com.patrickzedler.grocy.feature.masterdata.impl.product.minimumAmount
-import com.patrickzedler.grocy.feature.masterdata.impl.related.numberError
 
 /** The inputs of Grocy's conversion form. */
 internal data class ConversionFormValues(

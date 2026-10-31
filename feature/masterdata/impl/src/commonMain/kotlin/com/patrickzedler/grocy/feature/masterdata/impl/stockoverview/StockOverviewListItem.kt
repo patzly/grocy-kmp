@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -16,7 +15,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedListItem
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -43,6 +41,11 @@ import com.patrickzedler.grocy.core.design.component.SwipeActionBox
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.rememberStatusColors
+import com.patrickzedler.grocy.core.forms.EntryPrice
+import com.patrickzedler.grocy.core.forms.FieldChip
+import com.patrickzedler.grocy.core.forms.FieldChipView
+import com.patrickzedler.grocy.core.forms.ProductThumbnail
+import com.patrickzedler.grocy.core.forms.labelled
 import com.patrickzedler.grocy.core.model.stock.DueStatus
 import com.patrickzedler.grocy.core.model.stock.StockOverviewField
 import com.patrickzedler.grocy.core.model.text.formatCurrency
@@ -80,13 +83,9 @@ import com.patrickzedler.grocy.core.resources.stock_overview_below_min_stock
 import com.patrickzedler.grocy.core.resources.stock_overview_consume
 import com.patrickzedler.grocy.core.resources.stock_overview_consume_all
 import com.patrickzedler.grocy.core.resources.stock_overview_consume_spoiled
-import com.patrickzedler.grocy.core.resources.stock_overview_field_value
 import com.patrickzedler.grocy.core.resources.stock_overview_on_shopping_list
 import com.patrickzedler.grocy.core.resources.stock_overview_open
 import com.patrickzedler.grocy.core.resources.stock_overview_search_recipes
-import com.patrickzedler.grocy.feature.masterdata.impl.products.ProductThumbnail
-import com.patrickzedler.grocy.feature.masterdata.impl.stock.EntryPrice
-import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -262,14 +261,6 @@ private fun menuGroups(
     ),
 )
 
-/** A field shown as chip: its text, how screen readers name it, its icon and colors. */
-internal class FieldChip(
-    val text: String,
-    val description: String,
-    val icon: DrawableResource? = null,
-    val status: StatusColor? = null,
-)
-
 /**
  * The shown fields below the name, wrapping into more rows; the description as text above them.
  * A new layout for other chips: Material sizes the item by the baselines of this slot, which a
@@ -442,56 +433,7 @@ private fun dueChip(
     )
 }
 
-@Composable
-internal fun labelled(label: String, value: String) =
-    stringResource(Res.string.stock_overview_field_value, label, value)
-
-/**
- * A chip that only shows a value: no outline or elevation, surfaceContainer when neutral, a
- * status color otherwise.
- */
-@Composable
-internal fun FieldChipView(chip: FieldChip) {
-    val container = chip.status?.container ?: MaterialTheme.colorScheme.surfaceContainer
-    val content = chip.status?.content ?: MaterialTheme.colorScheme.onSurfaceVariant
-    Surface(
-        shape = MaterialTheme.shapes.small,
-        color = container,
-        contentColor = content,
-        // As text, not description: the item merges them, and a description would hide the
-        // product's name from screen readers
-        modifier = Modifier.clearAndSetSemantics { text = AnnotatedString(chip.description) },
-    ) {
-        Row(
-            modifier = Modifier
-                .heightIn(min = ChipHeight)
-                .padding(start = if (chip.icon != null) 8.dp else 12.dp, end = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            chip.icon?.let {
-                Icon(
-                    painter = painterResource(it),
-                    contentDescription = null,
-                    modifier = Modifier.size(ChipIconSize),
-                    tint = content,
-                )
-            }
-            Text(
-                text = chip.text,
-                style = MaterialTheme.typography.labelLarge,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
-    }
-}
-
 private const val DESCRIPTION_LINES = 2
 
 private val ShoppingListIconSize = 18.dp
 private val ShoppingListIconGap = 6.dp
-
-// Material's chip height and icon size
-private val ChipHeight = 32.dp
-private val ChipIconSize = 18.dp

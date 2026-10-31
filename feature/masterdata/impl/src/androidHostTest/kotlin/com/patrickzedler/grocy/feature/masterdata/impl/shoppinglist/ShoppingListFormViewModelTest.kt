@@ -1,10 +1,10 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
 
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import com.patrickzedler.grocy.core.forms.ObjectField
+import com.patrickzedler.grocy.core.forms.ObjectFormLoad
 import com.patrickzedler.grocy.core.testing.MasterDataJson
-import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
-import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectField
-import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectFormLoad
+import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
 import io.ktor.http.HttpMethod
 import io.ktor.http.content.TextContent
 import kotlin.test.AfterTest
@@ -25,7 +25,7 @@ import kotlinx.coroutines.test.setMain
 class ShoppingListFormViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
-    private val environment = MasterDataTestEnvironment(dispatcher)
+    private val environment = RepositoryTestEnvironment(dispatcher)
 
     @BeforeTest
     fun setUp() {

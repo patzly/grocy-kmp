@@ -6,13 +6,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.ObjectField
+import com.patrickzedler.grocy.core.forms.ObjectFormState
+import com.patrickzedler.grocy.core.forms.ObjectFormViewModel
 import com.patrickzedler.grocy.core.model.masterdata.Battery
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.ProductGroup
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.masterdata.TaskCategory
-import com.patrickzedler.grocy.feature.masterdata.impl.product.FieldError
 import kotlinx.coroutines.flow.first
 
 /**

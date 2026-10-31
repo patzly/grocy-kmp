@@ -1,11 +1,11 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.barcode
 
+import com.patrickzedler.grocy.core.forms.FieldError
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
-import com.patrickzedler.grocy.feature.masterdata.impl.product.FieldError
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

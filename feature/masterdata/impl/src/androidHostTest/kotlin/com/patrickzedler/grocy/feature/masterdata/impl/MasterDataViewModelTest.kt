@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.feature.masterdata.impl
 
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.core.model.server.ServerConfig
+import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -24,7 +25,7 @@ import kotlinx.coroutines.test.setMain
 class MasterDataViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
-    private val environment = MasterDataTestEnvironment(dispatcher)
+    private val environment = RepositoryTestEnvironment(dispatcher)
 
     @BeforeTest
     fun setUp() {

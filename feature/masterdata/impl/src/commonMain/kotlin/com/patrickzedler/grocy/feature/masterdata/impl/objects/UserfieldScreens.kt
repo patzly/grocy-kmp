@@ -11,6 +11,14 @@ import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.forms.ChoiceItem
+import com.patrickzedler.grocy.core.forms.DropdownItem
+import com.patrickzedler.grocy.core.forms.FormFrame
+import com.patrickzedler.grocy.core.forms.GroupItems
+import com.patrickzedler.grocy.core.forms.ObjectField
+import com.patrickzedler.grocy.core.forms.ObjectFormScreen
+import com.patrickzedler.grocy.core.forms.TextItem
+import com.patrickzedler.grocy.core.forms.fieldErrorText
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.data_none
 import com.patrickzedler.grocy.core.resources.ic_rounded_edit_attributes
@@ -42,11 +50,6 @@ import com.patrickzedler.grocy.core.resources.userfield_sort_number
 import com.patrickzedler.grocy.core.resources.userfield_sort_number_hint
 import com.patrickzedler.grocy.core.resources.userfield_type
 import com.patrickzedler.grocy.core.resources.userfield_type_required
-import com.patrickzedler.grocy.feature.masterdata.impl.product.ChoiceItem
-import com.patrickzedler.grocy.feature.masterdata.impl.product.DropdownItem
-import com.patrickzedler.grocy.feature.masterdata.impl.product.GroupItems
-import com.patrickzedler.grocy.feature.masterdata.impl.product.TextItem
-import com.patrickzedler.grocy.feature.masterdata.impl.product.fieldErrorText
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

@@ -12,6 +12,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
+import com.patrickzedler.grocy.core.forms.DropdownItem
+import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.FormDialog
+import com.patrickzedler.grocy.core.forms.GroupItems
+import com.patrickzedler.grocy.core.forms.ScannerToggleButton
+import com.patrickzedler.grocy.core.forms.TextItem
+import com.patrickzedler.grocy.core.forms.UserfieldItem
+import com.patrickzedler.grocy.core.forms.destinationAmount
+import com.patrickzedler.grocy.core.forms.fieldErrorText
+import com.patrickzedler.grocy.core.forms.saveMessage
 import com.patrickzedler.grocy.core.model.masterdata.nameFor
 import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
@@ -28,16 +38,6 @@ import com.patrickzedler.grocy.core.resources.data_store
 import com.patrickzedler.grocy.core.resources.data_this_equals
 import com.patrickzedler.grocy.core.resources.product_userfields
 import com.patrickzedler.grocy.core.scanner.BarcodeScanner
-import com.patrickzedler.grocy.feature.masterdata.impl.product.DropdownItem
-import com.patrickzedler.grocy.feature.masterdata.impl.product.FieldError
-import com.patrickzedler.grocy.feature.masterdata.impl.product.GroupItems
-import com.patrickzedler.grocy.feature.masterdata.impl.product.TextItem
-import com.patrickzedler.grocy.feature.masterdata.impl.product.UserfieldItem
-import com.patrickzedler.grocy.feature.masterdata.impl.product.fieldErrorText
-import com.patrickzedler.grocy.feature.masterdata.impl.related.FormDialog
-import com.patrickzedler.grocy.feature.masterdata.impl.related.ScannerToggleButton
-import com.patrickzedler.grocy.feature.masterdata.impl.related.destinationAmount
-import com.patrickzedler.grocy.feature.masterdata.impl.related.saveMessage
 import org.jetbrains.compose.resources.stringResource
 
 /** Grocy's barcode form of a product as dialog; the barcode can be scanned. */

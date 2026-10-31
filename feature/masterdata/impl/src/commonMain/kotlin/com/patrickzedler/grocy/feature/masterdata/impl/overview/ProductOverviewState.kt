@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.overview
 
 import com.patrickzedler.grocy.core.design.component.CHART_COLOR_COUNT
+import com.patrickzedler.grocy.core.forms.htmlToPlainText
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.PriceHistoryEntry
 import com.patrickzedler.grocy.core.model.masterdata.Product
@@ -12,7 +13,6 @@ import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.model.text.formatDecimal
-import com.patrickzedler.grocy.feature.masterdata.impl.product.htmlToPlainText
 
 /**
  * Grocy's "Product overview" of one product: what the stored product says at once, what the

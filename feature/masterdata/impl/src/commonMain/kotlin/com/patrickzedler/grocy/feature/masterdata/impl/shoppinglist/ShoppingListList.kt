@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
 
 import androidx.compose.runtime.Immutable
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.forms.EntryPrice
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.ProductGroup
@@ -20,7 +21,6 @@ import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
 import com.patrickzedler.grocy.core.model.text.FuzzySearch
 import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.normalizedForSearch
-import com.patrickzedler.grocy.feature.masterdata.impl.stock.EntryPrice
 import kotlin.math.ceil
 import kotlin.math.pow
 import kotlin.math.roundToLong

@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.util.RefreshController
 import com.patrickzedler.grocy.core.data.util.RefreshState
+import com.patrickzedler.grocy.core.forms.ignoringServerErrors
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
@@ -19,8 +20,6 @@ import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
-import com.patrickzedler.grocy.core.network.GrocyApiException
-import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -195,13 +194,4 @@ internal class ProductsViewModel(
         const val SEARCH_DELAY_MILLIS = 150L
         const val STOP_TIMEOUT_MILLIS = 5_000L
     }
-}
-
-/** [block]'s result, null when the server could not answer it (offline, errors). */
-internal suspend fun <T> ignoringServerErrors(block: suspend () -> T): T? = try {
-    block()
-} catch (e: CancellationException) {
-    throw e
-} catch (_: GrocyApiException) {
-    null
 }

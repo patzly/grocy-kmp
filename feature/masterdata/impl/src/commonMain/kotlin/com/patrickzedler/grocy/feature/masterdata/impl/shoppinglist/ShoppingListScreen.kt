@@ -40,6 +40,10 @@ import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.edgeToEdgeItem
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.insetItems
+import com.patrickzedler.grocy.core.forms.actionMessage
+import com.patrickzedler.grocy.core.forms.emptyListItem
+import com.patrickzedler.grocy.core.forms.searchItem
+import com.patrickzedler.grocy.core.forms.showSearchAtTop
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.resources.Res
@@ -69,15 +73,11 @@ import com.patrickzedler.grocy.core.resources.shopping_list_ungrouped
 import com.patrickzedler.grocy.core.resources.stock_overview_group_not_set
 import com.patrickzedler.grocy.core.resources.stock_overview_total_value
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
-import com.patrickzedler.grocy.feature.masterdata.impl.objects.emptyListItem
-import com.patrickzedler.grocy.feature.masterdata.impl.objects.searchItem
-import com.patrickzedler.grocy.feature.masterdata.impl.objects.showSearchAtTop
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductLinks
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewHost
 import com.patrickzedler.grocy.feature.masterdata.impl.overview.ProductOverviewViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintEffect
 import com.patrickzedler.grocy.feature.masterdata.impl.related.LabelPrintViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.related.actionMessage
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

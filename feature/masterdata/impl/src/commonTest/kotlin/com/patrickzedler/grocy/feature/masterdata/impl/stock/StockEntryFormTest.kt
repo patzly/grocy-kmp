@@ -1,8 +1,8 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.stock
 
+import com.patrickzedler.grocy.core.forms.FieldError
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.stock.StockEntry
-import com.patrickzedler.grocy.feature.masterdata.impl.product.FieldError
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

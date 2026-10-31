@@ -1,13 +1,13 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist
 
+import com.patrickzedler.grocy.core.forms.AmountUnit
+import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.ObjectField
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
-import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectField
-import com.patrickzedler.grocy.feature.masterdata.impl.product.FieldError
-import com.patrickzedler.grocy.feature.masterdata.impl.related.AmountUnit
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

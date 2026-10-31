@@ -1,9 +1,9 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.conversion
 
+import com.patrickzedler.grocy.core.forms.FieldError
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnitConversion
 import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
-import com.patrickzedler.grocy.feature.masterdata.impl.product.FieldError
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

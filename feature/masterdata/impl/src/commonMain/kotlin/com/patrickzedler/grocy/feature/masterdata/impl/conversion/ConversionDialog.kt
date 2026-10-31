@@ -6,6 +6,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
+import com.patrickzedler.grocy.core.forms.DropdownItem
+import com.patrickzedler.grocy.core.forms.FormDialog
+import com.patrickzedler.grocy.core.forms.TextItem
+import com.patrickzedler.grocy.core.forms.UserfieldItem
+import com.patrickzedler.grocy.core.forms.fieldErrorText
+import com.patrickzedler.grocy.core.forms.saveMessage
 import com.patrickzedler.grocy.core.model.text.parseDecimal
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
 import com.patrickzedler.grocy.core.resources.Res
@@ -20,12 +26,6 @@ import com.patrickzedler.grocy.core.resources.conversion_override_for
 import com.patrickzedler.grocy.core.resources.conversion_qu_required
 import com.patrickzedler.grocy.core.resources.conversion_to
 import com.patrickzedler.grocy.core.resources.product_userfields
-import com.patrickzedler.grocy.feature.masterdata.impl.product.DropdownItem
-import com.patrickzedler.grocy.feature.masterdata.impl.product.TextItem
-import com.patrickzedler.grocy.feature.masterdata.impl.product.UserfieldItem
-import com.patrickzedler.grocy.feature.masterdata.impl.product.fieldErrorText
-import com.patrickzedler.grocy.feature.masterdata.impl.related.FormDialog
-import com.patrickzedler.grocy.feature.masterdata.impl.related.saveMessage
 import org.jetbrains.compose.resources.stringResource
 
 /** Grocy's form of a product's conversion override or a unit's default conversion. */

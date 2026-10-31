@@ -9,6 +9,9 @@ import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.DetailPlaceholder
 import com.patrickzedler.grocy.core.design.component.ScreenPane
+import com.patrickzedler.grocy.core.forms.FormFrame
+import com.patrickzedler.grocy.core.forms.ObjectActionEvent
+import com.patrickzedler.grocy.core.forms.ObjectActionsViewModel
 import com.patrickzedler.grocy.core.model.masterdata.grocyPluralFormCount
 import com.patrickzedler.grocy.core.navigation.DetailRoute
 import com.patrickzedler.grocy.core.navigation.Navigator
@@ -55,9 +58,6 @@ import com.patrickzedler.grocy.feature.masterdata.impl.journal.StockJournalScree
 import com.patrickzedler.grocy.feature.masterdata.impl.journal.StockJournalViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.ChoreScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.ChoreViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.objects.FormFrame
-import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectActionEvent
-import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectActionsViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectListKind
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectListScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectListViewModel

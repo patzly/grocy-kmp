@@ -242,6 +242,8 @@ core/
   design/        GrocyTheme (Material 3 Expressive, MaterialKolor), typography, shapes, components
   navigation/    Navigator, Route, GrocyNavDisplay (Navigation 3)
   ui/            cross-feature UI: AppDialog/AppDialogHost, feedback/help/unlock dialogs, share
+  forms/         form and list building blocks of the features: TextItem, DropdownItem,
+                 userfields, ObjectFormViewModel/Screen, object actions, filter chips, ChangeError
   scanner/       BarcodeScanner composable, BarcodeDecoder interface, ZXing on Android + Web
   scanner-mlkit/ ML Kit implementation of BarcodeDecoder, closed source, only for android-play
   update-play/   Google Play in-app updates (PlayAppUpdater), closed source, only for android-play
@@ -533,6 +535,8 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
 - Room needs a real SQLite: tests with a database live in `androidHostTest` (Node has no web
   worker) and use `createInMemoryGrocyDatabase(queryContext = testDispatcher)`; modules running
   them apply `grocy.sqlite.host.tests`, which loads the desktop SQLite library for the JVM.
+  `RepositoryTestEnvironment` (`core:testing`, Android only) puts the repositories of the screens
+  on `FakeGrocyServer` and such a database.
 - `snapshotFlow` over a `TextFieldState` in a ViewModel needs `Snapshot.sendApplyNotifications()`
   in tests, which the frame clock does in the app.
 - Dates, durations, currencies and percents of the app language are formatted by the platform

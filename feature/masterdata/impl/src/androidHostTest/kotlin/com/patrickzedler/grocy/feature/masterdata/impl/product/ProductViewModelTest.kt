@@ -4,8 +4,9 @@ import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import app.cash.turbine.test
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.masterdata.PictureChange
+import com.patrickzedler.grocy.core.forms.FieldError
 import com.patrickzedler.grocy.core.testing.MasterDataJson
-import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
+import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import kotlin.test.AfterTest
@@ -27,7 +28,7 @@ import kotlinx.coroutines.test.setMain
 class ProductViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
-    private val environment = MasterDataTestEnvironment(dispatcher)
+    private val environment = RepositoryTestEnvironment(dispatcher)
 
     @BeforeTest
     fun setUp() {

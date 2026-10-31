@@ -8,6 +8,14 @@ import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
+import com.patrickzedler.grocy.core.forms.DatePickerButton
+import com.patrickzedler.grocy.core.forms.DropdownItem
+import com.patrickzedler.grocy.core.forms.FormDialog
+import com.patrickzedler.grocy.core.forms.GroupItems
+import com.patrickzedler.grocy.core.forms.TextItem
+import com.patrickzedler.grocy.core.forms.UserfieldItem
+import com.patrickzedler.grocy.core.forms.fieldErrorText
+import com.patrickzedler.grocy.core.forms.saveMessage
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.data_amount
 import com.patrickzedler.grocy.core.resources.data_due_date
@@ -25,14 +33,6 @@ import com.patrickzedler.grocy.core.resources.stock_entry_edit
 import com.patrickzedler.grocy.core.resources.stock_entry_opened
 import com.patrickzedler.grocy.core.resources.stock_entry_purchased_required
 import com.patrickzedler.grocy.core.resources.stock_entry_reprint_label
-import com.patrickzedler.grocy.feature.masterdata.impl.product.DatePickerButton
-import com.patrickzedler.grocy.feature.masterdata.impl.product.DropdownItem
-import com.patrickzedler.grocy.feature.masterdata.impl.product.GroupItems
-import com.patrickzedler.grocy.feature.masterdata.impl.product.TextItem
-import com.patrickzedler.grocy.feature.masterdata.impl.product.UserfieldItem
-import com.patrickzedler.grocy.feature.masterdata.impl.product.fieldErrorText
-import com.patrickzedler.grocy.feature.masterdata.impl.related.FormDialog
-import com.patrickzedler.grocy.feature.masterdata.impl.related.saveMessage
 import kotlinx.coroutines.flow.drop
 import org.jetbrains.compose.resources.stringResource
 

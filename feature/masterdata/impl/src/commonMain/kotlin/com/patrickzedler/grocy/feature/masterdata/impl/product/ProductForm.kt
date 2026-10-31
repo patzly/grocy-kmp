@@ -1,5 +1,9 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.product
 
+import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.htmlToPlainText
+import com.patrickzedler.grocy.core.forms.minimumAmount
+import com.patrickzedler.grocy.core.forms.plainTextToHtml
 import com.patrickzedler.grocy.core.model.masterdata.DueType
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.PurchasePriceType
@@ -67,19 +71,6 @@ internal enum class ProductField {
     QUICK_OPEN_AMOUNT,
 }
 
-internal sealed interface FieldError {
-    data object Required : FieldError
-
-    /** Grocy's number message: at least [min], at most [decimals] decimal places. */
-    data class InvalidNumber(val min: String, val decimals: Int) : FieldError
-
-    /** Not a date and time as "YYYY-MM-DD HH:MM:SS". */
-    data object InvalidDateTime : FieldError
-
-    /** Not a date as "YYYY-MM-DD". */
-    data object InvalidDate : FieldError
-}
-
 /** Which parts of the form the server's features show, like Grocy's feature flags. */
 internal data class ProductFormFeatures(
     val locations: Boolean,
@@ -101,13 +92,6 @@ internal data class ProductFormFeatures(
             labelPrinter = config.labelPrinter,
         )
     }
-}
-
-/** Smallest amount Grocy accepts for quick amounts: 1 without decimals, else 0.0…01. */
-internal fun minimumAmount(decimals: Int): Double {
-    var value = 1.0
-    repeat(decimals.coerceAtLeast(0)) { value /= 10 }
-    return value
 }
 
 /**
@@ -300,35 +284,3 @@ internal fun newProductValues(presets: ProductPresets, features: ProductFormFeat
  */
 internal fun linkedQuantityUnit(current: Int?, previousStock: Int?, newStock: Int?): Int? =
     if (current == null || current == previousStock) newStock else current
-
-/** Grocy keeps descriptions as HTML; the form edits them as plain text. */
-internal fun htmlToPlainText(html: String): String {
-    if (html.isBlank()) return ""
-    val text = html
-        .replace(Regex("(?i)<br\\s*/?>"), "\n")
-        .replace(Regex("(?i)</(p|div|li|h[1-6])>"), "\n\n")
-        .replace(Regex("(?i)<li[^>]*>"), "• ")
-        .replace(Regex("<[^>]*>"), "")
-        .replace("&nbsp;", " ")
-        .replace("&lt;", "<")
-        .replace("&gt;", ">")
-        .replace("&quot;", "\"")
-        .replace("&#39;", "'")
-        .replace("&amp;", "&")
-    return text.replace(Regex("\n{3,}"), "\n\n").trim()
-}
-
-/** Plain text as HTML paragraphs for Grocy's description, line breaks kept. */
-internal fun plainTextToHtml(text: String): String {
-    if (text.isBlank()) return ""
-    return text.trim()
-        .split(Regex("\n\\s*\n"))
-        .joinToString("") { paragraph ->
-            val escaped = paragraph.trim()
-                .replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\n", "<br>")
-            "<p>$escaped</p>"
-        }
-}

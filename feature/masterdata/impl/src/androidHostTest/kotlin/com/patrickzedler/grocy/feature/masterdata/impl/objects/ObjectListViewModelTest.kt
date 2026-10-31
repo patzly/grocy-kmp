@@ -2,7 +2,7 @@ package com.patrickzedler.grocy.feature.masterdata.impl.objects
 
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.snapshots.Snapshot
-import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
+import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -22,7 +22,7 @@ import org.jetbrains.compose.resources.StringResource
 class ObjectListViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
-    private val environment = MasterDataTestEnvironment(dispatcher)
+    private val environment = RepositoryTestEnvironment(dispatcher)
 
     // Resource keys instead of texts, the JVM tests have no app language
     private val texts = object : ListTexts {

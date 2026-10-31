@@ -1,6 +1,8 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.stockoverview
 
 import androidx.compose.runtime.Immutable
+import com.patrickzedler.grocy.core.forms.EntryPrice
+import com.patrickzedler.grocy.core.forms.htmlToPlainText
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
@@ -23,8 +25,6 @@ import com.patrickzedler.grocy.core.model.text.FuzzySearch
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.normalizedForSearch
-import com.patrickzedler.grocy.feature.masterdata.impl.product.htmlToPlainText
-import com.patrickzedler.grocy.feature.masterdata.impl.stock.EntryPrice
 import com.patrickzedler.grocy.feature.masterdata.impl.stock.priceToStockFactor
 import com.patrickzedler.grocy.feature.masterdata.impl.stock.toStockFactor
 

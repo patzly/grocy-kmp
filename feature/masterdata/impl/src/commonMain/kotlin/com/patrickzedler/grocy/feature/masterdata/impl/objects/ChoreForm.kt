@@ -7,6 +7,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.ObjectField
+import com.patrickzedler.grocy.core.forms.ObjectFormState
+import com.patrickzedler.grocy.core.forms.ObjectFormViewModel
+import com.patrickzedler.grocy.core.forms.minimumAmount
 import com.patrickzedler.grocy.core.model.User
 import com.patrickzedler.grocy.core.model.masterdata.Chore
 import com.patrickzedler.grocy.core.model.masterdata.ChoreAssignmentType
@@ -22,8 +27,6 @@ import com.patrickzedler.grocy.core.model.text.grocyDateTimeOf
 import com.patrickzedler.grocy.core.model.text.localNowMillis
 import com.patrickzedler.grocy.core.model.text.parseDecimal
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
-import com.patrickzedler.grocy.feature.masterdata.impl.product.FieldError
-import com.patrickzedler.grocy.feature.masterdata.impl.product.minimumAmount
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine

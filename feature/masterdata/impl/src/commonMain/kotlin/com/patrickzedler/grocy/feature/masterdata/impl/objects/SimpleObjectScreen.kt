@@ -11,6 +11,15 @@ import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.forms.FormFrame
+import com.patrickzedler.grocy.core.forms.GroupItems
+import com.patrickzedler.grocy.core.forms.ObjectAction
+import com.patrickzedler.grocy.core.forms.ObjectActionsHost
+import com.patrickzedler.grocy.core.forms.ObjectActionsViewModel
+import com.patrickzedler.grocy.core.forms.ObjectField
+import com.patrickzedler.grocy.core.forms.ObjectFormScreen
+import com.patrickzedler.grocy.core.forms.TextItem
+import com.patrickzedler.grocy.core.forms.fieldErrorText
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.battery_charge_interval
 import com.patrickzedler.grocy.core.resources.battery_charge_interval_hint
@@ -44,9 +53,6 @@ import com.patrickzedler.grocy.core.resources.task_category_edit
 import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionDialog
 import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionOwner
 import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionsViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.product.GroupItems
-import com.patrickzedler.grocy.feature.masterdata.impl.product.TextItem
-import com.patrickzedler.grocy.feature.masterdata.impl.product.fieldErrorText
 import com.patrickzedler.grocy.feature.masterdata.impl.related.conversionsGroup
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource

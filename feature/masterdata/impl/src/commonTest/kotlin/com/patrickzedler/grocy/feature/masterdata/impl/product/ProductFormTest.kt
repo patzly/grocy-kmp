@@ -1,5 +1,7 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.product
 
+import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.htmlToPlainText
 import com.patrickzedler.grocy.core.model.masterdata.DueType
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.StockLabelType
@@ -217,11 +219,5 @@ class ProductFormTest {
         assertEquals(2, form.quIdPurchase)
         assertEquals(3, form.quIdConsume)
         assertEquals(2, form.quIdPrice)
-    }
-
-    @Test
-    fun smallestQuickAmountDependsOnTheDecimals() {
-        assertEquals(1.0, minimumAmount(0))
-        assertEquals(0.01, minimumAmount(2))
     }
 }

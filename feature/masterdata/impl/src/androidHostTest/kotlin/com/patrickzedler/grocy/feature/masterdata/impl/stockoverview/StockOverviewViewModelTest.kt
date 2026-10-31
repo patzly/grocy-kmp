@@ -5,13 +5,13 @@ import androidx.compose.runtime.snapshots.Snapshot
 import app.cash.turbine.test
 import com.patrickzedler.grocy.core.data.settings.StockOverviewOptionsRepository
 import com.patrickzedler.grocy.core.data.util.RefreshError
+import com.patrickzedler.grocy.core.forms.ChangeError
 import com.patrickzedler.grocy.core.model.stock.StockOverviewField
 import com.patrickzedler.grocy.core.model.stock.StockOverviewGrouping
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.testing.FakeSettingsStore
-import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
-import com.patrickzedler.grocy.feature.masterdata.impl.related.ChangeError
+import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
 import io.ktor.http.HttpMethod
 import io.ktor.http.content.TextContent
 import kotlin.test.AfterTest
@@ -39,7 +39,7 @@ import kotlinx.serialization.json.jsonPrimitive
 class StockOverviewViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
-    private val environment = MasterDataTestEnvironment(dispatcher)
+    private val environment = RepositoryTestEnvironment(dispatcher)
     private val settingsStore = FakeSettingsStore()
 
     @BeforeTest

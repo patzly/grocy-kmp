@@ -75,12 +75,6 @@ class BookingLogicTest {
     }
 
     @Test
-    fun minimumAmountFollowsTheDecimalPlaces() {
-        assertEquals(1.0, minimumAmount(0))
-        assertEquals(0.01, minimumAmount(2))
-    }
-
-    @Test
     fun unitPricesAreConvertedToTheStockUnit() {
         // A pack of 6 pieces for 3.00: 0.5 per piece, the factor is 1/6 packs per piece
         assertEquals(0.5, pricePerStockUnit(3.0, 1.0 / 6, false, 2.0), 1e-9)

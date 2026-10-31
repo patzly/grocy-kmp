@@ -15,6 +15,10 @@ import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.data.util.RefreshController
 import com.patrickzedler.grocy.core.data.util.RefreshState
+import com.patrickzedler.grocy.core.forms.ChangeError
+import com.patrickzedler.grocy.core.forms.changeErrorOf
+import com.patrickzedler.grocy.core.forms.htmlToPlainText
+import com.patrickzedler.grocy.core.forms.plainTextToHtml
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.ProductGroup
@@ -33,10 +37,6 @@ import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItemSync
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
 import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
-import com.patrickzedler.grocy.feature.masterdata.impl.product.htmlToPlainText
-import com.patrickzedler.grocy.feature.masterdata.impl.product.plainTextToHtml
-import com.patrickzedler.grocy.feature.masterdata.impl.related.ChangeError
-import com.patrickzedler.grocy.feature.masterdata.impl.related.changeErrorOf
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview

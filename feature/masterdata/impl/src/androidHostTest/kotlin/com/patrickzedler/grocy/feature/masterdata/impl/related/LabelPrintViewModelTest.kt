@@ -1,7 +1,8 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.related
 
 import app.cash.turbine.test
-import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataTestEnvironment
+import com.patrickzedler.grocy.core.forms.ChangeError
+import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
 import io.ktor.http.HttpStatusCode
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -17,7 +18,7 @@ import kotlinx.coroutines.test.setMain
 class LabelPrintViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
-    private val environment = MasterDataTestEnvironment(dispatcher)
+    private val environment = RepositoryTestEnvironment(dispatcher)
 
     @BeforeTest
     fun setUp() {

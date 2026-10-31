@@ -9,6 +9,7 @@ kotlin {
             // MasterDataDependencies lists the repository of core:data
             api(projects.core.data)
             implementation(projects.core.design)
+            implementation(projects.core.forms)
             implementation(projects.core.resources)
             implementation(projects.core.scanner)
             implementation(projects.core.ui)

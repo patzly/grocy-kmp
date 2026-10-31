@@ -1,11 +1,11 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.barcode
 
+import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.minimumAmount
+import com.patrickzedler.grocy.core.forms.numberError
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.parseDecimal
-import com.patrickzedler.grocy.feature.masterdata.impl.product.FieldError
-import com.patrickzedler.grocy.feature.masterdata.impl.product.minimumAmount
-import com.patrickzedler.grocy.feature.masterdata.impl.related.numberError
 
 /** The inputs of Grocy's barcode form. */
 internal data class BarcodeFormValues(
