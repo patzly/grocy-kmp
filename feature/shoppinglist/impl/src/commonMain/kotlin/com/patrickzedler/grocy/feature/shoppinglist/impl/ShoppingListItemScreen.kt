@@ -3,6 +3,7 @@ package com.patrickzedler.grocy.feature.shoppinglist.impl
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -10,6 +11,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.forms.DropdownItem
@@ -83,6 +85,13 @@ private fun ProductItem(
 ) {
     val scope = rememberCoroutineScope()
     var showScanner by rememberSaveable { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+    if (form.focusesProduct) {
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+            form.onProductFocused()
+        }
+    }
     DropdownItem(
         label = stringResource(Res.string.data_product),
         options = form.products.map { DropdownOption(it.id, it.name) },
@@ -94,6 +103,7 @@ private fun ProductItem(
         optional = true,
         index = index,
         count = count,
+        focusRequester = focusRequester,
         below = if (showScanner) {
             {
                 BarcodeScanner(

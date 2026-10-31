@@ -96,6 +96,30 @@ class ShoppingListItemViewModelTest {
     }
 
     @Test
+    fun newItemFocusesTheProductOnce() = runTest(dispatcher) {
+        val viewModel = viewModel()
+
+        assertTrue(viewModel.form.focusesProduct)
+        viewModel.form.onProductFocused()
+
+        assertFalse(viewModel.form.focusesProduct)
+    }
+
+    @Test
+    fun newItemWithPresetProductDoesNotFocusTheProduct() = runTest(dispatcher) {
+        val viewModel = viewModel(productId = 1)
+
+        assertFalse(viewModel.form.focusesProduct)
+    }
+
+    @Test
+    fun editedItemDoesNotFocusTheProduct() = runTest(dispatcher) {
+        val viewModel = viewModel(id = 5)
+
+        assertFalse(viewModel.form.focusesProduct)
+    }
+
+    @Test
     fun choosingAProductStartsWithItsPurchaseUnit() = runTest(dispatcher) {
         val viewModel = viewModel()
 

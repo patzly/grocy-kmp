@@ -23,6 +23,7 @@ import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListItemRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingModeRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
+import com.patrickzedler.grocy.feature.stock.api.BookingRoute
 import com.patrickzedler.grocy.feature.stock.api.ConsumeRoute
 import com.patrickzedler.grocy.feature.stock.api.InventoryRoute
 import com.patrickzedler.grocy.feature.stock.api.PurchaseRoute
@@ -44,6 +45,7 @@ fun EntryProviderScope<NavKey>.startEntry(
         },
     ) {
         val server by dependencies.server.collectAsStateWithLifecycle()
+        val isBesideDetail = showsDetailBesideList()
         StartScreen(
             viewModel = viewModel {
                 StartViewModel(
@@ -55,7 +57,7 @@ fun EntryProviderScope<NavKey>.startEntry(
                 )
             },
             isDemoServer = server?.isDemo == true,
-            isBesideDetail = showsDetailBesideList(),
+            isBesideDetail = isBesideDetail,
             shownSection = startSectionOf(navigator.currentRoute),
             // The shopping list and the recipes are list-detail scenes of their own
             onSectionClick = { section ->
@@ -65,19 +67,11 @@ fun EntryProviderScope<NavKey>.startEntry(
                 }
             },
             onSettingsClick = { navigator.navigate(SettingsRoute) },
-            // Like reached through the settings, back returns there
-            onStockActionClick = { action ->
-                navigator.navigate(
-                    when (action) {
-                        StockAction.PURCHASE -> PurchaseRoute()
-                        StockAction.CONSUME -> ConsumeRoute()
-                        StockAction.TRANSFER -> TransferRoute()
-                        StockAction.INVENTORY -> InventoryRoute()
-                    },
-                )
-            },
+            // Beside the start screen like its sections, in place of the one shown there
+            onStockActionClick = { action -> navigator.openDetail(action.route) },
+            // In wide windows beside the shopping list, else a quick add of its own
             onShoppingListAddClick = { listId ->
-                navigator.navigate(ShoppingListItemRoute(listId = listId))
+                navigator.navigateAll(shoppingListAddRoutes(listId, isBesideDetail))
             },
             onShoppingModeClick = { navigator.navigate(ShoppingModeRoute) },
             onDemoWarningClick = {
@@ -95,6 +89,27 @@ internal val StartSection.route: Route
         StartSection.SHOPPING_LIST -> ShoppingListRoute()
         StartSection.RECIPES -> RecipesRoute()
         StartSection.MASTER_DATA -> MasterDataRoute
+    }
+
+/** The stock page of the start screen's button [this], beside the start screen. */
+internal val StockAction.route: BookingRoute
+    get() = when (this) {
+        StockAction.PURCHASE -> PurchaseRoute(besideStart = true)
+        StockAction.CONSUME -> ConsumeRoute(besideStart = true)
+        StockAction.TRANSFER -> TransferRoute(besideStart = true)
+        StockAction.INVENTORY -> InventoryRoute(besideStart = true)
+    }
+
+/**
+ * What "Add item" of the start screen's shopping list [listId] opens: where details show
+ * beside their list ([isBesideDetail]) the shopping list with the new item beside it, else
+ * the item form alone, which stays a screen of its own when the window grows.
+ */
+internal fun shoppingListAddRoutes(listId: Int?, isBesideDetail: Boolean): List<Route> =
+    if (isBesideDetail) {
+        listOf(ShoppingListRoute(listId), ShoppingListItemRoute(listId = listId))
+    } else {
+        listOf(ShoppingListItemRoute(listId = listId, inList = false))
     }
 
 /** The section whose page [route] is, null for other routes. */

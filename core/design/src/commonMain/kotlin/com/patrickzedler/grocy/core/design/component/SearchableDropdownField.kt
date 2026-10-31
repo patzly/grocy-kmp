@@ -31,6 +31,8 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
@@ -72,6 +74,7 @@ data class DropdownOption(
  *
  * @param noneLabel makes the choice optional: offered as first suggestion, it clears the field.
  * @param trailingAction e.g. a scan button, placed before the dropdown arrow.
+ * @param focusRequester focuses the field for typing, e.g. the first field of a new object.
  */
 @Composable
 fun SearchableDropdownField(
@@ -86,6 +89,7 @@ fun SearchableDropdownField(
     supportingText: String? = null,
     noneLabel: String? = null,
     trailingAction: (@Composable () -> Unit)? = null,
+    focusRequester: FocusRequester? = null,
 ) {
     val haptic = LocalHapticFeedback.current
     val selectedLabel = options.firstOrNull { it.id == selectedId }?.label.orEmpty()
@@ -165,6 +169,7 @@ fun SearchableDropdownField(
             state = textState,
             modifier = Modifier
                 .fillMaxWidth()
+                .then(focusRequester?.let { Modifier.focusRequester(it) } ?: Modifier)
                 .onSizeChanged { fieldWidth = it.width }
                 .semantics {
                     if (enabled) {

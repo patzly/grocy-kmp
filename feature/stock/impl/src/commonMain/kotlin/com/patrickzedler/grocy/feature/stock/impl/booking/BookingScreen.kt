@@ -38,6 +38,7 @@ import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
+import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
@@ -168,6 +169,7 @@ import org.jetbrains.compose.resources.stringResource
  * One of Grocy's stock pages: the form in Grocy's field order as segmented groups, the product
  * chosen by name, barcode or grocycode (typed or scanned), the booking as FAB and its message
  * with "Undo" as snackbar. [actions] show the chosen product's overview like Grocy's card.
+ * [pane] while it shows beside the start screen.
  */
 @Composable
 internal fun BookingScreen(
@@ -178,6 +180,7 @@ internal fun BookingScreen(
     onNewProductClick: () -> Unit,
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
+    pane: ScreenPane? = null,
 ) {
     val options by viewModel.options.collectAsStateWithLifecycle()
     val form = viewModel.form
@@ -206,8 +209,10 @@ internal fun BookingScreen(
     SegmentedListScreen(
         title = stringResource(kind.title),
         modifier = modifier,
-        navigationIcon = { NavigateBackButton(onClick = onBackClick) },
+        // Beside the start screen it needs no back button of its own
+        navigationIcon = { if (pane == null) NavigateBackButton(onClick = onBackClick) },
         menuItems = menuItems,
+        pane = pane,
         listState = listState,
         snackbarHostState = snackbarHostState,
         floatingToolbar = { scrollBehavior, toolbarModifier ->

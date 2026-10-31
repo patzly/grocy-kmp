@@ -5,9 +5,14 @@ import com.patrickzedler.grocy.core.navigation.DetailRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductsRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipesRoute
+import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListItemRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
+import com.patrickzedler.grocy.feature.stock.api.ConsumeRoute
+import com.patrickzedler.grocy.feature.stock.api.InventoryRoute
+import com.patrickzedler.grocy.feature.stock.api.PurchaseRoute
 import com.patrickzedler.grocy.feature.stock.api.StockOverviewRoute
+import com.patrickzedler.grocy.feature.stock.api.TransferRoute
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -25,6 +30,30 @@ class StartSectionTest {
         // List-detail scenes of their own, never beside the start screen
         assertFalse(StartSection.SHOPPING_LIST.route is DetailRoute)
         assertFalse(StartSection.RECIPES.route is DetailRoute)
+    }
+
+    @Test
+    fun stockActionsOpenTheirPageBesideTheStartScreen() {
+        assertEquals(PurchaseRoute(besideStart = true), StockAction.PURCHASE.route)
+        assertEquals(ConsumeRoute(besideStart = true), StockAction.CONSUME.route)
+        assertEquals(TransferRoute(besideStart = true), StockAction.TRANSFER.route)
+        assertEquals(InventoryRoute(besideStart = true), StockAction.INVENTORY.route)
+    }
+
+    @Test
+    fun addItemOpensTheShoppingListWithTheItemInWideWindows() {
+        assertEquals(
+            listOf(ShoppingListRoute(listId = 2), ShoppingListItemRoute(listId = 2)),
+            shoppingListAddRoutes(listId = 2, isBesideDetail = true),
+        )
+    }
+
+    @Test
+    fun addItemOpensTheItemAloneInNarrowWindows() {
+        assertEquals(
+            listOf(ShoppingListItemRoute(listId = 2, inList = false)),
+            shoppingListAddRoutes(listId = 2, isBesideDetail = false),
+        )
     }
 
     @Test

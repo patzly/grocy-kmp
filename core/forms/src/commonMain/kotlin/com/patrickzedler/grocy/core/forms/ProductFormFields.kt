@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
@@ -150,7 +151,7 @@ private fun HintText(hint: String?) {
 /**
  * A choice of objects as segmented item [index] of [count], Grocy's combobox picker: the text
  * names the option; [optional] ones offer "None". [onUnmatchedChange] reports text naming no
- * option, so the form can refuse to save.
+ * option, so the form can refuse to save; [focusRequester] focuses the field for typing.
  */
 @Composable
 fun DropdownItem(
@@ -168,6 +169,7 @@ fun DropdownItem(
     enabled: Boolean = true,
     trailingAction: (@Composable () -> Unit)? = null,
     below: (@Composable () -> Unit)? = null,
+    focusRequester: FocusRequester? = null,
 ) {
     SegmentedContainer(index = index, count = count, modifier = modifier) {
         SearchableDropdownField(
@@ -181,6 +183,7 @@ fun DropdownItem(
             supportingText = error,
             noneLabel = if (optional) stringResource(Res.string.data_none) else null,
             trailingAction = trailingAction,
+            focusRequester = focusRequester,
         )
         HintText(hint)
         // Belongs to the field, e.g. the scanner of its scan action

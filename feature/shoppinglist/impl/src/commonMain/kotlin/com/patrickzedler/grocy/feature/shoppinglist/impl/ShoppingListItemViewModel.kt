@@ -44,7 +44,19 @@ internal class ShoppingListItemFormState(
     private val quantityUnits: List<QuantityUnit>,
     /** Whether the item is done, which the form never changes. */
     val done: Boolean,
+    focusesProduct: Boolean = false,
 ) : ObjectFormState<ShoppingListItemValues> {
+
+    /**
+     * Whether the product field takes the focus once shown, so typing starts right away like in
+     * Grocy's form of a new item; once only, not again when it scrolls back into view.
+     */
+    var focusesProduct by mutableStateOf(focusesProduct)
+        private set
+
+    fun onProductFocused() {
+        focusesProduct = false
+    }
 
     var productId by mutableStateOf(initialProductId)
         private set
@@ -151,6 +163,8 @@ internal class ShoppingListItemViewModel(
             resolved = resolved,
             quantityUnits = quantityUnits,
             done = item?.done ?: false,
+            // A preset product is chosen already
+            focusesProduct = item == null && product == null,
         )
     }
 

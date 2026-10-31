@@ -36,7 +36,8 @@ data class StockJournalSummaryRoute(val productId: Int? = null) : Route
  * Grocy's "Purchase", the product [productId] preselected if given. From a shopping list item
  * ([shoppingListItemId]) with its [amount] (stock unit) in the unit [quId]; the item is removed
  * once the purchase is booked, like Grocy's "Add this item to stock". "Add all list items to
- * stock" books item [shoppingListPosition] of [shoppingListCount].
+ * stock" books item [shoppingListPosition] of [shoppingListCount]. [besideStart] as for every
+ * stock page.
  */
 @Serializable
 @SerialName("purchase")
@@ -47,30 +48,54 @@ data class PurchaseRoute(
     val shoppingListItemId: Int? = null,
     val shoppingListPosition: Int? = null,
     val shoppingListCount: Int? = null,
-) : Route
+    override val besideStart: Boolean = false,
+) : BookingRoute
 
-/** Grocy's "Consume"; [locationId] and [stockId] preselect a location and a stock entry. */
+/**
+ * Grocy's "Consume"; [locationId] and [stockId] preselect a location and a stock entry.
+ * [besideStart] as for every stock page.
+ */
 @Serializable
 @SerialName("consume")
 data class ConsumeRoute(
     val productId: Int? = null,
     val locationId: Int? = null,
     val stockId: String? = null,
-) : Route
+    override val besideStart: Boolean = false,
+) : BookingRoute
 
-/** Grocy's "Transfer"; [locationId] and [stockId] preselect the source and a stock entry. */
+/**
+ * Grocy's "Transfer"; [locationId] and [stockId] preselect the source and a stock entry.
+ * [besideStart] as for every stock page.
+ */
 @Serializable
 @SerialName("transfer")
 data class TransferRoute(
     val productId: Int? = null,
     val locationId: Int? = null,
     val stockId: String? = null,
-) : Route
+    override val besideStart: Boolean = false,
+) : BookingRoute
 
-/** Grocy's "Inventory", the product [productId] preselected if given. */
+/**
+ * Grocy's "Inventory", the product [productId] preselected if given. [besideStart] as for every
+ * stock page.
+ */
 @Serializable
 @SerialName("inventory")
-data class InventoryRoute(val productId: Int? = null) : Route
+data class InventoryRoute(
+    val productId: Int? = null,
+    override val besideStart: Boolean = false,
+) : BookingRoute
+
+/**
+ * One of Grocy's stock pages Purchase, Consume, Transfer and Inventory: opened from the start
+ * screen's buttons ([besideStart]) the page shows beside the start screen where the window is
+ * wide enough, replacing the section shown there; from elsewhere a screen of its own.
+ */
+sealed interface BookingRoute : DetailRoute {
+    val besideStart: Boolean
+}
 
 /** The route of Grocy's stock page of [kind], the product [productId] preselected if given. */
 fun bookingRoute(kind: BookingKind, productId: Int? = null): Route = when (kind) {

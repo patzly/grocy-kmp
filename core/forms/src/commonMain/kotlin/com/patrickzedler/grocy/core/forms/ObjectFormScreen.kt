@@ -81,7 +81,7 @@ class FormFrame(
 /**
  * The frame of the form of [route] (an object of [entity]): the app menu without the settings
  * and About, whose place the actions on the object take, and the list beside it. A copy opens
- * as [detail] in its place.
+ * as [detail] in its place. Without [inList] the form is a screen of its own in every window.
  */
 @Composable
 fun formFrame(
@@ -89,6 +89,7 @@ fun formFrame(
     route: DetailRoute,
     entity: String,
     repository: MasterDataRepository,
+    inList: Boolean = true,
     detail: (id: Int) -> DetailRoute,
 ): FormFrame {
     val menu = rememberAppMenu()
@@ -96,7 +97,7 @@ fun formFrame(
     return FormFrame(
         menuItems = menu.items,
         leaveGuard = navigator.rememberLeaveGuard(route),
-        isBesideList = showsDetailBesideList(),
+        isBesideList = inList && showsDetailBesideList(),
         objectActions = viewModel { ObjectActionsViewModel(entity, repository) },
         onBackClick = navigator::goBack,
         onActionDone = { event ->

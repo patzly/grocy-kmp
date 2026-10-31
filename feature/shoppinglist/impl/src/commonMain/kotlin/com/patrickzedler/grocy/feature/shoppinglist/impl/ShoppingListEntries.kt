@@ -120,7 +120,11 @@ fun EntryProviderScope<NavKey>.shoppingListEntries(
         )
     }
 
-    entry<ShoppingListItemRoute>(metadata = detailPaneMetadata(SHOPPING_LIST_SCENE)) { route ->
+    entry<ShoppingListItemRoute>(
+        metadata = { route ->
+            if (route.inList) detailPaneMetadata(SHOPPING_LIST_SCENE) else emptyMap()
+        },
+    ) { route ->
         ShoppingListItemScreen(
             viewModel = viewModel {
                 ShoppingListItemViewModel(
@@ -131,9 +135,13 @@ fun EntryProviderScope<NavKey>.shoppingListEntries(
                     shoppingLists = shoppingLists,
                 )
             },
-            frame = formFrame(navigator, route, MasterDataRepository.SHOPPING_LIST, repository) {
-                ShoppingListItemRoute(it)
-            },
+            frame = formFrame(
+                navigator = navigator,
+                route = route,
+                entity = MasterDataRepository.SHOPPING_LIST,
+                repository = repository,
+                inList = route.inList,
+            ) { ShoppingListItemRoute(it) },
         )
     }
 

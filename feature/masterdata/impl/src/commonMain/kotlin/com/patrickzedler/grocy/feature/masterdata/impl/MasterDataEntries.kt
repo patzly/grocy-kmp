@@ -290,7 +290,7 @@ private inline fun <reified L : Route, reified D : DetailRoute> EntryProviderSco
             viewModel = viewModel {
                 SimpleObjectViewModel(kind, detailId(route), repository, pluralFormCount)
             },
-            frame = formFrame(navigator, route, kind.entity, repository, detail),
+            frame = formFrame(navigator, route, kind.entity, repository, detail = detail),
             onConfigureUserfieldsClick = { navigator.navigate(UserfieldsRoute(it)) },
             // A quantity unit's form has its default conversions
             conversions = if (kind == ObjectListKind.QUANTITY_UNITS) {

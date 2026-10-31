@@ -15,8 +15,9 @@ data class ShoppingListRoute(val listId: Int? = null) : Route
 
 /**
  * Grocy's shopping list item form: edits item [id], or creates an item on list [listId] (the
- * first one without) with product [productId] preselected if given; beside its list where the
- * window is wide enough, on its own e.g. as quick add from the start screen.
+ * first one without) with product [productId] preselected if given. [inList]: beside its list
+ * where the window is wide enough; without, a screen of its own, e.g. the start screen's quick
+ * add in narrow windows.
  */
 @Serializable
 @SerialName("shoppinglist/item")
@@ -24,6 +25,7 @@ data class ShoppingListItemRoute(
     val id: Int? = null,
     val listId: Int? = null,
     val productId: Int? = null,
+    val inList: Boolean = true,
 ) : DetailRoute
 
 /** Grocy's shopping list form: renames list [id], or creates a list without. */

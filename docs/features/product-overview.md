@@ -15,8 +15,8 @@ pages and the shopping list show it through `ProductOverviewHost`, whose ViewMod
   Inventory for the product, then "Download Product Grocycode" and "Print Product Grocycode on label
   printer" (only when the server runs the webhook; `OverviewActions`, the host prints through
   the screen's `LabelPrintViewModel`). Then every
-  value of the card in its order, all as items with the label as text and the value as
-  supporting text, the product name first in the stock group (with the loading indicator of a
+  value of the card in its order, all as items with the label as small overline above the
+  value as text, the product name first in the stock group (with the loading indicator of a
   download over stored values), hidden like in Grocy by feature flag (prices: stock value, last/average price and
   price history; location: default location; best before dates: average shelf life),
   description (three lines, "Show more"), picture (1200 px, offline the stored list picture)

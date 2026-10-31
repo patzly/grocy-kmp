@@ -5,7 +5,9 @@ Grocy's shopping list, including offline check offs. Moved from CLAUDE.md.
 Shopping list (`feature:shoppinglist`, `ShoppingListRepository` of `core:data`):
 - `ShoppingListRoute(listId)` is the list pane of a list-detail scene of its own (scene key
   "shoppinglist"), the item form `ShoppingListItemRoute(id, listId, productId)` and the list form
-  `ShoppingListFormRoute(id)` its details (`DetailRoute`s, also on their own as quick add); both
+  `ShoppingListFormRoute(id)` its details (`DetailRoute`s; the start screen's quick add in
+  narrow windows is a screen of its own, `inList = false`). A new item without preset product
+  focuses the product field once (`focusesProduct`, Grocy's form does too); both
   forms close after creating (`ObjectFormViewModel.closesWhenCreated`), a new item without list
   goes to Grocy's first list by name, a list created in its form becomes the shown one
   (`ShoppingListRepository.selectedListId`, kept for the process). The item form is titled

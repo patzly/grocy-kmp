@@ -427,7 +427,7 @@ private fun DescriptionItem(text: String) {
     }
 }
 
-/** One value of the overview, the label above it like Grocy's bold labels. */
+/** One value of the overview, its label small above it. */
 private class OverviewRow(
     val title: String,
     val lines: List<String>,
@@ -576,11 +576,8 @@ private fun OverviewItem(row: OverviewRow, index: Int, count: Int) {
                 Icon(painter = painterResource(row.icon), contentDescription = null)
             }
         },
-        supportingContent = {
-            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                row.lines.forEach { Text(it) }
-            }
-        },
+        // The value is what people look for, the label only names it
+        overlineContent = { Text(row.title) },
         trailingContent = if (row.isLoading) {
             { LoadingIndicator(Modifier.size(IndicatorSize)) }
         } else {
@@ -588,7 +585,11 @@ private fun OverviewItem(row: OverviewRow, index: Int, count: Int) {
         },
         shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         colors = SegmentedListDefaults.colors(),
-        content = { Text(row.title) },
+        content = {
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                row.lines.forEach { Text(it) }
+            }
+        },
     )
 }
 
