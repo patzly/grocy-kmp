@@ -42,7 +42,12 @@ fun DemoServerWarning(modifier: Modifier = Modifier, onClick: (() -> Unit)? = nu
         }
     }
     val supporting = @Composable { Text(stringResource(Res.string.settings_server_demo_warning)) }
-    val title = @Composable { Text(stringResource(Res.string.settings_server_demo)) }
+    val title = @Composable {
+        Text(
+            text = stringResource(Res.string.settings_server_demo),
+            style = MaterialTheme.typography.bodyLargeEmphasized,
+        )
+    }
 
     if (onClick != null) {
         val haptic = LocalHapticFeedback.current

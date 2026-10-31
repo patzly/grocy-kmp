@@ -22,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -44,6 +43,7 @@ import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapp
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.clickCursor
+import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.edgeToEdgeItem
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.insetItems
@@ -246,9 +246,7 @@ private fun ShoppingModeRowItem(
     val supportingContent = supporting(row, style)
     SegmentedListItem(
         onClick = {
-            haptic.performHapticFeedback(
-                if (row.done) HapticFeedbackType.ToggleOff else HapticFeedbackType.ToggleOn,
-            )
+            haptic.confirm()
             onToggleDone()
         },
         shapes = ListItemDefaults.segmentedShapes(index = index, count = count),

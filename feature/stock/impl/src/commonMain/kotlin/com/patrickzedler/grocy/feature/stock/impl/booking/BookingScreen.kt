@@ -31,8 +31,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.patrickzedler.grocy.core.design.component.AppBarAction
-import com.patrickzedler.grocy.core.design.component.AppBarIconButton
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.ConnectedButtonGroup
 import com.patrickzedler.grocy.core.design.component.DropdownOption
@@ -205,24 +203,10 @@ internal fun BookingScreen(
         )
     }
 
-    val overviewDescription = stringResource(Res.string.product_overview)
     SegmentedListScreen(
         title = stringResource(kind.title),
         modifier = modifier,
         navigationIcon = { NavigateBackButton(onClick = onBackClick) },
-        actions = listOfNotNull(
-            form.product?.let { product ->
-                AppBarAction { actionModifier, interactionSource ->
-                    AppBarIconButton(
-                        painter = painterResource(Res.drawable.ic_rounded_info),
-                        contentDescription = overviewDescription,
-                        onClick = { actions.overview.show(product.id) },
-                        modifier = actionModifier,
-                        interactionSource = interactionSource,
-                    )
-                }
-            },
-        ),
         menuItems = menuItems,
         listState = listState,
         snackbarHostState = snackbarHostState,
@@ -244,6 +228,14 @@ internal fun BookingScreen(
                         enabled = viewModel.canOpen(currentOptions),
                     )
                 }
+                // Grocy's product card, once a product is chosen
+                val product = form.product
+                FloatingToolbarIconButton(
+                    painter = painterResource(Res.drawable.ic_rounded_info),
+                    contentDescription = stringResource(Res.string.product_overview),
+                    onClick = { product?.let { actions.overview.show(it.id) } },
+                    enabled = product != null,
+                )
                 FloatingToolbarIconButton(
                     painter = painterResource(Res.drawable.ic_rounded_vertical_align_top),
                     contentDescription = stringResource(Res.string.action_scroll_to_top),
@@ -323,7 +315,6 @@ private fun LazyListScope.bookingForm(
                     dueDateItem(viewModel, options),
                     neverOverdueItem(viewModel, options),
                     priceItem(viewModel, options),
-                    priceTypeItem(viewModel, options),
                     storeItem(viewModel, options),
                     locationItem(viewModel, options),
                     labelTypeItem(viewModel, options),
@@ -748,31 +739,29 @@ private fun priceItem(viewModel: BookingViewModel, options: BookingOptions): Gro
             keyboardType = KeyboardType.Decimal,
             index = index,
             count = count,
+            // Whether the price is per unit or the total belongs to the field
+            below = if (viewModel.kind == BookingKind.PURCHASE) {
+                { PriceTypeButtons(viewModel.form) }
+            } else {
+                null
+            },
         )
     }
 }
 
-private fun priceTypeItem(viewModel: BookingViewModel, options: BookingOptions): GroupItem? {
-    if (!options.config.stockPriceTracking || viewModel.kind != BookingKind.PURCHASE) return null
-    return { index, count ->
-        SegmentedContainer(index = index, count = count) {
-            ConnectedButtonGroup(
-                options = listOf(false, true),
-                checked = viewModel.form.isTotalPrice,
-                onCheckedChange = { viewModel.form.isTotalPrice = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { total ->
-                    stringResource(
-                        if (total) {
-                            Res.string.booking_total_price
-                        } else {
-                            Res.string.booking_unit_price
-                        },
-                    )
-                },
+@Composable
+private fun PriceTypeButtons(form: BookingForm) {
+    ConnectedButtonGroup(
+        options = listOf(false, true),
+        checked = form.isTotalPrice,
+        onCheckedChange = { form.isTotalPrice = it },
+        modifier = Modifier.fillMaxWidth(),
+        label = { total ->
+            stringResource(
+                if (total) Res.string.booking_total_price else Res.string.booking_unit_price,
             )
-        }
-    }
+        },
+    )
 }
 
 private fun storeItem(viewModel: BookingViewModel, options: BookingOptions): GroupItem? {

@@ -27,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -47,6 +46,7 @@ import com.patrickzedler.grocy.core.design.component.ListItemOverflowMenu
 import com.patrickzedler.grocy.core.design.component.SwipeAction
 import com.patrickzedler.grocy.core.design.component.SwipeActionBox
 import com.patrickzedler.grocy.core.design.component.clickCursor
+import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.rememberStatusColors
 import com.patrickzedler.grocy.core.forms.FieldChip
 import com.patrickzedler.grocy.core.forms.FieldChipView
@@ -177,13 +177,7 @@ internal fun ShoppingListRowItem(
                     Checkbox(
                         checked = row.done,
                         onCheckedChange = {
-                            haptic.performHapticFeedback(
-                                if (it) {
-                                    HapticFeedbackType.ToggleOn
-                                } else {
-                                    HapticFeedbackType.ToggleOff
-                                },
-                            )
+                            haptic.confirm()
                             actions.onToggleDone(row)
                         },
                         modifier = Modifier

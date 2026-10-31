@@ -8,7 +8,8 @@ of them, from the start screen's buttons and the product overview's menu):
 - One `BookingViewModel(kind)` and `BookingScreen` for Grocy's four pages, every field of
   Grocy's form in its order as segmented groups (`BookingForm`), hidden by feature flag and
   user setting like Grocy; the booking is the FAB, "Mark as opened" of the consume page a
-  toolbar button. The pure logic is tested: `bookableProducts` (purchase and inventory: active
+  toolbar button, then "Product overview" (disabled until a product is chosen) before "Scroll to
+  top". The pure logic is tested: `bookableProducts` (purchase and inventory: active
   with own stock; consume: in stock, sub products included; transfer: own stock in stock),
   `matchCode` (barcode, grocycode `grcy:p:<id>[:<stock_id>]` of `ProductGrocycode`, a known
   product the page does not offer is "not in stock", an unknown code asks Grocy's "Create or

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -384,7 +385,12 @@ private fun SectionItem(
             Icon(painterResource(section.icon), contentDescription = null)
         }
     }
-    val title = @Composable { Text(stringResource(section.title)) }
+    val title = @Composable {
+        Text(
+            text = stringResource(section.title),
+            style = MaterialTheme.typography.bodyLargeEmphasized,
+        )
+    }
     val supporting: (@Composable () -> Unit)? = if (summary != null || below != null) {
         {
             Column {
