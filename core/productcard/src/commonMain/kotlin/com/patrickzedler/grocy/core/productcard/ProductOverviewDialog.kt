@@ -68,6 +68,7 @@ import com.patrickzedler.grocy.core.design.component.animatedItem
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.smallIconButtonSize
+import com.patrickzedler.grocy.core.model.stock.BookingKind
 import com.patrickzedler.grocy.core.model.text.durationOf
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.model.text.formatDate

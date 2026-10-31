@@ -6,6 +6,8 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
+            // bookingRoute takes the BookingKind of core:model
+            api(projects.core.model)
             api(projects.core.navigation)
         }
     }

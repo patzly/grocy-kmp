@@ -31,6 +31,7 @@ kotlin {
             implementation(projects.feature.settings.impl)
             implementation(projects.feature.shoppinglist.api)
             implementation(projects.feature.stock.api)
+            implementation(projects.feature.stock.impl)
         }
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)

@@ -2,7 +2,6 @@ package com.patrickzedler.grocy.feature.masterdata.impl
 
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.settings.ShoppingListOptionsRepository
-import com.patrickzedler.grocy.core.data.settings.StockOverviewOptionsRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.model.server.ServerConfig
@@ -17,9 +16,6 @@ interface MasterDataDependencies {
 
     /** The stored server configuration, read at app start (null for the moment until then). */
     val serverConfig: StateFlow<ServerConfig?>
-
-    /** Fields, grouping and sort of the stock overview, read at app start. */
-    val stockOverviewOptions: StockOverviewOptionsRepository
 
     /** The shopping lists and their items, checked off offline too. */
     val shoppingListRepository: ShoppingListRepository

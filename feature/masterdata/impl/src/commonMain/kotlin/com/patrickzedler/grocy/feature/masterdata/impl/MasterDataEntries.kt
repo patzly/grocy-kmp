@@ -51,11 +51,7 @@ import com.patrickzedler.grocy.feature.masterdata.api.UserentityRoute
 import com.patrickzedler.grocy.feature.masterdata.api.UserfieldRoute
 import com.patrickzedler.grocy.feature.masterdata.api.UserfieldsRoute
 import com.patrickzedler.grocy.feature.masterdata.impl.barcode.ProductBarcodesViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.booking.bookingEntries
-import com.patrickzedler.grocy.feature.masterdata.impl.booking.bookingRoute
 import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionsViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.journal.StockJournalScreen
-import com.patrickzedler.grocy.feature.masterdata.impl.journal.StockJournalViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.ChoreScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.ChoreViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectListKind
@@ -74,12 +70,6 @@ import com.patrickzedler.grocy.feature.masterdata.impl.product.ProductViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.products.ProductsScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.products.ProductsViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.shoppinglist.shoppingListEntries
-import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockEntriesScreen
-import com.patrickzedler.grocy.feature.masterdata.impl.stock.StockEntriesViewModel
-import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.StockOverviewItemActions
-import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.StockOverviewLinks
-import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.StockOverviewScreen
-import com.patrickzedler.grocy.feature.masterdata.impl.stockoverview.StockOverviewViewModel
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.StockSettingsRoute
@@ -87,7 +77,7 @@ import com.patrickzedler.grocy.feature.start.api.StartRoute
 import com.patrickzedler.grocy.feature.stock.api.StockEntriesRoute
 import com.patrickzedler.grocy.feature.stock.api.StockJournalRoute
 import com.patrickzedler.grocy.feature.stock.api.StockJournalSummaryRoute
-import com.patrickzedler.grocy.feature.stock.api.StockOverviewRoute
+import com.patrickzedler.grocy.feature.stock.api.bookingRoute
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -96,7 +86,6 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
     navigator: Navigator,
 ) {
     val repository = dependencies.masterDataRepository
-    bookingEntries(dependencies, navigator)
     // Opens the userfields of an entity, like Grocy's "Configure userfields"
     val openUserfields = { entity: String -> navigator.navigate(UserfieldsRoute(entity)) }
 
@@ -149,99 +138,6 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
             onActionDone = listActionDone(navigator, ::ProductRoute) {
                 (it as? ProductRoute)?.productId
             },
-        )
-    }
-
-    // Beside the start screen like the master data, its bar has back and the app menu
-    entry<StockOverviewRoute>(metadata = detailPaneMetadata(StartRoute)) {
-        val isBesideList = showsDetailBesideList()
-        val language = appLanguage()
-        val actions = stockPageActions(dependencies, navigator)
-        // Outside the product list the form opens on its own
-        val openProduct = { id: Int -> navigator.navigate(ProductRoute(id)) }
-        val stockOverview = viewModel {
-            StockOverviewViewModel(
-                repository,
-                dependencies.stockRepository,
-                dependencies.stockOverviewOptions,
-                language = language,
-            )
-        }
-        StockOverviewScreen(
-            viewModel = stockOverview,
-            actions = actions,
-            // Grocy's reports, scanning and recipes do not exist in the app yet
-            links = StockOverviewLinks(
-                onJournalClick = { navigator.navigate(StockJournalRoute()) },
-                onStockEntriesClick = { navigator.navigate(StockEntriesRoute()) },
-                onReportsClick = {},
-                onScanClick = {},
-            ),
-            itemActions = StockOverviewItemActions(
-                onClick = { actions.overview.show(it.productId) },
-                onConsume = stockOverview::consume,
-                onOpen = stockOverview::open,
-                onConsumeAll = stockOverview::consumeAll,
-                onConsumeSpoiled = stockOverview::consumeSpoiled,
-                onAddToShoppingList = { actions.shoppingList.open(it.productId) },
-                onSearchRecipes = {},
-                onEditProduct = { openProduct(it.productId) },
-            ),
-            menuItems = if (isBesideList) emptyList() else appMenuItems(navigator),
-            onBackClick = navigator::goBack,
-            pane = ScreenPane.Detail.takeIf { isBesideList },
-        )
-    }
-
-    // Grocy's stock pages of a product, or of all products
-    entry<StockEntriesRoute> { route ->
-        val language = appLanguage()
-        StockEntriesScreen(
-            viewModel = viewModel {
-                StockEntriesViewModel(
-                    route.productId,
-                    repository,
-                    dependencies.stockRepository,
-                    language = language,
-                )
-            },
-            actions = stockPageActions(dependencies, navigator),
-            menuItems = appMenuItems(navigator),
-            onBackClick = navigator::goBack,
-        )
-    }
-    entry<StockJournalRoute> { route ->
-        val language = appLanguage()
-        StockJournalScreen(
-            viewModel = viewModel {
-                StockJournalViewModel(
-                    productId = route.productId,
-                    summary = false,
-                    masterData = repository,
-                    stock = dependencies.stockRepository,
-                    language = language,
-                )
-            },
-            actions = stockPageActions(dependencies, navigator),
-            menuItems = appMenuItems(navigator),
-            onBackClick = navigator::goBack,
-        )
-    }
-    entry<StockJournalSummaryRoute> { route ->
-        val language = appLanguage()
-        StockJournalScreen(
-            viewModel = viewModel {
-                StockJournalViewModel(
-                    productId = route.productId,
-                    summary = true,
-                    masterData = repository,
-                    stock = dependencies.stockRepository,
-                    language = language,
-                )
-            },
-            actions = stockPageActions(dependencies, navigator),
-            menuItems = appMenuItems(navigator),
-            onBackClick = navigator::goBack,
         )
     }
 

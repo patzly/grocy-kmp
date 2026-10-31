@@ -30,8 +30,8 @@ on its own (`StartSection.route` is no `DetailRoute`), and a category of the mas
 opens its list as a scene of its own with its forms beside it, never in place of the master
 data; back leaves the whole scene like every list-detail scene, from the start screen the app,
 it never closes the page beside it first, on purpose), an About
-screen, the Settings overview (`feature:settings`), Grocy's stock overview and the master data
-(`feature:masterdata`): the overview of Grocy's master data categories, the list and form of
+screen, the Settings overview (`feature:settings`), Grocy's stock overview (`feature:stock`)
+and the master data (`feature:masterdata`): the overview of Grocy's master data categories, the list and form of
 every category (products with their overview dialog, locations, stores, quantity units,
 product groups, chores, batteries, task categories, userfields, userentities), with the
 product's barcodes, grocycode and conversion overrides, the default conversions of units,

@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.stock.api
 
 import androidx.navigation3.runtime.NavKey
+import com.patrickzedler.grocy.core.model.stock.BookingKind
 import com.patrickzedler.grocy.core.navigation.DetailRoute
 import com.patrickzedler.grocy.core.navigation.Route
 import kotlinx.serialization.SerialName
@@ -67,6 +68,14 @@ data class TransferRoute(
 @Serializable
 @SerialName("inventory")
 data class InventoryRoute(val productId: Int? = null) : Route
+
+/** The route of Grocy's stock page of [kind], the product [productId] preselected if given. */
+fun bookingRoute(kind: BookingKind, productId: Int? = null): Route = when (kind) {
+    BookingKind.PURCHASE -> PurchaseRoute(productId)
+    BookingKind.CONSUME -> ConsumeRoute(productId)
+    BookingKind.TRANSFER -> TransferRoute(productId)
+    BookingKind.INVENTORY -> InventoryRoute(productId)
+}
 
 val stockRouteSerializers = SerializersModule {
     polymorphic(NavKey::class) {

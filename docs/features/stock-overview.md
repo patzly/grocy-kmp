@@ -2,7 +2,8 @@
 
 Grocy's stock overview page. Moved from CLAUDE.md.
 
-Stock overview (`stockoverview/` of `feature:masterdata`, it opens the product overview):
+Stock overview (`stockoverview/` of `feature:stock`, it opens the product overview of
+`core:productcard`):
 - `StockOverviewScreen` is Grocy's stock overview page: the active products not hidden there
   that are in stock or below their min. stock amount (every active one with the user setting
   `stock_overview_show_all_out_of_stock_products`). Grocy computes the page in the view

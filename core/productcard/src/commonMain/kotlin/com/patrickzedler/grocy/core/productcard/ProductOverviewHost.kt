@@ -4,6 +4,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.patrickzedler.grocy.core.model.stock.BookingKind
 import com.patrickzedler.grocy.core.scanner.writer.Grocycode
 
 /** Where Grocy's product pages lead: its form, its stock entries and its journal. */

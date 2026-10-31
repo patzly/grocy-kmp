@@ -548,7 +548,7 @@ goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
   are common code. Android's ICU is stubbed in JVM tests, so tests never call the relative and
   duration formatters. Prices use the server's `CURRENCY` (`ServerConfig.currency`) and the
   user setting `stock_decimal_places_prices_display`.
-- ViewModels get the app language as parameter (`appLanguage()` of `MasterDataEntries`,
+- ViewModels get the app language as parameter (`appLanguage()` of the entries,
   `LocalLocale`; a change restarts the app), composables read `LocalLocale`: Compose
   deprecated `Locale.current`, which no state backs. Builds have no compiler warnings of the
   project's own code.

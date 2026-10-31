@@ -2,9 +2,9 @@
 
 Grocy's Purchase, Consume, Transfer and Inventory pages. Moved from CLAUDE.md.
 
-Stock bookings (`booking/` of `feature:masterdata`, routes `PurchaseRoute`, `ConsumeRoute`,
-`TransferRoute`, `InventoryRoute`, from the start screen's buttons and the product overview's
-menu):
+Stock bookings (`booking/` of `feature:stock`, routes `PurchaseRoute`, `ConsumeRoute`,
+`TransferRoute`, `InventoryRoute` of `feature:stock:api`, `bookingRoute(BookingKind)` for one
+of them, from the start screen's buttons and the product overview's menu):
 - One `BookingViewModel(kind)` and `BookingScreen` for Grocy's four pages, every field of
   Grocy's form in its order as segmented groups (`BookingForm`), hidden by feature flag and
   user setting like Grocy; the booking is the FAB, "Mark as opened" of the consume page a

@@ -213,8 +213,8 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   `core:ui` ("Save as" on Android, a download in browsers). "Print on label printer" calls
   Grocy's `printlabel` and shows only when the server runs the webhook itself
   (`labelPrinterRunsOnServer`), the app never stores webhook addresses.
-- Stock pages (`stock/`, `journal/`, routes `StockEntriesRoute`, `StockJournalRoute`,
-  `StockJournalSummaryRoute` of `feature:stock:api`, from the product form's toolbar and
+- Stock pages (`stock/`, `journal/` of `feature:stock`, routes `StockEntriesRoute`,
+  `StockJournalRoute`, `StockJournalSummaryRoute` of `feature:stock:api`, from the product form's toolbar and
   the product overview's buttons).
   `StockRepository` (`core:data`) stores the entries (`stock_entries`, with the amounts) and
   the journal (`stock_log`, a download of a date range replaces the bookings of that range) for

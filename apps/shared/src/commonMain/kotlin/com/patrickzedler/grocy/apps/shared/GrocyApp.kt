@@ -41,6 +41,7 @@ import com.patrickzedler.grocy.feature.start.api.StartRoute
 import com.patrickzedler.grocy.feature.start.api.startRouteSerializers
 import com.patrickzedler.grocy.feature.start.impl.startEntry
 import com.patrickzedler.grocy.feature.stock.api.stockRouteSerializers
+import com.patrickzedler.grocy.feature.stock.impl.stockEntries
 import kotlinx.coroutines.launch
 import kotlinx.serialization.modules.plus
 
@@ -125,6 +126,7 @@ private fun GrocyNavigation(
         aboutEntries(graph.aboutDependencies, navigator)
         settingsEntries(graph.settingsDependencies, navigator)
         masterDataEntries(graph.masterDataDependencies, navigator)
+        stockEntries(graph.stockDependencies, navigator)
     }
 }
 
