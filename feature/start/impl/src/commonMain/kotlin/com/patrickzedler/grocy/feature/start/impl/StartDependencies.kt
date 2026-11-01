@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.start.impl
 
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
 import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 interface StartDependencies {
     val masterDataRepository: MasterDataRepository
     val recipesRepository: RecipesRepository
+    val mealPlanRepository: MealPlanRepository
     val stockRepository: StockRepository
     val shoppingListRepository: ShoppingListRepository
 

@@ -18,6 +18,8 @@ import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.masterdata.TaskCategory
 import com.patrickzedler.grocy.core.model.masterdata.Userentity
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
+import com.patrickzedler.grocy.core.model.recipes.MealPlanEntry
+import com.patrickzedler.grocy.core.model.recipes.MealPlanRecipe
 import com.patrickzedler.grocy.core.model.recipes.MealPlanSection
 import com.patrickzedler.grocy.core.model.recipes.Recipe
 import com.patrickzedler.grocy.core.model.recipes.RecipeFulfillment
@@ -47,7 +49,9 @@ import com.patrickzedler.grocy.core.network.dto.CreatedObjectDto
 import com.patrickzedler.grocy.core.network.dto.ErrorDto
 import com.patrickzedler.grocy.core.network.dto.LastPurchaseDto
 import com.patrickzedler.grocy.core.network.dto.LocationDto
+import com.patrickzedler.grocy.core.network.dto.MealPlanEntryDto
 import com.patrickzedler.grocy.core.network.dto.MealPlanSectionDto
+import com.patrickzedler.grocy.core.network.dto.NORMAL_RECIPE_TYPE
 import com.patrickzedler.grocy.core.network.dto.PriceHistoryDto
 import com.patrickzedler.grocy.core.network.dto.ProductBarcodeDto
 import com.patrickzedler.grocy.core.network.dto.ProductDetailsDto
@@ -79,6 +83,7 @@ import com.patrickzedler.grocy.core.network.dto.UserfieldDto
 import com.patrickzedler.grocy.core.network.dto.VolatileStockDto
 import com.patrickzedler.grocy.core.network.dto.flag
 import com.patrickzedler.grocy.core.network.dto.toJson
+import com.patrickzedler.grocy.core.network.dto.toMealPlanRecipe
 import com.patrickzedler.grocy.core.network.dto.toServerConfig
 import com.patrickzedler.grocy.core.network.dto.toUserSettings
 import io.ktor.client.HttpClient
@@ -575,8 +580,10 @@ class GrocyApi(
             connection,
             "objects",
             "recipes",
-            query = listOf("query[]" to "type=normal"),
-        ).associate { it.id to it.name.orEmpty() }
+            query = listOf("query[]" to "type=$NORMAL_RECIPE_TYPE"),
+        )
+            .filter { it.type == null || it.type == NORMAL_RECIPE_TYPE }
+            .associate { it.id to it.name.orEmpty() }
 
     /** Grocy's normal recipes with their userfields, meal plan entries left out. */
     suspend fun recipeObjects(connection: ServerConnection): List<Recipe> =
@@ -584,8 +591,20 @@ class GrocyApi(
             connection,
             "objects",
             RECIPES,
-            query = listOf("query[]" to "type=normal"),
-        ).map { it.toModel() }
+            query = listOf("query[]" to "type=$NORMAL_RECIPE_TYPE"),
+        ).filter { it.isNormal }.map { it.toModel() }
+
+    /**
+     * The recipes Grocy keeps for its meal plan by itself (per day, week and planned recipe),
+     * without what it computed for them.
+     */
+    suspend fun mealPlanRecipes(connection: ServerConnection): List<MealPlanRecipe> =
+        get<List<RecipeObjectDto>>(
+            connection,
+            "objects",
+            RECIPES,
+            query = listOf("query[]" to "type!=$NORMAL_RECIPE_TYPE"),
+        ).mapNotNull { it.toMealPlanRecipe() }
 
     suspend fun recipe(connection: ServerConnection, id: Int): Recipe =
         get<RecipeObjectDto>(connection, "objects", RECIPES, id.toString()).toModel()
@@ -690,8 +709,46 @@ class GrocyApi(
 
     /** The sections of Grocy's meal plan, in their order. */
     suspend fun mealPlanSections(connection: ServerConnection): List<MealPlanSection> =
-        get<List<MealPlanSectionDto>>(connection, "objects", "meal_plan_sections")
+        get<List<MealPlanSectionDto>>(connection, "objects", MEAL_PLAN_SECTIONS)
             .map { it.toModel() }
+
+    suspend fun mealPlanSection(connection: ServerConnection, id: Int): MealPlanSection =
+        get<MealPlanSectionDto>(connection, "objects", MEAL_PLAN_SECTIONS, id.toString())
+            .toModel()
+
+    /** Creates the section (id [NEW_OBJECT_ID]) or saves it; returns its id. */
+    suspend fun saveMealPlanSection(connection: ServerConnection, section: MealPlanSection): Int =
+        saveObject(connection, MEAL_PLAN_SECTIONS, section.id, section.toJson())
+
+    /** Every entry of Grocy's meal plan. */
+    suspend fun mealPlan(connection: ServerConnection): List<MealPlanEntry> =
+        get<List<MealPlanEntryDto>>(connection, "objects", MEAL_PLAN).map { it.toModel() }
+
+    /** The meal plan's entries on [day] ("YYYY-MM-DD"), like Grocy's "Copy this day" reads them. */
+    suspend fun mealPlanOfDay(connection: ServerConnection, day: String): List<MealPlanEntry> =
+        get<List<MealPlanEntryDto>>(
+            connection,
+            "objects",
+            MEAL_PLAN,
+            query = listOf("query[]" to "day=$day"),
+        ).map { it.toModel() }.filter { it.day == day }
+
+    suspend fun mealPlanEntry(connection: ServerConnection, id: Int): MealPlanEntry =
+        get<MealPlanEntryDto>(connection, "objects", MEAL_PLAN, id.toString()).toModel()
+
+    /** Creates the entry (id [NEW_OBJECT_ID]) or saves it like Grocy's dialogs; returns its id. */
+    suspend fun saveMealPlanEntry(connection: ServerConnection, entry: MealPlanEntry): Int =
+        saveObject(connection, MEAL_PLAN, entry.id, entry.toJson())
+
+    /** Grocy's "Mark this item as done" and "... as undone". */
+    suspend fun setMealPlanEntryDone(connection: ServerConnection, id: Int, done: Boolean) {
+        execute(
+            connection,
+            HttpMethod.Put,
+            listOf("objects", MEAL_PLAN, id.toString()),
+            body = jsonBody(buildJsonObject { put("done", flag(done)) }),
+        )
+    }
 
     /**
      * Grocy's "Add to meal plan": [servings] of the recipe on [day] ("YYYY-MM-DD") in section
@@ -1225,6 +1282,8 @@ class GrocyApi(
         private const val RECIPES = "recipes"
         private const val RECIPE_INGREDIENTS = "recipes_pos"
         private const val RECIPE_NESTINGS = "recipes_nestings"
+        private const val MEAL_PLAN = "meal_plan"
+        private const val MEAL_PLAN_SECTIONS = "meal_plan_sections"
         private const val RECIPE_PICTURES = "recipepictures"
         private const val PRODUCT_BARCODES = "product_barcodes"
         private const val QU_CONVERSIONS = "quantity_unit_conversions"

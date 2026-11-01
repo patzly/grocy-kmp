@@ -178,10 +178,20 @@ class RecipeListTest {
 
     @Test
     fun galleryFitsCardsToTheWidth() {
-        assertEquals(1, galleryColumns(360.dp))
-        assertEquals(2, galleryColumns(600.dp))
+        assertEquals(1, galleryColumns(300.dp))
+        assertEquals(3, galleryColumns(600.dp))
+    }
+
+    @Test
+    fun galleryShowsTwoCardsOnEveryUprightPhone() {
+        assertEquals(2, galleryColumns(360.dp))
+        assertEquals(2, galleryColumns(412.dp))
+    }
+
+    @Test
+    fun galleryKeepsToTheListsMaximumWidth() {
+        // The cards of wide windows share the list's 640.dp, they never get narrower
         assertEquals(3, galleryColumns(900.dp))
-        // Never more than four, however wide
-        assertEquals(4, galleryColumns(3000.dp))
+        assertEquals(3, galleryColumns(3000.dp))
     }
 }

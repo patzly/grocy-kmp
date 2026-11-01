@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.start.impl
 
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
@@ -38,14 +39,17 @@ class StartViewModelTest {
     private val config = MutableStateFlow<ServerConfig?>(ServerConfig())
     private lateinit var shoppingLists: ShoppingListRepository
 
-    private fun TestScope.viewModel() = StartViewModel(
+    private val recipes = RecipesRepository(server.api, database, connection)
+
+    private fun TestScope.viewModel(today: String = "2026-10-25") = StartViewModel(
         repository = repository,
         stock = stock,
         shoppingLists = ShoppingListRepository(server.api, database, backgroundScope, connection)
             .also { shoppingLists = it },
-        recipes = RecipesRepository(server.api, database, connection),
+        recipes = recipes,
+        mealPlan = MealPlanRepository(server.api, database, connection, recipes),
         serverConfig = config,
-        today = { epochDayOf("2026-10-25")!! },
+        today = { epochDayOf(today)!! },
     ).also { backgroundScope.launch { it.state.collect {} } }
 
     @BeforeTest
@@ -180,5 +184,26 @@ class StartViewModelTest {
 
         assertNull(viewModel.state.value!!.recipes)
         assertTrue("/api/objects/recipes" !in server.requestedPaths)
+    }
+
+    @Test
+    fun mealPlanSectionTellsWhatIsPlannedForToday() = runTest(dispatcher) {
+        val viewModel = viewModel(today = "2026-11-02")
+
+        advanceUntilIdle()
+
+        // Grocy's default section first, then breakfast
+        assertEquals(listOf("Milk", "Pancakes"), viewModel.state.value!!.mealPlanToday)
+    }
+
+    @Test
+    fun mealPlanSectionNeedsTheMealPlanFeature() = runTest(dispatcher) {
+        config.value = ServerConfig(recipesMealPlan = false)
+        val viewModel = viewModel(today = "2026-11-02")
+
+        advanceUntilIdle()
+
+        assertNull(viewModel.state.value!!.mealPlanToday)
+        assertTrue("/api/objects/meal_plan" !in server.requestedPaths)
     }
 }

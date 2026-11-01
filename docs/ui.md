@@ -39,6 +39,10 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
   buttons: the group lines its items up at the top, so the smaller indicator sat higher.
 - Overflow menus: `AppBarMenuItem(checked = ...)` is a checkable item (check mark while on, the
   menu stays open, `ToggleOn`/`ToggleOff` haptics), e.g. the shopping mode's auto sync.
+  `ListItemMenuButton` is a standard icon button of its own with such a menu, the choices of
+  one action, e.g. the meal plan day's "Add" (recipe, product, note, copy the day).
+- Time fields like Grocy's time inputs ("HH:MM") get `TimePickerButton` (`core:forms`,
+  Material's time picker), dates `DatePickerButton`.
 - `insetItem`/`insetItems(animate = true)` (with keys) apply `animateItem`: items fade in and
   out and move to their new place with the default spring, e.g. between groups.
 - Chips: `LocalChipSize` (`core:forms`) provides `ChipSize.LARGE` for field and filter chips
@@ -98,9 +102,11 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
   `SegmentedContainer`, `AppBarIconButton`, `InsetLazyColumn` + `insetItem` with max width
   640.dp, `RoundedTextField`, `ConnectedButtonGroup`, `NavigateBackButton`, `HapticTooltipBox`,
   `TextDialog`, `FormattedText`, `FloatingToolbarWithFab` + `FloatingToolbarIconButton` for the
-  floatingToolbar slot of `SegmentedListScreen` (the last item ends 16 dp above it; it hides
+  floatingToolbar slot of `SegmentedListScreen` (its bar 16 dp above the bottom and the last
+  item 16 dp above the bar: Material lays a toolbar with FAB out 80 dp high and centers the 64 dp
+  bar in it, so the layout lies 8 dp lower; it hides
   while scrolling down only in windows of compact height below 480 dp, a phone in landscape,
-  `hidesToolbarOnScroll`; snackbars never cover it: they lie above it and follow it while it
+  `hidesToolbarOnScroll`; snackbars never cover it: they lie 16 dp above it (Material's snackbar brings 12 dp padding) and follow it while it
   slides out and back in, `snackbarLift`; `secondContent` adds a second list beside the first
   from 840 dp width, `showsSecondColumn`), `SegmentedSwitchItem`,
   `SupportingLines` for every multi-line supporting content in lazy lists (Material sizes items

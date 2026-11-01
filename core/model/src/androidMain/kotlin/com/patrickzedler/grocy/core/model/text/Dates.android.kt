@@ -1,11 +1,15 @@
 package com.patrickzedler.grocy.core.model.text
 
+import android.icu.text.DateIntervalFormat
 import android.icu.text.MeasureFormat
 import android.icu.text.RelativeDateTimeFormatter
+import android.icu.util.Calendar
+import android.icu.util.DateInterval
 import android.icu.util.Measure
 import android.icu.util.MeasureUnit
 import android.icu.util.ULocale
 import java.text.DateFormat
+import java.text.FieldPosition
 import java.util.Date
 import java.util.TimeZone
 import kotlin.math.abs
@@ -27,6 +31,34 @@ actual fun formatDate(epochDay: Long): String =
         // The day itself, not its midnight in another time zone
         .apply { timeZone = TimeZone.getTimeZone("UTC") }
         .format(Date(epochDay * MILLIS_PER_DAY))
+
+actual fun formatWeekday(epochDay: Long): String = skeletonFormat("EEEE").format(utcDate(epochDay))
+
+actual fun formatDayAndMonth(epochDay: Long): String =
+    skeletonFormat("MMMMd").format(utcDate(epochDay))
+
+actual fun formatDateRange(start: Long, end: Long): String {
+    // The format follows the device's time zone, noon keeps every day itself
+    val interval = DateInterval(localNoonMillis(start), localNoonMillis(end))
+    return DateIntervalFormat.getInstance("yMMMd", ULocale.getDefault())
+        .format(interval, StringBuffer(), FieldPosition(0))
+        .toString()
+}
+
+actual fun localeFirstDayOfWeek(): Int =
+    Calendar.getInstance(ULocale.getDefault()).firstDayOfWeek - Calendar.SUNDAY
+
+// The day itself, not its midnight in another time zone
+private fun skeletonFormat(skeleton: String): android.icu.text.DateFormat =
+    android.icu.text.DateFormat.getInstanceForSkeleton(skeleton, ULocale.getDefault())
+        .apply { timeZone = android.icu.util.TimeZone.getTimeZone("UTC") }
+
+private fun utcDate(epochDay: Long) = Date(epochDay * MILLIS_PER_DAY)
+
+private fun localNoonMillis(epochDay: Long): Long {
+    val noon = epochDay * MILLIS_PER_DAY + MILLIS_PER_DAY / 2
+    return noon - TimeZone.getDefault().getOffset(noon)
+}
 
 actual fun formatRelativeTime(span: TimeSpan): String {
     val formatter = RelativeDateTimeFormatter.getInstance(ULocale.getDefault())

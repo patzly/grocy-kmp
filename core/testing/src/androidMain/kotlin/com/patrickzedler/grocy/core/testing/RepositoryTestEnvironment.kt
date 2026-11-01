@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.core.testing
 
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
@@ -32,6 +33,13 @@ class RepositoryTestEnvironment(dispatcher: TestDispatcher) {
         api = server.api,
         database = database,
         connection = connection,
+    )
+
+    val mealPlanRepository = MealPlanRepository(
+        api = server.api,
+        database = database,
+        connection = connection,
+        recipes = recipesRepository,
     )
 
     // Check offs are sent on the test dispatcher too, so advanceUntilIdle finishes them; retries

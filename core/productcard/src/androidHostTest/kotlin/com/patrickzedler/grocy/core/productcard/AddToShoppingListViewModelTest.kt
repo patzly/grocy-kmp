@@ -42,13 +42,16 @@ class AddToShoppingListViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private suspend fun TestScope.openedViewModel(): AddToShoppingListViewModel {
+    private suspend fun TestScope.openedViewModel(
+        stockAmount: Double? = null,
+    ): AddToShoppingListViewModel {
         environment.repository.refresh()
         return AddToShoppingListViewModel(
             environment.repository,
             environment.shoppingListRepository,
+            separator = '.',
         ).also {
-            it.open(productId = 1)
+            it.open(productId = 1, stockAmount = stockAmount)
             advanceUntilIdle()
         }
     }
@@ -62,6 +65,15 @@ class AddToShoppingListViewModelTest {
         assertEquals(2, dialog.inputs.quId)
         assertEquals(1, dialog.inputs.listId)
         assertEquals(listOf("Hardware store", "Shopping list"), dialog.inputs.lists.map { it.name })
+    }
+
+    @Test
+    fun aGivenAmountStartsInTheStockUnit() = runTest(dispatcher) {
+        val viewModel = openedViewModel(stockAmount = 2.5)
+
+        val dialog = assertNotNull(viewModel.dialog)
+        assertEquals("2.5", dialog.inputs.amount.text.toString())
+        assertEquals(1, dialog.inputs.quId)
     }
 
     @Test

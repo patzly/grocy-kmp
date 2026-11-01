@@ -45,8 +45,11 @@ import androidx.room3.RoomDatabaseConstructor
         RecipeNestingEntity::class,
         ResolvedRecipeIngredientEntity::class,
         RecipePictureEntity::class,
+        MealPlanEntryEntity::class,
+        MealPlanSectionEntity::class,
+        MealPlanRecipeEntity::class,
     ],
-    version = 9,
+    version = 10,
     autoMigrations = [
         // 2 adds product_thumbnails
         AutoMigration(from = 1, to = 2),
@@ -68,6 +71,8 @@ import androidx.room3.RoomDatabaseConstructor
         // 9 adds the recipes, their fulfillment, ingredients (as defined and as resolved),
         // included recipes and pictures
         AutoMigration(from = 8, to = 9),
+        // 10 adds the meal plan, its sections and the recipes Grocy keeps for it
+        AutoMigration(from = 9, to = 10),
     ],
 )
 @ConstructedBy(GrocyDatabaseConstructor::class)
@@ -79,6 +84,8 @@ abstract class GrocyDatabase : RoomDatabase() {
     abstract fun shoppingListDao(): ShoppingListDao
 
     abstract fun recipeDao(): RecipeDao
+
+    abstract fun mealPlanDao(): MealPlanDao
 }
 
 // Room generates the actual objects for every platform

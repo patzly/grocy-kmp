@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -24,6 +27,7 @@ import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.ListItemOverflowMenu
@@ -130,8 +134,9 @@ internal fun RecipeRow(
 
 /**
  * A card of Grocy's recipe gallery: the picture across its top (with the field shown), the name
- * and the shown fields below, the menu beside the name. Beside the recipe ([selected] not null)
- * it marks the recipe shown there with an outline.
+ * and the shown fields below, the menu in the bottom end corner. Beside the recipe ([selected]
+ * not null) it marks the recipe shown there with an outline. Cards of a row fill its height, so
+ * their menus line up.
  */
 @Composable
 internal fun RecipeCard(
@@ -149,8 +154,8 @@ internal fun RecipeCard(
     val pictureDescription = stringResource(Res.string.products_has_picture)
     val putText = stringResource(Res.string.recipe_add_missing_confirm)
     val picture = item.pictureFileName?.takeIf { RecipeField.PICTURE in fields }
-    val details = recipeDetails(item, fields, decimals)
-    val shape = MaterialTheme.shapes.large
+    val details = recipeDetails(item, fields, decimals, topPadding = CardTitleChipsGap)
+    val shape = RoundedCornerShape(CardCornerSize)
     val click = {
         haptic.confirm()
         onClick()
@@ -175,31 +180,34 @@ internal fun RecipeCard(
             )
         }
     val content = @Composable {
-        Column {
+        Column(Modifier.padding(start = CardPadding, end = CardPadding)) {
             picture?.let { fileName ->
                 RecipePicture(
                     fileName = fileName,
                     load = loadPicture,
-                    shape = MaterialTheme.shapes.medium,
+                    // Concentric with the card's corners
+                    shape = RoundedCornerShape(CardCornerSize - CardPadding),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 4.dp, top = 4.dp, end = 4.dp)
+                        .padding(top = CardPadding)
                         .aspectRatio(GALLERY_PICTURE_RATIO),
                 )
             }
-            Row(
-                modifier = Modifier.padding(start = 16.dp, top = 12.dp, end = 4.dp, bottom = 12.dp),
-                verticalAlignment = Alignment.Top,
-            ) {
-                Column(
-                    modifier = Modifier.weight(1f).padding(top = 10.dp, bottom = 4.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    Text(item.name, style = MaterialTheme.typography.titleMedium)
-                    details?.invoke()
-                }
-                ListItemOverflowMenu(groups = menuGroups)
-            }
+            Text(
+                text = item.name,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(top = CardPadding),
+            )
+            // Chips wider than the card shorten their text
+            details?.invoke()
+            Spacer(Modifier.weight(1f))
+            ListItemOverflowMenu(
+                groups = menuGroups,
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(vertical = CardMenuPadding)
+                    .offset(x = CardPadding - CardMenuPadding),
+            )
         }
     }
     // Beside the recipe a single choice marking it, like the rows
@@ -230,13 +238,14 @@ private fun recipeDetails(
     item: RecipeListItem,
     fields: List<RecipeField>,
     decimals: Int,
+    topPadding: Dp = 4.dp,
 ): (@Composable () -> Unit)? {
     val chips = recipeChips(item, fields, decimals)
     if (chips.isEmpty()) return null
     return {
         key(chips.map { it.text }) {
             FlowRow(
-                modifier = Modifier.padding(top = 4.dp),
+                modifier = Modifier.padding(top = topPadding),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
@@ -298,3 +307,12 @@ internal fun servingsText(servings: Double, decimals: Int): String {
 
 /** Wide like a photo, so the cards of a row line up. */
 private const val GALLERY_PICTURE_RATIO = 16f / 10f
+
+// The theme's extra large corners, which the picture's follow
+private val CardCornerSize = 24.dp
+private val CardPadding = 16.dp
+private val CardTitleChipsGap = 8.dp
+
+// Around the menu button's 48.dp room, so its icon sits 16.dp from the card's edges like the
+// trailing icon of a list item
+private val CardMenuPadding = 4.dp

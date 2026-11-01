@@ -10,7 +10,8 @@ Grocy's recipes page, its recipe card and its recipe form (`feature:recipes`).
   through an item's menu, forms with `openDetail`; the card's "Edit" opens the form with
   `navigate`, so it takes the card's place beside the list and back returns to the card.
 - Data (`RecipesRepository` of `core:data`, database version 9): Grocy's normal recipes
-  (`objects/recipes?query[]=type=normal`, meal plan recipes are left out), what the server
+  (`objects/recipes?query[]=type=normal`, meal plan recipes are left out and filtered by type
+  on the client too; they are stored for the meal plan, see `meal-plan.md`), what the server
   computes at their desired servings (`/recipes/fulfillment`, Grocy's `recipes_resolved`), the
   ingredients as defined (`recipes_pos`) and as resolved (`recipes_pos_resolved` of normal
   recipes, one row per recipe and ingredient, included recipes' ones with `is_nested`), the
@@ -34,9 +35,14 @@ Grocy's recipes page, its recipe card and its recipe form (`feature:recipes`).
   The pure `buildRecipeList` sorts (requirements by status, then missing ingredients; ties by
   name), filters and groups.
 - Items: a row has the name, the shown fields as chips that wrap (servings, "Due score: 11",
-  the requirements) and at its end the picture as thumbnail before the menu; a gallery card
-  (as many per row as `galleryColumns` fits, cards at least 260.dp, up to four) has the picture
-  across its top, name and chips below; without the picture field neither shows it. The
+  the requirements) and at its end the picture as thumbnail before the menu, both centered to
+  each other at the top of higher rows; a gallery card (as many per row as `galleryColumns` fits
+  into the list's 640.dp, cards at least 156.dp: two on every upright phone, 8.dp apart in both
+  directions; `extraLarge` corners) has the picture across its top with 16.dp padding and
+  concentric corners (24 - 16 = 8.dp), the name below (body large, 16.dp above, 8.dp to the
+  chips; chips wider than the card shorten their text with "…") and the menu in the bottom end
+  corner; the cards of a row are as high as the highest, so their menus line up; without the
+  picture field neither shows it. The
   requirements are status chips (`RecipeStatusChips.kt`, pure `statusChipsOf`), shared with the
   card: green (`positive`) "Enough in stock" with `priority`, yellow "2 ingredients missing"
   with `warning` while the shopping list covers them, then a blue "On shopping list" with the
@@ -61,7 +67,7 @@ Grocy's recipes page, its recipe card and its recipe form (`feature:recipes`).
   (headline small, a heading) with the requirements as status chips like the list's, Grocy's
   "Desired servings" (a number field with stepper, filled before the card shows so its label
   never jumps, saved once typing pauses like Grocy's field, the server scales the ingredients
-  anew), energy per serving and costs as chips (with price tracking; warning color while
+  anew; meanwhile a loading indicator at the end of the name's item, `isSavingServings`), energy per serving and costs as chips (with price tracking; warning color while
   prices are incomplete; a tap on the costs opens `CostsDialog` with Grocy's notes). The ingredients
   follow by Grocy's ingredient group and, with the user setting, product group (pure
   `buildRecipeSections`): "2 Pieces Milk" (Grocy keeps amounts in the stock unit and the unit

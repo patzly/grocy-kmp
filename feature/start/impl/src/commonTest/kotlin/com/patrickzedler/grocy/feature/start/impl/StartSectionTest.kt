@@ -4,6 +4,7 @@ import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.navigation.DetailRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductsRoute
+import com.patrickzedler.grocy.feature.recipes.api.MealPlanRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipesRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListItemRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListRoute
@@ -27,9 +28,12 @@ class StartSectionTest {
         assertEquals(ShoppingListRoute(), StartSection.SHOPPING_LIST.route)
         assertEquals(MasterDataRoute, StartSection.MASTER_DATA.route)
         assertEquals(RecipesRoute(), StartSection.RECIPES.route)
+        assertEquals(MealPlanRoute(), StartSection.MEAL_PLAN.route)
         // List-detail scenes of their own, never beside the start screen
         assertFalse(StartSection.SHOPPING_LIST.route is DetailRoute)
         assertFalse(StartSection.RECIPES.route is DetailRoute)
+        // The meal plan needs the whole window
+        assertFalse(StartSection.MEAL_PLAN.route is DetailRoute)
     }
 
     @Test
@@ -69,17 +73,32 @@ class StartSectionTest {
                 StartSection.STOCK_OVERVIEW,
                 StartSection.SHOPPING_LIST,
                 StartSection.RECIPES,
+                StartSection.MEAL_PLAN,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig()),
         )
         assertEquals(
-            listOf(StartSection.STOCK_OVERVIEW, StartSection.RECIPES, StartSection.MASTER_DATA),
+            listOf(
+                StartSection.STOCK_OVERVIEW,
+                StartSection.RECIPES,
+                StartSection.MEAL_PLAN,
+                StartSection.MASTER_DATA,
+            ),
             availableSections(ServerConfig(shoppingList = false)),
         )
         assertEquals(
-            listOf(StartSection.RECIPES, StartSection.MASTER_DATA),
+            listOf(StartSection.RECIPES, StartSection.MEAL_PLAN, StartSection.MASTER_DATA),
             availableSections(ServerConfig(stock = false)),
+        )
+        assertEquals(
+            listOf(
+                StartSection.STOCK_OVERVIEW,
+                StartSection.SHOPPING_LIST,
+                StartSection.RECIPES,
+                StartSection.MASTER_DATA,
+            ),
+            availableSections(ServerConfig(recipesMealPlan = false)),
         )
         assertEquals(
             listOf(
@@ -104,6 +123,8 @@ class StartSectionTest {
             StartGroup.entries,
         )
         assertEquals(StartGroup.RECIPES, StartSection.RECIPES.group)
+        // Like Grocy's menu, the meal plan follows the recipes
+        assertEquals(StartGroup.RECIPES, StartSection.MEAL_PLAN.group)
     }
 
     @Test

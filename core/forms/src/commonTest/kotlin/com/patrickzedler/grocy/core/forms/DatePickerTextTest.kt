@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.forms
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 class DatePickerTextTest {
 
@@ -56,5 +57,18 @@ class DatePickerTextTest {
     @Test
     fun dueDatePickerStopsAtItsLastYear() {
         assertEquals(47_846L, dueDateOf("999999", today = 20_750))
+    }
+
+    @Test
+    fun clockTimesAreReadLikeGrocysTimeInputs() {
+        assertEquals(7 to 30, clockTimeOf("07:30"))
+        assertEquals(7 to 30, clockTimeOf(" 7:30:00 "))
+        assertNull(clockTimeOf("24:00"))
+        assertNull(clockTimeOf("breakfast"))
+    }
+
+    @Test
+    fun pickedClockTimesHaveTwoDigits() {
+        assertEquals("07:05", clockTimeText(7, 5))
     }
 }

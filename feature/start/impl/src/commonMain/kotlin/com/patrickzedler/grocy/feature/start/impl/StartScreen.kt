@@ -43,15 +43,19 @@ import com.patrickzedler.grocy.core.model.stock.StockSummary
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.app_name
+import com.patrickzedler.grocy.core.resources.ic_rounded_calendar_month
 import com.patrickzedler.grocy.core.resources.ic_rounded_database
 import com.patrickzedler.grocy.core.resources.ic_rounded_kitchen
 import com.patrickzedler.grocy.core.resources.ic_rounded_menu_book
 import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_cart
 import com.patrickzedler.grocy.core.resources.masterdata_title
+import com.patrickzedler.grocy.core.resources.meal_plan_title
 import com.patrickzedler.grocy.core.resources.recipes_title
 import com.patrickzedler.grocy.core.resources.shopping_list_list
 import com.patrickzedler.grocy.core.resources.shopping_list_list_with_count
 import com.patrickzedler.grocy.core.resources.start_list_join
+import com.patrickzedler.grocy.core.resources.start_meal_plan_nothing
+import com.patrickzedler.grocy.core.resources.start_meal_plan_today
 import com.patrickzedler.grocy.core.resources.start_recipes_count
 import com.patrickzedler.grocy.core.resources.start_recipes_enough
 import com.patrickzedler.grocy.core.resources.start_recipes_not_enough
@@ -108,6 +112,12 @@ internal enum class StartSection(
         Res.drawable.ic_rounded_menu_book,
         StartGroup.RECIPES,
         { it.recipes },
+    ),
+    MEAL_PLAN(
+        Res.string.meal_plan_title,
+        Res.drawable.ic_rounded_calendar_month,
+        StartGroup.RECIPES,
+        { it.recipes && it.recipesMealPlan },
     ),
     MASTER_DATA(
         Res.string.masterdata_title,
@@ -233,7 +243,10 @@ private fun StartContent(
                                     onShoppingModeClick = onShoppingModeClick,
                                 )
                             }
-                            StartSection.RECIPES, StartSection.MASTER_DATA -> null
+                            StartSection.RECIPES,
+                            StartSection.MEAL_PLAN,
+                            StartSection.MASTER_DATA,
+                            -> null
                         },
                     )
                 }
@@ -257,6 +270,7 @@ private fun sectionSummary(section: StartSection, state: StartUiState): SectionS
         StartSection.STOCK_OVERVIEW -> state.stock?.let { stockSummary(it, state) }
         StartSection.SHOPPING_LIST -> state.shoppingLists?.let { shoppingListSummary(it) }
         StartSection.RECIPES -> state.recipes?.let { recipesSummary(it, state.checksRecipeStock) }
+        StartSection.MEAL_PLAN -> state.mealPlanToday?.let { mealPlanSummary(it) }
         StartSection.MASTER_DATA -> state.masterDataCounts
             .map { (count, number) -> pluralStringResource(count.text, number, number) }
             .takeIf { it.isNotEmpty() }
@@ -388,6 +402,27 @@ private fun recipesSummary(summary: RecipesSummary, checksStock: Boolean): Secti
     }
     return SectionSummary(intro, bullets)
 }
+
+/** What the meal plan has planned for today, as list like Grocy's day. */
+@Composable
+private fun mealPlanSummary(today: List<String>): SectionSummary =
+    if (today.isEmpty()) {
+        SectionSummary(
+            stringResource(
+                Res.string.start_summary_intro_end,
+                stringResource(Res.string.start_meal_plan_nothing),
+            ),
+            emptyList(),
+        )
+    } else {
+        SectionSummary(
+            stringResource(
+                Res.string.start_summary_intro_list,
+                stringResource(Res.string.start_meal_plan_today),
+            ),
+            today,
+        )
+    }
 
 /** The products below their min. stock amount and how many of them are on shopping lists. */
 @Composable

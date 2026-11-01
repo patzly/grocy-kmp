@@ -20,6 +20,8 @@ import com.patrickzedler.grocy.core.resources.recipes_select_hint
 import com.patrickzedler.grocy.core.ui.appMenuItems
 import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute
 import com.patrickzedler.grocy.feature.masterdata.api.UserfieldsRoute
+import com.patrickzedler.grocy.feature.recipes.api.MealPlanRoute
+import com.patrickzedler.grocy.feature.recipes.api.MealPlanSectionsRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipeFormRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipePreparationRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipeRoute
@@ -29,6 +31,11 @@ import com.patrickzedler.grocy.feature.recipes.impl.actions.RecipeActionsViewMod
 import com.patrickzedler.grocy.feature.recipes.impl.form.RecipeFormScreen
 import com.patrickzedler.grocy.feature.recipes.impl.form.RecipeFormViewModel
 import com.patrickzedler.grocy.feature.recipes.impl.list.RecipesLinks
+import com.patrickzedler.grocy.feature.recipes.impl.mealplan.MealPlanLinks
+import com.patrickzedler.grocy.feature.recipes.impl.mealplan.MealPlanScreen
+import com.patrickzedler.grocy.feature.recipes.impl.mealplan.MealPlanSectionsScreen
+import com.patrickzedler.grocy.feature.recipes.impl.mealplan.MealPlanSectionsViewModel
+import com.patrickzedler.grocy.feature.recipes.impl.mealplan.MealPlanViewModel
 import com.patrickzedler.grocy.feature.recipes.impl.list.RecipesScreen
 import com.patrickzedler.grocy.feature.recipes.impl.list.RecipesViewModel
 import com.patrickzedler.grocy.feature.recipes.impl.recipe.RecipeLinks
@@ -47,7 +54,8 @@ private const val RECIPES_SCENE = "recipes"
 
 /**
  * Grocy's recipes with their recipe cards and forms, which open beside the list where the window
- * is wide enough; a form opened from a card takes its place and back returns to the card.
+ * is wide enough; a form opened from a card takes its place and back returns to the card. The
+ * meal plan and its sections are screens of their own, a planned recipe opens its card alone.
  */
 fun EntryProviderScope<NavKey>.recipesEntries(
     dependencies: RecipesDependencies,
@@ -158,6 +166,41 @@ fun EntryProviderScope<NavKey>.recipesEntries(
                 links = productLinks(navigator),
             ),
             onCloseClick = navigator::goBack,
+        )
+    }
+
+    // The whole window for the week, no list beside it
+    entry<MealPlanRoute> { route ->
+        MealPlanScreen(
+            viewModel = viewModel {
+                MealPlanViewModel(
+                    mealPlan = dependencies.mealPlanRepository,
+                    recipes = recipes,
+                    masterData = masterData,
+                    stock = dependencies.stockRepository,
+                    initialDay = route.start,
+                )
+            },
+            stockPageActions = rememberStockPageActions(
+                masterData = masterData,
+                stock = dependencies.stockRepository,
+                shoppingLists = dependencies.shoppingListRepository,
+                links = productLinks(navigator),
+            ),
+            links = MealPlanLinks(
+                onRecipeOpen = { navigator.navigate(RecipeRoute(it)) },
+                onSectionsClick = { navigator.navigate(MealPlanSectionsRoute) },
+            ),
+            menuItems = appMenuItems(),
+            onBackClick = navigator::goBack,
+        )
+    }
+
+    entry<MealPlanSectionsRoute> {
+        MealPlanSectionsScreen(
+            viewModel = viewModel { MealPlanSectionsViewModel(dependencies.mealPlanRepository) },
+            menuItems = appMenuItems(),
+            onBackClick = navigator::goBack,
         )
     }
 

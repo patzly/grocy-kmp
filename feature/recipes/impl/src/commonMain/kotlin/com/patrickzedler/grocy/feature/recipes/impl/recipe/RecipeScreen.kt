@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -16,6 +18,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.SnackbarHostState
@@ -30,8 +33,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
@@ -98,6 +103,7 @@ import com.patrickzedler.grocy.core.resources.recipe_missing_added
 import com.patrickzedler.grocy.core.resources.recipe_preparation
 import com.patrickzedler.grocy.core.resources.recipe_preparation_mode
 import com.patrickzedler.grocy.core.resources.recipe_servings_failed
+import com.patrickzedler.grocy.core.resources.recipe_servings_saving
 import com.patrickzedler.grocy.core.resources.recipe_title
 import com.patrickzedler.grocy.core.resources.recipes_desired_servings
 import com.patrickzedler.grocy.core.resources.recipes_status_enough
@@ -377,7 +383,7 @@ private fun LazyListScope.overviewGroup(state: RecipeUiState, viewModel: RecipeV
         val fulfillment = state.fulfillment
         val config = state.config
         GroupItems(
-            { index, count -> NameItem(state, index, count) },
+            { index, count -> NameItem(state, viewModel.isSavingServings, index, count) },
             { index, count ->
                 TextItem(
                     state = viewModel.servings,
@@ -399,20 +405,42 @@ private fun LazyListScope.overviewGroup(state: RecipeUiState, viewModel: RecipeV
     }
 }
 
-/** The recipe's name as the card's heading, Grocy's requirements as chips below it. */
+/**
+ * The recipe's name as the card's heading, Grocy's requirements as chips below it. While changed
+ * servings are saved ([isSavingServings]) an indicator at its end tells the amounts are not
+ * scaled yet.
+ */
 @Composable
-private fun NameItem(state: RecipeUiState, index: Int, count: Int) {
+private fun NameItem(state: RecipeUiState, isSavingServings: Boolean, index: Int, count: Int) {
     val fulfillment = state.fulfillment?.takeIf { state.config.stock }
     val chips = fulfillment?.let {
         recipeStatusChips(it.status, it.missingProductsCount, rememberStatusColors())
     }.orEmpty()
     SegmentedContainer(index = index, count = count) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Text(
-                text = state.recipe.name,
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.semantics { heading() },
-            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = state.recipe.name,
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier
+                        .weight(1f)
+                        .semantics { heading() },
+                )
+                if (isSavingServings) {
+                    val saving = stringResource(Res.string.recipe_servings_saving)
+                    LoadingIndicator(
+                        modifier = Modifier
+                            .size(SavingIndicatorSize)
+                            .semantics {
+                                contentDescription = saving
+                                liveRegion = LiveRegionMode.Polite
+                            },
+                    )
+                }
+            }
             if (chips.isNotEmpty()) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -704,3 +732,6 @@ private const val PICTURE_RATIO = 2f
 private const val ENERGY_DECIMALS = 0
 
 private const val DoneAlpha = 0.6f
+
+// As high as a line of the name, so the item keeps its height
+private val SavingIndicatorSize = 32.dp

@@ -161,6 +161,8 @@ class FakeGrocyServer(
             "/api/objects/recipes_pos",
             "/api/objects/recipes_nestings",
             "/api/recipes/1/copy",
+            "/api/objects/meal_plan",
+            "/api/objects/meal_plan_sections",
         ).forEach { path ->
             respond(
                 path = path,
@@ -168,11 +170,14 @@ class FakeGrocyServer(
                 method = HttpMethod.Post,
             )
         }
-        listOf(
-            "/api/recipes/1/consume",
-            "/api/recipes/1/add-not-fulfilled-products-to-shoppinglist",
-            "/api/objects/meal_plan",
-        ).forEach { path ->
+        // The recipes Grocy keeps for its meal plan run the same actions: the Pancakes entry
+        // (-3) and the week (-1)
+        listOf(1, -1, -3).flatMap { id ->
+            listOf(
+                "/api/recipes/$id/consume",
+                "/api/recipes/$id/add-not-fulfilled-products-to-shoppinglist",
+            )
+        }.forEach { path ->
             respond(path = path, status = HttpStatusCode.NoContent, method = HttpMethod.Post)
         }
         respond("/api/recipes/1/printlabel", status = HttpStatusCode.NoContent)

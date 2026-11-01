@@ -37,8 +37,10 @@ Stock overview (`stockoverview/` of `feature:stock`, it opens the product overvi
   date relative and capitalized as a label of its own (`formatRelativeTimeLabel`: "Tomorrow",
   "Morgen"; ICU and Intl write the middle of a sentence), yellow when due soon and red when
   overdue or expired: `rememberStatusColors` of
-  `core:design`, Material's custom color roles of fixed hues harmonized with primary), the
-  description as text, the picture as thumbnail. A tap opens the product overview. Grocy's
+  `core:design`, Material's custom color roles of fixed hues with primary's chroma, harmonized
+  with primary), the
+  description as text, the picture as thumbnail before the menu (both centered to each other,
+  at the top of rows higher than one line, like the recipes' rows). A tap opens the product overview. Grocy's
   buttons in front of a row are swipe actions (`SwipeActionBox` of `core:design`, like Gmail's: a
   rounded primary surface opens from the screen's edge and uncovers the icon, which rests 16.dp
   from that edge until the surface's middle reaches it and stays in the middle then; passing the

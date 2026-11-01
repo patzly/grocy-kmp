@@ -8,6 +8,7 @@ import com.patrickzedler.grocy.core.database.RecipePictureEntity
 import com.patrickzedler.grocy.core.database.toEntity
 import com.patrickzedler.grocy.core.database.toModel
 import com.patrickzedler.grocy.core.model.ServerConnection
+import com.patrickzedler.grocy.core.model.recipes.MealPlanRecipe
 import com.patrickzedler.grocy.core.model.recipes.MealPlanSection
 import com.patrickzedler.grocy.core.model.recipes.Recipe
 import com.patrickzedler.grocy.core.model.recipes.RecipeFulfillment
@@ -26,8 +27,9 @@ import kotlinx.coroutines.flow.map
 /**
  * Grocy's recipes, offline first: the recipes, their ingredients and included recipes, and what
  * the server computes for them at their desired servings (fulfillment, costs, the resolved
- * ingredients), stored as last downloaded. What the server computes is never derived here; every
- * change is online only and downloads it again.
+ * ingredients), stored as last downloaded, also for the recipes Grocy keeps for its meal plan.
+ * What the server computes is never derived here; every change is online only and downloads it
+ * again.
  *
  * @param connection the logged in server, null after a logout.
  */
@@ -39,6 +41,7 @@ class RecipesRepository(
 ) {
 
     private val dao = database.recipeDao()
+    private val mealPlanDao = database.mealPlanDao()
 
     /** Grocy's normal recipes, by name. */
     val recipes: Flow<List<Recipe>> = dao.observeRecipes().map { list -> list.map { it.toModel() } }
@@ -79,14 +82,17 @@ class RecipesRepository(
             val ingredients = async { api.recipeIngredients(connection) }
             val nestings = async { api.recipeNestings(connection) }
             val resolved = async { api.resolvedRecipeIngredients(connection) }
+            val mealPlanRecipes = async { api.mealPlanRecipes(connection) }
             Download(
                 recipes = recipes.await(),
                 fulfillment = fulfillment.await(),
                 ingredients = ingredients.await(),
                 nestings = nestings.await(),
                 resolved = resolved.await(),
+                mealPlanRecipes = mealPlanRecipes.await(),
             )
         }
+        val fulfillmentById = download.fulfillment.associateBy { it.recipeId }
         // Meal plan entries are recipes too, only the normal ones are kept
         val ids = download.recipes.map { it.id }.toSet()
         database.withWriteTransaction {
@@ -109,6 +115,13 @@ class RecipesRepository(
                 download.resolved.filter { it.recipeId in ids }.map { it.toEntity() },
             )
             dao.deleteUnusedPictures()
+            // The meal plan's costs per entry, day and week
+            mealPlanDao.deleteRecipes()
+            mealPlanDao.insertRecipes(
+                download.mealPlanRecipes.map {
+                    it.copy(fulfillment = fulfillmentById[it.id]).toEntity()
+                },
+            )
         }
     }
 
@@ -269,6 +282,7 @@ class RecipesRepository(
         val ingredients: List<RecipeIngredient>,
         val nestings: List<RecipeNesting>,
         val resolved: List<ResolvedRecipeIngredient>,
+        val mealPlanRecipes: List<MealPlanRecipe>,
     )
 
     companion object {

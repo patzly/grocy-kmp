@@ -23,6 +23,11 @@ import com.patrickzedler.grocy.core.model.masterdata.Userfield
 import com.patrickzedler.grocy.core.model.masterdata.UserfieldType
 import com.patrickzedler.grocy.core.model.masterdata.Weekday
 import com.patrickzedler.grocy.core.model.recipes.Recipe
+import com.patrickzedler.grocy.core.model.recipes.MealPlanEntry
+import com.patrickzedler.grocy.core.model.recipes.MealPlanEntryType
+import com.patrickzedler.grocy.core.model.recipes.MealPlanRecipe
+import com.patrickzedler.grocy.core.model.recipes.MealPlanRecipeType
+import com.patrickzedler.grocy.core.model.recipes.MealPlanSection
 import com.patrickzedler.grocy.core.model.recipes.RecipeFulfillment
 import com.patrickzedler.grocy.core.model.recipes.RecipeIngredient
 import com.patrickzedler.grocy.core.model.recipes.RecipeNesting
@@ -594,3 +599,76 @@ fun ResolvedRecipeIngredientEntity.toModel() = ResolvedRecipeIngredient(
     dueScore = dueScore,
     productIdEffective = productIdEffective,
 )
+
+fun MealPlanEntry.toEntity() = MealPlanEntryEntity(
+    id = id,
+    day = day,
+    type = type.grocyName,
+    recipeId = recipeId,
+    recipeServings = recipeServings,
+    note = note,
+    productId = productId,
+    productAmount = productAmount,
+    productQuId = productQuId,
+    sectionId = sectionId,
+    done = done,
+)
+
+fun MealPlanEntryEntity.toModel() = MealPlanEntry(
+    id = id,
+    day = day,
+    type = MealPlanEntryType.of(type),
+    recipeId = recipeId,
+    recipeServings = recipeServings,
+    note = note,
+    productId = productId,
+    productAmount = productAmount,
+    productQuId = productQuId,
+    sectionId = sectionId,
+    done = done,
+)
+
+fun MealPlanSection.toEntity() = MealPlanSectionEntity(
+    id = id,
+    name = name,
+    sortNumber = sortNumber,
+    timeInfo = timeInfo,
+)
+
+fun MealPlanSectionEntity.toModel() = MealPlanSection(
+    id = id,
+    name = name,
+    sortNumber = sortNumber,
+    timeInfo = timeInfo,
+)
+
+fun MealPlanRecipe.toEntity() = MealPlanRecipeEntity(
+    id = id,
+    type = type.grocyName,
+    name = name,
+    hasFulfillment = fulfillment != null,
+    needFulfilled = fulfillment?.needFulfilled ?: true,
+    needFulfilledWithShoppingList = fulfillment?.needFulfilledWithShoppingList ?: true,
+    missingProductsCount = fulfillment?.missingProductsCount ?: 0,
+    costs = fulfillment?.costs ?: 0.0,
+    calories = fulfillment?.calories ?: 0.0,
+    pricesIncomplete = fulfillment?.pricesIncomplete ?: false,
+)
+
+/** Null for a type of a newer Grocy the app does not know. */
+fun MealPlanRecipeEntity.toModel(): MealPlanRecipe? {
+    val type = MealPlanRecipeType.of(type) ?: return null
+    val fulfillment = RecipeFulfillment(
+        recipeId = id,
+        needFulfilled = needFulfilled,
+        needFulfilledWithShoppingList = needFulfilledWithShoppingList,
+        missingProductsCount = missingProductsCount,
+        costs = costs,
+        costsPerServing = costs,
+        calories = calories,
+        dueScore = 0,
+        productNames = "",
+        pricesIncomplete = pricesIncomplete,
+    )
+    return MealPlanRecipe(id, type, name, fulfillment.takeIf { hasFulfillment })
+}

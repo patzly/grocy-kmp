@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.recipes.impl
 
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
 import com.patrickzedler.grocy.core.data.settings.RecipesOptionsRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
@@ -21,4 +22,7 @@ interface RecipesDependencies {
 
     /** Fields, grouping, sort and view of the recipes, read at app start. */
     val recipesOptions: RecipesOptionsRepository
+
+    /** Grocy's meal plan and its sections. */
+    val mealPlanRepository: MealPlanRepository
 }

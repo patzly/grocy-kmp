@@ -28,6 +28,7 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.testTimeSource
 
 class RecipeViewModelTest {
 
@@ -57,6 +58,7 @@ class RecipeViewModelTest {
         language = "en",
         decimalSeparator = '.',
         computeDispatcher = dispatcher,
+        timeSource = testTimeSource,
     ).also { created += it }
 
     @Test
@@ -132,6 +134,22 @@ class RecipeViewModelTest {
             listOf("""{"desired_servings":4.0}"""),
             puts.map { (it.body as TextContent).text },
         )
+    }
+
+    @Test
+    fun savingServingsShowsTheIndicatorUntilTheIngredientsAreScaled() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+
+        viewModel.servings.setTextAndPlaceCursorAtEnd("4")
+        Snapshot.sendApplyNotifications()
+        // After the typing pause, within the indicator's minimum duration
+        advanceTimeBy(1_000)
+        val whileSaving = viewModel.isSavingServings
+        advanceUntilIdle()
+
+        assertTrue(whileSaving)
+        assertFalse(viewModel.isSavingServings)
     }
 
     @Test

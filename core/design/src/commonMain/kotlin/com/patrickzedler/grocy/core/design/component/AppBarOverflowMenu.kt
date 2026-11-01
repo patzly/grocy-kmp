@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -140,17 +141,41 @@ fun FilledOverflowMenu(
     }
 }
 
+/**
+ * A standard icon button at the end of a list item whose [groups] are choices of one action,
+ * e.g. "Add" with the kinds of things to add, [description] naming it for its tooltip and
+ * screen readers.
+ */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun ListItemMenuButton(
+    painter: Painter,
+    description: String,
+    groups: List<List<AppBarMenuItem>>,
+    modifier: Modifier = Modifier,
+) {
+    NarrowOverflowMenu(groups, modifier, description) { text, onClick ->
+        IconButton(
+            onClick = onClick,
+            modifier = Modifier.clickCursor(),
+            shapes = IconButtonDefaults.shapes(),
+        ) {
+            Icon(painter = painter, contentDescription = text)
+        }
+    }
+}
+
 @Composable
 private fun NarrowOverflowMenu(
     groups: List<List<AppBarMenuItem>>,
     modifier: Modifier,
+    description: String = stringResource(Res.string.action_more_options),
     button: @Composable (description: String, onClick: () -> Unit) -> Unit,
 ) {
     val shownGroups = groups.filter { it.isNotEmpty() }
     if (shownGroups.isEmpty()) return
     val haptic = LocalHapticFeedback.current
     var showMenu by remember { mutableStateOf(false) }
-    val description = stringResource(Res.string.action_more_options)
 
     // A box of its own, so the menu opens at the button; the button takes the width it is given
     Box(modifier, propagateMinConstraints = true) {

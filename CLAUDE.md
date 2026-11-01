@@ -27,6 +27,8 @@ tasks need.
 - `docs/features/stock-overview.md`: Grocy's stock overview page.
 - `docs/features/recipes.md`: the recipes list and gallery, the recipe card, its form and
   dialogs, the meal plan dialog.
+- `docs/features/meal-plan.md`: the meal plan's week (agenda and grid), its entries, actions,
+  dialogs and sections, the recipes Grocy keeps for it.
 - `docs/features/stock-pages.md`: stock entries, stock journal and journal summary.
 - `docs/features/product-overview.md`: the product overview card (`core:productcard`), price
   chart, grocycodes, "Add to shopping list".

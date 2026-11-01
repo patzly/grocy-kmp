@@ -176,7 +176,6 @@ internal fun StockOverviewListItem(
                         }.takeIf { canOpen },
                     )
                 },
-            verticalAlignment = Alignment.CenterVertically,
             supportingContent = {
                 FieldChips(item = item, style = style, pictureDescription = pictureDescription)
             },

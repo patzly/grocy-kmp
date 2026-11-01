@@ -19,6 +19,8 @@ import com.patrickzedler.grocy.core.forms.changedValues
 import com.patrickzedler.grocy.core.forms.userfieldInputs
 import com.patrickzedler.grocy.core.forms.validationErrors
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
+import com.patrickzedler.grocy.core.model.text.formatDecimal
+import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -62,6 +64,7 @@ internal data class AddedToShoppingList(
 class AddToShoppingListViewModel(
     private val masterData: MasterDataRepository,
     private val shoppingLists: ShoppingListRepository,
+    private val separator: Char = platformDecimalSeparator(),
 ) : ViewModel() {
 
     internal var dialog by mutableStateOf<AddToShoppingListState?>(null)
@@ -70,7 +73,11 @@ class AddToShoppingListViewModel(
     private val addedChannel = Channel<AddedToShoppingList>(Channel.BUFFERED)
     internal val added: Flow<AddedToShoppingList> = addedChannel.receiveAsFlow()
 
-    fun open(productId: Int) {
+    /**
+     * Opens the dialog for the product, with [stockAmount] (in its stock unit) in the stock unit
+     * if given, e.g. what the meal plan plans; else 1 in its purchase unit like Grocy.
+     */
+    fun open(productId: Int, stockAmount: Double? = null) {
         viewModelScope.launch {
             val product = masterData.product(productId).first() ?: return@launch
             val config = masterData.serverConfig.first()
@@ -85,6 +92,7 @@ class AddToShoppingListViewModel(
                 units = masterData.quantityUnits.first(),
             )
             val fields = masterData.userfields(MasterDataRepository.SHOPPING_LIST).first()
+            val decimals = masterData.userSettings.first().stockDecimalPlacesAmounts
             dialog = AddToShoppingListState(
                 productId = productId,
                 productName = product.name,
@@ -96,8 +104,14 @@ class AddToShoppingListViewModel(
                         ?: ShoppingList.DEFAULT_ID,
                     units = units,
                     stockUnit = units.firstOrNull { it.unit.id == product.quIdStock }?.unit,
-                    initialQuId = defaultItemQuId(product, units),
-                    decimals = masterData.userSettings.first().stockDecimalPlacesAmounts,
+                    initialQuId = if (stockAmount != null) {
+                        product.quIdStock
+                    } else {
+                        defaultItemQuId(product, units)
+                    },
+                    decimals = decimals,
+                    initialAmount = stockAmount?.let { formatDecimal(it, decimals, separator) }
+                        ?: "1",
                 ),
                 userfields = userfieldInputs(fields, values = null),
             )

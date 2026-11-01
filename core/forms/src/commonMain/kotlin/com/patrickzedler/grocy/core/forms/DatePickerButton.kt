@@ -142,13 +142,66 @@ fun DatePickerButton(state: TextFieldState, withTime: Boolean) {
     }
     if (showTime) {
         PickTimeDialog(
-            text = state.text.toString(),
+            initial = timeOfDayOf(state.text.toString()),
             onPick = { hour, minute ->
                 showTime = false
                 val text = state.text.toString()
                 state.setTextAndPlaceCursorAtEnd(
                     withPickedTime(text, hour, minute, todayEpochDay()),
                 )
+            },
+            onDismissRequest = { showTime = false },
+        )
+    }
+}
+
+/** Hour and minute of a time of day "HH:MM" like a time input of Grocy; null for others. */
+fun clockTimeOf(text: String): Pair<Int, Int>? {
+    val match = CLOCK_TIME.matchEntire(text.trim()) ?: return null
+    val hour = match.groupValues[1].toInt()
+    val minute = match.groupValues[2].toInt()
+    return (hour to minute).takeIf { hour in 0..23 && minute in 0..59 }
+}
+
+/** [hour] and [minute] as Grocy's time inputs send them, "HH:MM". */
+fun clockTimeText(hour: Int, minute: Int): String =
+    "${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}"
+
+private val CLOCK_TIME = Regex("""(\d{1,2}):(\d{2})(:\d{2})?""")
+
+/**
+ * The clock button at the end of a time field like Grocy's time inputs: Material's time picker
+ * writes the choice into [state] as "HH:MM", which can still be typed as well.
+ */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun TimePickerButton(state: TextFieldState) {
+    val haptic = LocalHapticFeedback.current
+    var showTime by rememberSaveable { mutableStateOf(false) }
+    val description = stringResource(Res.string.time_picker_title)
+
+    HapticTooltipBox(text = description) {
+        IconButton(
+            onClick = {
+                haptic.confirm()
+                showTime = true
+            },
+            modifier = Modifier.clickCursor(),
+            shapes = IconButtonDefaults.shapes(),
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_rounded_schedule),
+                contentDescription = description,
+            )
+        }
+    }
+
+    if (showTime) {
+        PickTimeDialog(
+            initial = clockTimeOf(state.text.toString()),
+            onPick = { hour, minute ->
+                showTime = false
+                state.setTextAndPlaceCursorAtEnd(clockTimeText(hour, minute))
             },
             onDismissRequest = { showTime = false },
         )
@@ -262,12 +315,12 @@ private fun PickDateDialog(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun PickTimeDialog(
-    text: String,
+    initial: Pair<Int, Int>?,
     onPick: (hour: Int, minute: Int) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
     val haptic = LocalHapticFeedback.current
-    val (hour, minute) = timeOfDayOf(text) ?: (0 to 0)
+    val (hour, minute) = initial ?: (0 to 0)
     val pickerState = rememberTimePickerState(initialHour = hour, initialMinute = minute)
     // The dial or, e.g. for keyboards, two text fields
     var showInput by rememberSaveable { mutableStateOf(false) }

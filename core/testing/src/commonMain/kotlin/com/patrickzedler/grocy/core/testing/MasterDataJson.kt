@@ -18,8 +18,13 @@ package com.patrickzedler.grocy.core.testing
  *   price (0.9)
  * - recipes Pancakes (1, 4 servings scaled to 2, with picture, 2 pieces of Milk and Bread in
  *   the group "Topping", not enough in stock but on the shopping list) and Soup (2, 1 serving,
- *   includes 2 servings of Pancakes, enough in stock), meal plan sections Breakfast (1) and the
- *   default one
+ *   includes 2 servings of Pancakes, enough in stock), meal plan sections Breakfast (1, at
+ *   "7:00") and the default one
+ * - the meal plan of the week from Monday 2026-11-02 (Grocy's week "2026-44"): 2 servings of
+ *   Pancakes for breakfast (1) and 2 pieces of Milk (2) on Monday, the done note "Eat out" (3)
+ *   on Tuesday; the recipes Grocy keeps for it: the week (-1), Monday (-2), the Pancakes entry
+ *   (-3, not enough in stock but on the shopping list) and Tuesday (-4), all served together
+ *   with the normal recipes by `/objects/recipes`, which the client filters by type
  */
 object MasterDataJson {
 
@@ -192,7 +197,11 @@ object MasterDataJson {
             """"product_id":null,"userfields":{"vegan":"0"}},""" +
             """{"id":"2","name":"Soup","description":null,"picture_file_name":null,""" +
             """"base_servings":1,"desired_servings":1,"not_check_shoppinglist":1,""" +
-            """"type":"normal","product_id":"4","userfields":null}]"""
+            """"type":"normal","product_id":"4","userfields":null},""" +
+            """{"id":-1,"name":"2026-44","type":"mealplan-week"},""" +
+            """{"id":-2,"name":"2026-11-02","type":"mealplan-day"},""" +
+            """{"id":-3,"name":"2026-11-02#1","type":"mealplan-shadow"},""" +
+            """{"id":-4,"name":"2026-11-03","type":"mealplan-day"}]"""
 
     /** `/objects/recipes/1`, Pancakes. */
     const val PANCAKES =
@@ -211,8 +220,15 @@ object MasterDataJson {
             """"need_fulfilled_with_shopping_list":1,"missing_products_count":0,"costs":0,""" +
             """"costs_per_serving":0,"calories":0,"due_score":0,""" +
             """"product_names_comma_separated":null,"prices_incomplete":0},""" +
-            """{"id":1,"recipe_id":-1,"need_fulfilled":1,""" +
-            """"need_fulfilled_with_shopping_list":1,"missing_products_count":0}]"""
+            """{"id":1,"recipe_id":-1,"need_fulfilled":0,""" +
+            """"need_fulfilled_with_shopping_list":0,"missing_products_count":1,""" +
+            """"costs":"7.5","calories":"900","prices_incomplete":0},""" +
+            """{"recipe_id":"-2","need_fulfilled":"0","need_fulfilled_with_shopping_list":"0",""" +
+            """"missing_products_count":"1","costs":"7.5","calories":"900"},""" +
+            """{"recipe_id":-3,"need_fulfilled":0,"need_fulfilled_with_shopping_list":1,""" +
+            """"missing_products_count":1,"costs":5,"calories":700},""" +
+            """{"recipe_id":-4,"need_fulfilled":1,"need_fulfilled_with_shopping_list":1,""" +
+            """"missing_products_count":0,"costs":0,"calories":0}]"""
 
     const val RECIPE_INGREDIENTS =
         """[{"id":1,"recipe_id":1,"product_id":1,"amount":"4","qu_id":1,"note":"Cold",""" +
@@ -262,8 +278,24 @@ object MasterDataJson {
             """"due_score":1,"product_id_effective":1,"product_name":"Milk"}]"""
 
     const val MEAL_PLAN_SECTIONS =
-        """[{"id":"-1","name":"","sort_number":"-1"},""" +
-            """{"id":1,"name":"Breakfast","sort_number":"1"}]"""
+        """[{"id":"-1","name":"","sort_number":"-1","time_info":null},""" +
+            """{"id":1,"name":"Breakfast","sort_number":"1","time_info":"7:00"}]"""
+
+    const val MEAL_PLAN =
+        """[{"id":1,"day":"2026-11-02","type":"recipe","recipe_id":"1",""" +
+            """"recipe_servings":"2","note":null,"product_id":null,"product_amount":"0",""" +
+            """"product_qu_id":null,"section_id":"1","done":"0"},""" +
+            """{"id":"2","day":"2026-11-02","type":"product","recipe_id":null,""" +
+            """"recipe_servings":1,"note":"","product_id":1,"product_amount":2,""" +
+            """"product_qu_id":1,"section_id":-1,"done":0},""" +
+            """{"id":3,"day":"2026-11-03","type":"note","recipe_id":null,""" +
+            """"recipe_servings":1,"note":"Eat out","product_id":null,"product_amount":0,""" +
+            """"product_qu_id":null,"section_id":-1,"done":1}]"""
+
+    /** `/objects/meal_plan/99`, an entry the server just created. */
+    const val CREATED_MEAL_PLAN_ENTRY =
+        """{"id":$CREATED_ID,"day":"2026-11-04","type":"note","note":"Leftovers",""" +
+            """"section_id":-1,"done":0}"""
 
     /** Paths and answers [FakeGrocyServer] serves from the start. */
     val defaults: Map<String, String> = mapOf(
@@ -308,5 +340,9 @@ object MasterDataJson {
             """{"id":1,"recipe_id":2,"includes_recipe_id":1,"servings":"2"}""",
         "/api/objects/recipes_pos_resolved" to RESOLVED_RECIPE_INGREDIENTS,
         "/api/objects/meal_plan_sections" to MEAL_PLAN_SECTIONS,
+        "/api/objects/meal_plan_sections/$CREATED_ID" to
+            """{"id":$CREATED_ID,"name":"Dinner","sort_number":3,"time_info":"19:00"}""",
+        "/api/objects/meal_plan" to MEAL_PLAN,
+        "/api/objects/meal_plan/$CREATED_ID" to CREATED_MEAL_PLAN_ENTRY,
     )
 }

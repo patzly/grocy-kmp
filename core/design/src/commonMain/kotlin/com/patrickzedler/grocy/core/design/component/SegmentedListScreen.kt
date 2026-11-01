@@ -177,12 +177,12 @@ fun SegmentedListScreen(
     // The last item can scroll above the toolbar's bar, the group spacing from its top edge,
     // snackbars appear above it
     val toolbarSpace = if (floatingToolbar != null) {
-        with(FloatingToolbarDefaults) { ScreenOffset + ToolbarBarInset + ContainerSize }
+        with(FloatingToolbarDefaults) { ScreenOffset + ContainerSize }
     } else {
         0.dp
     }
 
-    // Snackbars lie a little above the toolbar's bar
+    // Snackbars lie the screen offset above the toolbar's bar
     val snackbarSpace = if (floatingToolbar != null) toolbarSpace + SnackbarToolbarGap else 0.dp
 
     Scaffold(
@@ -374,7 +374,8 @@ fun SegmentedListScreen(
                         Modifier
                             .align(Alignment.BottomCenter)
                             .windowInsetsPadding(WindowInsets.navigationBars)
-                            .offset(y = -FloatingToolbarDefaults.ScreenOffset)
+                            // The bar itself, not its layout, the screen offset above the bottom
+                            .offset(y = -(FloatingToolbarDefaults.ScreenOffset - ToolbarBarInset))
                             .zIndex(1f),
                     )
                 }
@@ -524,7 +525,8 @@ fun AppBarIconButton(
     }
 }
 
-private val SnackbarToolbarGap = 12.dp
+// Material's snackbar keeps 12 dp padding around itself, the rest makes the screen offset
+private val SnackbarToolbarGap = FloatingToolbarDefaults.ScreenOffset - 12.dp
 
 // Material lays a toolbar with FAB out 80 dp high and centers its 64 dp bar in it
 private val ToolbarBarInset = 8.dp

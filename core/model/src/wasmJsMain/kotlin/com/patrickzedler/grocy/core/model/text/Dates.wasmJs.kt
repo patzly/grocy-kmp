@@ -13,6 +13,17 @@ actual fun localNowMillis(): Long = localNowInBrowser().toLong()
 actual fun formatDate(epochDay: Long): String =
     formatDateInBrowser(epochDay.toDouble() * MILLIS_PER_DAY)
 
+actual fun formatWeekday(epochDay: Long): String =
+    formatWeekdayInBrowser(epochDay.toDouble() * MILLIS_PER_DAY)
+
+actual fun formatDayAndMonth(epochDay: Long): String =
+    formatDayAndMonthInBrowser(epochDay.toDouble() * MILLIS_PER_DAY)
+
+actual fun formatDateRange(start: Long, end: Long): String =
+    formatDateRangeInBrowser(start.toDouble() * MILLIS_PER_DAY, end.toDouble() * MILLIS_PER_DAY)
+
+actual fun localeFirstDayOfWeek(): Int = firstDayOfWeekInBrowser()
+
 actual fun formatRelativeTime(span: TimeSpan): String =
     formatRelativeInBrowser(span.value, span.unit.intlName)
 
@@ -49,6 +60,43 @@ private external fun localNowInBrowser(): Double
     )""",
 )
 private external fun formatDateInBrowser(millis: Double): String
+
+@JsFun(
+    """(millis) => new Date(millis).toLocaleDateString(
+        globalThis.navigator?.language,
+        { timeZone: 'UTC', weekday: 'long' }
+    )""",
+)
+private external fun formatWeekdayInBrowser(millis: Double): String
+
+@JsFun(
+    """(millis) => new Date(millis).toLocaleDateString(
+        globalThis.navigator?.language,
+        { timeZone: 'UTC', month: 'long', day: 'numeric' }
+    )""",
+)
+private external fun formatDayAndMonthInBrowser(millis: Double): String
+
+@JsFun(
+    """(start, end) => new Intl.DateTimeFormat(
+        globalThis.navigator?.language,
+        { timeZone: 'UTC', dateStyle: 'medium' }
+    ).formatRange(new Date(start), new Date(end))""",
+)
+private external fun formatDateRangeInBrowser(start: Double, end: Double): String
+
+// Intl counts from Monday (1) to Sunday (7); browsers without week info start on Monday
+@JsFun(
+    """() => {
+        try {
+            const locale = new Intl.Locale(globalThis.navigator?.language ?? 'en');
+            const info = locale.getWeekInfo ? locale.getWeekInfo() : locale.weekInfo;
+            if (info) return info.firstDay % 7;
+        } catch (e) {}
+        return 1;
+    }""",
+)
+private external fun firstDayOfWeekInBrowser(): Int
 
 // "auto" says "yesterday" instead of "1 day ago"
 @JsFun(

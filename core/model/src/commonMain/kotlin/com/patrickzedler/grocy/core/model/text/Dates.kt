@@ -24,6 +24,22 @@ fun isoDateOf(epochDay: Long): String {
         day.toString().padStart(2, '0')
 }
 
+/** The weekday of [epochDay] like JavaScript and SQLite count it: 0 is Sunday, 6 Saturday. */
+fun weekdayOf(epochDay: Long): Int = (epochDay + EPOCH_WEEKDAY).mod(DAYS_PER_WEEK)
+
+/**
+ * SQLite's `STRFTIME('%Y-%W', day)` of [epochDay]: the year and its week, weeks starting on
+ * Monday and the days before the year's first Monday in week 00.
+ */
+fun yearWeekOf(epochDay: Long): String {
+    val year = civilFromDays(epochDay).first
+    val dayOfYear = epochDay - daysFromCivil(year.toInt(), 1, 1)
+    // Days since Monday, 0 for a Monday
+    val sinceMonday = (weekdayOf(epochDay) + DAYS_PER_WEEK - 1) % DAYS_PER_WEEK
+    val week = (dayOfYear + DAYS_PER_WEEK - sinceMonday) / DAYS_PER_WEEK
+    return "${year.toString().padStart(4, '0')}-${week.toString().padStart(2, '0')}"
+}
+
 /** Hour and minute of Grocy's "YYYY-MM-DD HH:MM[:SS]"; null without a valid time. */
 fun timeOfDayOf(dateTime: String): Pair<Int, Int>? {
     val match = TIME_OF_DAY.find(dateTime.trim()) ?: return null
@@ -76,6 +92,18 @@ fun grocyDateTimeOf(localMillis: Long): String {
 /** [epochDay] as medium date of the app language, e.g. "Oct 24, 2026". */
 expect fun formatDate(epochDay: Long): String
 
+/** The weekday of [epochDay] in the app language, e.g. "Monday". */
+expect fun formatWeekday(epochDay: Long): String
+
+/** [epochDay] without year in the app language, e.g. "November 2". */
+expect fun formatDayAndMonth(epochDay: Long): String
+
+/** The days [start] to [end] as medium dates of the app language, e.g. "Nov 2 – 8, 2026". */
+expect fun formatDateRange(start: Long, end: Long): String
+
+/** The first day of the week in the app language's region, 0 for Sunday, 1 for Monday. */
+expect fun localeFirstDayOfWeek(): Int
+
 /** [span] relative to now in the app language, e.g. "yesterday" or "in 3 months". */
 expect fun formatRelativeTime(span: TimeSpan): String
 
@@ -124,6 +152,10 @@ private fun daysInMonth(year: Int, month: Int): Int = when (month) {
 
 private const val MILLIS_PER_DAY = 86_400_000L
 private const val MILLIS_PER_SECOND = 1_000L
+private const val DAYS_PER_WEEK = 7
+
+// 1970-01-01 was a Thursday
+private const val EPOCH_WEEKDAY = 4
 
 private val ISO_DATE = Regex("""(\d{4})-(\d{2})-(\d{2})""")
 

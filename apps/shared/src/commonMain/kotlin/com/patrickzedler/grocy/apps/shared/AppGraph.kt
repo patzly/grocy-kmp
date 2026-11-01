@@ -10,6 +10,7 @@ import com.patrickzedler.grocy.core.data.server.ServerRepository
 import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
+import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
 import com.patrickzedler.grocy.core.data.settings.RecipesOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ShoppingListOptionsRepository
@@ -93,6 +94,16 @@ class AppGraph(
             api = grocyApi,
             database = platform.database,
             connection = { platform.credentialStore.connection.first() },
+        )
+    }
+
+    /** Grocy's meal plan, its sections and what the server computes for it. */
+    private val mealPlanRepository by lazy {
+        MealPlanRepository(
+            api = grocyApi,
+            database = platform.database,
+            connection = { platform.credentialStore.connection.first() },
+            recipes = recipesRepository,
         )
     }
 
@@ -181,6 +192,8 @@ class AppGraph(
             get() = this@AppGraph.masterDataRepository
         override val recipesRepository: RecipesRepository
             get() = this@AppGraph.recipesRepository
+        override val mealPlanRepository: MealPlanRepository
+            get() = this@AppGraph.mealPlanRepository
         override val stockRepository: StockRepository
             get() = this@AppGraph.stockRepository
         override val shoppingListRepository: ShoppingListRepository
@@ -238,6 +251,8 @@ class AppGraph(
             get() = this@AppGraph.shoppingListRepository
         override val recipesOptions: RecipesOptionsRepository
             get() = recipesOptionsRepository
+        override val mealPlanRepository: MealPlanRepository
+            get() = this@AppGraph.mealPlanRepository
     }
 
     init {

@@ -4,9 +4,12 @@ package com.patrickzedler.grocy.feature.recipes.impl.list
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -295,9 +298,11 @@ private fun LazyListScope.recipeItems(
                 contentType = { "recipeRow" },
             ) { (rowIndex, row) ->
                 Row(
-                    // The rows keep the cards' gap between them, the list only the items' one
+                    // The rows keep the cards' gap between them, the list only the items' one;
+                    // the cards fill the row's height, so their menus line up at the bottom
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(IntrinsicSize.Min)
                         .padding(top = if (rowIndex > 0) GalleryRowTopPadding else 0.dp),
                     horizontalArrangement = Arrangement.spacedBy(GalleryGap),
                     verticalAlignment = Alignment.Top,
@@ -313,7 +318,7 @@ private fun LazyListScope.recipeItems(
                             menuGroups = menuGroups(item, put),
                             putOnShoppingList = put,
                             loadPicture = loadPicture,
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.weight(1f).fillMaxHeight(),
                         )
                     }
                     // A last row keeps the cards as wide as the full rows
@@ -332,16 +337,21 @@ private fun groupTitleText(title: RecipeGroupTitle, decimals: Int): String = whe
     RecipeGroupTitle.None -> stringResource(Res.string.stock_overview_group_not_set)
 }
 
-/** Cards of at least [GalleryCardWidth] next to each other, up to [MAX_GALLERY_COLUMNS]. */
+/**
+ * Cards of at least [GalleryCardWidth] next to each other in the list's width, [width] less its
+ * margins and at most [GalleryMaxWidth].
+ */
 internal fun galleryColumns(width: Dp): Int {
-    val content = width - GalleryMargins
-    return ((content + GalleryGap) / (GalleryCardWidth + GalleryGap)).toInt()
-        .coerceIn(1, MAX_GALLERY_COLUMNS)
+    val content = minOf(width - GalleryMargins, GalleryMaxWidth)
+    return ((content + GalleryGap) / (GalleryCardWidth + GalleryGap)).toInt().coerceAtLeast(1)
 }
 
-private val GalleryCardWidth = 260.dp
+// Two cards side by side on every phone held upright
+private val GalleryCardWidth = 156.dp
 private val GalleryGap = 8.dp
-private const val MAX_GALLERY_COLUMNS = 4
+
+// The width the list's items keep at most
+private val GalleryMaxWidth = 640.dp
 
 // The list's margins of 16.dp at both sides
 private val GalleryMargins = 32.dp

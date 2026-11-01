@@ -11,8 +11,10 @@ import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
+import com.patrickzedler.grocy.core.data.util.MINIMUM_LOADING_DURATION
 import com.patrickzedler.grocy.core.data.util.RefreshController
 import com.patrickzedler.grocy.core.data.util.RefreshState
+import com.patrickzedler.grocy.core.data.util.withMinimumDuration
 import com.patrickzedler.grocy.core.forms.ChangeError
 import com.patrickzedler.grocy.core.forms.changeErrorOf
 import com.patrickzedler.grocy.core.forms.ignoringServerErrors
@@ -28,6 +30,7 @@ import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.parseDecimal
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
+import kotlin.time.TimeSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -101,6 +104,7 @@ internal class RecipeViewModel(
     language: String,
     private val decimalSeparator: Char = platformDecimalSeparator(),
     computeDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    private val timeSource: TimeSource = TimeSource.Monotonic,
 ) : ViewModel() {
 
     /** Grocy's "Desired servings" of the card, filled before [state] shows the recipe. */
@@ -110,6 +114,10 @@ internal class RecipeViewModel(
     private val servingsFilled = MutableStateFlow(false)
 
     var dialog by mutableStateOf<RecipeDialog?>(null)
+        private set
+
+    /** While changed [servings] are saved and the server scales the ingredients anew. */
+    var isSavingServings by mutableStateOf(false)
         private set
 
     var isRunning by mutableStateOf(false)
@@ -227,9 +235,15 @@ internal class RecipeViewModel(
                 }
                 val current = recipes.recipe(recipeId).first()?.desiredServings
                 if (value == current) return@collect
-                changeErrorOf { recipes.setDesiredServings(recipeId, value) }?.let {
-                    eventChannel.send(RecipeEvent.ServingsFailed(it))
+                isSavingServings = true
+                val error = try {
+                    withMinimumDuration(MINIMUM_LOADING_DURATION, timeSource) {
+                        changeErrorOf { recipes.setDesiredServings(recipeId, value) }
+                    }
+                } finally {
+                    isSavingServings = false
                 }
+                error?.let { eventChannel.send(RecipeEvent.ServingsFailed(it)) }
             }
     }
 

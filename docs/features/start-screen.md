@@ -9,7 +9,9 @@ own, `DemoServerWarning` of `core:design` like the server settings show it, a ta
 through the settings categories; then sections grouped by `StartGroup`: the stock overview (only
 with the stock feature, `StartSection.isAvailable`) and the shopping list (also with the
 shopping list feature) as one group, then the recipes (with the recipes feature, a group of
-their own like Grocy's menu; how many and how many the stock covers, see `recipes.md`), then
+their own like Grocy's menu; how many and how many the stock covers, see `recipes.md`) and in
+the same group the meal plan (with its feature too; what is planned for today, a screen of its
+own, see `meal-plan.md`), then
 Master data, each telling about
 its data as supporting text (`SupportingBulletList` of `core:design`, numbers of 0 left out;
 `StartViewModel` downloads master data and stock overview when it opens): the products in stock
@@ -44,7 +46,8 @@ settings ("Presets for new products"); Grocy's stock overview, stock pages of pr
 entries, stock journal, journal summary) and stock bookings Purchase, Consume, Transfer and
 Inventory (`feature:stock`, see `stock-bookings.md`) and Grocy's shopping list
 (`feature:shoppinglist`, see `shopping-list.md`) and Grocy's recipes with their cards, forms and
-meal plan dialog (`feature:recipes`, see `recipes.md`).
+meal plan dialog (`feature:recipes`, see `recipes.md`) and its meal plan with its sections
+(`feature:recipes`, see `meal-plan.md`).
 
 The start screen's items use the segmented item's default text styles for title and supporting
 text. Items with buttons below their text (`SectionButtons`) keep 16.dp between the visible

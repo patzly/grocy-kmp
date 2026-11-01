@@ -1,5 +1,9 @@
 package com.patrickzedler.grocy.core.network.dto
 
+import com.patrickzedler.grocy.core.model.recipes.MealPlanEntry
+import com.patrickzedler.grocy.core.model.recipes.MealPlanEntryType
+import com.patrickzedler.grocy.core.model.recipes.MealPlanRecipe
+import com.patrickzedler.grocy.core.model.recipes.MealPlanRecipeType
 import com.patrickzedler.grocy.core.model.recipes.MealPlanSection
 import com.patrickzedler.grocy.core.model.recipes.Recipe
 import com.patrickzedler.grocy.core.model.recipes.RecipeFulfillment
@@ -23,8 +27,13 @@ internal data class RecipeObjectDto(
     @SerialName("desired_servings") val desiredServings: FlexDouble = null,
     @SerialName("not_check_shoppinglist") val notCheckShoppingList: FlexBoolean = null,
     @SerialName("product_id") val productId: FlexInt = null,
+    val type: FlexString = null,
     val userfields: Map<String, FlexString>? = null,
 ) {
+    /** Grocy's own recipes of the meal plan have a type of their own. */
+    val isNormal: Boolean
+        get() = type == null || type == NORMAL_RECIPE_TYPE
+
     fun toModel() = Recipe(
         id = id,
         name = name.orEmpty(),
@@ -217,6 +226,81 @@ internal data class MealPlanSectionDto(
     val id: Int,
     val name: FlexString = null,
     @SerialName("sort_number") val sortNumber: FlexInt = null,
+    @SerialName("time_info") val timeInfo: FlexString = null,
 ) {
-    fun toModel() = MealPlanSection(id = id, name = name.orEmpty(), sortNumber = sortNumber)
+    fun toModel() = MealPlanSection(
+        id = id,
+        name = name.orEmpty(),
+        sortNumber = sortNumber,
+        timeInfo = timeInfo?.takeIf { it.isNotBlank() },
+    )
 }
+
+/** The fields of Grocy's meal plan section form. */
+internal fun MealPlanSection.toJson(): JsonObject = buildJsonObject {
+    put("name", name)
+    put("sort_number", sortNumber)
+    put("time_info", timeInfo.orEmpty())
+}
+
+/** An entry of Grocy's `meal_plan`. */
+@Serializable
+internal data class MealPlanEntryDto(
+    val id: Int,
+    val day: FlexString = null,
+    val type: FlexString = null,
+    @SerialName("recipe_id") val recipeId: FlexInt = null,
+    @SerialName("recipe_servings") val recipeServings: FlexDouble = null,
+    val note: FlexString = null,
+    @SerialName("product_id") val productId: FlexInt = null,
+    @SerialName("product_amount") val productAmount: FlexDouble = null,
+    @SerialName("product_qu_id") val productQuId: FlexInt = null,
+    @SerialName("section_id") val sectionId: FlexInt = null,
+    val done: FlexBoolean = null,
+) {
+    fun toModel() = MealPlanEntry(
+        id = id,
+        // Grocy keeps the day as date, some versions with a time after it
+        day = day.orEmpty().take(ISO_DATE_LENGTH),
+        type = MealPlanEntryType.of(type),
+        recipeId = recipeId,
+        recipeServings = recipeServings ?: 1.0,
+        note = note?.takeIf { it.isNotBlank() },
+        productId = productId,
+        productAmount = productAmount ?: 0.0,
+        productQuId = productQuId,
+        sectionId = sectionId ?: MealPlanSection.DEFAULT_ID,
+        done = done ?: false,
+    )
+}
+
+/**
+ * The fields of Grocy's meal plan dialogs: those of the entry's type, the others null, like its
+ * forms leave them empty.
+ */
+internal fun MealPlanEntry.toJson(): JsonObject = buildJsonObject {
+    put("day", day)
+    put("type", type.grocyName)
+    put("section_id", sectionId)
+    put("done", flag(done))
+    when (type) {
+        MealPlanEntryType.RECIPE -> {
+            put("recipe_id", recipeId)
+            put("recipe_servings", recipeServings)
+        }
+        MealPlanEntryType.PRODUCT -> {
+            put("product_id", productId)
+            put("product_amount", productAmount)
+            put("product_qu_id", productQuId)
+        }
+        MealPlanEntryType.NOTE -> put("note", note.orEmpty())
+    }
+}
+
+/** One of Grocy's own recipes of the meal plan, null for every other recipe. */
+internal fun RecipeObjectDto.toMealPlanRecipe(): MealPlanRecipe? =
+    MealPlanRecipeType.of(type)?.let { MealPlanRecipe(id = id, type = it, name = name.orEmpty()) }
+
+private const val ISO_DATE_LENGTH = 10
+
+internal const val NORMAL_RECIPE_TYPE = "normal"

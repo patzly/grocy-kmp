@@ -119,8 +119,21 @@ data class ResolvedRecipeIngredient(
         }
 }
 
-/** A section of Grocy's meal plan, e.g. breakfast; the default one has no name. */
-data class MealPlanSection(val id: Int, val name: String, val sortNumber: Int?)
+/**
+ * A section of Grocy's meal plan, e.g. breakfast at "7:00" ([timeInfo], any text); the default
+ * one ([DEFAULT_ID]) has no name.
+ */
+data class MealPlanSection(
+    val id: Int,
+    val name: String,
+    val sortNumber: Int?,
+    val timeInfo: String? = null,
+) {
+    companion object {
+        /** Grocy's internal section of entries without one, which cannot be deleted. */
+        const val DEFAULT_ID = -1
+    }
+}
 
 /** Grocy's grocycode of recipe [recipeId], "grcy:r:<id>". */
 fun recipeGrocycode(recipeId: Int): String = "grcy:r:$recipeId"

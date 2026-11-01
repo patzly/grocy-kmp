@@ -17,6 +17,27 @@ class DatesTest {
     }
 
     @Test
+    fun weekdaysCountFromSundayLikeJavaScript() {
+        // 1970-01-01 was a Thursday, 2026-11-01 a Sunday
+        assertEquals(4, weekdayOf(0))
+        assertEquals(0, weekdayOf(epochDayOf("2026-11-01")!!))
+        assertEquals(1, weekdayOf(epochDayOf("2026-11-02")!!))
+        assertEquals(3, weekdayOf(-1))
+    }
+
+    @Test
+    fun yearWeeksAreSqlitesMondayWeeks() {
+        // 2026 starts on a Thursday, its first Monday (January 5) starts week 01
+        assertEquals("2026-00", yearWeekOf(epochDayOf("2026-01-04")!!))
+        assertEquals("2026-01", yearWeekOf(epochDayOf("2026-01-05")!!))
+        assertEquals("2026-44", yearWeekOf(epochDayOf("2026-11-02")!!))
+        assertEquals("2026-44", yearWeekOf(epochDayOf("2026-11-08")!!))
+        assertEquals("2026-45", yearWeekOf(epochDayOf("2026-11-09")!!))
+        // 2024 starts on a Monday
+        assertEquals("2024-01", yearWeekOf(epochDayOf("2024-01-01")!!))
+    }
+
+    @Test
     fun invalidDatesAreNone() {
         assertNull(epochDayOf("2026-02-29"))
         assertNull(epochDayOf("2026-13-01"))

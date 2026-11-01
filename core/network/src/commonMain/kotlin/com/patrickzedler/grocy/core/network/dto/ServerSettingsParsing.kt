@@ -15,6 +15,9 @@ import kotlinx.serialization.json.booleanOrNull
 internal fun JsonObject.toServerConfig(): ServerConfig {
     val defaults = ServerConfig()
     fun flag(key: String, default: Boolean) = primitive(key)?.toFlag() ?: default
+    // Empty for the default, else a weekday from 0 (Sunday) to 6
+    fun weekday(key: String, range: IntRange) =
+        primitive(key)?.content?.trim()?.toIntOrNull()?.takeIf { it in range }
     return ServerConfig(
         stock = flag("FEATURE_FLAG_STOCK", defaults.stock),
         shoppingList = flag("FEATURE_FLAG_SHOPPINGLIST", defaults.shoppingList),
@@ -56,6 +59,8 @@ internal fun JsonObject.toServerConfig(): ServerConfig {
         currency = primitive("CURRENCY")?.content?.trim()?.uppercase()
             ?.takeIf { CURRENCY_CODE.matches(it) }
             ?: defaults.currency,
+        calendarFirstDayOfWeek = weekday("CALENDAR_FIRST_DAY_OF_WEEK", 0..6),
+        mealPlanFirstDayOfWeek = weekday("MEAL_PLAN_FIRST_DAY_OF_WEEK", -1..6),
     )
 }
 

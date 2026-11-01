@@ -39,6 +39,13 @@ data class ServerConfig(
     val energyUnit: String = "kcal",
     /** ISO 4217 code of the server's prices. */
     val currency: String = "USD",
+    /** First day of calendar weeks, 0 Sunday to 6 Saturday; null for the language's. */
+    val calendarFirstDayOfWeek: Int? = null,
+    /**
+     * First day of the meal plan's weeks like [calendarFirstDayOfWeek], -1 for today's weekday;
+     * null for the calendar's.
+     */
+    val mealPlanFirstDayOfWeek: Int? = null,
 )
 
 /**

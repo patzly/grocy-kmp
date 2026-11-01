@@ -16,6 +16,7 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_home
 import com.patrickzedler.grocy.core.resources.start_select_hint
 import com.patrickzedler.grocy.feature.about.api.AboutRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
+import com.patrickzedler.grocy.feature.recipes.api.MealPlanRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipesRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
@@ -53,13 +54,15 @@ fun EntryProviderScope<NavKey>.startEntry(
                     stock = dependencies.stockRepository,
                     shoppingLists = dependencies.shoppingListRepository,
                     recipes = dependencies.recipesRepository,
+                    mealPlan = dependencies.mealPlanRepository,
                     serverConfig = dependencies.serverConfig,
                 )
             },
             isDemoServer = server?.isDemo == true,
             isBesideDetail = isBesideDetail,
             shownSection = startSectionOf(navigator.currentRoute),
-            // The shopping list and the recipes are list-detail scenes of their own
+            // The shopping list and the recipes are list-detail scenes of their own, the meal
+            // plan needs the whole window
             onSectionClick = { section ->
                 when (val route = section.route) {
                     is DetailRoute -> navigator.openDetail(route)
@@ -88,6 +91,7 @@ internal val StartSection.route: Route
         StartSection.STOCK_OVERVIEW -> StockOverviewRoute
         StartSection.SHOPPING_LIST -> ShoppingListRoute()
         StartSection.RECIPES -> RecipesRoute()
+        StartSection.MEAL_PLAN -> MealPlanRoute()
         StartSection.MASTER_DATA -> MasterDataRoute
     }
 

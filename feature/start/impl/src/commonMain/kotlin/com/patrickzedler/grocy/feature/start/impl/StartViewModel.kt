@@ -3,22 +3,27 @@ package com.patrickzedler.grocy.feature.start.impl
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.data.util.RefreshController
 import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.model.masterdata.Product
+import com.patrickzedler.grocy.core.model.masterdata.StockAmount
+import com.patrickzedler.grocy.core.model.recipes.MealPlanEntry
+import com.patrickzedler.grocy.core.model.recipes.MealPlanEntryType
+import com.patrickzedler.grocy.core.model.recipes.MealPlanSection
 import com.patrickzedler.grocy.core.model.recipes.Recipe
 import com.patrickzedler.grocy.core.model.recipes.RecipeFulfillment
 import com.patrickzedler.grocy.core.model.recipes.RecipeStatus
-import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListSummary
 import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
 import com.patrickzedler.grocy.core.model.stock.StockSummary
 import com.patrickzedler.grocy.core.model.stock.stockSummaryOf
+import com.patrickzedler.grocy.core.model.text.isoDateOf
 import com.patrickzedler.grocy.core.model.text.todayEpochDay
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.masterdata_batteries_count
@@ -89,6 +94,34 @@ internal fun recipesSummaryOf(
     )
 }
 
+/**
+ * What the meal plan has planned for [today]: the names of its recipes and products and its
+ * notes, in the order of their sections like Grocy's day, then as planned. Entries of deleted
+ * recipes or products are left out like Grocy does.
+ */
+internal fun mealPlanTodayOf(
+    entries: List<MealPlanEntry>,
+    sections: List<MealPlanSection>,
+    recipes: List<Recipe>,
+    products: List<Product>,
+    today: Long,
+): List<String> {
+    val day = isoDateOf(today)
+    val order = sections.withIndex().associate { (index, section) -> section.id to index }
+    val recipeNames = recipes.associate { it.id to it.name }
+    val productNames = products.associate { it.id to it.name }
+    return entries
+        .filter { it.day == day }
+        .sortedWith(compareBy<MealPlanEntry> { order[it.sectionId] ?: -1 }.thenBy { it.id })
+        .mapNotNull { entry ->
+            when (entry.type) {
+                MealPlanEntryType.RECIPE -> entry.recipeId?.let { recipeNames[it] }
+                MealPlanEntryType.PRODUCT -> entry.productId?.let { productNames[it] }
+                MealPlanEntryType.NOTE -> entry.note?.takeIf { it.isNotBlank() }
+            }
+        }
+}
+
 /** What the start screen's sections tell about the stored data. */
 internal data class StartUiState(
     /** Null without the stock feature or before the first download. */
@@ -104,6 +137,8 @@ internal data class StartUiState(
     val recipes: RecipesSummary? = null,
     /** The recipes' stock status needs the stock feature. */
     val checksRecipeStock: Boolean = true,
+    /** What is planned for today ([mealPlanTodayOf]), null without the meal plan feature. */
+    val mealPlanToday: List<String>? = null,
 )
 
 /**
@@ -116,6 +151,7 @@ internal class StartViewModel(
     private val stock: StockRepository,
     private val shoppingLists: ShoppingListRepository,
     private val recipes: RecipesRepository,
+    private val mealPlan: MealPlanRepository,
     val serverConfig: StateFlow<ServerConfig?>,
     private val today: () -> Long = ::todayEpochDay,
 ) : ViewModel() {
@@ -127,6 +163,7 @@ internal class StartViewModel(
             if (config.stock) launch { stock.refreshOverview(config.shoppingList) }
             if (config.stock && config.shoppingList) launch { shoppingLists.refresh() }
             if (config.recipes) launch { recipes.refresh() }
+            if (config.recipes && config.recipesMealPlan) launch { mealPlan.refresh() }
         }
     }
     val refresh: StateFlow<RefreshState> = refreshController.state
@@ -144,7 +181,14 @@ internal class StartViewModel(
         shoppingLists.summary,
     ) { products, amounts, info, lists -> StockData(products, amounts, info, lists) }
 
-    private val recipesSummary = combine(recipes.recipes, recipes.fulfillment, ::recipesSummaryOf)
+    private val recipesSummary = combine(
+        combine(recipes.recipes, recipes.fulfillment, ::recipesSummaryOf),
+        combine(mealPlan.entries, mealPlan.sections, recipes.recipes, repository.products) {
+                entries, sections, recipeList, products ->
+            mealPlanTodayOf(entries, sections, recipeList, products, today())
+        },
+        ::Pair,
+    )
 
     val state: StateFlow<StartUiState?> = combine(
         serverConfig.filterNotNull(),
@@ -152,10 +196,11 @@ internal class StartViewModel(
         stockData,
         counts,
         recipesSummary,
-    ) { config, settings, stockData, counts, recipes ->
+    ) { config, settings, stockData, counts, (recipes, mealPlanToday) ->
         stateOf(config, settings, stockData, counts).copy(
             recipes = recipes.takeIf { config.recipes && it.count > 0 },
             checksRecipeStock = config.stock,
+            mealPlanToday = mealPlanToday.takeIf { config.recipes && config.recipesMealPlan },
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), null)
 

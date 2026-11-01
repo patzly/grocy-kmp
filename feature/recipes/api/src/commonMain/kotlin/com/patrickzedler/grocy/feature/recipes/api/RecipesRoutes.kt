@@ -34,11 +34,26 @@ data class RecipePreparationRoute(val id: Int) : Route
 @SerialName("recipes/edit")
 data class RecipeFormRoute(val id: Int? = null) : DetailRoute
 
+/**
+ * Grocy's "Meal plan" from the week of [start] ("YYYY-MM-DD", Grocy's `/mealplan?start=`), the
+ * current week without; a screen of its own that uses the whole window.
+ */
+@Serializable
+@SerialName("mealplan")
+data class MealPlanRoute(val start: String? = null) : Route
+
+/** Grocy's "Meal plan sections", which the meal plan's "Configure sections" opens. */
+@Serializable
+@SerialName("mealplan/sections")
+data object MealPlanSectionsRoute : Route
+
 val recipesRouteSerializers = SerializersModule {
     polymorphic(NavKey::class) {
         subclass(RecipesRoute::class, RecipesRoute.serializer())
         subclass(RecipeRoute::class, RecipeRoute.serializer())
         subclass(RecipePreparationRoute::class, RecipePreparationRoute.serializer())
         subclass(RecipeFormRoute::class, RecipeFormRoute.serializer())
+        subclass(MealPlanRoute::class, MealPlanRoute.serializer())
+        subclass(MealPlanSectionsRoute::class, MealPlanSectionsRoute.serializer())
     }
 }
