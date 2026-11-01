@@ -37,6 +37,7 @@ class RecipeViewTest {
         amount: Double = 2.0,
         status: RecipeStatus = RecipeStatus.ENOUGH_IN_STOCK,
         missing: Double = 0.0,
+        onShoppingList: Double = 0.0,
         variableAmount: String? = null,
         onlyCheckSingleUnit: Boolean = false,
         dueScore: Int = 0,
@@ -49,7 +50,7 @@ class RecipeViewTest {
         stockAmount = 3.0,
         needFulfilled = status == RecipeStatus.ENOUGH_IN_STOCK,
         missingAmount = missing,
-        amountOnShoppingList = 0.0,
+        amountOnShoppingList = onShoppingList,
         needFulfilledWithShoppingList = status != RecipeStatus.NOT_ENOUGH_IN_STOCK,
         quId = quId,
         costs = 0.5,
@@ -91,6 +92,20 @@ class RecipeViewTest {
 
         assertEquals("a pinch Milk", line.text)
         assertEquals(true, line.isVariableAmount)
+    }
+
+    @Test
+    fun anAmountOnTheShoppingListIsNoted() {
+        val line = ingredientLine(
+            row(1, status = RecipeStatus.NOT_ENOUGH_IN_STOCK, missing = 2.0, onShoppingList = 1.0),
+            format,
+            checksStock = true,
+        )
+
+        assertEquals(true, line.isOnShoppingList)
+        assertEquals("2 Pieces", line.missingAmount)
+        assertEquals("1 Piece", line.amountOnShoppingList)
+        assertEquals(false, ingredientLine(row(1), format, checksStock = true).isOnShoppingList)
     }
 
     @Test

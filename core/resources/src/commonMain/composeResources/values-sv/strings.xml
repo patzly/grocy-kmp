@@ -984,7 +984,7 @@
   <string name="recipes_show_gallery">Visa som galleri</string>
   <string name="recipes_desired_servings">Önskat antal portioner</string>
   <string name="recipes_due_score">Förfallopoäng</string>
-  <string name="recipes_due_score_value">Förfallopoäng %1$d</string>
+  <string name="recipes_due_score_value">Förfallopoäng: %1$d</string>
   <string name="recipes_due_score_hint">Ju högre talet är, desto fler lagerförda ingredienser förfaller snart, har passerat förfallodatumet eller har redan gått ut</string>
   <string name="recipes_requirements_fulfilled">Krav uppfyllda</string>
   <string name="recipes_status_enough">Tillräckligt i lager</string>
@@ -1005,6 +1005,14 @@
     <item quantity="one">%1$s portion</item>
     <item quantity="other">%1$s portioner</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="one">%1$d ingrediens saknas</item>
+    <item quantity="other">%1$d ingredienser saknas</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">På inköpslistan</string>
+  <string name="recipe_title">Recept</string>
+  <string name="recipe_ingredient_missing_amount">%1$s saknas</string>
+  <string name="recipe_ingredient_on_list_amount">%1$s på inköpslistan</string>
   <string name="recipes_empty">Inga recept ännu</string>
   <string name="recipes_empty_filtered">Inga recept matchar filtret</string>
   <string name="recipes_select_hint">Välj ett recept för att visa det här</string>

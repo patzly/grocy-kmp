@@ -984,7 +984,7 @@
   <string name="recipes_show_gallery">Galeri olarak göster</string>
   <string name="recipes_desired_servings">Istenen porsiyon</string>
   <string name="recipes_due_score">Son tarih skoru</string>
-  <string name="recipes_due_score_value">Son tarih skoru %1$d</string>
+  <string name="recipes_due_score_value">Son tarih skoru: %1$d</string>
   <string name="recipes_due_score_hint">Bu sayı ne kadar yüksekse, şu anda stokta bulunan malzemeler de o kadar yakında, vadesi geçmiş veya son kullanma tarihi geçmiş demektir</string>
   <string name="recipes_requirements_fulfilled">Gereklilikler sağlandı</string>
   <string name="recipes_status_enough">Stokta yeteri kadar var</string>
@@ -1005,6 +1005,14 @@
     <item quantity="one">%1$s porsiyon</item>
     <item quantity="other">%1$s porsiyon</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="one">%1$d malzeme eksik</item>
+    <item quantity="other">%1$d malzeme eksik</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">Alışveriş listesinde</string>
+  <string name="recipe_title">Tarif</string>
+  <string name="recipe_ingredient_missing_amount">%1$s eksik</string>
+  <string name="recipe_ingredient_on_list_amount">%1$s alışveriş listesinde</string>
   <string name="recipes_empty">Henüz tarif yok</string>
   <string name="recipes_empty_filtered">Filtreye uyan tarif yok</string>
   <string name="recipes_select_hint">Burada göstermek için bir tarif seç</string>

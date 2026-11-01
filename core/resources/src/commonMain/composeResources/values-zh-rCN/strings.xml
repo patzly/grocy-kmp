@@ -952,7 +952,7 @@
   <string name="recipes_show_gallery">以照片墙显示</string>
   <string name="recipes_desired_servings">所需份量</string>
   <string name="recipes_due_score">到期评分</string>
-  <string name="recipes_due_score_value">到期评分 %1$d</string>
+  <string name="recipes_due_score_value">到期评分：%1$d</string>
   <string name="recipes_due_score_hint">此数值越高，当前库存中即将到期、到期或已经过期的食材越多</string>
   <string name="recipes_requirements_fulfilled">库存检查</string>
   <string name="recipes_status_enough">库存充足</string>
@@ -970,6 +970,13 @@
   <plurals name="recipes_servings">
     <item quantity="other">%1$s份</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="other">缺少%1$d种食材</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">已在购物清单上</string>
+  <string name="recipe_title">菜谱</string>
+  <string name="recipe_ingredient_missing_amount">缺少 %1$s</string>
+  <string name="recipe_ingredient_on_list_amount">%1$s 已在购物清单上</string>
   <string name="recipes_empty">还没有菜谱</string>
   <string name="recipes_empty_filtered">没有符合筛选条件的菜谱</string>
   <string name="recipes_select_hint">选择一个菜谱以在此显示</string>

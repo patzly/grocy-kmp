@@ -952,7 +952,7 @@
   <string name="recipes_show_gallery">以圖庫顯示</string>
   <string name="recipes_desired_servings">需要份數</string>
   <string name="recipes_due_score">到期分數</string>
-  <string name="recipes_due_score_value">到期分數 %1$d</string>
+  <string name="recipes_due_score_value">到期分數：%1$d</string>
   <string name="recipes_due_score_hint">數字越高表示越多食材即將或已經過期</string>
   <string name="recipes_requirements_fulfilled">符合需求</string>
   <string name="recipes_status_enough">庫存充足</string>
@@ -970,6 +970,13 @@
   <plurals name="recipes_servings">
     <item quantity="other">%1$s 份</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="other">缺少 %1$d 種食材</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">已在購物清單上</string>
+  <string name="recipe_title">食譜</string>
+  <string name="recipe_ingredient_missing_amount">缺少 %1$s</string>
+  <string name="recipe_ingredient_on_list_amount">%1$s 已在購物清單上</string>
   <string name="recipes_empty">尚無食譜</string>
   <string name="recipes_empty_filtered">沒有符合過濾條件的食譜</string>
   <string name="recipes_select_hint">選擇一個食譜以在此顯示</string>

@@ -13,6 +13,7 @@ import com.patrickzedler.grocy.core.model.recipes.RecipeStatus
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.data_all
 import com.patrickzedler.grocy.core.resources.data_none
+import com.patrickzedler.grocy.core.resources.product_picture
 import com.patrickzedler.grocy.core.resources.products_filter_status
 import com.patrickzedler.grocy.core.resources.products_sort_name
 import com.patrickzedler.grocy.core.resources.recipes_desired_servings
@@ -32,7 +33,8 @@ import org.jetbrains.compose.resources.stringResource
 
 /**
  * The filter and table options of Grocy's recipes as chips: its status filter (with the stock
- * feature, the number of recipes of each in its menu), sort (the name and the shown fields),
+ * feature, the number of recipes of each in its menu), sort (the name and the shown fields
+ * except the picture),
  * grouping (every groupable column, shown or not) and the shown fields. "Clear filter" while
  * a filter is set.
  */
@@ -64,7 +66,7 @@ internal fun RecipesFilterBar(
             )
         }
         SortChip(
-            fields = listOf(RecipeField.NAME) + state.fields,
+            fields = sortableFields(state.fields),
             field = state.sort.field,
             ascending = state.sort.ascending,
             isDefault = state.isDefaultSort,
@@ -118,6 +120,7 @@ internal val RecipeField.label: StringResource
         RecipeField.DESIRED_SERVINGS -> Res.string.recipes_desired_servings
         RecipeField.DUE_SCORE -> Res.string.recipes_due_score
         RecipeField.REQUIREMENTS_FULFILLED -> Res.string.recipes_requirements_fulfilled
+        RecipeField.PICTURE -> Res.string.product_picture
     }
 
 private val RecipeGrouping.label: StringResource

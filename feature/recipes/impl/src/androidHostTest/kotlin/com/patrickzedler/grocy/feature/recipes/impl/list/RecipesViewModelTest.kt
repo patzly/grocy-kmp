@@ -122,7 +122,7 @@ class RecipesViewModelTest {
         advanceUntilIdle()
 
         assertEquals(
-            RecipesOptions(fields = setOf(RecipeField.REQUIREMENTS_FULFILLED)),
+            RecipesOptions(fields = setOf(RecipeField.REQUIREMENTS_FULFILLED, RecipeField.PICTURE)),
             settingsStore.recipesOptions.value,
         )
         assertTrue(viewModel.state.value!!.isDefaultSort)

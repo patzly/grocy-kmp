@@ -155,11 +155,19 @@ class RecipeListTest {
     }
 
     @Test
+    fun thePictureIsNoSortField() {
+        val shown = listOf(RecipeField.DUE_SCORE, RecipeField.PICTURE)
+
+        assertEquals(listOf(RecipeField.NAME, RecipeField.DUE_SCORE), sortableFields(shown))
+        assertEquals(DefaultSort, effectiveSort(RecipeField.PICTURE, false, shown))
+    }
+
+    @Test
     fun requirementsNeedTheStockFeature() {
         val withoutStock = ServerConfig(stock = false)
 
         assertEquals(
-            listOf(RecipeField.DESIRED_SERVINGS, RecipeField.DUE_SCORE),
+            listOf(RecipeField.DESIRED_SERVINGS, RecipeField.DUE_SCORE, RecipeField.PICTURE),
             availableFields(withoutStock),
         )
         assertEquals(

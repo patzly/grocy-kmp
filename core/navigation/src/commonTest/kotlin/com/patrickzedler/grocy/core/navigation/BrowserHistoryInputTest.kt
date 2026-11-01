@@ -254,10 +254,27 @@ class BrowserHistoryInputTest {
         connect(browser)
         val writes = browser.replacedAt.size
 
-        // The back stack grew, the dispatcher has not reported the new screen yet
+        // The back stack grew, the dispatcher reports the new screen with its frame
         input.onBackStackChanged(lastIndex = 1)
+        app.navigate()
+        advanceUntilIdle()
 
-        assertEquals(emptyList(), browser.replacedAt.drop(writes))
+        assertTrue(0 !in browser.replacedAt.drop(writes))
+        assertEquals(listOf<Int?>(0, 1), browser.entries)
+    }
+
+    @Test
+    fun anotherPageInTheSameSceneRewritesItsEntry() = runTest {
+        val browser = FakeBrowser()
+        connect(browser)
+        val writes = browser.replacedAt.size
+
+        // E.g. Consume replacing the stock overview beside the start screen: two back stack
+        // entries in one scene, which keeps its place in the dispatcher's history
+        input.onBackStackChanged(lastIndex = 1)
+        advanceUntilIdle()
+
+        assertEquals(listOf(0), browser.replacedAt.drop(writes))
     }
 
     @Test

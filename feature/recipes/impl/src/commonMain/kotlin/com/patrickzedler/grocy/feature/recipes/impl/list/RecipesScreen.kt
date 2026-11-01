@@ -209,13 +209,20 @@ internal fun RecipesScreen(
                 onRecipeClick = links.onRecipeClick,
                 onRetryClick = viewModel::refresh,
                 loadPicture = viewModel::picture,
-                menuGroups = { id ->
+                // Grocy's missing products need the stock and the shopping list
+                putOnShoppingList = { item ->
+                    PutOnShoppingList(enabled = item.missesProducts) {
+                        actions.putOnShoppingList(item.id)
+                    }.takeIf { current.config.stock && current.config.shoppingList }
+                },
+                menuGroups = { item, putOnShoppingList ->
                     recipeMenuGroups(
-                        recipeId = id,
+                        recipeId = item.id,
                         config = current.config,
                         actions = actions,
                         onEditClick = links.onEditClick,
                         onGrocycodeDownload = downloadGrocycode,
+                        canPutOnShoppingList = putOnShoppingList?.enabled,
                     )
                 },
             )
@@ -233,7 +240,8 @@ private fun LazyListScope.recipeItems(
     onRecipeClick: (Int) -> Unit,
     onRetryClick: () -> Unit,
     loadPicture: suspend (fileName: String) -> ByteArray?,
-    menuGroups: @Composable (id: Int) -> List<List<AppBarMenuItem>>,
+    putOnShoppingList: (RecipeListItem) -> PutOnShoppingList?,
+    menuGroups: @Composable (RecipeListItem, PutOnShoppingList?) -> List<List<AppBarMenuItem>>,
 ) {
     if (state.isEmpty) {
         emptyListItem(
@@ -267,6 +275,7 @@ private fun LazyListScope.recipeItems(
                 key = { "${group.title}-${it.value.id}" },
                 contentType = { "recipe" },
             ) { (index, item) ->
+                val put = putOnShoppingList(item)
                 RecipeRow(
                     item = item,
                     fields = state.fields,
@@ -275,7 +284,9 @@ private fun LazyListScope.recipeItems(
                     index = index,
                     count = group.items.size,
                     onClick = { onRecipeClick(item.id) },
-                    menuGroups = menuGroups(item.id),
+                    menuGroups = menuGroups(item, put),
+                    putOnShoppingList = put,
+                    loadPicture = loadPicture,
                 )
             }
             RecipesView.GALLERY -> insetItems(
@@ -292,13 +303,15 @@ private fun LazyListScope.recipeItems(
                     verticalAlignment = Alignment.Top,
                 ) {
                     row.forEach { item ->
+                        val put = putOnShoppingList(item)
                         RecipeCard(
                             item = item,
                             fields = state.fields,
                             decimals = state.amountDecimals,
                             selected = selected(item.id),
                             onClick = { onRecipeClick(item.id) },
-                            menuGroups = menuGroups(item.id),
+                            menuGroups = menuGroups(item, put),
+                            putOnShoppingList = put,
                             loadPicture = loadPicture,
                             modifier = Modifier.weight(1f),
                         )

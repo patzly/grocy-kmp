@@ -23,6 +23,7 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.MenuItemShapes
 import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -60,6 +61,7 @@ import androidx.compose.ui.unit.offset
 import com.patrickzedler.grocy.core.design.component.EdgeToEdgeRow
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.menuItemShape
 import com.patrickzedler.grocy.core.design.component.verticalScrollbar
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_arrow_downward
@@ -232,7 +234,7 @@ fun <T> DropdownFilterChip(
                             onSelect(option)
                         },
                         text = { Text(optionLabel(option)) },
-                        shapes = MenuDefaults.itemShape(index = index, count = options.size),
+                        shapes = menuItemShapes(index, options.size, groupIndex, groups.size),
                         selectedLeadingIcon = { MenuIcon(Res.drawable.ic_rounded_check) },
                     )
                 }
@@ -281,7 +283,7 @@ fun <T> MultiSelectChip(
                             onCheckedChange(option, value)
                         },
                         text = { Text(optionLabel(option)) },
-                        shapes = MenuDefaults.itemShape(index = index, count = options.size),
+                        shapes = menuItemShapes(index, options.size),
                         modifier = Modifier.clickCursor(),
                         checkedLeadingIcon = { MenuIcon(Res.drawable.ic_rounded_check) },
                     )
@@ -480,7 +482,7 @@ private fun <F> SortFieldItems(
                 onDone()
             },
             text = { Text(fieldLabel(option)) },
-            shapes = MenuDefaults.itemShape(index = index, count = fields.size),
+            shapes = menuItemShapes(index, fields.size, groupIndex = 0, groupCount = 2),
             selectedLeadingIcon = { MenuIcon(Res.drawable.ic_rounded_check) },
         )
     }
@@ -514,7 +516,7 @@ private fun <F> SortDirectionItems(
                     ),
                 )
             },
-            shapes = MenuDefaults.itemShape(index = index, count = 2),
+            shapes = menuItemShapes(index, count = 2, groupIndex = 1, groupCount = 2),
             leadingIcon = {
                 MenuIcon(
                     if (direction) {
@@ -571,3 +573,14 @@ private val MenuMaxHeight = 480.dp
 
 // Beyond the reach of the menu groups' shadows
 private val MenuShadowRoom = 8.dp
+
+/**
+ * Material's shapes of a menu item whose ripple follows the corners of its group
+ * ([menuItemShape]), also for a group of one item, whose own shape Material leaves small.
+ */
+@Composable
+private fun menuItemShapes(index: Int, count: Int, groupIndex: Int = 0, groupCount: Int = 1) =
+    MenuItemShapes(
+        shape = menuItemShape(index, count, groupIndex, groupCount),
+        selectedShape = MenuDefaults.itemShape(index = index, count = count).selectedShape,
+    )

@@ -58,7 +58,7 @@ import com.patrickzedler.grocy.core.resources.action_close
 import com.patrickzedler.grocy.core.resources.ic_rounded_close
 import com.patrickzedler.grocy.core.resources.shopping_list_empty
 import com.patrickzedler.grocy.core.resources.shopping_list_empty_filtered
-import com.patrickzedler.grocy.core.resources.shopping_list_list
+import com.patrickzedler.grocy.core.resources.shopping_mode
 import com.patrickzedler.grocy.core.resources.shopping_mode_auto_sync
 import com.patrickzedler.grocy.core.resources.shopping_mode_settings
 import com.patrickzedler.grocy.core.resources.stock_overview_total_value
@@ -102,7 +102,7 @@ internal fun ShoppingModeScreen(
 
     val current = state
     SegmentedListScreen(
-        title = stringResource(Res.string.shopping_list_list),
+        title = stringResource(Res.string.shopping_mode),
         modifier = modifier,
         navigationIcon = {
             AppBarIconButton(

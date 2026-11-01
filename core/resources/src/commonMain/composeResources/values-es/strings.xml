@@ -1017,7 +1017,7 @@
   <string name="recipes_show_gallery">Mostrar como galería</string>
   <string name="recipes_desired_servings">Raciones deseadas</string>
   <string name="recipes_due_score">Puntuación</string>
-  <string name="recipes_due_score_value">Puntuación %1$d</string>
+  <string name="recipes_due_score_value">Puntuación: %1$d</string>
   <string name="recipes_due_score_hint">Cuanto más alto sea este número, más ingredientes en stock habrá pronto, estarán pendientes o ya habrán caducado.</string>
   <string name="recipes_requirements_fulfilled">Requisitos satisfechos</string>
   <string name="recipes_status_enough">Existencias suficientes</string>
@@ -1041,6 +1041,15 @@
     <item quantity="many">%1$s raciones</item>
     <item quantity="other">%1$s raciones</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="one">Falta %1$d ingrediente</item>
+    <item quantity="many">Faltan %1$d ingredientes</item>
+    <item quantity="other">Faltan %1$d ingredientes</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">En la lista de la compra</string>
+  <string name="recipe_title">Receta</string>
+  <string name="recipe_ingredient_missing_amount">Faltan %1$s</string>
+  <string name="recipe_ingredient_on_list_amount">%1$s en la lista de la compra</string>
   <string name="recipes_empty">Todavía no hay recetas</string>
   <string name="recipes_empty_filtered">Ninguna receta coincide con el filtro</string>
   <string name="recipes_select_hint">Elija una receta para mostrarla aquí</string>

@@ -10,7 +10,11 @@ class RecipesOptionsTest {
         val options = RecipesOptions.of(null, null, null, null, null)
 
         assertEquals(
-            setOf(RecipeField.DUE_SCORE, RecipeField.REQUIREMENTS_FULFILLED),
+            setOf(
+                RecipeField.DUE_SCORE,
+                RecipeField.REQUIREMENTS_FULFILLED,
+                RecipeField.PICTURE,
+            ),
             options.fields,
         )
         assertEquals(RecipeGrouping.NONE, options.grouping)

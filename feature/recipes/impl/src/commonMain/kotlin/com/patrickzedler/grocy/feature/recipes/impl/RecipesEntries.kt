@@ -71,7 +71,9 @@ fun EntryProviderScope<NavKey>.recipesEntries(
                     search = route.search,
                 )
             },
-            actions = viewModel { RecipeActionsViewModel(recipes, masterData) },
+            actions = viewModel {
+                RecipeActionsViewModel(recipes, masterData, dependencies.shoppingListRepository)
+            },
             links = RecipesLinks(
                 onRecipeClick = { navigator.openDetail(RecipeRoute(it)) },
                 onEditClick = { navigator.openDetail(RecipeFormRoute(it)) },
@@ -107,7 +109,9 @@ fun EntryProviderScope<NavKey>.recipesEntries(
                     language = language,
                 )
             },
-            actions = viewModel { RecipeActionsViewModel(recipes, masterData) },
+            actions = viewModel {
+                RecipeActionsViewModel(recipes, masterData, dependencies.shoppingListRepository)
+            },
             stockPageActions = rememberStockPageActions(
                 masterData = masterData,
                 stock = dependencies.stockRepository,
@@ -157,7 +161,9 @@ fun EntryProviderScope<NavKey>.recipesEntries(
                 entity = RecipesRepository.RECIPES,
                 repository = masterData,
             ) { RecipeFormRoute(it) },
-            actions = viewModel { RecipeActionsViewModel(recipes, masterData) },
+            actions = viewModel {
+                RecipeActionsViewModel(recipes, masterData, dependencies.shoppingListRepository)
+            },
             onConfigureUserfieldsClick = {
                 navigator.navigate(UserfieldsRoute(RecipesRepository.RECIPES))
             },

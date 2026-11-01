@@ -1003,7 +1003,7 @@
   <string name="recipes_show_gallery">Show as gallery</string>
   <string name="recipes_desired_servings">Desired servings</string>
   <string name="recipes_due_score">Due score</string>
-  <string name="recipes_due_score_value">Due score %1$d</string>
+  <string name="recipes_due_score_value">Due score: %1$d</string>
   <string name="recipes_due_score_hint">The higher this number is, the more ingredients currently in stock are due soon, overdue or already expired</string>
   <string name="recipes_requirements_fulfilled">Requirements fulfilled</string>
   <string name="recipes_status_enough">Enough in stock</string>
@@ -1024,6 +1024,14 @@
     <item quantity="one">%1$s serving</item>
     <item quantity="other">%1$s servings</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="one">%1$d ingredient missing</item>
+    <item quantity="other">%1$d ingredients missing</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">On shopping list</string>
+  <string name="recipe_title">Recipe</string>
+  <string name="recipe_ingredient_missing_amount">%1$s missing</string>
+  <string name="recipe_ingredient_on_list_amount">%1$s on shopping list</string>
   <string name="recipes_empty">No recipes yet</string>
   <string name="recipes_empty_filtered">No recipes match the filter</string>
   <string name="recipes_select_hint">Choose a recipe to show it here</string>

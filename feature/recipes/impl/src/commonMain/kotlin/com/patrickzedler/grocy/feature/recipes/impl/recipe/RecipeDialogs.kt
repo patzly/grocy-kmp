@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedListItem
@@ -21,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
@@ -30,12 +32,17 @@ import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.forms.DeleteDialog
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_cancel
+import com.patrickzedler.grocy.core.resources.action_close
+import com.patrickzedler.grocy.core.resources.ic_rounded_payments
 import com.patrickzedler.grocy.core.resources.recipe_add_missing_confirm
 import com.patrickzedler.grocy.core.resources.recipe_add_missing_hint
 import com.patrickzedler.grocy.core.resources.recipe_add_missing_question
 import com.patrickzedler.grocy.core.resources.recipe_consume_confirm
 import com.patrickzedler.grocy.core.resources.recipe_consume_hint
 import com.patrickzedler.grocy.core.resources.recipe_consume_question
+import com.patrickzedler.grocy.core.resources.recipe_costs_hint
+import com.patrickzedler.grocy.core.resources.recipe_prices_incomplete
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /** Grocy's question before consuming every ingredient of the recipe. */
@@ -137,3 +144,44 @@ internal fun AddMissingDialog(
     }
 }
 
+
+/**
+ * What Grocy notes about the recipe's [costs]: whether prices are missing ([pricesIncomplete])
+ * and which prices it is based on.
+ */
+@Composable
+internal fun CostsDialog(
+    costs: String,
+    pricesIncomplete: Boolean,
+    onDismissRequest: () -> Unit,
+) {
+    val haptic = LocalHapticFeedback.current
+
+    ScrollableAlertDialog(onDismissRequest = onDismissRequest) {
+        ScrollableAlertDialogContent(
+            icon = {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_rounded_payments),
+                    contentDescription = null,
+                )
+            },
+            title = { Text(costs) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        haptic.confirm()
+                        onDismissRequest()
+                    },
+                    modifier = Modifier.clickCursor(),
+                ) {
+                    Text(stringResource(Res.string.action_close))
+                }
+            },
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                if (pricesIncomplete) Text(stringResource(Res.string.recipe_prices_incomplete))
+                Text(stringResource(Res.string.recipe_costs_hint))
+            }
+        }
+    }
+}

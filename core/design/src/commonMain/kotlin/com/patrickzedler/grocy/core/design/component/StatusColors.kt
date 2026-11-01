@@ -20,11 +20,13 @@ data class StatusColor(val container: Color, val content: Color, val color: Colo
 
 /**
  * Colors that mark a state like Grocy's highlighted rows, harmonized with the theme's primary
- * color: [info] (blue, e.g. below the min. stock amount), [warning] (yellow, due soon) and
- * [critical] (red, overdue or expired). Always together with a text, never color alone.
+ * color: [positive] (green, e.g. enough in stock), [info] (blue, e.g. below the min. stock
+ * amount), [warning] (yellow, due soon) and [critical] (red, overdue or expired). Always
+ * together with a text, never color alone.
  */
 @Immutable
 data class StatusColors(
+    val positive: StatusColor,
     val info: StatusColor,
     val warning: StatusColor,
     val critical: StatusColor,
@@ -36,6 +38,7 @@ fun rememberStatusColors(): StatusColors {
     val isDark = MaterialTheme.colorScheme.surface.luminance() < DARK_LUMINANCE
     return remember(primary, isDark) {
         StatusColors(
+            positive = statusColorOf(StatusGreen, primary, isDark),
             info = statusColorOf(StatusBlue, primary, isDark),
             warning = statusColorOf(StatusYellow, primary, isDark),
             critical = statusColorOf(StatusRed, primary, isDark),
@@ -66,6 +69,7 @@ internal fun statusColorOf(base: Color, primary: Color, isDark: Boolean): Status
     }
 }
 
+internal val StatusGreen = Color(0xFF2E9E4F)
 internal val StatusBlue = Color(0xFF2A78D6)
 internal val StatusYellow = Color(0xFFEDA100)
 internal val StatusRed = Color(0xFFE34948)

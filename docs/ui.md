@@ -15,7 +15,11 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
   panes and menus cover it; `SegmentedListScreen` lays it between app bar and navigation bar
   (beside side cutouts), dialogs 4.dp from their edge between the dividers, also lists that
   scroll a dialog themselves (`dialogListScrollbar`, in the dialog's end padding). Material's
-  scrollbar cannot be dragged, on purpose no own one that can.
+  scrollbar cannot be dragged, on purpose no own one that can. Lazy lists use
+  `LazyListScrollIndicatorState` instead of Compose's estimate (the visible items' average
+  size for all of them, so the thumb jumped with every item of another height): it remembers
+  each laid out item's size (`ItemSizes`) and estimates only the others, by the known average;
+  other items at the same indices start anew.
 - Button groups of icon buttons (`ButtonGroupItems.kt` of `core:design`): Material's 12.dp lie
   between the visible containers, the touch targets take no room in the group (48.dp targets
   of narrow 32.dp buttons would leave 16.dp at least): Compose's hit test extends small
@@ -82,7 +86,8 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
 ## Components of `core:design`
 
 - Colors of states outside the color scheme (Grocy's highlighted rows) come from
-  `rememberStatusColors` (`core:design`): info (blue), warning (yellow), critical (red), fixed
+  `rememberStatusColors` (`core:design`): positive (green), info (blue), warning (yellow),
+  critical (red), fixed
   hues harmonized with primary and turned into container, content and color tones like
   Material's custom colors (90/10/40 light, 30/90/80 dark; `color` for small marks such as
   dots), always together with a text. Gestures on list items

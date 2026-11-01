@@ -70,8 +70,12 @@ internal class BrowserHistoryInput(
     /** Indices the browser arrives at after [BrowserHistory.go] of this input, no user action. */
     private val pendingArrivals = ArrayDeque<Int>()
 
+    /** True while a dialog or popup has the current entry, which keeps its own state. */
+    private var isOverlay = false
+
     private var popStateJob: Job? = null
     private var syncJob: Job? = null
+    private var rewriteJob: Job? = null
 
     override fun onAdded(dispatcher: NavigationEventDispatcher) {
         // Undispatched, so no pop state is missed from here on
@@ -95,6 +99,7 @@ internal class BrowserHistoryInput(
     override fun onRemoved() {
         popStateJob?.cancel()
         syncJob?.cancel()
+        rewriteJob?.cancel()
         pendingArrivals.clear()
     }
 
@@ -102,7 +107,8 @@ internal class BrowserHistoryInput(
         val current = history.mergedHistory.getOrNull(history.currentIndex)
         // Without an enabled handler (current is null) the app is on its first screen
         val appIndex = history.currentIndex.coerceAtLeast(0)
-        if (current == null || isScreen(current)) {
+        isOverlay = current != null && !isScreen(current)
+        if (!isOverlay) {
             targetIndex = appIndex
             // Right away, so the browser keeps a screenshot of the screen it leaves
             syncJob?.cancel()
@@ -115,12 +121,27 @@ internal class BrowserHistoryInput(
 
     /**
      * Rewrites the current entry when the back stack changed without a move, e.g. the login
-     * replacing its screen by the start screen. On the first screen no handler is enabled, so
-     * [onHistoryChanged] does not tell. Only when [lastIndex] of the back stack is the entry's
-     * index, so a half-done navigation never writes its back stack into the previous entry.
+     * replacing its screen by the start screen, or a page beside the start screen replaced by
+     * another: on the first screen no handler is enabled, and a scene of several entries keeps
+     * its place in the history, so [onHistoryChanged] does not tell. Right away when [lastIndex]
+     * of the back stack is the entry's index; otherwise the dispatcher gets [REWRITE_FRAMES]
+     * frames to report a move first, so a half-done navigation never writes its back stack into
+     * the previous entry.
      */
     fun onBackStackChanged(lastIndex: Int) {
-        if (lastIndex == targetIndex && targetIndex == browserIndex && pendingArrivals.isEmpty()) {
+        rewriteJob?.cancel()
+        if (lastIndex == targetIndex) {
+            rewriteCurrentEntry()
+            return
+        }
+        rewriteJob = scope.launch {
+            repeat(REWRITE_FRAMES) { awaitFrame() }
+            rewriteCurrentEntry()
+        }
+    }
+
+    private fun rewriteCurrentEntry() {
+        if (!isOverlay && targetIndex == browserIndex && pendingArrivals.isEmpty()) {
             history.replaceState(targetIndex)
         }
     }
@@ -188,5 +209,8 @@ internal class BrowserHistoryInput(
 
     private companion object {
         val ARRIVAL_TIMEOUT = 1.seconds
+
+        // The back stack changes before the frame that composes it reports the new history
+        const val REWRITE_FRAMES = 2
     }
 }

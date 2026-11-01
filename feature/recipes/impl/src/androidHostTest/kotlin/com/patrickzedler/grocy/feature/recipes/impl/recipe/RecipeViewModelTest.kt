@@ -18,8 +18,11 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -70,6 +73,35 @@ class RecipeViewModelTest {
         assertEquals("2 Pieces Milk", groups[0].lines.single().text)
         assertEquals("a slice Bread", groups[1].lines.single().text)
         assertEquals("2", viewModel.servings.text.toString())
+    }
+
+    @Test
+    fun cardShowsOnlyWithItsServingsFilled() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        val servingsWhenShown = mutableListOf<String>()
+        // Unconfined, so it sees the servings at the moment the card appears
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.state.filterNotNull().collect {
+                servingsWhenShown += viewModel.servings.text.toString()
+            }
+        }
+
+        advanceUntilIdle()
+
+        // Its first frame has the servings, their label never jumps up
+        assertEquals("2", servingsWhenShown.first())
+    }
+
+    @Test
+    fun costsChipOpensTheCostsNotes() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+
+        viewModel.showCosts()
+        assertEquals(RecipeDialog.Costs, viewModel.dialog)
+        viewModel.dismissDialog()
+
+        assertNull(viewModel.dialog)
     }
 
     @Test

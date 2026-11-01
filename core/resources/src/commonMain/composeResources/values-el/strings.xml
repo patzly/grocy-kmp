@@ -985,7 +985,7 @@
   <string name="recipes_show_gallery">Εμφάνιση ως συλλογή</string>
   <string name="recipes_desired_servings">Επιθυμητές μερίδες</string>
   <string name="recipes_due_score">Βαθμολογία λήξης</string>
-  <string name="recipes_due_score_value">Βαθμολογία λήξης %1$d</string>
+  <string name="recipes_due_score_value">Βαθμολογία λήξης: %1$d</string>
   <string name="recipes_due_score_hint">Όσο μεγαλύτερος είναι αυτός ο αριθμός, τόσο περισσότερα συστατικά του αποθέματος λήγουν σύντομα, έχουν περάσει την ημερομηνία ή έχουν ήδη λήξει</string>
   <string name="recipes_requirements_fulfilled">Οι απαιτήσεις πληρούνται</string>
   <string name="recipes_status_enough">Αρκετά σε απόθεμα</string>
@@ -1006,6 +1006,14 @@
     <item quantity="one">Μερίδα %1$s</item>
     <item quantity="other">%1$s Μερίδες</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="one">Λείπει %1$d συστατικό</item>
+    <item quantity="other">Λείπουν %1$d συστατικά</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">Στη λίστα αγορών</string>
+  <string name="recipe_title">Συνταγή</string>
+  <string name="recipe_ingredient_missing_amount">Λείπουν %1$s</string>
+  <string name="recipe_ingredient_on_list_amount">%1$s στη λίστα αγορών</string>
   <string name="recipes_empty">Δεν υπάρχουν ακόμη συνταγές</string>
   <string name="recipes_empty_filtered">Καμία συνταγή δεν ταιριάζει με το φίλτρο</string>
   <string name="recipes_select_hint">Επιλέξτε μια συνταγή για να εμφανιστεί εδώ</string>

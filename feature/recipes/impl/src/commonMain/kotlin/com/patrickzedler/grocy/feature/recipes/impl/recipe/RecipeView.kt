@@ -26,6 +26,8 @@ internal data class IngredientLine(
     /** What is missing and what is on the shopping list, in the product's stock unit. */
     val missingAmount: String,
     val amountOnShoppingList: String,
+    /** Some of it is on the shopping list. */
+    val isOnShoppingList: Boolean,
     val isVariableAmount: Boolean,
     val note: String?,
     val productActive: Boolean,
@@ -149,6 +151,7 @@ internal fun ingredientLine(
         stockAmount = amountText(row.stockAmount, stockUnit),
         missingAmount = amountText(row.missingAmount, stockUnit),
         amountOnShoppingList = amountText(row.amountOnShoppingList, stockUnit),
+        isOnShoppingList = row.amountOnShoppingList > 0,
         isVariableAmount = row.variableAmount != null,
         note = row.note,
         productActive = row.productActive,

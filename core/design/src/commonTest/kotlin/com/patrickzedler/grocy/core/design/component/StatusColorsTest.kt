@@ -27,7 +27,7 @@ class StatusColorsTest {
     @Test
     fun textOnEveryStatusContainerIsEasyToRead() {
         for (isDark in listOf(false, true)) {
-            for (base in listOf(StatusBlue, StatusYellow, StatusRed)) {
+            for (base in listOf(StatusGreen, StatusBlue, StatusYellow, StatusRed)) {
                 val color = statusColorOf(base, primary, isDark)
 
                 // WCAG AAA for normal text, like the theme's container roles
@@ -40,7 +40,7 @@ class StatusColorsTest {
     fun marksStandOutFromTheSurface() {
         val lightSurface = Color.White
         val darkSurface = Color(0xFF111411)
-        for (base in listOf(StatusBlue, StatusYellow, StatusRed)) {
+        for (base in listOf(StatusGreen, StatusBlue, StatusYellow, StatusRed)) {
             val light = statusColorOf(base, primary, isDark = false).color
             val dark = statusColorOf(base, primary, isDark = true).color
 
@@ -61,7 +61,7 @@ class StatusColorsTest {
 
     @Test
     fun colorsTurnTowardsPrimaryAndKeepTheirHue() {
-        for (base in listOf(StatusBlue, StatusYellow, StatusRed)) {
+        for (base in listOf(StatusGreen, StatusBlue, StatusYellow, StatusRed)) {
             val turned = hueOf(statusColorOf(base, primary, isDark = false).container)
 
             // Material's harmonization turns by at most 15 degrees

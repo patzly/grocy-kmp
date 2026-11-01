@@ -1017,7 +1017,7 @@
   <string name="recipes_show_gallery">Afficher en galerie</string>
   <string name="recipes_desired_servings">portions souhaitées</string>
   <string name="recipes_due_score">Indice de péremption</string>
-  <string name="recipes_due_score_value">Indice de péremption %1$d</string>
+  <string name="recipes_due_score_value">Indice de péremption : %1$d</string>
   <string name="recipes_due_score_hint">Plus ce nombre est élevé, plus il y a d'ingrédients actuellement en stock qui sont bientôt périmés, déjà périmés ou dont la date est dépassée</string>
   <string name="recipes_requirements_fulfilled">Prérequis remplis</string>
   <string name="recipes_status_enough">Il y en a assez en stock</string>
@@ -1041,6 +1041,15 @@
     <item quantity="many">%1$s parts / portions</item>
     <item quantity="other">%1$s parts / portions</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="one">%1$d ingrédient manquant</item>
+    <item quantity="many">%1$d ingrédients manquants</item>
+    <item quantity="other">%1$d ingrédients manquants</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">Sur la liste de courses</string>
+  <string name="recipe_title">Recette</string>
+  <string name="recipe_ingredient_missing_amount">%1$s manquant</string>
+  <string name="recipe_ingredient_on_list_amount">%1$s sur la liste de courses</string>
   <string name="recipes_empty">Aucune recette pour l’instant</string>
   <string name="recipes_empty_filtered">Aucune recette ne correspond au filtre</string>
   <string name="recipes_select_hint">Choisissez une recette pour l’afficher ici</string>

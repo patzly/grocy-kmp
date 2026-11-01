@@ -34,6 +34,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -67,6 +68,9 @@ internal sealed interface RecipeDialog {
 
     /** The missing products, all checked first; unchecked ones stay off the shopping list. */
     data class AddMissing(val products: List<MissingProduct>) : RecipeDialog
+
+    /** Grocy's notes on the costs, from their chip. */
+    data object Costs : RecipeDialog
 }
 
 /** What became of the card's actions, shown once. */
@@ -99,8 +103,11 @@ internal class RecipeViewModel(
     computeDispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : ViewModel() {
 
-    /** Grocy's "Desired servings" of the card, filled once the recipe is read. */
+    /** Grocy's "Desired servings" of the card, filled before [state] shows the recipe. */
     val servings = TextFieldState()
+
+    // The card waits for the servings, so their label does not jump up in its first frame
+    private val servingsFilled = MutableStateFlow(false)
 
     var dialog by mutableStateOf<RecipeDialog?>(null)
         private set
@@ -171,6 +178,7 @@ internal class RecipeViewModel(
         )
     }
         .flowOn(computeDispatcher)
+        .combine(servingsFilled) { state, filled -> state.takeIf { filled } }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     init {
@@ -181,6 +189,7 @@ internal class RecipeViewModel(
             servings.setTextAndPlaceCursorAtEnd(
                 formatDecimal(recipe.desiredServings, decimals, decimalSeparator),
             )
+            servingsFilled.value = true
             saveServingsWhileTyping(decimals)
         }
     }
@@ -244,6 +253,10 @@ internal class RecipeViewModel(
         } else {
             RecipeEvent.AddMissingFailed(error)
         }
+    }
+
+    fun showCosts() {
+        dialog = RecipeDialog.Costs
     }
 
     fun dismissDialog() {

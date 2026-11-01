@@ -985,7 +985,7 @@
   <string name="recipes_show_gallery">Megjelenítés galériaként</string>
   <string name="recipes_desired_servings">Kívánt adagok</string>
   <string name="recipes_due_score">Lejárati pontszám</string>
-  <string name="recipes_due_score_value">Lejárati pontszám %1$d</string>
+  <string name="recipes_due_score_value">Lejárati pontszám: %1$d</string>
   <string name="recipes_due_score_hint">Minél magasabb ez a szám, annál több hozzávaló fog lejárni a közeljövőben</string>
   <string name="recipes_requirements_fulfilled">Teljesült követelmények</string>
   <string name="recipes_status_enough">Elegendő mennyiség készleten</string>
@@ -1006,6 +1006,14 @@
     <item quantity="one">%1$s tálalás</item>
     <item quantity="other">%1$s adag</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="one">%1$d hozzávaló hiányzik</item>
+    <item quantity="other">%1$d hozzávaló hiányzik</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">A bevásárlólistán</string>
+  <string name="recipe_title">Recept</string>
+  <string name="recipe_ingredient_missing_amount">%1$s hiányzik</string>
+  <string name="recipe_ingredient_on_list_amount">%1$s a bevásárlólistán</string>
   <string name="recipes_empty">Még nincsenek receptek</string>
   <string name="recipes_empty_filtered">Egy recept sem felel meg a szűrőnek</string>
   <string name="recipes_select_hint">Válassz egy receptet, hogy itt lásd</string>

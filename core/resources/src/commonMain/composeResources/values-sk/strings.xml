@@ -1049,7 +1049,7 @@
   <string name="recipes_show_gallery">Zobraziť ako galériu</string>
   <string name="recipes_desired_servings">Požadované porcie</string>
   <string name="recipes_due_score">Skóre spotreby</string>
-  <string name="recipes_due_score_value">Skóre spotreby %1$d</string>
+  <string name="recipes_due_score_value">Skóre spotreby: %1$d</string>
   <string name="recipes_due_score_hint">Čím vyššie je toto číslo, tým viac surovín na sklade sa blíži k dátumu spotreby, je po ňom alebo už expirovalo</string>
   <string name="recipes_requirements_fulfilled">Požiadavky splnené</string>
   <string name="recipes_status_enough">Dostatočná zásoba</string>
@@ -1076,6 +1076,16 @@
     <item quantity="many">%1$s porcií</item>
     <item quantity="other">%1$s porcií</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="one">Chýba %1$d ingrediencia</item>
+    <item quantity="few">Chýbajú %1$d ingrediencie</item>
+    <item quantity="many">Chýba %1$d ingrediencií</item>
+    <item quantity="other">Chýba %1$d ingrediencií</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">V nákupnom zozname</string>
+  <string name="recipe_title">Recept</string>
+  <string name="recipe_ingredient_missing_amount">Chýba %1$s</string>
+  <string name="recipe_ingredient_on_list_amount">%1$s v nákupnom zozname</string>
   <string name="recipes_empty">Zatiaľ žiadne recepty</string>
   <string name="recipes_empty_filtered">Filtru nezodpovedajú žiadne recepty</string>
   <string name="recipes_select_hint">Vyberte recept a zobrazte ho tu</string>

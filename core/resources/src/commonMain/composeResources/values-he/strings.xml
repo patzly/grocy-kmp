@@ -1017,7 +1017,7 @@
   <string name="recipes_show_gallery">הצגה כגלריה</string>
   <string name="recipes_desired_servings">גודל מנה מבוקשת</string>
   <string name="recipes_due_score">ניקוד תפוגה</string>
-  <string name="recipes_due_score_value">ניקוד תפוגה %1$d</string>
+  <string name="recipes_due_score_value">ניקוד תפוגה: %1$d</string>
   <string name="recipes_due_score_hint">ככל שהמספר הזה גבוה יותר, כך תוקפם של יותר רכיבים במלאי עומד לפוג בהקדם, יפוג היום או פג</string>
   <string name="recipes_requirements_fulfilled">הדרישות מולאו</string>
   <string name="recipes_status_enough">מספיק במלאי</string>
@@ -1041,6 +1041,15 @@
     <item quantity="two">%1$s מנות</item>
     <item quantity="other">%1$s מנות</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="one">רכיב אחד חסר</item>
+    <item quantity="two">%1$d רכיבים חסרים</item>
+    <item quantity="other">%1$d רכיבים חסרים</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">ברשימת הקניות</string>
+  <string name="recipe_title">מתכון</string>
+  <string name="recipe_ingredient_missing_amount">%1$s חסרים</string>
+  <string name="recipe_ingredient_on_list_amount">%1$s ברשימת הקניות</string>
   <string name="recipes_empty">אין מתכונים עדיין</string>
   <string name="recipes_empty_filtered">אין מתכונים שתואמים לסינון</string>
   <string name="recipes_select_hint">יש לבחור מתכון כדי להציג אותו כאן</string>

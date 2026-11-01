@@ -985,7 +985,7 @@
   <string name="recipes_show_gallery">Vis som galleri</string>
   <string name="recipes_desired_servings">Ønskede porsjoner</string>
   <string name="recipes_due_score">Utløps score</string>
-  <string name="recipes_due_score_value">Utløps score %1$d</string>
+  <string name="recipes_due_score_value">Utløps score: %1$d</string>
   <string name="recipes_due_score_hint">Dette nummeret viser hvor mange av ingrediensene som er i beholdning som snart går ut på dato, eller er allerede utgått.</string>
   <string name="recipes_requirements_fulfilled">Har jeg alt jeg trenger for denne oppskriften?</string>
   <string name="recipes_status_enough">Nok i beholdningen</string>
@@ -1006,6 +1006,14 @@
     <item quantity="one">%1$s porsjon</item>
     <item quantity="other">%1$s porsjoner</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="one">%1$d ingrediens mangler</item>
+    <item quantity="other">%1$d ingredienser mangler</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">På handlelisten</string>
+  <string name="recipe_title">Oppskrift</string>
+  <string name="recipe_ingredient_missing_amount">Mangler %1$s</string>
+  <string name="recipe_ingredient_on_list_amount">%1$s på handlelisten</string>
   <string name="recipes_empty">Ingen oppskrifter ennå</string>
   <string name="recipes_empty_filtered">Ingen oppskrifter samsvarer med filteret</string>
   <string name="recipes_select_hint">Velg en oppskrift for å vise den her</string>

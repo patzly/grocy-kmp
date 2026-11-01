@@ -23,7 +23,11 @@ Entry decorators, the navigationevent version and the browser history of the web
   stack's size does not tell, a two-pane scene shows two entries; guessing from it went back
   past the app's first entry and left the page); on a dialog's entry it returns to the screen below. A pasted URL without
   stored back stack starts on the first screen. When the first screen changes in place (login),
-  no handler reports it, so `onBackStackChanged` rewrites the entry. A back the
+  no handler reports it, so `onBackStackChanged` rewrites the entry; so does a page replaced
+  inside a scene of several entries (Consume taking the stock overview's place beside the start
+  screen), whose place in the dispatcher's history stays: two frames after the change, unless
+  the dispatcher reported a move meanwhile, so a navigation never writes into the previous
+  entry. A back the
   browser animated itself (`hasUAVisualTransition`) skips the app's pop transition. Browsers
   expose no gesture progress, so the web cannot run Compose's predictive back animation.
   From `beforeunload` until the next `pageshow` `WindowBrowserHistory` moves nothing: closing a

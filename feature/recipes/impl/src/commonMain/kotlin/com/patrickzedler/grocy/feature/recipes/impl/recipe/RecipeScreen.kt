@@ -26,10 +26,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
@@ -58,7 +60,6 @@ import com.patrickzedler.grocy.core.forms.GroupItems
 import com.patrickzedler.grocy.core.forms.TextItem
 import com.patrickzedler.grocy.core.forms.actionMessage
 import com.patrickzedler.grocy.core.forms.htmlToPlainText
-import com.patrickzedler.grocy.core.model.recipes.RecipeStatus
 import com.patrickzedler.grocy.core.model.stock.DueStatus
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.model.text.formatDecimal
@@ -81,22 +82,23 @@ import com.patrickzedler.grocy.core.resources.recipe_add_missing_failed
 import com.patrickzedler.grocy.core.resources.recipe_consume
 import com.patrickzedler.grocy.core.resources.recipe_consume_failed
 import com.patrickzedler.grocy.core.resources.recipe_consumed
-import com.patrickzedler.grocy.core.resources.recipe_costs
-import com.patrickzedler.grocy.core.resources.recipe_costs_hint
 import com.patrickzedler.grocy.core.resources.recipe_costs_value
 import com.patrickzedler.grocy.core.resources.recipe_edit
 import com.patrickzedler.grocy.core.resources.recipe_energy_per_serving
 import com.patrickzedler.grocy.core.resources.recipe_ingredient_done
 import com.patrickzedler.grocy.core.resources.recipe_ingredient_enough
 import com.patrickzedler.grocy.core.resources.recipe_ingredient_missing
+import com.patrickzedler.grocy.core.resources.recipe_ingredient_missing_amount
+import com.patrickzedler.grocy.core.resources.recipe_ingredient_on_list_amount
 import com.patrickzedler.grocy.core.resources.recipe_ingredient_substitute
 import com.patrickzedler.grocy.core.resources.recipe_ingredient_variable_amount
 import com.patrickzedler.grocy.core.resources.recipe_ingredients
 import com.patrickzedler.grocy.core.resources.recipe_missing_added
 import com.patrickzedler.grocy.core.resources.recipe_preparation
-import com.patrickzedler.grocy.core.resources.recipe_prices_incomplete
 import com.patrickzedler.grocy.core.resources.recipe_servings_failed
+import com.patrickzedler.grocy.core.resources.recipe_title
 import com.patrickzedler.grocy.core.resources.recipes_desired_servings
+import com.patrickzedler.grocy.core.resources.recipes_status_enough
 import com.patrickzedler.grocy.core.resources.stock_entry_due_soon
 import com.patrickzedler.grocy.core.resources.stock_entry_expired
 import com.patrickzedler.grocy.core.resources.stock_entry_overdue
@@ -106,8 +108,10 @@ import com.patrickzedler.grocy.feature.recipes.impl.actions.RecipeActionsHost
 import com.patrickzedler.grocy.feature.recipes.impl.actions.RecipeActionsViewModel
 import com.patrickzedler.grocy.feature.recipes.impl.actions.recipeMenuGroups
 import com.patrickzedler.grocy.feature.recipes.impl.actions.rememberRecipeGrocycodeDownload
-import com.patrickzedler.grocy.feature.recipes.impl.list.RecipeStatusLine
-import com.patrickzedler.grocy.feature.recipes.impl.list.StatusLine
+import com.patrickzedler.grocy.feature.recipes.impl.list.StatusChip
+import com.patrickzedler.grocy.feature.recipes.impl.list.recipeStatusChips
+import com.patrickzedler.grocy.feature.recipes.impl.list.statusChipsOf
+import com.patrickzedler.grocy.feature.recipes.impl.list.statusFieldChip
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
@@ -122,7 +126,8 @@ internal class RecipeLinks(
 
 /**
  * Grocy's recipe card: the picture across the top below the app bar, fully rounded, then the
- * requirements, Grocy's desired servings (saved while typing), energy and costs, the ingredients
+ * name with the requirements as chips, Grocy's desired servings (saved while typing), energy and
+ * costs (a tap on the costs explains them), the ingredients
  * by group (a tap opens the product's overview) and the preparation, the included recipes after
  * it. Consuming the ingredients is the toolbar's FAB, the menu has Grocy's recipe actions.
  * Beside the list ([isBesideList]) it has no back button of its own.
@@ -162,11 +167,19 @@ internal fun RecipeScreen(
             onAdd = viewModel::addMissing,
             onDismissRequest = viewModel::dismissDialog,
         )
+        RecipeDialog.Costs -> current?.fulfillment?.let { fulfillment ->
+            CostsDialog(
+                costs = costsText(current),
+                pricesIncomplete = fulfillment.pricesIncomplete,
+                onDismissRequest = viewModel::dismissDialog,
+            )
+        }
         null -> Unit
     }
 
     SegmentedListScreen(
-        title = current?.recipe?.name.orEmpty(),
+        // The name heads the first item, like the picture it belongs to the content
+        title = stringResource(Res.string.recipe_title),
         modifier = modifier,
         navigationIcon = {
             // Beside the list its own back button leaves both
@@ -310,21 +323,16 @@ private fun RecipeEvents(viewModel: RecipeViewModel, snackbarHostState: Snackbar
     }
 }
 
-/** What Grocy shows above the ingredients: requirements, desired servings, energy, costs. */
+/**
+ * What Grocy shows above the ingredients: the name with the requirements, desired servings,
+ * energy and costs.
+ */
 private fun LazyListScope.overviewGroup(state: RecipeUiState, viewModel: RecipeViewModel) {
     segmentedGroup(key = "overview") {
         val fulfillment = state.fulfillment
         val config = state.config
         GroupItems(
-            if (config.stock && fulfillment != null) {
-                { index, count ->
-                    SegmentedContainer(index = index, count = count) {
-                        RecipeStatusLine(fulfillment.status, fulfillment.missingProductsCount)
-                    }
-                }
-            } else {
-                null
-            },
+            { index, count -> NameItem(state, index, count) },
             { index, count ->
                 TextItem(
                     state = viewModel.servings,
@@ -336,7 +344,9 @@ private fun LazyListScope.overviewGroup(state: RecipeUiState, viewModel: RecipeV
                 )
             },
             if (fulfillment != null && (fulfillment.calories > 0 || config.stockPriceTracking)) {
-                { index, count -> EnergyAndCostsItem(state, index, count) }
+                { index, count ->
+                    EnergyAndCostsItem(state, viewModel::showCosts, index, count)
+                }
             } else {
                 null
             },
@@ -344,58 +354,87 @@ private fun LazyListScope.overviewGroup(state: RecipeUiState, viewModel: RecipeV
     }
 }
 
-/** Grocy's energy per serving and costs with their notes. */
+/** The recipe's name as the card's heading, Grocy's requirements as chips below it. */
 @Composable
-private fun EnergyAndCostsItem(state: RecipeUiState, index: Int, count: Int) {
+private fun NameItem(state: RecipeUiState, index: Int, count: Int) {
+    val fulfillment = state.fulfillment?.takeIf { state.config.stock }
+    val chips = fulfillment?.let {
+        recipeStatusChips(it.status, it.missingProductsCount, rememberStatusColors())
+    }.orEmpty()
+    SegmentedContainer(index = index, count = count) {
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Text(
+                text = state.recipe.name,
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.semantics { heading() },
+            )
+            if (chips.isNotEmpty()) {
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    chips.forEach { FieldChipView(it) }
+                }
+            }
+        }
+    }
+}
+
+/** "Costs: 2.50 €" of the recipe at its desired servings. */
+@Composable
+private fun costsText(state: RecipeUiState): String {
+    val costs = state.fulfillment?.costs ?: 0.0
+    return stringResource(
+        Res.string.recipe_costs_value,
+        formatCurrency(costs, state.config.currency, state.priceDecimals),
+    )
+}
+
+/**
+ * Grocy's energy per serving and costs as chips; the costs are yellow while prices are missing,
+ * a tap on them shows Grocy's notes ([onCostsClick]).
+ */
+@Composable
+private fun EnergyAndCostsItem(
+    state: RecipeUiState,
+    onCostsClick: () -> Unit,
+    index: Int,
+    count: Int,
+) {
     val fulfillment = state.fulfillment ?: return
     val config = state.config
     val colors = rememberStatusColors()
     val separator = platformDecimalSeparator()
-    val chips = buildList {
-        if (fulfillment.calories > 0) {
-            val text = stringResource(
-                Res.string.recipe_energy_per_serving,
-                formatDecimal(fulfillment.calories, ENERGY_DECIMALS, separator),
-                config.energyUnit,
-            )
-            add(FieldChip(text, text, Res.drawable.ic_rounded_local_fire_department))
-        }
-        if (config.stockPriceTracking) {
-            val costs = formatCurrency(fulfillment.costs, config.currency, state.priceDecimals)
-            val text = stringResource(Res.string.recipe_costs_value, costs)
-            add(
-                FieldChip(
-                    text = text,
-                    description = text,
-                    icon = Res.drawable.ic_rounded_payments,
-                    status = colors.warning.takeIf { fulfillment.pricesIncomplete },
-                ),
-            )
-        }
+    val energy = if (fulfillment.calories > 0) {
+        val text = stringResource(
+            Res.string.recipe_energy_per_serving,
+            formatDecimal(fulfillment.calories, ENERGY_DECIMALS, separator),
+            config.energyUnit,
+        )
+        FieldChip(text, text, Res.drawable.ic_rounded_local_fire_department)
+    } else {
+        null
+    }
+    val costs = if (config.stockPriceTracking) {
+        val text = costsText(state)
+        FieldChip(
+            text = text,
+            description = text,
+            icon = Res.drawable.ic_rounded_payments,
+            status = colors.warning.takeIf { fulfillment.pricesIncomplete },
+        )
+    } else {
+        null
     }
     SegmentedContainer(index = index, count = count) {
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                chips.forEach { FieldChipView(it) }
-            }
-            if (config.stockPriceTracking) {
-                val notes = listOfNotNull(
-                    stringResource(Res.string.recipe_prices_incomplete)
-                        .takeIf { fulfillment.pricesIncomplete },
-                    "${stringResource(Res.string.recipe_costs)}: " +
-                        stringResource(Res.string.recipe_costs_hint),
-                )
-                notes.forEach {
-                    Text(
-                        text = it,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-            }
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            // The costs are a button with its larger touch target
+            itemVerticalAlignment = Alignment.CenterVertically,
+        ) {
+            energy?.let { FieldChipView(it) }
+            costs?.let { FieldChipView(it, onClick = onCostsClick) }
         }
     }
 }
@@ -457,8 +496,8 @@ private fun preparationTitle(isOwn: Boolean, recipeName: String): String {
 }
 
 /**
- * An ingredient like Grocy's line: amount, unit and product, below it the stock status and what
- * else Grocy notes (due status, the sub product used, a variable amount, energy and costs, the
+ * An ingredient like Grocy's line: amount, unit and product, below it the stock status as chips
+ * and what else Grocy notes (due status, the sub product used, a variable amount, energy and costs, the
  * note). A tap opens the product overview; with Grocy's checkboxes it can be marked as done.
  */
 @Composable
@@ -472,17 +511,8 @@ private fun IngredientItem(
     count: Int,
 ) {
     val haptic = LocalHapticFeedback.current
-    val chips = ingredientChips(line, state, rememberStatusColors())
-    val statusText = when (line.status) {
-        RecipeStatus.ENOUGH_IN_STOCK ->
-            stringResource(Res.string.recipe_ingredient_enough, line.stockAmount)
-        RecipeStatus.ON_SHOPPING_LIST, RecipeStatus.NOT_ENOUGH_IN_STOCK -> stringResource(
-            Res.string.recipe_ingredient_missing,
-            line.missingAmount,
-            line.amountOnShoppingList,
-        )
-        null -> null
-    }
+    val colors = rememberStatusColors()
+    val chips = ingredientStatusChips(line, colors) + ingredientChips(line, state, colors)
     val doneText = stringResource(Res.string.recipe_ingredient_done)
     // Done ones are crossed out and muted like Grocy's
     val textModifier = if (done) Modifier.alpha(DoneAlpha) else Modifier
@@ -518,14 +548,13 @@ private fun IngredientItem(
         } else {
             null
         },
-        supportingContent = if (chips.isNotEmpty() || line.note != null || statusText != null) {
+        supportingContent = if (chips.isNotEmpty() || line.note != null) {
             {
                 Column(
                     modifier = textModifier.padding(top = 4.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     line.note?.let { Text(it) }
-                    line.status?.let { status -> statusText?.let { StatusLine(status, it) } }
                     if (chips.isNotEmpty()) {
                         key(chips.map { it.text }) {
                             FlowRow(
@@ -547,6 +576,33 @@ private fun IngredientItem(
             modifier = textModifier,
             textDecoration = if (done) TextDecoration.LineThrough else null,
         )
+    }
+}
+
+/**
+ * An ingredient's stock status as chips like the recipe's: "Enough in stock", or what is
+ * missing and, after it, what of it is on the shopping list.
+ */
+@Composable
+private fun ingredientStatusChips(line: IngredientLine, colors: StatusColors): List<FieldChip> {
+    val status = line.status ?: return emptyList()
+    val enough = stringResource(Res.string.recipes_status_enough)
+    val enoughDescription = stringResource(Res.string.recipe_ingredient_enough, line.stockAmount)
+    val missing = stringResource(Res.string.recipe_ingredient_missing_amount, line.missingAmount)
+    val missingDescription = stringResource(
+        Res.string.recipe_ingredient_missing,
+        line.missingAmount,
+        line.amountOnShoppingList,
+    )
+    val onList =
+        stringResource(Res.string.recipe_ingredient_on_list_amount, line.amountOnShoppingList)
+    return statusChipsOf(status, line.isOnShoppingList).map { chip ->
+        when (chip) {
+            StatusChip.ENOUGH -> statusFieldChip(chip, enough, enoughDescription, colors)
+            StatusChip.MISSING_ON_LIST, StatusChip.MISSING ->
+                statusFieldChip(chip, missing, missingDescription, colors)
+            StatusChip.ON_SHOPPING_LIST -> statusFieldChip(chip, onList, onList, colors)
+        }
     }
 }
 

@@ -63,7 +63,7 @@ Shopping list (`feature:shoppinglist`, `ShoppingListRepository` of `core:data`):
   item shows `notesSyncStates` like a row its check off.
 - Shopping mode (`ShoppingModeRoute`, `ShoppingModeScreen`, `ShoppingModeViewModel`), opened by
   the start screen's `storefront` button and the shopping list's toolbar: a screen of its own
-  with a close button, "Shopping list" as title without subtitle, no search or toolbar. Its
+  with a close button, "Shopping mode" as title without subtitle, no search or toolbar. Its
   overflow menu holds "Reload", then the checkable "Auto sync" and "Shopping mode settings" in
   one group. The shopping list's chips (list, status and table options are the same, not
   separate settings) and rows in large type (`LocalChipSize` large: title medium chips; titles

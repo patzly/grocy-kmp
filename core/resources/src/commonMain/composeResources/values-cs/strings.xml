@@ -1052,7 +1052,7 @@
   <string name="recipes_show_gallery">Zobrazit jako galerii</string>
   <string name="recipes_desired_servings">Počet porcí</string>
   <string name="recipes_due_score">Index min. trvanlivosti</string>
-  <string name="recipes_due_score_value">Index min. trvanlivosti %1$d</string>
+  <string name="recipes_due_score_value">Index min. trvanlivosti: %1$d</string>
   <string name="recipes_due_score_hint">Čím je index vyšší, tím více ingrediencí se blíží datu min. trvanlivosti. V indexu dostává jeden bod každý produkt s blížící se dobou spotřeby, 10 bodů za každý produkt po době min. trvanlivosti a 20 bodů za každý produkt po době použitelnosti.</string>
   <string name="recipes_requirements_fulfilled">Stav zásob</string>
   <string name="recipes_status_enough">Dostatečná zásoba</string>
@@ -1079,6 +1079,16 @@
     <item quantity="many">%1$s porcí</item>
     <item quantity="other">%1$s porcí</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="one">Chybí %1$d ingredience</item>
+    <item quantity="few">Chybí %1$d ingredience</item>
+    <item quantity="many">Chybí %1$d ingrediencí</item>
+    <item quantity="other">Chybí %1$d ingrediencí</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">Na nákupním seznamu</string>
+  <string name="recipe_title">Recept</string>
+  <string name="recipe_ingredient_missing_amount">Chybí %1$s</string>
+  <string name="recipe_ingredient_on_list_amount">%1$s na nákupním seznamu</string>
   <string name="recipes_empty">Zatím žádné recepty</string>
   <string name="recipes_empty_filtered">Filtru neodpovídají žádné recepty</string>
   <string name="recipes_select_hint">Vyberte recept a zobrazte ho zde</string>

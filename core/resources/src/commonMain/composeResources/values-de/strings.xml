@@ -985,7 +985,7 @@
   <string name="recipes_show_gallery">Als Galerie anzeigen</string>
   <string name="recipes_desired_servings">Gewünschte Portionen</string>
   <string name="recipes_due_score">Fällig.-Punkte</string>
-  <string name="recipes_due_score_value">Fällig.-Punkte %1$d</string>
+  <string name="recipes_due_score_value">Fällig.-Punkte: %1$d</string>
   <string name="recipes_due_score_hint">Je höher diese Zahl ist, desto mehr Zutaten, die derzeit im Bestand sind, sind bald fällig, überfällig oder bereits abgelaufen</string>
   <string name="recipes_requirements_fulfilled">Bedarf im Bestand</string>
   <string name="recipes_status_enough">Bestand reicht aus</string>
@@ -1006,6 +1006,14 @@
     <item quantity="one">%1$s Portion</item>
     <item quantity="other">%1$s Portionen</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="one">%1$d Zutat fehlt</item>
+    <item quantity="other">%1$d Zutaten fehlen</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">Auf dem Einkaufszettel</string>
+  <string name="recipe_title">Rezept</string>
+  <string name="recipe_ingredient_missing_amount">Fehlt: %1$s</string>
+  <string name="recipe_ingredient_on_list_amount">%1$s auf dem Einkaufszettel</string>
   <string name="recipes_empty">Noch keine Rezepte</string>
   <string name="recipes_empty_filtered">Keine Rezepte entsprechen dem Filter</string>
   <string name="recipes_select_hint">Wähle ein Rezept, um es hier anzuzeigen</string>

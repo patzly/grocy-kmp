@@ -1,11 +1,15 @@
 package com.patrickzedler.grocy.core.model.recipes
 
-/** The columns of Grocy's recipes table, in its order. */
+/**
+ * The columns of Grocy's recipes table, in its order, then the picture of its gallery, which
+ * the list shows at an item's end too.
+ */
 enum class RecipeField {
     NAME,
     DESIRED_SERVINGS,
     DUE_SCORE,
     REQUIREMENTS_FULFILLED,
+    PICTURE,
 }
 
 /** The columns Grocy's "Table options" can group the recipes by. */
@@ -22,7 +26,8 @@ enum class RecipesView { LIST, GALLERY }
 /**
  * How the user set up the recipes, kept across app starts like Grocy keeps its table options
  * and its last tab: the shown fields besides the name, grouping, sort and list or gallery. The
- * defaults are Grocy's: due score and requirements fulfilled shown, sorted by name.
+ * defaults are Grocy's: due score and requirements fulfilled shown, sorted by name; the picture
+ * is shown too, like Grocy's gallery does.
  */
 data class RecipesOptions(
     val fields: Set<RecipeField> = DEFAULT_FIELDS,
@@ -32,7 +37,11 @@ data class RecipesOptions(
     val view: RecipesView = RecipesView.LIST,
 ) {
     companion object {
-        val DEFAULT_FIELDS = setOf(RecipeField.DUE_SCORE, RecipeField.REQUIREMENTS_FULFILLED)
+        val DEFAULT_FIELDS = setOf(
+            RecipeField.DUE_SCORE,
+            RecipeField.REQUIREMENTS_FULFILLED,
+            RecipeField.PICTURE,
+        )
 
         /** Options from their stored parts; missing or unknown values fall back to defaults. */
         fun of(

@@ -44,8 +44,53 @@ class RecipeActionsViewModelTest {
         return RecipeActionsViewModel(
             recipes = environment.recipesRepository,
             masterData = environment.repository,
+            shoppingLists = environment.shoppingListRepository,
             today = { epochDayOf("2026-11-02")!! },
         )
+    }
+
+    private fun missingProductsPosts() = environment.server.requestsTo(
+        "/api/recipes/1/add-not-fulfilled-products-to-shoppinglist",
+        HttpMethod.Post,
+    )
+
+    @Test
+    fun missingProductsGoOnTheShoppingListWithoutAQuestion() = runTest(dispatcher) {
+        // Pancakes miss something that is not on the shopping list
+        environment.server.respond(
+            "/api/recipes/fulfillment",
+            body = MasterDataJson.RECIPES_FULFILLMENT.replace(
+                "\"need_fulfilled_with_shopping_list\":\"1\"",
+                "\"need_fulfilled_with_shopping_list\":\"0\"",
+            ),
+        )
+        val viewModel = viewModel()
+
+        viewModel.events.test {
+            viewModel.putOnShoppingList(1)
+            advanceUntilIdle()
+
+            assertEquals(RecipeActionEvent.PutOnShoppingList, awaitItem())
+        }
+        assertNull(viewModel.dialog)
+        assertEquals(
+            """{"excludedProductIds":[]}""",
+            (missingProductsPosts().single().body as TextContent).text,
+        )
+    }
+
+    @Test
+    fun whatIsOnTheShoppingListAlreadyIsNotPutThereTwice() = runTest(dispatcher) {
+        // Pancakes miss only what the shopping list covers
+        val viewModel = viewModel()
+
+        viewModel.events.test {
+            viewModel.putOnShoppingList(1)
+            advanceUntilIdle()
+
+            assertEquals(RecipeActionEvent.PutOnShoppingList, awaitItem())
+        }
+        assertTrue(missingProductsPosts().isEmpty())
     }
 
     @Test

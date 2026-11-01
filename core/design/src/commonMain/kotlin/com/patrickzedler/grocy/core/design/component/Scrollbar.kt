@@ -2,8 +2,10 @@ package com.patrickzedler.grocy.core.design.component
 
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.ScrollableState
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.nonInteractiveScrollbar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -16,13 +18,17 @@ import androidx.compose.ui.unit.dp
  * The thumb keeps the same distance from the top and bottom as from the end edge; rounded
  * corners of a clipping parent (panes, menus) cover it there. [endInset] moves it away from this
  * node's end edge, a negative one into the padding beside this node.
+ * A lazy list's thumb keeps its length while scrolling ([LazyListScrollIndicatorState]).
  */
 @Composable
 fun Modifier.verticalScrollbar(
     state: ScrollableState,
     endInset: Dp = ScrollbarInset,
 ): Modifier {
-    val indicatorState = state.scrollIndicatorState ?: return this
+    val lazyIndicatorState = remember(state) {
+        (state as? LazyListState)?.let(::LazyListScrollIndicatorState)
+    }
+    val indicatorState = lazyIndicatorState ?: state.scrollIndicatorState ?: return this
     return nonInteractiveScrollbar(
         state = indicatorState,
         orientation = Orientation.Vertical,

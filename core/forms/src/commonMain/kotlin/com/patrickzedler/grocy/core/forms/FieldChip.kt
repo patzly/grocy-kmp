@@ -12,12 +12,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.text
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.StatusColor
+import com.patrickzedler.grocy.core.design.component.clickCursor
+import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.stock_overview_field_value
 import org.jetbrains.compose.resources.DrawableResource
@@ -38,21 +44,27 @@ fun labelled(label: String, value: String) =
     stringResource(Res.string.stock_overview_field_value, label, value)
 
 /**
- * A chip that only shows a value: no outline or elevation, surfaceContainer when neutral, a
- * status color otherwise.
+ * A chip that shows a value: no outline or elevation, surfaceContainer when neutral, a status
+ * color otherwise. With [onClick] it is a button, e.g. to explain the value in a dialog.
  */
 @Composable
-fun FieldChipView(chip: FieldChip) {
+fun FieldChipView(chip: FieldChip, onClick: (() -> Unit)? = null) {
     val container = chip.status?.container ?: MaterialTheme.colorScheme.surfaceContainer
     val content = chip.status?.content ?: MaterialTheme.colorScheme.onSurfaceVariant
-    Surface(
-        shape = MaterialTheme.shapes.small,
-        color = container,
-        contentColor = content,
-        // As text, not description: the item merges them, and a description would hide the
-        // product's name from screen readers
-        modifier = Modifier.clearAndSetSemantics { text = AnnotatedString(chip.description) },
-    ) {
+    val haptic = LocalHapticFeedback.current
+    // As text, not description: the item merges them, and a description would hide the
+    // product's name from screen readers
+    val semantics = Modifier.clearAndSetSemantics {
+        text = AnnotatedString(chip.description)
+        if (onClick != null) {
+            role = Role.Button
+            onClick {
+                onClick()
+                true
+            }
+        }
+    }
+    val chipContent = @Composable {
         Row(
             modifier = Modifier
                 .heightIn(min = chipHeight())
@@ -75,6 +87,27 @@ fun FieldChipView(chip: FieldChip) {
                 overflow = TextOverflow.Ellipsis,
             )
         }
+    }
+    if (onClick != null) {
+        Surface(
+            onClick = {
+                haptic.confirm()
+                onClick()
+            },
+            shape = MaterialTheme.shapes.small,
+            color = container,
+            contentColor = content,
+            modifier = semantics.clickCursor(),
+            content = chipContent,
+        )
+    } else {
+        Surface(
+            shape = MaterialTheme.shapes.small,
+            color = container,
+            contentColor = content,
+            modifier = semantics,
+            content = chipContent,
+        )
     }
 }
 

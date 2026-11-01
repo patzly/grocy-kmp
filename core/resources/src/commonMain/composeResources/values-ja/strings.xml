@@ -953,7 +953,7 @@
   <string name="recipes_show_gallery">ギャラリーで表示</string>
   <string name="recipes_desired_servings">分量</string>
   <string name="recipes_due_score">期限スコア</string>
-  <string name="recipes_due_score_value">期限スコア %1$d</string>
+  <string name="recipes_due_score_value">期限スコア：%1$d</string>
   <string name="recipes_due_score_hint">この数字が大きいほど、現在ストックしている「まもなく期限」または「期限切れ」の物品が材料に多く含まれています</string>
   <string name="recipes_requirements_fulfilled">要件</string>
   <string name="recipes_status_enough">ストックあり</string>
@@ -971,6 +971,13 @@
   <plurals name="recipes_servings">
     <item quantity="other">分量 %1$s</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="other">材料不足 %1$d 点</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">買い物リスト追加済</string>
+  <string name="recipe_title">レシピ</string>
+  <string name="recipe_ingredient_missing_amount">不足 %1$s</string>
+  <string name="recipe_ingredient_on_list_amount">買い物リスト追加済 %1$s</string>
   <string name="recipes_empty">まだレシピがありません</string>
   <string name="recipes_empty_filtered">フィルターに一致するレシピはありません</string>
   <string name="recipes_select_hint">レシピを選択すると、ここに表示されます</string>

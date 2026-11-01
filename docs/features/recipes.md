@@ -22,39 +22,52 @@ Grocy's recipes page, its recipe card and its recipe form (`feature:recipes`).
 - List (`RecipesScreen`, `RecipesViewModel`): Grocy's tabs as list or gallery, switched by the
   floating toolbar's first button and kept like Grocy's last tab; then Scroll to top and
   Search; "Add" as FAB. The chips: Grocy's status filter (with the stock feature, the number
-  of recipes per status in its menu), sort (the name and the shown fields), group by (none,
+  of recipes per status in its menu), sort (the name and the shown fields but the picture),
+  group by (none,
   desired servings, due score, requirements fulfilled, also when not shown; groups in the
   order of their value, recipes not computed yet last as "Not set"), the shown fields
   (`MultiSelectChip`) and "Clear filter". Fields, grouping, sort and view are
   `RecipesOptions` (`core:model`) in `SettingsStore`, read at app start by
-  `RecipesOptionsRepository`; Grocy's defaults: due score and requirements shown, by name.
+  `RecipesOptionsRepository`, the same for list and gallery; defaults: due score, requirements
+  and the picture (`RecipeField.PICTURE`, after Grocy's columns) shown, by name.
   The search is fuzzy over the name and the ingredients' products (Grocy's hidden column).
   The pure `buildRecipeList` sorts (requirements by status, then missing ingredients; ties by
   name), filters and groups.
-- Items: a row has the name and the shown fields as chips (servings, "Due score 11", the
-  status with Grocy's icon: check, exclamation in warning, cross in critical); a gallery card
+- Items: a row has the name, the shown fields as chips that wrap (servings, "Due score: 11",
+  the requirements) and at its end the picture as thumbnail before the menu; a gallery card
   (as many per row as `galleryColumns` fits, cards at least 260.dp, up to four) has the picture
-  across its top, name and chips below. Each has the narrow menu with Grocy's actions in three
-  groups: Edit; Add to meal plan (with the meal plan feature), Copy, Delete; Download recipe
-  grocycode, Print recipe grocycode (with a label printer the server runs). There is no swipe
-  action. Beside a card or form the item shown there is marked (`ListDetailItem`, the card a
+  across its top, name and chips below; without the picture field neither shows it. The
+  requirements are status chips (`RecipeStatusChips.kt`, pure `statusChipsOf`), shared with the
+  card: green (`positive`) "Enough in stock" with `priority`, yellow "2 ingredients missing"
+  with `warning` while the shopping list covers them, then a blue "On shopping list" with the
+  cart, otherwise red with `dangerous`; screen readers get Grocy's long text. Each has the
+  narrow menu with Grocy's actions in three groups: Edit; "Put on shopping list" (Grocy's "Put
+  missing products on shopping list", with stock and shopping list, off while enough is in
+  stock), Add to meal plan (with the meal plan feature), Copy, Delete; Download recipe
+  grocycode, Print recipe grocycode (with a label printer the server runs). Swiping a row
+  towards the end runs "Put on shopping list" (off like the menu item; also an accessibility
+  action of rows and cards; the gallery has no swipe). Beside a card or form the item shown there is marked (`ListDetailItem`, the card a
   selectable `Surface` with an outline).
 - Actions (`RecipeActionsViewModel`, `RecipeActionsHost`, shared by list, card and form): copy
   (`/recipes/{id}/copy`, the copy's card opens like Grocy shows it), delete (Grocy's question,
   a shown card or form of the recipe closes), Grocy's meal plan dialog (day with today and the
   date picker, servings, section from `meal_plan_sections`, the default one named "None"),
   the grocycode `grcy:r:<id>` as PNG (`rememberGrocycodeDownload`) and on the label printer
-  (`/recipes/{id}/printlabel`).
-- Card (`RecipeScreen`, `RecipeViewModel`): the picture right below the app bar, as wide as
-  the content and fully rounded (`CircleShape`, 2:1); then the requirements chip, Grocy's
-  "Desired servings" (a number field with stepper, saved once typing pauses like Grocy's field,
-  the server scales the ingredients anew), energy per serving and costs (with price tracking;
-  warning color and note while prices are incomplete, Grocy's hint below). The ingredients
+  (`/recipes/{id}/printlabel`), and "Put on shopping list" without Grocy's question: all
+  missing products (`add-not-fulfilled-products-to-shoppinglist`), but nothing is sent while
+  the shopping list covers what is missing already, so repeating it never adds anything twice.
+- Card (`RecipeScreen`, `RecipeViewModel`): "Recipe" as title, the picture right below the app
+  bar, as wide as the content and fully rounded (`CircleShape`, 2:1); then the recipe's name
+  (headline small, a heading) with the requirements as status chips like the list's, Grocy's
+  "Desired servings" (a number field with stepper, filled before the card shows so its label
+  never jumps, saved once typing pauses like Grocy's field, the server scales the ingredients
+  anew), energy per serving and costs as chips (with price tracking; warning color while
+  prices are incomplete; a tap on the costs opens `CostsDialog` with Grocy's notes). The ingredients
   follow by Grocy's ingredient group and, with the user setting, product group (pure
   `buildRecipeSections`): "2 Pieces Milk" (Grocy keeps amounts in the stock unit and the unit
   only shows them, unless "Only check if any amount is in stock"), the variable amount instead
-  of amount and unit, and chips: the stock status ("Enough in stock (3 Pieces)" or Grocy's
-  missing and on-list amounts), due soon/overdue/expired like Grocy's highlighted names, the
+  of amount and unit, and chips: the stock status like the recipe's ("Enough in stock", or
+  "2 Pieces missing" and after it "1 Piece on shopping list" while some of it is there), due soon/overdue/expired like Grocy's highlighted names, the
   sub product used for a parent out of stock, "Variable amount", energy, costs; the note above
   them. A tap opens the product overview. With Grocy's ingredient checkbox setting a checkbox
   crosses an ingredient out, kept in the ViewModel only. The preparation (HTML as text)

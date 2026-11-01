@@ -1049,7 +1049,7 @@
   <string name="recipes_show_gallery">Pokaż jako galerię</string>
   <string name="recipes_desired_servings">Pożądana ilość porcji</string>
   <string name="recipes_due_score">Wynik końcowy</string>
-  <string name="recipes_due_score_value">Wynik końcowy %1$d</string>
+  <string name="recipes_due_score_value">Wynik końcowy: %1$d</string>
   <string name="recipes_due_score_hint">Im wyższa jest ta liczba, tym więcej składników znajdujących się obecnie w magazynie zbliża się do terminu ważności lub jest przeterminowane.</string>
   <string name="recipes_requirements_fulfilled">Wymagania spełnione</string>
   <string name="recipes_status_enough">Dość na stanie</string>
@@ -1076,6 +1076,16 @@
     <item quantity="many">%1$s porcji</item>
     <item quantity="other">%1$s porcji</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="one">Brakuje %1$d składnika</item>
+    <item quantity="few">Brakuje %1$d składników</item>
+    <item quantity="many">Brakuje %1$d składników</item>
+    <item quantity="other">Brakuje %1$d składników</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">Na liście zakupów</string>
+  <string name="recipe_title">Przepis</string>
+  <string name="recipe_ingredient_missing_amount">Brakuje: %1$s</string>
+  <string name="recipe_ingredient_on_list_amount">%1$s na liście zakupów</string>
   <string name="recipes_empty">Brak przepisów</string>
   <string name="recipes_empty_filtered">Żaden przepis nie pasuje do filtra</string>
   <string name="recipes_select_hint">Wybierz przepis, aby wyświetlić go tutaj</string>

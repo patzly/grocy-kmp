@@ -1048,7 +1048,7 @@
   <string name="recipes_show_gallery">Показати галереєю</string>
   <string name="recipes_desired_servings">Потрібно порцій</string>
   <string name="recipes_due_score">Оцінка терміну</string>
-  <string name="recipes_due_score_value">Оцінка терміну %1$d</string>
+  <string name="recipes_due_score_value">Оцінка терміну: %1$d</string>
   <string name="recipes_due_score_hint">Що більше це число, то більше інгредієнтів у наявності скоро зіпсуються, прострочені або вже зіпсовані</string>
   <string name="recipes_requirements_fulfilled">Виконані вимоги</string>
   <string name="recipes_status_enough">Достатньо у наявності</string>
@@ -1075,6 +1075,16 @@
     <item quantity="many">%1$s порцій</item>
     <item quantity="other">%1$s порцій</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="one">Бракує %1$d інгредієнта</item>
+    <item quantity="few">Бракує %1$d інгредієнтів</item>
+    <item quantity="many">Бракує %1$d інгредієнтів</item>
+    <item quantity="other">Бракує %1$d інгредієнтів</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">У списку покупок</string>
+  <string name="recipe_title">Рецепт</string>
+  <string name="recipe_ingredient_missing_amount">Бракує: %1$s</string>
+  <string name="recipe_ingredient_on_list_amount">%1$s у списку покупок</string>
   <string name="recipes_empty">Рецептів ще немає</string>
   <string name="recipes_empty_filtered">Немає рецептів, що відповідають фільтру</string>
   <string name="recipes_select_hint">Оберіть рецепт, щоб показати його тут</string>

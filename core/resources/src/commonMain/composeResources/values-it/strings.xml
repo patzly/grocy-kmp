@@ -1017,7 +1017,7 @@
   <string name="recipes_show_gallery">Mostra come galleria</string>
   <string name="recipes_desired_servings">Porzioni desiderate</string>
   <string name="recipes_due_score">Punteggio scadenza</string>
-  <string name="recipes_due_score_value">Punteggio scadenza %1$d</string>
+  <string name="recipes_due_score_value">Punteggio scadenza: %1$d</string>
   <string name="recipes_due_score_hint">Più questo numero è alto, più sono gli ingredienti attualmente in dispensa che sono in scadenza o già scaduti</string>
   <string name="recipes_requirements_fulfilled">Requisiti soddisfatti</string>
   <string name="recipes_status_enough">Abbastanza in magazzino</string>
@@ -1041,6 +1041,15 @@
     <item quantity="many">%1$s porzioni</item>
     <item quantity="other">%1$s porzioni</item>
   </plurals>
+  <plurals name="recipes_ingredients_missing">
+    <item quantity="one">%1$d ingrediente mancante</item>
+    <item quantity="many">%1$d ingredienti mancanti</item>
+    <item quantity="other">%1$d ingredienti mancanti</item>
+  </plurals>
+  <string name="recipes_on_shopping_list">Nella lista della spesa</string>
+  <string name="recipe_title">Ricetta</string>
+  <string name="recipe_ingredient_missing_amount">%1$s mancante</string>
+  <string name="recipe_ingredient_on_list_amount">%1$s nella lista della spesa</string>
   <string name="recipes_empty">Ancora nessuna ricetta</string>
   <string name="recipes_empty_filtered">Nessuna ricetta corrisponde al filtro</string>
   <string name="recipes_select_hint">Scegli una ricetta per mostrarla qui</string>

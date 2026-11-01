@@ -19,7 +19,11 @@ internal data class RecipeListItem(
     val status: RecipeStatus?,
     val missingProductsCount: Int,
     val pictureFileName: String?,
-)
+) {
+    /** Something is missing, so Grocy's "Put missing products on shopping list" can run. */
+    val missesProducts: Boolean
+        get() = status != null && status != RecipeStatus.ENOUGH_IN_STOCK
+}
 
 /** What a group of the list is titled by, the value of the column it is grouped by. */
 internal sealed interface RecipeGroupTitle {
@@ -56,7 +60,12 @@ internal fun availableFields(config: ServerConfig): List<RecipeField> = listOfNo
     RecipeField.DESIRED_SERVINGS,
     RecipeField.DUE_SCORE,
     RecipeField.REQUIREMENTS_FULFILLED.takeIf { config.stock },
+    RecipeField.PICTURE,
 )
+
+/** The fields the list can be sorted by: the name and the shown ones, but not the picture. */
+internal fun sortableFields(shown: List<RecipeField>): List<RecipeField> =
+    listOf(RecipeField.NAME) + shown.filter { it != RecipeField.PICTURE }
 
 /** Grocy's groupable columns the server's features offer, "None" first. */
 internal fun availableGroupings(config: ServerConfig): List<RecipeGrouping> = listOfNotNull(
@@ -71,7 +80,7 @@ internal val DefaultSort = RecipeSort(RecipeField.NAME, ascending = true)
 
 /** The chosen order while its field is shown, otherwise Grocy's default. */
 internal fun effectiveSort(field: RecipeField, ascending: Boolean, shown: List<RecipeField>) =
-    if (field == RecipeField.NAME || field in shown) RecipeSort(field, ascending) else DefaultSort
+    if (field in sortableFields(shown)) RecipeSort(field, ascending) else DefaultSort
 
 /**
  * Grocy's recipes page: [recipes] joined with what the server computed for them, filtered by
@@ -124,7 +133,8 @@ private fun searchTexts(recipe: Recipe, fulfillment: RecipeFulfillment?): List<S
 private fun comparatorOf(sort: RecipeSort): Comparator<RecipeListItem> {
     val byName = compareBy<RecipeListItem> { it.name.lowercase() }
     val byField: Comparator<RecipeListItem> = when (sort.field) {
-        RecipeField.NAME -> byName
+        // Not sortable, see sortableFields
+        RecipeField.NAME, RecipeField.PICTURE -> byName
         RecipeField.DESIRED_SERVINGS -> compareBy { it.desiredServings }
         // Not computed yet sorts last either way
         RecipeField.DUE_SCORE -> compareBy(nullsLast()) { it.dueScore }

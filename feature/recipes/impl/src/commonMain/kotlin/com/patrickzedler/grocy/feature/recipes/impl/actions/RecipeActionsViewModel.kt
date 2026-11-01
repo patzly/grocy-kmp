@@ -9,12 +9,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
+import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.forms.ChangeError
 import com.patrickzedler.grocy.core.forms.FieldError
 import com.patrickzedler.grocy.core.forms.changeErrorOf
+import com.patrickzedler.grocy.core.forms.ignoringServerErrors
 import com.patrickzedler.grocy.core.forms.minimumAmount
 import com.patrickzedler.grocy.core.forms.numberError
 import com.patrickzedler.grocy.core.model.recipes.MealPlanSection
+import com.patrickzedler.grocy.core.model.recipes.RecipeStatus
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.model.text.isoDateOf
 import com.patrickzedler.grocy.core.model.text.parseDecimal
@@ -26,7 +29,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 /** The actions of Grocy's recipe menus, for their messages. */
-internal enum class RecipeAction { COPY, DELETE, MEAL_PLAN, PRINT }
+internal enum class RecipeAction { COPY, DELETE, MEAL_PLAN, PRINT, SHOPPING_LIST }
 
 /** What became of an action of [RecipeActionsViewModel], shown or acted on once. */
 internal sealed interface RecipeActionEvent {
@@ -38,6 +41,8 @@ internal sealed interface RecipeActionEvent {
     data object AddedToMealPlan : RecipeActionEvent
 
     data object Printed : RecipeActionEvent
+
+    data object PutOnShoppingList : RecipeActionEvent
 
     data class Failed(val action: RecipeAction, val error: ChangeError) : RecipeActionEvent
 }
@@ -90,12 +95,13 @@ internal fun validateMealPlan(day: String, servings: String, decimals: Int) = bu
 
 /**
  * The actions of Grocy's recipe menus on the list and the recipe page: copy, delete (asks
- * first), add to the meal plan (its dialog in [dialog]) and print the grocycode, online only.
- * Results arrive as [events].
+ * first), add to the meal plan (its dialog in [dialog]), put what is missing on the shopping
+ * list and print the grocycode, online only. Results arrive as [events].
  */
 internal class RecipeActionsViewModel(
     private val recipes: RecipesRepository,
     private val masterData: MasterDataRepository,
+    private val shoppingLists: ShoppingListRepository,
     private val today: () -> Long = ::todayEpochDay,
 ) : ViewModel() {
 
@@ -121,6 +127,21 @@ internal class RecipeActionsViewModel(
     fun delete(id: Int) = run(RecipeAction.DELETE) {
         recipes.deleteRecipe(id)
         RecipeActionEvent.Deleted(id)
+    }
+
+    /**
+     * Grocy's "Put missing products on shopping list" of recipe [id] without its question, from
+     * a swipe or the menu: all missing products. Once the shopping list covers what is missing
+     * nothing is sent, so doing it again never puts anything there twice.
+     */
+    fun putOnShoppingList(id: Int) = run(RecipeAction.SHOPPING_LIST) {
+        val status = recipes.fulfillment.first().firstOrNull { it.recipeId == id }?.status
+        if (status == RecipeStatus.NOT_ENOUGH_IN_STOCK) {
+            recipes.addMissingProductsToShoppingList(id, excludedProductIds = emptyList())
+            // The shopping list shows them next time, offline too
+            ignoringServerErrors { shoppingLists.refresh() }
+        }
+        RecipeActionEvent.PutOnShoppingList
     }
 
     fun print(id: Int) = run(RecipeAction.PRINT) {

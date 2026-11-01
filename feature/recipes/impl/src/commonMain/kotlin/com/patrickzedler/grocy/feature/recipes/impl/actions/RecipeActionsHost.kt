@@ -40,8 +40,11 @@ import com.patrickzedler.grocy.core.resources.meal_plan_day_required
 import com.patrickzedler.grocy.core.resources.meal_plan_section
 import com.patrickzedler.grocy.core.resources.meal_plan_servings
 import com.patrickzedler.grocy.core.resources.objects_delete_failed
+import com.patrickzedler.grocy.core.resources.recipe_add_missing_confirm
+import com.patrickzedler.grocy.core.resources.recipe_add_missing_failed
 import com.patrickzedler.grocy.core.resources.recipe_edit
 import com.patrickzedler.grocy.core.resources.recipe_ingredient_of
+import com.patrickzedler.grocy.core.resources.recipe_missing_added
 import com.patrickzedler.grocy.core.resources.recipes_add_to_meal_plan
 import com.patrickzedler.grocy.core.resources.recipes_delete_question
 import org.jetbrains.compose.resources.StringResource
@@ -49,8 +52,9 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * The menu of a recipe like Grocy's: edit; add to the meal plan, copy and delete; the grocycode
- * as download and, where the server prints labels, on the label printer.
+ * The menu of a recipe like Grocy's: edit; put what is missing on the shopping list (with
+ * [canPutOnShoppingList] not null, enabled while true), add to the meal plan, copy and delete;
+ * the grocycode as download and, where the server prints labels, on the label printer.
  */
 @Composable
 internal fun recipeMenuGroups(
@@ -59,11 +63,19 @@ internal fun recipeMenuGroups(
     actions: RecipeActionsViewModel,
     onEditClick: (recipeId: Int) -> Unit,
     onGrocycodeDownload: (recipeId: Int) -> Unit,
+    canPutOnShoppingList: Boolean? = null,
 ): List<List<AppBarMenuItem>> {
     val recipe = stringResource(Res.string.grocycode_recipe)
     return listOf(
         listOf(AppBarMenuItem(stringResource(Res.string.recipe_edit)) { onEditClick(recipeId) }),
         listOfNotNull(
+            // The menu's short name of Grocy's "Put missing products on shopping list"
+            canPutOnShoppingList?.let { enabled ->
+                AppBarMenuItem(
+                    stringResource(Res.string.recipe_add_missing_confirm),
+                    enabled = enabled,
+                ) { actions.putOnShoppingList(recipeId) }
+            },
             AppBarMenuItem(stringResource(Res.string.recipes_add_to_meal_plan)) {
                 actions.openMealPlan(recipeId)
             }.takeIf { config.recipesMealPlan },
@@ -115,6 +127,8 @@ internal fun RecipeActionsHost(
                     snackbarHostState.showSnackbar(getString(Res.string.meal_plan_added))
                 RecipeActionEvent.Printed ->
                     snackbarHostState.showSnackbar(getString(Res.string.grocycode_printed))
+                RecipeActionEvent.PutOnShoppingList ->
+                    snackbarHostState.showSnackbar(getString(Res.string.recipe_missing_added))
                 is RecipeActionEvent.Failed ->
                     snackbarHostState.showSnackbar(event.error.actionMessage(event.action.failure))
                 is RecipeActionEvent.Copied, is RecipeActionEvent.Deleted -> currentOnDone(event)
@@ -144,6 +158,7 @@ private val RecipeAction.failure: StringResource
         RecipeAction.COPY, RecipeAction.MEAL_PLAN -> Res.string.data_save_failed
         RecipeAction.DELETE -> Res.string.objects_delete_failed
         RecipeAction.PRINT -> Res.string.grocycode_print_failed
+        RecipeAction.SHOPPING_LIST -> Res.string.recipe_add_missing_failed
     }
 
 /** Grocy's "Add meal plan entry" of a recipe: day, servings and section. */
