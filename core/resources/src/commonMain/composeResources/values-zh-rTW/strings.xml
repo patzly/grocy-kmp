@@ -1003,6 +1003,8 @@
   <string name="recipe_add_missing_failed">無法將缺少的食材加入購物清單</string>
   <string name="recipe_ingredients">食材</string>
   <string name="recipe_preparation">前置作業</string>
+  <string name="recipe_preparation_mode">烹飪模式</string>
+  <string name="recipe_keep_screen_on">保持螢幕開啟</string>
   <string name="recipe_energy_per_serving">%1$s %2$s 每份</string>
   <string name="recipe_costs">花費</string>
   <string name="recipe_costs_value">花費: %1$s</string>

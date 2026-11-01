@@ -216,4 +216,15 @@ class RecipeViewModelTest {
         assertEquals(setOf(1), viewModel.doneIngredients)
         assertFalse(environment.server.requests.any { it.method == HttpMethod.Put })
     }
+
+    @Test
+    fun thePreparationModeKeepsTheScreenOnUntilSwitchedOff() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+        assertTrue(viewModel.keepsScreenOn)
+
+        viewModel.setKeepScreenOn(false)
+
+        assertFalse(viewModel.keepsScreenOn)
+    }
 }

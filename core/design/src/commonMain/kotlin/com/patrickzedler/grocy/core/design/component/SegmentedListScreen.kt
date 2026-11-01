@@ -5,7 +5,9 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -48,6 +50,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -56,7 +59,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -88,14 +93,19 @@ import org.jetbrains.compose.resources.stringResource
  * [actionMenuGroups] precede where a screen has several groups of actions.
  * [pane]: the screen is one of two panes of a list-detail layout ([ScreenPane]): a small bar in
  * the background's color that lines both bars up, the list on a rounded surface below it.
- * [floatingToolbar] (a [FloatingToolbarWithFab]) floats above the bottom edge and hides while
- * the list scrolls down; the list ends above it. It must apply the given modifier itself: the
- * scroll behavior measures how far to move it within the screen high box it is placed in.
+ * [floatingToolbar] (a [FloatingToolbarWithFab]) floats above the bottom edge; the list ends
+ * [SegmentedListDefaults.GroupSpacing] above it. Only in windows of a compact height (a phone in
+ * landscape) it hides while the list scrolls down, taller ones have room for both. It must
+ * apply the given modifier itself: the scroll behavior measures how far to move it within the
+ * screen high box it is placed in.
  * [itemSpacing] is the space between list items, the segmented gap for long lists whose items
  * are one group each. With [onRefresh] the list can be pulled down to download its data again
  * (Material's contained loading indicator), or through "Reload" in the app bar's overflow menu
  * for keyboards and screen readers. With a mouse, which cannot pull (its wheel would only show
  * the indicator), pulling is off and "Reload" is a button of the app bar.
+ * [secondContent] is a second list beside [content] that scrolls on its own
+ * ([secondListState]) where the screen is as wide as Material's expanded width class; on
+ * narrower screens it follows [content] in the same list.
  */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -115,6 +125,8 @@ fun SegmentedListScreen(
     itemSpacing: Dp = SegmentedListDefaults.GroupSpacing,
     isRefreshing: Boolean = false,
     onRefresh: (() -> Unit)? = null,
+    secondListState: LazyListState = rememberLazyListState(),
+    secondContent: (LazyListScope.() -> Unit)? = null,
     content: LazyListScope.() -> Unit,
 ) {
     val isRefreshable = onRefresh != null
@@ -129,6 +141,13 @@ fun SegmentedListScreen(
     val toolbarScrollBehavior = FloatingToolbarDefaults.exitAlwaysScrollBehavior(
         exitDirection = FloatingToolbarExitDirection.Bottom,
     )
+    val density = LocalDensity.current
+    val windowHeight = with(density) { LocalWindowInfo.current.containerSize.height.toDp() }
+    val hidesToolbar = hidesToolbarOnScroll(windowHeight)
+    // A window grown out of the compact height brings a hidden toolbar back
+    LaunchedEffect(hidesToolbar) {
+        if (!hidesToolbar) toolbarScrollBehavior.state.offset = 0f
+    }
     // Content of a pane never scrolls below the bar, which keeps the scrolled color
     val scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
     val containerColor = if (isRefreshable || pane != null) {
@@ -155,14 +174,15 @@ fun SegmentedListScreen(
     val surfaceContainer = MaterialTheme.colorScheme.surfaceContainer
     StatusBarColorEffect { lerp(surfaceContainer, scrolledContainerColor, scrolledFraction()) }
 
-    // The last item can scroll above the toolbar, snackbars appear above it
+    // The last item can scroll above the toolbar's bar, the group spacing from its top edge,
+    // snackbars appear above it
     val toolbarSpace = if (floatingToolbar != null) {
-        FloatingToolbarDefaults.ContainerSize + FloatingToolbarDefaults.ScreenOffset
+        with(FloatingToolbarDefaults) { ScreenOffset + ToolbarBarInset + ContainerSize }
     } else {
         0.dp
     }
 
-    // Snackbars keep a little more distance to the toolbar than its own screen offset
+    // Snackbars lie a little above the toolbar's bar
     val snackbarSpace = if (floatingToolbar != null) toolbarSpace + SnackbarToolbarGap else 0.dp
 
     Scaffold(
@@ -170,7 +190,7 @@ fun SegmentedListScreen(
             .then(if (pane != null) Modifier.paneMargin(pane) else Modifier)
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .then(
-                if (floatingToolbar != null) {
+                if (floatingToolbar != null && hidesToolbar) {
                     Modifier.nestedScroll(toolbarScrollBehavior)
                 } else {
                     Modifier
@@ -345,7 +365,7 @@ fun SegmentedListScreen(
                 )
             },
         ) {
-            Box(Modifier.fillMaxSize()) {
+            BoxWithConstraints(Modifier.fillMaxSize()) {
                 if (floatingToolbar != null) {
                     // First for the accessibility order, so its actions are reached without the
                     // list. A direct child of this box: hiding moves it below the bottom edge.
@@ -358,42 +378,69 @@ fun SegmentedListScreen(
                             .zIndex(1f),
                     )
                 }
-                InsetLazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        // Before consuming the scaffold padding: the list ends above the keyboard
-                        .windowInsetsPadding(WindowInsets.keyboard)
-                        .consumeWindowInsets(padding),
-                    state = listState,
-                    contentPadding = remember(topPadding, bottomInsets, toolbarSpace) {
-                        ScreenContentPadding(
-                            top = topPadding,
-                            bottomInsets = bottomInsets,
-                            spacing = SegmentedListDefaults.GroupSpacing + toolbarSpace,
-                        )
-                    },
-                    verticalArrangement = Arrangement.spacedBy(itemSpacing),
-                    content = content,
-                )
+                val contentPadding = remember(topPadding, bottomInsets, toolbarSpace) {
+                    ScreenContentPadding(
+                        top = topPadding,
+                        bottomInsets = bottomInsets,
+                        spacing = SegmentedListDefaults.GroupSpacing + toolbarSpace,
+                    )
+                }
                 // Over the list's part between the app bar and the navigation bar (a pane's
-                // surface), beside the cutouts at the sides
-                Box(
-                    Modifier
-                        .matchParentSize()
-                        .windowInsetsPadding(WindowInsets.keyboard)
-                        .padding(top = barPadding)
-                        .padding(bottomInsets)
-                        .then(
-                            if (pane != null) {
-                                Modifier
-                            } else {
-                                Modifier.windowInsetsPadding(
-                                    WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal),
-                                )
-                            },
+                // surface), beside the cutouts at the [sides]
+                @Composable
+                fun ScreenList(
+                    state: LazyListState,
+                    sides: WindowInsetsSides,
+                    modifier: Modifier,
+                    items: LazyListScope.() -> Unit,
+                ) {
+                    Box(modifier) {
+                        InsetLazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                // Before consuming the scaffold padding: it ends above the keyboard
+                                .windowInsetsPadding(WindowInsets.keyboard)
+                                .consumeWindowInsets(padding),
+                            state = state,
+                            contentPadding = contentPadding,
+                            verticalArrangement = Arrangement.spacedBy(itemSpacing),
+                            content = items,
                         )
-                        .verticalScrollbar(listState),
-                )
+                        Box(
+                            Modifier
+                                .matchParentSize()
+                                .windowInsetsPadding(WindowInsets.keyboard)
+                                .padding(top = barPadding)
+                                .padding(bottomInsets)
+                                .then(
+                                    if (pane != null) {
+                                        Modifier
+                                    } else {
+                                        Modifier.windowInsetsPadding(
+                                            WindowInsets.safeDrawing.only(sides),
+                                        )
+                                    },
+                                )
+                                .verticalScrollbar(state),
+                        )
+                    }
+                }
+                val horizontal = WindowInsetsSides.Horizontal
+                when {
+                    secondContent == null ->
+                        ScreenList(listState, horizontal, Modifier.fillMaxSize(), content)
+                    showsSecondColumn(maxWidth) -> Row(Modifier.fillMaxSize()) {
+                        val start = WindowInsetsSides.Start
+                        val end = WindowInsetsSides.End
+                        ScreenList(listState, start, Modifier.weight(1f), content)
+                        ScreenList(secondListState, end, Modifier.weight(1f), secondContent)
+                    }
+                    // One list on narrow screens, the second content following the first
+                    else -> ScreenList(listState, horizontal, Modifier.fillMaxSize()) {
+                        content()
+                        secondContent()
+                    }
+                }
             }
         }
     }
@@ -477,7 +524,10 @@ fun AppBarIconButton(
     }
 }
 
-private val SnackbarToolbarGap = 4.dp
+private val SnackbarToolbarGap = 12.dp
+
+// Material lays a toolbar with FAB out 80 dp high and centers its 64 dp bar in it
+private val ToolbarBarInset = 8.dp
 
 // Material switches the small app bar's color once content scrolled below it
 private const val OVERLAP_THRESHOLD = 0.01f
@@ -490,3 +540,18 @@ internal fun snackbarLift(toolbarSpace: Float, toolbarOffset: Float, offsetLimit
     val hidden = if (offsetLimit == 0f) 0f else (toolbarOffset / offsetLimit).coerceIn(0f, 1f)
     return (toolbarSpace * (1 - hidden)).roundToInt()
 }
+
+// Material's compact window height class ends below 480 dp, a phone in landscape
+private val CompactHeightLimit = 480.dp
+
+/** Whether a floating toolbar hides while scrolling down: only where a phone lies sideways. */
+internal fun hidesToolbarOnScroll(windowHeight: Dp): Boolean = windowHeight < CompactHeightLimit
+
+// Material's expanded window width class starts at 840 dp, room for two panes
+private val ExpandedWidth = 840.dp
+
+/**
+ * Whether a [SegmentedListScreen] this [width] shows its second content beside the first one,
+ * for screens whose content differs then.
+ */
+fun showsSecondColumn(width: Dp): Boolean = width >= ExpandedWidth

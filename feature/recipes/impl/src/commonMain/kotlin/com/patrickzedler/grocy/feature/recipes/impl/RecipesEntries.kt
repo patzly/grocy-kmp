@@ -21,6 +21,7 @@ import com.patrickzedler.grocy.core.ui.appMenuItems
 import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute
 import com.patrickzedler.grocy.feature.masterdata.api.UserfieldsRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipeFormRoute
+import com.patrickzedler.grocy.feature.recipes.api.RecipePreparationRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipeRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipesRoute
 import com.patrickzedler.grocy.feature.recipes.impl.actions.RecipeActionEvent
@@ -31,6 +32,7 @@ import com.patrickzedler.grocy.feature.recipes.impl.list.RecipesLinks
 import com.patrickzedler.grocy.feature.recipes.impl.list.RecipesScreen
 import com.patrickzedler.grocy.feature.recipes.impl.list.RecipesViewModel
 import com.patrickzedler.grocy.feature.recipes.impl.recipe.RecipeLinks
+import com.patrickzedler.grocy.feature.recipes.impl.recipe.RecipePreparationScreen
 import com.patrickzedler.grocy.feature.recipes.impl.recipe.RecipeScreen
 import com.patrickzedler.grocy.feature.recipes.impl.recipe.RecipeViewModel
 import com.patrickzedler.grocy.feature.stock.api.StockEntriesRoute
@@ -116,20 +118,12 @@ fun EntryProviderScope<NavKey>.recipesEntries(
                 masterData = masterData,
                 stock = dependencies.stockRepository,
                 shoppingLists = dependencies.shoppingListRepository,
-                // The product's pages open on their own, the recipe stays below them
-                links = ProductLinks(
-                    onEditClick = { navigator.navigate(ProductRoute(it)) },
-                    onStockEntriesClick = { navigator.navigate(StockEntriesRoute(it)) },
-                    onStockJournalClick = { navigator.navigate(StockJournalRoute(it)) },
-                    onStockJournalSummaryClick = {
-                        navigator.navigate(StockJournalSummaryRoute(it))
-                    },
-                    onBookingClick = { id, kind -> navigator.navigate(bookingRoute(kind, id)) },
-                ),
+                links = productLinks(navigator),
             ),
             links = RecipeLinks(
                 // Takes the card's place beside the list, back returns to the card
                 onEditClick = { navigator.navigate(RecipeFormRoute(it)) },
+                onPreparationModeClick = { navigator.navigate(RecipePreparationRoute(it)) },
                 onActionDone = { event ->
                     when (event) {
                         is RecipeActionEvent.Copied -> navigator.openDetail(RecipeRoute(event.id))
@@ -141,6 +135,29 @@ fun EntryProviderScope<NavKey>.recipesEntries(
             menuItems = appMenuItems(),
             isBesideList = showsDetailBesideList(),
             onBackClick = navigator::goBack,
+        )
+    }
+
+    // A screen of its own, the kitchen needs the whole window
+    entry<RecipePreparationRoute> { route ->
+        val language = appLanguage()
+        RecipePreparationScreen(
+            viewModel = viewModel {
+                RecipeViewModel(
+                    recipeId = route.id,
+                    recipes = recipes,
+                    masterData = masterData,
+                    shoppingLists = dependencies.shoppingListRepository,
+                    language = language,
+                )
+            },
+            stockPageActions = rememberStockPageActions(
+                masterData = masterData,
+                stock = dependencies.stockRepository,
+                shoppingLists = dependencies.shoppingListRepository,
+                links = productLinks(navigator),
+            ),
+            onCloseClick = navigator::goBack,
         )
     }
 
@@ -170,6 +187,15 @@ fun EntryProviderScope<NavKey>.recipesEntries(
         )
     }
 }
+
+/** The product's pages open on their own, the recipe stays below them. */
+private fun productLinks(navigator: Navigator) = ProductLinks(
+    onEditClick = { navigator.navigate(ProductRoute(it)) },
+    onStockEntriesClick = { navigator.navigate(StockEntriesRoute(it)) },
+    onStockJournalClick = { navigator.navigate(StockJournalRoute(it)) },
+    onStockJournalSummaryClick = { navigator.navigate(StockJournalSummaryRoute(it)) },
+    onBookingClick = { id, kind -> navigator.navigate(bookingRoute(kind, id)) },
+)
 
 /** The recipe shown beside the list, as card or form; null for none or a new recipe. */
 private fun shownRecipeId(route: NavKey): Int? = when (route) {

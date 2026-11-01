@@ -21,6 +21,14 @@ data class RecipesRoute(val search: String? = null) : Route
 @SerialName("recipes/recipe")
 data class RecipeRoute(val id: Int) : DetailRoute
 
+/**
+ * The preparation mode of recipe [id]: its card for the kitchen in a screen of its own, the
+ * preparation beside the ingredients on wide screens, the screen kept on.
+ */
+@Serializable
+@SerialName("recipes/recipe/preparation")
+data class RecipePreparationRoute(val id: Int) : Route
+
 /** Grocy's recipe form: edits recipe [id], or creates a recipe without. */
 @Serializable
 @SerialName("recipes/edit")
@@ -30,6 +38,7 @@ val recipesRouteSerializers = SerializersModule {
     polymorphic(NavKey::class) {
         subclass(RecipesRoute::class, RecipesRoute.serializer())
         subclass(RecipeRoute::class, RecipeRoute.serializer())
+        subclass(RecipePreparationRoute::class, RecipePreparationRoute.serializer())
         subclass(RecipeFormRoute::class, RecipeFormRoute.serializer())
     }
 }

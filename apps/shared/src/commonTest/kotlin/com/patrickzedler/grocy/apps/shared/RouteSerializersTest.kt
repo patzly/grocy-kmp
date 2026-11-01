@@ -36,6 +36,7 @@ import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.StockSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.UserSettingsRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipeFormRoute
+import com.patrickzedler.grocy.feature.recipes.api.RecipePreparationRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipeRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipesRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListFormRoute
@@ -129,6 +130,7 @@ class RouteSerializersTest {
         RecipesRoute(),
         RecipesRoute(search = "Milk"),
         RecipeRoute(id = 3),
+        RecipePreparationRoute(id = 3),
         RecipeFormRoute(),
         RecipeFormRoute(id = 3),
         StockEntriesRoute(),

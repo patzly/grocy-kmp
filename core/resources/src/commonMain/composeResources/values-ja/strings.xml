@@ -1004,6 +1004,8 @@
   <string name="recipe_add_missing_failed">不足している材料を買い物リストに追加できませんでした</string>
   <string name="recipe_ingredients">材料</string>
   <string name="recipe_preparation">作り方</string>
+  <string name="recipe_preparation_mode">調理モード</string>
+  <string name="recipe_keep_screen_on">画面をオンのままにする</string>
   <string name="recipe_energy_per_serving">%1$s %2$s 分量1</string>
   <string name="recipe_costs">費用</string>
   <string name="recipe_costs_value">費用: %1$s</string>

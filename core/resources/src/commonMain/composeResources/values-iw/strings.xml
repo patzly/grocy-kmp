@@ -1076,6 +1076,8 @@
   <string name="recipe_add_missing_failed">לא ניתן היה להוסיף את הרכיבים החסרים לרשימת הקניות</string>
   <string name="recipe_ingredients">רכיבים</string>
   <string name="recipe_preparation">הכנה</string>
+  <string name="recipe_preparation_mode">מצב הכנה</string>
+  <string name="recipe_keep_screen_on">להשאיר את המסך דלוק</string>
   <string name="recipe_energy_per_serving">%1$s %2$s לפי מנה</string>
   <string name="recipe_costs">עלויות</string>
   <string name="recipe_costs_value">עלויות: %1$s</string>

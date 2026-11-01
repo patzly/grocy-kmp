@@ -1112,6 +1112,8 @@
   <string name="recipe_add_missing_failed">Chýbajúce suroviny sa nepodarilo pridať na nákupný zoznam</string>
   <string name="recipe_ingredients">Suroviny</string>
   <string name="recipe_preparation">Príprava</string>
+  <string name="recipe_preparation_mode">Režim prípravy</string>
+  <string name="recipe_keep_screen_on">Nechať obrazovku zapnutú</string>
   <string name="recipe_energy_per_serving">%1$s %2$s na porciu</string>
   <string name="recipe_costs">Náklady</string>
   <string name="recipe_costs_value">Náklady: %1$s</string>

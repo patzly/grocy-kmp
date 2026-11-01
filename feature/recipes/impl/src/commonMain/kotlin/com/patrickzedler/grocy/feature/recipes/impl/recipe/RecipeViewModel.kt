@@ -122,6 +122,10 @@ internal class RecipeViewModel(
     var doneIngredients by mutableStateOf(emptySet<Int>())
         private set
 
+    /** The preparation mode's "Keep screen on": on whenever it opens, until it is closed. */
+    var keepsScreenOn by mutableStateOf(true)
+        private set
+
     private val eventChannel = Channel<RecipeEvent>(Channel.BUFFERED)
     val events: Flow<RecipeEvent> = eventChannel.receiveAsFlow()
 
@@ -202,6 +206,10 @@ internal class RecipeViewModel(
         } else {
             doneIngredients - ingredientId
         }
+    }
+
+    fun setKeepScreenOn(keepScreenOn: Boolean) {
+        keepsScreenOn = keepScreenOn
     }
 
     fun onErrorShown() = refreshController.onErrorShown()

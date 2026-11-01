@@ -1076,6 +1076,8 @@
   <string name="recipe_add_missing_failed">Impossible d’ajouter les ingrédients manquants à la liste de courses</string>
   <string name="recipe_ingredients">Ingrédients</string>
   <string name="recipe_preparation">Préparation</string>
+  <string name="recipe_preparation_mode">Mode préparation</string>
+  <string name="recipe_keep_screen_on">Garder l'écran allumé</string>
   <string name="recipe_energy_per_serving">%1$s %2$s par portion</string>
   <string name="recipe_costs">Coûts</string>
   <string name="recipe_costs_value">Coûts: %1$s</string>

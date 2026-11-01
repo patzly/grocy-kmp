@@ -19,10 +19,10 @@ import com.materialkolor.ktx.toHct
 data class StatusColor(val container: Color, val content: Color, val color: Color)
 
 /**
- * Colors that mark a state like Grocy's highlighted rows, harmonized with the theme's primary
- * color: [positive] (green, e.g. enough in stock), [info] (blue, e.g. below the min. stock
- * amount), [warning] (yellow, due soon) and [critical] (red, overdue or expired). Always
- * together with a text, never color alone.
+ * Colors that mark a state like Grocy's highlighted rows, as colorful as the theme's primary
+ * color and harmonized with it: [positive] (green, e.g. enough in stock), [info] (blue, e.g.
+ * below the min. stock amount), [warning] (yellow, due soon) and [critical] (red, overdue or
+ * expired). Always together with a text, never color alone.
  */
 @Immutable
 data class StatusColors(
@@ -47,13 +47,18 @@ fun rememberStatusColors(): StatusColors {
 }
 
 /**
- * [base] turned towards [primary] like Material's harmonization, then as tones the way Material
+ * The hue of [base] with the chroma of [primary], so every status color is as colorful as the
+ * theme, turned towards [primary] like Material's harmonization, then as tones the way Material
  * derives a custom color's roles: container 90, content 10 and color 40 in light themes,
  * 30, 90 and 80 in dark ones.
  */
 internal fun statusColorOf(base: Color, primary: Color, isDark: Boolean): StatusColor {
-    val harmonized = base.harmonize(primary).toHct()
-    fun tone(tone: Double) = Hct.from(harmonized.hue, harmonized.chroma, tone).toColor()
+    val chroma = primary.toHct().chroma
+    val hue = Hct.from(base.toHct().hue, chroma, LIGHT_COLOR_TONE).toColor()
+        .harmonize(primary)
+        .toHct()
+        .hue
+    fun tone(tone: Double) = Hct.from(hue, chroma, tone).toColor()
     return if (isDark) {
         StatusColor(
             container = tone(DARK_CONTAINER_TONE),
@@ -69,6 +74,7 @@ internal fun statusColorOf(base: Color, primary: Color, isDark: Boolean): Status
     }
 }
 
+// Only their hues count, the chroma comes from the theme
 internal val StatusGreen = Color(0xFF2E9E4F)
 internal val StatusBlue = Color(0xFF2A78D6)
 internal val StatusYellow = Color(0xFFEDA100)

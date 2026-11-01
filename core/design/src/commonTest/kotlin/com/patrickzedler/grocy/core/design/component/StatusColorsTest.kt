@@ -72,4 +72,28 @@ class StatusColorsTest {
             )
         }
     }
+
+    @Test
+    fun everyStatusIsExactlyAsColorfulAsPrimary() {
+        val primaryChroma = Hct.fromInt(primary.toArgb()).chroma
+        for (base in listOf(StatusGreen, StatusBlue, StatusYellow, StatusRed)) {
+            val color = Hct.fromInt(statusColorOf(base, primary, isDark = false).color.toArgb())
+
+            // Unless sRGB has no color that colorful at this hue and tone
+            val reachable = Hct.from(color.hue, 200.0, color.tone).chroma
+            val expected = min(primaryChroma, reachable)
+            // Rounding to 8 bit sRGB moves the chroma a little
+            assertTrue(abs(color.chroma - expected) < 1.0, "$base: ${color.chroma}")
+        }
+    }
+
+    @Test
+    fun aCalmerThemeGivesCalmerStatusColors() {
+        val calmPrimary = Color(Hct.from(154.0, 16.0, 40.0).toInt())
+
+        val color = statusColorOf(StatusGreen, calmPrimary, isDark = false).color
+        val chroma = Hct.fromInt(color.toArgb()).chroma
+
+        assertTrue(abs(chroma - 16.0) < 1.0, "$chroma")
+    }
 }

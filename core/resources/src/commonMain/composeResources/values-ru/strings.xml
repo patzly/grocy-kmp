@@ -1112,6 +1112,8 @@
   <string name="recipe_add_missing_failed">Не удалось добавить недостающие ингредиенты в список покупок</string>
   <string name="recipe_ingredients">Ингредиенты</string>
   <string name="recipe_preparation">Приготовление</string>
+  <string name="recipe_preparation_mode">Режим приготовления</string>
+  <string name="recipe_keep_screen_on">Не выключать экран</string>
   <string name="recipe_energy_per_serving">%1$s %2$s на порцию</string>
   <string name="recipe_costs">Цены</string>
   <string name="recipe_costs_value">Цены: %1$s</string>

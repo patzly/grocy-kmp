@@ -1111,6 +1111,8 @@
   <string name="recipe_add_missing_failed">Не вдалося додати відсутні інгредієнти до списку покупок</string>
   <string name="recipe_ingredients">Інгрідієнти</string>
   <string name="recipe_preparation">Приготування</string>
+  <string name="recipe_preparation_mode">Режим приготування</string>
+  <string name="recipe_keep_screen_on">Не вимикати екран</string>
   <string name="recipe_energy_per_serving">%1$s %2$s на порцію</string>
   <string name="recipe_costs">Вартість</string>
   <string name="recipe_costs_value">Вартість: %1$s</string>

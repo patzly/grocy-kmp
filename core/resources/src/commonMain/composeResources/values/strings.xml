@@ -1058,6 +1058,8 @@
   <string name="recipe_add_missing_failed">The missing ingredients could not be put on the shopping list</string>
   <string name="recipe_ingredients">Ingredients</string>
   <string name="recipe_preparation">Preparation</string>
+  <string name="recipe_preparation_mode">Preparation mode</string>
+  <string name="recipe_keep_screen_on">Keep screen on</string>
   <string name="recipe_energy_per_serving">%1$s %2$s per serving</string>
   <string name="recipe_costs">Costs</string>
   <string name="recipe_costs_value">Costs: %1$s</string>

@@ -1040,6 +1040,8 @@
   <string name="recipe_add_missing_failed">Puuduvaid koostisosi ei õnnestunud ostunimekirja lisada</string>
   <string name="recipe_ingredients">Koostisosad</string>
   <string name="recipe_preparation">Valmistamine</string>
+  <string name="recipe_preparation_mode">Valmistamisrežiim</string>
+  <string name="recipe_keep_screen_on">Hoia ekraan sees</string>
   <string name="recipe_energy_per_serving">%1$s %2$s serveeringu kohta</string>
   <string name="recipe_costs">Maksumus</string>
   <string name="recipe_costs_value">Maksumus: %1$s</string>

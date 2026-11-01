@@ -1040,6 +1040,8 @@
   <string name="recipe_add_missing_failed">De ontbrekende ingrediënten konden niet op de boodschappenlijst worden gezet</string>
   <string name="recipe_ingredients">Ingrediënten</string>
   <string name="recipe_preparation">Bereiding</string>
+  <string name="recipe_preparation_mode">Bereidingsmodus</string>
+  <string name="recipe_keep_screen_on">Scherm aan laten</string>
   <string name="recipe_energy_per_serving">%1$s %2$s per portie</string>
   <string name="recipe_costs">Kosten</string>
   <string name="recipe_costs_value">Kosten: %1$s</string>

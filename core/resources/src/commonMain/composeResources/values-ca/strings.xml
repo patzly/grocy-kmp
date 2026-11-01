@@ -1076,6 +1076,8 @@
   <string name="recipe_add_missing_failed">No s'han pogut afegir els ingredients que falten a la llista de la compra</string>
   <string name="recipe_ingredients">Ingredients</string>
   <string name="recipe_preparation">Preparació</string>
+  <string name="recipe_preparation_mode">Mode preparació</string>
+  <string name="recipe_keep_screen_on">Mantén la pantalla encesa</string>
   <string name="recipe_energy_per_serving">%1$s %2$s per ració</string>
   <string name="recipe_costs">Costs</string>
   <string name="recipe_costs_value">Costs: %1$s</string>

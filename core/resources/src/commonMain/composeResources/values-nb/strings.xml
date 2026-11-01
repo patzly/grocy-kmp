@@ -1040,6 +1040,8 @@
   <string name="recipe_add_missing_failed">De manglende ingrediensene kunne ikke legges på handlelisten</string>
   <string name="recipe_ingredients">Ingredienser</string>
   <string name="recipe_preparation">Forberedelse / Slik gjør du</string>
+  <string name="recipe_preparation_mode">Tilberedningsmodus</string>
+  <string name="recipe_keep_screen_on">Hold skjermen på</string>
   <string name="recipe_energy_per_serving">%1$s %2$s pr. porsjon</string>
   <string name="recipe_costs">Kostnad</string>
   <string name="recipe_costs_value">Kostnad: %1$s</string>

@@ -70,6 +70,7 @@ import com.patrickzedler.grocy.core.productcard.StockPageActions
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_scroll_to_top
 import com.patrickzedler.grocy.core.resources.ic_rounded_add_shopping_cart
+import com.patrickzedler.grocy.core.resources.ic_rounded_cooking
 import com.patrickzedler.grocy.core.resources.ic_rounded_edit
 import com.patrickzedler.grocy.core.resources.ic_rounded_local_fire_department
 import com.patrickzedler.grocy.core.resources.ic_rounded_payments
@@ -95,6 +96,7 @@ import com.patrickzedler.grocy.core.resources.recipe_ingredient_variable_amount
 import com.patrickzedler.grocy.core.resources.recipe_ingredients
 import com.patrickzedler.grocy.core.resources.recipe_missing_added
 import com.patrickzedler.grocy.core.resources.recipe_preparation
+import com.patrickzedler.grocy.core.resources.recipe_preparation_mode
 import com.patrickzedler.grocy.core.resources.recipe_servings_failed
 import com.patrickzedler.grocy.core.resources.recipe_title
 import com.patrickzedler.grocy.core.resources.recipes_desired_servings
@@ -120,6 +122,7 @@ import org.jetbrains.compose.resources.stringResource
 /** Where the recipe card leads. */
 internal class RecipeLinks(
     val onEditClick: (recipeId: Int) -> Unit,
+    val onPreparationModeClick: (recipeId: Int) -> Unit,
     /** Gets the copies and deletions, e.g. to open the copy or close a deleted recipe. */
     val onActionDone: (RecipeActionEvent) -> Unit,
 )
@@ -129,7 +132,8 @@ internal class RecipeLinks(
  * name with the requirements as chips, Grocy's desired servings (saved while typing), energy and
  * costs (a tap on the costs explains them), the ingredients
  * by group (a tap opens the product's overview) and the preparation, the included recipes after
- * it. Consuming the ingredients is the toolbar's FAB, the menu has Grocy's recipe actions.
+ * it. Consuming the ingredients is the toolbar's FAB, the preparation mode its last action
+ * before "Scroll to top"; the menu has Grocy's recipe actions.
  * Beside the list ([isBesideList]) it has no back button of its own.
  */
 @Composable
@@ -155,27 +159,7 @@ internal fun RecipeScreen(
     RecipeEvents(viewModel, snackbarHostState)
     RecipeActionsHost(actions, snackbarHostState, links.onActionDone)
     LabelPrintEffect(stockPageActions.labels, snackbarHostState)
-    when (val dialog = viewModel.dialog) {
-        RecipeDialog.Consume -> ConsumeDialog(
-            recipeName = current?.recipe?.name.orEmpty(),
-            onConsume = viewModel::consume,
-            onDismissRequest = viewModel::dismissDialog,
-        )
-        is RecipeDialog.AddMissing -> AddMissingDialog(
-            recipeName = current?.recipe?.name.orEmpty(),
-            products = dialog.products,
-            onAdd = viewModel::addMissing,
-            onDismissRequest = viewModel::dismissDialog,
-        )
-        RecipeDialog.Costs -> current?.fulfillment?.let { fulfillment ->
-            CostsDialog(
-                costs = costsText(current),
-                pricesIncomplete = fulfillment.pricesIncomplete,
-                onDismissRequest = viewModel::dismissDialog,
-            )
-        }
-        null -> Unit
-    }
+    RecipeDialogs(viewModel, current)
 
     SegmentedListScreen(
         // The name heads the first item, like the picture it belongs to the content
@@ -242,6 +226,12 @@ internal fun RecipeScreen(
                     )
                 }
                 FloatingToolbarIconButton(
+                    painter = painterResource(Res.drawable.ic_rounded_cooking),
+                    contentDescription = stringResource(Res.string.recipe_preparation_mode),
+                    onClick = { links.onPreparationModeClick(viewModel.recipeId) },
+                    enabled = current != null,
+                )
+                FloatingToolbarIconButton(
                     painter = painterResource(Res.drawable.ic_rounded_vertical_align_top),
                     contentDescription = stringResource(Res.string.action_scroll_to_top),
                     onClick = { scope.launch { listState.animateScrollToItem(0) } },
@@ -251,40 +241,95 @@ internal fun RecipeScreen(
         },
     ) {
         if (current == null) return@SegmentedListScreen
-        current.recipe.pictureFileName?.let { fileName ->
-            // Right below the app bar, as wide as the content and fully rounded
-            insetItem(key = "picture") {
-                RecipePicture(
-                    fileName = fileName,
-                    load = viewModel::picture,
-                    shape = CircleShape,
-                    modifier = Modifier.fillMaxWidth().aspectRatio(PICTURE_RATIO),
-                )
-            }
-        }
-        overviewGroup(current, viewModel)
+        recipeHeader(current, viewModel)
         current.sections.forEachIndexed { index, section ->
-            val isOwn = index == 0
-            section.groups.forEach { group ->
-                ingredientGroup(
-                    key = "ingredients-${section.recipeId}-${group.title}",
-                    title = { groupTitle(isOwn, section.name, group.title) },
-                    lines = group.lines,
-                    state = current,
-                    viewModel = viewModel,
-                    onIngredientClick = stockPageActions.overview::show,
-                )
-            }
-            section.description?.let(::htmlToPlainText)?.takeIf { it.isNotBlank() }?.let { text ->
-                preparationGroup(
-                    key = "preparation-${section.recipeId}",
-                    title = { preparationTitle(isOwn, section.name) },
-                    text = text,
-                )
-            }
+            recipeIngredients(section, index, current, viewModel, stockPageActions.overview::show)
+            recipePreparation(section, index)
         }
     }
 
+    IngredientOverviewHost(stockPageActions, snackbarHostState, current)
+}
+
+/** The dialogs of the card's actions and chips. */
+@Composable
+internal fun RecipeDialogs(viewModel: RecipeViewModel, current: RecipeUiState?) {
+    when (val dialog = viewModel.dialog) {
+        RecipeDialog.Consume -> ConsumeDialog(
+            recipeName = current?.recipe?.name.orEmpty(),
+            onConsume = viewModel::consume,
+            onDismissRequest = viewModel::dismissDialog,
+        )
+        is RecipeDialog.AddMissing -> AddMissingDialog(
+            recipeName = current?.recipe?.name.orEmpty(),
+            products = dialog.products,
+            onAdd = viewModel::addMissing,
+            onDismissRequest = viewModel::dismissDialog,
+        )
+        RecipeDialog.Costs -> current?.fulfillment?.let { fulfillment ->
+            CostsDialog(
+                costs = costsText(current),
+                pricesIncomplete = fulfillment.pricesIncomplete,
+                onDismissRequest = viewModel::dismissDialog,
+            )
+        }
+        null -> Unit
+    }
+}
+
+/** The picture right below the app bar, then the name, servings, energy and costs. */
+internal fun LazyListScope.recipeHeader(state: RecipeUiState, viewModel: RecipeViewModel) {
+    state.recipe.pictureFileName?.let { fileName ->
+        // Right below the app bar, as wide as the content and fully rounded
+        insetItem(key = "picture") {
+            RecipePicture(
+                fileName = fileName,
+                load = viewModel::picture,
+                shape = CircleShape,
+                modifier = Modifier.fillMaxWidth().aspectRatio(PICTURE_RATIO),
+            )
+        }
+    }
+    overviewGroup(state, viewModel)
+}
+
+/** The ingredients of [section]: the recipe's own at [index] 0, then the included recipes. */
+internal fun LazyListScope.recipeIngredients(
+    section: RecipeSection,
+    index: Int,
+    state: RecipeUiState,
+    viewModel: RecipeViewModel,
+    onIngredientClick: (productId: Int) -> Unit,
+) {
+    section.groups.forEach { group ->
+        ingredientGroup(
+            key = "ingredients-${section.recipeId}-${group.title}",
+            title = { groupTitle(index == 0, section.name, group.title) },
+            lines = group.lines,
+            state = state,
+            viewModel = viewModel,
+            onIngredientClick = onIngredientClick,
+        )
+    }
+}
+
+/** The preparation of [section] at [index], if it has one. */
+internal fun LazyListScope.recipePreparation(section: RecipeSection, index: Int) {
+    val text = section.description?.let(::htmlToPlainText)?.takeIf { it.isNotBlank() } ?: return
+    preparationGroup(
+        key = "preparation-${section.recipeId}",
+        title = { preparationTitle(index == 0, section.name) },
+        text = text,
+    )
+}
+
+/** The product overview an ingredient opens. */
+@Composable
+internal fun IngredientOverviewHost(
+    stockPageActions: StockPageActions,
+    snackbarHostState: SnackbarHostState,
+    current: RecipeUiState?,
+) {
     ProductOverviewHost(
         overview = stockPageActions.overview,
         shoppingList = stockPageActions.shoppingList,
@@ -303,7 +348,7 @@ internal fun RecipeScreen(
 
 /** Grocy's messages of the card's actions. */
 @Composable
-private fun RecipeEvents(viewModel: RecipeViewModel, snackbarHostState: SnackbarHostState) {
+internal fun RecipeEvents(viewModel: RecipeViewModel, snackbarHostState: SnackbarHostState) {
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             snackbarHostState.showSnackbar(

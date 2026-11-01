@@ -1040,6 +1040,8 @@
   <string name="recipe_add_missing_failed">Δεν ήταν δυνατή η προσθήκη των συστατικών που λείπουν στη λίστα αγορών</string>
   <string name="recipe_ingredients">Συστατικά</string>
   <string name="recipe_preparation">Παρασκευή</string>
+  <string name="recipe_preparation_mode">Λειτουργία παρασκευής</string>
+  <string name="recipe_keep_screen_on">Η οθόνη να μένει ανοιχτή</string>
   <string name="recipe_energy_per_serving">%1$s %2$s ανά μερίδα</string>
   <string name="recipe_costs">Δικαστικά έξοδα</string>
   <string name="recipe_costs_value">Δικαστικά έξοδα: %1$s</string>

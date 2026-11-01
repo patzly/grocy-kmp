@@ -1039,6 +1039,8 @@
   <string name="recipe_add_missing_failed">De saknade ingredienserna kunde inte läggas på inköpslistan</string>
   <string name="recipe_ingredients">Ingredienser</string>
   <string name="recipe_preparation">Tillagning</string>
+  <string name="recipe_preparation_mode">Tillagningsläge</string>
+  <string name="recipe_keep_screen_on">Håll skärmen på</string>
   <string name="recipe_energy_per_serving">%1$s %2$s per portion</string>
   <string name="recipe_costs">Kostnader</string>
   <string name="recipe_costs_value">Kostnader: %1$s</string>

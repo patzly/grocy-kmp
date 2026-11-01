@@ -1039,6 +1039,8 @@
   <string name="recipe_add_missing_failed">Eksik malzemeler alışveriş listesine eklenemedi</string>
   <string name="recipe_ingredients">Malzemeler</string>
   <string name="recipe_preparation">Hazırlanışı</string>
+  <string name="recipe_preparation_mode">Hazırlama modu</string>
+  <string name="recipe_keep_screen_on">Ekranı açık tut</string>
   <string name="recipe_energy_per_serving">%1$s %2$s porsiyon başına</string>
   <string name="recipe_costs">Maliyet</string>
   <string name="recipe_costs_value">Maliyet: %1$s</string>

@@ -75,8 +75,16 @@ Grocy's recipes page, its recipe card and its recipe form (`feature:recipes`).
   and preparation. The toolbar: "Consume all ingredients" as FAB (Grocy's question and hint;
   without the stock feature Edit is the FAB), "Put missing products on shopping list" (Grocy's
   question with every missing product as checked choice, unchecked ones are excluded; off while
-  the shopping list covers what is missing, like Grocy), Edit, Scroll to top; the app bar's menu
-  has the recipe actions above the app menu.
+  the shopping list covers what is missing, like Grocy), Edit, the preparation mode (`cooking`),
+  Scroll to top; the app bar's menu has the recipe actions above the app menu.
+- Preparation mode (`RecipePreparationRoute`, `RecipePreparationScreen` with its own
+  `RecipeViewModel`): the card for cooking in a screen of its own like the shopping mode, a
+  close button, "Preparation mode" as title, no toolbar or FAB. The overflow menu only holds the
+  checkable "Keep screen on", on whenever the mode opens, until it is closed (ViewModel state,
+  never saved). From Material's expanded width (840 dp, `showsSecondColumn`) the picture,
+  servings and ingredients form the left column and the preparations the right one, each
+  scrolling on its own (`SegmentedListScreen(secondContent)`); narrower screens follow the
+  card's order.
 - Form (`RecipeFormScreen`, `RecipeFormViewModel` on `ObjectFormViewModel`): name, servings
   (Grocy's hint), "Do not check against the shopping list" (with the shopping list feature),
   "Produces product" (with the stock feature), the preparation (plain text, an unchanged one

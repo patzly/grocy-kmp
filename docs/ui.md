@@ -87,8 +87,8 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
 
 - Colors of states outside the color scheme (Grocy's highlighted rows) come from
   `rememberStatusColors` (`core:design`): positive (green), info (blue), warning (yellow),
-  critical (red), fixed
-  hues harmonized with primary and turned into container, content and color tones like
+  critical (red): fixed hues with exactly the HCT chroma of the theme's primary color,
+  harmonized with primary and turned into container, content and color tones like
   Material's custom colors (90/10/40 light, 30/90/80 dark; `color` for small marks such as
   dots), always together with a text. Gestures on list items
   use `SwipeActionBox` (Gmail's look, the action runs on letting go beyond the threshold, the
@@ -98,8 +98,11 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
   `SegmentedContainer`, `AppBarIconButton`, `InsetLazyColumn` + `insetItem` with max width
   640.dp, `RoundedTextField`, `ConnectedButtonGroup`, `NavigateBackButton`, `HapticTooltipBox`,
   `TextDialog`, `FormattedText`, `FloatingToolbarWithFab` + `FloatingToolbarIconButton` for the
-  floatingToolbar slot of `SegmentedListScreen` (snackbars never cover it: they lie above it
-  and follow it while it slides out and back in, `snackbarLift`), `SegmentedSwitchItem`,
+  floatingToolbar slot of `SegmentedListScreen` (the last item ends 16 dp above it; it hides
+  while scrolling down only in windows of compact height below 480 dp, a phone in landscape,
+  `hidesToolbarOnScroll`; snackbars never cover it: they lie above it and follow it while it
+  slides out and back in, `snackbarLift`; `secondContent` adds a second list beside the first
+  from 840 dp width, `showsSecondColumn`), `SegmentedSwitchItem`,
   `SupportingLines` for every multi-line supporting content in lazy lists (Material sizes items
   by the slot's baselines, a reused column kept those of its former line count, so items stayed
   too high), `SupportingBulletList` for a text with a bulleted list in that slot (wrapping

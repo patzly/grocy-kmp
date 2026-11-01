@@ -1040,6 +1040,8 @@
   <string name="recipe_add_missing_failed">A hiányzó hozzávalókat nem sikerült a bevásárlólistára tenni</string>
   <string name="recipe_ingredients">Hozzávalók</string>
   <string name="recipe_preparation">Elkészítés</string>
+  <string name="recipe_preparation_mode">Elkészítési mód</string>
+  <string name="recipe_keep_screen_on">Képernyő bekapcsolva tartása</string>
   <string name="recipe_energy_per_serving">%1$s %2$s per adag</string>
   <string name="recipe_costs">Költség</string>
   <string name="recipe_costs_value">Költség: %1$s</string>

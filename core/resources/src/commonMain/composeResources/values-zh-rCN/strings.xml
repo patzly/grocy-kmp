@@ -1003,6 +1003,8 @@
   <string name="recipe_add_missing_failed">无法将缺少的食材加入购物清单</string>
   <string name="recipe_ingredients">食材</string>
   <string name="recipe_preparation">步骤</string>
+  <string name="recipe_preparation_mode">烹饪模式</string>
+  <string name="recipe_keep_screen_on">保持屏幕常亮</string>
   <string name="recipe_energy_per_serving">%1$s %2$s 每份</string>
   <string name="recipe_costs">费用</string>
   <string name="recipe_costs_value">费用: %1$s</string>

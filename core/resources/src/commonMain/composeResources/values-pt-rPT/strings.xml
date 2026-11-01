@@ -1076,6 +1076,8 @@
   <string name="recipe_add_missing_failed">Não foi possível adicionar os ingredientes em falta à lista de compras</string>
   <string name="recipe_ingredients">Ingredientes</string>
   <string name="recipe_preparation">Preparação</string>
+  <string name="recipe_preparation_mode">Modo de preparação</string>
+  <string name="recipe_keep_screen_on">Manter o ecrã ligado</string>
   <string name="recipe_energy_per_serving">%1$s %2$s por porção</string>
   <string name="recipe_costs">Custos</string>
   <string name="recipe_costs_value">Custos: %1$s</string>

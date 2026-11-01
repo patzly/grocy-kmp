@@ -1115,6 +1115,8 @@
   <string name="recipe_add_missing_failed">Chybějící ingredience se nepodařilo přidat na nákupní seznam</string>
   <string name="recipe_ingredients">Ingredience</string>
   <string name="recipe_preparation">Postup přípravy</string>
+  <string name="recipe_preparation_mode">Režim přípravy</string>
+  <string name="recipe_keep_screen_on">Nechat obrazovku zapnutou</string>
   <string name="recipe_energy_per_serving">%1$s %2$s na porci</string>
   <string name="recipe_costs">Náklady</string>
   <string name="recipe_costs_value">Náklady: %1$s</string>
