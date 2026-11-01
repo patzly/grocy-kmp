@@ -30,24 +30,26 @@ Grocy's meal plan page (`/mealplan`) and its sections (`/mealplansections`), par
 - Screen (`MealPlanScreen`, `MealPlanViewModel`): the week item first (date range as heading,
   "Week costs" with price tracking, with the stock feature Grocy's "Put missing products on
   shopping list" of the week, off while the shopping list covers it, and "Consume all
-  ingredients needed by this weeks recipes or products" after a question). The floating
+  ingredients needed by this weeks recipes or products" after a question; wide tonal icon
+  buttons in a button group, `animatedItem`). The floating
   toolbar: previous week, today (off in the current week), next week; "Add recipe" as FAB, on
   today in the current week, else on the week's first day (`addDayOf`).
   - Narrow windows (below `showsWeekGrid`, at least 136.dp per day beside the margins: phones,
     foldables, tablets held upright): the days below each other, each a group of its header
     (weekday as heading, date, Grocy's day costs and "900 kcal per day" as chips, "Nothing
-    planned"; today in primary container with "Today") and its entries; the section ("Breakfast
+    planned"; today in secondary container with "Today") and its entries; the section ("Breakfast
     · 7:00") is each entry's overline. The current week opens at today
     (`agendaIndexOfDay`), other weeks at their start.
   - Wide windows (tablets in landscape, desktops): Grocy's grid over the whole width, a column
     per day; the days' headers in one row as high as the highest, then per used section its
-    name and each day's entries as cards (picture across the top, name, chips, menu in the
-    bottom end corner).
+    name and each day's entries as cards like the recipe gallery's (picture across the top, the
+    name in body large emphasized with the menu centered on its first line, chips; 16.dp
+    between them).
   - Entries: the name, crossed out and muted once done; chips: a recipe's servings, its status
     like the recipes list (with the stock feature), costs (price tracking) and energy per
     serving; a product's amount in its stock unit, "Enough in stock"/"Not enough in stock"
     (aggregated stock), costs by its last price and its energy; the picture (recipe or product)
-    before the menu. A tap shows the recipe at the planned servings (Grocy's "Display recipe"
+    before the menu. A tap shows the recipe (as a single pane with back button in wide windows) at the planned servings (Grocy's "Display recipe"
     sets them as desired servings first, offline it opens as it is), the product overview or,
     for notes, their dialog. Swiping a row towards the end marks it done or undone, also in
     the menu and as accessibility action. The menu: Edit, Delete (at once like Grocy, the
@@ -61,7 +63,7 @@ Grocy's meal plan page (`/mealplan`) and its sections (`/mealplansections`), par
   - Each day's add button (`ListItemMenuButton`): Add recipe, Add product, Add note, then Copy
     this day (the day to copy to, every entry of the server's day once more, not done).
 - Dialogs (`MealPlanDialogs.kt`, `MealPlanEntryDialogState`): "Add/Edit meal plan entry" with
-  the type below the title; the day (date picker), then a recipe (it brings its base servings
+  the type below the title, all fields in one group whatever the type; the day (date picker), then a recipe (it brings its base servings
   like Grocy's picker) and its servings, a product and its amount in one of its units (kept in
   the stock unit, the entered unit as `product_qu_id`; edits show the stock unit like Grocy), or
   a note; then the section ("None" for the default one).

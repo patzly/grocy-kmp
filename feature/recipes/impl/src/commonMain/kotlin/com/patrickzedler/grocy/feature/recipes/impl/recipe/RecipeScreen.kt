@@ -140,7 +140,7 @@ internal class RecipeLinks(
  * by group (a tap opens the product's overview) and the preparation, the included recipes after
  * it. Consuming the ingredients is the toolbar's FAB, the preparation mode its last action
  * before "Scroll to top"; the menu has Grocy's recipe actions.
- * Beside the list ([isBesideList]) it has no back button of its own.
+ * Beside the list ([pane] Detail) it has no back button of its own.
  */
 @Composable
 internal fun RecipeScreen(
@@ -149,7 +149,7 @@ internal fun RecipeScreen(
     stockPageActions: StockPageActions,
     links: RecipeLinks,
     menuItems: List<AppBarMenuItem>,
-    isBesideList: Boolean,
+    pane: ScreenPane?,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -173,7 +173,7 @@ internal fun RecipeScreen(
         modifier = modifier,
         navigationIcon = {
             // Beside the list its own back button leaves both
-            if (!isBesideList) NavigateBackButton(onClick = onBackClick)
+            if (pane != ScreenPane.Detail) NavigateBackButton(onClick = onBackClick)
         },
         menuItems = menuItems,
         actionMenuGroups = current?.let {
@@ -185,7 +185,7 @@ internal fun RecipeScreen(
                 onGrocycodeDownload = downloadGrocycode,
             )
         }.orEmpty(),
-        pane = ScreenPane.Detail.takeIf { isBesideList },
+        pane = pane,
         listState = listState,
         snackbarHostState = snackbarHostState,
         floatingToolbar = { scrollBehavior, toolbarModifier ->

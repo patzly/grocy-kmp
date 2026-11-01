@@ -11,6 +11,7 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +27,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.patrickzedler.grocy.core.design.component.LocalShowsPanes
 
 private const val SMALLER_SCALE = 0.9f
 private const val LARGER_SCALE = 1.1f
@@ -70,27 +72,30 @@ fun GrocyNavDisplay(
         }
     }
 
-    NavDisplay(
-        backStack = navigator.backStack,
-        modifier = modifier,
-        onBack = navigator::goBack,
-        entryDecorators = listOf(
-            // Keeps rememberSaveable state per entry
-            rememberSaveableStateHolderNavEntryDecorator(),
-            // Scopes each ViewModel to its entry, cleared when the entry leaves the back stack
-            rememberViewModelStoreNavEntryDecorator(),
-            // Keeps each entry's layout intact while it moves between scenes
-            rememberLookaheadNavEntryDecorator(),
-        ),
-        // Lists and their details side by side where the window is wide enough
-        sceneStrategies = listOf(rememberListDetailStrategy()),
-        // Both panes on one background, also between them
-        sceneDecoratorStrategies = listOf(rememberPaneBackgroundDecorator()),
-        entryProvider = entryProvider { entries() },
-        transitionSpec = { forwardTransition },
-        popTransitionSpec = { if (skipPopTransition) NoTransition else backwardTransition },
-        predictivePopTransitionSpec = { backwardTransition },
-    )
+    // Screens without a pane of their own become a single pane where two would fit
+    CompositionLocalProvider(LocalShowsPanes provides windowShowsPanes()) {
+        NavDisplay(
+            backStack = navigator.backStack,
+            modifier = modifier,
+            onBack = navigator::goBack,
+            entryDecorators = listOf(
+                // Keeps rememberSaveable state per entry
+                rememberSaveableStateHolderNavEntryDecorator(),
+                // Scopes each ViewModel to its entry, cleared when the entry leaves the back stack
+                rememberViewModelStoreNavEntryDecorator(),
+                // Keeps each entry's layout intact while it moves between scenes
+                rememberLookaheadNavEntryDecorator(),
+            ),
+            // Lists and their details side by side where the window is wide enough
+            sceneStrategies = listOf(rememberListDetailStrategy()),
+            // Both panes on one background, also between them
+            sceneDecoratorStrategies = listOf(rememberPaneBackgroundDecorator()),
+            entryProvider = entryProvider { entries() },
+            transitionSpec = { forwardTransition },
+            popTransitionSpec = { if (skipPopTransition) NoTransition else backwardTransition },
+            predictivePopTransitionSpec = { backwardTransition },
+        )
+    }
 }
 
 /**

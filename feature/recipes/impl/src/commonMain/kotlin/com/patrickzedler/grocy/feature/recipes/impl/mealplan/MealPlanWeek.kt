@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.feature.recipes.impl.mealplan
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.patrickzedler.grocy.core.design.component.PaneMargin
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
@@ -204,10 +205,13 @@ internal fun anchorDayOf(day: String?, today: Long): Long =
 /**
  * Whether a window [width] wide shows the week as Grocy's grid, a column per day and a row
  * per section, instead of the days below each other: once every day gets
- * [MinDayColumnWidth] beside the screen margins.
+ * [MinDayColumnWidth] beside the screen margins, and the pane's ones on both sides as
+ * [isSinglePane].
  */
-internal fun showsWeekGrid(width: Dp): Boolean {
-    val content = width - GridMargins * 2
+internal fun showsWeekGrid(width: Dp, isSinglePane: Boolean = false): Boolean {
+    // A single pane keeps the screen's margin on both sides
+    val paneWidth = if (isSinglePane) width - PaneMargin * 2 else width
+    val content = paneWidth - GridMargins * 2
     return (content - DayColumnGap * (DAYS_PER_WEEK - 1)) / DAYS_PER_WEEK >= MinDayColumnWidth
 }
 

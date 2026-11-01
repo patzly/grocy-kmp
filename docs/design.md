@@ -20,6 +20,10 @@ for `SegmentedListItem`s, and `AppBarIconButton` for app bar actions.
   (`TopAppBarDefaults.topAppBarColors(containerColor = surfaceContainer,
   scrolledContainerColor = surfaceContainerHighest)` plus a scroll behavior connected via
   `nestedScroll`).
+- Windows wide enough for two panes: every screen with an app bar is a pane (`ScreenPane`),
+  beside its list or detail, else a single pane with the margin on both sides
+  (`LocalShowsPanes`, automatic in `SegmentedListScreen`); a small bar always in the scrolled
+  color on `surfaceContainerHighest`, the content on a rounded `surfaceContainer` surface.
 - App bar actions (navigation icon included) are `FilledIconButton`s with `contentColor =
   onSurface` inside a `HapticTooltipBox`: `AppBarIconButton`, which `NavigateBackButton` and
   `AppBarOverflowMenu` use. Their container is always `surfaceContainerHighest`: it stands out

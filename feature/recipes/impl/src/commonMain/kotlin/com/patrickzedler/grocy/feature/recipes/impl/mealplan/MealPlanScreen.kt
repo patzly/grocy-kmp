@@ -2,6 +2,7 @@
 
 package com.patrickzedler.grocy.feature.recipes.impl.mealplan
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -13,10 +14,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.IconButtonDefaults.IconButtonWidthOption
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
@@ -48,14 +51,17 @@ import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
 import com.patrickzedler.grocy.core.design.component.GroupTitle
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
+import com.patrickzedler.grocy.core.design.component.LocalShowsPanes
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
+import com.patrickzedler.grocy.core.design.component.animatedItem
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.insetItems
+import com.patrickzedler.grocy.core.design.component.smallIconButtonSize
 import com.patrickzedler.grocy.core.forms.actionMessage
 import com.patrickzedler.grocy.core.model.masterdata.nameFor
 import com.patrickzedler.grocy.core.model.recipes.MealPlanEntryType
@@ -163,7 +169,7 @@ internal fun MealPlanScreen(
 
     val density = LocalDensity.current
     val windowWidth = with(density) { LocalWindowInfo.current.containerSize.width.toDp() }
-    val isGrid = showsWeekGrid(windowWidth)
+    val isGrid = showsWeekGrid(windowWidth, isSinglePane = LocalShowsPanes.current)
     WeekScrollEffect(current, isGrid, listState)
 
     val actions = MealPlanItemActions(
@@ -374,22 +380,31 @@ private fun WeekItem(state: MealPlanUiState, viewModel: MealPlanViewModel) {
                 }
             }
             if (weekRecipe != null && config.stock) {
-                Row(horizontalArrangement = Arrangement.spacedBy(WeekButtonGap)) {
+                // Material's 12.dp between the wide buttons, the pressed one grows
+                ButtonGroup(overflowIndicator = {}) {
                     if (config.shoppingList) {
+                        animatedItem { itemModifier, interactionSource ->
+                            WeekButton(
+                                painter = painterResource(Res.drawable.ic_rounded_add_shopping_cart),
+                                description = stringResource(Res.string.recipe_add_missing),
+                                enabled = fulfillment?.status ==
+                                    RecipeStatus.NOT_ENOUGH_IN_STOCK && !viewModel.isRunning,
+                                onClick = { viewModel.putOnShoppingList(weekRecipe.id) },
+                                interactionSource = interactionSource,
+                                modifier = itemModifier,
+                            )
+                        }
+                    }
+                    animatedItem { itemModifier, interactionSource ->
                         WeekButton(
-                            painter = painterResource(Res.drawable.ic_rounded_add_shopping_cart),
-                            description = stringResource(Res.string.recipe_add_missing),
-                            enabled = fulfillment?.status == RecipeStatus.NOT_ENOUGH_IN_STOCK &&
-                                !viewModel.isRunning,
-                            onClick = { viewModel.putOnShoppingList(weekRecipe.id) },
+                            painter = painterResource(Res.drawable.ic_rounded_restaurant),
+                            description = stringResource(Res.string.meal_plan_consume_week),
+                            enabled = !viewModel.isRunning,
+                            onClick = { viewModel.requestConsumeWeek(weekRecipe.id) },
+                            interactionSource = interactionSource,
+                            modifier = itemModifier,
                         )
                     }
-                    WeekButton(
-                        painter = painterResource(Res.drawable.ic_rounded_restaurant),
-                        description = stringResource(Res.string.meal_plan_consume_week),
-                        enabled = !viewModel.isRunning,
-                        onClick = { viewModel.requestConsumeWeek(weekRecipe.id) },
-                    )
                 }
             }
         }
@@ -402,17 +417,20 @@ private fun WeekButton(
     description: String,
     enabled: Boolean,
     onClick: () -> Unit,
+    interactionSource: MutableInteractionSource,
+    modifier: Modifier = Modifier,
 ) {
     val haptic = LocalHapticFeedback.current
-    HapticTooltipBox(text = description) {
+    HapticTooltipBox(text = description, modifier = modifier) {
         FilledTonalIconButton(
             onClick = {
                 haptic.confirm()
                 onClick()
             },
             enabled = enabled,
-            modifier = Modifier.clickCursor(enabled),
+            modifier = smallIconButtonSize(IconButtonWidthOption.Wide).clickCursor(enabled),
             shapes = IconButtonDefaults.shapes(),
+            interactionSource = interactionSource,
         ) {
             Icon(painter = painter, contentDescription = description)
         }
@@ -592,4 +610,3 @@ private val ListMaxWidth = 640.dp
 // The list puts the segmented gap between its items, a group adds the rest of a group gap
 private val GroupTopPadding = SegmentedListDefaults.GroupSpacing - ListItemDefaults.SegmentedGap
 
-private val WeekButtonGap = 8.dp

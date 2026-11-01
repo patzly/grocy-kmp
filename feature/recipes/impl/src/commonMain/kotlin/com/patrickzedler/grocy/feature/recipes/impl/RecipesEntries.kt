@@ -7,6 +7,7 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
 import com.patrickzedler.grocy.core.design.component.DetailPlaceholder
+import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.forms.formFrame
 import com.patrickzedler.grocy.core.navigation.Navigator
 import com.patrickzedler.grocy.core.navigation.detailPaneMetadata
@@ -141,7 +142,7 @@ fun EntryProviderScope<NavKey>.recipesEntries(
                 },
             ),
             menuItems = appMenuItems(),
-            isBesideList = showsDetailBesideList(),
+            pane = ScreenPane.Detail.takeIf { showsDetailBesideList() },
             onBackClick = navigator::goBack,
         )
     }

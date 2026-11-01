@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -22,12 +22,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.ListItemOverflowMenu
@@ -134,9 +136,8 @@ internal fun RecipeRow(
 
 /**
  * A card of Grocy's recipe gallery: the picture across its top (with the field shown), the name
- * and the shown fields below, the menu in the bottom end corner. Beside the recipe ([selected]
- * not null) it marks the recipe shown there with an outline. Cards of a row fill its height, so
- * their menus line up.
+ * with the menu at its end and the shown fields below. Beside the recipe ([selected] not null) it
+ * marks the recipe shown there with an outline. Cards of a row fill its height.
  */
 @Composable
 internal fun RecipeCard(
@@ -154,7 +155,7 @@ internal fun RecipeCard(
     val pictureDescription = stringResource(Res.string.products_has_picture)
     val putText = stringResource(Res.string.recipe_add_missing_confirm)
     val picture = item.pictureFileName?.takeIf { RecipeField.PICTURE in fields }
-    val details = recipeDetails(item, fields, decimals, topPadding = CardTitleChipsGap)
+    val details = recipeDetails(item, fields, decimals, topPadding = CardPadding)
     val shape = RoundedCornerShape(CardCornerSize)
     val click = {
         haptic.confirm()
@@ -193,21 +194,21 @@ internal fun RecipeCard(
                         .aspectRatio(GALLERY_PICTURE_RATIO),
                 )
             }
-            Text(
-                text = item.name,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(top = CardPadding),
-            )
+            val titleStyle = MaterialTheme.typography.bodyLargeEmphasized
+            // As far from the picture or the card's edge as from the chips, so the menu has room
+            Row(modifier = Modifier.padding(top = CardPadding)) {
+                Text(text = item.name, style = titleStyle, modifier = Modifier.weight(1f))
+                ListItemOverflowMenu(
+                    groups = menuGroups,
+                    modifier = Modifier.centeredOnFirstLine(
+                        lineHeight = titleStyle.lineHeight,
+                        endOverhang = CardPadding - CardMenuPadding,
+                    ),
+                )
+            }
             // Chips wider than the card shorten their text
             details?.invoke()
-            Spacer(Modifier.weight(1f))
-            ListItemOverflowMenu(
-                groups = menuGroups,
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(vertical = CardMenuPadding)
-                    .offset(x = CardPadding - CardMenuPadding),
-            )
+            Spacer(Modifier.height(CardPadding))
         }
     }
     // Beside the recipe a single choice marking it, like the rows
@@ -227,6 +228,21 @@ internal fun RecipeCard(
         }
     }
 }
+
+/**
+ * Centers the menu button on the title's first line without making the line any higher, and
+ * moves it [endOverhang] towards the card's edge, so its icon sits where a list item's would.
+ */
+internal fun Modifier.centeredOnFirstLine(lineHeight: TextUnit, endOverhang: Dp) =
+    layout { measurable, constraints ->
+        val placeable = measurable.measure(constraints.copy(minHeight = 0))
+        val overhang = endOverhang.roundToPx()
+        val y = firstLineCenterOffset(lineHeight.roundToPx(), placeable.height)
+        layout(placeable.width - overhang, 0) { placeable.place(0, y) }
+    }
+
+/** Where a [height] high node starts so its center is the one of a [lineHeight] high line. */
+internal fun firstLineCenterOffset(lineHeight: Int, height: Int): Int = (lineHeight - height) / 2
 
 /**
  * A recipe's shown fields as chips that wrap into more rows: servings, due score, then Grocy's
@@ -311,8 +327,7 @@ private const val GALLERY_PICTURE_RATIO = 16f / 10f
 // The theme's extra large corners, which the picture's follow
 private val CardCornerSize = 24.dp
 private val CardPadding = 16.dp
-private val CardTitleChipsGap = 8.dp
 
-// Around the menu button's 48.dp room, so its icon sits 16.dp from the card's edges like the
+// Around the menu button's 48.dp room, so its icon sits 16.dp from the card's end like the
 // trailing icon of a list item
 private val CardMenuPadding = 4.dp

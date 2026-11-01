@@ -39,7 +39,7 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   below it a `surfaceContainer` surface with
   `extraLargeIncreased` corners that holds the list, the background of single screens, so the
   content looks the same in every window size (`paneMargin`, `paneSurface`;
-  `DetailPlaceholder` draws the same surface below the bar's height). Beside its list a form has no back button (the list's leaves both). Forms are `DetailRoute`s opened with `Navigator.openDetail` (replaces the form beside
+  `DetailPlaceholder` draws the same surface below the bar's height). Beside its list a form has no back button (the list's leaves both). `showsDetailBesideList` asks the scene, not the window (`PaneBackgroundScene` provides it): a detail another screen opened without its list (e.g. a recipe from the meal plan, a product from a recipe) keeps its back button. Every screen without a pane of its own is `ScreenPane.Single` in windows wide enough for two (`LocalShowsPanes` of `GrocyNavDisplay`, `SegmentedListScreen`): the same surface and small bar in the scrolled color, with the margin on both sides. Forms are `DetailRoute`s opened with `Navigator.openDetail` (replaces the form beside
   the list, and the details opened from it), lists leave with `goBack(from = route)`. A detail
   opened from a detail (`navigate`, e.g. the stock settings from Grocy's settings) takes its
   place beside the list and back returns to it (`NestedDetailSceneStrategy`: Material's scene

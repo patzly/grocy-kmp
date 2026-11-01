@@ -249,6 +249,16 @@ class MealPlanWeekTest {
     }
 
     @Test
+    fun aSinglePaneLeavesLessRoomForTheGrid() {
+        // 7 columns of 136.dp, their gaps and the grid's margins
+        val justEnough = 136.dp * 7 + 8.dp * 6 + 16.dp * 2
+
+        assertTrue(showsWeekGrid(justEnough))
+        assertFalse(showsWeekGrid(justEnough, isSinglePane = true))
+        assertTrue(showsWeekGrid(justEnough + 32.dp, isSinglePane = true))
+    }
+
+    @Test
     fun sectionsAreNamedWithTheirTime() {
         assertEquals("Breakfast · 7:00", sectionLabel(breakfast))
         assertEquals("Dinner", sectionLabel(dinner))

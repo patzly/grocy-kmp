@@ -39,7 +39,7 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
   buttons: the group lines its items up at the top, so the smaller indicator sat higher.
 - Overflow menus: `AppBarMenuItem(checked = ...)` is a checkable item (check mark while on, the
   menu stays open, `ToggleOn`/`ToggleOff` haptics), e.g. the shopping mode's auto sync.
-  `ListItemMenuButton` is a standard icon button of its own with such a menu, the choices of
+  `ListItemMenuButton` is a narrow standard icon button of its own with such a menu, the choices of
   one action, e.g. the meal plan day's "Add" (recipe, product, note, copy the day).
 - Time fields like Grocy's time inputs ("HH:MM") get `TimePickerButton` (`core:forms`,
   Material's time picker), dates `DatePickerButton`.

@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.design.component
 
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,6 +41,7 @@ import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -93,6 +95,8 @@ import org.jetbrains.compose.resources.stringResource
  * [actionMenuGroups] precede where a screen has several groups of actions.
  * [pane]: the screen is one of two panes of a list-detail layout ([ScreenPane]): a small bar in
  * the background's color that lines both bars up, the list on a rounded surface below it.
+ * Without one it is a single such pane where the window is wide enough for two
+ * ([LocalShowsPanes]), so its bar always has the scrolled color there.
  * [floatingToolbar] (a [FloatingToolbarWithFab]) floats above the bottom edge; the list ends
  * [SegmentedListDefaults.GroupSpacing] above it. Only in windows of a compact height (a phone in
  * landscape) it hides while the list scrolls down, taller ones have room for both. It must
@@ -129,10 +133,11 @@ fun SegmentedListScreen(
     secondContent: (LazyListScope.() -> Unit)? = null,
     content: LazyListScope.() -> Unit,
 ) {
+    val shownPane = shownPane(pane, LocalShowsPanes.current)
     val isRefreshable = onRefresh != null
     val usesMouse = LocalPointerKind.current.usesMouse
     // A mouse wheel has no gesture end the large bar could settle on, it stayed half collapsed
-    val isSmallBar = isRefreshable || usesMouse || pane != null
+    val isSmallBar = isRefreshable || usesMouse || shownPane != null
     val scrollBehavior = if (isSmallBar) {
         TopAppBarDefaults.pinnedScrollBehavior(listState)
     } else {
@@ -150,7 +155,7 @@ fun SegmentedListScreen(
     }
     // Content of a pane never scrolls below the bar, which keeps the scrolled color
     val scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
-    val containerColor = if (isRefreshable || pane != null) {
+    val containerColor = if (isRefreshable || shownPane != null) {
         scrolledContainerColor
     } else {
         MaterialTheme.colorScheme.surfaceContainer
@@ -187,7 +192,15 @@ fun SegmentedListScreen(
 
     Scaffold(
         modifier = modifier
-            .then(if (pane != null) Modifier.paneMargin(pane) else Modifier)
+            .then(
+                // A single pane lies in no list-detail scene, whose background fills the margin
+                if (shownPane == ScreenPane.Single) {
+                    Modifier.background(scrolledContainerColor)
+                } else {
+                    Modifier
+                },
+            )
+            .then(if (shownPane != null) Modifier.paneMargin(shownPane) else Modifier)
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .then(
                 if (floatingToolbar != null && hidesToolbar) {
@@ -321,10 +334,11 @@ fun SegmentedListScreen(
                         )
                         IntOffset(x = 0, y = -lift)
                     },
+                    snackbar = { data -> Snackbar(data, shape = MaterialTheme.shapes.small) },
                 )
             }
         },
-        containerColor = if (pane != null) {
+        containerColor = if (shownPane != null) {
             MaterialTheme.colorScheme.surfaceContainerHighest
         } else {
             MaterialTheme.colorScheme.surfaceContainer
@@ -332,19 +346,19 @@ fun SegmentedListScreen(
     ) { padding ->
         // Below the list only the part of the navigation bar the keyboard leaves visible; a pane's
         // surface ends above both
-        val bottomInsets = if (pane != null) {
+        val bottomInsets = if (shownPane != null) {
             PaddingValues()
         } else {
             WindowInsets.navigationBars.exclude(WindowInsets.keyboard).asPaddingValues()
         }
         // A pane's surface starts below the bar, so do its list and the loading indicator
-        val barPadding = if (pane != null) 0.dp else padding.calculateTopPadding()
+        val barPadding = if (shownPane != null) 0.dp else padding.calculateTopPadding()
         val topPadding = barPadding + SegmentedListDefaults.GroupSpacing
         val pullToRefreshState = rememberPullToRefreshState()
         PullToRefreshBox(
             isRefreshing = isRefreshing,
             onRefresh = { onRefresh?.invoke() },
-            modifier = if (pane != null) {
+            modifier = if (shownPane != null) {
                 Modifier
                     .fillMaxSize()
                     .padding(top = padding.calculateTopPadding())
@@ -414,7 +428,7 @@ fun SegmentedListScreen(
                                 .padding(top = barPadding)
                                 .padding(bottomInsets)
                                 .then(
-                                    if (pane != null) {
+                                    if (shownPane != null) {
                                         Modifier
                                     } else {
                                         Modifier.windowInsetsPadding(

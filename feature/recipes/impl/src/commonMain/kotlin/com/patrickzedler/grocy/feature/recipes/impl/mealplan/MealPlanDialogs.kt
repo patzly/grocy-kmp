@@ -9,6 +9,7 @@ import com.patrickzedler.grocy.core.forms.DatePickerButton
 import com.patrickzedler.grocy.core.forms.DeleteDialog
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FormDialog
+import com.patrickzedler.grocy.core.forms.GroupItem
 import com.patrickzedler.grocy.core.forms.GroupItems
 import com.patrickzedler.grocy.core.forms.TextItem
 import com.patrickzedler.grocy.core.forms.TimePickerButton
@@ -107,151 +108,127 @@ private fun MealPlanEntryDialog(
         onSave = onSave,
         onDismissRequest = onDismissRequest,
     ) {
+        // One group whatever the type, a note alone would leave groups of single items
         SegmentedGroup {
-            GroupItems(
-                { index, count ->
-                    TextItem(
-                        state = state.day,
-                        label = stringResource(Res.string.meal_plan_day),
-                        error = fieldErrorText(
-                            errors[MealPlanEntryField.DAY],
-                            Res.string.meal_plan_day_required,
-                        ),
-                        trailingAction = { DatePickerButton(state.day, withTime = false) },
-                        index = index,
-                        count = count,
-                    )
-                },
-            )
-        }
-        when (state.type) {
-            MealPlanEntryType.RECIPE -> RecipeFields(state)
-            MealPlanEntryType.PRODUCT -> ProductFields(state)
-            MealPlanEntryType.NOTE -> SegmentedGroup {
-                GroupItems(
-                    { index, count ->
-                        TextItem(
-                            state = state.note,
-                            label = stringResource(Res.string.data_note),
-                            multiLine = true,
-                            index = index,
-                            count = count,
-                        )
-                    },
+            val day: GroupItem = { index, count ->
+                TextItem(
+                    state = state.day,
+                    label = stringResource(Res.string.meal_plan_day),
+                    error = fieldErrorText(
+                        errors[MealPlanEntryField.DAY],
+                        Res.string.meal_plan_day_required,
+                    ),
+                    trailingAction = { DatePickerButton(state.day, withTime = false) },
+                    index = index,
+                    count = count,
                 )
             }
-        }
-        SegmentedGroup {
-            GroupItems(
-                { index, count ->
-                    SectionItem(
-                        sections = state.choices.sections,
-                        selectedId = state.sectionId,
-                        onSelectedIdChange = {
-                            state.sectionId = it ?: MealPlanSection.DEFAULT_ID
-                        },
-                        onUnmatchedChange = { state.isSectionUnmatched = it },
-                        index = index,
-                        count = count,
-                    )
-                },
-            )
+            val section: GroupItem = { index, count ->
+                SectionItem(
+                    sections = state.choices.sections,
+                    selectedId = state.sectionId,
+                    onSelectedIdChange = { state.sectionId = it ?: MealPlanSection.DEFAULT_ID },
+                    onUnmatchedChange = { state.isSectionUnmatched = it },
+                    index = index,
+                    count = count,
+                )
+            }
+            val typeItems = when (state.type) {
+                MealPlanEntryType.RECIPE -> recipeItems(state)
+                MealPlanEntryType.PRODUCT -> productItems(state)
+                MealPlanEntryType.NOTE -> listOf(noteItem(state))
+            }
+            GroupItems(day, *typeItems.toTypedArray(), section)
         }
     }
 }
 
 /** The recipe, which brings its servings like Grocy's picker, and the servings. */
-@Composable
-private fun RecipeFields(state: MealPlanEntryDialogState) {
-    val errors = state.errors
-    SegmentedGroup {
-        GroupItems(
-            { index, count ->
-                DropdownItem(
-                    label = stringResource(Res.string.recipe_nesting_recipe),
-                    options = state.choices.recipes.map { DropdownOption(it.id, it.name) },
-                    selectedId = state.recipeId,
-                    onSelectedIdChange = state::selectRecipe,
-                    onUnmatchedChange = { state.isRecipeUnmatched = it },
-                    error = fieldErrorText(
-                        errors[MealPlanEntryField.RECIPE],
-                        Res.string.recipe_nesting_recipe_required,
-                    ),
-                    index = index,
-                    count = count,
-                )
-            },
-            { index, count ->
-                TextItem(
-                    state = state.servings,
-                    label = stringResource(Res.string.meal_plan_servings),
-                    error = fieldErrorText(errors[MealPlanEntryField.SERVINGS]),
-                    keyboardType = KeyboardType.Decimal,
-                    stepper = NumberStepper.Positive,
-                    index = index,
-                    count = count,
-                )
-            },
+private fun recipeItems(state: MealPlanEntryDialogState): List<GroupItem> = listOf(
+    { index, count ->
+        DropdownItem(
+            label = stringResource(Res.string.recipe_nesting_recipe),
+            options = state.choices.recipes.map { DropdownOption(it.id, it.name) },
+            selectedId = state.recipeId,
+            onSelectedIdChange = state::selectRecipe,
+            onUnmatchedChange = { state.isRecipeUnmatched = it },
+            error = fieldErrorText(
+                state.errors[MealPlanEntryField.RECIPE],
+                Res.string.recipe_nesting_recipe_required,
+            ),
+            index = index,
+            count = count,
         )
-    }
-}
+    },
+    { index, count ->
+        TextItem(
+            state = state.servings,
+            label = stringResource(Res.string.meal_plan_servings),
+            error = fieldErrorText(state.errors[MealPlanEntryField.SERVINGS]),
+            keyboardType = KeyboardType.Decimal,
+            stepper = NumberStepper.Positive,
+            index = index,
+            count = count,
+        )
+    },
+)
 
 /** The product, its amount and the unit of the amount, the stock unit at first. */
-@Composable
-private fun ProductFields(state: MealPlanEntryDialogState) {
-    val errors = state.errors
-    val units = state.units
-    SegmentedGroup {
-        GroupItems(
-            { index, count ->
-                DropdownItem(
-                    label = stringResource(Res.string.data_product),
-                    options = state.choices.products.map { DropdownOption(it.id, it.name) },
-                    selectedId = state.productId,
-                    onSelectedIdChange = state::selectProduct,
-                    onUnmatchedChange = { state.isProductUnmatched = it },
-                    error = fieldErrorText(
-                        errors[MealPlanEntryField.PRODUCT],
-                        Res.string.booking_product_required,
-                    ),
-                    index = index,
-                    count = count,
-                )
-            },
+private fun productItems(state: MealPlanEntryDialogState): List<GroupItem> = listOf(
+    { index, count ->
+        DropdownItem(
+            label = stringResource(Res.string.data_product),
+            options = state.choices.products.map { DropdownOption(it.id, it.name) },
+            selectedId = state.productId,
+            onSelectedIdChange = state::selectProduct,
+            onUnmatchedChange = { state.isProductUnmatched = it },
+            error = fieldErrorText(
+                state.errors[MealPlanEntryField.PRODUCT],
+                Res.string.booking_product_required,
+            ),
+            index = index,
+            count = count,
         )
-    }
-    SegmentedGroup {
-        GroupItems(
-            { index, count ->
-                TextItem(
-                    state = state.amount,
-                    label = stringResource(Res.string.data_amount),
-                    error = fieldErrorText(errors[MealPlanEntryField.AMOUNT]),
-                    keyboardType = KeyboardType.Decimal,
-                    stepper = NumberStepper.Positive,
-                    index = index,
-                    count = count,
-                )
-            },
-            { index, count ->
-                DropdownItem(
-                    label = stringResource(Res.string.data_quantity_unit),
-                    options = units.map { DropdownOption(it.unit.id, it.unit.name) },
-                    selectedId = state.quId,
-                    onSelectedIdChange = { state.quId = it },
-                    onUnmatchedChange = { state.isUnitUnmatched = it },
-                    error = fieldErrorText(
-                        errors[MealPlanEntryField.UNIT],
-                        Res.string.booking_unit_required,
-                    ),
-                    // Grocy's picker is fixed while the product has only one unit
-                    enabled = units.size > 1,
-                    index = index,
-                    count = count,
-                )
-            },
+    },
+    { index, count ->
+        TextItem(
+            state = state.amount,
+            label = stringResource(Res.string.data_amount),
+            error = fieldErrorText(state.errors[MealPlanEntryField.AMOUNT]),
+            keyboardType = KeyboardType.Decimal,
+            stepper = NumberStepper.Positive,
+            index = index,
+            count = count,
         )
-    }
+    },
+    { index, count ->
+        val units = state.units
+        DropdownItem(
+            label = stringResource(Res.string.data_quantity_unit),
+            options = units.map { DropdownOption(it.unit.id, it.unit.name) },
+            selectedId = state.quId,
+            onSelectedIdChange = { state.quId = it },
+            onUnmatchedChange = { state.isUnitUnmatched = it },
+            error = fieldErrorText(
+                state.errors[MealPlanEntryField.UNIT],
+                Res.string.booking_unit_required,
+            ),
+            // Grocy's picker is fixed while the product has only one unit
+            enabled = units.size > 1,
+            index = index,
+            count = count,
+        )
+    },
+)
+
+private fun noteItem(state: MealPlanEntryDialogState): GroupItem = { index, count ->
+    TextItem(
+        state = state.note,
+        label = stringResource(Res.string.data_note),
+        multiLine = true,
+        index = index,
+        count = count,
+    )
 }
 
 /** Grocy's section choice; its default section has no name, "None" here. */

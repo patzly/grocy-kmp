@@ -142,9 +142,9 @@ fun FilledOverflowMenu(
 }
 
 /**
- * A standard icon button at the end of a list item whose [groups] are choices of one action,
- * e.g. "Add" with the kinds of things to add, [description] naming it for its tooltip and
- * screen readers.
+ * A narrow standard icon button at the end of a list item whose [groups] are choices of one
+ * action, e.g. "Add" with the kinds of things to add, [description] naming it for its tooltip
+ * and screen readers.
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -157,7 +157,8 @@ fun ListItemMenuButton(
     NarrowOverflowMenu(groups, modifier, description) { text, onClick ->
         IconButton(
             onClick = onClick,
-            modifier = Modifier.clickCursor(),
+            modifier = smallIconButtonSize(IconButtonDefaults.IconButtonWidthOption.Narrow)
+                .clickCursor(),
             shapes = IconButtonDefaults.shapes(),
         ) {
             Icon(painter = painter, contentDescription = text)

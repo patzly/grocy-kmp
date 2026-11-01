@@ -21,7 +21,9 @@ import androidx.compose.material3.adaptive.layout.rememberPaneExpansionState
 import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
 import androidx.compose.material3.adaptive.navigation3.rememberListDetailSceneStrategy
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
@@ -123,12 +125,19 @@ internal class BackToScene(
 }
 
 /**
- * Whether the current window shows details beside their list, so the list marks the item shown
- * there and the details need no back button of their own; the same rule the list-detail scene
- * follows.
+ * Whether the screen lies in a scene of a list and its details side by side, so the list marks
+ * the item shown there and the details need no back button of their own. A detail another
+ * screen opened without its list is a single pane of its own, also in wide windows.
  */
 @Composable
-fun showsDetailBesideList(): Boolean =
+fun showsDetailBesideList(): Boolean = LocalSceneShowsPanes.current
+
+// Provided by the scenes of a list beside its details
+private val LocalSceneShowsPanes = compositionLocalOf { false }
+
+/** Whether the current window has room for two panes, the rule the list-detail scene follows. */
+@Composable
+internal fun windowShowsPanes(): Boolean =
     calculatePaneScaffoldDirective(currentWindowAdaptiveInfoV2()).maxHorizontalPartitions > 1
 
 /**
@@ -268,7 +277,9 @@ internal class PaneBackgroundScene(val scene: Scene<NavKey>) : Scene<NavKey> by 
             // one pixel for screenshots) is measured once before the scene turns single pane,
             // and Material's scaffold throws when it clamps the handle into that width
             Box(Modifier.atLeastWidth(MinTwoPaneWidth)) {
-                scene.content()
+                CompositionLocalProvider(LocalSceneShowsPanes provides true) {
+                    scene.content()
+                }
             }
         }
     }
@@ -295,6 +306,6 @@ private val MinTwoPaneWidth = 48.dp
 
 @Composable
 internal fun rememberPaneBackgroundDecorator(): SceneDecoratorStrategy<NavKey> {
-    val isTwoPane = showsDetailBesideList()
+    val isTwoPane = windowShowsPanes()
     return remember(isTwoPane) { PaneBackgroundDecorator(isTwoPane) }
 }

@@ -3,6 +3,7 @@
 package com.patrickzedler.grocy.feature.recipes.impl.mealplan
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -10,13 +11,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -31,6 +33,7 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -85,6 +88,7 @@ import com.patrickzedler.grocy.core.resources.recipes_status_enough
 import com.patrickzedler.grocy.core.resources.recipes_status_not_enough
 import com.patrickzedler.grocy.feature.recipes.impl.RecipePicture
 import com.patrickzedler.grocy.feature.recipes.impl.list.StatusChip
+import com.patrickzedler.grocy.feature.recipes.impl.list.centeredOnFirstLine
 import com.patrickzedler.grocy.feature.recipes.impl.list.recipeStatusChips
 import com.patrickzedler.grocy.feature.recipes.impl.list.servingsText
 import com.patrickzedler.grocy.feature.recipes.impl.list.statusFieldChip
@@ -104,7 +108,7 @@ internal class MealPlanItemActions(
 
 /**
  * The header of a day: its weekday as heading, the date and what Grocy computed for the day
- * (costs and energy), "Nothing planned" without entries; today in primary container. Its
+ * (costs and energy), "Nothing planned" without entries; today in secondary container. Its
  * button adds like Grocy's day header: a recipe, a product, a note, or copies the day.
  */
 @Composable
@@ -117,9 +121,9 @@ internal fun MealPlanDayHeader(
     modifier: Modifier = Modifier,
 ) {
     val colors = if (day.isToday) {
-        val content = MaterialTheme.colorScheme.onPrimaryContainer
+        val content = MaterialTheme.colorScheme.onSecondaryContainer
         ListItemDefaults.segmentedColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
             contentColor = content,
             supportingContentColor = content,
             trailingContentColor = content,
@@ -159,8 +163,8 @@ internal fun MealPlanDayHeader(
 }
 
 /**
- * A day's header in the week's grid: weekday and date stacked, the summary below, the add
- * button in the top end corner; as high as the row's other headers.
+ * A day's header in the week's grid: weekday (with "Today" beside it) and date stacked, the add
+ * button centered at their end, the summary below; as high as the row's other headers.
  */
 @Composable
 internal fun MealPlanDayCard(
@@ -170,12 +174,12 @@ internal fun MealPlanDayCard(
     modifier: Modifier = Modifier,
 ) {
     val container = if (day.isToday) {
-        MaterialTheme.colorScheme.primaryContainer
+        MaterialTheme.colorScheme.secondaryContainer
     } else {
         SegmentedListDefaults.containerColor
     }
     val content = if (day.isToday) {
-        MaterialTheme.colorScheme.onPrimaryContainer
+        MaterialTheme.colorScheme.onSecondaryContainer
     } else {
         MaterialTheme.colorScheme.onSurface
     }
@@ -189,21 +193,33 @@ internal fun MealPlanDayCard(
         modifier = modifier,
     ) {
         Column(Modifier.padding(start = CardPadding, bottom = CardPadding)) {
-            Row(verticalAlignment = Alignment.Top) {
-                Column(Modifier.weight(1f).padding(top = CardPadding)) {
-                    if (day.isToday) {
+            // The add button centered on weekday and date, as wide as the entries' menus
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = CardPadding),
+            ) {
+                Column(Modifier.weight(1f)) {
+                    // "Today" beside the weekday, so weekday and date line up with the other days
+                    Row(verticalAlignment = Alignment.Bottom) {
                         Text(
-                            text = stringResource(Res.string.meal_plan_today),
-                            style = MaterialTheme.typography.labelMedium,
+                            text = weekday,
+                            style = MaterialTheme.typography.titleMedium,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier
+                                .weight(1f, fill = false)
+                                .alignByBaseline()
+                                .semantics { heading() },
                         )
+                        if (day.isToday) {
+                            Text(
+                                text = stringResource(Res.string.meal_plan_today),
+                                style = MaterialTheme.typography.labelMedium,
+                                maxLines = 1,
+                                modifier = Modifier.padding(start = 8.dp).alignByBaseline(),
+                            )
+                        }
                     }
-                    Text(
-                        text = weekday,
-                        style = MaterialTheme.typography.titleMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.semantics { heading() },
-                    )
                     Text(
                         text = date,
                         style = MaterialTheme.typography.bodyMedium,
@@ -214,7 +230,7 @@ internal fun MealPlanDayCard(
                     day = day.day,
                     label = "$weekday, $date",
                     actions = actions,
-                    modifier = Modifier.padding(top = CardMenuPadding, end = CardMenuPadding),
+                    modifier = Modifier.padding(end = CardMenuPadding),
                 )
             }
             if (chips.isNotEmpty()) {
@@ -280,7 +296,7 @@ internal fun MealPlanEntryRow(
 
 /**
  * A planned entry as card of a day in the week's grid: the picture across its top, the name
- * and chips below, the menu in the bottom end corner.
+ * with the menu at its end and chips below, like the recipe gallery's cards.
  */
 @Composable
 internal fun MealPlanEntryCard(
@@ -315,17 +331,22 @@ internal fun MealPlanEntryCard(
                         .aspectRatio(CARD_PICTURE_RATIO),
                 )
             }
-            Column(Modifier.padding(top = CardPadding)) { EntryName(item, maxLines = 3) }
-            if (chips.isNotEmpty()) {
-                Column(Modifier.padding(top = 8.dp)) { ChipRow(chips) }
+            // Like the recipe gallery's cards: the menu at the name's end, 16.dp around the name
+            val nameStyle = MaterialTheme.typography.bodyLargeEmphasized
+            Row(Modifier.padding(top = CardPadding)) {
+                Box(Modifier.weight(1f)) { EntryName(item, maxLines = 3, style = nameStyle) }
+                ListItemOverflowMenu(
+                    groups = menuGroups,
+                    modifier = Modifier.centeredOnFirstLine(
+                        lineHeight = nameStyle.lineHeight,
+                        endOverhang = CardPadding - CardMenuPadding,
+                    ),
+                )
             }
-            ListItemOverflowMenu(
-                groups = menuGroups,
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(vertical = CardMenuPadding)
-                    .offset(x = CardPadding - CardMenuPadding),
-            )
+            if (chips.isNotEmpty()) {
+                Column(Modifier.padding(top = CardPadding)) { ChipRow(chips) }
+            }
+            Spacer(Modifier.height(CardPadding))
         }
     }
 }
@@ -337,7 +358,11 @@ internal fun sectionLabel(section: MealPlanSection): String? {
 }
 
 @Composable
-private fun EntryName(item: MealPlanItem, maxLines: Int = Int.MAX_VALUE) {
+private fun EntryName(
+    item: MealPlanItem,
+    maxLines: Int = Int.MAX_VALUE,
+    style: TextStyle = LocalTextStyle.current,
+) {
     val done = item.entry.done
     Text(
         text = item.name,
@@ -346,6 +371,7 @@ private fun EntryName(item: MealPlanItem, maxLines: Int = Int.MAX_VALUE) {
         color = if (done) MaterialTheme.colorScheme.onSurfaceVariant else LocalContentColor.current,
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
+        style = style,
     )
 }
 
