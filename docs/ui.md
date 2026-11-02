@@ -91,7 +91,8 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
 
 - Colors of states outside the color scheme (Grocy's highlighted rows) come from
   `rememberStatusColors` (`core:design`): positive (green), info (blue), warning (yellow),
-  critical (red): fixed hues with exactly the HCT chroma of the theme's primary color,
+  critical (red): CAM16's unique hues (red 20.14, yellow 90, green 164.25, blue 237.53, the
+  purest of each, no amber or pink) with exactly the HCT chroma of the theme's primary color,
   harmonized with primary and turned into container, content and color tones like
   Material's custom colors (90/10/40 light, 30/90/80 dark; `color` for small marks such as
   dots), always together with a text. Gestures on list items

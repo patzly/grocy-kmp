@@ -38,23 +38,23 @@ fun rememberStatusColors(): StatusColors {
     val isDark = MaterialTheme.colorScheme.surface.luminance() < DARK_LUMINANCE
     return remember(primary, isDark) {
         StatusColors(
-            positive = statusColorOf(StatusGreen, primary, isDark),
-            info = statusColorOf(StatusBlue, primary, isDark),
-            warning = statusColorOf(StatusYellow, primary, isDark),
-            critical = statusColorOf(StatusRed, primary, isDark),
+            positive = statusColorOf(GREEN_HUE, primary, isDark),
+            info = statusColorOf(BLUE_HUE, primary, isDark),
+            warning = statusColorOf(YELLOW_HUE, primary, isDark),
+            critical = statusColorOf(RED_HUE, primary, isDark),
         )
     }
 }
 
 /**
- * The hue of [base] with the chroma of [primary], so every status color is as colorful as the
- * theme, turned towards [primary] like Material's harmonization, then as tones the way Material
+ * [baseHue] with the chroma of [primary], so every status color is as colorful as the theme,
+ * turned towards [primary] like Material's harmonization, then as tones the way Material
  * derives a custom color's roles: container 90, content 10 and color 40 in light themes,
  * 30, 90 and 80 in dark ones.
  */
-internal fun statusColorOf(base: Color, primary: Color, isDark: Boolean): StatusColor {
+internal fun statusColorOf(baseHue: Double, primary: Color, isDark: Boolean): StatusColor {
     val chroma = primary.toHct().chroma
-    val hue = Hct.from(base.toHct().hue, chroma, LIGHT_COLOR_TONE).toColor()
+    val hue = Hct.from(baseHue, chroma, LIGHT_COLOR_TONE).toColor()
         .harmonize(primary)
         .toHct()
         .hue
@@ -74,11 +74,12 @@ internal fun statusColorOf(base: Color, primary: Color, isDark: Boolean): Status
     }
 }
 
-// Only their hues count, the chroma comes from the theme
-internal val StatusGreen = Color(0xFF2E9E4F)
-internal val StatusBlue = Color(0xFF2A78D6)
-internal val StatusYellow = Color(0xFFEDA100)
-internal val StatusRed = Color(0xFFE34948)
+// CAM16's unique hues (HCT's hue), which look neither of their neighbours: a yellow that is no
+// amber, a red that is no pink; the chroma comes from the theme
+internal const val RED_HUE = 20.14
+internal const val YELLOW_HUE = 90.0
+internal const val GREEN_HUE = 164.25
+internal const val BLUE_HUE = 237.53
 
 private const val LIGHT_CONTAINER_TONE = 90.0
 private const val LIGHT_CONTENT_TONE = 10.0

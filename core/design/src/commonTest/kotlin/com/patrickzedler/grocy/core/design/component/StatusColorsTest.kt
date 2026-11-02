@@ -14,6 +14,8 @@ class StatusColorsTest {
 
     private val primary = Color(Hct.from(154.0, 48.0, 40.0).toInt())
 
+    private val baseHues = listOf(GREEN_HUE, BLUE_HUE, YELLOW_HUE, RED_HUE)
+
     private fun hueOf(color: Color) = Hct.fromInt(color.toArgb()).hue
 
     private fun hueDistance(a: Double, b: Double) = abs((b - a + 540) % 360 - 180)
@@ -27,7 +29,7 @@ class StatusColorsTest {
     @Test
     fun textOnEveryStatusContainerIsEasyToRead() {
         for (isDark in listOf(false, true)) {
-            for (base in listOf(StatusGreen, StatusBlue, StatusYellow, StatusRed)) {
+            for (base in baseHues) {
                 val color = statusColorOf(base, primary, isDark)
 
                 // WCAG AAA for normal text, like the theme's container roles
@@ -40,7 +42,7 @@ class StatusColorsTest {
     fun marksStandOutFromTheSurface() {
         val lightSurface = Color.White
         val darkSurface = Color(0xFF111411)
-        for (base in listOf(StatusGreen, StatusBlue, StatusYellow, StatusRed)) {
+        for (base in baseHues) {
             val light = statusColorOf(base, primary, isDark = false).color
             val dark = statusColorOf(base, primary, isDark = true).color
 
@@ -52,8 +54,8 @@ class StatusColorsTest {
 
     @Test
     fun lightContainersAreLightAndDarkOnesDark() {
-        val light = statusColorOf(StatusBlue, primary, isDark = false)
-        val dark = statusColorOf(StatusBlue, primary, isDark = true)
+        val light = statusColorOf(BLUE_HUE, primary, isDark = false)
+        val dark = statusColorOf(BLUE_HUE, primary, isDark = true)
 
         assertTrue(light.container.luminance() > 0.5f)
         assertTrue(dark.container.luminance() < 0.2f)
@@ -61,13 +63,13 @@ class StatusColorsTest {
 
     @Test
     fun colorsTurnTowardsPrimaryAndKeepTheirHue() {
-        for (base in listOf(StatusGreen, StatusBlue, StatusYellow, StatusRed)) {
+        for (base in baseHues) {
             val turned = hueOf(statusColorOf(base, primary, isDark = false).container)
 
             // Material's harmonization turns by at most 15 degrees
-            assertTrue(hueDistance(hueOf(base), turned) <= 16.0, "$base")
+            assertTrue(hueDistance(base, turned) <= 16.0, "$base")
             assertTrue(
-                hueDistance(turned, hueOf(primary)) < hueDistance(hueOf(base), hueOf(primary)),
+                hueDistance(turned, hueOf(primary)) < hueDistance(base, hueOf(primary)),
                 "$base",
             )
         }
@@ -76,7 +78,7 @@ class StatusColorsTest {
     @Test
     fun everyStatusIsExactlyAsColorfulAsPrimary() {
         val primaryChroma = Hct.fromInt(primary.toArgb()).chroma
-        for (base in listOf(StatusGreen, StatusBlue, StatusYellow, StatusRed)) {
+        for (base in baseHues) {
             val color = Hct.fromInt(statusColorOf(base, primary, isDark = false).color.toArgb())
 
             // Unless sRGB has no color that colorful at this hue and tone
@@ -88,10 +90,18 @@ class StatusColorsTest {
     }
 
     @Test
+    fun yellowStaysYellowInsteadOfAmber() {
+        // Amber lies below 80 degrees, harmonizing only turns it towards the green primary
+        val yellow = hueOf(statusColorOf(YELLOW_HUE, primary, isDark = false).container)
+
+        assertTrue(yellow in 88.0..106.0, "$yellow")
+    }
+
+    @Test
     fun aCalmerThemeGivesCalmerStatusColors() {
         val calmPrimary = Color(Hct.from(154.0, 16.0, 40.0).toInt())
 
-        val color = statusColorOf(StatusGreen, calmPrimary, isDark = false).color
+        val color = statusColorOf(GREEN_HUE, calmPrimary, isDark = false).color
         val chroma = Hct.fromInt(color.toArgb()).chroma
 
         assertTrue(abs(chroma - 16.0) < 1.0, "$chroma")
