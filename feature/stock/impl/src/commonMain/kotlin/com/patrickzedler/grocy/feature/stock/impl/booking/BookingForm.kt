@@ -111,6 +111,10 @@ internal class BookingForm(today: String) {
     val details: ProductStockDetails? get() = (context as? ProductContext.Ready)?.details
 
     /** True while any picker's text names none of its options, which blocks booking. */
+    /** Whether a field shows why the page was not booked, for the focus to go there. */
+    val hasInvalidFields: Boolean
+        get() = errors.isNotEmpty() || userfieldErrors.isNotEmpty() || hasUnmatchedChoice
+
     val hasUnmatchedChoice: Boolean
         get() = isProductUnmatched || isUnitUnmatched || isLocationUnmatched ||
             isStoreUnmatched || isRecipeUnmatched || userfields.any { it.isUnmatched }

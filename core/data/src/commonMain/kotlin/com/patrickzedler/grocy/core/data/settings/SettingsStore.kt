@@ -3,6 +3,7 @@ package com.patrickzedler.grocy.core.data.settings
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
+import com.patrickzedler.grocy.core.model.scanner.ScannerForm
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
@@ -42,4 +43,9 @@ interface SettingsStore {
     val recipesOptions: Flow<RecipesOptions>
 
     suspend fun setRecipesOptions(options: RecipesOptions)
+
+    /** The forms that open with their scanner, because it was used there last. */
+    val scannerForms: Flow<Set<ScannerForm>>
+
+    suspend fun setScannerForms(forms: Set<ScannerForm>)
 }

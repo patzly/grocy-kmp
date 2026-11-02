@@ -12,6 +12,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,10 +33,12 @@ import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
+import com.patrickzedler.grocy.core.design.component.LocalFormFocus
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.insetItem
+import com.patrickzedler.grocy.core.design.component.rememberFormFocus
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.navigation.DetailRoute
 import com.patrickzedler.grocy.core.navigation.LeaveGuard
@@ -200,63 +203,67 @@ fun <F : ObjectFormState<*>> ObjectFormScreen(
         }
     }
 
-    SegmentedListScreen(
-        title = title,
-        modifier = modifier,
-        navigationIcon = {
-            // Beside the list its own back button leaves both
-            if (!frame.isBesideList) NavigateBackButton(onClick = requestBack)
-        },
-        menuItems = frame.menuItems,
-        actionMenuItems = if (viewModel.isNew || viewModel.load !is ObjectFormLoad.Ready) {
-            emptyList()
-        } else {
-            objectActionItems(frame.objectActions, viewModel.objectId)
-        },
-        pane = ScreenPane.Detail.takeIf { frame.isBesideList },
-        listState = listState,
-        snackbarHostState = snackbarHostState,
-        floatingToolbar = { scrollBehavior, toolbarModifier ->
-            FloatingToolbarWithFab(
-                scrollBehavior = scrollBehavior,
-                modifier = toolbarModifier,
-                fabPainter = painterResource(Res.drawable.ic_rounded_save),
-                fabDescription = stringResource(Res.string.action_save),
-                onFabClick = { viewModel.save() },
-            ) {
-                toolbarActions()
-                FloatingToolbarIconButton(
-                    painter = painterResource(Res.drawable.ic_rounded_vertical_align_top),
-                    contentDescription = stringResource(Res.string.action_scroll_to_top),
-                    onClick = { scope.launch { listState.animateScrollToItem(0) } },
-                    enabled = listState.canScrollBackward,
-                )
-            }
-        },
-    ) {
-        when (val load = viewModel.load) {
-            is ObjectFormLoad.Ready -> {
-                content(load.form)
-                if (load.userfields.isNotEmpty()) {
-                    segmentedGroup(key = "userfields", title = Res.string.product_userfields) {
-                        val errors = viewModel.userfieldErrors
-                        load.userfields.forEachIndexed { index, input ->
-                            UserfieldItem(
-                                input = input,
-                                error = errors[input.userfield.name],
-                                index = index,
-                                count = load.userfields.size,
-                            )
+    val formFocus = rememberFormFocus(listState) { viewModel.save() }
+    CompositionLocalProvider(LocalFormFocus provides formFocus) {
+        SegmentedListScreen(
+            title = title,
+            modifier = modifier,
+            navigationIcon = {
+                // Beside the list its own back button leaves both
+                if (!frame.isBesideList) NavigateBackButton(onClick = requestBack)
+            },
+            menuItems = frame.menuItems,
+            actionMenuItems = if (viewModel.isNew || viewModel.load !is ObjectFormLoad.Ready) {
+                emptyList()
+            } else {
+                objectActionItems(frame.objectActions, viewModel.objectId)
+            },
+            pane = ScreenPane.Detail.takeIf { frame.isBesideList },
+            listState = listState,
+            snackbarHostState = snackbarHostState,
+            floatingToolbar = { scrollBehavior, toolbarModifier ->
+                FloatingToolbarWithFab(
+                    scrollBehavior = scrollBehavior,
+                    modifier = toolbarModifier,
+                    fabPainter = painterResource(Res.drawable.ic_rounded_save),
+                    fabDescription = stringResource(Res.string.action_save),
+                    onFabClick = formFocus::submit,
+                ) {
+                    toolbarActions()
+                    FloatingToolbarIconButton(
+                        painter = painterResource(Res.drawable.ic_rounded_vertical_align_top),
+                        contentDescription = stringResource(Res.string.action_scroll_to_top),
+                        onClick = { scope.launch { listState.animateScrollToItem(0) } },
+                        enabled = listState.canScrollBackward,
+                    )
+                }
+            },
+        ) {
+            when (val load = viewModel.load) {
+                is ObjectFormLoad.Ready -> {
+                    content(load.form)
+                    if (load.userfields.isNotEmpty()) {
+                        segmentedGroup(key = "userfields", title = Res.string.product_userfields) {
+                            val errors = viewModel.userfieldErrors
+                            load.userfields.forEachIndexed { index, input ->
+                                UserfieldItem(
+                                    input = input,
+                                    error = errors[input.userfield.name],
+                                    index = index,
+                                    count = load.userfields.size,
+                                    isLastField = index == load.userfields.lastIndex,
+                                )
+                            }
                         }
                     }
                 }
-            }
 
-            ObjectFormLoad.NotFound -> Unit
+                ObjectFormLoad.NotFound -> Unit
 
-            ObjectFormLoad.Loading -> insetItem(key = "loading") {
-                Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
-                    LoadingIndicator()
+                ObjectFormLoad.Loading -> insetItem(key = "loading") {
+                    Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
+                        LoadingIndicator()
+                    }
                 }
             }
         }

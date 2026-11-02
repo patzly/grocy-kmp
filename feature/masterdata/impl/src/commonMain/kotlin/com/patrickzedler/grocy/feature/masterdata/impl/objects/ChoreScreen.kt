@@ -28,6 +28,7 @@ import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.forms.ChipIcon
+import com.patrickzedler.grocy.core.forms.DateKeyboardType
 import com.patrickzedler.grocy.core.forms.DatePickerButton
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FormFrame
@@ -127,6 +128,7 @@ internal fun ChoreScreen(
                 { index, count ->
                     TextItem(
                         state = form.name,
+                        autoFocus = viewModel.isNew,
                         label = stringResource(Res.string.product_name),
                         error = fieldErrorText(
                             errors[ObjectField.NAME],
@@ -224,6 +226,7 @@ internal fun ChoreScreen(
                 { index, count ->
                     TextItem(
                         state = form.startDate,
+                        keyboardType = DateKeyboardType,
                         label = stringResource(Res.string.chore_start_date),
                         hint = "YYYY-MM-DD HH:MM:SS\n" +
                             stringResource(Res.string.chore_start_date_hint),
@@ -344,6 +347,7 @@ internal fun ChoreScreen(
                     { index, count ->
                         TextItem(
                             state = form.productAmount,
+                            isLastField = !viewModel.hasUserfields,
                             label = stringResource(Res.string.chore_product_amount),
                             error = fieldErrorText(errors[ObjectField.PRODUCT_AMOUNT]),
                             suffix = stockUnit?.let { it.namePlural?.ifBlank { null } ?: it.name },

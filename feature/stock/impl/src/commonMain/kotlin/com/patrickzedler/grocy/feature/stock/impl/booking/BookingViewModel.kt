@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.feature.stock.impl.booking
 
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.foundation.text.input.setTextAndSelectAll
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,6 +11,8 @@ import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.forms.ChangeError
+import com.patrickzedler.grocy.core.forms.FormFocusTarget
+import com.patrickzedler.grocy.core.forms.ScannerFieldState
 import com.patrickzedler.grocy.core.forms.changeErrorOf
 import com.patrickzedler.grocy.core.forms.changedValues
 import com.patrickzedler.grocy.core.forms.productAmountUnits
@@ -133,6 +136,8 @@ internal class BookingViewModel(
     private val removeShoppingListItem: (suspend (Int) -> Unit)? = null,
     private val today: () -> Long = ::todayEpochDay,
     private val decimalSeparator: Char = platformDecimalSeparator(),
+    /** The product's scanner and where the focus goes around it. */
+    val scanner: ScannerFieldState = ScannerFieldState(hasValue = preset.productId != null),
 ) : ViewModel() {
 
     /** Set while this purchase puts a shopping list item into stock. */
@@ -198,6 +203,7 @@ internal class BookingViewModel(
             preset.productId?.let { id ->
                 options.products.firstOrNull { it.id == id }?.let { product ->
                     choose(options, product, stockId = preset.stockId)
+                    if (!submitWhenReady) scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
                 }
             }
         }
@@ -238,6 +244,37 @@ internal class BookingViewModel(
         }
         form.usedBarcode = null
         choose(options, product)
+        scanner.onValueChosen()
+    }
+
+    /** The keyboard's action in the product field: on to the amount, once there is a product. */
+    fun goToAmount() {
+        if (form.product != null) scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
+    }
+
+    /** A scanned [code]; scan mode goes on scanning, a code to answer for closes the scanner. */
+    fun onScanned(code: String) {
+        val options = options.value ?: return
+        val scanMode = isScanMode(options)
+        when (onCode(code, scanMode)) {
+            is CodeMatch.Found -> scanner.onScanned(staysOpen = scanMode)
+            CodeMatch.Unknown -> scanner.closeWithoutFocus()
+            // Scan the right one next
+            CodeMatch.NotOffered, null -> Unit
+        }
+    }
+
+    /**
+     * Text submitted in the product field, which a barcode reader types like a keyboard: a code
+     * is used like a scanned one, other text only when no suggestion would take it, for Grocy's
+     * "Create or assign product". False leaves it to the suggestions.
+     */
+    fun onTextSubmitted(text: String, hasSuggestion: Boolean): Boolean {
+        val options = options.value ?: return false
+        val match = matchCode(text, offeredProducts(options), options.products, options.barcodes)
+        if (match == CodeMatch.Unknown && hasSuggestion) return false
+        onCode(text, isScanMode(options))
+        return true
     }
 
     /**
@@ -245,19 +282,14 @@ internal class BookingViewModel(
      * chooses it (with the barcode's defaults); in [scanMode] the page books by itself once
      * every field is filled.
      */
-    fun onCode(code: String, scanMode: Boolean) {
-        val options = options.value ?: return
-        when (
-            val match = matchCode(
-                code,
-                offeredProducts(options),
-                options.products,
-                options.barcodes,
-            )
-        ) {
+    fun onCode(code: String, scanMode: Boolean): CodeMatch? {
+        val options = options.value ?: return null
+        val match = matchCode(code, offeredProducts(options), options.products, options.barcodes)
+        when (match) {
             is CodeMatch.Found -> {
                 form.usedBarcode = match.barcode
                 choose(options, match.product, match.barcode, match.stockId, scanMode)
+                if (!scanMode) scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
             }
 
             CodeMatch.NotOffered -> {
@@ -267,10 +299,12 @@ internal class BookingViewModel(
 
             CodeMatch.Unknown -> unknownCode = code.trim()
         }
+        return match
     }
 
     fun dismissUnknownCode() {
         unknownCode = null
+        scanner.onFormReset()
     }
 
     /**
@@ -281,6 +315,8 @@ internal class BookingViewModel(
         form.pendingBarcode = unknownCode
         unknownCode = null
         clearProduct()
+        // Now the product is typed
+        scanner.requestFocus(FormFocusTarget.CODE_FIELD)
     }
 
     /** Grocy's "Add as new product": the barcode is added to the product once it is booked. */
@@ -519,9 +555,8 @@ internal class BookingViewModel(
         if (amount == null) {
             form.amount.clearText()
         } else {
-            form.amount.setTextAndPlaceCursorAtEnd(
-                formatDecimal(amount, decimals, decimalSeparator),
-            )
+            // Selected, typing replaces it also when it arrives after the field took the focus
+            form.amount.setTextAndSelectAll(formatDecimal(amount, decimals, decimalSeparator))
         }
     }
 
@@ -767,6 +802,7 @@ internal class BookingViewModel(
     private fun reset(open: Boolean) {
         val options = options.value
         clearProduct()
+        scanner.onFormReset()
         if (open) return
         when (kind) {
             BookingKind.PURCHASE, BookingKind.INVENTORY -> {

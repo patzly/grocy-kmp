@@ -12,6 +12,7 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
+import com.patrickzedler.grocy.core.model.scanner.ScannerForm
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
@@ -113,6 +114,14 @@ class AndroidSettingsStore(
         }
     }
 
+    override val scannerForms: Flow<Set<ScannerForm>> = preferences
+        .map { ScannerForm.of(it[SCANNER_FORMS]) }
+        .distinctUntilChanged()
+
+    override suspend fun setScannerForms(forms: Set<ScannerForm>) {
+        dataStore.edit { it[SCANNER_FORMS] = ScannerForm.stored(forms) }
+    }
+
     override val recipesOptions: Flow<RecipesOptions> = preferences
         .map {
             RecipesOptions.of(
@@ -159,5 +168,6 @@ class AndroidSettingsStore(
         val RECIPES_SORT = stringPreferencesKey("recipes_sort")
         val RECIPES_ASCENDING = booleanPreferencesKey("recipes_ascending")
         val RECIPES_VIEW = stringPreferencesKey("recipes_view")
+        val SCANNER_FORMS = stringPreferencesKey("scanner_forms")
     }
 }

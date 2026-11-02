@@ -4,6 +4,8 @@ import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
+import com.patrickzedler.grocy.core.model.scanner.ScannerForm
+import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.stock.BookingKind
 import com.patrickzedler.grocy.core.model.stock.ProductGrocycode
 import com.patrickzedler.grocy.core.model.stock.ProductLocationAmount
@@ -185,3 +187,27 @@ private const val NEVER_OVERDUE_DAYS = -1
 
 // Amounts are compared with Grocy's smallest decimal step in mind
 private const val AMOUNT_EPSILON = 1e-9
+
+/**
+ * The field whose keyboard action books the page: the last one a user usually changes. What
+ * follows it is prefilled or optional, like where Enter books on Grocy's pages; a missing value
+ * takes the focus instead.
+ */
+internal fun keyboardEndField(kind: BookingKind, config: ServerConfig): BookingField = when (kind) {
+    BookingKind.CONSUME, BookingKind.INVENTORY -> BookingField.AMOUNT
+    BookingKind.TRANSFER -> BookingField.TO_LOCATION
+    BookingKind.PURCHASE -> when {
+        config.stockPriceTracking -> BookingField.PRICE
+        config.stockBestBeforeDateTracking -> BookingField.DUE_DATE
+        else -> BookingField.AMOUNT
+    }
+}
+
+/** The remembered scanner of a stock page. */
+internal val BookingKind.scannerForm: ScannerForm
+    get() = when (this) {
+        BookingKind.PURCHASE -> ScannerForm.PURCHASE
+        BookingKind.CONSUME -> ScannerForm.CONSUME
+        BookingKind.TRANSFER -> ScannerForm.TRANSFER
+        BookingKind.INVENTORY -> ScannerForm.INVENTORY
+    }

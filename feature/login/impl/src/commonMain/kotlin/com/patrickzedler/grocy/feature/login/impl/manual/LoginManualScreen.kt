@@ -20,15 +20,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.ConnectedButtonGroup
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
+import com.patrickzedler.grocy.core.design.component.LocalFormFocus
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.RoundedSecureTextField
 import com.patrickzedler.grocy.core.design.component.RoundedTextField
@@ -39,6 +44,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedTexts
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.insetItem
+import com.patrickzedler.grocy.core.design.component.rememberFormFocus
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.design.component.tryOpenUri
 import com.patrickzedler.grocy.core.network.ServerUrl
@@ -82,66 +88,72 @@ internal fun LoginManualScreen(
     val isEditable = !viewModel.isLoggingIn
     val isHomeAssistant = viewModel.serverType == ServerType.HOME_ASSISTANT
 
-    SegmentedListScreen(
-        title = stringResource(Res.string.login_title),
-        modifier = modifier,
-        navigationIcon = { NavigateBackButton(onClick = onBackClick) },
-    ) {
-        segmentedGroup(key = "type") {
-            SegmentedContainer(index = 0, count = 1) {
-                SegmentedTexts(
-                    headline = stringResource(Res.string.login_manual_server_type),
-                    supporting = stringResource(Res.string.login_manual_server_type_description),
-                    modifier = Modifier.padding(bottom = 12.dp),
-                )
-                ConnectedButtonGroup(
-                    options = ServerType.entries,
-                    checked = viewModel.serverType,
-                    onCheckedChange = viewModel::selectServerType,
-                    enabled = isEditable,
-                    label = { it.label() },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-        }
-
-        when {
-            !isHomeAssistant -> grocyGroup(
-                viewModel = viewModel,
-                enabled = isEditable,
-                onCreateKeyClick = {
-                    viewModel.normalizedGrocyUrl?.let { uriHandler.tryOpenUri("$it/manageapikeys") }
-                },
-            )
-
-            viewModel.isHomeAssistantSupported -> homeAssistantGroups(
-                viewModel = viewModel,
-                enabled = isEditable,
-                onCreateTokenClick = {
-                    viewModel.normalizedHomeAssistantUrl?.let {
-                        uriHandler.tryOpenUri("$it/profile/security")
-                    }
-                },
-            )
-
-            else -> homeAssistantUnsupportedGroup(
-                onUseGrocyClick = { viewModel.selectServerType(ServerType.GROCY) },
-            )
-        }
-
-        if (!isHomeAssistant || viewModel.isHomeAssistantSupported) {
-            viewModel.error?.let { error ->
-                segmentedGroup(key = "error") {
-                    LoginErrorItem(error = error, index = 0, count = 1)
+    val formFocus = rememberFormFocus {
+        viewModel.connect()
+        true
+    }
+    CompositionLocalProvider(LocalFormFocus provides formFocus) {
+        SegmentedListScreen(
+            title = stringResource(Res.string.login_title),
+            modifier = modifier,
+            navigationIcon = { NavigateBackButton(onClick = onBackClick) },
+        ) {
+            segmentedGroup(key = "type") {
+                SegmentedContainer(index = 0, count = 1) {
+                    SegmentedTexts(
+                        headline = stringResource(Res.string.login_manual_server_type),
+                        supporting = stringResource(Res.string.login_manual_server_type_description),
+                        modifier = Modifier.padding(bottom = 12.dp),
+                    )
+                    ConnectedButtonGroup(
+                        options = ServerType.entries,
+                        checked = viewModel.serverType,
+                        onCheckedChange = viewModel::selectServerType,
+                        enabled = isEditable,
+                        label = { it.label() },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
                 }
             }
-            // The primary action of the form, on the background like a dialog's buttons
-            insetItem(key = "connect") {
-                ConnectButton(
-                    isLoggingIn = viewModel.isLoggingIn,
-                    enabled = viewModel.canConnect,
-                    onClick = viewModel::connect,
+
+            when {
+                !isHomeAssistant -> grocyGroup(
+                    viewModel = viewModel,
+                    enabled = isEditable,
+                    onCreateKeyClick = {
+                        viewModel.normalizedGrocyUrl?.let { uriHandler.tryOpenUri("$it/manageapikeys") }
+                    },
                 )
+
+                viewModel.isHomeAssistantSupported -> homeAssistantGroups(
+                    viewModel = viewModel,
+                    enabled = isEditable,
+                    onCreateTokenClick = {
+                        viewModel.normalizedHomeAssistantUrl?.let {
+                            uriHandler.tryOpenUri("$it/profile/security")
+                        }
+                    },
+                )
+
+                else -> homeAssistantUnsupportedGroup(
+                    onUseGrocyClick = { viewModel.selectServerType(ServerType.GROCY) },
+                )
+            }
+
+            if (!isHomeAssistant || viewModel.isHomeAssistantSupported) {
+                viewModel.error?.let { error ->
+                    segmentedGroup(key = "error") {
+                        LoginErrorItem(error = error, index = 0, count = 1)
+                    }
+                }
+                // The primary action of the form, on the background like a dialog's buttons
+                insetItem(key = "connect") {
+                    ConnectButton(
+                        isLoggingIn = viewModel.isLoggingIn,
+                        enabled = viewModel.canConnect,
+                        onClick = viewModel::connect,
+                    )
+                }
             }
         }
     }
@@ -307,6 +319,8 @@ private fun AddressItem(
                 isError = isInvalid,
                 enabled = enabled,
                 lineLimits = TextFieldLineLimits.SingleLine,
+                // The first thing to enter, unless the address came with the link or scan
+                autoFocus = state.text.isEmpty(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Uri,
                     autoCorrectEnabled = false,
@@ -339,7 +353,8 @@ private fun SecretField(
         onKeyboardAction = { performDefaultAction ->
             if (imeAction == ImeAction.Done) onDone() else performDefaultAction()
         },
-        modifier = modifier.fillMaxWidth(),
+        // Password managers offer the key they keep for this app
+        modifier = modifier.fillMaxWidth().semantics { contentType = ContentType.Password },
     )
 }
 

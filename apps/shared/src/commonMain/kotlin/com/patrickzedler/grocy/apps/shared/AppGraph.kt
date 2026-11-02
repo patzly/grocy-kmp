@@ -9,6 +9,7 @@ import com.patrickzedler.grocy.core.data.server.GROCY_GITHUB_REPOSITORY
 import com.patrickzedler.grocy.core.data.server.ServerRepository
 import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
+import com.patrickzedler.grocy.core.data.settings.ScannerFormsRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
@@ -149,6 +150,8 @@ class AppGraph(
     private val shoppingModeSettingsRepository =
         ShoppingModeSettingsRepository(platform.settingsStore, appScope)
 
+    private val scannerFormsRepository = ScannerFormsRepository(platform.settingsStore, appScope)
+
     private val recipesOptionsRepository =
         RecipesOptionsRepository(platform.settingsStore, appScope)
 
@@ -205,6 +208,8 @@ class AppGraph(
     }
 
     internal val masterDataDependencies: MasterDataDependencies = object : MasterDataDependencies {
+        override val scannerForms: ScannerFormsRepository
+            get() = scannerFormsRepository
         override val masterDataRepository: MasterDataRepository
             get() = this@AppGraph.masterDataRepository
         override val stockRepository: StockRepository
@@ -217,6 +222,8 @@ class AppGraph(
 
     internal val shoppingListDependencies: ShoppingListDependencies =
         object : ShoppingListDependencies {
+            override val scannerForms: ScannerFormsRepository
+                get() = scannerFormsRepository
             override val masterDataRepository: MasterDataRepository
                 get() = this@AppGraph.masterDataRepository
             override val stockRepository: StockRepository
@@ -230,6 +237,8 @@ class AppGraph(
         }
 
     internal val stockDependencies: StockDependencies = object : StockDependencies {
+        override val scannerForms: ScannerFormsRepository
+            get() = scannerFormsRepository
         override val masterDataRepository: MasterDataRepository
             get() = this@AppGraph.masterDataRepository
         override val stockRepository: StockRepository

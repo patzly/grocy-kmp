@@ -16,14 +16,13 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.semantics.heading
@@ -36,7 +35,9 @@ import com.patrickzedler.grocy.core.design.component.ConnectedButtonGroup
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
+import com.patrickzedler.grocy.core.design.component.FocusRequestEffect
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
+import com.patrickzedler.grocy.core.design.component.LocalFormFocus
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.NumberStepper
@@ -48,10 +49,13 @@ import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.rememberFormFocus
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.forms.ChangeError
+import com.patrickzedler.grocy.core.forms.DateKeyboardType
 import com.patrickzedler.grocy.core.forms.DatePickerButton
 import com.patrickzedler.grocy.core.forms.DropdownItem
+import com.patrickzedler.grocy.core.forms.FormFocusTarget
 import com.patrickzedler.grocy.core.forms.GroupItem
 import com.patrickzedler.grocy.core.forms.GroupItems
 import com.patrickzedler.grocy.core.forms.ScannerToggleButton
@@ -188,8 +192,14 @@ internal fun BookingScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-    var showScanner by rememberSaveable { mutableStateOf(false) }
     val currentOptions = options
+    val formFocus = rememberFormFocus(listState) { viewModel.book() || !form.hasInvalidFields }
+    // The next object starts at the top, also after booking from the end of a long form
+    val startsOver = viewModel.scanner.isOpen ||
+        viewModel.scanner.focusTarget == FormFocusTarget.CODE_FIELD
+    LaunchedEffect(startsOver) {
+        if (startsOver && listState.canScrollBackward) listState.animateScrollToItem(0)
+    }
 
     BookingEvents(viewModel, snackbarHostState, onDone)
     LabelPrintEffect(actions.labels, snackbarHostState)
@@ -206,59 +216,56 @@ internal fun BookingScreen(
         )
     }
 
-    SegmentedListScreen(
-        title = stringResource(kind.title),
-        modifier = modifier,
-        // Beside the start screen it needs no back button of its own
-        navigationIcon = { if (pane == null) NavigateBackButton(onClick = onBackClick) },
-        menuItems = menuItems,
-        pane = pane,
-        listState = listState,
-        snackbarHostState = snackbarHostState,
-        floatingToolbar = { scrollBehavior, toolbarModifier ->
-            FloatingToolbarWithFab(
-                scrollBehavior = scrollBehavior,
-                modifier = toolbarModifier,
-                fabPainter = painterResource(Res.drawable.ic_rounded_check),
-                fabDescription = stringResource(kind.title),
-                onFabClick = { viewModel.book() },
-            ) {
-                if (kind == BookingKind.CONSUME && currentOptions != null &&
-                    currentOptions.config.stockProductOpenedTracking
+    CompositionLocalProvider(LocalFormFocus provides formFocus) {
+        SegmentedListScreen(
+            title = stringResource(kind.title),
+            modifier = modifier,
+            // Beside the start screen it needs no back button of its own
+            navigationIcon = { if (pane == null) NavigateBackButton(onClick = onBackClick) },
+            menuItems = menuItems,
+            pane = pane,
+            listState = listState,
+            snackbarHostState = snackbarHostState,
+            floatingToolbar = { scrollBehavior, toolbarModifier ->
+                FloatingToolbarWithFab(
+                    scrollBehavior = scrollBehavior,
+                    modifier = toolbarModifier,
+                    fabPainter = painterResource(Res.drawable.ic_rounded_check),
+                    fabDescription = stringResource(kind.title),
+                    onFabClick = formFocus::submit,
                 ) {
+                    if (kind == BookingKind.CONSUME && currentOptions != null &&
+                        currentOptions.config.stockProductOpenedTracking
+                    ) {
+                        FloatingToolbarIconButton(
+                            painter = painterResource(Res.drawable.ic_rounded_box),
+                            contentDescription = stringResource(Res.string.booking_mark_as_opened),
+                            onClick = { viewModel.markAsOpened() },
+                            enabled = viewModel.canOpen(currentOptions),
+                        )
+                    }
+                    // Grocy's product card, once a product is chosen
+                    val product = form.product
                     FloatingToolbarIconButton(
-                        painter = painterResource(Res.drawable.ic_rounded_box),
-                        contentDescription = stringResource(Res.string.booking_mark_as_opened),
-                        onClick = { viewModel.markAsOpened() },
-                        enabled = viewModel.canOpen(currentOptions),
+                        painter = painterResource(Res.drawable.ic_rounded_info),
+                        contentDescription = stringResource(Res.string.product_overview),
+                        onClick = { product?.let { actions.overview.show(it.id) } },
+                        enabled = product != null,
+                    )
+                    FloatingToolbarIconButton(
+                        painter = painterResource(Res.drawable.ic_rounded_vertical_align_top),
+                        contentDescription = stringResource(Res.string.action_scroll_to_top),
+                        onClick = { scope.launch { listState.animateScrollToItem(0) } },
+                        enabled = listState.canScrollBackward,
                     )
                 }
-                // Grocy's product card, once a product is chosen
-                val product = form.product
-                FloatingToolbarIconButton(
-                    painter = painterResource(Res.drawable.ic_rounded_info),
-                    contentDescription = stringResource(Res.string.product_overview),
-                    onClick = { product?.let { actions.overview.show(it.id) } },
-                    enabled = product != null,
-                )
-                FloatingToolbarIconButton(
-                    painter = painterResource(Res.drawable.ic_rounded_vertical_align_top),
-                    contentDescription = stringResource(Res.string.action_scroll_to_top),
-                    onClick = { scope.launch { listState.animateScrollToItem(0) } },
-                    enabled = listState.canScrollBackward,
-                )
-            }
-        },
-    ) {
-        if (currentOptions == null) return@SegmentedListScreen
-        bookingForm(
-            viewModel = viewModel,
-            options = currentOptions,
-            showScanner = showScanner,
-            onScannerToggle = { showScanner = it },
-        )
-    }
+            },
+        ) {
+            if (currentOptions == null) return@SegmentedListScreen
+            bookingForm(viewModel = viewModel, options = currentOptions)
+        }
 
+    }
     ProductOverviewHost(
         overview = actions.overview,
         shoppingList = actions.shoppingList,
@@ -272,8 +279,6 @@ internal fun BookingScreen(
 private fun LazyListScope.bookingForm(
     viewModel: BookingViewModel,
     options: BookingOptions,
-    showScanner: Boolean,
-    onScannerToggle: (Boolean) -> Unit,
 ) {
     val kind = viewModel.kind
     val form = viewModel.form
@@ -294,7 +299,7 @@ private fun LazyListScope.bookingForm(
     }
     segmentedGroup(key = "product") {
         GroupItems(
-            productItem(viewModel, options, showScanner, onScannerToggle),
+            productItem(viewModel, options),
             exactAmountItem(viewModel),
             amountItem(viewModel, options),
             unitItem(viewModel),
@@ -334,6 +339,7 @@ private fun LazyListScope.bookingForm(
                             error = form.userfieldErrors[input.userfield.name],
                             index = index,
                             count = form.userfields.size,
+                            isLastField = index == form.userfields.lastIndex,
                         )
                     }
                 }
@@ -345,12 +351,16 @@ private fun LazyListScope.bookingForm(
 private fun productItem(
     viewModel: BookingViewModel,
     options: BookingOptions,
-    showScanner: Boolean,
-    onScannerToggle: (Boolean) -> Unit,
 ): GroupItem = { index, count ->
     val form = viewModel.form
-    val scanMode = viewModel.isScanMode(options)
+    val scanner = viewModel.scanner
     val context = form.context
+    val focusRequester = remember { FocusRequester() }
+    FocusRequestEffect(
+        scanner.focusTarget == FormFocusTarget.CODE_FIELD,
+        focusRequester,
+        scanner::onFocusHandled,
+    )
     DropdownItem(
         label = stringResource(Res.string.data_product),
         options = viewModel.offeredProducts(options).map { DropdownOption(it.id, it.name) },
@@ -372,14 +382,15 @@ private fun productItem(
         },
         index = index,
         count = count,
-        below = if (showScanner) {
+        focusRequester = focusRequester,
+        onSubmitText = viewModel::onTextSubmitted,
+        // The amount takes the focus only with a product, without one typing goes on here
+        onKeyboardNext = viewModel::goToAmount,
+        onFocusChange = scanner::onFieldFocusChange,
+        below = if (scanner.isOpen) {
             {
                 BarcodeScanner(
-                    onBarcodeScanned = { barcode ->
-                        viewModel.onCode(barcode.value, scanMode)
-                        // Scan mode books one product after the other
-                        if (!scanMode) onScannerToggle(false)
-                    },
+                    onBarcodeScanned = { barcode -> viewModel.onScanned(barcode.value) },
                     shape = MaterialTheme.shapes.small,
                     containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                 )
@@ -389,8 +400,8 @@ private fun productItem(
         },
         trailingAction = {
             ScannerToggleButton(
-                isScannerOpen = showScanner,
-                onClick = { onScannerToggle(!showScanner) },
+                isScannerOpen = scanner.isOpen,
+                onClick = scanner::toggle,
             )
         },
     )
@@ -421,6 +432,12 @@ private fun amountItem(viewModel: BookingViewModel, options: BookingOptions): Gr
         val separator = platformDecimalSeparator()
         val typed = parseDecimal(form.amount.text.toString())
         val stockUnit = form.stockUnit
+        val focusRequester = remember { FocusRequester() }
+        FocusRequestEffect(
+            viewModel.scanner.focusTarget == FormFocusTarget.NEXT_FIELD && form.product != null,
+            focusRequester,
+            viewModel.scanner::onFocusHandled,
+        )
         val hint = when {
             form.product?.enableTareWeightHandling == true &&
                 !(viewModel.kind == BookingKind.CONSUME && form.exactAmount) ->
@@ -465,6 +482,8 @@ private fun amountItem(viewModel: BookingViewModel, options: BookingOptions): Gr
             enabled = form.product != null,
             keyboardType = KeyboardType.Decimal,
             stepper = NumberStepper(min = limits?.min, max = limits?.max),
+            focusRequester = focusRequester,
+            isLastField = keyboardEndField(viewModel.kind, options.config) == BookingField.AMOUNT,
             index = index,
             count = count,
         )
@@ -537,6 +556,7 @@ private fun toLocationItem(viewModel: BookingViewModel, options: BookingOptions)
             selectedId = form.toLocationId,
             onSelectedIdChange = { form.toLocationId = it },
             onUnmatchedChange = { form.isLocationUnmatched = it },
+            isLastField = true,
             error = form.errors[BookingField.TO_LOCATION]?.let {
                 stringResource(Res.string.booking_location_required)
             },
@@ -648,6 +668,7 @@ private fun purchasedDateItem(viewModel: BookingViewModel, options: BookingOptio
         val form = viewModel.form
         TextItem(
             state = form.purchasedDate,
+            keyboardType = DateKeyboardType,
             label = stringResource(Res.string.data_purchased_date),
             error = form.errors[BookingField.PURCHASED_DATE]?.let {
                 dateErrorText(it, Res.string.booking_purchased_date_required)
@@ -667,6 +688,8 @@ private fun dueDateItem(viewModel: BookingViewModel, options: BookingOptions): G
         val neverOverdue = date == NEVER_OVERDUE_DATE
         TextItem(
             state = form.dueDate,
+            keyboardType = DateKeyboardType,
+            isLastField = keyboardEndField(viewModel.kind, options.config) == BookingField.DUE_DATE,
             label = stringResource(Res.string.data_due_date),
             hint = stringResource(Res.string.booking_date_before_today)
                 .takeIf { viewModel.isBeforeToday(date) },
@@ -735,6 +758,7 @@ private fun priceItem(viewModel: BookingViewModel, options: BookingOptions): Gro
         }
         TextItem(
             state = form.price,
+            isLastField = keyboardEndField(viewModel.kind, options.config) == BookingField.PRICE,
             label = stringResource(Res.string.data_price),
             hint = hint,
             error = form.errors[BookingField.PRICE]?.let {

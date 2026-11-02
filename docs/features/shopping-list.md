@@ -7,7 +7,7 @@ Shopping list (`feature:shoppinglist`, `ShoppingListRepository` of `core:data`):
   "shoppinglist"), the item form `ShoppingListItemRoute(id, listId, productId)` and the list form
   `ShoppingListFormRoute(id)` its details (`DetailRoute`s; the start screen's quick add in
   narrow windows is a screen of its own, `inList = false`). A new item without preset product
-  focuses the product field once (`focusesProduct`, Grocy's form does too); both
+  starts with the product field or its scanner as last used, an edited item or a preset product with the amount (`ScannerFieldState`, `docs/focus.md`); both
   forms close after creating (`ObjectFormViewModel.closesWhenCreated`), a new item without list
   goes to Grocy's first list by name, a list created in its form becomes the shown one
   (`ShoppingListRepository.selectedListId`, kept for the process). The item form is titled

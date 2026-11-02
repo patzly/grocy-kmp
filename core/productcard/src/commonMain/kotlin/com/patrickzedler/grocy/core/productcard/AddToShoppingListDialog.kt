@@ -65,7 +65,11 @@ private fun AddToShoppingListDialog(
         onDismissRequest = onDismissRequest,
     ) {
         SegmentedGroup {
-            ShoppingListItemFields(inputs = state.inputs, errors = state.errors)
+            ShoppingListItemFields(
+                inputs = state.inputs,
+                errors = state.errors,
+                autoFocusAmount = true,
+            )
         }
         if (state.userfields.isNotEmpty()) {
             SegmentedGroup(title = stringResource(Res.string.product_userfields)) {
@@ -75,6 +79,7 @@ private fun AddToShoppingListDialog(
                         error = state.userfieldErrors[input.userfield.name],
                         index = index,
                         count = state.userfields.size,
+                        isLastField = index == state.userfields.lastIndex,
                     )
                 }
             }

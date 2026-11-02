@@ -9,7 +9,8 @@ Credential and settings stores, and the FOSS vs Play variant. Moved from CLAUDE.
   (no secure storage available). Both serialize via `ServerConnectionCodec` (JSON, polymorphic
   `ServerConnection` with `@SerialName` discriminators "demo" / "api_key" / "home_assistant").
 - `SettingsStore`: DataStore on Android, `localStorage` keys prefixed `grocy.` on web. Holds
-  `checkUnlockKey` and `scannerEngine` (stored by enum name, unknown values fall back to ZXing),
+  `checkUnlockKey`, `scannerEngine` (stored by enum name, unknown values fall back to ZXing),
+  `scannerForms` (the forms that open with their scanner, enum names joined with commas),
   the appearance, the stock overview's table options (`StockOverviewOptions.of`: unknown
   values of a newer version fall back to the defaults) and the shopping list's
   (`shopping_list_fields`/`shopping_list_grouping`, on the web `grocy.shoppingListFields`/

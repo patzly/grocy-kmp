@@ -144,7 +144,13 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
                 ProductRoute(it)
             },
             related = ProductRelated(
-                barcodes = viewModel { ProductBarcodesViewModel(repository, language = language) },
+                barcodes = viewModel {
+                    ProductBarcodesViewModel(
+                        repository = repository,
+                        language = language,
+                        scannerForms = dependencies.scannerForms,
+                    )
+                },
                 barcodeActions = viewModel(key = "barcodeActions") {
                     ObjectActionsViewModel(MasterDataRepository.PRODUCT_BARCODES, repository)
                 },

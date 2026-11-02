@@ -4,6 +4,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.clickCursor
@@ -24,6 +25,7 @@ fun ScannerToggleButton(
     enabled: Boolean = true,
 ) {
     val haptic = LocalHapticFeedback.current
+    val focusManager = LocalFocusManager.current
     val description = stringResource(
         if (isScannerOpen) Res.string.action_close_scanner else Res.string.action_scan_barcode,
     )
@@ -31,6 +33,8 @@ fun ScannerToggleButton(
         IconButton(
             onClick = {
                 haptic.confirm()
+                // The camera takes the keyboard's place
+                if (!isScannerOpen) focusManager.clearFocus()
                 onClick()
             },
             modifier = Modifier.clickCursor(enabled = enabled),

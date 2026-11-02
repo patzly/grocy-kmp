@@ -41,7 +41,7 @@ Grocy's meal plan page (`/mealplan`) and its sections (`/mealplansections`), par
     · 7:00") is each entry's overline. The current week opens at today
     (`agendaIndexOfDay`), other weeks at their start.
   - Wide windows (tablets in landscape, desktops): Grocy's grid over the whole width, a column
-    per day; the days' headers in one row as high as the highest, then per used section its
+    per day; the days' headers in one row as high as the highest, then per used section a divider line (`outlineVariant`, 16.dp below the row above, 12.dp above the name) and its
     name and each day's entries as cards like the recipe gallery's (picture across the top with
     8.dp padding, the name in body large emphasized with the menu centered on its first line,
     chips; 16.dp between them).

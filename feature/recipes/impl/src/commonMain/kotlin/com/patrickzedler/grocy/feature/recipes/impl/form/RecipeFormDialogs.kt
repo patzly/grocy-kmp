@@ -72,6 +72,7 @@ internal fun IngredientDialog(
                 { index, count ->
                     DropdownItem(
                         label = stringResource(Res.string.data_product),
+                        autoFocus = state.isNew,
                         options = state.products.map { DropdownOption(it.id, it.name) },
                         selectedId = state.productId,
                         onSelectedIdChange = state::selectProduct,
@@ -109,6 +110,7 @@ internal fun IngredientDialog(
                 { index, count ->
                     TextItem(
                         state = state.amount,
+                        autoFocus = !state.isNew,
                         label = stringResource(Res.string.data_amount),
                         error = fieldErrorText(errors[IngredientField.AMOUNT]),
                         keyboardType = KeyboardType.Decimal,
@@ -193,6 +195,7 @@ internal fun IngredientDialog(
                     { index, count ->
                         TextItem(
                             state = state.priceFactor,
+                            isLastField = true,
                             label = stringResource(Res.string.recipe_ingredient_price_factor),
                             hint = stringResource(Res.string.recipe_ingredient_price_factor_hint),
                             error = fieldErrorText(errors[IngredientField.PRICE_FACTOR]),
@@ -233,6 +236,7 @@ internal fun NestingDialog(
                 { index, count ->
                     DropdownItem(
                         label = stringResource(Res.string.recipe_nesting_recipe),
+                        autoFocus = state.isNew,
                         options = state.recipes.map { DropdownOption(it.id, it.name) },
                         selectedId = state.recipeId,
                         onSelectedIdChange = { state.recipeId = it },
@@ -248,6 +252,8 @@ internal fun NestingDialog(
                 { index, count ->
                     TextItem(
                         state = state.servings,
+                        autoFocus = !state.isNew,
+                        isLastField = true,
                         label = stringResource(Res.string.meal_plan_servings),
                         error = fieldErrorText(errors[ObjectField.AMOUNT]),
                         keyboardType = KeyboardType.Decimal,

@@ -5,6 +5,7 @@ import com.patrickzedler.grocy.core.data.KeyValueStorage
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
+import com.patrickzedler.grocy.core.model.scanner.ScannerForm
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
@@ -117,6 +118,15 @@ class WebSettingsStore internal constructor(
         shoppingModeSettingsState.value = settings
     }
 
+    private val scannerFormsState = MutableStateFlow(ScannerForm.of(storage.get(SCANNER_FORMS)))
+
+    override val scannerForms: Flow<Set<ScannerForm>> = scannerFormsState.asStateFlow()
+
+    override suspend fun setScannerForms(forms: Set<ScannerForm>) {
+        storage.set(SCANNER_FORMS, ScannerForm.stored(forms))
+        scannerFormsState.value = forms
+    }
+
     private val recipesOptionsState = MutableStateFlow(
         RecipesOptions.of(
             fields = storage.get(RECIPES_FIELDS),
@@ -161,5 +171,6 @@ class WebSettingsStore internal constructor(
         const val RECIPES_SORT = "grocy.recipesSort"
         const val RECIPES_ASCENDING = "grocy.recipesAscending"
         const val RECIPES_VIEW = "grocy.recipesView"
+        const val SCANNER_FORMS = "grocy.scannerForms"
     }
 }

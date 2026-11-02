@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.feature.shoppinglist.impl
 
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import app.cash.turbine.test
+import com.patrickzedler.grocy.core.forms.FormFocusTarget
 import com.patrickzedler.grocy.core.forms.ObjectField
 import com.patrickzedler.grocy.core.forms.ObjectFormEvent
 import com.patrickzedler.grocy.core.forms.ObjectFormLoad
@@ -99,24 +100,63 @@ class ShoppingListItemViewModelTest {
     fun newItemFocusesTheProductOnce() = runTest(dispatcher) {
         val viewModel = viewModel()
 
-        assertTrue(viewModel.form.focusesProduct)
-        viewModel.form.onProductFocused()
+        assertEquals(FormFocusTarget.CODE_FIELD, viewModel.form.scanner.focusTarget)
+        viewModel.form.scanner.onFocusHandled()
 
-        assertFalse(viewModel.form.focusesProduct)
+        assertNull(viewModel.form.scanner.focusTarget)
     }
 
     @Test
-    fun newItemWithPresetProductDoesNotFocusTheProduct() = runTest(dispatcher) {
+    fun newItemWithPresetProductGoesOnWithTheAmount() = runTest(dispatcher) {
         val viewModel = viewModel(productId = 1)
 
-        assertFalse(viewModel.form.focusesProduct)
+        assertEquals(FormFocusTarget.NEXT_FIELD, viewModel.form.scanner.focusTarget)
     }
 
     @Test
-    fun editedItemDoesNotFocusTheProduct() = runTest(dispatcher) {
+    fun editedItemGoesOnWithTheAmount() = runTest(dispatcher) {
         val viewModel = viewModel(id = 5)
 
-        assertFalse(viewModel.form.focusesProduct)
+        assertEquals(FormFocusTarget.NEXT_FIELD, viewModel.form.scanner.focusTarget)
+    }
+
+    @Test
+    fun scanChoosesTheProductAndGoesOnWithTheAmount() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        viewModel.form.scanner.toggle()
+
+        assertTrue(viewModel.form.onScanned("grcy:p:1"))
+
+        assertEquals(1, viewModel.form.productId)
+        assertFalse(viewModel.form.scanner.isOpen)
+        assertEquals(FormFocusTarget.NEXT_FIELD, viewModel.form.scanner.focusTarget)
+    }
+
+    @Test
+    fun unknownScanKeepsScanning() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        viewModel.form.scanner.toggle()
+
+        assertFalse(viewModel.form.onScanned("unknown"))
+
+        assertTrue(viewModel.form.scanner.isOpen)
+    }
+
+    @Test
+    fun aBarcodeReaderTypesTheCodeIntoTheProductField() = runTest(dispatcher) {
+        val viewModel = viewModel()
+
+        assertTrue(viewModel.form.onTextSubmitted("grcy:p:1"))
+
+        assertEquals(1, viewModel.form.productId)
+        assertEquals(FormFocusTarget.NEXT_FIELD, viewModel.form.scanner.focusTarget)
+    }
+
+    @Test
+    fun textThatIsNoCodeIsLeftToTheSuggestions() = runTest(dispatcher) {
+        val viewModel = viewModel()
+
+        assertFalse(viewModel.form.onTextSubmitted("Mil"))
     }
 
     @Test

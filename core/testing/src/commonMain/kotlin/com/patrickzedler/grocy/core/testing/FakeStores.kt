@@ -3,6 +3,7 @@ package com.patrickzedler.grocy.core.testing
 import com.patrickzedler.grocy.core.data.credentials.CredentialStore
 import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
+import com.patrickzedler.grocy.core.model.scanner.ScannerForm
 import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
@@ -38,6 +39,7 @@ class FakeSettingsStore(
     stockOverviewOptions: StockOverviewOptions = StockOverviewOptions(),
     shoppingListOptions: ShoppingListOptions = ShoppingListOptions(),
     shoppingModeSettings: ShoppingModeSettings = ShoppingModeSettings(),
+    scannerForms: Set<ScannerForm> = emptySet(),
     recipesOptions: RecipesOptions = RecipesOptions(),
 ) : SettingsStore {
 
@@ -75,6 +77,12 @@ class FakeSettingsStore(
 
     override suspend fun setShoppingModeSettings(settings: ShoppingModeSettings) {
         shoppingModeSettings.value = settings
+    }
+
+    override val scannerForms = MutableStateFlow(scannerForms)
+
+    override suspend fun setScannerForms(forms: Set<ScannerForm>) {
+        scannerForms.value = forms
     }
 
     override val recipesOptions = MutableStateFlow(recipesOptions)

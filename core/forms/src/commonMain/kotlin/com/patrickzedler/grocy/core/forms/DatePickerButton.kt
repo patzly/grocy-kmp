@@ -31,6 +31,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.clickCursor
@@ -55,6 +56,12 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 private const val MILLIS_PER_DAY = 86_400_000L
+
+/**
+ * The keyboard of a date field: digits with the "-" of the ISO date, which the number keyboard
+ * leaves out on many devices.
+ */
+val DateKeyboardType = KeyboardType.Phone
 
 /**
  * [text] with the date [epochDay] chosen in the date picker, in Grocy's format: "YYYY-MM-DD", for

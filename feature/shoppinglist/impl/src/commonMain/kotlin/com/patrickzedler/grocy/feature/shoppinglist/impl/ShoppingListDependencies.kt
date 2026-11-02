@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.shoppinglist.impl
 
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.settings.ScannerFormsRepository
 import com.patrickzedler.grocy.core.data.settings.ShoppingListOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ShoppingModeSettingsRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
@@ -12,6 +13,9 @@ interface ShoppingListDependencies {
 
     /** Stock amounts of the items' products and the product overview's labels. */
     val stockRepository: StockRepository
+
+    /** The forms that open with their scanner, read at app start. */
+    val scannerForms: ScannerFormsRepository
 
     /** The shopping lists and their items, checked off offline too. */
     val shoppingListRepository: ShoppingListRepository

@@ -5,6 +5,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
+import com.patrickzedler.grocy.core.forms.DateKeyboardType
 import com.patrickzedler.grocy.core.forms.DatePickerButton
 import com.patrickzedler.grocy.core.forms.DeleteDialog
 import com.patrickzedler.grocy.core.forms.DropdownItem
@@ -113,6 +114,7 @@ private fun MealPlanEntryDialog(
             val day: GroupItem = { index, count ->
                 TextItem(
                     state = state.day,
+                    keyboardType = DateKeyboardType,
                     label = stringResource(Res.string.meal_plan_day),
                     error = fieldErrorText(
                         errors[MealPlanEntryField.DAY],
@@ -148,6 +150,7 @@ private fun recipeItems(state: MealPlanEntryDialogState): List<GroupItem> = list
     { index, count ->
         DropdownItem(
             label = stringResource(Res.string.recipe_nesting_recipe),
+            autoFocus = state.isNew,
             options = state.choices.recipes.map { DropdownOption(it.id, it.name) },
             selectedId = state.recipeId,
             onSelectedIdChange = state::selectRecipe,
@@ -163,6 +166,7 @@ private fun recipeItems(state: MealPlanEntryDialogState): List<GroupItem> = list
     { index, count ->
         TextItem(
             state = state.servings,
+            autoFocus = !state.isNew,
             label = stringResource(Res.string.meal_plan_servings),
             error = fieldErrorText(state.errors[MealPlanEntryField.SERVINGS]),
             keyboardType = KeyboardType.Decimal,
@@ -178,6 +182,7 @@ private fun productItems(state: MealPlanEntryDialogState): List<GroupItem> = lis
     { index, count ->
         DropdownItem(
             label = stringResource(Res.string.data_product),
+            autoFocus = state.isNew,
             options = state.choices.products.map { DropdownOption(it.id, it.name) },
             selectedId = state.productId,
             onSelectedIdChange = state::selectProduct,
@@ -193,6 +198,7 @@ private fun productItems(state: MealPlanEntryDialogState): List<GroupItem> = lis
     { index, count ->
         TextItem(
             state = state.amount,
+            autoFocus = !state.isNew,
             label = stringResource(Res.string.data_amount),
             error = fieldErrorText(state.errors[MealPlanEntryField.AMOUNT]),
             keyboardType = KeyboardType.Decimal,
@@ -224,6 +230,7 @@ private fun productItems(state: MealPlanEntryDialogState): List<GroupItem> = lis
 private fun noteItem(state: MealPlanEntryDialogState): GroupItem = { index, count ->
     TextItem(
         state = state.note,
+        autoFocus = true,
         label = stringResource(Res.string.data_note),
         multiLine = true,
         index = index,
@@ -244,6 +251,7 @@ private fun SectionItem(
     val none = stringResource(Res.string.data_none)
     DropdownItem(
         label = stringResource(Res.string.meal_plan_section),
+        isLastField = true,
         options = sections.map { section ->
             DropdownOption(section.id, sectionLabel(section) ?: none)
         },
@@ -276,6 +284,9 @@ private fun CopyDayDialog(
                 { index, count ->
                     TextItem(
                         state = state.toDay,
+                        autoFocus = true,
+                        isLastField = true,
+                        keyboardType = DateKeyboardType,
                         label = stringResource(Res.string.meal_plan_day),
                         error = fieldErrorText(state.error, Res.string.meal_plan_day_required),
                         trailingAction = { DatePickerButton(state.toDay, withTime = false) },
@@ -309,6 +320,7 @@ internal fun MealPlanSectionDialog(
                 { index, count ->
                     TextItem(
                         state = state.name,
+                        autoFocus = state.isNew,
                         label = stringResource(Res.string.product_name),
                         error = fieldErrorText(state.nameError, Res.string.product_name_required),
                         index = index,
@@ -329,6 +341,7 @@ internal fun MealPlanSectionDialog(
                 { index, count ->
                     TextItem(
                         state = state.timeInfo,
+                        isLastField = true,
                         label = stringResource(Res.string.meal_plan_section_time),
                         trailingAction = { TimePickerButton(state.timeInfo) },
                         index = index,

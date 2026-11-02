@@ -81,6 +81,9 @@ internal fun ConversionDialog(
             )
             TextItem(
                 state = state.factor,
+                // The units come first; with both chosen only the factor is left to type
+                autoFocus = state.fromQuId != null && state.toQuId != null,
+                isLastField = state.userfields.isEmpty(),
                 label = stringResource(Res.string.conversion_factor),
                 error = state.errors[ConversionField.FACTOR]?.let { errorText(it, null) },
                 // Grocy explains the factor both ways once both units are chosen
@@ -115,6 +118,7 @@ internal fun ConversionDialog(
                         error = state.userfieldErrors[input.userfield.name],
                         index = index,
                         count = state.userfields.size,
+                        isLastField = index == state.userfields.lastIndex,
                     )
                 }
             }

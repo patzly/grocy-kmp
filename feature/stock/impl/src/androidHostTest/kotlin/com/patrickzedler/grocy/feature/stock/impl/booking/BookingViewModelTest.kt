@@ -1,7 +1,10 @@
 package com.patrickzedler.grocy.feature.stock.impl.booking
 
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.ui.text.TextRange
 import app.cash.turbine.test
+import com.patrickzedler.grocy.core.forms.FormFocusTarget
+import com.patrickzedler.grocy.core.forms.ScannerFieldState
 import com.patrickzedler.grocy.core.model.stock.BookingKind
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
@@ -64,6 +67,7 @@ class BookingViewModelTest {
     private suspend fun TestScope.viewModel(
         kind: BookingKind,
         preset: BookingPreset = BookingPreset(),
+        scanner: ScannerFieldState = ScannerFieldState(hasValue = preset.productId != null),
     ): BookingViewModel {
         environment.repository.refresh()
         return BookingViewModel(
@@ -74,6 +78,7 @@ class BookingViewModelTest {
             removeShoppingListItem = { removedItems += it },
             today = { epochDayOf("2026-10-30")!! },
             decimalSeparator = '.',
+            scanner = scanner,
         ).also { advanceUntilIdle() }
     }
 
@@ -171,6 +176,161 @@ class BookingViewModelTest {
         assertTrue(viewModel.form.useSpecificEntry)
         assertEquals("b", viewModel.form.stockId)
         assertEquals("2", viewModel.form.amount.text.toString())
+    }
+
+    @Test
+    fun emptyPageStartsInTheProductField() = runTest(dispatcher) {
+        val viewModel = viewModel(BookingKind.CONSUME)
+
+        assertEquals(FormFocusTarget.CODE_FIELD, viewModel.scanner.focusTarget)
+        assertFalse(viewModel.scanner.isOpen)
+    }
+
+    @Test
+    fun pageOfAScannerUserStartsWithTheScanner() = runTest(dispatcher) {
+        val viewModel = viewModel(
+            BookingKind.CONSUME,
+            scanner = ScannerFieldState(rememberedOpen = true),
+        )
+
+        assertTrue(viewModel.scanner.isOpen)
+        assertNull(viewModel.scanner.focusTarget)
+    }
+
+    @Test
+    fun presetProductGoesOnWithTheAmountWithoutScanner() = runTest(dispatcher) {
+        val viewModel = viewModel(
+            BookingKind.CONSUME,
+            BookingPreset(productId = 1),
+            ScannerFieldState(rememberedOpen = true, hasValue = true),
+        )
+
+        assertFalse(viewModel.scanner.isOpen)
+        assertEquals(FormFocusTarget.NEXT_FIELD, viewModel.scanner.focusTarget)
+    }
+
+    @Test
+    fun scanGoesOnWithTheAmountAndTheNextBookingScansAgain() = runTest(dispatcher) {
+        val remembered = mutableListOf<Boolean>()
+        val viewModel = viewModel(
+            BookingKind.CONSUME,
+            scanner = ScannerFieldState(true, { remembered += it }),
+        )
+
+        viewModel.onScanned("grcy:p:1")
+        advanceUntilIdle()
+        assertFalse(viewModel.scanner.isOpen)
+        assertEquals(FormFocusTarget.NEXT_FIELD, viewModel.scanner.focusTarget)
+        viewModel.scanner.onFocusHandled()
+
+        viewModel.book()
+        advanceUntilIdle()
+
+        assertTrue(viewModel.scanner.isOpen)
+        assertNull(viewModel.scanner.focusTarget)
+        assertTrue(remembered.isEmpty())
+    }
+
+    @Test
+    fun keyboardUserGoesBackToTheProductFieldAfterBooking() = runTest(dispatcher) {
+        val viewModel = viewModel(BookingKind.CONSUME)
+        viewModel.scanner.onFocusHandled()
+        viewModel.selectProduct(1)
+        advanceUntilIdle()
+
+        viewModel.book()
+        advanceUntilIdle()
+
+        assertFalse(viewModel.scanner.isOpen)
+        assertEquals(FormFocusTarget.CODE_FIELD, viewModel.scanner.focusTarget)
+    }
+
+    @Test
+    fun productChosenFromTheFocusedFieldGoesOnWithTheAmount() = runTest(dispatcher) {
+        val viewModel = viewModel(BookingKind.CONSUME)
+        viewModel.scanner.onFocusHandled()
+        viewModel.scanner.onFieldFocusChange(true)
+
+        viewModel.selectProduct(1)
+
+        assertEquals(FormFocusTarget.NEXT_FIELD, viewModel.scanner.focusTarget)
+    }
+
+    @Test
+    fun keyboardActionWithoutProductStaysInTheField() = runTest(dispatcher) {
+        val viewModel = viewModel(BookingKind.CONSUME)
+        viewModel.scanner.onFocusHandled()
+
+        viewModel.goToAmount()
+
+        assertNull(viewModel.scanner.focusTarget)
+    }
+
+    @Test
+    fun aScannedCodeThisPageDoesNotOfferKeepsScanning() = runTest(dispatcher) {
+        val viewModel = viewModel(
+            BookingKind.CONSUME,
+            scanner = ScannerFieldState(rememberedOpen = true),
+        )
+
+        viewModel.onScanned("grcy:p:3")
+        advanceUntilIdle()
+
+        assertTrue(viewModel.scanner.isOpen)
+    }
+
+    @Test
+    fun anUnknownScanClosesTheScannerForTheQuestion() = runTest(dispatcher) {
+        val viewModel = viewModel(
+            BookingKind.PURCHASE,
+            scanner = ScannerFieldState(rememberedOpen = true),
+        )
+
+        viewModel.onScanned("123456")
+        assertFalse(viewModel.scanner.isOpen)
+
+        viewModel.dismissUnknownCode()
+        assertTrue(viewModel.scanner.isOpen)
+    }
+
+    @Test
+    fun aBarcodeReaderTypesTheCodeIntoTheProductField() = runTest(dispatcher) {
+        val viewModel = viewModel(BookingKind.CONSUME)
+
+        assertTrue(viewModel.onTextSubmitted("grcy:p:1", hasSuggestion = false))
+        advanceUntilIdle()
+
+        assertEquals(1, viewModel.form.product?.id)
+        assertEquals(FormFocusTarget.NEXT_FIELD, viewModel.scanner.focusTarget)
+    }
+
+    @Test
+    fun textWithASuggestionIsLeftToTheSuggestion() = runTest(dispatcher) {
+        val viewModel = viewModel(BookingKind.CONSUME)
+
+        assertFalse(viewModel.onTextSubmitted("Mil", hasSuggestion = true))
+
+        assertNull(viewModel.unknownCode)
+    }
+
+    @Test
+    fun textThatFindsNothingAsksGrocysQuestion() = runTest(dispatcher) {
+        val viewModel = viewModel(BookingKind.PURCHASE)
+
+        assertTrue(viewModel.onTextSubmitted("123456", hasSuggestion = false))
+
+        assertEquals("123456", viewModel.unknownCode)
+    }
+
+    @Test
+    fun aPrefilledAmountIsSelectedSoTypingReplacesIt() = runTest(dispatcher) {
+        val viewModel = viewModel(BookingKind.CONSUME)
+
+        viewModel.selectProduct(1)
+        advanceUntilIdle()
+
+        val amount = viewModel.form.amount
+        assertEquals(TextRange(0, amount.text.length), amount.selection)
     }
 
     @Test

@@ -8,13 +8,16 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.settings.ScannerFormsRepository
 import com.patrickzedler.grocy.core.forms.AmountUnit
 import com.patrickzedler.grocy.core.forms.ChangeError
 import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.ScannerFieldState
 import com.patrickzedler.grocy.core.forms.UserfieldError
 import com.patrickzedler.grocy.core.forms.UserfieldInput
 import com.patrickzedler.grocy.core.forms.changeErrorOf
 import com.patrickzedler.grocy.core.forms.changedValues
+import com.patrickzedler.grocy.core.forms.fieldState
 import com.patrickzedler.grocy.core.forms.productAmountUnits
 import com.patrickzedler.grocy.core.forms.userfieldInputs
 import com.patrickzedler.grocy.core.forms.validationErrors
@@ -22,6 +25,7 @@ import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.masterdata.nameFor
+import com.patrickzedler.grocy.core.model.scanner.ScannerForm
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.text.formatCurrency
@@ -99,6 +103,8 @@ internal class BarcodeDialogState(
     val showsStore: Boolean,
     val decimals: Int,
     val userfields: List<UserfieldInput>,
+    /** The barcode's scanner, as it was left in the last new barcode. */
+    val scanner: ScannerFieldState = ScannerFieldState(hasValue = original != null),
 ) {
     val barcode = TextFieldState(initial.barcode)
     val amount = TextFieldState(initial.amount)
@@ -136,6 +142,7 @@ internal class ProductBarcodesViewModel(
     private val repository: MasterDataRepository,
     private val decimalSeparator: Char = platformDecimalSeparator(),
     language: String,
+    private val scannerForms: ScannerFormsRepository? = null,
 ) : ViewModel() {
 
     private val productId = MutableStateFlow<Int?>(null)
@@ -203,6 +210,8 @@ internal class ProductBarcodesViewModel(
                 showsStore = config.stockPriceTracking,
                 decimals = decimals,
                 userfields = userfieldInputs(fields, original?.userfields),
+                scanner = scannerForms?.fieldState(ScannerForm.BARCODE, hasValue = original != null)
+                    ?: ScannerFieldState(hasValue = original != null),
             )
         }
     }

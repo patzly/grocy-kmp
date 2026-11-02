@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.masterdata.impl
 
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.settings.ScannerFormsRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.model.server.ServerConfig
@@ -9,6 +10,9 @@ import kotlinx.coroutines.flow.StateFlow
 /** What the master data screens need from the app. */
 interface MasterDataDependencies {
     val masterDataRepository: MasterDataRepository
+
+    /** The forms that open with their scanner, read at app start. */
+    val scannerForms: ScannerFormsRepository
 
     /** The labels the product overview and the product form print. */
     val stockRepository: StockRepository

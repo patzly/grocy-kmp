@@ -8,6 +8,7 @@ import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
+import com.patrickzedler.grocy.core.forms.DateKeyboardType
 import com.patrickzedler.grocy.core.forms.DatePickerButton
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FormDialog
@@ -65,6 +66,7 @@ internal fun StockEntryDialog(
                 { index, count ->
                     TextItem(
                         state = state.amount,
+                        autoFocus = true,
                         label = stringResource(Res.string.data_amount),
                         error = fieldErrorText(errors[StockEntryField.AMOUNT]),
                         suffix = state.stockUnitName,
@@ -167,6 +169,7 @@ internal fun StockEntryDialog(
                 { index, count ->
                     TextItem(
                         state = state.note,
+                        isLastField = true,
                         label = stringResource(Res.string.data_note),
                         index = index,
                         count = count,
@@ -229,6 +232,7 @@ private fun DateItem(
     val enabled = !isDue || !state.neverOverdue
     TextItem(
         state = text,
+        keyboardType = DateKeyboardType,
         label = label,
         hint = "YYYY-MM-DD",
         error = fieldErrorText(

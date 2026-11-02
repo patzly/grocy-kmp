@@ -4,6 +4,7 @@ import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
+import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.stock.BookingKind
 import com.patrickzedler.grocy.core.model.stock.ProductLocationAmount
 import com.patrickzedler.grocy.core.model.stock.ProductStockDetails
@@ -331,4 +332,23 @@ class BookingLogicTest {
             open = open,
             locationId = location,
         )
+
+    @Test
+    fun theKeyboardBooksFromTheLastFieldUsuallyChanged() {
+        val all = ServerConfig(stockPriceTracking = true, stockBestBeforeDateTracking = true)
+
+        assertEquals(BookingField.AMOUNT, keyboardEndField(BookingKind.CONSUME, all))
+        assertEquals(BookingField.AMOUNT, keyboardEndField(BookingKind.INVENTORY, all))
+        assertEquals(BookingField.TO_LOCATION, keyboardEndField(BookingKind.TRANSFER, all))
+        assertEquals(BookingField.PRICE, keyboardEndField(BookingKind.PURCHASE, all))
+    }
+
+    @Test
+    fun aPurchaseWithoutPricesBooksFromTheFieldBefore() {
+        val noPrices = ServerConfig(stockPriceTracking = false, stockBestBeforeDateTracking = true)
+        val neither = noPrices.copy(stockBestBeforeDateTracking = false)
+
+        assertEquals(BookingField.DUE_DATE, keyboardEndField(BookingKind.PURCHASE, noPrices))
+        assertEquals(BookingField.AMOUNT, keyboardEndField(BookingKind.PURCHASE, neither))
+    }
 }

@@ -6,6 +6,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.text.input.KeyboardType
 import com.patrickzedler.grocy.core.design.component.DropdownOption
@@ -85,13 +86,19 @@ class ShoppingListItemInputs(
 /**
  * The fields of [inputs] as one segmented group in Grocy's order: list, then [product] (Grocy's
  * product picker of the full form), amount with "This equals" in the stock unit, the unit while
- * a product is chosen, and the note.
+ * a product is chosen, and the note. The amount is the keyboard's end, like Enter in Grocy's
+ * form: the rest is optional, and what is missing takes the focus.
+ *
+ * @param amountFocusRequester focuses the amount, the field that follows the product.
+ * @param autoFocusAmount the amount takes the focus when the form opens with its product.
  */
 @Composable
 fun ShoppingListItemFields(
     inputs: ShoppingListItemInputs,
     errors: Map<ObjectField, FieldError>,
     product: GroupItem? = null,
+    amountFocusRequester: FocusRequester? = null,
+    autoFocusAmount: Boolean = false,
 ) {
     val language = LocalLocale.current.toLanguageTag()
     val stockUnit = inputs.stockUnit
@@ -120,6 +127,9 @@ fun ShoppingListItemFields(
         { index, count ->
             TextItem(
                 state = inputs.amount,
+                focusRequester = amountFocusRequester,
+                autoFocus = autoFocusAmount,
+                isLastField = true,
                 label = stringResource(Res.string.data_amount),
                 error = fieldErrorText(errors[ObjectField.AMOUNT]),
                 hint = if (converted != null && stockUnit != null) {

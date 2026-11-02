@@ -94,6 +94,7 @@ internal fun UserfieldScreen(
                 { index, count ->
                     TextItem(
                         state = form.name,
+                        autoFocus = viewModel.isNew,
                         label = stringResource(Res.string.product_name),
                         hint = stringResource(Res.string.userfield_name_hint),
                         error = fieldErrorText(
@@ -246,6 +247,7 @@ internal fun UserentityScreen(
                 { index, count ->
                     TextItem(
                         state = form.name,
+                        autoFocus = viewModel.isNew,
                         label = stringResource(Res.string.product_name),
                         error = fieldErrorText(
                             errors[ObjectField.NAME],
@@ -289,6 +291,7 @@ internal fun UserentityScreen(
                 { index, count ->
                     TextItem(
                         state = form.iconCssClass,
+                        isLastField = true,
                         label = stringResource(Res.string.userentity_icon),
                         hint = stringResource(Res.string.userentity_icon_hint),
                         keyboardType = KeyboardType.Ascii,

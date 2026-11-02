@@ -39,6 +39,7 @@ fun UserfieldItem(
     error: UserfieldError?,
     index: Int,
     count: Int,
+    isLastField: Boolean = false,
 ) {
     val haptic = LocalHapticFeedback.current
     val field = input.userfield
@@ -138,9 +139,11 @@ fun UserfieldItem(
                 UserfieldType.NUMBER_INTEGRAL -> KeyboardType.Number
                 UserfieldType.NUMBER_DECIMAL, UserfieldType.NUMBER_CURRENCY -> KeyboardType.Decimal
                 UserfieldType.LINK -> KeyboardType.Uri
+                UserfieldType.DATE -> DateKeyboardType
                 else -> KeyboardType.Text
             },
             multiLine = field.type == UserfieldType.TEXT_MULTI_LINE,
+            isLastField = isLastField,
             stepper = if (field.type in NumberTypes) NumberStepper() else null,
             index = index,
             count = count,

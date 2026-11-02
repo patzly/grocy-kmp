@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.patrickzedler.grocy.core.design.component.ScreenPane
+import com.patrickzedler.grocy.core.forms.fieldState
 import com.patrickzedler.grocy.core.model.stock.BookingKind
 import com.patrickzedler.grocy.core.navigation.Navigator
 import com.patrickzedler.grocy.core.navigation.detailPaneMetadata
@@ -101,6 +102,10 @@ private fun BookingEntry(
                 stock = dependencies.stockRepository,
                 preset = preset,
                 removeShoppingListItem = { shoppingLists.deleteItem(it) },
+                scanner = dependencies.scannerForms.fieldState(
+                    kind.scannerForm,
+                    hasValue = preset.productId != null,
+                ),
             )
         },
         actions = stockPageActions(dependencies, navigator),

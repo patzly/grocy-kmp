@@ -8,7 +8,9 @@ import androidx.navigation3.runtime.NavKey
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.design.component.DetailPlaceholder
+import com.patrickzedler.grocy.core.forms.fieldState
 import com.patrickzedler.grocy.core.forms.formFrame
+import com.patrickzedler.grocy.core.model.scanner.ScannerForm
 import com.patrickzedler.grocy.core.navigation.Navigator
 import com.patrickzedler.grocy.core.navigation.detailPaneMetadata
 import com.patrickzedler.grocy.core.navigation.listPaneMetadata
@@ -133,6 +135,10 @@ fun EntryProviderScope<NavKey>.shoppingListEntries(
                     presetProductId = route.productId,
                     masterData = repository,
                     shoppingLists = shoppingLists,
+                    scanner = {
+                        dependencies.scannerForms
+                            .fieldState(ScannerForm.SHOPPING_LIST_ITEM, hasValue = it)
+                    },
                 )
             },
             frame = formFrame(

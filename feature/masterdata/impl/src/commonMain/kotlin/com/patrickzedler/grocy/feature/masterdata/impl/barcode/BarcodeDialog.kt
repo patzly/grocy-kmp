@@ -3,18 +3,18 @@ package com.patrickzedler.grocy.feature.masterdata.impl.barcode
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.text.input.KeyboardType
 import com.patrickzedler.grocy.core.design.component.DropdownOption
+import com.patrickzedler.grocy.core.design.component.FocusRequestEffect
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FieldError
 import com.patrickzedler.grocy.core.forms.FormDialog
+import com.patrickzedler.grocy.core.forms.FormFocusTarget
 import com.patrickzedler.grocy.core.forms.GroupItems
 import com.patrickzedler.grocy.core.forms.ScannerToggleButton
 import com.patrickzedler.grocy.core.forms.TextItem
@@ -47,7 +47,13 @@ internal fun BarcodeDialog(
     onSave: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
-    var showScanner by rememberSaveable { mutableStateOf(false) }
+    val scanner = state.scanner
+    val barcodeFocus = remember { FocusRequester() }
+    FocusRequestEffect(
+        scanner.focusTarget == FormFocusTarget.CODE_FIELD,
+        barcodeFocus,
+        scanner::onFocusHandled,
+    )
     val errors = state.errors
 
     FormDialog(
@@ -65,6 +71,9 @@ internal fun BarcodeDialog(
                 { index, count ->
                     TextItem(
                         state = state.barcode,
+                        focusRequester = barcodeFocus,
+                        onFocusChange = scanner::onFieldFocusChange,
+                        autoCorrect = false,
                         label = stringResource(Res.string.barcode_barcode),
                         error = fieldErrorText(
                             errors[BarcodeField.BARCODE],
@@ -74,16 +83,16 @@ internal fun BarcodeDialog(
                         count = count,
                         trailingAction = {
                             ScannerToggleButton(
-                                isScannerOpen = showScanner,
-                                onClick = { showScanner = !showScanner },
+                                isScannerOpen = scanner.isOpen,
+                                onClick = scanner::toggle,
                             )
                         },
-                        below = if (showScanner) {
+                        below = if (scanner.isOpen) {
                             {
                                 BarcodeScanner(
                                     onBarcodeScanned = { barcode ->
                                         state.barcode.setTextAndPlaceCursorAtEnd(barcode.value)
-                                        showScanner = false
+                                        scanner.onScanned()
                                     },
                                     shape = MaterialTheme.shapes.small,
                                     containerColor =
@@ -129,6 +138,7 @@ internal fun BarcodeDialog(
                 { index, count ->
                     TextItem(
                         state = state.note,
+                        isLastField = state.userfields.isEmpty(),
                         label = stringResource(Res.string.data_note),
                         index = index,
                         count = count,
@@ -144,6 +154,7 @@ internal fun BarcodeDialog(
                         error = state.userfieldErrors[input.userfield.name],
                         index = index,
                         count = state.userfields.size,
+                        isLastField = index == state.userfields.lastIndex,
                     )
                 }
             }

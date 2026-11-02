@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.stock.impl
 
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.settings.ScannerFormsRepository
 import com.patrickzedler.grocy.core.data.settings.StockOverviewOptionsRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
@@ -8,6 +9,9 @@ import com.patrickzedler.grocy.core.data.stock.StockRepository
 /** What Grocy's stock pages need from the app. */
 interface StockDependencies {
     val masterDataRepository: MasterDataRepository
+
+    /** The forms that open with their scanner, read at app start. */
+    val scannerForms: ScannerFormsRepository
 
     /** Stock entries, the stock journal and bookings on them. */
     val stockRepository: StockRepository

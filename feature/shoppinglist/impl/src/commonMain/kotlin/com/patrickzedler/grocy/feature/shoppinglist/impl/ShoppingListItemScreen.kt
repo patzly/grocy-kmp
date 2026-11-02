@@ -3,19 +3,16 @@ package com.patrickzedler.grocy.feature.shoppinglist.impl
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import com.patrickzedler.grocy.core.design.component.DropdownOption
+import com.patrickzedler.grocy.core.design.component.FocusRequestEffect
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.FormFocusTarget
 import com.patrickzedler.grocy.core.forms.FormFrame
 import com.patrickzedler.grocy.core.forms.ObjectField
 import com.patrickzedler.grocy.core.forms.ObjectFormScreen
@@ -57,6 +54,12 @@ internal fun ShoppingListItemScreen(
         snackbarHostState = snackbarHostState,
     ) { form ->
         segmentedGroup(key = "item") {
+            val amountFocus = remember { FocusRequester() }
+            FocusRequestEffect(
+                form.scanner.focusTarget == FormFocusTarget.NEXT_FIELD,
+                amountFocus,
+                form.scanner::onFocusHandled,
+            )
             ShoppingListItemFields(
                 inputs = form.inputs,
                 errors = viewModel.errors,
@@ -69,6 +72,7 @@ internal fun ShoppingListItemScreen(
                         count = count,
                     )
                 },
+                amountFocusRequester = amountFocus,
             )
         }
     }
@@ -84,14 +88,13 @@ private fun ProductItem(
     count: Int,
 ) {
     val scope = rememberCoroutineScope()
-    var showScanner by rememberSaveable { mutableStateOf(false) }
+    val scanner = form.scanner
     val focusRequester = remember { FocusRequester() }
-    if (form.focusesProduct) {
-        LaunchedEffect(Unit) {
-            focusRequester.requestFocus()
-            form.onProductFocused()
-        }
-    }
+    FocusRequestEffect(
+        scanner.focusTarget == FormFocusTarget.CODE_FIELD,
+        focusRequester,
+        scanner::onFocusHandled,
+    )
     DropdownItem(
         label = stringResource(Res.string.data_product),
         options = form.products.map { DropdownOption(it.id, it.name) },
@@ -104,20 +107,18 @@ private fun ProductItem(
         index = index,
         count = count,
         focusRequester = focusRequester,
-        below = if (showScanner) {
+        onSubmitText = { text, _ -> form.onTextSubmitted(text) },
+        onFocusChange = scanner::onFieldFocusChange,
+        below = if (scanner.isOpen) {
             {
                 BarcodeScanner(
                     onBarcodeScanned = { barcode ->
-                        val product = form.productForCode(barcode.value)
-                        if (product == null) {
+                        if (!form.onScanned(barcode.value)) {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
                                     getString(Res.string.product_parent_not_found),
                                 )
                             }
-                        } else {
-                            form.selectProduct(product.id)
-                            showScanner = false
                         }
                     },
                     shape = MaterialTheme.shapes.small,
@@ -129,8 +130,8 @@ private fun ProductItem(
         },
         trailingAction = {
             ScannerToggleButton(
-                isScannerOpen = showScanner,
-                onClick = { showScanner = !showScanner },
+                isScannerOpen = scanner.isOpen,
+                onClick = scanner::toggle,
             )
         },
     )

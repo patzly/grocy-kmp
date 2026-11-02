@@ -12,6 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
@@ -21,6 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.ConnectedButtonGroup
 import com.patrickzedler.grocy.core.design.component.DropdownOption
+import com.patrickzedler.grocy.core.design.component.LocalFormFocus
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.NumberStepperField
 import com.patrickzedler.grocy.core.design.component.RoundedTextField
@@ -61,6 +64,12 @@ fun fieldErrorText(error: FieldError?, requiredMessage: StringResource? = null):
  * A text field as segmented item [index] of [count]: [error] below it, then [hint], and [below]
  * for what belongs to the field (e.g. the scanner of [trailingAction]). With [stepper] it gets
  * buttons to count up and down.
+ *
+ * @param autoFocus takes the focus once when the form opens; for fields the user types into
+ *   right away, see `docs/focus.md`.
+ * @param isLastField the keyboard's action submits the form instead of going on, outside of a
+ *   form it closes the keyboard.
+ * @param autoCorrect off for what is no language, like codes.
  */
 @Composable
 fun TextItem(
@@ -78,12 +87,21 @@ fun TextItem(
     trailingAction: (@Composable () -> Unit)? = null,
     below: (@Composable () -> Unit)? = null,
     stepper: NumberStepper? = null,
+    focusRequester: FocusRequester? = null,
+    autoFocus: Boolean = false,
+    isLastField: Boolean = false,
+    autoCorrect: Boolean = true,
+    onFocusChange: (Boolean) -> Unit = {},
 ) {
+    val form = LocalFormFocus.current
+    val isDone = isLastField && !multiLine
     SegmentedContainer(index = index, count = count, modifier = modifier) {
         val field: @Composable (Modifier) -> Unit = { fieldModifier ->
             RoundedTextField(
                 state = state,
-                modifier = fieldModifier,
+                modifier = fieldModifier
+                    .then(focusRequester?.let { Modifier.focusRequester(it) } ?: Modifier)
+                    .onFocusChanged { onFocusChange(it.isFocused) },
                 enabled = enabled,
                 label = { Text(label) },
                 trailingIcon = trailingAction,
@@ -99,14 +117,26 @@ fun TextItem(
                 },
                 isError = error != null,
                 keyboardOptions = KeyboardOptions(
-                    capitalization = if (keyboardType == KeyboardType.Text) {
+                    capitalization = if (keyboardType == KeyboardType.Text && autoCorrect) {
                         KeyboardCapitalization.Sentences
                     } else {
                         KeyboardCapitalization.None
                     },
+                    autoCorrectEnabled = autoCorrect,
                     keyboardType = keyboardType,
-                    imeAction = if (multiLine) ImeAction.Default else ImeAction.Next,
+                    imeAction = when {
+                        multiLine -> ImeAction.Default
+                        isDone -> ImeAction.Done
+                        else -> ImeAction.Next
+                    },
                 ),
+                // Outside of a form Done only closes the keyboard, its default
+                onKeyboardAction = if (isDone && form != null) {
+                    { form.submit() }
+                } else {
+                    null
+                },
+                autoFocus = autoFocus,
                 // Multi-line fields start as high as the others and grow with their paragraphs
                 lineLimits = if (multiLine) {
                     TextFieldLineLimits.MultiLine(minHeightInLines = 1)
@@ -151,7 +181,8 @@ private fun HintText(hint: String?) {
 /**
  * A choice of objects as segmented item [index] of [count], Grocy's combobox picker: the text
  * names the option; [optional] ones offer "None". [onUnmatchedChange] reports text naming no
- * option, so the form can refuse to save; [focusRequester] focuses the field for typing.
+ * option, so the form can refuse to save; [focusRequester] focuses the field for typing. The
+ * other focus parameters are [SearchableDropdownField]'s.
  */
 @Composable
 fun DropdownItem(
@@ -170,6 +201,11 @@ fun DropdownItem(
     trailingAction: (@Composable () -> Unit)? = null,
     below: (@Composable () -> Unit)? = null,
     focusRequester: FocusRequester? = null,
+    autoFocus: Boolean = false,
+    isLastField: Boolean = false,
+    onSubmitText: ((text: String, hasSuggestion: Boolean) -> Boolean)? = null,
+    onKeyboardNext: (() -> Unit)? = null,
+    onFocusChange: (Boolean) -> Unit = {},
 ) {
     SegmentedContainer(index = index, count = count, modifier = modifier) {
         SearchableDropdownField(
@@ -184,6 +220,11 @@ fun DropdownItem(
             noneLabel = if (optional) stringResource(Res.string.data_none) else null,
             trailingAction = trailingAction,
             focusRequester = focusRequester,
+            autoFocus = autoFocus,
+            isLastField = isLastField,
+            onSubmitText = onSubmitText,
+            onKeyboardNext = onKeyboardNext,
+            onFocusChange = onFocusChange,
         )
         HintText(hint)
         // Belongs to the field, e.g. the scanner of its scan action

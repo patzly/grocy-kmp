@@ -115,6 +115,7 @@ internal fun SimpleObjectScreen(
                 { index, count ->
                     TextItem(
                         state = form.name,
+                        autoFocus = viewModel.isNew,
                         label = stringResource(
                             if (kind == ObjectListKind.QUANTITY_UNITS) {
                                 Res.string.quantity_unit_name
@@ -207,6 +208,7 @@ internal fun SimpleObjectScreen(
                     { index, count ->
                         TextItem(
                             state = form.chargeIntervalDays,
+                            isLastField = !viewModel.hasUserfields,
                             label = stringResource(Res.string.battery_charge_interval),
                             hint = stringResource(Res.string.battery_charge_interval_hint),
                             error = fieldErrorText(errors[ObjectField.CHARGE_INTERVAL]),

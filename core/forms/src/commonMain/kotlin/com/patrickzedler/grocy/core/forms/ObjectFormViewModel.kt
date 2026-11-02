@@ -101,6 +101,10 @@ abstract class ObjectFormViewModel<V : Any, F : ObjectFormState<V>>(
     val isNew: Boolean
         get() = objectId == MasterDataRepository.NEW_OBJECT_ID
 
+    /** Userfields follow the form's own fields, so its last own field is not the last one. */
+    val hasUserfields: Boolean
+        get() = (load as? ObjectFormLoad.Ready)?.userfields?.isNotEmpty() == true
+
     /** True when the form differs from the saved object (or the defaults of a new one). */
     val hasUnsavedChanges: Boolean
         get() {

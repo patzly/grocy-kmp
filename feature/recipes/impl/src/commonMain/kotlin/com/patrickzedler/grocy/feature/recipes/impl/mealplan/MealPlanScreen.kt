@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,6 +18,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.IconButtonDefaults.IconButtonWidthOption
@@ -318,7 +320,10 @@ private fun LazyListScope.weekGrid(
     state.week.sections.forEach { section ->
         val title = sectionLabel(section)
         insetItem(key = "section-${section.id}", contentType = "section", maxWidth = Dp.Infinity) {
-            Column(Modifier.padding(top = GroupTopPadding)) {
+            // The line carries the eye across all days, not only the short title
+            Column(Modifier.padding(top = SectionDividerTopPadding)) {
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                Spacer(Modifier.height(SectionDividerBottomPadding))
                 title?.let { GroupTitle(it) }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -609,4 +614,8 @@ private val ListMaxWidth = 640.dp
 
 // The list puts the segmented gap between its items, a group adds the rest of a group gap
 private val GroupTopPadding = SegmentedListDefaults.GroupSpacing - ListItemDefaults.SegmentedGap
+
+// 16.dp above the line together with the gap between the list's items
+private val SectionDividerTopPadding = 16.dp - ListItemDefaults.SegmentedGap
+private val SectionDividerBottomPadding = 12.dp
 

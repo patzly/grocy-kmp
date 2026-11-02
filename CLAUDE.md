@@ -18,6 +18,9 @@ tasks need.
 - `docs/ui.md`: logo, scrollbars, button groups, tooltips, pointer kind, web status bar, keyboard,
   the `core:design` components (`SearchableDropdownField`, `SupportingLines`, `SwipeActionBox`,
   status colors), `FormattedText` markup.
+- `docs/focus.md`: binding focus and keyboard rules of every form: what takes the focus when it
+  opens, scanner or keyboard per form, IME actions, Enter, invalid fields; a checklist for new
+  screens. Read it before adding a field, form or dialog.
 - `docs/translations.md`: languages and the rules for writing a translation.
 - `docs/testing.md`: `FakeGrocyServer` and its data, Room tests, formatter caveats, decoders.
 - `docs/features/start-screen.md`: the start screen and the full list of what is built.
@@ -76,6 +79,9 @@ Composables must be finished work that leaves nothing to improve:
   wrappers around raw Material components must do it too. Long presses get `LongPress` from
   `combinedClickable` already. The web app has no haptics (silent `LocalHapticFeedback`, see
   `docs/design.md`).
+- A user works through forms with as few extra taps as possible: first field focused or scanner
+  open as last used per form, keyboard actions that go on and submit, Enter like Grocy's forms,
+  the first invalid field focused. `docs/focus.md` is binding for every field, form and dialog.
 - Text input never hides behind the keyboard, on every platform and in every window size: the
   scrolling container shrinks with the keyboard (padding from `WindowInsets.keyboard`, not
   content padding), so Compose keeps the focused field in view; on Android the change is

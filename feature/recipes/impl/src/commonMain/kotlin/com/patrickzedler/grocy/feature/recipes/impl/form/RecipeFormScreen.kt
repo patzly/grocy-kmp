@@ -176,6 +176,7 @@ private fun LazyListScope.generalGroup(form: RecipeFormState, viewModel: RecipeF
             { index, count ->
                 TextItem(
                     state = form.name,
+                    autoFocus = viewModel.isNew,
                     label = stringResource(Res.string.product_name),
                     error = fieldErrorText(
                         errors[ObjectField.NAME],

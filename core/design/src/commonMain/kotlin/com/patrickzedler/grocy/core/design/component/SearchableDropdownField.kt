@@ -31,12 +31,16 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.input.InputMode
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.semantics.collapse
 import androidx.compose.ui.semantics.expand
 import androidx.compose.ui.semantics.semantics
@@ -70,11 +74,20 @@ data class DropdownOption(
  * reports it, so a form can refuse to save. The menu only helps typing: it suggests the options
  * that fit the text (forgiving small typos), the arrow shows all of them, and choosing one or
  * typing one completely closes it. Tapping the field itself only focuses it for typing; the
- * arrow opens the menu without focusing it, so choosing needs no keyboard.
+ * arrow opens the menu without focusing it, so choosing needs no keyboard. The keyboard's action
+ * takes the best suggestion for typed text and goes on to the next field, the last field of a
+ * form submits it instead.
  *
  * @param noneLabel makes the choice optional: offered as first suggestion, it clears the field.
  * @param trailingAction e.g. a scan button, placed before the dropdown arrow.
  * @param focusRequester focuses the field for typing, e.g. the first field of a new object.
+ * @param autoFocus takes the focus once when the form opens.
+ * @param isLastField the keyboard's action submits the form of [LocalFormFocus].
+ * @param onSubmitText can use text submitted by the keyboard itself, e.g. as a code, with whether
+ *   a suggestion would take it otherwise; true when it did.
+ * @param onKeyboardNext replaces going on to the next field, e.g. for a field whose next field
+ *   only takes the focus after a choice.
+ * @param onFocusChange whether the field has the focus.
  */
 @Composable
 fun SearchableDropdownField(
@@ -90,8 +103,16 @@ fun SearchableDropdownField(
     noneLabel: String? = null,
     trailingAction: (@Composable () -> Unit)? = null,
     focusRequester: FocusRequester? = null,
+    autoFocus: Boolean = false,
+    isLastField: Boolean = false,
+    onSubmitText: ((text: String, hasSuggestion: Boolean) -> Boolean)? = null,
+    onKeyboardNext: (() -> Unit)? = null,
+    onFocusChange: (Boolean) -> Unit = {},
 ) {
     val haptic = LocalHapticFeedback.current
+    val focusManager = LocalFocusManager.current
+    val inputModeManager = LocalInputModeManager.current
+    val form = LocalFormFocus.current
     val selectedLabel = options.firstOrNull { it.id == selectedId }?.label.orEmpty()
     val textState = rememberTextFieldState(selectedLabel)
     val currentOptions by rememberUpdatedState(options)
@@ -157,6 +178,40 @@ fun SearchableDropdownField(
         write(options.firstOrNull { it.id == id }?.label.orEmpty())
     }
 
+    // What the keyboard's action makes of typed text; true when that gave the field its value
+    fun useTypedText(): Boolean {
+        if (!isTyped) return false
+        val text = textState.text.toString().trim()
+        val named = dropdownTextMatch(options, text)
+        if (named != NoMatch && named != null) {
+            close()
+            write(selectedLabel)
+            return true
+        }
+        if (text.isNotEmpty() && onSubmitText?.invoke(text, matches.isNotEmpty()) == true) {
+            close()
+            return true
+        }
+        val suggested = typedChoice(isTyped, text, matches) ?: return false
+        choose(suggested)
+        return true
+    }
+
+    fun goOn() {
+        when {
+            onKeyboardNext != null -> onKeyboardNext()
+            isLastField && form != null -> form.submit()
+            else -> focusManager.moveFocus(FocusDirection.Next)
+        }
+    }
+
+    // A suggestion tapped while typing goes on to the next field, the keyboard stays open for it
+    fun chooseFromMenu(id: Int?) {
+        choose(id)
+        if (!isFocused || inputModeManager.inputMode != InputMode.Touch) return
+        if (isLastField) focusManager.clearFocus() else goOn()
+    }
+
     val unmatchedText = stringResource(Res.string.msg_choose_from_list)
     val isMenuShown = expanded && enabled && (matches.isNotEmpty() || showNone)
     // As soon as no suggestion is left: a tap beside the field does not take its focus away
@@ -192,6 +247,7 @@ fun SearchableDropdownField(
                         // A matching text shows the option's own spelling
                         if (isTyped && !isUnmatched) write(selectedLabel)
                     }
+                    if (isFocused != focus.isFocused) onFocusChange(focus.isFocused)
                     isFocused = focus.isFocused
                 },
             enabled = enabled,
@@ -215,10 +271,23 @@ fun SearchableDropdownField(
             supportingText = (if (showUnmatched) unmatchedText else supportingText)
                 ?.let { { Text(it) } },
             isError = isError || showUnmatched,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            // Names are chosen from the suggestions, autocorrect would only change what they find
+            keyboardOptions = KeyboardOptions(
+                autoCorrectEnabled = false,
+                imeAction = if (isLastField && form != null) ImeAction.Done else ImeAction.Next,
+            ),
             onKeyboardAction = {
                 // Enter takes the best suggestion, like picking it from the list
-                matches.firstOrNull()?.let { choose(it.id) }
+                useTypedText()
+                goOn()
+            },
+            autoFocus = autoFocus,
+            onEnterKey = {
+                // Like Grocy's picker: a suggestion first, Enter again submits the form
+                useTypedText() || onKeyboardNext?.let { next ->
+                    next()
+                    true
+                } == true
             },
         )
         // An expressive menu group instead of ExposedDropdownMenu: that one wraps its items in
@@ -250,7 +319,7 @@ fun SearchableDropdownField(
                         supporting = null,
                         index = 0,
                         count = count,
-                        onClick = { choose(null) },
+                        onClick = { chooseFromMenu(null) },
                     )
                 }
                 val offset = if (showNone) 1 else 0
@@ -260,7 +329,7 @@ fun SearchableDropdownField(
                         supporting = option.supporting,
                         index = index + offset,
                         count = count,
-                        onClick = { choose(option.id) },
+                        onClick = { chooseFromMenu(option.id) },
                     )
                 }
             }
@@ -315,6 +384,17 @@ internal fun dropdownTextMatch(options: List<DropdownOption>, text: CharSequence
     return options.firstOrNull { it.label.trim().equals(trimmed.toString(), ignoreCase = true) }
         ?.id ?: NoMatch
 }
+
+/**
+ * The option the keyboard's action chooses: the best of [matches] for [text] the user typed. Text
+ * that is only shown, or nothing at all, chooses nothing, so going on through a form changes
+ * nothing.
+ */
+internal fun typedChoice(
+    isTyped: Boolean,
+    text: CharSequence,
+    matches: List<DropdownOption>,
+): Int? = if (isTyped && text.isNotBlank()) matches.firstOrNull()?.id else null
 
 /** Result of [dropdownTextMatch] for a text that names no option. */
 internal const val NoMatch = Int.MIN_VALUE

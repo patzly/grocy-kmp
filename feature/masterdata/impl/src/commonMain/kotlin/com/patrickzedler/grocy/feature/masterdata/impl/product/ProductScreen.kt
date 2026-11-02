@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -18,6 +19,7 @@ import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,6 +44,7 @@ import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
+import com.patrickzedler.grocy.core.design.component.LocalFormFocus
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.ScreenPane
@@ -51,6 +54,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.insetItem
+import com.patrickzedler.grocy.core.design.component.rememberFormFocus
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.forms.ChoiceItem
 import com.patrickzedler.grocy.core.forms.DropdownItem
@@ -318,78 +322,83 @@ internal fun ProductScreen(
         }
     }
 
-    SegmentedListScreen(
-        title = stringResource(
-            if (viewModel.isNew) Res.string.product_create else Res.string.product_edit,
-        ),
-        modifier = modifier,
-        navigationIcon = {
-            // Beside the list its own back button leaves both
-            if (!frame.isBesideList) NavigateBackButton(onClick = requestBack)
-        },
-        menuItems = frame.menuItems,
-        actionMenuItems = if (viewModel.isNew) {
-            emptyList()
-        } else {
-            objectActionItems(frame.objectActions, viewModel.productId)
-        },
-        pane = ScreenPane.Detail.takeIf { frame.isBesideList },
-        snackbarHostState = snackbarHostState,
-        floatingToolbar = { scrollBehavior, toolbarModifier ->
-            FloatingToolbarWithFab(
-                scrollBehavior = scrollBehavior,
-                modifier = toolbarModifier,
-                fabPainter = painterResource(Res.drawable.ic_rounded_save),
-                fabDescription = stringResource(Res.string.action_save),
-                onFabClick = { viewModel.save() },
-            ) {
-                // They exist once the product is saved
-                FloatingToolbarIconButton(
-                    painter = painterResource(Res.drawable.ic_rounded_inventory_2),
-                    contentDescription = stringResource(Res.string.product_stock_entries),
-                    onClick = { related.onStockEntriesClick(viewModel.productId) },
-                    enabled = !viewModel.isNew,
-                )
-                FloatingToolbarIconButton(
-                    painter = painterResource(Res.drawable.ic_rounded_receipt_long),
-                    contentDescription = stringResource(Res.string.product_stock_journal),
-                    onClick = { related.onStockJournalClick(viewModel.productId) },
-                    enabled = !viewModel.isNew,
-                )
-            }
-        },
-    ) {
-        val state = viewModel.loadState
-        val currentOptions = options
-        when {
-            state is ProductLoadState.Ready && currentOptions != null -> {
-                productForm(
-                    state = state,
-                    options = currentOptions,
-                    viewModel = viewModel,
-                    snackbarHostState = snackbarHostState,
-                )
-                relatedGroups(
-                    viewModel = viewModel,
-                    related = related,
-                    config = currentOptions.config,
-                    barcodes = barcodes,
-                    conversions = conversions,
-                    onGrocycodeDownload = downloadGrocycode,
-                    onPictureClick = { showPictureDialog = true },
-                )
-            }
+    val listState = rememberLazyListState()
+    val formFocus = rememberFormFocus(listState) { viewModel.save() }
+    CompositionLocalProvider(LocalFormFocus provides formFocus) {
+        SegmentedListScreen(
+            title = stringResource(
+                if (viewModel.isNew) Res.string.product_create else Res.string.product_edit,
+            ),
+            modifier = modifier,
+            navigationIcon = {
+                // Beside the list its own back button leaves both
+                if (!frame.isBesideList) NavigateBackButton(onClick = requestBack)
+            },
+            menuItems = frame.menuItems,
+            actionMenuItems = if (viewModel.isNew) {
+                emptyList()
+            } else {
+                objectActionItems(frame.objectActions, viewModel.productId)
+            },
+            pane = ScreenPane.Detail.takeIf { frame.isBesideList },
+            listState = listState,
+            snackbarHostState = snackbarHostState,
+            floatingToolbar = { scrollBehavior, toolbarModifier ->
+                FloatingToolbarWithFab(
+                    scrollBehavior = scrollBehavior,
+                    modifier = toolbarModifier,
+                    fabPainter = painterResource(Res.drawable.ic_rounded_save),
+                    fabDescription = stringResource(Res.string.action_save),
+                    onFabClick = formFocus::submit,
+                ) {
+                    // They exist once the product is saved
+                    FloatingToolbarIconButton(
+                        painter = painterResource(Res.drawable.ic_rounded_inventory_2),
+                        contentDescription = stringResource(Res.string.product_stock_entries),
+                        onClick = { related.onStockEntriesClick(viewModel.productId) },
+                        enabled = !viewModel.isNew,
+                    )
+                    FloatingToolbarIconButton(
+                        painter = painterResource(Res.drawable.ic_rounded_receipt_long),
+                        contentDescription = stringResource(Res.string.product_stock_journal),
+                        onClick = { related.onStockJournalClick(viewModel.productId) },
+                        enabled = !viewModel.isNew,
+                    )
+                }
+            },
+        ) {
+            val state = viewModel.loadState
+            val currentOptions = options
+            when {
+                state is ProductLoadState.Ready && currentOptions != null -> {
+                    productForm(
+                        state = state,
+                        options = currentOptions,
+                        viewModel = viewModel,
+                        snackbarHostState = snackbarHostState,
+                    )
+                    relatedGroups(
+                        viewModel = viewModel,
+                        related = related,
+                        config = currentOptions.config,
+                        barcodes = barcodes,
+                        conversions = conversions,
+                        onGrocycodeDownload = downloadGrocycode,
+                        onPictureClick = { showPictureDialog = true },
+                    )
+                }
 
-            state is ProductLoadState.NotFound -> Unit
+                state is ProductLoadState.NotFound -> Unit
 
-            else -> insetItem(key = "loading") {
-                Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
-                    LoadingIndicator()
+                else -> insetItem(key = "loading") {
+                    Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
+                        LoadingIndicator()
+                    }
                 }
             }
         }
-    }
 
+    }
     related.barcodes.dialog?.let { dialog ->
         BarcodeDialog(
             state = dialog,
@@ -668,6 +677,7 @@ private fun LazyListScope.productForm(
                     error = userfieldErrors[input.userfield.name],
                     index = index,
                     count = state.userfields.size,
+                    isLastField = index == state.userfields.lastIndex,
                 )
             }
         }
@@ -776,6 +786,7 @@ private fun GeneralItems(
         { index, count ->
             TextItem(
                 state = form.name,
+                autoFocus = viewModel.isNew,
                 label = stringResource(Res.string.product_name),
                 error = fieldErrorText(
                     viewModel.errors[ProductField.NAME],
@@ -1057,6 +1068,7 @@ private fun MoreItems(
         { index, count ->
             TextItem(
                 state = form.quickOpenAmount,
+                isLastField = state.userfields.isEmpty(),
                 label = stringResource(Res.string.product_quick_open_amount),
                 hint = stringResource(Res.string.product_quick_open_amount_hint),
                 error = fieldErrorText(errors[ProductField.QUICK_OPEN_AMOUNT]),

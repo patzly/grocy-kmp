@@ -8,9 +8,11 @@ import androidx.compose.runtime.setValue
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.FormFocusTarget
 import com.patrickzedler.grocy.core.forms.ObjectField
 import com.patrickzedler.grocy.core.forms.ObjectFormState
 import com.patrickzedler.grocy.core.forms.ObjectFormViewModel
+import com.patrickzedler.grocy.core.forms.ScannerFieldState
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
@@ -44,19 +46,9 @@ internal class ShoppingListItemFormState(
     private val quantityUnits: List<QuantityUnit>,
     /** Whether the item is done, which the form never changes. */
     val done: Boolean,
-    focusesProduct: Boolean = false,
+    /** The product's scanner and where the focus goes around it. */
+    val scanner: ScannerFieldState = ScannerFieldState(),
 ) : ObjectFormState<ShoppingListItemValues> {
-
-    /**
-     * Whether the product field takes the focus once shown, so typing starts right away like in
-     * Grocy's form of a new item; once only, not again when it scrolls back into view.
-     */
-    var focusesProduct by mutableStateOf(focusesProduct)
-        private set
-
-    fun onProductFocused() {
-        focusesProduct = false
-    }
 
     var productId by mutableStateOf(initialProductId)
         private set
@@ -88,6 +80,24 @@ internal class ShoppingListItemFormState(
         if (product != null && inputs.amount.text.isBlank()) {
             inputs.amount.setTextAndPlaceCursorAtEnd("1")
         }
+        if (product != null) scanner.onValueChosen()
+    }
+
+    /** A scanned code: its product is chosen and the amount is next; false if it has none. */
+    fun onScanned(code: String): Boolean {
+        val product = productForCode(code) ?: return false
+        selectProduct(product.id)
+        scanner.onScanned()
+        scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
+        return true
+    }
+
+    /** Text submitted in the product field, which a barcode reader types like a keyboard. */
+    fun onTextSubmitted(text: String): Boolean {
+        val product = productForCode(text) ?: return false
+        selectProduct(product.id)
+        scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
+        return true
     }
 
     /** The product of a scanned grocycode or barcode, null if none of the choices. */
@@ -109,6 +119,9 @@ internal class ShoppingListItemViewModel(
     masterData: MasterDataRepository,
     private val shoppingLists: ShoppingListRepository,
     private val decimalSeparator: Char = platformDecimalSeparator(),
+    private val scanner: (hasValue: Boolean) -> ScannerFieldState = {
+        ScannerFieldState(hasValue = it)
+    },
 ) : ObjectFormViewModel<ShoppingListItemValues, ShoppingListItemFormState>(id, masterData) {
 
     override val userfieldEntity = MasterDataRepository.SHOPPING_LIST
@@ -163,8 +176,12 @@ internal class ShoppingListItemViewModel(
             resolved = resolved,
             quantityUnits = quantityUnits,
             done = item?.done ?: false,
-            // A preset product is chosen already
-            focusesProduct = item == null && product == null,
+            // An edited item or a preset product goes on with the amount like Grocy's form
+            scanner = scanner(item != null || product != null).also {
+                if (item != null || product != null) {
+                    it.requestFocus(FormFocusTarget.NEXT_FIELD)
+                }
+            },
         )
     }
 

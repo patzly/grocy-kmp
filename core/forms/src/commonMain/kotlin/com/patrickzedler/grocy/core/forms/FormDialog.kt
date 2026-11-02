@@ -12,17 +12,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.patrickzedler.grocy.core.design.component.LocalFormFocus
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.rememberFormFocus
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_cancel
 import com.patrickzedler.grocy.core.resources.action_save
@@ -47,6 +50,11 @@ fun FormDialog(
 ) {
     val haptic = LocalHapticFeedback.current
     val dismiss = { if (!isSaving) onDismissRequest() }
+    val formFocus = rememberFormFocus {
+        onSave()
+        // Saving shows what is invalid at once; no field with an error simply ends the search
+        false
+    }
 
     ScrollableAlertDialog(onDismissRequest = dismiss, paneTitle = title) {
         ScrollableAlertDialogContent(
@@ -59,7 +67,7 @@ fun FormDialog(
                     TextButton(
                         onClick = {
                             haptic.confirm()
-                            onSave()
+                            formFocus.submit()
                         },
                         modifier = Modifier.clickCursor(),
                         shapes = ButtonDefaults.shapes(),
@@ -94,7 +102,9 @@ fun FormDialog(
                         modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
                     )
                 }
-                content()
+                CompositionLocalProvider(LocalFormFocus provides formFocus) {
+                    content()
+                }
             }
         }
     }

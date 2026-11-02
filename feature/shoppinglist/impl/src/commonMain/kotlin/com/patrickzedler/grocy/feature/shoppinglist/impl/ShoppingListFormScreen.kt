@@ -107,6 +107,8 @@ internal fun ShoppingListFormScreen(
         segmentedGroup(key = "list") {
             TextItem(
                 state = form.name,
+                autoFocus = viewModel.isNew,
+                isLastField = !viewModel.hasUserfields,
                 label = stringResource(Res.string.product_name),
                 error = fieldErrorText(
                     viewModel.errors[ObjectField.NAME],

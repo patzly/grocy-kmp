@@ -39,6 +39,11 @@ of them, from the start screen's buttons and the product overview's menu):
   frozen, moved on opening); userfields of `stock` are saved under the transaction like
   Grocy's pages (the server moves them to the new entries), the used barcode gets the typed
   price as last price. The form resets like Grocy's page (each keeps what Grocy keeps).
+- Focus and scanner (`BookingViewModel.scanner`, rules in `docs/focus.md`): each page opens with
+  its scanner or the focus in the product field, as it was used last; a chosen product moves on to
+  the amount; `keyboardEndField` is the field whose keyboard action books; after a booking the
+  page starts over at the top. A code typed into the field (or by a barcode reader, ending with
+  Enter) works like a scanned one.
 - Grocy's scan mode (user settings `scan_mode_purchase_enabled`/`_consume_enabled`, a switch
   on the page): a scanned product is booked with one unit (a barcode's amount stays) once every
   field is filled, the scanner stays open; otherwise Grocy's message.

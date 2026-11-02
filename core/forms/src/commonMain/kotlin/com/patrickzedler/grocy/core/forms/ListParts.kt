@@ -31,6 +31,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.LiveRegionMode
@@ -187,7 +192,13 @@ private fun SearchField(
             state = state,
             modifier = Modifier
                 .fillMaxWidth()
-                .focusRequester(focusRequester),
+                .focusRequester(focusRequester)
+                .onPreviewKeyEvent { event ->
+                    // Escape leaves the search like closing it with its button
+                    val isEscape = event.key == Key.Escape
+                    if (isEscape && event.type == KeyEventType.KeyDown) onCloseClick()
+                    isEscape
+                },
             label = { Text(stringResource(Res.string.action_search)) },
             trailingIcon = {
                 IconButton(
@@ -203,7 +214,12 @@ private fun SearchField(
                     )
                 }
             },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardOptions = KeyboardOptions(
+                autoCorrectEnabled = false,
+                imeAction = ImeAction.Search,
+            ),
+            // The list filters while typing, the action only makes room to see it
+            onKeyboardAction = { focusManager.clearFocus() },
         )
     }
 }

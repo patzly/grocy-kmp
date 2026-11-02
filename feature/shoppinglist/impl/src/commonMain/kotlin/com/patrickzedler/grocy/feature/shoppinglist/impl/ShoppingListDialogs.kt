@@ -103,6 +103,7 @@ private fun NotesDialog(
                 state = editor.text,
                 label = title,
                 multiLine = true,
+                autoFocus = true,
                 index = 0,
                 count = 1,
             )

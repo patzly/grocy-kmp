@@ -387,6 +387,8 @@ private fun LazyListScope.overviewGroup(state: RecipeUiState, viewModel: RecipeV
             { index, count ->
                 TextItem(
                     state = viewModel.servings,
+                    // Only this field: Done closes the keyboard and shows the changed amounts
+                    isLastField = true,
                     label = stringResource(Res.string.recipes_desired_servings),
                     keyboardType = KeyboardType.Decimal,
                     stepper = NumberStepper.Positive,

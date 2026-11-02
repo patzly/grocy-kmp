@@ -1,8 +1,11 @@
 package com.patrickzedler.grocy.core.design.component
 
+import androidx.compose.ui.text.input.KeyboardType
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class DropdownTextMatchTest {
 
@@ -26,5 +29,24 @@ class DropdownTextMatchTest {
     @Test
     fun partOfALabelIsNoMatch() {
         assertEquals(NoMatch, dropdownTextMatch(options, "Mil"))
+    }
+
+    @Test
+    fun theKeyboardsActionTakesTheBestSuggestionForTypedText() {
+        assertEquals(1, typedChoice(isTyped = true, "Mi", options))
+    }
+
+    @Test
+    fun goingOnThroughAFormChoosesNothing() {
+        assertNull(typedChoice(isTyped = false, "", options))
+        assertNull(typedChoice(isTyped = false, "Milk", options))
+        assertNull(typedChoice(isTyped = true, "  ", options))
+    }
+
+    @Test
+    fun onlyNumbersAreSelectedWhenTheyTakeTheFocus() {
+        assertTrue(selectsOnFocus(KeyboardType.Decimal))
+        assertTrue(selectsOnFocus(KeyboardType.Number))
+        assertFalse(selectsOnFocus(KeyboardType.Text))
     }
 }
