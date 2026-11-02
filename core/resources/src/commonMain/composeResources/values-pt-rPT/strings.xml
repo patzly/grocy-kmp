@@ -1221,4 +1221,39 @@
     <item quantity="many">%1$d tarefas estão atribuídas a mim.</item>
     <item quantity="other">%1$d tarefas estão atribuídas a mim.</item>
   </plurals>
+  <string name="tasks_title">Tarefas</string>
+  <string name="task_due">Agendado para</string>
+  <string name="task_category">Categoria</string>
+  <string name="task_uncategorized">Sem categoria</string>
+  <string name="tasks_show_done">Mostrar tarefas concluidas</string>
+  <string name="task_complete">Marcar tarefa como concluída</string>
+  <string name="task_undo">Desfazer tarefa</string>
+  <string name="task_completed">Marcar tarefa "%1$s" como concluída em %2$s</string>
+  <string name="objects_delete_task">Tem a certeza de que pretende eliminar a tarefa "%1$s"?</string>
+  <string name="task_create">Criar tarefa</string>
+  <string name="task_edit">Editar tarefa</string>
+  <string name="task_save_add_another">Guardar e adicionar outra tarefa</string>
+  <string name="tasks_detail_hint">Escolha uma tarefa da lista para a editar aqui</string>
+  <string name="task_change_failed">Não foi possível alterar a tarefa</string>
+  <string name="task_done">Concluída</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d tarefa</item>
+    <item quantity="many">%1$d tarefas</item>
+    <item quantity="other">%1$d tarefas</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$d tarefas pendentes de execução.</item>
+    <item quantity="many">%1$dtaferas pendentes de realização.</item>
+    <item quantity="other">%1$dtaferas pendentes de realização.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$d tarefa agendada para hoje.</item>
+    <item quantity="many">%1$d tarefas agendadas para hoje.</item>
+    <item quantity="other">%1$d tarefas agendadas para hoje.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d tarefa agendada %2$s.</item>
+    <item quantity="many">%1$d tarefas agendadas %2$s.</item>
+    <item quantity="other">%1$d tarefas agendadas %2$s.</item>
+  </plurals>
 </resources>

@@ -1180,4 +1180,35 @@
     <item quantity="one">%1$dhusarbeidsoppgave tildelt meg.</item>
     <item quantity="other">%1$d husarbeidsoppgaver tildelt meg.</item>
   </plurals>
+  <string name="tasks_title">Oppgaver</string>
+  <string name="task_due">Forfall</string>
+  <string name="task_category">Kategori</string>
+  <string name="task_uncategorized">Mangler kategori</string>
+  <string name="tasks_show_done">Vis ferdige oppgaver</string>
+  <string name="task_complete">Merk oppgave som ferdig</string>
+  <string name="task_undo">Angre oppgave</string>
+  <string name="task_completed">Merket oppgave %1$s som ferdig på %2$s</string>
+  <string name="objects_delete_task">Er du sikker på at du vil slette oppgave "%1$s"?</string>
+  <string name="task_create">Opprett en oppgave</string>
+  <string name="task_edit">Endre oppgave</string>
+  <string name="task_save_add_another">Lagre og opprett ny oppgave</string>
+  <string name="tasks_detail_hint">Velg en oppgave fra listen for å redigere den her</string>
+  <string name="task_change_failed">Oppgaven kunne ikke endres</string>
+  <string name="task_done">Utført</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d oppgave</item>
+    <item quantity="other">%1$d oppgaver</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$d oppgave har forfalt frist for å bli utført.</item>
+    <item quantity="other">%1$d oppgaver har forfalt frist for å bli utført.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$d oppgave å gjøre i dag.</item>
+    <item quantity="other">%1$d oppgaver å gjøre i dag.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d oppgave må gjøres %2$s.</item>
+    <item quantity="other">%1$d oppgaver må gjøres %2$s.</item>
+  </plurals>
 </resources>

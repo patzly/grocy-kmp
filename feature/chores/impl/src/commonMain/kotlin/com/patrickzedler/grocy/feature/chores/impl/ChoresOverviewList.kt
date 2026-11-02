@@ -1,6 +1,8 @@
 package com.patrickzedler.grocy.feature.chores.impl
 
+import com.patrickzedler.grocy.core.forms.sortableUserfieldColumns
 import com.patrickzedler.grocy.core.forms.userfieldText
+import com.patrickzedler.grocy.core.forms.userfieldTextOrder
 import com.patrickzedler.grocy.core.model.User
 import com.patrickzedler.grocy.core.model.chores.ChoreDueStatus
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewField
@@ -11,6 +13,7 @@ import com.patrickzedler.grocy.core.model.chores.CurrentChore
 import com.patrickzedler.grocy.core.model.chores.choreDueStatusOf
 import com.patrickzedler.grocy.core.model.masterdata.Chore
 import com.patrickzedler.grocy.core.model.masterdata.ChorePeriodType
+import com.patrickzedler.grocy.core.model.masterdata.TableColumn
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.text.FuzzySearch
@@ -33,6 +36,8 @@ internal data class ChoreRow(
     val canSkip: Boolean,
     /** The userfields Grocy shows as table columns with a value, as caption and text. */
     val userfields: List<Pair<String, String>>,
+    /** Their texts by the field's name, what sorting and grouping by them use. */
+    val userfieldTexts: Map<String, String> = emptyMap(),
 )
 
 /** Rows below a group title; [title] is null without grouping and for unassigned rows. */
@@ -62,34 +67,56 @@ internal fun availableChoreFields(
     }
 }
 
-/** The groupings [config]'s features offer. */
-internal fun availableChoreGroupings(config: ServerConfig): List<ChoresOverviewGrouping> =
+/** The groupings [config]'s features and the server's [userfieldColumns] offer. */
+internal fun availableChoreGroupings(
+    config: ServerConfig,
+    userfieldColumns: List<Userfield>,
+): List<TableColumn<ChoresOverviewGrouping>> =
     ChoresOverviewGrouping.entries.filter {
         it != ChoresOverviewGrouping.ASSIGNED_TO || config.choresAssignments
-    }
+    }.map { TableColumn.Own(it) } + userfieldColumns.map { TableColumn.OfUserfield(it.name) }
+
+/** The grouping the list has: the chosen one, none while its column is gone. */
+internal fun effectiveChoreGrouping(
+    options: ChoresOverviewOptions,
+    available: List<TableColumn<ChoresOverviewGrouping>>,
+): TableColumn<ChoresOverviewGrouping> =
+    options.groupingColumn.takeIf { it in available }
+        ?: TableColumn.Own(ChoresOverviewGrouping.NONE)
 
 /** The name and the shown columns, what the list can be sorted by. */
-internal fun availableChoreSortFields(
+internal fun availableChoreSortColumns(
     fields: Collection<ChoresOverviewField>,
-): List<ChoresOverviewSortField> = ChoresOverviewSortField.entries.filter {
-    it == ChoresOverviewSortField.NAME || it.field in fields
-}
+    userfieldColumns: List<Userfield>,
+): List<TableColumn<ChoresOverviewSortField>> =
+    ChoresOverviewSortField.entries.filter {
+        it == ChoresOverviewSortField.NAME || it.field in fields
+    }.map { TableColumn.Own(it) } + if (ChoresOverviewField.USERFIELDS in fields) {
+        userfieldColumns.map { TableColumn.OfUserfield(it.name) }
+    } else {
+        emptyList()
+    }
 
 /** The order the list has: the chosen one, Grocy's default while its column is hidden. */
 internal fun effectiveChoreSort(
     options: ChoresOverviewOptions,
     fields: Collection<ChoresOverviewField>,
-): Pair<ChoresOverviewSortField, Boolean> {
-    val available = availableChoreSortFields(fields)
-    if (options.sortField in available) return options.sortField to options.ascending
-    return defaultChoreSort(fields) to true
+    userfieldColumns: List<Userfield> = emptyList(),
+): Pair<TableColumn<ChoresOverviewSortField>, Boolean> {
+    val column = options.sortColumn
+    if (column in availableChoreSortColumns(fields, userfieldColumns)) {
+        return column to options.ascending
+    }
+    return TableColumn.Own(defaultChoreSort(fields)) to true
 }
 
 /** Grocy's default: by next estimated tracking, the name while that is hidden. */
 internal fun defaultChoreSort(fields: Collection<ChoresOverviewField>): ChoresOverviewSortField =
-    ChoresOverviewSortField.NEXT_ESTIMATED_TRACKING
-        .takeIf { it in availableChoreSortFields(fields) }
-        ?: ChoresOverviewSortField.NAME
+    if (ChoresOverviewField.NEXT_ESTIMATED_TRACKING in fields) {
+        ChoresOverviewSortField.NEXT_ESTIMATED_TRACKING
+    } else {
+        ChoresOverviewSortField.NAME
+    }
 
 private val ChoresOverviewSortField.field: ChoresOverviewField?
     get() = when (this) {
@@ -107,8 +134,8 @@ private val ChoresOverviewSortField.field: ChoresOverviewField?
 internal fun buildChoresOverview(
     data: ChoresOverviewData,
     filter: ChoresFilter,
-    sort: Pair<ChoresOverviewSortField, Boolean>,
-    grouping: ChoresOverviewGrouping,
+    sort: Pair<TableColumn<ChoresOverviewSortField>, Boolean>,
+    grouping: TableColumn<ChoresOverviewGrouping>,
     query: String,
     now: String,
     dueSoonDays: Int,
@@ -116,6 +143,7 @@ internal fun buildChoresOverview(
     val chores = data.chores.associateBy { it.id }
     val users = data.users.associateBy { it.id }
     val columns = data.userfields.filter { it.showAsColumnInTables }
+    val sortable = sortableUserfieldColumns(data.userfields)
     val rows = data.current.map { chore ->
         val master = chores[chore.choreId]
         ChoreRow(
@@ -127,6 +155,10 @@ internal fun buildChoresOverview(
                 userfieldText(field, master?.userfields?.get(field.name))
                     ?.let { field.caption to it }
             },
+            userfieldTexts = columns.mapNotNull { field ->
+                userfieldText(field, master?.userfields?.get(field.name))
+                    ?.let { field.name to it }
+            }.toMap(),
         )
     }
     val filtered = rows.filter { row ->
@@ -134,16 +166,29 @@ internal fun buildChoresOverview(
             (filter.status == ChoreDueStatus.DUE_SOON && row.dueStatus == ChoreDueStatus.DUE_TODAY)
         status && (filter.userId == null || row.chore.assignedUserId == filter.userId)
     }
-    val sorted = sorted(search(filtered, query), sort)
-    if (grouping == ChoresOverviewGrouping.NONE) {
-        return if (sorted.isEmpty()) emptyList() else listOf(ChoreGroup(null, sorted))
+    val sorted = sorted(search(filtered, query), sort, sortable)
+    val value: (ChoreRow) -> String?
+    val order: Comparator<String>
+    when (grouping) {
+        is TableColumn.OfUserfield -> {
+            value = { row -> row.userfieldTexts[grouping.name] }
+            order = userfieldTextOrder(sortable.firstOrNull { it.name == grouping.name })
+        }
+        is TableColumn.Own -> when (grouping.column) {
+            ChoresOverviewGrouping.NONE ->
+                return if (sorted.isEmpty()) emptyList() else listOf(ChoreGroup(null, sorted))
+            ChoresOverviewGrouping.ASSIGNED_TO -> {
+                value = { row -> row.assignedUserName }
+                order = userfieldTextOrder(null)
+            }
+        }
     }
-    val (assigned, unassigned) = sorted.partition { it.assignedUserName != null }
-    return assigned.groupBy { it.assignedUserName }.entries
-        .sortedBy { it.key?.lowercase() }
-        .map { (name, group) -> ChoreGroup(name, group) } +
+    val (withValue, withoutValue) = sorted.partition { value(it) != null }
+    return withValue.groupBy { value(it).orEmpty() }.entries
+        .sortedWith(compareBy(order) { it.key })
+        .map { (title, group) -> ChoreGroup(title, group) } +
         listOfNotNull(
-            unassigned.takeIf { it.isNotEmpty() }
+            withoutValue.takeIf { it.isNotEmpty() }
                 ?.let { ChoreGroup(null, it, isUnassigned = true) },
         )
 }
@@ -159,20 +204,29 @@ private fun search(rows: List<ChoreRow>, query: String): List<ChoreRow> {
 /** Sorted by the chosen column, rows without a value last in both directions, then by name. */
 private fun sorted(
     rows: List<ChoreRow>,
-    sort: Pair<ChoresOverviewSortField, Boolean>,
+    sort: Pair<TableColumn<ChoresOverviewSortField>, Boolean>,
+    userfieldColumns: List<Userfield>,
 ): List<ChoreRow> {
-    val (field, ascending) = sort
+    val (column, ascending) = sort
     val byName = compareBy<ChoreRow> { it.chore.name.lowercase() }
-    if (field == ChoresOverviewSortField.NAME) {
-        return rows.sortedWith(if (ascending) byName else byName.reversed())
+    val textOrder = if (column is TableColumn.OfUserfield) {
+        userfieldTextOrder(userfieldColumns.firstOrNull { it.name == column.name })
+    } else {
+        naturalOrder()
     }
-    val value: (ChoreRow) -> String? = when (field) {
-        ChoresOverviewSortField.LAST_TRACKED -> { row -> row.chore.lastTrackedTime }
-        ChoresOverviewSortField.ASSIGNED_TO -> { row -> row.assignedUserName?.lowercase() }
-        else -> { row -> row.chore.nextEstimatedExecutionTime }
+    val value: (ChoreRow) -> String? = when (column) {
+        is TableColumn.OfUserfield -> { row -> row.userfieldTexts[column.name] }
+        is TableColumn.Own -> when (column.column) {
+            ChoresOverviewSortField.NAME ->
+                return rows.sortedWith(if (ascending) byName else byName.reversed())
+            ChoresOverviewSortField.LAST_TRACKED -> { row -> row.chore.lastTrackedTime }
+            ChoresOverviewSortField.ASSIGNED_TO -> { row -> row.assignedUserName?.lowercase() }
+            ChoresOverviewSortField.NEXT_ESTIMATED_TRACKING ->
+                { row -> row.chore.nextEstimatedExecutionTime }
+        }
     }
     val (withValue, withoutValue) = rows.partition { value(it) != null }
-    val byValue = compareBy<ChoreRow> { value(it) }
+    val byValue = compareBy<ChoreRow, String>(textOrder) { value(it).orEmpty() }
     val order = if (ascending) byValue else byValue.reversed()
     return withValue.sortedWith(order.then(byName)) + withoutValue.sortedWith(byName)
 }

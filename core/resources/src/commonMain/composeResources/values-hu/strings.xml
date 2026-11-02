@@ -1180,4 +1180,35 @@
     <item quantity="one">%1$d házimunka hozzám rendelve.</item>
     <item quantity="other">%1$d házimunka hozzám rendelve.</item>
   </plurals>
+  <string name="tasks_title">Feladatok</string>
+  <string name="task_due">Esedékes</string>
+  <string name="task_category">Kategória</string>
+  <string name="task_uncategorized">Kategorizálatlan</string>
+  <string name="tasks_show_done">Elvégzett feladatok megjelenítése</string>
+  <string name="task_complete">Feladat jelölése elvégzettként</string>
+  <string name="task_undo">Feladat visszavonása</string>
+  <string name="task_completed">%1$s feladat készre jelölve %2$s időpontban</string>
+  <string name="objects_delete_task">Biztosan törölni szeretnéd a(z) "%1$s" feladatot?</string>
+  <string name="task_create">Feladat létrehozása</string>
+  <string name="task_edit">Feladat szerkesztése</string>
+  <string name="task_save_add_another">Mentés és újabb feladat hozzáadása</string>
+  <string name="tasks_detail_hint">Válassz egy feladatot a listából, hogy itt szerkeszd</string>
+  <string name="task_change_failed">A feladatot nem sikerült módosítani</string>
+  <string name="task_done">Kész</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d feladat</item>
+    <item quantity="other">%1$d feladat</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$d feladat elvégzése késésben van.</item>
+    <item quantity="other">%1$d feladat elvégzése késésben van.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$d feladat elvégzendő ma.</item>
+    <item quantity="other">%1$d feladat elvégzendő ma.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d feladatot kell elvégezni %2$s.</item>
+    <item quantity="other">%1$d feladatot kell elvégezni %2$s.</item>
+  </plurals>
 </resources>

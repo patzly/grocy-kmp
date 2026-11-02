@@ -1,5 +1,7 @@
 package com.patrickzedler.grocy.core.forms
 
+import androidx.compose.runtime.Composable
+import com.patrickzedler.grocy.core.model.masterdata.TableColumn
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
 import com.patrickzedler.grocy.core.model.masterdata.UserfieldType
 import com.patrickzedler.grocy.core.model.text.formatDecimal
@@ -95,6 +97,32 @@ fun userfieldText(field: Userfield, value: String?): String? {
         UserfieldType.FILE, UserfieldType.IMAGE -> null
         else -> value
     }
+}
+
+/** The columns a table can sort and group by: Grocy's table columns that show as text. */
+fun sortableUserfieldColumns(userfields: List<Userfield>): List<Userfield> =
+    userfields.filter {
+        it.showAsColumnInTables &&
+            it.type != UserfieldType.FILE && it.type != UserfieldType.IMAGE
+    }
+
+/** How the texts of [field]'s column order: numbers by their value, others ignoring case. */
+fun userfieldTextOrder(field: Userfield?): Comparator<String> = when (field?.type) {
+    UserfieldType.NUMBER_INTEGRAL,
+    UserfieldType.NUMBER_DECIMAL,
+    UserfieldType.NUMBER_CURRENCY,
+    -> compareBy<String> { it.toDoubleOrNull() }.thenBy { it.lowercase() }
+    else -> compareBy { it.lowercase() }
+}
+
+/** The label of a sort or group column: [own] for a table's own, a userfield's caption. */
+@Composable
+fun <C> TableColumn<C>.label(
+    userfields: List<Userfield>,
+    own: @Composable (C) -> String,
+): String = when (this) {
+    is TableColumn.Own -> own(column)
+    is TableColumn.OfUserfield -> userfields.firstOrNull { it.name == name }?.caption ?: name
 }
 
 private val LINK_TITLE = Regex(""""title"\s*:\s*"([^"]*)"""")

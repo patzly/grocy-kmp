@@ -1179,4 +1179,35 @@
     <item quantity="one">%1$d görev bana atandı.</item>
     <item quantity="other">%1$d görevler bana atandı.</item>
   </plurals>
+  <string name="tasks_title">Görevler</string>
+  <string name="task_due">Tamamlanma tarihi</string>
+  <string name="task_category">Kategori</string>
+  <string name="task_uncategorized">Kategorize edilmemiş</string>
+  <string name="tasks_show_done">Tamamlanmış görevleri göster</string>
+  <string name="task_complete">Görevi tamamlandı olarak işaretle</string>
+  <string name="task_undo">Görevi geri al</string>
+  <string name="task_completed">%1$s tarihinde %2$s işaretli görevleri tamamlandı</string>
+  <string name="objects_delete_task">"%1$s" görevini silmek istediğinizden emin misiniz?</string>
+  <string name="task_create">Görev oluştur</string>
+  <string name="task_edit">Görevi düzenle</string>
+  <string name="task_save_add_another">Kaydet ve başka bir görev ekle</string>
+  <string name="tasks_detail_hint">Burada düzenlemek için listeden bir görev seçin</string>
+  <string name="task_change_failed">Görev değiştirilemedi</string>
+  <string name="task_done">Tamamlandı</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d görev</item>
+    <item quantity="other">%1$d görev</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$d görevin tamamlanması gecikti.</item>
+    <item quantity="other">%1$d görevin tamamlanması gecikti.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$d görevinin bugün tamamlanmasının son günü.</item>
+    <item quantity="other">%1$d görevinin bugün tamamlanmasının son günü.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d görevin yapılma zamanı geçti %2$s.</item>
+    <item quantity="other">%1$d adet görevin yapılma zamanı geçti %2$s.</item>
+  </plurals>
 </resources>

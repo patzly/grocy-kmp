@@ -26,6 +26,7 @@ import com.patrickzedler.grocy.core.design.component.smallIconButtonSize
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.chore_tracking_title
+import com.patrickzedler.grocy.core.resources.task_create
 import com.patrickzedler.grocy.core.resources.ic_rounded_play_arrow
 import com.patrickzedler.grocy.core.resources.action_more_options
 import com.patrickzedler.grocy.core.resources.ic_rounded_add
@@ -174,6 +175,19 @@ internal fun ChoreTrackingButton(onClick: () -> Unit, modifier: Modifier = Modif
         Res.drawable.ic_rounded_play_arrow,
         onClick,
     )
+    // The group only makes the pressed button grow
+    ButtonGroup(overflowIndicator = {}, modifier = modifier) {
+        animatedItem { itemModifier, interactionSource ->
+            QuickIconButton(button, itemModifier, interactionSource)
+        }
+    }
+}
+
+/** Grocy's "Add" of its tasks as the tasks item's only action, a wide button with a plus. */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+internal fun TaskCreateButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val button = QuickButton(Res.string.task_create, Res.drawable.ic_rounded_add, onClick)
     // The group only makes the pressed button grow
     ButtonGroup(overflowIndicator = {}, modifier = modifier) {
         animatedItem { itemModifier, interactionSource ->

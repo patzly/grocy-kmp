@@ -13,6 +13,7 @@ import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.settings.ChoresOverviewOptionsRepository
 import com.patrickzedler.grocy.core.data.util.RefreshController
 import com.patrickzedler.grocy.core.data.util.RefreshState
+import com.patrickzedler.grocy.core.forms.sortableUserfieldColumns
 import com.patrickzedler.grocy.core.model.User
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewField
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewGrouping
@@ -20,6 +21,8 @@ import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewSortField
 import com.patrickzedler.grocy.core.model.chores.ChoresSummary
 import com.patrickzedler.grocy.core.model.chores.choresSummaryOf
+import com.patrickzedler.grocy.core.model.masterdata.TableColumn
+import com.patrickzedler.grocy.core.model.masterdata.Userfield
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.text.grocyDateTimeOf
@@ -39,14 +42,16 @@ internal data class ChoresOverviewUiState(
     val groups: List<ChoreGroup>,
     val summary: ChoresSummary,
     val filter: ChoresFilter,
-    val sortField: ChoresOverviewSortField,
+    val sortField: TableColumn<ChoresOverviewSortField>,
     val ascending: Boolean,
     val isDefaultSort: Boolean,
-    val grouping: ChoresOverviewGrouping,
+    val grouping: TableColumn<ChoresOverviewGrouping>,
     /** The shown fields besides the name, in Grocy's order. */
     val fields: List<ChoresOverviewField>,
     val availableFields: List<ChoresOverviewField>,
-    val availableGroupings: List<ChoresOverviewGrouping>,
+    val availableGroupings: List<TableColumn<ChoresOverviewGrouping>>,
+    /** The userfield columns the list can be sorted and grouped by. */
+    val userfieldColumns: List<Userfield>,
     val users: List<User>,
     val currentUserId: Int?,
     val dueSoonDays: Int,
@@ -115,10 +120,10 @@ internal class ChoresOverviewViewModel(
             hasUserfieldColumns = data.userfields.any { it.showAsColumnInTables },
         )
         val shown = available.filter { it in list.options.fields }
-        val sort = effectiveChoreSort(list.options, shown)
-        val groupings = availableChoreGroupings(config)
-        val grouping = list.options.grouping.takeIf { it in groupings }
-            ?: ChoresOverviewGrouping.NONE
+        val userfieldColumns = sortableUserfieldColumns(data.userfields)
+        val sort = effectiveChoreSort(list.options, shown, userfieldColumns)
+        val groupings = availableChoreGroupings(config, userfieldColumns)
+        val grouping = effectiveChoreGrouping(list.options, groupings)
         val time = now()
         ChoresOverviewUiState(
             groups = buildChoresOverview(
@@ -134,11 +139,12 @@ internal class ChoresOverviewViewModel(
             filter = list.filter,
             sortField = sort.first,
             ascending = sort.second,
-            isDefaultSort = sort == (defaultChoreSort(shown) to true),
+            isDefaultSort = sort == (TableColumn.Own(defaultChoreSort(shown)) to true),
             grouping = grouping,
             fields = shown,
             availableFields = available,
             availableGroupings = groupings,
+            userfieldColumns = userfieldColumns,
             users = data.users.takeIf { config.choresAssignments }.orEmpty(),
             currentUserId = userId.takeIf { config.choresAssignments },
             dueSoonDays = dueSoonDays,
@@ -166,12 +172,12 @@ internal class ChoresOverviewViewModel(
         hideSearch()
     }
 
-    fun setSort(field: ChoresOverviewSortField, ascending: Boolean) {
-        updateOptions { it.copy(sortField = field, ascending = ascending) }
+    fun setSort(column: TableColumn<ChoresOverviewSortField>, ascending: Boolean) {
+        updateOptions { it.withSort(column, ascending) }
     }
 
-    fun setGrouping(grouping: ChoresOverviewGrouping) {
-        updateOptions { it.copy(grouping = grouping) }
+    fun setGrouping(column: TableColumn<ChoresOverviewGrouping>) {
+        updateOptions { it.withGrouping(column) }
     }
 
     fun setFieldShown(field: ChoresOverviewField, shown: Boolean) {

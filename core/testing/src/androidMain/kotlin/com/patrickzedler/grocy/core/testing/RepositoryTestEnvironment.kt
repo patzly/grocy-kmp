@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.core.testing
 
 import com.patrickzedler.grocy.core.data.chores.ChoresRepository
+import com.patrickzedler.grocy.core.data.tasks.TasksRepository
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
@@ -54,6 +55,12 @@ class RepositoryTestEnvironment(dispatcher: TestDispatcher) {
     )
 
     val choresRepository = ChoresRepository(
+        api = server.api,
+        database = database,
+        connection = connection,
+    )
+
+    val tasksRepository = TasksRepository(
         api = server.api,
         database = database,
         connection = connection,

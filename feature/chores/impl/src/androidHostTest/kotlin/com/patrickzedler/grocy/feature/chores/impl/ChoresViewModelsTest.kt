@@ -15,6 +15,7 @@ import com.patrickzedler.grocy.core.model.chores.ChoresJournalGrouping
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalSortField
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
+import com.patrickzedler.grocy.core.model.masterdata.TableColumn
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.testing.FakeSettingsStore
 import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
@@ -217,7 +218,10 @@ class ChoresViewModelsTest {
 
         assertFalse(viewModel.state.value!!.filter.isActive)
         assertFalse(viewModel.isSearchVisible)
-        assertEquals(ChoresOverviewGrouping.ASSIGNED_TO, viewModel.state.value!!.grouping)
+        assertEquals(
+            TableColumn.Own(ChoresOverviewGrouping.ASSIGNED_TO),
+            viewModel.state.value!!.grouping,
+        )
     }
 
     @Test

@@ -38,6 +38,7 @@ import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.model.chores.ChoresSummary
+import com.patrickzedler.grocy.core.model.tasks.TasksSummary
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListSummary
 import com.patrickzedler.grocy.core.model.stock.StockSummary
@@ -61,6 +62,12 @@ import com.patrickzedler.grocy.core.resources.start_chores_assigned_to_me
 import com.patrickzedler.grocy.core.resources.start_chores_due_soon
 import com.patrickzedler.grocy.core.resources.start_chores_due_today
 import com.patrickzedler.grocy.core.resources.start_chores_overdue
+import com.patrickzedler.grocy.core.resources.ic_rounded_checklist
+import com.patrickzedler.grocy.core.resources.start_tasks_due_soon
+import com.patrickzedler.grocy.core.resources.start_tasks_due_today
+import com.patrickzedler.grocy.core.resources.start_tasks_overdue
+import com.patrickzedler.grocy.core.resources.tasks_count
+import com.patrickzedler.grocy.core.resources.tasks_title
 import com.patrickzedler.grocy.core.resources.start_list_join
 import com.patrickzedler.grocy.core.resources.start_meal_plan_nothing
 import com.patrickzedler.grocy.core.resources.start_meal_plan_today
@@ -133,6 +140,12 @@ internal enum class StartSection(
         StartGroup.CHORES,
         { it.chores },
     ),
+    TASKS(
+        Res.string.tasks_title,
+        Res.drawable.ic_rounded_checklist,
+        StartGroup.CHORES,
+        { it.tasks },
+    ),
     MASTER_DATA(
         Res.string.masterdata_title,
         Res.drawable.ic_rounded_database,
@@ -165,6 +178,7 @@ internal fun StartScreen(
     onShoppingListAddClick: (listId: Int?) -> Unit,
     onShoppingModeClick: () -> Unit,
     onChoreTrackingClick: () -> Unit,
+    onTaskCreateClick: () -> Unit,
     onAboutClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -198,6 +212,7 @@ internal fun StartScreen(
         onShoppingListAddClick = { onShoppingListAddClick(viewModel.quickAddListId()) },
         onShoppingModeClick = onShoppingModeClick,
         onChoreTrackingClick = onChoreTrackingClick,
+        onTaskCreateClick = onTaskCreateClick,
         menuItems = appMenu.items,
         modifier = modifier,
     )
@@ -220,6 +235,7 @@ private fun StartContent(
     onShoppingListAddClick: () -> Unit,
     onShoppingModeClick: () -> Unit,
     onChoreTrackingClick: () -> Unit,
+    onTaskCreateClick: () -> Unit,
     menuItems: List<AppBarMenuItem>,
     modifier: Modifier = Modifier,
 ) {
@@ -263,6 +279,9 @@ private fun StartContent(
                             StartSection.CHORES -> SectionButtons(0.dp) {
                                 ChoreTrackingButton(onClick = onChoreTrackingClick)
                             }
+                            StartSection.TASKS -> SectionButtons(0.dp) {
+                                TaskCreateButton(onClick = onTaskCreateClick)
+                            }
                             StartSection.RECIPES,
                             StartSection.MEAL_PLAN,
                             StartSection.MASTER_DATA,
@@ -292,6 +311,7 @@ private fun sectionSummary(section: StartSection, state: StartUiState): SectionS
         StartSection.RECIPES -> state.recipes?.let { recipesSummary(it, state.checksRecipeStock) }
         StartSection.MEAL_PLAN -> state.mealPlanToday?.let { mealPlanSummary(it) }
         StartSection.CHORES -> state.chores?.let { choresSummary(it, state.choresDueSoonDays) }
+        StartSection.TASKS -> state.tasks?.let { tasksSummary(it, state.tasksDueSoonDays) }
         StartSection.MASTER_DATA -> state.masterDataCounts
             .map { (count, number) -> pluralStringResource(count.text, number, number) }
             .takeIf { it.isNotEmpty() }
@@ -444,6 +464,37 @@ private fun mealPlanSummary(today: List<String>): SectionSummary =
             today,
         )
     }
+
+/**
+ * How many tasks are still to do, then like Grocy's messages above its tasks what is overdue and
+ * due; numbers of 0 are left out.
+ */
+@Composable
+private fun tasksSummary(summary: TasksSummary, dueSoonDays: Int): SectionSummary {
+    val text = pluralStringResource(Res.plurals.tasks_count, summary.count, summary.count)
+    val bullets = listOfNotNull(
+        summary.overdue.takeIf { it > 0 }?.let {
+            pluralStringResource(Res.plurals.start_tasks_overdue, it, it)
+        },
+        summary.dueToday.takeIf { it > 0 }?.let {
+            pluralStringResource(Res.plurals.start_tasks_due_today, it, it)
+        },
+        summary.dueSoon.takeIf { it > 0 && dueSoonDays > 0 }?.let {
+            val within = pluralStringResource(
+                Res.plurals.start_stock_within_days,
+                dueSoonDays,
+                dueSoonDays,
+            )
+            pluralStringResource(Res.plurals.start_tasks_due_soon, it, it, within)
+        },
+    )
+    val intro = if (bullets.isEmpty()) {
+        stringResource(Res.string.start_summary_intro_end, text)
+    } else {
+        stringResource(Res.string.start_summary_intro_list, text)
+    }
+    return SectionSummary(intro, bullets)
+}
 
 /**
  * How many chores there are, then like Grocy's messages above its chores overview what is
@@ -618,6 +669,7 @@ private fun StartScreenPreview() {
             onShoppingListAddClick = {},
             onShoppingModeClick = {},
             onChoreTrackingClick = {},
+            onTaskCreateClick = {},
             menuItems = emptyList(),
         )
     }

@@ -1180,4 +1180,35 @@
     <item quantity="one">%1$d majapidamistöö on määratud mulle.</item>
     <item quantity="other">%1$d majapidamistööö on määratud mulle.</item>
   </plurals>
+  <string name="tasks_title">Ülesanded</string>
+  <string name="task_due">Tähtaeg</string>
+  <string name="task_category">Kategooria</string>
+  <string name="task_uncategorized">Kategoriseerimata</string>
+  <string name="tasks_show_done">Näita tehtud ülesandeid</string>
+  <string name="task_complete">Märgi ülesanne tehtuks</string>
+  <string name="task_undo">Võta ülesanne tagasi</string>
+  <string name="task_completed">Märgitud ülesanne %1$s lõpetatuks kuupäeval %2$s</string>
+  <string name="objects_delete_task">Kas oled kindel, et soovid kustutada ülesande "%1$s"?</string>
+  <string name="task_create">Loo ülesanne</string>
+  <string name="task_edit">Muuda ülesannet</string>
+  <string name="task_save_add_another">Salvesta &amp; lisa teine ülesanne</string>
+  <string name="tasks_detail_hint">Vali loendist ülesanne, et seda siin muuta</string>
+  <string name="task_change_failed">Ülesannet ei õnnestunud muuta</string>
+  <string name="task_done">Tehtud</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d ülesanne</item>
+    <item quantity="other">%1$d ülesannet</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$d ülesanne on üle tähtaja.</item>
+    <item quantity="other">%1$d ülesanne on üle tähtaja.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$d ülesanne vajab täna tegemist.</item>
+    <item quantity="other">%1$d ülesannet vajab täna tegemist.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d ülesanne vajab peatselt tegemist %2$s.</item>
+    <item quantity="other">%1$d ülesannet vajab peatselt tegemist %2$s.</item>
+  </plurals>
 </resources>

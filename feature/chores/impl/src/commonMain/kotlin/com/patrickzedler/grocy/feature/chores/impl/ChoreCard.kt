@@ -188,7 +188,8 @@ private fun choreFacts(card: ChoreCardData): List<ChoreFact> {
         ),
         ChoreFact(
             label = stringResource(Res.string.chores_last_tracked),
-            value = card.lastTracked?.let { choreDateTimeWithRelative(it, card.trackDateOnly, today) }
+            value = card.lastTracked
+                ?.let { choreDateTimeWithRelative(it, card.trackDateOnly, today) }
                 ?: stringResource(Res.string.chore_never),
             icon = Res.drawable.ic_rounded_history,
         ),

@@ -35,6 +35,7 @@ import kotlin.random.Random
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
@@ -445,6 +446,10 @@ class MasterDataRepository(
         return id
     }
 
+    /** The name of task [id] as stored, which Grocy's question before deleting it shows. */
+    suspend fun taskName(id: Int): String? =
+        database.taskDao().observeTasks().first().find { it.id == id }?.name
+
     /**
      * Deletes the object [id] of [entity] (one of the entity names below) on the server, which
      * removes everything that refers to it there, and its local copy. Online only.
@@ -463,6 +468,7 @@ class MasterDataRepository(
             CHORES -> dao.deleteChore(id)
             BATTERIES -> dao.deleteBattery(id)
             TASK_CATEGORIES -> dao.deleteTaskCategory(id)
+            TASKS -> database.taskDao().deleteTask(id)
             USERENTITIES -> dao.deleteUserentity(id)
             USERFIELDS -> dao.deleteUserfield(id)
             PRODUCT_BARCODES -> dao.deleteProductBarcode(id)
@@ -588,6 +594,7 @@ class MasterDataRepository(
         const val CHORES = "chores"
         const val BATTERIES = "batteries"
         const val TASK_CATEGORIES = "task_categories"
+        const val TASKS = "tasks"
         const val USERENTITIES = "userentities"
         const val USERFIELDS = "userfields"
         const val PRODUCT_BARCODES = "product_barcodes"

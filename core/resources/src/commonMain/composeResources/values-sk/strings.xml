@@ -1262,4 +1262,43 @@
     <item quantity="many">%1$d povinností je priradených mne.</item>
     <item quantity="other">%1$d povinností je priradených mne.</item>
   </plurals>
+  <string name="tasks_title">Úlohy</string>
+  <string name="task_due">Termín splnenia</string>
+  <string name="task_category">Kategória</string>
+  <string name="task_uncategorized">Bez kategórie</string>
+  <string name="tasks_show_done">Zobraziť dokončené úlohy</string>
+  <string name="task_complete">Označiť úlohu ako dokončenú</string>
+  <string name="task_undo">Zrušiť úlohu</string>
+  <string name="task_completed">Úloha %1$s označená ako hotová v %2$s</string>
+  <string name="objects_delete_task">Naozaj chcete odstrániť úlohu "%1$s"?</string>
+  <string name="task_create">Vytvoriť úlohu</string>
+  <string name="task_edit">Upraviť úlohu</string>
+  <string name="task_save_add_another">Uložiť a pridať ďalšiu úlohu</string>
+  <string name="tasks_detail_hint">Vyberte úlohu zo zoznamu a upravte ju tu</string>
+  <string name="task_change_failed">Úlohu sa nepodarilo zmeniť</string>
+  <string name="task_done">Hotovo</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d úloha</item>
+    <item quantity="few">%1$d úlohy</item>
+    <item quantity="many">%1$d úlohy</item>
+    <item quantity="other">%1$d úloh</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$d úloha už mala byť splnená.</item>
+    <item quantity="few">%1$d úlohy už mali byť splnené.</item>
+    <item quantity="many">%1$d úloh už malo byť splnených.</item>
+    <item quantity="other">%1$d úloh už malo byť splnených.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$d úloha má byť splnená dnes.</item>
+    <item quantity="few">%1$d úlohy majú byť splnené dnes.</item>
+    <item quantity="many">%1$d úloh má byť splnených dnes.</item>
+    <item quantity="other">%1$d úloh má byť splnených dnes.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d úloha má byť splnená %2$s.</item>
+    <item quantity="few">%1$d úlohy majú byť splnené %2$s.</item>
+    <item quantity="many">%1$d úloh má byť splnených %2$s.</item>
+    <item quantity="other">%1$d úloh má byť splnených %2$s.</item>
+  </plurals>
 </resources>

@@ -99,4 +99,19 @@ class UserfieldValuesTest {
 
         assertFalse(input.isChanged)
     }
+
+    @Test
+    fun numberColumnsOrderByValueOthersIgnoringCase() {
+        val number = Userfield(1, "tasks", "n", "N", UserfieldType.NUMBER_DECIMAL, true)
+        val text = Userfield(2, "tasks", "t", "T", UserfieldType.TEXT_SINGLE_LINE, true)
+
+        assertEquals(
+            listOf("2.5", "10"),
+            listOf("10", "2.5").sortedWith(userfieldTextOrder(number)),
+        )
+        assertEquals(
+            listOf("apple", "Pear"),
+            listOf("Pear", "apple").sortedWith(userfieldTextOrder(text)),
+        )
+    }
 }

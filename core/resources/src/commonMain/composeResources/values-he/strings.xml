@@ -1221,4 +1221,39 @@
     <item quantity="two">%1$d מטלות מוקצות אלי.</item>
     <item quantity="other">%1$d מטלות מוקצות אלי.</item>
   </plurals>
+  <string name="tasks_title">משימות</string>
+  <string name="task_due">סיום</string>
+  <string name="task_category">קטגוריה</string>
+  <string name="task_uncategorized">ללא קטגוריה</string>
+  <string name="tasks_show_done">הצגת משימות שבוצעו</string>
+  <string name="task_complete">סימון המשימה כהושלמה</string>
+  <string name="task_undo">ביטול ביצוע משימה</string>
+  <string name="task_completed">המשימה %1$s סומנה שהושלמה ב־%2$s</string>
+  <string name="objects_delete_task">למחוק את המשימה „%1$s”?</string>
+  <string name="task_create">יצירת משימה</string>
+  <string name="task_edit">עריכת משימה</string>
+  <string name="task_save_add_another">לשמור ולהוסיף משימה נוספת</string>
+  <string name="tasks_detail_hint">יש לבחור משימה מהרשימה כדי לערוך אותה כאן</string>
+  <string name="task_change_failed">לא ניתן היה לשנות את המשימה</string>
+  <string name="task_done">בוצעה</string>
+  <plurals name="tasks_count">
+    <item quantity="one">משימה אחת</item>
+    <item quantity="two">שתי משימות</item>
+    <item quantity="other">%1$d משימות</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">משימה אחת חרגה ממועד הסיום.</item>
+    <item quantity="two">%1$d משימות חרגו ממועד הסיום.</item>
+    <item quantity="other">%1$d משימות חרגו ממועד הסיום.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">משימה אמורה להסתיים היום.</item>
+    <item quantity="two">%1$d משימות אמורות להסתיים היום.</item>
+    <item quantity="other">%1$d משימות אמורות להסתיים היום.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">משימה אחת אמורה להסתיים %2$s.</item>
+    <item quantity="two">%1$d משימות אמורות להסתיים %2$s.</item>
+    <item quantity="other">%1$d משימות אמורות להסתיים %2$s.</item>
+  </plurals>
 </resources>

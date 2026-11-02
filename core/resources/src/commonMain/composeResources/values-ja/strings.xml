@@ -1139,4 +1139,31 @@
   <plurals name="start_chores_assigned_to_me">
     <item quantity="other">あなたの担当 %1$d 件。</item>
   </plurals>
+  <string name="tasks_title">タスク一覧</string>
+  <string name="task_due">期限</string>
+  <string name="task_category">分類</string>
+  <string name="task_uncategorized">未分類</string>
+  <string name="tasks_show_done">完了タスクを表示</string>
+  <string name="task_complete">タスクを完了としてマーク</string>
+  <string name="task_undo">タスクの状態を元に戻す</string>
+  <string name="task_completed">タスク「%1$s」を%2$sに完了としてマーク</string>
+  <string name="objects_delete_task">タスク「%1$s」を削除してもよろしいですか？</string>
+  <string name="task_create">新規作成/タスク</string>
+  <string name="task_edit">タスクを編集</string>
+  <string name="task_save_add_another">保存して別のタスクを追加</string>
+  <string name="tasks_detail_hint">リストからタスクを選択するとここで編集できます</string>
+  <string name="task_change_failed">タスクを変更できませんでした</string>
+  <string name="task_done">完了</string>
+  <plurals name="tasks_count">
+    <item quantity="other">%1$d 件のタスク</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="other">期限超過 %1$d 件。</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="other">本日期限 %1$d 件。</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="other">まもなく期限 %1$d 件 %2$s。</item>
+  </plurals>
 </resources>

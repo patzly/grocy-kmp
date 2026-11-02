@@ -95,6 +95,16 @@ fun FilterChipRow(
 /** Grocy's "Show disabled" checkbox as toggle chip. */
 @Composable
 fun ShowDisabledChip(selected: Boolean, onSelectedChange: (Boolean) -> Unit) {
+    ToggleFilterChip(
+        label = stringResource(Res.string.products_filter_show_disabled),
+        selected = selected,
+        onSelectedChange = onSelectedChange,
+    )
+}
+
+/** One of Grocy's filter checkboxes as toggle chip. */
+@Composable
+fun ToggleFilterChip(label: String, selected: Boolean, onSelectedChange: (Boolean) -> Unit) {
     val haptic = LocalHapticFeedback.current
     FilterChip(
         selected = selected,
@@ -104,10 +114,7 @@ fun ShowDisabledChip(selected: Boolean, onSelectedChange: (Boolean) -> Unit) {
             onSelectedChange(!selected)
         },
         label = {
-            Text(
-                stringResource(Res.string.products_filter_show_disabled),
-                style = chipTextStyle(),
-            )
+            Text(label, style = chipTextStyle())
         },
         colors = filterChipColors(),
         elevation = filterChipElevation(),

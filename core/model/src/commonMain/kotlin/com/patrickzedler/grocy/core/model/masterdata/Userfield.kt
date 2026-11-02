@@ -15,6 +15,13 @@ data class Userfield(
     val sortNumber: Int? = null,
 )
 
+/** A column a table sorts or groups by: one of its own or of a userfield, by the field's name. */
+sealed interface TableColumn<out C> {
+    data class Own<C>(val column: C) : TableColumn<C>
+
+    data class OfUserfield(val name: String) : TableColumn<Nothing>
+}
+
 enum class UserfieldType(val value: String) {
     TEXT_SINGLE_LINE("text-single-line"),
     TEXT_MULTI_LINE("text-multi-line"),

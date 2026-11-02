@@ -1198,4 +1198,35 @@
     <item quantity="one">%1$d chore is assigned to me.</item>
     <item quantity="other">%1$d chores are assigned to me.</item>
   </plurals>
+  <string name="tasks_title">Tasks</string>
+  <string name="task_due">Due</string>
+  <string name="task_category">Category</string>
+  <string name="task_uncategorized">Uncategorized</string>
+  <string name="tasks_show_done">Show done tasks</string>
+  <string name="task_complete">Mark task as completed</string>
+  <string name="task_undo">Undo task</string>
+  <string name="task_completed">Marked task %1$s as completed on %2$s</string>
+  <string name="objects_delete_task">Are you sure you want to delete task "%1$s"?</string>
+  <string name="task_create">Create task</string>
+  <string name="task_edit">Edit task</string>
+  <string name="task_save_add_another">Save &amp; add another task</string>
+  <string name="tasks_detail_hint">Choose a task of the list to edit it here</string>
+  <string name="task_change_failed">The task could not be changed</string>
+  <string name="task_done">Done</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d task</item>
+    <item quantity="other">%1$d tasks</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$d task is overdue.</item>
+    <item quantity="other">%1$d tasks are overdue.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$d task is due today.</item>
+    <item quantity="other">%1$d tasks are due today.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d task is due %2$s.</item>
+    <item quantity="other">%1$d tasks are due %2$s.</item>
+  </plurals>
 </resources>

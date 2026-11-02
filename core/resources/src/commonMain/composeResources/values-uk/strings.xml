@@ -1261,4 +1261,43 @@
     <item quantity="many">Мені призначено %1$d робіт.</item>
     <item quantity="other">Мені призначено %1$d робіт.</item>
   </plurals>
+  <string name="tasks_title">Завдання</string>
+  <string name="task_due">Виконати до</string>
+  <string name="task_category">Категорія</string>
+  <string name="task_uncategorized">Без категорії</string>
+  <string name="tasks_show_done">Показати викані завдання</string>
+  <string name="task_complete">Відмітити завдання як виконане</string>
+  <string name="task_undo">Відмінити завдання</string>
+  <string name="task_completed">Завдання %1$s відмічено виконаним %2$s</string>
+  <string name="objects_delete_task">Ви впевнені, що хочете видалити завдання "%1$s"?</string>
+  <string name="task_create">Створити завдання</string>
+  <string name="task_edit">Редагувати завдання</string>
+  <string name="task_save_add_another">Зберегти та додати ще одне завдання</string>
+  <string name="tasks_detail_hint">Виберіть завдання зі списку, щоб редагувати його тут</string>
+  <string name="task_change_failed">Не вдалося змінити завдання</string>
+  <string name="task_done">Виконано</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d завдання</item>
+    <item quantity="few">%1$d завдання</item>
+    <item quantity="many">%1$d завдань</item>
+    <item quantity="other">%1$d завдання</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$d прострочено.</item>
+    <item quantity="few">%1$d прострочено.</item>
+    <item quantity="many">%1$d прострочено.</item>
+    <item quantity="other">%1$d прострочено.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$d завдання має бути виконано сьогодні.</item>
+    <item quantity="few">%1$d завдання має бути виконано сьогодні.</item>
+    <item quantity="many">%1$d завдань має бути виконано сьогодні.</item>
+    <item quantity="other">%1$d завдань має бути виконано сьогодні.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d завдання має бути виконано %2$s.</item>
+    <item quantity="few">%1$d завдання має бути виконано %2$s.</item>
+    <item quantity="many">%1$d завдань має бути виконано %2$s.</item>
+    <item quantity="other">%1$d завдань має бути виконано %2$s.</item>
+  </plurals>
 </resources>

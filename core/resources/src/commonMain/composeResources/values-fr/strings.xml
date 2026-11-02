@@ -1221,4 +1221,39 @@
     <item quantity="many">%1$d corvées me sont assignées.</item>
     <item quantity="other">%1$d corvées me sont assignées.</item>
   </plurals>
+  <string name="tasks_title">Tâches</string>
+  <string name="task_due">À faire</string>
+  <string name="task_category">Catégorie</string>
+  <string name="task_uncategorized">Sans catégorie</string>
+  <string name="tasks_show_done">Afficher les tâches terminées</string>
+  <string name="task_complete">Marquer la tâche comme terminée</string>
+  <string name="task_undo">Annuler</string>
+  <string name="task_completed">%1$s tâche marquée complétée sur %2$s</string>
+  <string name="objects_delete_task">Êtes-vous sûr de vouloir supprimer la tâche "%1$s" ?</string>
+  <string name="task_create">Créer une tâche</string>
+  <string name="task_edit">Modifier la tâche</string>
+  <string name="task_save_add_another">Sauvegarder et créer une autre tâche</string>
+  <string name="tasks_detail_hint">Choisissez une tâche de la liste pour la modifier ici</string>
+  <string name="task_change_failed">La tâche n'a pas pu être modifiée</string>
+  <string name="task_done">Terminée</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d tâche</item>
+    <item quantity="many">%1$d tâches</item>
+    <item quantity="other">%1$d tâches</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$d tâche en retard.</item>
+    <item quantity="many">%1$d tâches en retard.</item>
+    <item quantity="other">%1$d tâches en retard.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$d tâche doit être effectuée aujourd'hui.</item>
+    <item quantity="many">%1$d tâches doivent être effectuées aujourd'hui.</item>
+    <item quantity="other">%1$d tâches doivent être effectuées aujourd'hui.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d tâche est due %2$s.</item>
+    <item quantity="many">%1$d tâches sont dues %2$s.</item>
+    <item quantity="other">%1$d tâches à réaliser %2$s.</item>
+  </plurals>
 </resources>

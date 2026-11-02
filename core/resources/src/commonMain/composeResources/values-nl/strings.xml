@@ -1180,4 +1180,35 @@
     <item quantity="one">%1$d klusje is toegewezen aan mij.</item>
     <item quantity="other">%1$d klusjes aan mij toegewezen.</item>
   </plurals>
+  <string name="tasks_title">Taken</string>
+  <string name="task_due">Uiterlijk wanneer doen</string>
+  <string name="task_category">Categorie</string>
+  <string name="task_uncategorized">Ongecategoriseerd</string>
+  <string name="tasks_show_done">Toon gedane taken</string>
+  <string name="task_complete">Markeer taak als gedaan</string>
+  <string name="task_undo">Taak ongedaan maken</string>
+  <string name="task_completed">Gemarkeerde taak %1$s voltooid op %2$s</string>
+  <string name="objects_delete_task">Weet je zeker dat taak "%1$s" verwijderd mag worden?</string>
+  <string name="task_create">Maak taak</string>
+  <string name="task_edit">Bewerk taak</string>
+  <string name="task_save_add_another">Opslaan &amp; voeg andere taak toe</string>
+  <string name="tasks_detail_hint">Kies een taak uit de lijst om deze hier te bewerken</string>
+  <string name="task_change_failed">De taak kon niet worden gewijzigd</string>
+  <string name="task_done">Klaar</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d taak</item>
+    <item quantity="other">%1$d taken</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$dtaak moet nog uitgevoerd worden.</item>
+    <item quantity="other">%1$d taken hadden al gedaan moeten worden.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$dtaken moeten vandaag worden gedaan.</item>
+    <item quantity="other">%1$d taken moeten vandaag worden gedaan.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d taak moet worden gedaan %2$s.</item>
+    <item quantity="other">%1$d taken moeten worden gedaan %2$s.</item>
+  </plurals>
 </resources>

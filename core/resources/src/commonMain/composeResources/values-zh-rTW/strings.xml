@@ -1138,4 +1138,31 @@
   <plurals name="start_chores_assigned_to_me">
     <item quantity="other">%1$d 件家務分配給我。</item>
   </plurals>
+  <string name="tasks_title">任務</string>
+  <string name="task_due">到期</string>
+  <string name="task_category">分類</string>
+  <string name="task_uncategorized">未分類的</string>
+  <string name="tasks_show_done">顯示已完成的任務</string>
+  <string name="task_complete">標記任務為已完成</string>
+  <string name="task_undo">取消任務</string>
+  <string name="task_completed">已將任務 %1$s 標記為在 %2$s 上已完成</string>
+  <string name="objects_delete_task">確定要刪除任務「%1$s」嗎？</string>
+  <string name="task_create">新增任務</string>
+  <string name="task_edit">編輯任務</string>
+  <string name="task_save_add_another">儲存並新增另一項任務</string>
+  <string name="tasks_detail_hint">從清單中選擇任務以在此編輯</string>
+  <string name="task_change_failed">無法變更任務</string>
+  <string name="task_done">已完成</string>
+  <plurals name="tasks_count">
+    <item quantity="other">%1$d 項任務</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="other">%1$d 項任務早該完成。</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="other">%1$d項任務應在今天完成。</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="other">%1$d 項任務需要完成 %2$s。</item>
+  </plurals>
 </resources>

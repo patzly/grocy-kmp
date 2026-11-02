@@ -16,6 +16,8 @@ import com.patrickzedler.grocy.feature.stock.api.InventoryRoute
 import com.patrickzedler.grocy.feature.stock.api.PurchaseRoute
 import com.patrickzedler.grocy.feature.stock.api.StockOverviewRoute
 import com.patrickzedler.grocy.feature.stock.api.TransferRoute
+import com.patrickzedler.grocy.feature.tasks.api.TaskRoute
+import com.patrickzedler.grocy.feature.tasks.api.TasksRoute
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -32,10 +34,12 @@ class StartSectionTest {
         assertEquals(RecipesRoute(), StartSection.RECIPES.route)
         assertEquals(MealPlanRoute(), StartSection.MEAL_PLAN.route)
         assertEquals(ChoresOverviewRoute, StartSection.CHORES.route)
+        assertEquals(TasksRoute, StartSection.TASKS.route)
         // List-detail scenes of their own, never beside the start screen
         assertFalse(StartSection.SHOPPING_LIST.route is DetailRoute)
         assertFalse(StartSection.RECIPES.route is DetailRoute)
         assertFalse(StartSection.CHORES.route is DetailRoute)
+        assertFalse(StartSection.TASKS.route is DetailRoute)
         // The meal plan needs the whole window
         assertFalse(StartSection.MEAL_PLAN.route is DetailRoute)
     }
@@ -81,6 +85,19 @@ class StartSectionTest {
     }
 
     @Test
+    fun creatingATaskOpensBesideTheTasksInWideWindows() {
+        assertEquals(listOf(TasksRoute, TaskRoute()), taskCreateRoutes(isBesideDetail = true))
+    }
+
+    @Test
+    fun creatingATaskOpensAloneInNarrowWindows() {
+        assertEquals(
+            listOf(TaskRoute(inList = false)),
+            taskCreateRoutes(isBesideDetail = false),
+        )
+    }
+
+    @Test
     fun shownPageMarksItsSection() {
         assertEquals(StartSection.STOCK_OVERVIEW, startSectionOf(StockOverviewRoute))
         assertEquals(StartSection.MASTER_DATA, startSectionOf(MasterDataRoute))
@@ -95,6 +112,7 @@ class StartSectionTest {
                 StartSection.RECIPES,
                 StartSection.MEAL_PLAN,
                 StartSection.CHORES,
+                StartSection.TASKS,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig()),
@@ -105,6 +123,7 @@ class StartSectionTest {
                 StartSection.RECIPES,
                 StartSection.MEAL_PLAN,
                 StartSection.CHORES,
+                StartSection.TASKS,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig(shoppingList = false)),
@@ -114,6 +133,7 @@ class StartSectionTest {
                 StartSection.RECIPES,
                 StartSection.MEAL_PLAN,
                 StartSection.CHORES,
+                StartSection.TASKS,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig(stock = false)),
@@ -124,6 +144,7 @@ class StartSectionTest {
                 StartSection.SHOPPING_LIST,
                 StartSection.RECIPES,
                 StartSection.CHORES,
+                StartSection.TASKS,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig(recipesMealPlan = false)),
@@ -133,6 +154,7 @@ class StartSectionTest {
                 StartSection.STOCK_OVERVIEW,
                 StartSection.SHOPPING_LIST,
                 StartSection.CHORES,
+                StartSection.TASKS,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig(recipes = false)),
@@ -173,5 +195,10 @@ class StartSectionTest {
         // The start screen alone, or a list opened from a section's page
         assertNull(startSectionOf(StartRoute))
         assertNull(startSectionOf(ProductsRoute))
+    }
+
+    @Test
+    fun tasksSectionNeedsItsFeature() {
+        assertFalse(StartSection.TASKS in availableSections(ServerConfig(tasks = false)))
     }
 }

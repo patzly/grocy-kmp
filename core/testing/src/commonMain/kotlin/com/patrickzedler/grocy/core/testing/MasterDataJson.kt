@@ -114,6 +114,41 @@ object MasterDataJson {
 
     const val TASK_CATEGORIES = """[{"id":1,"name":"Garden","active":"1"}]"""
 
+    /** Mow the lawn (due, in Garden, assigned to Alice) */
+    private const val MOW_TASK =
+        """{"id":1,"name":"Mow the lawn","description":"Mind the roses",""" +
+            """"due_date":"2026-11-01","done":0,"done_timestamp":null,"category_id":1,""" +
+            """"assigned_to_user_id":1,"userfields":{"area":"Back"}}"""
+
+    /** Old task, done on 2026-10-01. */
+    private const val OLD_TASK =
+        """{"id":3,"name":"Old task","description":null,"due_date":"2026-09-30","done":1,""" +
+            """"done_timestamp":"2026-10-01 10:00:00","category_id":null,""" +
+            """"assigned_to_user_id":null}"""
+
+    /** `objects/tasks`: Mow the lawn, Buy seeds (no date, category or user), a done one. */
+    const val TASKS =
+        "[$MOW_TASK," +
+            """{"id":2,"name":"Buy seeds","description":"","due_date":"","done":"0",""" +
+            """"category_id":"","assigned_to_user_id":""},""" +
+            "$OLD_TASK]"
+
+    /** Mow the lawn after "Mark task as completed". */
+    const val COMPLETED_TASK =
+        """{"id":1,"name":"Mow the lawn","due_date":"2026-11-01","done":1,""" +
+            """"done_timestamp":"2026-11-02 12:00:00","category_id":1,""" +
+            """"assigned_to_user_id":1}"""
+
+    /** Old task after "Undo task". */
+    const val UNDONE_TASK =
+        """{"id":3,"name":"Old task","due_date":"2026-09-30","done":0,""" +
+            """"done_timestamp":null,"category_id":null,"assigned_to_user_id":null}"""
+
+    /** A task as the server stores a new one. */
+    const val CREATED_TASK =
+        """{"id":$CREATED_ID,"name":"Created task","due_date":"2026-11-05","done":0,""" +
+            """"category_id":1,"assigned_to_user_id":2}"""
+
     const val USERENTITIES =
         """[{"id":1,"name":"books","caption":"Books","show_in_sidebar_menu":1}]"""
 
@@ -354,6 +389,10 @@ object MasterDataJson {
         "/api/objects/chores_log/13" to TRACKED_CHORE,
         "/api/objects/batteries" to BATTERIES,
         "/api/objects/task_categories" to TASK_CATEGORIES,
+        "/api/objects/tasks" to TASKS,
+        "/api/objects/tasks/1" to MOW_TASK,
+        "/api/objects/tasks/3" to OLD_TASK,
+        "/api/objects/tasks/$CREATED_ID" to CREATED_TASK,
         "/api/objects/userentities" to USERENTITIES,
         "/api/users" to USERS,
         "/api/objects/userfields" to USERFIELDS,

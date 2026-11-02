@@ -15,6 +15,8 @@ import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalGrouping
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
+import com.patrickzedler.grocy.core.model.tasks.TasksOverviewGrouping
+import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewGrouping
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
@@ -199,5 +201,15 @@ class WebSettingsStoreTest {
         WebSettingsStore(storage).setChoresJournalOptions(options)
 
         assertEquals(options, WebSettingsStore(storage).choresJournalOptions.first())
+    }
+
+    @Test
+    fun tasksOverviewOptionsSurviveARestart() = runTest {
+        val storage = InMemoryStorage()
+        val options = TasksOverviewOptions(grouping = TasksOverviewGrouping.CATEGORY)
+
+        WebSettingsStore(storage).setTasksOverviewOptions(options)
+
+        assertEquals(options, WebSettingsStore(storage).tasksOverviewOptions.first())
     }
 }

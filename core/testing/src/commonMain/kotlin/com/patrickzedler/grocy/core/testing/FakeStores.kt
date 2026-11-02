@@ -5,6 +5,7 @@ import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
+import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
 import com.patrickzedler.grocy.core.model.scanner.ScannerForm
 import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
 import com.patrickzedler.grocy.core.model.AppearanceSettings
@@ -45,6 +46,7 @@ class FakeSettingsStore(
     recipesOptions: RecipesOptions = RecipesOptions(),
     choresOverviewOptions: ChoresOverviewOptions = ChoresOverviewOptions(),
     choresJournalOptions: ChoresJournalOptions = ChoresJournalOptions(),
+    tasksOverviewOptions: TasksOverviewOptions = TasksOverviewOptions(),
 ) : SettingsStore {
 
     override val checkUnlockKey = MutableStateFlow(checkUnlockKey)
@@ -99,6 +101,12 @@ class FakeSettingsStore(
 
     override suspend fun setChoresJournalOptions(options: ChoresJournalOptions) {
         choresJournalOptions.value = options
+    }
+
+    override val tasksOverviewOptions = MutableStateFlow(tasksOverviewOptions)
+
+    override suspend fun setTasksOverviewOptions(options: TasksOverviewOptions) {
+        tasksOverviewOptions.value = options
     }
 
     override val recipesOptions = MutableStateFlow(recipesOptions)

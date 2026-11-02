@@ -1,5 +1,7 @@
 package com.patrickzedler.grocy.core.model.chores
 
+import com.patrickzedler.grocy.core.model.masterdata.TableColumn
+
 /** The columns of Grocy's chores overview besides the chore, in its order. */
 enum class ChoresOverviewField {
     NEXT_ESTIMATED_TRACKING,
@@ -25,14 +27,48 @@ data class ChoresOverviewOptions(
     val grouping: ChoresOverviewGrouping = ChoresOverviewGrouping.NONE,
     val sortField: ChoresOverviewSortField = ChoresOverviewSortField.NEXT_ESTIMATED_TRACKING,
     val ascending: Boolean = true,
+    /** The userfield column it is sorted by instead of [sortField]. */
+    val sortUserfield: String? = null,
+    /** The userfield column it is grouped by instead of [grouping]. */
+    val groupingUserfield: String? = null,
 ) {
-    /** The options as stored, read back by [of]. */
-    fun stored(): String = listOf(
-        fields.sortedBy { it.ordinal }.joinToString(FIELD_SEPARATOR) { it.name },
-        grouping.name,
-        sortField.name,
-        ascending.toString(),
-    ).joinToString(PART_SEPARATOR)
+    val sortColumn: TableColumn<ChoresOverviewSortField>
+        get() = sortUserfield?.let { TableColumn.OfUserfield(it) }
+            ?: TableColumn.Own(sortField)
+
+    val groupingColumn: TableColumn<ChoresOverviewGrouping>
+        get() = groupingUserfield?.let { TableColumn.OfUserfield(it) }
+            ?: TableColumn.Own(grouping)
+
+    fun withSort(
+        column: TableColumn<ChoresOverviewSortField>,
+        ascending: Boolean,
+    ): ChoresOverviewOptions =
+        when (column) {
+            is TableColumn.Own ->
+                copy(sortField = column.column, sortUserfield = null, ascending = ascending)
+            is TableColumn.OfUserfield -> copy(sortUserfield = column.name, ascending = ascending)
+        }
+
+    fun withGrouping(column: TableColumn<ChoresOverviewGrouping>): ChoresOverviewOptions =
+        when (column) {
+            is TableColumn.Own -> copy(grouping = column.column, groupingUserfield = null)
+            is TableColumn.OfUserfield -> copy(groupingUserfield = column.name)
+        }
+
+    /** The options as stored, read back by [of]; userfield columns only when chosen. */
+    fun stored(): String = (
+        listOf(
+            fields.sortedBy { it.ordinal }.joinToString(FIELD_SEPARATOR) { it.name },
+            grouping.name,
+            sortField.name,
+            ascending.toString(),
+        ) + if (sortUserfield != null || groupingUserfield != null) {
+            listOf(sortUserfield.orEmpty(), groupingUserfield.orEmpty())
+        } else {
+            emptyList()
+        }
+        ).joinToString(PART_SEPARATOR)
 
     companion object {
         /** Options from their stored form; missing or unknown values fall back to defaults. */
@@ -50,6 +86,8 @@ data class ChoresOverviewOptions(
                 sortField = ChoresOverviewSortField.entries
                     .firstOrNull { it.name == parts.getOrNull(2) } ?: default.sortField,
                 ascending = parts.getOrNull(3)?.toBooleanStrictOrNull() ?: default.ascending,
+                sortUserfield = parts.getOrNull(4)?.ifEmpty { null },
+                groupingUserfield = parts.getOrNull(5)?.ifEmpty { null },
             )
         }
 

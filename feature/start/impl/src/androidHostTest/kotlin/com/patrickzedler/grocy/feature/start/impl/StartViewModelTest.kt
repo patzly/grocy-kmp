@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.start.impl
 
 import com.patrickzedler.grocy.core.data.chores.ChoresRepository
+import com.patrickzedler.grocy.core.data.tasks.TasksRepository
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
@@ -51,6 +52,7 @@ class StartViewModelTest {
         recipes = recipes,
         mealPlan = MealPlanRepository(server.api, database, connection, recipes),
         chores = ChoresRepository(server.api, database, connection),
+        tasks = TasksRepository(server.api, database, connection),
         serverConfig = config,
         today = { epochDayOf(today)!! },
         now = { "$today 12:00:00" },
@@ -221,6 +223,31 @@ class StartViewModelTest {
         assertEquals(2, chores.count)
         assertEquals(1, chores.overdue)
         assertEquals(1, chores.assignedToMe)
+    }
+
+    @Test
+    fun tasksSectionCountsLikeGrocysMessages() = runTest {
+        val viewModel = viewModel(today = "2026-11-02")
+
+        advanceUntilIdle()
+
+        val tasks = viewModel.state.value!!.tasks!!
+        // Not the done one, however late it was
+        assertEquals(2, tasks.count)
+        assertEquals(1, tasks.overdue)
+        assertEquals(0, tasks.dueToday)
+        assertEquals(5, viewModel.state.value!!.tasksDueSoonDays)
+    }
+
+    @Test
+    fun tasksSectionNeedsItsFeature() = runTest {
+        config.value = ServerConfig(tasks = false)
+        val viewModel = viewModel()
+
+        advanceUntilIdle()
+
+        assertNull(viewModel.state.value!!.tasks)
+        assertEquals(0, server.requestsTo("/api/objects/tasks", HttpMethod.Get).size)
     }
 
     @Test

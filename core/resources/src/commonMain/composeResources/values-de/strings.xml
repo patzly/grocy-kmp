@@ -1180,4 +1180,35 @@
     <item quantity="one">%1$d Hausarbeit ist mir zugewiesen.</item>
     <item quantity="other">%1$d Hausarbeiten sind mir zugewiesen.</item>
   </plurals>
+  <string name="tasks_title">Aufgaben</string>
+  <string name="task_due">Fällig</string>
+  <string name="task_category">Kategorie</string>
+  <string name="task_uncategorized">Nicht kategorisiert</string>
+  <string name="tasks_show_done">Erledigte Aufgaben anzeigen</string>
+  <string name="task_complete">Aufgabe als erledigt markieren</string>
+  <string name="task_undo">Aufgabe rückgängig machen</string>
+  <string name="task_completed">Aufgabe %1$s als erledigt markiert am %2$s</string>
+  <string name="objects_delete_task">Aufgabe "%1$s" wirklich löschen?</string>
+  <string name="task_create">Aufgabe erstellen</string>
+  <string name="task_edit">Aufgabe bearbeiten</string>
+  <string name="task_save_add_another">Speichern &amp; weitere Aufgabe hinzufügen</string>
+  <string name="tasks_detail_hint">Wähle eine Aufgabe aus der Liste, um sie hier zu bearbeiten</string>
+  <string name="task_change_failed">Die Aufgabe konnte nicht geändert werden</string>
+  <string name="task_done">Erledigt</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d Aufgabe</item>
+    <item quantity="other">%1$d Aufgaben</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$d Aufgabe ist überfällig.</item>
+    <item quantity="other">%1$d Aufgaben sind überfällig.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$d Aufgabe steht heute an.</item>
+    <item quantity="other">%1$d Aufgaben stehen heute an.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d Aufgabe steht an %2$s.</item>
+    <item quantity="other">%1$d Aufgaben stehen an %2$s.</item>
+  </plurals>
 </resources>

@@ -3,6 +3,7 @@ package com.patrickzedler.grocy.feature.start.impl
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.chores.ChoresRepository
+import com.patrickzedler.grocy.core.data.tasks.TasksRepository
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
@@ -12,6 +13,8 @@ import com.patrickzedler.grocy.core.data.util.RefreshController
 import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.model.chores.ChoresSummary
 import com.patrickzedler.grocy.core.model.chores.choresSummaryOf
+import com.patrickzedler.grocy.core.model.tasks.TasksSummary
+import com.patrickzedler.grocy.core.model.tasks.tasksSummaryOf
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.recipes.MealPlanEntry
@@ -147,6 +150,9 @@ internal data class StartUiState(
     /** Null without the chores feature or before the first download stored any chore. */
     val chores: ChoresSummary? = null,
     val choresDueSoonDays: Int = 0,
+    /** Null without the tasks feature or before the first download stored any task to do. */
+    val tasks: TasksSummary? = null,
+    val tasksDueSoonDays: Int = 0,
 )
 
 /**
@@ -161,6 +167,7 @@ internal class StartViewModel(
     private val recipes: RecipesRepository,
     private val mealPlan: MealPlanRepository,
     private val chores: ChoresRepository,
+    private val tasks: TasksRepository,
     val serverConfig: StateFlow<ServerConfig?>,
     private val today: () -> Long = ::todayEpochDay,
     private val now: () -> String = { grocyDateTimeOf(localNowMillis()) },
@@ -175,6 +182,7 @@ internal class StartViewModel(
             if (config.recipes) launch { recipes.refresh() }
             if (config.recipes && config.recipesMealPlan) launch { mealPlan.refresh() }
             if (config.chores) launch { chores.refresh() }
+            if (config.tasks) launch { tasks.refresh() }
         }
     }
     val refresh: StateFlow<RefreshState> = refreshController.state
@@ -201,7 +209,12 @@ internal class StartViewModel(
         ::Pair,
     )
 
-    private val choresPart = combine(chores.current, chores.currentUserId, ::Pair)
+    private val choresPart = combine(
+        chores.current,
+        chores.currentUserId,
+        tasks.tasks,
+        ::Triple,
+    )
 
     val state: StateFlow<StartUiState?> = combine(
         combine(serverConfig.filterNotNull(), repository.userSettings, ::Pair),
@@ -209,7 +222,8 @@ internal class StartViewModel(
         counts,
         recipesSummary,
         choresPart,
-    ) { (config, settings), stockData, counts, (recipes, mealPlanToday), (current, userId) ->
+    ) { (config, settings), stockData, counts, (recipes, mealPlanToday), choresPart ->
+        val (current, userId, allTasks) = choresPart
         stateOf(config, settings, stockData, counts).copy(
             recipes = recipes.takeIf { config.recipes && it.count > 0 },
             checksRecipeStock = config.stock,
@@ -221,6 +235,9 @@ internal class StartViewModel(
                 userId = userId.takeIf { config.choresAssignments },
             ).takeIf { config.chores && it.count > 0 },
             choresDueSoonDays = settings.choresDueSoonDays,
+            tasks = tasksSummaryOf(allTasks, today(), settings.tasksDueSoonDays)
+                .takeIf { config.tasks && it.count > 0 },
+            tasksDueSoonDays = settings.tasksDueSoonDays,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), null)
 

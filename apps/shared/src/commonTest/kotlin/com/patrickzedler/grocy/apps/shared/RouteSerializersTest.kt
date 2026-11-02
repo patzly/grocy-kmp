@@ -10,6 +10,8 @@ import com.patrickzedler.grocy.feature.masterdata.api.BatteryRoute
 import com.patrickzedler.grocy.feature.chores.api.ChoreTrackingRoute
 import com.patrickzedler.grocy.feature.chores.api.ChoresJournalRoute
 import com.patrickzedler.grocy.feature.chores.api.ChoresOverviewRoute
+import com.patrickzedler.grocy.feature.tasks.api.TaskRoute
+import com.patrickzedler.grocy.feature.tasks.api.TasksRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ChoreRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ChoresRoute
 import com.patrickzedler.grocy.feature.masterdata.api.LocationRoute
@@ -94,6 +96,8 @@ class RouteSerializersTest {
         ChoresOverviewRoute,
         ChoreTrackingRoute(choreId = 3, inList = false),
         ChoresJournalRoute(choreId = 3),
+        TasksRoute,
+        TaskRoute(id = 3, inList = false),
         ChoresRoute,
         ChoreRoute(id = 3),
         BatteriesRoute,

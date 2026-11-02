@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.data.settings
 
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
+import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
@@ -60,4 +61,9 @@ interface SettingsStore {
     val choresJournalOptions: Flow<ChoresJournalOptions>
 
     suspend fun setChoresJournalOptions(options: ChoresJournalOptions)
+
+    /** How the user set up the tasks page. */
+    val tasksOverviewOptions: Flow<TasksOverviewOptions>
+
+    suspend fun setTasksOverviewOptions(options: TasksOverviewOptions)
 }

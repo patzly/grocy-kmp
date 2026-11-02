@@ -24,7 +24,9 @@ list stay in `feature:masterdata`, the chores settings in `feature:settings`.
   in its menu ("Due soon" includes what is due today like Grocy's hidden column, and hides with 0
   due soon days), assignment ("Assigned to me" with its number first; only with
   `FEATURE_FLAG_CHORES_ASSIGNMENTS` and readable users), sort (name and shown fields), group by
-  (assigned to) and the shown fields (Grocy's columns and its userfield columns), kept like Grocy's
+  (assigned to) and, for both, the userfield columns except files and pictures (`TableColumn`,
+  numbers order by value, rows without a value last, a hidden or deleted column falls back to the
+  default), and the shown fields (Grocy's columns and its userfield columns), kept like Grocy's
   table options (`ChoresOverviewOptions`, `ChoresOverviewOptionsRepository`); filters and search
   only for the screen. Grocy sorts by next estimated tracking; chores without a schedule sort last
   in both directions (Grocy's text sort puts its "-" first, which pushes everything due down). The

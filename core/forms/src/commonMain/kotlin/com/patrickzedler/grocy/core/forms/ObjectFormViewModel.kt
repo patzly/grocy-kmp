@@ -25,6 +25,7 @@ enum class ObjectField {
     PERIOD_DAYS,
     PERIOD_INTERVAL,
     START_DATE,
+    DUE_DATE,
     ASSIGNED_USERS,
     PRODUCT_AMOUNT,
     SHOPPING_LIST,
@@ -128,6 +129,9 @@ abstract class ObjectFormViewModel<V : Any, F : ObjectFormState<V>>(
     /** A created object closes the form like a saved one, instead of becoming its edit form. */
     protected open val closesWhenCreated: Boolean = false
 
+    /** A new object was created and the form stays open, before [ObjectFormEvent.Created]. */
+    protected open fun onCreated() {}
+
     /** Downloads the objects once more, when the form opened for an object not stored. */
     protected open suspend fun refreshForUnknownObject() {
         repository.refresh()
@@ -145,6 +149,15 @@ abstract class ObjectFormViewModel<V : Any, F : ObjectFormState<V>>(
 
     protected fun start() {
         viewModelScope.launch { load() }
+    }
+
+    /** Starts over with the form of a new object, e.g. after Grocy's "Save & add another". */
+    protected fun startNew() {
+        objectId = MasterDataRepository.NEW_OBJECT_ID
+        errors = emptyMap()
+        userfieldErrors = emptyMap()
+        load = ObjectFormLoad.Loading
+        start()
     }
 
     private suspend fun load() {
@@ -203,6 +216,7 @@ abstract class ObjectFormViewModel<V : Any, F : ObjectFormState<V>>(
                 savedValues = ready.form.values()
                 savedUserfields = ready.userfields.associate { it.userfield.name to it.value }
                 if (wasNew && !closesWhenCreated) {
+                    onCreated()
                     ObjectFormEvent.Created
                 } else {
                     ObjectFormEvent.Saved

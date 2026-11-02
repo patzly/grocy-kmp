@@ -1262,4 +1262,43 @@
     <item quantity="many">%1$d работ назначены мне.</item>
     <item quantity="other">%1$d работ назначены мне.</item>
   </plurals>
+  <string name="tasks_title">Задачи</string>
+  <string name="task_due">Срок выполнения</string>
+  <string name="task_category">Категория</string>
+  <string name="task_uncategorized">Без категории</string>
+  <string name="tasks_show_done">Показать завершённые задачи</string>
+  <string name="task_complete">Пометить задачу как выполненную</string>
+  <string name="task_undo">Отменить задание</string>
+  <string name="task_completed">Пометить задачу "%1$s" как выполненную %2$s</string>
+  <string name="objects_delete_task">Вы уверены, что хотите удалить задачу "%1$s"?</string>
+  <string name="task_create">Создать задачу</string>
+  <string name="task_edit">Изменить задачу</string>
+  <string name="task_save_add_another">Сохранить и добавить другую</string>
+  <string name="tasks_detail_hint">Выберите задачу в списке, чтобы редактировать её здесь</string>
+  <string name="task_change_failed">Не удалось изменить задачу</string>
+  <string name="task_done">Выполнено</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d задача</item>
+    <item quantity="few">%1$d задачи</item>
+    <item quantity="many">%1$d задач</item>
+    <item quantity="other">%1$d задачи</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">Вышел срок %1$d задачи.</item>
+    <item quantity="few">Вышел срок %1$d задач.</item>
+    <item quantity="many">Вышел срок %1$d задач.</item>
+    <item quantity="other">Вышел срок %1$d задач.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">Сегодня должна быть выполнена %1$d задача.</item>
+    <item quantity="few">Сегодня должны быть выполнены %1$d задачи.</item>
+    <item quantity="many">Сегодня должны быть выполнены %1$d задач.</item>
+    <item quantity="other">Сегодня должно быть выполнено %1$d задач.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">Подходит срок %1$d задачи %2$s.</item>
+    <item quantity="few">Подходит срок %1$d задач %2$s.</item>
+    <item quantity="many">Подходит срок %1$d задач %2$s.</item>
+    <item quantity="other">Подходит срок %1$d задач %2$s.</item>
+  </plurals>
 </resources>

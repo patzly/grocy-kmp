@@ -1266,4 +1266,43 @@ Po zaškrtnutí nebude brán zřetel na množství produktu v nákupním seznamu
     <item quantity="many">Mám splnit %1$d povinností.</item>
     <item quantity="other">Mám splnit %1$d povinností.</item>
   </plurals>
+  <string name="tasks_title">Přehled úkolů</string>
+  <string name="task_due">Termín splnění</string>
+  <string name="task_category">Kategorie</string>
+  <string name="task_uncategorized">Bez kategorie</string>
+  <string name="tasks_show_done">Zobrazit hotové úkoly</string>
+  <string name="task_complete">Označit úkol jako hotový</string>
+  <string name="task_undo">Vrátit úkol</string>
+  <string name="task_completed">Úkol %1$s označen jako hotový v %2$s</string>
+  <string name="objects_delete_task">Odstranit úkol „%1$s“?</string>
+  <string name="task_create">Vytvořit úkol</string>
+  <string name="task_edit">Upravit úkol</string>
+  <string name="task_save_add_another">Uložit a přidat další úkol</string>
+  <string name="tasks_detail_hint">Vyberte úkol ze seznamu a upravte ho zde</string>
+  <string name="task_change_failed">Úkol se nepodařilo změnit</string>
+  <string name="task_done">Hotovo</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d úkol</item>
+    <item quantity="few">%1$d úkoly</item>
+    <item quantity="many">%1$d úkolu</item>
+    <item quantity="other">%1$d úkolů</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$d úkol již měl být splněn.</item>
+    <item quantity="few">%1$d úkoly již měly být splněny.</item>
+    <item quantity="many">%1$d úkolů již mělo být splněno.</item>
+    <item quantity="other">%1$d úkolů již mělo být splněno.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">Dnes má být hotov %1$d úkol.</item>
+    <item quantity="few">Dnes má být hotovo %1$d úkoly.</item>
+    <item quantity="many">Dnes má být hotovo %1$d úkolů.</item>
+    <item quantity="other">Dnes má být hotovo %1$d úkolů.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d úkol má být splněn %2$s.</item>
+    <item quantity="few">%1$d úkoly mají být splněny %2$s.</item>
+    <item quantity="many">%1$d úkolů má být splněno %2$s.</item>
+    <item quantity="other">%1$d úkolů má být splněno %2$s.</item>
+  </plurals>
 </resources>

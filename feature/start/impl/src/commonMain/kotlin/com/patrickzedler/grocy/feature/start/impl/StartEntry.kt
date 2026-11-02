@@ -32,6 +32,8 @@ import com.patrickzedler.grocy.feature.stock.api.InventoryRoute
 import com.patrickzedler.grocy.feature.stock.api.PurchaseRoute
 import com.patrickzedler.grocy.feature.stock.api.StockOverviewRoute
 import com.patrickzedler.grocy.feature.stock.api.TransferRoute
+import com.patrickzedler.grocy.feature.tasks.api.TaskRoute
+import com.patrickzedler.grocy.feature.tasks.api.TasksRoute
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -58,6 +60,7 @@ fun EntryProviderScope<NavKey>.startEntry(
                     recipes = dependencies.recipesRepository,
                     mealPlan = dependencies.mealPlanRepository,
                     chores = dependencies.choresRepository,
+                    tasks = dependencies.tasksRepository,
                     serverConfig = dependencies.serverConfig,
                 )
             },
@@ -84,6 +87,8 @@ fun EntryProviderScope<NavKey>.startEntry(
             onChoreTrackingClick = {
                 navigator.navigateAll(choreTrackingRoutes(isBesideDetail))
             },
+            // In wide windows beside the tasks, else a screen of its own
+            onTaskCreateClick = { navigator.navigateAll(taskCreateRoutes(isBesideDetail)) },
             onDemoWarningClick = {
                 navigator.navigateAll(listOf(SettingsRoute, ServerSettingsRoute))
             },
@@ -100,6 +105,7 @@ internal val StartSection.route: Route
         StartSection.RECIPES -> RecipesRoute()
         StartSection.MEAL_PLAN -> MealPlanRoute()
         StartSection.CHORES -> ChoresOverviewRoute
+        StartSection.TASKS -> TasksRoute
         StartSection.MASTER_DATA -> MasterDataRoute
     }
 
@@ -134,6 +140,18 @@ internal fun choreTrackingRoutes(isBesideDetail: Boolean): List<Route> =
         listOf(ChoresOverviewRoute, ChoreTrackingRoute())
     } else {
         listOf(ChoreTrackingRoute(inList = false))
+    }
+
+/**
+ * What the start screen's "Create task" opens: where details show beside their list
+ * ([isBesideDetail]) the tasks with the form beside them, else the form alone, which stays a
+ * screen of its own when the window grows.
+ */
+internal fun taskCreateRoutes(isBesideDetail: Boolean): List<Route> =
+    if (isBesideDetail) {
+        listOf(TasksRoute, TaskRoute())
+    } else {
+        listOf(TaskRoute(inList = false))
     }
 
 /** The section whose page [route] is, null for other routes. */

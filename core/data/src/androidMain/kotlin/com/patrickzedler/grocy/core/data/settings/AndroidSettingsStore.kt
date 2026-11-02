@@ -11,6 +11,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
+import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
@@ -140,6 +141,14 @@ class AndroidSettingsStore(
         dataStore.edit { it[CHORES_JOURNAL_OPTIONS] = options.stored() }
     }
 
+    override val tasksOverviewOptions: Flow<TasksOverviewOptions> = preferences
+        .map { TasksOverviewOptions.of(it[TASKS_OVERVIEW_OPTIONS]) }
+        .distinctUntilChanged()
+
+    override suspend fun setTasksOverviewOptions(options: TasksOverviewOptions) {
+        dataStore.edit { it[TASKS_OVERVIEW_OPTIONS] = options.stored() }
+    }
+
     override val recipesOptions: Flow<RecipesOptions> = preferences
         .map {
             RecipesOptions.of(
@@ -189,5 +198,6 @@ class AndroidSettingsStore(
         val SCANNER_FORMS = stringPreferencesKey("scanner_forms")
         val CHORES_OVERVIEW_OPTIONS = stringPreferencesKey("chores_overview_options")
         val CHORES_JOURNAL_OPTIONS = stringPreferencesKey("chores_journal_options")
+        val TASKS_OVERVIEW_OPTIONS = stringPreferencesKey("tasks_overview_options")
     }
 }

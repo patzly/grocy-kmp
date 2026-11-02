@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.feature.chores.impl
 
+import com.patrickzedler.grocy.core.forms.sortableUserfieldColumns
 import com.patrickzedler.grocy.core.model.User
 import com.patrickzedler.grocy.core.model.chores.ChoreDueStatus
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewField
@@ -9,6 +10,7 @@ import com.patrickzedler.grocy.core.model.chores.ChoresOverviewSortField
 import com.patrickzedler.grocy.core.model.chores.CurrentChore
 import com.patrickzedler.grocy.core.model.masterdata.Chore
 import com.patrickzedler.grocy.core.model.masterdata.ChorePeriodType
+import com.patrickzedler.grocy.core.model.masterdata.TableColumn
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
 import com.patrickzedler.grocy.core.model.masterdata.UserfieldType
 import com.patrickzedler.grocy.core.model.server.ServerConfig
@@ -66,8 +68,8 @@ class ChoresOverviewListTest {
     ) = buildChoresOverview(
         data = data,
         filter = filter,
-        sort = sort,
-        grouping = grouping,
+        sort = TableColumn.Own(sort.first) to sort.second,
+        grouping = TableColumn.Own(grouping),
         query = query,
         now = "2026-11-02 12:00:00",
         dueSoonDays = 5,
@@ -179,7 +181,10 @@ class ChoresOverviewListTest {
             ChoresOverviewField.ASSIGNED_TO in
                 availableChoreFields(without, hasUserfieldColumns = true),
         )
-        assertEquals(listOf(ChoresOverviewGrouping.NONE), availableChoreGroupings(without))
+        assertEquals(
+            listOf(TableColumn.Own(ChoresOverviewGrouping.NONE)),
+            availableChoreGroupings(without, emptyList()),
+        )
     }
 
     @Test
@@ -198,13 +203,116 @@ class ChoresOverviewListTest {
         )
 
         assertEquals(
-            ChoresOverviewSortField.LAST_TRACKED to false,
+            TableColumn.Own(ChoresOverviewSortField.LAST_TRACKED) to false,
             effectiveChoreSort(options, ChoresOverviewField.entries),
         )
         assertEquals(
-            ChoresOverviewSortField.NEXT_ESTIMATED_TRACKING to true,
+            TableColumn.Own(ChoresOverviewSortField.NEXT_ESTIMATED_TRACKING) to true,
             effectiveChoreSort(options, listOf(ChoresOverviewField.NEXT_ESTIMATED_TRACKING)),
         )
-        assertEquals(ChoresOverviewSortField.NAME to true, effectiveChoreSort(options, emptyList()))
+        assertEquals(
+            TableColumn.Own(ChoresOverviewSortField.NAME) to true,
+            effectiveChoreSort(options, emptyList()),
+        )
+    }
+
+    private val numberData = ChoresOverviewData(
+        current = listOf(
+            CurrentChore(choreId = 1, name = "Vacuum"),
+            CurrentChore(choreId = 2, name = "Dust"),
+            CurrentChore(choreId = 3, name = "Mop"),
+        ),
+        chores = listOf(
+            Chore(1, "Vacuum", userfields = mapOf("minutes" to "30", "room" to "Hall")),
+            Chore(2, "Dust", userfields = mapOf("minutes" to "5", "room" to "Attic")),
+            Chore(3, "Mop"),
+        ),
+        users = emptyList(),
+        userfields = listOf(
+            Userfield(1, "chores", "minutes", "Minutes", UserfieldType.NUMBER_INTEGRAL, true),
+            Userfield(2, "chores", "room", "Room", UserfieldType.TEXT_SINGLE_LINE, true),
+            Userfield(3, "chores", "photo", "Photo", UserfieldType.IMAGE, true),
+        ),
+    )
+
+    private fun byUserfield(
+        sort: Pair<TableColumn<ChoresOverviewSortField>, Boolean> = TableColumn.Own(
+            ChoresOverviewSortField.NAME,
+        ) to true,
+        grouping: TableColumn<ChoresOverviewGrouping> = TableColumn.Own(
+            ChoresOverviewGrouping.NONE,
+        ),
+    ) = buildChoresOverview(
+        data = numberData,
+        filter = ChoresFilter(),
+        sort = sort,
+        grouping = grouping,
+        query = "",
+        now = "2026-11-02 12:00:00",
+        dueSoonDays = 5,
+    )
+
+    @Test
+    fun numberUserfieldsSortByTheirValueWithoutOnesLast() {
+        val column = TableColumn.OfUserfield("minutes")
+
+        assertEquals(
+            listOf("Dust", "Vacuum", "Mop"),
+            names(byUserfield(sort = column to true)),
+        )
+        assertEquals(
+            listOf("Vacuum", "Dust", "Mop"),
+            names(byUserfield(sort = column to false)),
+        )
+    }
+
+    @Test
+    fun groupsByAUserfieldWithoutOnesLast() {
+        val groups = byUserfield(grouping = TableColumn.OfUserfield("room"))
+
+        assertEquals(listOf("Attic", "Hall", null), groups.map { it.title })
+        assertEquals(listOf(false, false, true), groups.map { it.isUnassigned })
+    }
+
+    @Test
+    fun userfieldColumnsAreOfferedLikeTheOthersExceptPictures() {
+        val columns = sortableUserfieldColumns(
+            numberData.userfields,
+        )
+
+        assertEquals(listOf("minutes", "room"), columns.map { it.name })
+        assertTrue(
+            TableColumn.OfUserfield("room") in
+                availableChoreGroupings(ServerConfig(), columns),
+        )
+        assertTrue(
+            TableColumn.OfUserfield("room") in
+                availableChoreSortColumns(listOf(ChoresOverviewField.USERFIELDS), columns),
+        )
+    }
+
+    @Test
+    fun hiddenUserfieldColumnsAreNoSortChoiceAndFallBack() {
+        val columns = sortableUserfieldColumns(
+            numberData.userfields,
+        )
+        val options = ChoresOverviewOptions(sortUserfield = "room", ascending = false)
+        val hidden = listOf(ChoresOverviewField.NEXT_ESTIMATED_TRACKING)
+
+        assertFalse(TableColumn.OfUserfield("room") in availableChoreSortColumns(hidden, columns))
+        assertEquals(
+            TableColumn.Own(ChoresOverviewSortField.NEXT_ESTIMATED_TRACKING) to true,
+            effectiveChoreSort(options, hidden, columns),
+        )
+    }
+
+    @Test
+    fun aGroupingByADeletedUserfieldEndsTheGrouping() {
+        val options = ChoresOverviewOptions(groupingUserfield = "gone")
+
+        assertEquals(
+            TableColumn.Own(ChoresOverviewGrouping.NONE),
+            effectiveChoreGrouping(options, availableChoreGroupings(ServerConfig(), emptyList())),
+        )
     }
 }

@@ -1179,4 +1179,35 @@
     <item quantity="one">%1$d syssla har tilldelats mig.</item>
     <item quantity="other">%1$d sysslor har tilldelats mig.</item>
   </plurals>
+  <string name="tasks_title">Uppgifter</string>
+  <string name="task_due">Förfaller</string>
+  <string name="task_category">Kategori</string>
+  <string name="task_uncategorized">Okategoriserad</string>
+  <string name="tasks_show_done">Visa utförda uppgifter</string>
+  <string name="task_complete">Markera uppgift som slutförd</string>
+  <string name="task_undo">Ångra uppgift</string>
+  <string name="task_completed">Markerade uppgiften %1$s som slutförd den %2$s</string>
+  <string name="objects_delete_task">Är du säker på att du vill radera uppgiften "%1$s"?</string>
+  <string name="task_create">Skapa uppgift</string>
+  <string name="task_edit">Redigera uppgiften</string>
+  <string name="task_save_add_another">Spara och lägg till ytterligare en uppgift</string>
+  <string name="tasks_detail_hint">Välj en uppgift i listan för att redigera den här</string>
+  <string name="task_change_failed">Uppgiften kunde inte ändras</string>
+  <string name="task_done">Klar</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d uppgift</item>
+    <item quantity="other">%1$d uppgifter</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$d uppgift är försenad.</item>
+    <item quantity="other">%1$d uppgifter är försenade.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$d uppgift ska utföras idag.</item>
+    <item quantity="other">%1$d uppgifter ska utföras idag.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d uppgift ska utföras %2$s.</item>
+    <item quantity="other">%1$d uppgifter ska utföras %2$s.</item>
+  </plurals>
 </resources>

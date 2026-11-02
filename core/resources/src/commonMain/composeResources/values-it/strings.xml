@@ -1221,4 +1221,39 @@
     <item quantity="many">%1$d faccende sono assegnate a me.</item>
     <item quantity="other">%1$d faccende sono assegnate a me.</item>
   </plurals>
+  <string name="tasks_title">Compiti</string>
+  <string name="task_due">Da fare</string>
+  <string name="task_category">Categoria</string>
+  <string name="task_uncategorized">Non categorizzato</string>
+  <string name="tasks_show_done">Mostra compiti completati</string>
+  <string name="task_complete">Segna l'attività come completata</string>
+  <string name="task_undo">Annulla attività</string>
+  <string name="task_completed">Contrassegnata compito %1$s come completato il %2$s</string>
+  <string name="objects_delete_task">Sei sicuro di voler eliminare l'attività "%1$s"?</string>
+  <string name="task_create">Crea compito</string>
+  <string name="task_edit">Modifica compito</string>
+  <string name="task_save_add_another">Salva e aggiungi un'altra attività</string>
+  <string name="tasks_detail_hint">Scegli un compito dall'elenco per modificarlo qui</string>
+  <string name="task_change_failed">Non è stato possibile modificare il compito</string>
+  <string name="task_done">Fatto</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d compito</item>
+    <item quantity="many">%1$d compiti</item>
+    <item quantity="other">%1$d compiti</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$d compito in ritardo da fare .</item>
+    <item quantity="many">%1$d compiti in ritardo da fare.</item>
+    <item quantity="other">%1$d compiti in ritardo da fare.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$d attività che dovrebbe essere svolta oggi.</item>
+    <item quantity="many">%1$d attività che dovrebbero essere svolte oggi.</item>
+    <item quantity="other">%1$d attività che dovrebbero essere svolte oggi.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d compito da fare %2$s.</item>
+    <item quantity="many">%1$d compiti da fare %2$s.</item>
+    <item quantity="other">%1$d compiti da fare %2$s.</item>
+  </plurals>
 </resources>

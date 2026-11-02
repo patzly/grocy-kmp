@@ -1221,4 +1221,39 @@
     <item quantity="many">%1$d atribuídas a mim.</item>
     <item quantity="other">%1$d atribuídas a mim.</item>
   </plurals>
+  <string name="tasks_title">Atividades</string>
+  <string name="task_due">Prazo</string>
+  <string name="task_category">Categoria</string>
+  <string name="task_uncategorized">Não categorizado</string>
+  <string name="tasks_show_done">Exibir atividades concluídas</string>
+  <string name="task_complete">Marcar a atividade como concluída</string>
+  <string name="task_undo">Desfazer atividade</string>
+  <string name="task_completed">Atividades marcadas %1$s como concluídas em %2$s</string>
+  <string name="objects_delete_task">Tem certeza que deseja remover a atividade "%1$s"?</string>
+  <string name="task_create">Criar atividade</string>
+  <string name="task_edit">Editar atividade</string>
+  <string name="task_save_add_another">Salvar e adicionar outra atividade</string>
+  <string name="tasks_detail_hint">Escolha uma atividade da lista para editá-la aqui</string>
+  <string name="task_change_failed">Não foi possível alterar a atividade</string>
+  <string name="task_done">Concluída</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d atividade</item>
+    <item quantity="many">%1$d atividades</item>
+    <item quantity="other">%1$d atividades</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$d atrasada.</item>
+    <item quantity="many">%1$d atrasadas.</item>
+    <item quantity="other">%1$d atrasadas.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$d prevista para hoje.</item>
+    <item quantity="many">%1$d previstas para hoje.</item>
+    <item quantity="other">%1$d previstas para hoje.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d pendente %2$s.</item>
+    <item quantity="many">%1$d pendentes %2$s.</item>
+    <item quantity="other">%1$d pendentes %2$s.</item>
+  </plurals>
 </resources>

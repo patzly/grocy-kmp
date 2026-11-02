@@ -19,6 +19,7 @@ import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConvers
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.masterdata.TaskCategory
+import com.patrickzedler.grocy.core.model.tasks.Task
 import com.patrickzedler.grocy.core.model.masterdata.Userentity
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
 import com.patrickzedler.grocy.core.model.recipes.MealPlanEntry
@@ -83,6 +84,7 @@ import com.patrickzedler.grocy.core.network.dto.StockLogDto
 import com.patrickzedler.grocy.core.network.dto.StoreDto
 import com.patrickzedler.grocy.core.network.dto.SystemInfoDto
 import com.patrickzedler.grocy.core.network.dto.TaskCategoryDto
+import com.patrickzedler.grocy.core.network.dto.TaskDto
 import com.patrickzedler.grocy.core.network.dto.UserDto
 import com.patrickzedler.grocy.core.network.dto.UserentityDto
 import com.patrickzedler.grocy.core.network.dto.UserfieldDto
@@ -320,6 +322,36 @@ class GrocyApi(
 
     suspend fun saveTaskCategory(connection: ServerConnection, category: TaskCategory): Int =
         saveObject(connection, TASK_CATEGORIES, category.id, category.toJson())
+
+    /** Grocy's tasks, also the done ones its page shows with "Show done tasks". */
+    suspend fun tasks(connection: ServerConnection): List<Task> =
+        get<List<TaskDto>>(connection, "objects", TASKS).map { it.toModel() }
+
+    suspend fun task(connection: ServerConnection, id: Int): Task =
+        get<TaskDto>(connection, "objects", TASKS, id.toString()).toModel()
+
+    suspend fun saveTask(connection: ServerConnection, task: Task): Int =
+        saveObject(connection, TASKS, task.id, task.toJson())
+
+    /** Grocy's "Mark task as completed" of task [id] at [doneTime] ("YYYY-MM-DD HH:MM:SS"). */
+    suspend fun completeTask(connection: ServerConnection, id: Int, doneTime: String) {
+        execute(
+            connection,
+            HttpMethod.Post,
+            listOf(TASKS, id.toString(), "complete"),
+            body = jsonBody(buildJsonObject { put("done_time", doneTime) }),
+        )
+    }
+
+    /** Grocy's "Undo task" of task [id]: it is to do again. */
+    suspend fun undoTask(connection: ServerConnection, id: Int) {
+        execute(
+            connection,
+            HttpMethod.Post,
+            listOf(TASKS, id.toString(), "undo"),
+            body = jsonBody(JsonObject(emptyMap())),
+        )
+    }
 
     suspend fun userentities(connection: ServerConnection): List<Userentity> =
         get<List<UserentityDto>>(connection, "objects", USERENTITIES).map { it.toModel() }
@@ -1374,6 +1406,7 @@ class GrocyApi(
         private const val CHORES_LOG = "chores_log"
         private const val BATTERIES = "batteries"
         private const val TASK_CATEGORIES = "task_categories"
+        private const val TASKS = "tasks"
         private const val USERENTITIES = "userentities"
         private const val USERFIELDS = "userfields"
         private const val PRODUCT_PICTURES = "productpictures"

@@ -4,6 +4,7 @@ import com.patrickzedler.grocy.core.data.BrowserLocalStorage
 import com.patrickzedler.grocy.core.data.KeyValueStorage
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
+import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
@@ -151,6 +152,17 @@ class WebSettingsStore internal constructor(
         choresJournalOptionsState.value = options
     }
 
+    private val tasksOverviewOptionsState =
+        MutableStateFlow(TasksOverviewOptions.of(storage.get(TASKS_OVERVIEW_OPTIONS)))
+
+    override val tasksOverviewOptions: Flow<TasksOverviewOptions> =
+        tasksOverviewOptionsState.asStateFlow()
+
+    override suspend fun setTasksOverviewOptions(options: TasksOverviewOptions) {
+        storage.set(TASKS_OVERVIEW_OPTIONS, options.stored())
+        tasksOverviewOptionsState.value = options
+    }
+
     private val recipesOptionsState = MutableStateFlow(
         RecipesOptions.of(
             fields = storage.get(RECIPES_FIELDS),
@@ -198,5 +210,6 @@ class WebSettingsStore internal constructor(
         const val SCANNER_FORMS = "grocy.scannerForms"
         const val CHORES_OVERVIEW_OPTIONS = "grocy.choresOverviewOptions"
         const val CHORES_JOURNAL_OPTIONS = "grocy.choresJournalOptions"
+        const val TASKS_OVERVIEW_OPTIONS = "grocy.tasksOverviewOptions"
     }
 }

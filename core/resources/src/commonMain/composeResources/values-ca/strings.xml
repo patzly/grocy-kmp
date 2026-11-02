@@ -1221,4 +1221,39 @@
     <item quantity="many">Tens assignades %1$d feines.</item>
     <item quantity="other">Tens assignades %1$d feines.</item>
   </plurals>
+  <string name="tasks_title">Tasques</string>
+  <string name="task_due">Data</string>
+  <string name="task_category">Categoria</string>
+  <string name="task_uncategorized">Sense categoria</string>
+  <string name="tasks_show_done">Mostra tasques fetes</string>
+  <string name="task_complete">Marcar tasca com a completada</string>
+  <string name="task_undo">Desfer tasca</string>
+  <string name="task_completed">Tasca %1$s marcada com a completada en %2$s</string>
+  <string name="objects_delete_task">Segur que voleu suprimir la tasca "%1$s"?</string>
+  <string name="task_create">Afegir tasca</string>
+  <string name="task_edit">Editar tasca</string>
+  <string name="task_save_add_another">Desa i afegeix una altra tasca</string>
+  <string name="tasks_detail_hint">Trieu una tasca de la llista per editar-la aquí</string>
+  <string name="task_change_failed">No s'ha pogut canviar la tasca</string>
+  <string name="task_done">Feta</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d tasca</item>
+    <item quantity="many">%1$d tasques</item>
+    <item quantity="other">%1$d tasques</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$d tasca s'hauria d'haver fet.</item>
+    <item quantity="many">%1$d tasques s'haurien d'haver fer.</item>
+    <item quantity="other">%1$d tasques s'haurien d'haver fer.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$d tasca per fer avui.</item>
+    <item quantity="many">%1$d tasques per fer avui.</item>
+    <item quantity="other">%1$d tasques per fer avui.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d tasca per fer %2$s.</item>
+    <item quantity="many">%1$d tasques per fer %2$s.</item>
+    <item quantity="other">%1$d tasques per fer %2$s.</item>
+  </plurals>
 </resources>

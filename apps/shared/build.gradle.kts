@@ -21,6 +21,8 @@ kotlin {
             api(projects.core.model)
             implementation(projects.feature.chores.api)
             implementation(projects.feature.chores.impl)
+            implementation(projects.feature.tasks.api)
+            implementation(projects.feature.tasks.impl)
             implementation(projects.feature.login.api)
             implementation(projects.feature.login.impl)
             implementation(projects.feature.masterdata.api)

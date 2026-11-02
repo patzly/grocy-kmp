@@ -1180,4 +1180,35 @@
     <item quantity="one">%1$d δουλειά μου έχει ανατεθεί.</item>
     <item quantity="other">%1$d δουλειές μου έχουν ανατεθεί.</item>
   </plurals>
+  <string name="tasks_title">Καθήκοντα</string>
+  <string name="task_due">Λόγω</string>
+  <string name="task_category">Κατηγορία</string>
+  <string name="task_uncategorized">Χωρίς κατηγορία</string>
+  <string name="tasks_show_done">Εμφάνιση ολοκληρωμένων εργασιών</string>
+  <string name="task_complete">Σήμανση εργασίας ως ολοκληρωμένης</string>
+  <string name="task_undo">Αναίρεση εργασίας</string>
+  <string name="task_completed">Επισημάνθηκε η εργασία %1$s ως ολοκληρωμένη στο %2$s</string>
+  <string name="objects_delete_task">Θέλετε σίγουρα να διαγράψετε την εργασία "%1$s";</string>
+  <string name="task_create">Δημιουργήστε εργασία</string>
+  <string name="task_edit">Επεξεργασία εργασίας</string>
+  <string name="task_save_add_another">Αποθήκευση &amp; προσθήκη άλλης εργασίας</string>
+  <string name="tasks_detail_hint">Επιλέξτε μια εργασία από τη λίστα για να την επεξεργαστείτε εδώ</string>
+  <string name="task_change_failed">Δεν ήταν δυνατή η αλλαγή της εργασίας</string>
+  <string name="task_done">Ολοκληρώθηκε</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d εργασία</item>
+    <item quantity="other">%1$d εργασίες</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$d καθήκον που πρέπει να γίνει.</item>
+    <item quantity="other">%1$d καθήκοντα έχουν καθυστερήσει να γίνουν.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$d εργασία πρέπει να γίνει σήμερα.</item>
+    <item quantity="other">%1$d εργασίες πρέπει να γίνουν σήμερα.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d εργασία πρέπει να γίνει %2$s.</item>
+    <item quantity="other">%1$d εργασίες πρέπει να γίνουν %2$s.</item>
+  </plurals>
 </resources>

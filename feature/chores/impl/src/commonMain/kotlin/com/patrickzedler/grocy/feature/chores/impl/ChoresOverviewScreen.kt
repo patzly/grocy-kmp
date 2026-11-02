@@ -39,12 +39,14 @@ import com.patrickzedler.grocy.core.forms.FilterChipRow
 import com.patrickzedler.grocy.core.forms.MultiSelectChip
 import com.patrickzedler.grocy.core.forms.SortChip
 import com.patrickzedler.grocy.core.forms.emptyListItem
+import com.patrickzedler.grocy.core.forms.label
 import com.patrickzedler.grocy.core.forms.searchItem
 import com.patrickzedler.grocy.core.forms.showSearchAtTop
 import com.patrickzedler.grocy.core.model.chores.ChoreDueStatus
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewField
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewGrouping
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewSortField
+import com.patrickzedler.grocy.core.model.masterdata.TableColumn
 import com.patrickzedler.grocy.core.productcard.rememberGrocycodeDownload
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_search
@@ -291,11 +293,13 @@ private fun ChoresFilterBar(
             )
         }
         SortChip(
-            fields = availableChoreSortFields(state.fields),
+            fields = availableChoreSortColumns(state.fields, state.userfieldColumns),
             field = state.sortField,
             ascending = state.ascending,
             isDefault = state.isDefaultSort,
-            fieldLabel = { stringResource(it.label) },
+            fieldLabel = { column ->
+                column.label(state.userfieldColumns) { stringResource(it.label) }
+            },
             onSortChange = viewModel::setSort,
         )
         if (state.availableGroupings.size > 1) {
@@ -303,10 +307,15 @@ private fun ChoresFilterBar(
                 label = stringResource(Res.string.stock_overview_group_by),
                 optionGroups = listOf(state.availableGroupings),
                 selected = state.grouping,
-                isDefault = { it == ChoresOverviewGrouping.NONE },
-                optionLabel = { stringResource(it.label) },
-                selectedLabel = {
-                    stringResource(Res.string.stock_overview_grouped_by, stringResource(it.label))
+                isDefault = { it == TableColumn.Own(ChoresOverviewGrouping.NONE) },
+                optionLabel = { column ->
+                    column.label(state.userfieldColumns) { stringResource(it.label) }
+                },
+                selectedLabel = { column ->
+                    stringResource(
+                        Res.string.stock_overview_grouped_by,
+                        column.label(state.userfieldColumns) { stringResource(it.label) },
+                    )
                 },
                 onSelect = viewModel::setGrouping,
             )

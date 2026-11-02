@@ -168,6 +168,7 @@ class ObjectActionsViewModel(
         MasterDataRepository.BATTERIES -> repository.batteries.first().find { it.id == id }?.name
         MasterDataRepository.TASK_CATEGORIES ->
             repository.taskCategories.first().find { it.id == id }?.name
+        MasterDataRepository.TASKS -> repository.taskName(id)
         MasterDataRepository.USERENTITIES ->
             repository.userentities.first().find { it.id == id }?.name
         MasterDataRepository.USERFIELDS ->

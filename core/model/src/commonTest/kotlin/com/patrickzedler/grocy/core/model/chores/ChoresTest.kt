@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.core.model.chores
 
+import com.patrickzedler.grocy.core.model.masterdata.TableColumn
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -137,5 +138,27 @@ class ChoresTest {
         val options = ChoresOverviewOptions(fields = emptySet())
 
         assertEquals(emptySet(), ChoresOverviewOptions.of(options.stored()).fields)
+    }
+
+    @Test
+    fun userfieldColumnsOfStoredOptionsStayReadable() {
+        val options = ChoresOverviewOptions.of("LAST_TRACKED;NONE;NAME;false;room;floor")
+
+        assertEquals(TableColumn.OfUserfield("room"), options.sortColumn)
+        assertEquals(TableColumn.OfUserfield("floor"), options.groupingColumn)
+        assertEquals("LAST_TRACKED;NONE;NAME;false;room;floor", options.stored())
+    }
+
+    @Test
+    fun choosingAnOwnColumnEndsTheUserfieldOne() {
+        val options = ChoresOverviewOptions(sortUserfield = "room", groupingUserfield = "floor")
+
+        val own = options
+            .withSort(TableColumn.Own(ChoresOverviewSortField.NAME), ascending = true)
+            .withGrouping(TableColumn.Own(ChoresOverviewGrouping.ASSIGNED_TO))
+
+        assertEquals(TableColumn.Own(ChoresOverviewSortField.NAME), own.sortColumn)
+        assertEquals(TableColumn.Own(ChoresOverviewGrouping.ASSIGNED_TO), own.groupingColumn)
+        assertEquals(own, ChoresOverviewOptions.of(own.stored()))
     }
 }

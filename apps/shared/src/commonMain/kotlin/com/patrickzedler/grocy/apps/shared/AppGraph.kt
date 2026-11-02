@@ -12,6 +12,8 @@ import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.ChoresJournalOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ChoresOverviewOptionsRepository
+import com.patrickzedler.grocy.core.data.settings.TasksOverviewOptionsRepository
+import com.patrickzedler.grocy.core.data.tasks.TasksRepository
 import com.patrickzedler.grocy.core.data.settings.ScannerFormsRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
@@ -31,6 +33,7 @@ import com.patrickzedler.grocy.core.network.createGrocyHttpClient
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.feature.about.impl.AboutDependencies
 import com.patrickzedler.grocy.feature.chores.impl.ChoresDependencies
+import com.patrickzedler.grocy.feature.tasks.impl.TasksDependencies
 import com.patrickzedler.grocy.feature.login.impl.LoginDependencies
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataDependencies
 import com.patrickzedler.grocy.feature.settings.impl.SettingsDependencies
@@ -112,6 +115,15 @@ class AppGraph(
         )
     }
 
+    /** Grocy's tasks, also the done ones. */
+    private val tasksRepository by lazy {
+        TasksRepository(
+            api = grocyApi,
+            database = platform.database,
+            connection = { platform.credentialStore.connection.first() },
+        )
+    }
+
     /** Grocy's chores, what the server computes for them and their journal. */
     private val choresRepository by lazy {
         ChoresRepository(
@@ -168,6 +180,9 @@ class AppGraph(
     private val recipesOptionsRepository =
         RecipesOptionsRepository(platform.settingsStore, appScope)
 
+    private val tasksOverviewOptionsRepository =
+        TasksOverviewOptionsRepository(platform.settingsStore, appScope)
+
     private val choresOverviewOptionsRepository =
         ChoresOverviewOptionsRepository(platform.settingsStore, appScope)
 
@@ -218,6 +233,8 @@ class AppGraph(
             get() = this@AppGraph.mealPlanRepository
         override val choresRepository: ChoresRepository
             get() = this@AppGraph.choresRepository
+        override val tasksRepository: TasksRepository
+            get() = this@AppGraph.tasksRepository
         override val stockRepository: StockRepository
             get() = this@AppGraph.stockRepository
         override val shoppingListRepository: ShoppingListRepository
@@ -283,6 +300,15 @@ class AppGraph(
             get() = recipesOptionsRepository
         override val mealPlanRepository: MealPlanRepository
             get() = this@AppGraph.mealPlanRepository
+    }
+
+    internal val tasksDependencies: TasksDependencies = object : TasksDependencies {
+        override val masterDataRepository: MasterDataRepository
+            get() = this@AppGraph.masterDataRepository
+        override val tasksRepository: TasksRepository
+            get() = this@AppGraph.tasksRepository
+        override val tasksOverviewOptions: TasksOverviewOptionsRepository
+            get() = tasksOverviewOptionsRepository
     }
 
     internal val choresDependencies: ChoresDependencies = object : ChoresDependencies {

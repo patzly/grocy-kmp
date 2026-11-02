@@ -123,6 +123,17 @@ class FakeGrocyServer(
             status = HttpStatusCode.NoContent,
             method = HttpMethod.Post,
         )
+        // New tasks, completing them and undoing that; POST has no default answer
+        respond(
+            path = "/api/objects/tasks",
+            body = """{"created_object_id":${MasterDataJson.CREATED_ID}}""",
+            method = HttpMethod.Post,
+        )
+        listOf(1, 3).flatMap { task ->
+            listOf("/api/tasks/$task/complete", "/api/tasks/$task/undo")
+        }.forEach { path ->
+            respond(path = path, status = HttpStatusCode.NoContent, method = HttpMethod.Post)
+        }
         respond(
             path = "$PRODUCTS_PATH/${MasterDataJson.CREATED_ID}",
             body = MasterDataJson.CREATED_PRODUCT,

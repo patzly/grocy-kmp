@@ -21,6 +21,7 @@ import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.StockLabelType
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.masterdata.TaskCategory
+import com.patrickzedler.grocy.core.model.tasks.Task
 import com.patrickzedler.grocy.core.model.masterdata.Userentity
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
 import com.patrickzedler.grocy.core.model.masterdata.UserfieldType
@@ -738,4 +739,28 @@ fun ChoreDetailsEntity.toModel() = ChoreDetails(
     trackedCount = trackedCount,
     lastDoneByName = lastDoneByName,
     averageFrequencyHours = averageFrequencyHours,
+)
+
+fun Task.toEntity() = TaskEntity(
+    id = id,
+    name = name,
+    description = description,
+    dueDate = dueDate,
+    done = done,
+    doneTimestamp = doneTimestamp,
+    categoryId = categoryId,
+    assignedToUserId = assignedToUserId,
+    userfields = encodeUserfieldValues(userfields),
+)
+
+fun TaskEntity.toModel() = Task(
+    id = id,
+    name = name,
+    description = description,
+    dueDate = dueDate,
+    done = done,
+    doneTimestamp = doneTimestamp,
+    categoryId = categoryId,
+    assignedToUserId = assignedToUserId,
+    userfields = decodeUserfieldValues(userfields),
 )

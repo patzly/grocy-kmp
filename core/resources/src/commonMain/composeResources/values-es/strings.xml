@@ -1221,4 +1221,39 @@
     <item quantity="many">%1$d tareas del hogar asignadas a mí.</item>
     <item quantity="other">%1$d tareas del hogar asignadas a mí.</item>
   </plurals>
+  <string name="tasks_title">Tareas</string>
+  <string name="task_due">Fecha límite</string>
+  <string name="task_category">Categoría</string>
+  <string name="task_uncategorized">Sin categorizar</string>
+  <string name="tasks_show_done">Mostrar tareas completadas</string>
+  <string name="task_complete">Marcar tarea como completada</string>
+  <string name="task_undo">Deshacer tarea</string>
+  <string name="task_completed">Tarea %1$s marcada como completada el %2$s</string>
+  <string name="objects_delete_task">¿Seguro que quieres eliminar la tarea "%1$s"?</string>
+  <string name="task_create">Crear tarea</string>
+  <string name="task_edit">Modificar tarea</string>
+  <string name="task_save_add_another">Guardar y agregar otra tarea.</string>
+  <string name="tasks_detail_hint">Elige una tarea de la lista para editarla aquí</string>
+  <string name="task_change_failed">No se ha podido cambiar la tarea</string>
+  <string name="task_done">Hecha</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d tarea</item>
+    <item quantity="many">%1$d tareas</item>
+    <item quantity="other">%1$d tareas</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">%1$d tarea debería haberse hecho.</item>
+    <item quantity="many">%1$d tareas deberían haberse hecho.</item>
+    <item quantity="other">%1$d tareas deberían haberse hecho.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$d tarea debe hacerse hoy.</item>
+    <item quantity="many">%1$d tareas deben hacerse hoy.</item>
+    <item quantity="other">%1$d tareas deben hacerse hoy.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">%1$d tarea debe hacerse %2$s.</item>
+    <item quantity="many">%1$d tareas deben hacerse %2$s.</item>
+    <item quantity="other">%1$d tareas deben hacerse %2$s.</item>
+  </plurals>
 </resources>

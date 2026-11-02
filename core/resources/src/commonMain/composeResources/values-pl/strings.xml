@@ -1262,4 +1262,43 @@
     <item quantity="many">%1$d obowiązek przypisany do mnie.</item>
     <item quantity="other">%1$d obowiązków przypisanych do mnie.</item>
   </plurals>
+  <string name="tasks_title">Zadania</string>
+  <string name="task_due">Termin wykonania</string>
+  <string name="task_category">Kategoria</string>
+  <string name="task_uncategorized">Bez kategorii</string>
+  <string name="tasks_show_done">Pokaż ukończone zadania</string>
+  <string name="task_complete">Oznacz zadanie jako wykonane</string>
+  <string name="task_undo">Cofnij zadanie</string>
+  <string name="task_completed">Oznaczono zadanie %1$s jako wykonane dnia %2$s</string>
+  <string name="objects_delete_task">Czy jesteś pewien, że chcesz usunąć zadanie "%1$s"?</string>
+  <string name="task_create">Dodaj zadanie</string>
+  <string name="task_edit">Edytuj zadanie</string>
+  <string name="task_save_add_another">Zapisz i dodaj kolejne zadanie</string>
+  <string name="tasks_detail_hint">Wybierz zadanie z listy, aby edytować je tutaj</string>
+  <string name="task_change_failed">Nie udało się zmienić zadania</string>
+  <string name="task_done">Wykonane</string>
+  <plurals name="tasks_count">
+    <item quantity="one">%1$d zadanie</item>
+    <item quantity="few">%1$d zadania</item>
+    <item quantity="many">%1$d zadań</item>
+    <item quantity="other">%1$d zadania</item>
+  </plurals>
+  <plurals name="start_tasks_overdue">
+    <item quantity="one">Zadania po terminie realizacji: %1$d.</item>
+    <item quantity="few">Zadania po terminie realizacji: %1$d.</item>
+    <item quantity="many">Zadania po terminie realizacji: %1$d.</item>
+    <item quantity="other">Zadania po terminie realizacji: %1$d.</item>
+  </plurals>
+  <plurals name="start_tasks_due_today">
+    <item quantity="one">%1$d zadanie jest do zrobienia do dzisiaj.</item>
+    <item quantity="few">%1$d zadania są do zrobienia do dzisiaj.</item>
+    <item quantity="many">%1$d zadań jest do zrobienia do dzisiaj.</item>
+    <item quantity="other">%1$d zadań jest do zrobienia do dzisiaj.</item>
+  </plurals>
+  <plurals name="start_tasks_due_soon">
+    <item quantity="one">Zadania bliskie terminu realizacji: %1$d %2$s.</item>
+    <item quantity="few">Zadania bliskie terminu realizacji: %1$d %2$s.</item>
+    <item quantity="many">Zadania bliskie terminu realizacji: %1$d %2$s.</item>
+    <item quantity="other">Zadania bliskie terminu realizacji: %1$d %2$s.</item>
+  </plurals>
 </resources>
