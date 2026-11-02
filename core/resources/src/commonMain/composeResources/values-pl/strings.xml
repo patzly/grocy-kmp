@@ -1076,11 +1076,11 @@
     <item quantity="many">%1$s porcji</item>
     <item quantity="other">%1$s porcji</item>
   </plurals>
-  <plurals name="recipes_ingredients_missing">
-    <item quantity="one">Brakuje %1$d składnika</item>
-    <item quantity="few">Brakuje %1$d składników</item>
-    <item quantity="many">Brakuje %1$d składników</item>
-    <item quantity="other">Brakuje %1$d składników</item>
+  <plurals name="recipes_missing_short">
+    <item quantity="one">Brakuje %1$d</item>
+    <item quantity="few">Brakuje %1$d</item>
+    <item quantity="many">Brakuje %1$d</item>
+    <item quantity="other">Brakuje %1$d</item>
   </plurals>
   <string name="recipes_on_shopping_list">Na liście zakupów</string>
   <string name="recipe_title">Przepis</string>

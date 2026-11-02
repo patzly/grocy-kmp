@@ -1024,9 +1024,9 @@
     <item quantity="one">%1$s serving</item>
     <item quantity="other">%1$s servings</item>
   </plurals>
-  <plurals name="recipes_ingredients_missing">
-    <item quantity="one">%1$d ingredient missing</item>
-    <item quantity="other">%1$d ingredients missing</item>
+  <plurals name="recipes_missing_short">
+    <item quantity="one">%1$d missing</item>
+    <item quantity="other">%1$d missing</item>
   </plurals>
   <string name="recipes_on_shopping_list">On shopping list</string>
   <string name="recipe_title">Recipe</string>

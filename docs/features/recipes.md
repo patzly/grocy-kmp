@@ -38,16 +38,16 @@ Grocy's recipes page, its recipe card and its recipe form (`feature:recipes`).
   the requirements) and at its end the picture as thumbnail before the menu, both centered to
   each other at the top of higher rows; a gallery card (as many per row as `galleryColumns` fits
   into the list's 640.dp, cards at least 156.dp: two on every upright phone, 8.dp apart in both
-  directions; `extraLarge` corners) has the picture across its top with 16.dp padding and
-  concentric corners (24 - 16 = 8.dp), the name below (body large emphasized, 16.dp from the
+  directions; `extraLarge` corners) has the picture across its top with 8.dp padding (half the text's) and
+  concentric corners (24 - 8 = 16.dp), the name below (body large emphasized, 16.dp from the
   picture, or the card's edge without one, and from the chips; chips wider than the card
   shorten their text with "…", 16.dp below them) with the menu at its end, centered on its first
   line (`firstLineCenterOffset`) without making it higher; the cards of a row are as high as the
   highest; without the picture field neither shows it. The
   requirements are status chips (`RecipeStatusChips.kt`, pure `statusChipsOf`), shared with the
-  card: green (`positive`) "Enough in stock" with `priority`, yellow "2 ingredients missing"
-  with `warning` while the shopping list covers them, then a blue "On shopping list" with the
-  cart, otherwise red with `dangerous`; screen readers get Grocy's long text. Each has the
+  card: green (`positive`) "Enough in stock" with `priority`, yellow "2 missing" (short for the
+  cards) with `warning` while the shopping list covers them, then a blue "On shopping list" with
+  the cart, otherwise red with `dangerous`; screen readers get Grocy's long text. Each has the
   narrow menu with Grocy's actions in three groups: Edit; "Put on shopping list" (Grocy's "Put
   missing products on shopping list", with stock and shopping list, off while enough is in
   stock), Add to meal plan (with the meal plan feature), Copy, Delete; Download recipe

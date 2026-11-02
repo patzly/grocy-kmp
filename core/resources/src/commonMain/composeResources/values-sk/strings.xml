@@ -1076,11 +1076,11 @@
     <item quantity="many">%1$s porcií</item>
     <item quantity="other">%1$s porcií</item>
   </plurals>
-  <plurals name="recipes_ingredients_missing">
-    <item quantity="one">Chýba %1$d ingrediencia</item>
-    <item quantity="few">Chýbajú %1$d ingrediencie</item>
-    <item quantity="many">Chýba %1$d ingrediencií</item>
-    <item quantity="other">Chýba %1$d ingrediencií</item>
+  <plurals name="recipes_missing_short">
+    <item quantity="one">Chýba %1$d</item>
+    <item quantity="few">Chýbajú %1$d</item>
+    <item quantity="many">Chýba %1$d</item>
+    <item quantity="other">Chýba %1$d</item>
   </plurals>
   <string name="recipes_on_shopping_list">V nákupnom zozname</string>
   <string name="recipe_title">Recept</string>

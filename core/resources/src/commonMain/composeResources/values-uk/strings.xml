@@ -1075,11 +1075,11 @@
     <item quantity="many">%1$s порцій</item>
     <item quantity="other">%1$s порцій</item>
   </plurals>
-  <plurals name="recipes_ingredients_missing">
-    <item quantity="one">Бракує %1$d інгредієнта</item>
-    <item quantity="few">Бракує %1$d інгредієнтів</item>
-    <item quantity="many">Бракує %1$d інгредієнтів</item>
-    <item quantity="other">Бракує %1$d інгредієнтів</item>
+  <plurals name="recipes_missing_short">
+    <item quantity="one">Бракує %1$d</item>
+    <item quantity="few">Бракує %1$d</item>
+    <item quantity="many">Бракує %1$d</item>
+    <item quantity="other">Бракує %1$d</item>
   </plurals>
   <string name="recipes_on_shopping_list">У списку покупок</string>
   <string name="recipe_title">Рецепт</string>

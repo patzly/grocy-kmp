@@ -1005,9 +1005,9 @@
     <item quantity="one">%1$s porsiyon</item>
     <item quantity="other">%1$s porsiyon</item>
   </plurals>
-  <plurals name="recipes_ingredients_missing">
-    <item quantity="one">%1$d malzeme eksik</item>
-    <item quantity="other">%1$d malzeme eksik</item>
+  <plurals name="recipes_missing_short">
+    <item quantity="one">%1$d eksik</item>
+    <item quantity="other">%1$d eksik</item>
   </plurals>
   <string name="recipes_on_shopping_list">Alışveriş listesinde</string>
   <string name="recipe_title">Tarif</string>

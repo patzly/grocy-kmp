@@ -1006,9 +1006,9 @@
     <item quantity="one">%1$s tálalás</item>
     <item quantity="other">%1$s adag</item>
   </plurals>
-  <plurals name="recipes_ingredients_missing">
-    <item quantity="one">%1$d hozzávaló hiányzik</item>
-    <item quantity="other">%1$d hozzávaló hiányzik</item>
+  <plurals name="recipes_missing_short">
+    <item quantity="one">%1$d hiányzik</item>
+    <item quantity="other">%1$d hiányzik</item>
   </plurals>
   <string name="recipes_on_shopping_list">A bevásárlólistán</string>
   <string name="recipe_title">Recept</string>

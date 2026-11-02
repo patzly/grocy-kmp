@@ -1006,9 +1006,9 @@
     <item quantity="one">%1$s porsjon</item>
     <item quantity="other">%1$s porsjoner</item>
   </plurals>
-  <plurals name="recipes_ingredients_missing">
-    <item quantity="one">%1$d ingrediens mangler</item>
-    <item quantity="other">%1$d ingredienser mangler</item>
+  <plurals name="recipes_missing_short">
+    <item quantity="one">%1$d mangler</item>
+    <item quantity="other">%1$d mangler</item>
   </plurals>
   <string name="recipes_on_shopping_list">På handlelisten</string>
   <string name="recipe_title">Oppskrift</string>

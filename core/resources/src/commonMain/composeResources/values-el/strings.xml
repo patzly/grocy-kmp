@@ -1006,9 +1006,9 @@
     <item quantity="one">Μερίδα %1$s</item>
     <item quantity="other">%1$s Μερίδες</item>
   </plurals>
-  <plurals name="recipes_ingredients_missing">
-    <item quantity="one">Λείπει %1$d συστατικό</item>
-    <item quantity="other">Λείπουν %1$d συστατικά</item>
+  <plurals name="recipes_missing_short">
+    <item quantity="one">Λείπει %1$d</item>
+    <item quantity="other">Λείπουν %1$d</item>
   </plurals>
   <string name="recipes_on_shopping_list">Στη λίστα αγορών</string>
   <string name="recipe_title">Συνταγή</string>

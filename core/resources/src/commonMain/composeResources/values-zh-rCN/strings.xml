@@ -970,8 +970,8 @@
   <plurals name="recipes_servings">
     <item quantity="other">%1$s份</item>
   </plurals>
-  <plurals name="recipes_ingredients_missing">
-    <item quantity="other">缺少%1$d种食材</item>
+  <plurals name="recipes_missing_short">
+    <item quantity="other">缺少%1$d种</item>
   </plurals>
   <string name="recipes_on_shopping_list">已在购物清单上</string>
   <string name="recipe_title">菜谱</string>

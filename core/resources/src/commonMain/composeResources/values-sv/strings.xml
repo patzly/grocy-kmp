@@ -1005,9 +1005,9 @@
     <item quantity="one">%1$s portion</item>
     <item quantity="other">%1$s portioner</item>
   </plurals>
-  <plurals name="recipes_ingredients_missing">
-    <item quantity="one">%1$d ingrediens saknas</item>
-    <item quantity="other">%1$d ingredienser saknas</item>
+  <plurals name="recipes_missing_short">
+    <item quantity="one">%1$d saknas</item>
+    <item quantity="other">%1$d saknas</item>
   </plurals>
   <string name="recipes_on_shopping_list">På inköpslistan</string>
   <string name="recipe_title">Recept</string>

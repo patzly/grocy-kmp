@@ -1041,10 +1041,10 @@
     <item quantity="many">%1$s porzioni</item>
     <item quantity="other">%1$s porzioni</item>
   </plurals>
-  <plurals name="recipes_ingredients_missing">
-    <item quantity="one">%1$d ingrediente mancante</item>
-    <item quantity="many">%1$d ingredienti mancanti</item>
-    <item quantity="other">%1$d ingredienti mancanti</item>
+  <plurals name="recipes_missing_short">
+    <item quantity="one">%1$d mancante</item>
+    <item quantity="many">%1$d mancanti</item>
+    <item quantity="other">%1$d mancanti</item>
   </plurals>
   <string name="recipes_on_shopping_list">Nella lista della spesa</string>
   <string name="recipe_title">Ricetta</string>

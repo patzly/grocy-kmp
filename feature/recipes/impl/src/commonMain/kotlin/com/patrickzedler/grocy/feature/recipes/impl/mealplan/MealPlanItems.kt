@@ -223,7 +223,11 @@ internal fun MealPlanDayCard(
                     Text(
                         text = date,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = if (day.isToday) content else MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = if (day.isToday) {
+                            content
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
                     )
                 }
                 DayMenuButton(
@@ -319,7 +323,7 @@ internal fun MealPlanEntryCard(
         color = SegmentedListDefaults.containerColor,
         modifier = modifier.clickCursor().doneSemantics(item, actions),
     ) {
-        Column(Modifier.padding(horizontal = CardPadding)) {
+        Column {
             pictureOf(item, actions)?.let { (fileName, load) ->
                 RecipePicture(
                     fileName = fileName,
@@ -327,26 +331,32 @@ internal fun MealPlanEntryCard(
                     shape = RoundedCornerShape(CardPictureCornerSize),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = CardPadding)
+                        .padding(
+                            start = CardPicturePadding,
+                            top = CardPicturePadding,
+                            end = CardPicturePadding,
+                        )
                         .aspectRatio(CARD_PICTURE_RATIO),
                 )
             }
-            // Like the recipe gallery's cards: the menu at the name's end, 16.dp around the name
-            val nameStyle = MaterialTheme.typography.bodyLargeEmphasized
-            Row(Modifier.padding(top = CardPadding)) {
-                Box(Modifier.weight(1f)) { EntryName(item, maxLines = 3, style = nameStyle) }
-                ListItemOverflowMenu(
-                    groups = menuGroups,
-                    modifier = Modifier.centeredOnFirstLine(
-                        lineHeight = nameStyle.lineHeight,
-                        endOverhang = CardPadding - CardMenuPadding,
-                    ),
-                )
+            Column(Modifier.padding(horizontal = CardPadding)) {
+                // Like the recipe gallery's cards: the menu at the name's end, 16.dp around it
+                val nameStyle = MaterialTheme.typography.bodyLargeEmphasized
+                Row(Modifier.padding(top = CardPadding)) {
+                    Box(Modifier.weight(1f)) { EntryName(item, maxLines = 3, style = nameStyle) }
+                    ListItemOverflowMenu(
+                        groups = menuGroups,
+                        modifier = Modifier.centeredOnFirstLine(
+                            lineHeight = nameStyle.lineHeight,
+                            endOverhang = CardPadding - CardMenuPadding,
+                        ),
+                    )
+                }
+                if (chips.isNotEmpty()) {
+                    Column(Modifier.padding(top = CardPadding)) { ChipRow(chips) }
+                }
+                Spacer(Modifier.height(CardPadding))
             }
-            if (chips.isNotEmpty()) {
-                Column(Modifier.padding(top = CardPadding)) { ChipRow(chips) }
-            }
-            Spacer(Modifier.height(CardPadding))
         }
     }
 }
@@ -566,6 +576,9 @@ private const val ENERGY_DECIMALS = 0
 private const val CARD_PICTURE_RATIO = 16f / 10f
 
 private val CardPadding = 16.dp
+
+// Like the recipe gallery's cards, closer to the edges than the text
+private val CardPicturePadding = CardPadding / 2
 
 // A step rounder than the inner corners of segmented items
 private val CardPictureCornerSize = 8.dp

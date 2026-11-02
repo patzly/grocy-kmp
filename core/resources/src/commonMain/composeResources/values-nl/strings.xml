@@ -1006,9 +1006,9 @@
     <item quantity="one">%1$s portie</item>
     <item quantity="other">%1$s porties</item>
   </plurals>
-  <plurals name="recipes_ingredients_missing">
-    <item quantity="one">%1$d ingrediënt ontbreekt</item>
-    <item quantity="other">%1$d ingrediënten ontbreken</item>
+  <plurals name="recipes_missing_short">
+    <item quantity="one">%1$d ontbreekt</item>
+    <item quantity="other">%1$d ontbreken</item>
   </plurals>
   <string name="recipes_on_shopping_list">Op de boodschappenlijst</string>
   <string name="recipe_title">Recept</string>

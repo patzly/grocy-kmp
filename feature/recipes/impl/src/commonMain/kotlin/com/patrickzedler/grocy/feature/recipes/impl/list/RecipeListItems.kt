@@ -181,34 +181,41 @@ internal fun RecipeCard(
             )
         }
     val content = @Composable {
-        Column(Modifier.padding(start = CardPadding, end = CardPadding)) {
+        Column {
             picture?.let { fileName ->
                 RecipePicture(
                     fileName = fileName,
                     load = loadPicture,
                     // Concentric with the card's corners
-                    shape = RoundedCornerShape(CardCornerSize - CardPadding),
+                    shape = RoundedCornerShape(CardCornerSize - CardPicturePadding),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = CardPadding)
+                        .padding(
+                            start = CardPicturePadding,
+                            top = CardPicturePadding,
+                            end = CardPicturePadding,
+                        )
                         .aspectRatio(GALLERY_PICTURE_RATIO),
                 )
             }
-            val titleStyle = MaterialTheme.typography.bodyLargeEmphasized
-            // As far from the picture or the card's edge as from the chips, so the menu has room
-            Row(modifier = Modifier.padding(top = CardPadding)) {
-                Text(text = item.name, style = titleStyle, modifier = Modifier.weight(1f))
-                ListItemOverflowMenu(
-                    groups = menuGroups,
-                    modifier = Modifier.centeredOnFirstLine(
-                        lineHeight = titleStyle.lineHeight,
-                        endOverhang = CardPadding - CardMenuPadding,
-                    ),
-                )
+            Column(Modifier.padding(horizontal = CardPadding)) {
+                val titleStyle = MaterialTheme.typography.bodyLargeEmphasized
+                // As far from the picture or the card's edge as from the chips, so the menu has
+                // room
+                Row(modifier = Modifier.padding(top = CardPadding)) {
+                    Text(text = item.name, style = titleStyle, modifier = Modifier.weight(1f))
+                    ListItemOverflowMenu(
+                        groups = menuGroups,
+                        modifier = Modifier.centeredOnFirstLine(
+                            lineHeight = titleStyle.lineHeight,
+                            endOverhang = CardPadding - CardMenuPadding,
+                        ),
+                    )
+                }
+                // Chips wider than the card shorten their text
+                details?.invoke()
+                Spacer(Modifier.height(CardPadding))
             }
-            // Chips wider than the card shorten their text
-            details?.invoke()
-            Spacer(Modifier.height(CardPadding))
         }
     }
     // Beside the recipe a single choice marking it, like the rows
@@ -327,6 +334,9 @@ private const val GALLERY_PICTURE_RATIO = 16f / 10f
 // The theme's extra large corners, which the picture's follow
 private val CardCornerSize = 24.dp
 private val CardPadding = 16.dp
+
+// Closer to the card's edges than its text, so the picture fills more of it
+private val CardPicturePadding = CardPadding / 2
 
 // Around the menu button's 48.dp room, so its icon sits 16.dp from the card's end like the
 // trailing icon of a list item

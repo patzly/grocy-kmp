@@ -1079,11 +1079,11 @@
     <item quantity="many">%1$s porcí</item>
     <item quantity="other">%1$s porcí</item>
   </plurals>
-  <plurals name="recipes_ingredients_missing">
-    <item quantity="one">Chybí %1$d ingredience</item>
-    <item quantity="few">Chybí %1$d ingredience</item>
-    <item quantity="many">Chybí %1$d ingrediencí</item>
-    <item quantity="other">Chybí %1$d ingrediencí</item>
+  <plurals name="recipes_missing_short">
+    <item quantity="one">Chybí %1$d</item>
+    <item quantity="few">Chybí %1$d</item>
+    <item quantity="many">Chybí %1$d</item>
+    <item quantity="other">Chybí %1$d</item>
   </plurals>
   <string name="recipes_on_shopping_list">Na nákupním seznamu</string>
   <string name="recipe_title">Recept</string>

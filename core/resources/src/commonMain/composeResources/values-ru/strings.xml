@@ -1076,11 +1076,11 @@
     <item quantity="many">%1$s порций</item>
     <item quantity="other">%1$s порций</item>
   </plurals>
-  <plurals name="recipes_ingredients_missing">
-    <item quantity="one">Не хватает %1$d ингредиента</item>
-    <item quantity="few">Не хватает %1$d ингредиентов</item>
-    <item quantity="many">Не хватает %1$d ингредиентов</item>
-    <item quantity="other">Не хватает %1$d ингредиентов</item>
+  <plurals name="recipes_missing_short">
+    <item quantity="one">Не хватает %1$d</item>
+    <item quantity="few">Не хватает %1$d</item>
+    <item quantity="many">Не хватает %1$d</item>
+    <item quantity="other">Не хватает %1$d</item>
   </plurals>
   <string name="recipes_on_shopping_list">В списке покупок</string>
   <string name="recipe_title">Рецепт</string>

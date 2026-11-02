@@ -42,9 +42,9 @@ Grocy's meal plan page (`/mealplan`) and its sections (`/mealplansections`), par
     (`agendaIndexOfDay`), other weeks at their start.
   - Wide windows (tablets in landscape, desktops): Grocy's grid over the whole width, a column
     per day; the days' headers in one row as high as the highest, then per used section its
-    name and each day's entries as cards like the recipe gallery's (picture across the top, the
-    name in body large emphasized with the menu centered on its first line, chips; 16.dp
-    between them).
+    name and each day's entries as cards like the recipe gallery's (picture across the top with
+    8.dp padding, the name in body large emphasized with the menu centered on its first line,
+    chips; 16.dp between them).
   - Entries: the name, crossed out and muted once done; chips: a recipe's servings, its status
     like the recipes list (with the stock feature), costs (price tracking) and energy per
     serving; a product's amount in its stock unit, "Enough in stock"/"Not enough in stock"

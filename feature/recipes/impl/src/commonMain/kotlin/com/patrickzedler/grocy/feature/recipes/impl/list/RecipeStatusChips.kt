@@ -9,9 +9,9 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_dangerous
 import com.patrickzedler.grocy.core.resources.ic_rounded_priority
 import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_cart
 import com.patrickzedler.grocy.core.resources.ic_rounded_warning
-import com.patrickzedler.grocy.core.resources.recipes_ingredients_missing
 import com.patrickzedler.grocy.core.resources.recipes_missing
 import com.patrickzedler.grocy.core.resources.recipes_missing_on_list
+import com.patrickzedler.grocy.core.resources.recipes_missing_short
 import com.patrickzedler.grocy.core.resources.recipes_on_shopping_list
 import com.patrickzedler.grocy.core.resources.recipes_status_enough
 import org.jetbrains.compose.resources.pluralStringResource
@@ -78,8 +78,9 @@ internal fun recipeStatusChips(
     colors: StatusColors,
 ): List<FieldChip> {
     val onList = stringResource(Res.string.recipes_on_shopping_list)
+    // Short for the chips, screen readers get the whole sentence
     val missing =
-        pluralStringResource(Res.plurals.recipes_ingredients_missing, missingCount, missingCount)
+        pluralStringResource(Res.plurals.recipes_missing_short, missingCount, missingCount)
     val description = when (status) {
         RecipeStatus.ENOUGH_IN_STOCK -> stringResource(Res.string.recipes_status_enough)
         RecipeStatus.ON_SHOPPING_LIST ->

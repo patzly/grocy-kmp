@@ -135,7 +135,9 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   `RefreshController` (`core:data`: one at a time, offline/failed errors, `loadedOnce`);
   `RefreshErrorEffect` (`core:ui`) shows a failed download as snackbar.
 - `ProductsScreen`: one segmented item per product (`itemSpacing = SegmentedGap`, a product with
-  picture shows it at the item's end before the overflow menu button, `ProductThumbnail`, 56.dp with small corners, without
+  picture shows it at the item's end before the overflow menu button, `ProductThumbnail`, 56.dp in one of 24 of Material's expressive shapes on a square base
+  (`ThumbnailShapes`, chosen by a hash of the file name computed by the app, `thumbnailShapeIndex`,
+  so a picture keeps its shape everywhere), without
   `LeadingTrailingContentWrapper`, whose padding only icons and switches need), first the
   filter row directly on the background
   (`edgeToEdgeItem` + `EdgeToEdgeRow` of `InsetLazyColumn`: centered on the screen while all

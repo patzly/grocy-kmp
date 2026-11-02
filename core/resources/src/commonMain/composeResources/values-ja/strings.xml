@@ -971,8 +971,8 @@
   <plurals name="recipes_servings">
     <item quantity="other">分量 %1$s</item>
   </plurals>
-  <plurals name="recipes_ingredients_missing">
-    <item quantity="other">材料不足 %1$d 点</item>
+  <plurals name="recipes_missing_short">
+    <item quantity="other">%1$d 点不足</item>
   </plurals>
   <string name="recipes_on_shopping_list">買い物リスト追加済</string>
   <string name="recipe_title">レシピ</string>
