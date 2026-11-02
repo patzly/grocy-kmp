@@ -34,6 +34,8 @@ import com.patrickzedler.grocy.feature.about.api.AboutRoute
 import com.patrickzedler.grocy.feature.about.api.aboutRouteSerializers
 import com.patrickzedler.grocy.feature.about.impl.aboutEntries
 import com.patrickzedler.grocy.feature.login.api.LoginChoiceRoute
+import com.patrickzedler.grocy.feature.chores.api.choresRouteSerializers
+import com.patrickzedler.grocy.feature.chores.impl.choresEntries
 import com.patrickzedler.grocy.feature.login.api.loginRouteSerializers
 import com.patrickzedler.grocy.feature.login.impl.loginEntries
 import com.patrickzedler.grocy.feature.masterdata.api.masterDataRouteSerializers
@@ -56,7 +58,7 @@ import kotlinx.serialization.modules.plus
 internal val routeSerializers =
     startRouteSerializers + loginRouteSerializers + aboutRouteSerializers +
         settingsRouteSerializers + masterDataRouteSerializers + stockRouteSerializers +
-        shoppingListRouteSerializers + recipesRouteSerializers
+        shoppingListRouteSerializers + recipesRouteSerializers + choresRouteSerializers
 
 /**
  * Shared entry point of the Android and web apps.
@@ -145,6 +147,7 @@ private fun GrocyNavigation(
             stockEntries(graph.stockDependencies, navigator)
             shoppingListEntries(graph.shoppingListDependencies, navigator)
             recipesEntries(graph.recipesDependencies, navigator)
+            choresEntries(graph.choresDependencies, navigator)
         }
     }
 }

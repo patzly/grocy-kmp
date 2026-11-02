@@ -48,8 +48,11 @@ import androidx.room3.RoomDatabaseConstructor
         MealPlanEntryEntity::class,
         MealPlanSectionEntity::class,
         MealPlanRecipeEntity::class,
+        CurrentChoreEntity::class,
+        ChoreExecutionEntity::class,
+        ChoreDetailsEntity::class,
     ],
-    version = 10,
+    version = 11,
     autoMigrations = [
         // 2 adds product_thumbnails
         AutoMigration(from = 1, to = 2),
@@ -73,6 +76,8 @@ import androidx.room3.RoomDatabaseConstructor
         AutoMigration(from = 8, to = 9),
         // 10 adds the meal plan, its sections and the recipes Grocy keeps for it
         AutoMigration(from = 9, to = 10),
+        // 11 adds the chores overview, the chores journal and the chores' overview cards
+        AutoMigration(from = 10, to = 11),
     ],
 )
 @ConstructedBy(GrocyDatabaseConstructor::class)
@@ -86,6 +91,8 @@ abstract class GrocyDatabase : RoomDatabase() {
     abstract fun recipeDao(): RecipeDao
 
     abstract fun mealPlanDao(): MealPlanDao
+
+    abstract fun choreDao(): ChoreDao
 }
 
 // Room generates the actual objects for every platform

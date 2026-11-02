@@ -1115,4 +1115,68 @@
   <string name="recipe_nesting_recipe">Recept</string>
   <string name="recipe_nesting_recipe_required">Ett recept krävs</string>
   <string name="recipe_nesting_delete_question">Är du säker på att du vill ta bort det inkluderade receptet "%1$s"?</string>
+  <string name="chores_overview_title">Översikt över sysslor</string>
+  <string name="chore_tracking_title">Registrera sysslor</string>
+  <string name="chores_journal_title">Sysslologg</string>
+  <string name="chore_journal">Sysslologg</string>
+  <string name="chore_overview">Sysselöversikt</string>
+  <string name="chores_track_next">Registrera nästa schemalagda utförande</string>
+  <string name="chores_track_now">Registrera sysslan som utförd nu</string>
+  <string name="chores_skip_next">Hoppa över nästa schemalagda utförande</string>
+  <string name="chores_reschedule">Schemalägg om nästa utförande</string>
+  <string name="chores_next_tracking">Nästa beräknade utförande</string>
+  <string name="chores_last_tracked">Senast utförd</string>
+  <string name="chores_assigned_to">Tilldelad</string>
+  <string name="chores_assignment">Tilldelning</string>
+  <string name="chores_rescheduled">Omschemalagd</string>
+  <string name="chores_reassigned">Omtilldelad</string>
+  <string name="chores_status_overdue">Förfallen</string>
+  <string name="chores_status_due_today">Förfaller idag</string>
+  <string name="chores_status_due_soon">Förfaller snart</string>
+  <string name="chores_tracked">Registrerade utförandet av sysslan %1$s den %2$s</string>
+  <string name="chores_undone">Utförandet av sysslan har ångrats</string>
+  <string name="chore_field">Syssla</string>
+  <string name="chore_name">Sysslans namn</string>
+  <string name="chore_required">Du måste välja en syssla</string>
+  <string name="chore_tracked_time">Tid för utförande</string>
+  <string name="chore_date_required">Ett datum krävs</string>
+  <string name="chore_done_by">Gjord av</string>
+  <string name="chore_skip">Hoppa över</string>
+  <string name="chore_tracked_count">Antal registreringar</string>
+  <string name="chore_average_frequency">Genomsnittlig utförandefrekvens</string>
+  <string name="chore_last_done_by">Senast gjord av</string>
+  <string name="chore_never">aldrig</string>
+  <string name="chore_unknown">Okänd</string>
+  <string name="chore_reset">Nollställ</string>
+  <string name="chore_scheduled_time">Schemalagd tid för utförande</string>
+  <string name="chore_time_of_tracking">Tidpunkt för registrering</string>
+  <string name="chore_skipped">Överhoppad</string>
+  <string name="chore_undo">Ångra utförande av syssla</string>
+  <string name="grocycode_chore">Syssla</string>
+  <string name="chores_assigned_to_me">Tilldelade mig</string>
+  <string name="chores_track_failed">Sysslans utförande kunde inte registreras</string>
+  <string name="chores_detail_hint">Registrera en syssla eller öppna journalen för att se den här</string>
+  <string name="chore_undo_failed">Sysslans utförande kunde inte ångras</string>
+  <string name="chore_tracked_late">Registrerad efter schemat</string>
+  <string name="chore_code_unknown">Ingen syssla hittades för den här koden</string>
+  <plurals name="chore_hours">
+    <item quantity="one">%1$d timme</item>
+    <item quantity="other">%1$d timmar</item>
+  </plurals>
+  <plurals name="start_chores_overdue">
+    <item quantity="one">%1$d syssla är försenad.</item>
+    <item quantity="other">%1$d sysslor är försenade.</item>
+  </plurals>
+  <plurals name="start_chores_due_today">
+    <item quantity="one">%1$d syssla ska utföras idag.</item>
+    <item quantity="other">%1$d sysslor ska utföras idag.</item>
+  </plurals>
+  <plurals name="start_chores_due_soon">
+    <item quantity="one">%1$d syssla ska utföras %2$s.</item>
+    <item quantity="other">%1$d sysslor ska utföras %2$s.</item>
+  </plurals>
+  <plurals name="start_chores_assigned_to_me">
+    <item quantity="one">%1$d syssla har tilldelats mig.</item>
+    <item quantity="other">%1$d sysslor har tilldelats mig.</item>
+  </plurals>
 </resources>

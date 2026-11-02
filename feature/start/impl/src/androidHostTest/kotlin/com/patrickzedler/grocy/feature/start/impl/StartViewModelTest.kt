@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.feature.start.impl
 
+import com.patrickzedler.grocy.core.data.chores.ChoresRepository
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
@@ -11,6 +12,7 @@ import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.testing.FakeGrocyServer
+import io.ktor.http.HttpMethod
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -48,8 +50,10 @@ class StartViewModelTest {
             .also { shoppingLists = it },
         recipes = recipes,
         mealPlan = MealPlanRepository(server.api, database, connection, recipes),
+        chores = ChoresRepository(server.api, database, connection),
         serverConfig = config,
         today = { epochDayOf(today)!! },
+        now = { "$today 12:00:00" },
     ).also { backgroundScope.launch { it.state.collect {} } }
 
     @BeforeTest
@@ -205,5 +209,28 @@ class StartViewModelTest {
 
         assertNull(viewModel.state.value!!.mealPlanToday)
         assertTrue("/api/objects/meal_plan" !in server.requestedPaths)
+    }
+
+    @Test
+    fun choresSectionCountsLikeGrocysMessages() = runTest {
+        val viewModel = viewModel(today = "2026-11-02")
+
+        advanceUntilIdle()
+
+        val chores = viewModel.state.value!!.chores!!
+        assertEquals(2, chores.count)
+        assertEquals(1, chores.overdue)
+        assertEquals(1, chores.assignedToMe)
+    }
+
+    @Test
+    fun choresSectionNeedsItsFeature() = runTest {
+        config.value = ServerConfig(chores = false)
+        val viewModel = viewModel()
+
+        advanceUntilIdle()
+
+        assertNull(viewModel.state.value!!.chores)
+        assertEquals(0, server.requestsTo("/api/chores", HttpMethod.Get).size)
     }
 }

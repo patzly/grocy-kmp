@@ -1080,4 +1080,63 @@
   <string name="recipe_nesting_recipe">レシピ</string>
   <string name="recipe_nesting_recipe_required">レシピは必須項目です</string>
   <string name="recipe_nesting_delete_question">含まれているレシピ「%1$s」を削除してもよろしいですか？</string>
+  <string name="chores_overview_title">家事一覧</string>
+  <string name="chore_tracking_title">家事の実行</string>
+  <string name="chores_journal_title">家事履歴</string>
+  <string name="chore_journal">家事履歴</string>
+  <string name="chore_overview">家事一覧</string>
+  <string name="chores_track_next">次回予定を実行</string>
+  <string name="chores_track_now">家事を今すぐ実行</string>
+  <string name="chores_skip_next">次回予定までスキップ</string>
+  <string name="chores_reschedule">次回予定を変更</string>
+  <string name="chores_next_tracking">次回予定</string>
+  <string name="chores_last_tracked">直近の実行</string>
+  <string name="chores_assigned_to">担当者</string>
+  <string name="chores_assignment">担当</string>
+  <string name="chores_rescheduled">予定変更</string>
+  <string name="chores_reassigned">再割り当て</string>
+  <string name="chores_status_overdue">期限超過</string>
+  <string name="chores_status_due_today">本日期限</string>
+  <string name="chores_status_due_soon">まもなく期限</string>
+  <string name="chores_tracked">実行した家事: %2$s %1$s</string>
+  <string name="chores_undone">家事の実行を元に戻しました</string>
+  <string name="chore_field">家事</string>
+  <string name="chore_name">家事名</string>
+  <string name="chore_required">家事を選択する必要があります</string>
+  <string name="chore_tracked_time">実行日</string>
+  <string name="chore_date_required">日付は必須項目です</string>
+  <string name="chore_done_by">実行者</string>
+  <string name="chore_skip">スキップ</string>
+  <string name="chore_tracked_count">実行回数</string>
+  <string name="chore_average_frequency">平均実行頻度</string>
+  <string name="chore_last_done_by">直近の実行者</string>
+  <string name="chore_never">該当なし</string>
+  <string name="chore_unknown">不明</string>
+  <string name="chore_reset">リセット</string>
+  <string name="chore_scheduled_time">予定実行時間</string>
+  <string name="chore_time_of_tracking">実行時間</string>
+  <string name="chore_skipped">スキップ</string>
+  <string name="chore_undo">家事の実行を元に戻す</string>
+  <string name="grocycode_chore">家事</string>
+  <string name="chores_assigned_to_me">自分に割り当て済み</string>
+  <string name="chores_track_failed">家事の実行を記録できませんでした</string>
+  <string name="chores_detail_hint">家事を記録するかジャーナルを開くとここに表示されます</string>
+  <string name="chore_undo_failed">家事の実行を取り消せませんでした</string>
+  <string name="chore_tracked_late">予定より後に記録</string>
+  <string name="chore_code_unknown">このコードの家事は見つかりませんでした</string>
+  <plurals name="chore_hours">
+    <item quantity="other">%1$d 時間</item>
+  </plurals>
+  <plurals name="start_chores_overdue">
+    <item quantity="other">期限超過 %1$d 件。</item>
+  </plurals>
+  <plurals name="start_chores_due_today">
+    <item quantity="other">本日期限 %1$d 件。</item>
+  </plurals>
+  <plurals name="start_chores_due_soon">
+    <item quantity="other">まもなく期限 %1$d 件 %2$s。</item>
+  </plurals>
+  <plurals name="start_chores_assigned_to_me">
+    <item quantity="other">あなたの担当 %1$d 件。</item>
+  </plurals>
 </resources>

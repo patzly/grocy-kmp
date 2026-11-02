@@ -1,5 +1,7 @@
 package com.patrickzedler.grocy.core.data.settings
 
+import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
+import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
@@ -48,4 +50,14 @@ interface SettingsStore {
     val scannerForms: Flow<Set<ScannerForm>>
 
     suspend fun setScannerForms(forms: Set<ScannerForm>)
+
+    /** How the user set up the chores overview. */
+    val choresOverviewOptions: Flow<ChoresOverviewOptions>
+
+    suspend fun setChoresOverviewOptions(options: ChoresOverviewOptions)
+
+    /** How the user set up the chores journal. */
+    val choresJournalOptions: Flow<ChoresJournalOptions>
+
+    suspend fun setChoresJournalOptions(options: ChoresJournalOptions)
 }

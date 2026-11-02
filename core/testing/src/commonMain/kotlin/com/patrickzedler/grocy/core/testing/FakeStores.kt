@@ -3,6 +3,8 @@ package com.patrickzedler.grocy.core.testing
 import com.patrickzedler.grocy.core.data.credentials.CredentialStore
 import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
+import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
+import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
 import com.patrickzedler.grocy.core.model.scanner.ScannerForm
 import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
 import com.patrickzedler.grocy.core.model.AppearanceSettings
@@ -41,6 +43,8 @@ class FakeSettingsStore(
     shoppingModeSettings: ShoppingModeSettings = ShoppingModeSettings(),
     scannerForms: Set<ScannerForm> = emptySet(),
     recipesOptions: RecipesOptions = RecipesOptions(),
+    choresOverviewOptions: ChoresOverviewOptions = ChoresOverviewOptions(),
+    choresJournalOptions: ChoresJournalOptions = ChoresJournalOptions(),
 ) : SettingsStore {
 
     override val checkUnlockKey = MutableStateFlow(checkUnlockKey)
@@ -83,6 +87,18 @@ class FakeSettingsStore(
 
     override suspend fun setScannerForms(forms: Set<ScannerForm>) {
         scannerForms.value = forms
+    }
+
+    override val choresOverviewOptions = MutableStateFlow(choresOverviewOptions)
+
+    override suspend fun setChoresOverviewOptions(options: ChoresOverviewOptions) {
+        choresOverviewOptions.value = options
+    }
+
+    override val choresJournalOptions = MutableStateFlow(choresJournalOptions)
+
+    override suspend fun setChoresJournalOptions(options: ChoresJournalOptions) {
+        choresJournalOptions.value = options
     }
 
     override val recipesOptions = MutableStateFlow(recipesOptions)

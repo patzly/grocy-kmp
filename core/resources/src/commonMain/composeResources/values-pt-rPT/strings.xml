@@ -1152,4 +1152,73 @@
   <string name="recipe_nesting_recipe">Receita</string>
   <string name="recipe_nesting_recipe_required">É necessário uma receita</string>
   <string name="recipe_nesting_delete_question">Tem a certeza de que quer remover a receita incluída "%1$s"?</string>
+  <string name="chores_overview_title">Visão geral das Tarefas</string>
+  <string name="chore_tracking_title">Tracking de Tarefas</string>
+  <string name="chores_journal_title">Diário de tarefas</string>
+  <string name="chore_journal">Diário da tarefa</string>
+  <string name="chore_overview">Visão geral da Tarefa</string>
+  <string name="chores_track_next">Registar o próximo agendamento da tarefa</string>
+  <string name="chores_track_now">Registar a execução da tarefa agora</string>
+  <string name="chores_skip_next">Saltar próxima agenda de tarefas</string>
+  <string name="chores_reschedule">Remarcar a próxima execução</string>
+  <string name="chores_next_tracking">Próximo acompanhamento estimado</string>
+  <string name="chores_last_tracked">Apagar lista de compras</string>
+  <string name="chores_assigned_to">Atribuído a</string>
+  <string name="chores_assignment">Tarefa</string>
+  <string name="chores_rescheduled">Remarcado</string>
+  <string name="chores_reassigned">Reatribuído</string>
+  <string name="chores_status_overdue">Caducado</string>
+  <string name="chores_status_due_today">Vence hoje</string>
+  <string name="chores_status_due_soon">previsto em breve</string>
+  <string name="chores_tracked">Acompanhamento da tarefa %1$s de %2$s</string>
+  <string name="chores_undone">Execução da tarefa anulada com sucesso</string>
+  <string name="chore_field">Tarefa</string>
+  <string name="chore_name">Nome da tarefa</string>
+  <string name="chore_required">Tem que seleccionar uma tarefa</string>
+  <string name="chore_tracked_time">Tempo registado</string>
+  <string name="chore_date_required">É necessário uma data</string>
+  <string name="chore_done_by">Efectuado por</string>
+  <string name="chore_skip">Passar</string>
+  <string name="chore_tracked_count">Total de registos</string>
+  <string name="chore_average_frequency">Média de frequência de execução</string>
+  <string name="chore_last_done_by">Efectuado na ultima vez por</string>
+  <string name="chore_never">nunca</string>
+  <string name="chore_unknown">Desconhecido</string>
+  <string name="chore_reset">Repor</string>
+  <string name="chore_scheduled_time">Hora de registo agendada</string>
+  <string name="chore_time_of_tracking">Hora do registo</string>
+  <string name="chore_skipped">Ignorado</string>
+  <string name="chore_undo">Anular a execução da tarefa</string>
+  <string name="grocycode_chore">Tarefa</string>
+  <string name="chores_assigned_to_me">Atribuídas a mim</string>
+  <string name="chores_track_failed">Não foi possível registar a execução da tarefa</string>
+  <string name="chores_detail_hint">Registe uma tarefa ou abra o diário para o ver aqui</string>
+  <string name="chore_undo_failed">Não foi possível anular a execução da tarefa</string>
+  <string name="chore_tracked_late">Registada após o agendamento</string>
+  <string name="chore_code_unknown">Não foi encontrada nenhuma tarefa para este código</string>
+  <plurals name="chore_hours">
+    <item quantity="one">%1$d hora</item>
+    <item quantity="many">%1$d horas</item>
+    <item quantity="other">%1$d horas</item>
+  </plurals>
+  <plurals name="start_chores_overdue">
+    <item quantity="one">%1$d tarefa já ultrapassou o prazo.</item>
+    <item quantity="many">%1$d tarefas já ultrapassaram o prazo.</item>
+    <item quantity="other">%1$d tarefas já ultrapassaram o prazo.</item>
+  </plurals>
+  <plurals name="start_chores_due_today">
+    <item quantity="one">%1$d tarefa está para ser feita hoje.</item>
+    <item quantity="many">%1$d tarefas estão para ser feitas hoje.</item>
+    <item quantity="other">%1$d tarefas estão para ser feitas hoje.</item>
+  </plurals>
+  <plurals name="start_chores_due_soon">
+    <item quantity="one">%1$d tarefa está agendada %2$s.</item>
+    <item quantity="many">%1$d tarefas estão agendadas %2$s.</item>
+    <item quantity="other">%1$d tarefas estão agendadas %2$s.</item>
+  </plurals>
+  <plurals name="start_chores_assigned_to_me">
+    <item quantity="one">%1$d tarefa está atribuída a mim.</item>
+    <item quantity="many">%1$d tarefas estão atribuídas a mim.</item>
+    <item quantity="other">%1$d tarefas estão atribuídas a mim.</item>
+  </plurals>
 </resources>

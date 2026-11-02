@@ -8,6 +8,7 @@ import com.patrickzedler.grocy.core.model.masterdata.ChorePeriodType
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.UserfieldType
 import com.patrickzedler.grocy.core.model.masterdata.Weekday
+import com.patrickzedler.grocy.core.model.text.normalizedDateTime
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

@@ -99,4 +99,18 @@ class GrocycodeWriterTest {
         // Eight codewords take the 14x14 symbol
         assertEquals(14, Grocycode.matrix(code, twoDimensional = true).height)
     }
+
+    @Test
+    fun choreCodesNameTheirChore() {
+        assertEquals("grcy:c:3", Grocycode.chore(3))
+        assertEquals(3, Grocycode.choreIdOf(" grcy:c:3 "))
+        assertEquals(3, Grocycode.choreIdOf("grcy:c:3:extra"))
+    }
+
+    @Test
+    fun otherCodesNameNoChore() {
+        assertEquals(null, Grocycode.choreIdOf("grcy:p:3"))
+        assertEquals(null, Grocycode.choreIdOf("grcy:c:x"))
+        assertEquals(null, Grocycode.choreIdOf("4006381333931"))
+    }
 }

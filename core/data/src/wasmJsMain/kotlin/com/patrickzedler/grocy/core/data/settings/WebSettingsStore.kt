@@ -2,6 +2,8 @@ package com.patrickzedler.grocy.core.data.settings
 
 import com.patrickzedler.grocy.core.data.BrowserLocalStorage
 import com.patrickzedler.grocy.core.data.KeyValueStorage
+import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
+import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
@@ -127,6 +129,28 @@ class WebSettingsStore internal constructor(
         scannerFormsState.value = forms
     }
 
+    private val choresOverviewOptionsState =
+        MutableStateFlow(ChoresOverviewOptions.of(storage.get(CHORES_OVERVIEW_OPTIONS)))
+
+    override val choresOverviewOptions: Flow<ChoresOverviewOptions> =
+        choresOverviewOptionsState.asStateFlow()
+
+    override suspend fun setChoresOverviewOptions(options: ChoresOverviewOptions) {
+        storage.set(CHORES_OVERVIEW_OPTIONS, options.stored())
+        choresOverviewOptionsState.value = options
+    }
+
+    private val choresJournalOptionsState =
+        MutableStateFlow(ChoresJournalOptions.of(storage.get(CHORES_JOURNAL_OPTIONS)))
+
+    override val choresJournalOptions: Flow<ChoresJournalOptions> =
+        choresJournalOptionsState.asStateFlow()
+
+    override suspend fun setChoresJournalOptions(options: ChoresJournalOptions) {
+        storage.set(CHORES_JOURNAL_OPTIONS, options.stored())
+        choresJournalOptionsState.value = options
+    }
+
     private val recipesOptionsState = MutableStateFlow(
         RecipesOptions.of(
             fields = storage.get(RECIPES_FIELDS),
@@ -172,5 +196,7 @@ class WebSettingsStore internal constructor(
         const val RECIPES_ASCENDING = "grocy.recipesAscending"
         const val RECIPES_VIEW = "grocy.recipesView"
         const val SCANNER_FORMS = "grocy.scannerForms"
+        const val CHORES_OVERVIEW_OPTIONS = "grocy.choresOverviewOptions"
+        const val CHORES_JOURNAL_OPTIONS = "grocy.choresJournalOptions"
     }
 }

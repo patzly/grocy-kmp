@@ -9,8 +9,8 @@ import com.patrickzedler.grocy.core.model.masterdata.ProductGroup
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
 import com.patrickzedler.grocy.core.model.masterdata.Store
+import com.patrickzedler.grocy.core.forms.userfieldText
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
-import com.patrickzedler.grocy.core.model.masterdata.UserfieldType
 import com.patrickzedler.grocy.core.model.masterdata.nameFor
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
@@ -264,23 +264,6 @@ private fun userfields(
 ): List<Pair<String, String>> = fields.mapNotNull { field ->
     userfieldText(field, values[field.name])?.let { field.caption to it }
 }
-
-/** A userfield's value as text like Grocy's table cell; null when it shows nothing. */
-internal fun userfieldText(field: Userfield, value: String?): String? {
-    if (value.isNullOrBlank()) return null
-    return when (field.type) {
-        // Grocy shows a check mark, the chip names the field
-        UserfieldType.CHECKBOX -> field.caption.takeIf { value == "1" }
-        UserfieldType.LINK_WITH_TITLE -> LINK_TITLE.find(value)?.groupValues?.get(1)
-            ?.takeIf { it.isNotBlank() } ?: value
-        UserfieldType.PRESET_CHECKLIST -> value.split(",").joinToString(", ")
-        // Files and pictures need their own view
-        UserfieldType.FILE, UserfieldType.IMAGE -> null
-        else -> value
-    }
-}
-
-private val LINK_TITLE = Regex(""""title"\s*:\s*"([^"]*)"""")
 
 private fun search(rows: List<ShoppingListRow>, query: String): List<ShoppingListRow> {
     if (query.isBlank()) return rows

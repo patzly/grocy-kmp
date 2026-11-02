@@ -1116,4 +1116,68 @@
   <string name="recipe_nesting_recipe">Recept</string>
   <string name="recipe_nesting_recipe_required">A recept megadása kötelező</string>
   <string name="recipe_nesting_delete_question">Biztosan eltávolítod a(z) "%1$s" tartalmazott receptet?</string>
+  <string name="chores_overview_title">Házimunkák áttekintése</string>
+  <string name="chore_tracking_title">Házimunka követése</string>
+  <string name="chores_journal_title">Házimunka napló</string>
+  <string name="chore_journal">Házimunka napló</string>
+  <string name="chore_overview">Házimunka áttekintése</string>
+  <string name="chores_track_next">A következő ütemezett házimunka végrehajtásának követése</string>
+  <string name="chores_track_now">Házimunka végrehajtásának követése most</string>
+  <string name="chores_skip_next">A következő ütemezett házimunka kihagyása</string>
+  <string name="chores_reschedule">Következő végrehajtás átütemezése</string>
+  <string name="chores_next_tracking">Legközelebbi becsült követés</string>
+  <string name="chores_last_tracked">Legutóbb követve</string>
+  <string name="chores_assigned_to">Hozzárendelve</string>
+  <string name="chores_assignment">Hozzárendelés</string>
+  <string name="chores_rescheduled">Átütemezve</string>
+  <string name="chores_reassigned">Másnak átadva</string>
+  <string name="chores_status_overdue">Lejárt</string>
+  <string name="chores_status_due_today">Ma esedékes</string>
+  <string name="chores_status_due_soon">Hamarosan esedékes</string>
+  <string name="chores_tracked">Az elvégzett %1$s házimunka a %2$s -on naplózásra került</string>
+  <string name="chores_undone">Házimunka végrehajtás sikeresen visszavonva</string>
+  <string name="chore_field">Házimunka</string>
+  <string name="chore_name">Házimunka neve</string>
+  <string name="chore_required">Választanod kell egy házimunkát</string>
+  <string name="chore_tracked_time">Követett idő</string>
+  <string name="chore_date_required">Dátum megadása kötelező</string>
+  <string name="chore_done_by">Elvégezte</string>
+  <string name="chore_skip">Kihagyás</string>
+  <string name="chore_tracked_count">Nyomonkövetések száma</string>
+  <string name="chore_average_frequency">Általános végrehajtási gyakoriság</string>
+  <string name="chore_last_done_by">Legutóbb elvégezte</string>
+  <string name="chore_never">soha</string>
+  <string name="chore_unknown">Ismeretlen</string>
+  <string name="chore_reset">Visszaállítás</string>
+  <string name="chore_scheduled_time">Ütemezett követési idő</string>
+  <string name="chore_time_of_tracking">Rögzítés ideje</string>
+  <string name="chore_skipped">Kihagyott</string>
+  <string name="chore_undo">Házimunka végrehajtás visszavonása</string>
+  <string name="grocycode_chore">Házimunka</string>
+  <string name="chores_assigned_to_me">Hozzám rendelt</string>
+  <string name="chores_track_failed">A házimunka végrehajtását nem sikerült rögzíteni</string>
+  <string name="chores_detail_hint">Rögzíts egy házimunkát vagy nyisd meg a naplót, hogy itt lásd</string>
+  <string name="chore_undo_failed">A házimunka végrehajtását nem sikerült visszavonni</string>
+  <string name="chore_tracked_late">Az ütemezés után rögzítve</string>
+  <string name="chore_code_unknown">Ehhez a kódhoz nem található házimunka</string>
+  <plurals name="chore_hours">
+    <item quantity="one">%1$d óra</item>
+    <item quantity="other">%1$d óra</item>
+  </plurals>
+  <plurals name="start_chores_overdue">
+    <item quantity="one">%1$d házimunkára lejárt a határidő.</item>
+    <item quantity="other">%1$d házimunkára lejárt a határidő.</item>
+  </plurals>
+  <plurals name="start_chores_due_today">
+    <item quantity="one">%1$d házimunka elvégzendő ma.</item>
+    <item quantity="other">%1$d házimunka elvégzendő ma.</item>
+  </plurals>
+  <plurals name="start_chores_due_soon">
+    <item quantity="one">%1$d házimunkát kell elvégezni %2$s.</item>
+    <item quantity="other">%1$d házimunkát kell elvégezni %2$s.</item>
+  </plurals>
+  <plurals name="start_chores_assigned_to_me">
+    <item quantity="one">%1$d házimunka hozzám rendelve.</item>
+    <item quantity="other">%1$d házimunka hozzám rendelve.</item>
+  </plurals>
 </resources>

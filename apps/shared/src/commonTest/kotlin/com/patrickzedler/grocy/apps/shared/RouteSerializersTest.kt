@@ -7,6 +7,9 @@ import com.patrickzedler.grocy.feature.login.api.LoginManualRoute
 import com.patrickzedler.grocy.feature.login.api.LoginScanRoute
 import com.patrickzedler.grocy.feature.masterdata.api.BatteriesRoute
 import com.patrickzedler.grocy.feature.masterdata.api.BatteryRoute
+import com.patrickzedler.grocy.feature.chores.api.ChoreTrackingRoute
+import com.patrickzedler.grocy.feature.chores.api.ChoresJournalRoute
+import com.patrickzedler.grocy.feature.chores.api.ChoresOverviewRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ChoreRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ChoresRoute
 import com.patrickzedler.grocy.feature.masterdata.api.LocationRoute
@@ -88,6 +91,9 @@ class RouteSerializersTest {
         QuantityUnitRoute(id = 3),
         ProductGroupsRoute,
         ProductGroupRoute(id = 3),
+        ChoresOverviewRoute,
+        ChoreTrackingRoute(choreId = 3, inList = false),
+        ChoresJournalRoute(choreId = 3),
         ChoresRoute,
         ChoreRoute(id = 3),
         BatteriesRoute,

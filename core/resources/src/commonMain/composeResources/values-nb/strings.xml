@@ -1116,4 +1116,68 @@
   <string name="recipe_nesting_recipe">Oppskrift</string>
   <string name="recipe_nesting_recipe_required">En oppskrift kreves</string>
   <string name="recipe_nesting_delete_question">Er du sikker på at du vil slette den inkluderte oppskriften "%1$s"?</string>
+  <string name="chores_overview_title">Husarbeidsoversikt</string>
+  <string name="chore_tracking_title">Husarbeidsregistrering</string>
+  <string name="chores_journal_title">Statistikk husarbeid</string>
+  <string name="chore_journal">Statistikk husarbeid</string>
+  <string name="chore_overview">Husarbeidsoversikt</string>
+  <string name="chores_track_next">Følg neste planlegging</string>
+  <string name="chores_track_now">Registrer husarbeid nå</string>
+  <string name="chores_skip_next">Hopp over neste planlegging</string>
+  <string name="chores_reschedule">Endre tidspunkt for neste utførelse</string>
+  <string name="chores_next_tracking">Neste estimterte registrering</string>
+  <string name="chores_last_tracked">Sist registert</string>
+  <string name="chores_assigned_to">Tildelt</string>
+  <string name="chores_assignment">Oppgave</string>
+  <string name="chores_rescheduled">Endre tidspunkt</string>
+  <string name="chores_reassigned">Tilordne på nytt</string>
+  <string name="chores_status_overdue">Forfalt</string>
+  <string name="chores_status_due_today">Skal gjøres i dag</string>
+  <string name="chores_status_due_soon">Forfaller snart</string>
+  <string name="chores_tracked">Registrerte husarbeidsoppgave "%1$s" den %2$s</string>
+  <string name="chores_undone">Husarbeid fjernet</string>
+  <string name="chore_field">Husarbeid</string>
+  <string name="chore_name">Navn på husarbeid</string>
+  <string name="chore_required">Du må velge en husarbeidsoppgave</string>
+  <string name="chore_tracked_time">Tid registrert</string>
+  <string name="chore_date_required">En dato er nødvendig</string>
+  <string name="chore_done_by">Utført av</string>
+  <string name="chore_skip">Hopp over</string>
+  <string name="chore_tracked_count">Antall registrerte</string>
+  <string name="chore_average_frequency">Gjennomsnittlig utførelses frekvens</string>
+  <string name="chore_last_done_by">Sist utført av</string>
+  <string name="chore_never">aldri</string>
+  <string name="chore_unknown">Ukjent</string>
+  <string name="chore_reset">Reset</string>
+  <string name="chore_scheduled_time">Planlagt sporingstid</string>
+  <string name="chore_time_of_tracking">Tidspunkt for registrering</string>
+  <string name="chore_skipped">Hoppet over</string>
+  <string name="chore_undo">Fjerne utførelse av husarbeidsoppgave</string>
+  <string name="grocycode_chore">Husarbeid</string>
+  <string name="chores_assigned_to_me">Tildelt meg</string>
+  <string name="chores_track_failed">Utførelsen av husarbeidet kunne ikke registreres</string>
+  <string name="chores_detail_hint">Registrer et husarbeid eller åpne journalen for å se det her</string>
+  <string name="chore_undo_failed">Utførelsen av husarbeidet kunne ikke angres</string>
+  <string name="chore_tracked_late">Registrert etter planlagt tid</string>
+  <string name="chore_code_unknown">Fant ikke noe husarbeid for denne koden</string>
+  <plurals name="chore_hours">
+    <item quantity="one">%1$d time</item>
+    <item quantity="other">%1$d timer</item>
+  </plurals>
+  <plurals name="start_chores_overdue">
+    <item quantity="one">%1$d husarbeidsoppgave har gått over fristen for utførelse.</item>
+    <item quantity="other">%1$d husarbeidsoppgaver har gått over fristen for utførelse.</item>
+  </plurals>
+  <plurals name="start_chores_due_today">
+    <item quantity="one">%1$d husarbeidsoppgave må gjøres i dag.</item>
+    <item quantity="other">%1$d husarbeidsoppgaver må gjøres i dag.</item>
+  </plurals>
+  <plurals name="start_chores_due_soon">
+    <item quantity="one">%1$d husarbeidsoppgave som må gjøres nå %2$s.</item>
+    <item quantity="other">%1$d husarbeidsoppgaver som må gjøres nå %2$s.</item>
+  </plurals>
+  <plurals name="start_chores_assigned_to_me">
+    <item quantity="one">%1$dhusarbeidsoppgave tildelt meg.</item>
+    <item quantity="other">%1$d husarbeidsoppgaver tildelt meg.</item>
+  </plurals>
 </resources>

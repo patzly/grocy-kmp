@@ -131,4 +131,12 @@ class DatesTest {
         assertEquals("明天", capitalizeStart("明天"))
         assertEquals("", capitalizeStart(""))
     }
+
+    @Test
+    fun onlyExistingDatesAreDates() {
+        assertEquals("2026-10-24", normalizedDate(" 2026-10-24 "))
+        assertNull(normalizedDate("2026-02-30"))
+        assertNull(normalizedDate("2026-10-24 08:00:00"))
+        assertNull(normalizedDate("24.10.2026"))
+    }
 }

@@ -17,6 +17,7 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
@@ -246,5 +247,20 @@ class ObjectFormViewModelTest {
 
     private companion object {
         const val NOW = "2026-10-24 12:00:00"
+    }
+
+    @Test
+    fun choreGrocycodePrintsOnTheServer() = runTest(dispatcher) {
+        environment.repository.refresh()
+        environment.server.respond("/api/chores/1/printlabel", body = "{}")
+        val viewModel = ChoreViewModel(1, environment.repository, now = { NOW })
+        advanceUntilIdle()
+
+        viewModel.labelResults.test {
+            viewModel.printLabel()
+            advanceUntilIdle()
+
+            assertNull(awaitItem())
+        }
     }
 }

@@ -41,7 +41,6 @@ import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -187,8 +186,10 @@ fun SegmentedListScreen(
         0.dp
     }
 
-    // Snackbars lie the screen offset above the toolbar's bar
-    val snackbarSpace = if (floatingToolbar != null) toolbarSpace + SnackbarToolbarGap else 0.dp
+    val snackbarSpace = snackbarSpace(
+        hasToolbar = floatingToolbar != null,
+        isPane = shownPane != null,
+    )
 
     Scaffold(
         modifier = modifier
@@ -334,7 +335,9 @@ fun SegmentedListScreen(
                         )
                         IntOffset(x = 0, y = -lift)
                     },
-                    snackbar = { data -> Snackbar(data, shape = MaterialTheme.shapes.small) },
+                    snackbar = { data ->
+                        ScreenSnackbar(data, maxWidth = snackbarMaxWidth(shownPane))
+                    },
                 )
             }
         },
@@ -539,8 +542,18 @@ fun AppBarIconButton(
     }
 }
 
-// Material's snackbar keeps 12 dp padding around itself, the rest makes the screen offset
-private val SnackbarToolbarGap = FloatingToolbarDefaults.ScreenOffset - 12.dp
+// A snackbar keeps its margin around itself, the rest makes the screen offset
+private val SnackbarToolbarGap = FloatingToolbarDefaults.ScreenOffset - SnackbarMargin
+
+/**
+ * How far snackbars lie above the scaffold's bottom to keep the screen offset to a floating
+ * toolbar's bar: a pane's toolbar lies in its surface, which ends the margin above that bottom.
+ */
+internal fun snackbarSpace(hasToolbar: Boolean, isPane: Boolean): Dp {
+    if (!hasToolbar) return 0.dp
+    val toolbarSpace = with(FloatingToolbarDefaults) { ScreenOffset + ContainerSize }
+    return toolbarSpace + SnackbarToolbarGap + if (isPane) PaneMargin else 0.dp
+}
 
 // Material lays a toolbar with FAB out 80 dp high and centers its 64 dp bar in it
 private val ToolbarBarInset = 8.dp

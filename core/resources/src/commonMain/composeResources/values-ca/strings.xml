@@ -1152,4 +1152,73 @@
   <string name="recipe_nesting_recipe">Recepta</string>
   <string name="recipe_nesting_recipe_required">Es requereix una recepta</string>
   <string name="recipe_nesting_delete_question">Segur que vols treure la recepta inclosa "%1$s"?</string>
+  <string name="chores_overview_title">Resum de feines de casa</string>
+  <string name="chore_tracking_title">Seguiment de feines de casa</string>
+  <string name="chores_journal_title">Registre de feines de casa</string>
+  <string name="chore_journal">Resum de tasques</string>
+  <string name="chore_overview">Resum de feines de casa</string>
+  <string name="chores_track_next">Registra la propera programació de la tasca</string>
+  <string name="chores_track_now">Registra l'execució de la tasca ara</string>
+  <string name="chores_skip_next">Omet la propera programació de la tasca</string>
+  <string name="chores_reschedule">Re-programa la següent realització</string>
+  <string name="chores_next_tracking">Pròxima data prevista</string>
+  <string name="chores_last_tracked">Última data</string>
+  <string name="chores_assigned_to">Assignat a</string>
+  <string name="chores_assignment">Assignació</string>
+  <string name="chores_rescheduled">Re-programada</string>
+  <string name="chores_reassigned">Re-assignada</string>
+  <string name="chores_status_overdue">Caducat</string>
+  <string name="chores_status_due_today">Venç avui</string>
+  <string name="chores_status_due_soon">Caduca aviat</string>
+  <string name="chores_tracked">Feina de casa enregistrada el %1$s a les %2$s</string>
+  <string name="chores_undone">Execució de tasca desfeta correctament</string>
+  <string name="chore_field">Feina de casa</string>
+  <string name="chore_name">Nom de la feina de casa</string>
+  <string name="chore_required">Cal seleccionar una feina de casa</string>
+  <string name="chore_tracked_time">Temps registrat</string>
+  <string name="chore_date_required">Es requereix una data</string>
+  <string name="chore_done_by">Fet per</string>
+  <string name="chore_skip">Saltar</string>
+  <string name="chore_tracked_count">Nombre de vegades</string>
+  <string name="chore_average_frequency">Freqüència mitjana de realització</string>
+  <string name="chore_last_done_by">Últim cop fet per</string>
+  <string name="chore_never">mai</string>
+  <string name="chore_unknown">Desconegut</string>
+  <string name="chore_reset">Reinicia</string>
+  <string name="chore_scheduled_time">Hora de registre programada</string>
+  <string name="chore_time_of_tracking">Moment del registre</string>
+  <string name="chore_skipped">Omesa</string>
+  <string name="chore_undo">Desfer execució de tasca</string>
+  <string name="grocycode_chore">Feina de casa</string>
+  <string name="chores_assigned_to_me">Assignades a mi</string>
+  <string name="chores_track_failed">No s'ha pogut registrar l'execució de la tasca</string>
+  <string name="chores_detail_hint">Registreu una tasca o obriu el diari per veure-ho aquí</string>
+  <string name="chore_undo_failed">No s'ha pogut desfer l'execució de la tasca</string>
+  <string name="chore_tracked_late">Registrada després de la programació</string>
+  <string name="chore_code_unknown">No s'ha trobat cap tasca per a aquest codi</string>
+  <plurals name="chore_hours">
+    <item quantity="one">%1$d hora</item>
+    <item quantity="many">%1$d hores</item>
+    <item quantity="other">%1$d hores</item>
+  </plurals>
+  <plurals name="start_chores_overdue">
+    <item quantity="one">%1$d feina de casa que s'hauria d'haver fet.</item>
+    <item quantity="many">%1$d feines de casa que s'haurien d'haver fet.</item>
+    <item quantity="other">%1$d feines de casa que s'haurien d'haver fet.</item>
+  </plurals>
+  <plurals name="start_chores_due_today">
+    <item quantity="one">%1$d tasca s'ha d'acabar avui.</item>
+    <item quantity="many">%1$d tasques s'han d'acabar avui.</item>
+    <item quantity="other">%1$d tasques s'han d'acabar avui.</item>
+  </plurals>
+  <plurals name="start_chores_due_soon">
+    <item quantity="one">%1$d feina de casa programada %2$s.</item>
+    <item quantity="many">%1$d feines de casa per fer %2$s.</item>
+    <item quantity="other">%1$d feines de casa per fer %2$s.</item>
+  </plurals>
+  <plurals name="start_chores_assigned_to_me">
+    <item quantity="one">Tens assignada %1$d feina.</item>
+    <item quantity="many">Tens assignades %1$d feines.</item>
+    <item quantity="other">Tens assignades %1$d feines.</item>
+  </plurals>
 </resources>

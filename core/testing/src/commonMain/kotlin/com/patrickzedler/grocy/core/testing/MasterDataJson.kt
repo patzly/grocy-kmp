@@ -71,6 +71,43 @@ object MasterDataJson {
             """"userfields":{"room":"Living room"}},""" +
             """{"id":2,"name":"Old chore","active":0,"period_type":"manually"}]"""
 
+    /** `/chores`: Vacuum is assigned to Alice and rescheduled, Old chore has no schedule. */
+    const val CURRENT_CHORES =
+        """[{"chore_id":1,"chore_name":"Vacuum","last_tracked_time":"2026-10-20 08:00:00",""" +
+            """"next_estimated_execution_time":"2026-11-02 08:00:00","track_date_only":"0",""" +
+            """"next_execution_assigned_to_user_id":"1","is_rescheduled":"1",""" +
+            """"is_reassigned":"0"},""" +
+            """{"chore_id":3,"chore_name":"Water plants","track_date_only":1,""" +
+            """"next_estimated_execution_time":null,"last_tracked_time":null,""" +
+            """"next_execution_assigned_to_user_id":null,"is_rescheduled":0,""" +
+            """"is_reassigned":0}]"""
+
+    /** `/chores/1`. */
+    const val VACUUM_DETAILS =
+        """{"last_tracked":"2026-10-20 08:00:00","tracked_count":"4",""" +
+            """"last_done_by":{"id":1,"username":"alice","display_name":"Alice"},""" +
+            """"average_execution_frequency_hours":"72.5"}"""
+
+    /** The chores journal: an execution of Vacuum, a late one and an undone skipped one. */
+    const val CHORES_LOG =
+        """[{"id":12,"chore_id":1,"tracked_time":"2026-10-20 08:00:00",""" +
+            """"scheduled_execution_time":"2026-10-20 08:00:00","done_by_user_id":1,""" +
+            """"skipped":0,"undone":0,"row_created_timestamp":"2026-10-20 08:01:00",""" +
+            """"userfields":{"mood":"Good"}},""" +
+            """{"id":11,"chore_id":1,"tracked_time":"2026-10-10 09:00:00",""" +
+            """"scheduled_execution_time":"2026-10-10 08:00:00","done_by_user_id":2,""" +
+            """"skipped":0,"undone":0,"row_created_timestamp":"2026-10-10 09:00:00"},""" +
+            """{"id":10,"chore_id":3,"tracked_time":"2026-10-01",""" +
+            """"scheduled_execution_time":null,"skipped":1,"undone":1,""" +
+            """"undone_timestamp":"2026-10-02 10:00:00",""" +
+            """"row_created_timestamp":"2026-10-01 12:00:00"}]"""
+
+    /** What tracking a chore answers: the execution as stored. */
+    const val TRACKED_CHORE =
+        """{"id":13,"chore_id":1,"tracked_time":"2026-11-02 08:00:00",""" +
+            """"scheduled_execution_time":"2026-11-02 08:00:00","done_by_user_id":1,""" +
+            """"skipped":0,"undone":0,"row_created_timestamp":"2026-11-02 09:00:00"}"""
+
     const val BATTERIES =
         """[{"id":1,"name":"Remote","used_in":"Living room","charge_interval_days":"30",""" +
             """"active":1}]"""
@@ -311,6 +348,10 @@ object MasterDataJson {
         "/api/objects/products_average_price" to AVERAGE_PRICES,
         "/api/objects/stock_current_locations" to STOCK_LOCATIONS,
         "/api/objects/chores" to CHORES,
+        "/api/chores" to CURRENT_CHORES,
+        "/api/chores/1" to VACUUM_DETAILS,
+        "/api/objects/chores_log" to CHORES_LOG,
+        "/api/objects/chores_log/13" to TRACKED_CHORE,
         "/api/objects/batteries" to BATTERIES,
         "/api/objects/task_categories" to TASK_CATEGORIES,
         "/api/objects/userentities" to USERENTITIES,

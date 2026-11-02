@@ -37,22 +37,30 @@ import com.patrickzedler.grocy.core.design.component.SupportingBulletList
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.model.chores.ChoresSummary
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListSummary
 import com.patrickzedler.grocy.core.model.stock.StockSummary
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.app_name
+import com.patrickzedler.grocy.core.resources.chores_overview_title
 import com.patrickzedler.grocy.core.resources.ic_rounded_calendar_month
+import com.patrickzedler.grocy.core.resources.ic_rounded_cleaning_services
 import com.patrickzedler.grocy.core.resources.ic_rounded_database
 import com.patrickzedler.grocy.core.resources.ic_rounded_kitchen
 import com.patrickzedler.grocy.core.resources.ic_rounded_menu_book
 import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_cart
+import com.patrickzedler.grocy.core.resources.masterdata_chores_count
 import com.patrickzedler.grocy.core.resources.masterdata_title
 import com.patrickzedler.grocy.core.resources.meal_plan_title
 import com.patrickzedler.grocy.core.resources.recipes_title
 import com.patrickzedler.grocy.core.resources.shopping_list_list
 import com.patrickzedler.grocy.core.resources.shopping_list_list_with_count
+import com.patrickzedler.grocy.core.resources.start_chores_assigned_to_me
+import com.patrickzedler.grocy.core.resources.start_chores_due_soon
+import com.patrickzedler.grocy.core.resources.start_chores_due_today
+import com.patrickzedler.grocy.core.resources.start_chores_overdue
 import com.patrickzedler.grocy.core.resources.start_list_join
 import com.patrickzedler.grocy.core.resources.start_meal_plan_nothing
 import com.patrickzedler.grocy.core.resources.start_meal_plan_today
@@ -85,7 +93,7 @@ import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 /** The groups of the start screen's sections, in their order. */
-internal enum class StartGroup { STOCK, RECIPES, MASTER_DATA }
+internal enum class StartGroup { STOCK, RECIPES, CHORES, MASTER_DATA }
 
 /** The sections of the start screen, in their order, grouped by [group]. */
 internal enum class StartSection(
@@ -119,6 +127,12 @@ internal enum class StartSection(
         StartGroup.RECIPES,
         { it.recipes && it.recipesMealPlan },
     ),
+    CHORES(
+        Res.string.chores_overview_title,
+        Res.drawable.ic_rounded_cleaning_services,
+        StartGroup.CHORES,
+        { it.chores },
+    ),
     MASTER_DATA(
         Res.string.masterdata_title,
         Res.drawable.ic_rounded_database,
@@ -132,7 +146,7 @@ internal fun availableSections(config: ServerConfig?): List<StartSection> =
 
 /**
  * The first screen after login; grows with the app's sections (stock overview, shopping list,
- * recipes and master data so far), the settings are the first item of its app menu. On Grocy's
+ * recipes, chores and master data so far), the settings are the first item of its app menu. On Grocy's
  * public demo ([isDemoServer]) its warning comes first and opens the server settings. Beside the
  * sections' pages ([isBesideDetail]) it is the start [ScreenPane.List] of the layout and its
  * sections a single choice marking the [shownSection]; the settings, the shopping list and the
@@ -150,6 +164,7 @@ internal fun StartScreen(
     onStockActionClick: (StockAction) -> Unit,
     onShoppingListAddClick: (listId: Int?) -> Unit,
     onShoppingModeClick: () -> Unit,
+    onChoreTrackingClick: () -> Unit,
     onAboutClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -182,6 +197,7 @@ internal fun StartScreen(
         onStockActionClick = onStockActionClick,
         onShoppingListAddClick = { onShoppingListAddClick(viewModel.quickAddListId()) },
         onShoppingModeClick = onShoppingModeClick,
+        onChoreTrackingClick = onChoreTrackingClick,
         menuItems = appMenu.items,
         modifier = modifier,
     )
@@ -203,6 +219,7 @@ private fun StartContent(
     onStockActionClick: (StockAction) -> Unit,
     onShoppingListAddClick: () -> Unit,
     onShoppingModeClick: () -> Unit,
+    onChoreTrackingClick: () -> Unit,
     menuItems: List<AppBarMenuItem>,
     modifier: Modifier = Modifier,
 ) {
@@ -243,6 +260,9 @@ private fun StartContent(
                                     onShoppingModeClick = onShoppingModeClick,
                                 )
                             }
+                            StartSection.CHORES -> SectionButtons(0.dp) {
+                                ChoreTrackingButton(onClick = onChoreTrackingClick)
+                            }
                             StartSection.RECIPES,
                             StartSection.MEAL_PLAN,
                             StartSection.MASTER_DATA,
@@ -271,6 +291,7 @@ private fun sectionSummary(section: StartSection, state: StartUiState): SectionS
         StartSection.SHOPPING_LIST -> state.shoppingLists?.let { shoppingListSummary(it) }
         StartSection.RECIPES -> state.recipes?.let { recipesSummary(it, state.checksRecipeStock) }
         StartSection.MEAL_PLAN -> state.mealPlanToday?.let { mealPlanSummary(it) }
+        StartSection.CHORES -> state.chores?.let { choresSummary(it, state.choresDueSoonDays) }
         StartSection.MASTER_DATA -> state.masterDataCounts
             .map { (count, number) -> pluralStringResource(count.text, number, number) }
             .takeIf { it.isNotEmpty() }
@@ -424,6 +445,44 @@ private fun mealPlanSummary(today: List<String>): SectionSummary =
         )
     }
 
+/**
+ * How many chores there are, then like Grocy's messages above its chores overview what is
+ * overdue, due and assigned to the user; numbers of 0 are left out.
+ */
+@Composable
+private fun choresSummary(summary: ChoresSummary, dueSoonDays: Int): SectionSummary {
+    val text = pluralStringResource(
+        Res.plurals.masterdata_chores_count,
+        summary.count,
+        summary.count,
+    )
+    val bullets = listOfNotNull(
+        summary.overdue.takeIf { it > 0 }?.let {
+            pluralStringResource(Res.plurals.start_chores_overdue, it, it)
+        },
+        summary.dueToday.takeIf { it > 0 }?.let {
+            pluralStringResource(Res.plurals.start_chores_due_today, it, it)
+        },
+        summary.dueSoon.takeIf { it > 0 && dueSoonDays > 0 }?.let {
+            val within = pluralStringResource(
+                Res.plurals.start_stock_within_days,
+                dueSoonDays,
+                dueSoonDays,
+            )
+            pluralStringResource(Res.plurals.start_chores_due_soon, it, it, within)
+        },
+        summary.assignedToMe.takeIf { it > 0 }?.let {
+            pluralStringResource(Res.plurals.start_chores_assigned_to_me, it, it)
+        },
+    )
+    val intro = if (bullets.isEmpty()) {
+        stringResource(Res.string.start_summary_intro_end, text)
+    } else {
+        stringResource(Res.string.start_summary_intro_list, text)
+    }
+    return SectionSummary(intro, bullets)
+}
+
 /** The products below their min. stock amount and how many of them are on shopping lists. */
 @Composable
 private fun belowMinStock(summary: StockSummary): String {
@@ -558,6 +617,7 @@ private fun StartScreenPreview() {
             onStockActionClick = {},
             onShoppingListAddClick = {},
             onShoppingModeClick = {},
+            onChoreTrackingClick = {},
             menuItems = emptyList(),
         )
     }

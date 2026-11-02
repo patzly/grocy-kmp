@@ -1116,4 +1116,68 @@
   <string name="recipe_nesting_recipe">Rezept</string>
   <string name="recipe_nesting_recipe_required">Ein Rezept ist erforderlich</string>
   <string name="recipe_nesting_delete_question">Das enthaltene Rezept "%1$s" wirklich löschen?</string>
+  <string name="chores_overview_title">Hausarbeitenübersicht</string>
+  <string name="chore_tracking_title">Hausarbeit-Ausführung</string>
+  <string name="chores_journal_title">Hausarbeitenjournal</string>
+  <string name="chore_journal">Hausarbeitenjournal</string>
+  <string name="chore_overview">Hausarbeitübersicht</string>
+  <string name="chores_track_next">Nächste geplante Ausführung erfassen</string>
+  <string name="chores_track_now">Ausführung jetzt erfassen</string>
+  <string name="chores_skip_next">Nächste geplante Ausführung überspringen</string>
+  <string name="chores_reschedule">Nächste Ausführung umplanen</string>
+  <string name="chores_next_tracking">Nächste geplante Ausführung</string>
+  <string name="chores_last_tracked">Zuletzt ausgeführt</string>
+  <string name="chores_assigned_to">Zugewiesen an</string>
+  <string name="chores_assignment">Zuweisung</string>
+  <string name="chores_rescheduled">Umgeplant</string>
+  <string name="chores_reassigned">Neu zugewiesen</string>
+  <string name="chores_status_overdue">Überfällig</string>
+  <string name="chores_status_due_today">Heute fällig</string>
+  <string name="chores_status_due_soon">Bald fällig</string>
+  <string name="chores_tracked">Ausführung von %1$s am %2$s erfasst</string>
+  <string name="chores_undone">Ausführung erfolgreich rückgängig gemacht</string>
+  <string name="chore_field">Hausarbeit</string>
+  <string name="chore_name">Name der Hausarbeit</string>
+  <string name="chore_required">Eine Hausarbeit muss ausgewählt werden</string>
+  <string name="chore_tracked_time">Ausführungszeit</string>
+  <string name="chore_date_required">Ein Datum ist erforderlich</string>
+  <string name="chore_done_by">Ausgeführt von</string>
+  <string name="chore_skip">Überspringen</string>
+  <string name="chore_tracked_count">Ausführungsanzahl</string>
+  <string name="chore_average_frequency">Durchschnittliche Ausführungshäufigkeit</string>
+  <string name="chore_last_done_by">Zuletzt ausgeführt von</string>
+  <string name="chore_never">nie</string>
+  <string name="chore_unknown">Unbekannt</string>
+  <string name="chore_reset">Zurücksetzen</string>
+  <string name="chore_scheduled_time">Geplante Ausführungszeit</string>
+  <string name="chore_time_of_tracking">Erfassungszeit</string>
+  <string name="chore_skipped">Übersprungen</string>
+  <string name="chore_undo">Ausführung rückgängig machen</string>
+  <string name="grocycode_chore">Hausarbeit</string>
+  <string name="chores_assigned_to_me">Mir zugewiesen</string>
+  <string name="chores_track_failed">Die Ausführung konnte nicht erfasst werden</string>
+  <string name="chores_detail_hint">Erfasse eine Hausarbeit oder öffne das Journal, um es hier zu sehen</string>
+  <string name="chore_undo_failed">Die Ausführung konnte nicht rückgängig gemacht werden</string>
+  <string name="chore_tracked_late">Nach dem geplanten Zeitpunkt erfasst</string>
+  <string name="chore_code_unknown">Zu diesem Code wurde keine Hausarbeit gefunden</string>
+  <plurals name="chore_hours">
+    <item quantity="one">%1$d Stunde</item>
+    <item quantity="other">%1$d Stunden</item>
+  </plurals>
+  <plurals name="start_chores_overdue">
+    <item quantity="one">%1$d Hausarbeit ist überfällig.</item>
+    <item quantity="other">%1$d Hausarbeiten sind überfällig.</item>
+  </plurals>
+  <plurals name="start_chores_due_today">
+    <item quantity="one">%1$d Hausarbeit steht heute an.</item>
+    <item quantity="other">%1$d Hausarbeiten stehen heute an.</item>
+  </plurals>
+  <plurals name="start_chores_due_soon">
+    <item quantity="one">%1$d Hausarbeit steht an %2$s.</item>
+    <item quantity="other">%1$d Hausarbeiten stehen an %2$s.</item>
+  </plurals>
+  <plurals name="start_chores_assigned_to_me">
+    <item quantity="one">%1$d Hausarbeit ist mir zugewiesen.</item>
+    <item quantity="other">%1$d Hausarbeiten sind mir zugewiesen.</item>
+  </plurals>
 </resources>

@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.feature.start.impl
 
+import com.patrickzedler.grocy.core.data.chores.ChoresRepository
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
@@ -14,6 +15,7 @@ interface StartDependencies {
     val masterDataRepository: MasterDataRepository
     val recipesRepository: RecipesRepository
     val mealPlanRepository: MealPlanRepository
+    val choresRepository: ChoresRepository
     val stockRepository: StockRepository
     val shoppingListRepository: ShoppingListRepository
 

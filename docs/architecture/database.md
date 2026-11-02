@@ -14,7 +14,9 @@ Schema history and the web database driver. Moved from CLAUDE.md.
   `recipe_nestings`, `recipe_pictures`; `RecipeDao`, `RecipesRepository`), an AutoMigration;
   version 10 the meal plan (`meal_plan`, `meal_plan_sections` and `meal_plan_recipes`, the
   recipes Grocy keeps per day, week and planned recipe with what it computed for them;
-  `MealPlanDao`, `MealPlanRepository`), an AutoMigration.
+  `MealPlanDao`, `MealPlanRepository`), an AutoMigration; version 11 the chores overview, journal
+  and cards (`chores_current`, `chores_log`, `chore_details`; `ChoreDao`, `ChoresRepository`), an
+  AutoMigration.
 - Android: `BundledSQLiteDriver`, file `grocy.db`. Web: `WebWorkerSQLiteDriver` with the worker
   `core/database/web-worker/worker.js` (npm package `grocy-sqlite-worker` on top of
   `@sqlite.org/sqlite-wasm`, androidx's message protocol). It stores the database in OPFS with

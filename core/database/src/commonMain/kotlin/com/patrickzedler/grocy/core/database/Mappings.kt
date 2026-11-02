@@ -1,6 +1,9 @@
 package com.patrickzedler.grocy.core.database
 
 import com.patrickzedler.grocy.core.model.User
+import com.patrickzedler.grocy.core.model.chores.ChoreDetails
+import com.patrickzedler.grocy.core.model.chores.ChoreExecution
+import com.patrickzedler.grocy.core.model.chores.CurrentChore
 import com.patrickzedler.grocy.core.model.masterdata.Battery
 import com.patrickzedler.grocy.core.model.masterdata.Chore
 import com.patrickzedler.grocy.core.model.masterdata.ChoreAssignmentType
@@ -672,3 +675,67 @@ fun MealPlanRecipeEntity.toModel(): MealPlanRecipe? {
     )
     return MealPlanRecipe(id, type, name, fulfillment.takeIf { hasFulfillment })
 }
+
+fun CurrentChore.toEntity() = CurrentChoreEntity(
+    choreId = choreId,
+    name = name,
+    lastTrackedTime = lastTrackedTime,
+    nextEstimatedExecutionTime = nextEstimatedExecutionTime,
+    trackDateOnly = trackDateOnly,
+    assignedUserId = assignedUserId,
+    isRescheduled = isRescheduled,
+    isReassigned = isReassigned,
+)
+
+fun CurrentChoreEntity.toModel() = CurrentChore(
+    choreId = choreId,
+    name = name,
+    lastTrackedTime = lastTrackedTime,
+    nextEstimatedExecutionTime = nextEstimatedExecutionTime,
+    trackDateOnly = trackDateOnly,
+    assignedUserId = assignedUserId,
+    isRescheduled = isRescheduled,
+    isReassigned = isReassigned,
+)
+
+fun ChoreExecution.toEntity() = ChoreExecutionEntity(
+    id = id,
+    choreId = choreId,
+    trackedTime = trackedTime,
+    scheduledExecutionTime = scheduledExecutionTime,
+    doneByUserId = doneByUserId,
+    skipped = skipped,
+    undone = undone,
+    undoneTimestamp = undoneTimestamp,
+    createdTimestamp = createdTimestamp,
+    userfields = encodeUserfieldValues(userfields),
+)
+
+fun ChoreExecutionEntity.toModel() = ChoreExecution(
+    id = id,
+    choreId = choreId,
+    trackedTime = trackedTime,
+    scheduledExecutionTime = scheduledExecutionTime,
+    doneByUserId = doneByUserId,
+    skipped = skipped,
+    undone = undone,
+    undoneTimestamp = undoneTimestamp,
+    createdTimestamp = createdTimestamp,
+    userfields = decodeUserfieldValues(userfields),
+)
+
+fun ChoreDetails.toEntity() = ChoreDetailsEntity(
+    choreId = choreId,
+    lastTracked = lastTracked,
+    trackedCount = trackedCount,
+    lastDoneByName = lastDoneByName,
+    averageFrequencyHours = averageFrequencyHours,
+)
+
+fun ChoreDetailsEntity.toModel() = ChoreDetails(
+    choreId = choreId,
+    lastTracked = lastTracked,
+    trackedCount = trackedCount,
+    lastDoneByName = lastDoneByName,
+    averageFrequencyHours = averageFrequencyHours,
+)

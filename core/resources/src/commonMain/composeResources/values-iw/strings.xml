@@ -1152,4 +1152,73 @@
   <string name="recipe_nesting_recipe">מתכון</string>
   <string name="recipe_nesting_recipe_required">נדרש מתכון</string>
   <string name="recipe_nesting_delete_question">להסיר את המתכון הכלול „%1$s”?</string>
+  <string name="chores_overview_title">סקירת מטלות</string>
+  <string name="chore_tracking_title">מעקב מטלות</string>
+  <string name="chores_journal_title">יומן מטלות</string>
+  <string name="chore_journal">יומן מטלות</string>
+  <string name="chore_overview">סקירת מטלה</string>
+  <string name="chores_track_next">מעקב תזמון המטלה הבאה</string>
+  <string name="chores_track_now">מעקב הוצאת המטלה לפועל כעת</string>
+  <string name="chores_skip_next">לדלג על תזמון המטלה הבא</string>
+  <string name="chores_reschedule">תזמון ההפעילות הבאה מחדש</string>
+  <string name="chores_next_tracking">המעקב המוערך הבא</string>
+  <string name="chores_last_tracked">נעקב לאחרונה</string>
+  <string name="chores_assigned_to">מוקצית אל</string>
+  <string name="chores_assignment">הקצאה</string>
+  <string name="chores_rescheduled">תוזמן מחדש</string>
+  <string name="chores_reassigned">מוקצה מחדש</string>
+  <string name="chores_status_overdue">מועד הסיום חלף</string>
+  <string name="chores_status_due_today">מסתיים היום</string>
+  <string name="chores_status_due_soon">מועד הסיום מתקרב</string>
+  <string name="chores_tracked">ההוצאה לפועל של מטלה %1$s ב־%2$s נעקבה</string>
+  <string name="chores_undone">הוצאת המטלה לפועל בוטלה בהצלחה</string>
+  <string name="chore_field">מטלה</string>
+  <string name="chore_name">שם המטלה</string>
+  <string name="chore_required">עליך לבחור במטלה</string>
+  <string name="chore_tracked_time">זמן מעקב</string>
+  <string name="chore_date_required">נדרש תאריך</string>
+  <string name="chore_done_by">בוצע על ידי</string>
+  <string name="chore_skip">דילוג</string>
+  <string name="chore_tracked_count">ספירת מעקב</string>
+  <string name="chore_average_frequency">תדירות ממוצאת להוצאה לפועל</string>
+  <string name="chore_last_done_by">בוצע לאחרונה על ידי</string>
+  <string name="chore_never">אף פעם לא</string>
+  <string name="chore_unknown">לא ידוע</string>
+  <string name="chore_reset">איפוס</string>
+  <string name="chore_scheduled_time">זמן מעקב מתוזמן</string>
+  <string name="chore_time_of_tracking">זמן המעקב</string>
+  <string name="chore_skipped">דילגת</string>
+  <string name="chore_undo">ביטול הוצאת מטלה לפועל</string>
+  <string name="grocycode_chore">מטלה</string>
+  <string name="chores_assigned_to_me">מוקצות אלי</string>
+  <string name="chores_track_failed">לא ניתן היה לתעד את ביצוע המטלה</string>
+  <string name="chores_detail_hint">יש לתעד מטלה או לפתוח את היומן כדי לראות זאת כאן</string>
+  <string name="chore_undo_failed">לא ניתן היה לבטל את ביצוע המטלה</string>
+  <string name="chore_tracked_late">תועדה לאחר המועד המתוכנן</string>
+  <string name="chore_code_unknown">לא נמצאה מטלה עבור קוד זה</string>
+  <plurals name="chore_hours">
+    <item quantity="one">שעה אחת</item>
+    <item quantity="two">%1$d שעות</item>
+    <item quantity="other">%1$d שעות</item>
+  </plurals>
+  <plurals name="start_chores_overdue">
+    <item quantity="one">מטלה אחת חרגה ממועד הסיום.</item>
+    <item quantity="two">%1$d מטלות חרגו ממועד הסיום.</item>
+    <item quantity="other">%1$d מטלות חרגו ממועד הסיום.</item>
+  </plurals>
+  <plurals name="start_chores_due_today">
+    <item quantity="one">מטלה אמורה להסתיים היום.</item>
+    <item quantity="two">%1$d מטלות אמורות להסתיים היום.</item>
+    <item quantity="other">%1$d מטלות אמורות להסתיים היום.</item>
+  </plurals>
+  <plurals name="start_chores_due_soon">
+    <item quantity="one">מטלה אחת אמורה להסתיים %2$s.</item>
+    <item quantity="two">%1$d מטלות אמורות להסתיים %2$s.</item>
+    <item quantity="other">%1$d מטלות אמורות להסתיים %2$s.</item>
+  </plurals>
+  <plurals name="start_chores_assigned_to_me">
+    <item quantity="one">מטלה אחת מוקצית אלי.</item>
+    <item quantity="two">%1$d מטלות מוקצות אלי.</item>
+    <item quantity="other">%1$d מטלות מוקצות אלי.</item>
+  </plurals>
 </resources>

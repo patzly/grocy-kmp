@@ -11,7 +11,11 @@ with the stock feature, `StartSection.isAvailable`) and the shopping list (also 
 shopping list feature) as one group, then the recipes (with the recipes feature, a group of
 their own like Grocy's menu; how many and how many the stock covers, see `recipes.md`) and in
 the same group the meal plan (with its feature too; what is planned for today, a screen of its
-own, see `meal-plan.md`), then
+own, see `meal-plan.md`), then Grocy's chores overview (with the chores feature, a group of its
+own, a list-detail scene of its own: how many, then Grocy's messages overdue, due today, due soon
+and assigned to me; as its only action "Chore tracking", a wide filled icon button with a start
+arrow, `ChoreTrackingButton`; from Material's expanded width on beside the overview, both opened
+at once, narrower as a screen of its own: `choreTrackingRoutes`; see `chores.md`), then
 Master data, each telling about
 its data as supporting text (`SupportingBulletList` of `core:design`, numbers of 0 left out;
 `StartViewModel` downloads master data and stock overview when it opens): the products in stock
@@ -47,7 +51,7 @@ entries, stock journal, journal summary) and stock bookings Purchase, Consume, T
 Inventory (`feature:stock`, see `stock-bookings.md`) and Grocy's shopping list
 (`feature:shoppinglist`, see `shopping-list.md`) and Grocy's recipes with their cards, forms and
 meal plan dialog (`feature:recipes`, see `recipes.md`) and its meal plan with its sections
-(`feature:recipes`, see `meal-plan.md`).
+(`feature:recipes`, see `meal-plan.md`) and its chores (`feature:chores`, see `chores.md`).
 
 The start screen's items use the segmented item's default text styles for title and supporting
 text. Items with buttons below their text (`SectionButtons`) keep 16.dp between the visible

@@ -82,6 +82,23 @@ fun defaultUserfieldValue(field: Userfield): String? =
 /** Values Grocy treats as the same: nothing and an empty text. */
 fun sameUserfieldValue(a: String?, b: String?): Boolean = a.orEmpty() == b.orEmpty()
 
+/** A userfield's value as text like Grocy's table cell; null when it shows nothing. */
+fun userfieldText(field: Userfield, value: String?): String? {
+    if (value.isNullOrBlank()) return null
+    return when (field.type) {
+        // Grocy shows a check mark, the chip names the field
+        UserfieldType.CHECKBOX -> field.caption.takeIf { value == "1" }
+        UserfieldType.LINK_WITH_TITLE -> LINK_TITLE.find(value)?.groupValues?.get(1)
+            ?.takeIf { it.isNotBlank() } ?: value
+        UserfieldType.PRESET_CHECKLIST -> value.split(",").joinToString(", ")
+        // Files and pictures need their own view
+        UserfieldType.FILE, UserfieldType.IMAGE -> null
+        else -> value
+    }
+}
+
+private val LINK_TITLE = Regex(""""title"\s*:\s*"([^"]*)"""")
+
 private const val MAX_DECIMALS = 10
 private val INTEGER = Regex("""-?\d+""")
 private val DATE = Regex("""\d{4}-\d{2}-\d{2}""")

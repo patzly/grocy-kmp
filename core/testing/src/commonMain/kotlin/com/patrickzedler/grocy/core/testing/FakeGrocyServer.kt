@@ -110,6 +110,19 @@ class FakeGrocyServer(
             status = HttpStatusCode.NoContent,
             method = HttpMethod.Post,
         )
+        // Tracking chores and undoing what was tracked
+        listOf(1, 3).forEach { chore ->
+            respond(
+                path = "/api/chores/$chore/execute",
+                body = MasterDataJson.TRACKED_CHORE,
+                method = HttpMethod.Post,
+            )
+        }
+        respond(
+            path = "/api/chores/executions/13/undo",
+            status = HttpStatusCode.NoContent,
+            method = HttpMethod.Post,
+        )
         respond(
             path = "$PRODUCTS_PATH/${MasterDataJson.CREATED_ID}",
             body = MasterDataJson.CREATED_PRODUCT,

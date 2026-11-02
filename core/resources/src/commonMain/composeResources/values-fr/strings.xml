@@ -1152,4 +1152,73 @@
   <string name="recipe_nesting_recipe">Recette</string>
   <string name="recipe_nesting_recipe_required">Une recette est requise</string>
   <string name="recipe_nesting_delete_question">Êtes-vous sûr de vouloir supprimer la recette incluse "%1$s" ?</string>
+  <string name="chores_overview_title">Aperçu des corvées</string>
+  <string name="chore_tracking_title">Suivi des corvées</string>
+  <string name="chores_journal_title">Journal des corvées</string>
+  <string name="chore_journal">Journal des corvées</string>
+  <string name="chore_overview">Aperçu de la corvée</string>
+  <string name="chores_track_next">Suivre la prochaine corvée planifiée</string>
+  <string name="chores_track_now">Suivre l'exécution de la corvée</string>
+  <string name="chores_skip_next">Passer la prochaine corvée planifiée</string>
+  <string name="chores_reschedule">Reprogrammer la prochaine réalisation</string>
+  <string name="chores_next_tracking">Prochaine occurrence estimée</string>
+  <string name="chores_last_tracked">Dernière réalisation</string>
+  <string name="chores_assigned_to">Assigné à</string>
+  <string name="chores_assignment">Tâche</string>
+  <string name="chores_rescheduled">Reprogrammer</string>
+  <string name="chores_reassigned">Réaffecté</string>
+  <string name="chores_status_overdue">En retard</string>
+  <string name="chores_status_due_today">A faire aujourd'hui</string>
+  <string name="chores_status_due_soon">À réaliser bientôt</string>
+  <string name="chores_tracked">Suivi de la corvée%1$s sur %2$s</string>
+  <string name="chores_undone">La réalisation de la corvée a bien été annulée</string>
+  <string name="chore_field">Corvée</string>
+  <string name="chore_name">Nom de la corvée</string>
+  <string name="chore_required">Vous devez sélectionner une corvée</string>
+  <string name="chore_tracked_time">Réalisé le</string>
+  <string name="chore_date_required">Une date est requise</string>
+  <string name="chore_done_by">Fait par</string>
+  <string name="chore_skip">Passer</string>
+  <string name="chore_tracked_count">Nombre de réalisations</string>
+  <string name="chore_average_frequency">Fréquence moyenne de réalisation</string>
+  <string name="chore_last_done_by">Dernière réalisation par</string>
+  <string name="chore_never">jamais</string>
+  <string name="chore_unknown">Inconnu</string>
+  <string name="chore_reset">Réinitialiser</string>
+  <string name="chore_scheduled_time">Date de suivi prévu</string>
+  <string name="chore_time_of_tracking">Temps de pistage</string>
+  <string name="chore_skipped">Ignoré</string>
+  <string name="chore_undo">Annuler la réalisation de la corvée</string>
+  <string name="grocycode_chore">Corvée</string>
+  <string name="chores_assigned_to_me">Assignées à moi</string>
+  <string name="chores_track_failed">L'exécution de la corvée n'a pas pu être enregistrée</string>
+  <string name="chores_detail_hint">Enregistrez une corvée ou ouvrez le journal pour l'afficher ici</string>
+  <string name="chore_undo_failed">L'exécution de la corvée n'a pas pu être annulée</string>
+  <string name="chore_tracked_late">Enregistrée après la date prévue</string>
+  <string name="chore_code_unknown">Aucune corvée trouvée pour ce code</string>
+  <plurals name="chore_hours">
+    <item quantity="one">%1$d heure</item>
+    <item quantity="many">%1$d heures</item>
+    <item quantity="other">%1$d heures</item>
+  </plurals>
+  <plurals name="start_chores_overdue">
+    <item quantity="one">%1$d corvée n'a pas été réalisée à temps.</item>
+    <item quantity="many">%1$d corvées n'ont pas été réalisées à temps.</item>
+    <item quantity="other">%1$d corvées n'ont pas été réalisées à temps.</item>
+  </plurals>
+  <plurals name="start_chores_due_today">
+    <item quantity="one">%1$d corvée est à faire aujourd'hui.</item>
+    <item quantity="many">%1$d corvées sont à faire aujourd'hui.</item>
+    <item quantity="other">%1$d corvées sont à faire aujourd'hui.</item>
+  </plurals>
+  <plurals name="start_chores_due_soon">
+    <item quantity="one">%1$d corvée reste à faire %2$s.</item>
+    <item quantity="many">%1$d corvées restent à faire %2$s.</item>
+    <item quantity="other">%1$d corvées restent à faire %2$s.</item>
+  </plurals>
+  <plurals name="start_chores_assigned_to_me">
+    <item quantity="one">%1$d corvée m'est assignée.</item>
+    <item quantity="many">%1$d corvées me sont assignées.</item>
+    <item quantity="other">%1$d corvées me sont assignées.</item>
+  </plurals>
 </resources>

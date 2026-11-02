@@ -15,6 +15,8 @@ import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_home
 import com.patrickzedler.grocy.core.resources.start_select_hint
 import com.patrickzedler.grocy.feature.about.api.AboutRoute
+import com.patrickzedler.grocy.feature.chores.api.ChoreTrackingRoute
+import com.patrickzedler.grocy.feature.chores.api.ChoresOverviewRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
 import com.patrickzedler.grocy.feature.recipes.api.MealPlanRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipesRoute
@@ -55,14 +57,15 @@ fun EntryProviderScope<NavKey>.startEntry(
                     shoppingLists = dependencies.shoppingListRepository,
                     recipes = dependencies.recipesRepository,
                     mealPlan = dependencies.mealPlanRepository,
+                    chores = dependencies.choresRepository,
                     serverConfig = dependencies.serverConfig,
                 )
             },
             isDemoServer = server?.isDemo == true,
             isBesideDetail = isBesideDetail,
             shownSection = startSectionOf(navigator.currentRoute),
-            // The shopping list and the recipes are list-detail scenes of their own, the meal
-            // plan needs the whole window
+            // The shopping list, the recipes and the chores are list-detail scenes of their
+            // own, the meal plan needs the whole window
             onSectionClick = { section ->
                 when (val route = section.route) {
                     is DetailRoute -> navigator.openDetail(route)
@@ -77,6 +80,10 @@ fun EntryProviderScope<NavKey>.startEntry(
                 navigator.navigateAll(shoppingListAddRoutes(listId, isBesideDetail))
             },
             onShoppingModeClick = { navigator.navigate(ShoppingModeRoute) },
+            // In wide windows beside the chores overview, else a screen of its own
+            onChoreTrackingClick = {
+                navigator.navigateAll(choreTrackingRoutes(isBesideDetail))
+            },
             onDemoWarningClick = {
                 navigator.navigateAll(listOf(SettingsRoute, ServerSettingsRoute))
             },
@@ -92,6 +99,7 @@ internal val StartSection.route: Route
         StartSection.SHOPPING_LIST -> ShoppingListRoute()
         StartSection.RECIPES -> RecipesRoute()
         StartSection.MEAL_PLAN -> MealPlanRoute()
+        StartSection.CHORES -> ChoresOverviewRoute
         StartSection.MASTER_DATA -> MasterDataRoute
     }
 
@@ -114,6 +122,18 @@ internal fun shoppingListAddRoutes(listId: Int?, isBesideDetail: Boolean): List<
         listOf(ShoppingListRoute(listId), ShoppingListItemRoute(listId = listId))
     } else {
         listOf(ShoppingListItemRoute(listId = listId, inList = false))
+    }
+
+/**
+ * What the start screen's "Chore tracking" opens: where details show beside their list
+ * ([isBesideDetail]) the chores overview with the tracking beside it, else the tracking alone,
+ * which stays a screen of its own when the window grows.
+ */
+internal fun choreTrackingRoutes(isBesideDetail: Boolean): List<Route> =
+    if (isBesideDetail) {
+        listOf(ChoresOverviewRoute, ChoreTrackingRoute())
+    } else {
+        listOf(ChoreTrackingRoute(inList = false))
     }
 
 /** The section whose page [route] is, null for other routes. */

@@ -1116,4 +1116,68 @@
   <string name="recipe_nesting_recipe">Recept</string>
   <string name="recipe_nesting_recipe_required">Een recept is vereist</string>
   <string name="recipe_nesting_delete_question">Weet je zeker dat je het bijgevoegde recept "%1$s" wilt verwijderen?</string>
+  <string name="chores_overview_title">Klusjes</string>
+  <string name="chore_tracking_title">Klusjes volgen</string>
+  <string name="chores_journal_title">Klusjesdagboek</string>
+  <string name="chore_journal">Klusjesdagboek</string>
+  <string name="chore_overview">Overzicht klusje</string>
+  <string name="chores_track_next">Voer volgend klusje uit</string>
+  <string name="chores_track_now">Voer klusje nu uit</string>
+  <string name="chores_skip_next">Volgend klusje overslaan</string>
+  <string name="chores_reschedule">Plan de uitvoering opnieuw in</string>
+  <string name="chores_next_tracking">Volgende geschatte uitvoering</string>
+  <string name="chores_last_tracked">Laatste keer gedaan</string>
+  <string name="chores_assigned_to">Toegewezen aan</string>
+  <string name="chores_assignment">Toewijzing</string>
+  <string name="chores_rescheduled">Verzet</string>
+  <string name="chores_reassigned">Opnieuw toegewezen</string>
+  <string name="chores_status_overdue">Achterstallig</string>
+  <string name="chores_status_due_today">Tot vandaag</string>
+  <string name="chores_status_due_soon">Moet binnenkort gedaan worden</string>
+  <string name="chores_tracked">Ingevoerde uitvoering van klusje %1$s op %2$s</string>
+  <string name="chores_undone">Uitvoering van klusje ongedaan gemaakt</string>
+  <string name="chore_field">Klusje</string>
+  <string name="chore_name">Naam van het klusje</string>
+  <string name="chore_required">Je moet een klusje selecteren</string>
+  <string name="chore_tracked_time">Tijd</string>
+  <string name="chore_date_required">Een datum is vereist</string>
+  <string name="chore_done_by">Gedaan door</string>
+  <string name="chore_skip">Overslaan</string>
+  <string name="chore_tracked_count">Bijgehouden aantal</string>
+  <string name="chore_average_frequency">Gemiddelde uitvoeringsfrequentie</string>
+  <string name="chore_last_done_by">Laatst gedaan door</string>
+  <string name="chore_never">nooit</string>
+  <string name="chore_unknown">Onbekend</string>
+  <string name="chore_reset">Resetten</string>
+  <string name="chore_scheduled_time">Geplande registratietijd</string>
+  <string name="chore_time_of_tracking">Tijdstip van registratie</string>
+  <string name="chore_skipped">Overgeslagen</string>
+  <string name="chore_undo">Uitvoering van klusje ongedaan maken</string>
+  <string name="grocycode_chore">Klusje</string>
+  <string name="chores_assigned_to_me">Aan mij toegewezen</string>
+  <string name="chores_track_failed">De uitvoering van het klusje kon niet worden geregistreerd</string>
+  <string name="chores_detail_hint">Registreer een klusje of open het logboek om het hier te zien</string>
+  <string name="chore_undo_failed">De uitvoering van het klusje kon niet ongedaan worden gemaakt</string>
+  <string name="chore_tracked_late">Geregistreerd na de planning</string>
+  <string name="chore_code_unknown">Geen klusje gevonden voor deze code</string>
+  <plurals name="chore_hours">
+    <item quantity="one">%1$d uur</item>
+    <item quantity="other">%1$d uur</item>
+  </plurals>
+  <plurals name="start_chores_overdue">
+    <item quantity="one">%1$dklus moet nog gedaan worden.</item>
+    <item quantity="other">%1$d klusjes hadden al gedaan moeten worden.</item>
+  </plurals>
+  <plurals name="start_chores_due_today">
+    <item quantity="one">%1$dklusje moet vandaag worden gedaan.</item>
+    <item quantity="other">%1$d klusjes moeten vandaag worden gedaan..</item>
+  </plurals>
+  <plurals name="start_chores_due_soon">
+    <item quantity="one">%1$dklusje is om uitgevoerd te worden %2$s.</item>
+    <item quantity="other">%1$d klusjes moeten worden gedaan %2$s.</item>
+  </plurals>
+  <plurals name="start_chores_assigned_to_me">
+    <item quantity="one">%1$d klusje is toegewezen aan mij.</item>
+    <item quantity="other">%1$d klusjes aan mij toegewezen.</item>
+  </plurals>
 </resources>

@@ -492,6 +492,11 @@ class MasterDataRepository(
         refresh()
     }
 
+    /** Prints chore [id]'s grocycode on the server's label printer. */
+    suspend fun printChoreLabel(id: Int) {
+        api.printChoreLabel(requireConnection(), id)
+    }
+
     /** Merges chore [removeId] into [keepId] like [mergeProducts]. */
     suspend fun mergeChores(keepId: Int, removeId: Int) {
         api.mergeChores(requireConnection(), keepId, removeId)

@@ -1116,4 +1116,68 @@
   <string name="recipe_nesting_recipe">Retsept</string>
   <string name="recipe_nesting_recipe_required">Retsept on nõutud</string>
   <string name="recipe_nesting_delete_question">Kas soovid kindlasti kaasatud retsepti "%1$s" eemaldada?</string>
+  <string name="chores_overview_title">Kodutööde ülevaade</string>
+  <string name="chore_tracking_title">Kodutööde jälgimine</string>
+  <string name="chores_journal_title">Kodutööde päevik</string>
+  <string name="chore_journal">Kodutööde päevik</string>
+  <string name="chore_overview">Majapidamistöö ülevaade</string>
+  <string name="chores_track_next">Jälgi järgmist kodutööde plaani</string>
+  <string name="chores_track_now">Jälgi kodutööde tegemist praegu</string>
+  <string name="chores_skip_next">Jäta järgmine töögraafik vahele</string>
+  <string name="chores_reschedule">Ajasta järgmine ülesanne ümber</string>
+  <string name="chores_next_tracking">Järgmine eeldatav jälgimine</string>
+  <string name="chores_last_tracked">Viimati jälgitud</string>
+  <string name="chores_assigned_to">Määratud isikule</string>
+  <string name="chores_assignment">Määratlus</string>
+  <string name="chores_rescheduled">Ümber ajastatud</string>
+  <string name="chores_reassigned">Ümber määratud</string>
+  <string name="chores_status_overdue">Üle aja</string>
+  <string name="chores_status_due_today">Täna teha</string>
+  <string name="chores_status_due_soon">Vajab tegemist</string>
+  <string name="chores_tracked">Jälgitud majapidamistöö %1$s tegemist kuupäeval%2$s</string>
+  <string name="chores_undone">Majapidamistöö tegemine edukalt tühistatud</string>
+  <string name="chore_field">Majapidamistöö</string>
+  <string name="chore_name">Majapidamistöö nimi</string>
+  <string name="chore_required">Pead valima kodutöö</string>
+  <string name="chore_tracked_time">Jälgitud aeg</string>
+  <string name="chore_date_required">Kuupäev on kohustuslik</string>
+  <string name="chore_done_by">Valmis ajaks</string>
+  <string name="chore_skip">Jäta vahele</string>
+  <string name="chore_tracked_count">Jälgitud arv</string>
+  <string name="chore_average_frequency">Keskmine ülesannete sagedus</string>
+  <string name="chore_last_done_by">Viimati tehtud ajaks</string>
+  <string name="chore_never">mitte kunagi</string>
+  <string name="chore_unknown">Tundmatu</string>
+  <string name="chore_reset">Nulli</string>
+  <string name="chore_scheduled_time">Planeeritud jälgimisaeg</string>
+  <string name="chore_time_of_tracking">Registreerimise aeg</string>
+  <string name="chore_skipped">Vahele jäetud</string>
+  <string name="chore_undo">Majapidamistöö tegemise tagasivõtmine</string>
+  <string name="grocycode_chore">Majapidamistöö</string>
+  <string name="chores_assigned_to_me">Minule määratud</string>
+  <string name="chores_track_failed">Kodutöö täitmist ei õnnestunud salvestada</string>
+  <string name="chores_detail_hint">Registreeri kodutöö või ava päevik, et seda siin näha</string>
+  <string name="chore_undo_failed">Kodutöö täitmist ei õnnestunud tagasi võtta</string>
+  <string name="chore_tracked_late">Salvestatud pärast planeeritud aega</string>
+  <string name="chore_code_unknown">Selle koodiga kodutööd ei leitud</string>
+  <plurals name="chore_hours">
+    <item quantity="one">%1$d tund</item>
+    <item quantity="other">%1$d tundi</item>
+  </plurals>
+  <plurals name="start_chores_overdue">
+    <item quantity="one">%1$d kodutöö on hilinenud.</item>
+    <item quantity="other">%1$d majapidamistööd on üle aja.</item>
+  </plurals>
+  <plurals name="start_chores_due_today">
+    <item quantity="one">%1$d kodutöö vajab täna tegemist.</item>
+    <item quantity="other">%1$d kodutööd vajab täna tegemist.</item>
+  </plurals>
+  <plurals name="start_chores_due_soon">
+    <item quantity="one">%1$d majapidamistöö vajab tegemist %2$s.</item>
+    <item quantity="other">%1$d majapidamistööd vajab tegemist %2$s.</item>
+  </plurals>
+  <plurals name="start_chores_assigned_to_me">
+    <item quantity="one">%1$d majapidamistöö on määratud mulle.</item>
+    <item quantity="other">%1$d majapidamistööö on määratud mulle.</item>
+  </plurals>
 </resources>

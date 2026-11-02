@@ -1152,4 +1152,73 @@
   <string name="recipe_nesting_recipe">Receta</string>
   <string name="recipe_nesting_recipe_required">Es necesaria una receta</string>
   <string name="recipe_nesting_delete_question">¿Seguro que quiere quitar la receta incluida "%1$s"?</string>
+  <string name="chores_overview_title">Resumen de tareas del hogar</string>
+  <string name="chore_tracking_title">Registro de tareas del hogar</string>
+  <string name="chores_journal_title">Diario de tareas del hogar</string>
+  <string name="chore_journal">Diario de tareas del hogar</string>
+  <string name="chore_overview">Resumen de tarea del hogar</string>
+  <string name="chores_track_next">Registrar la siguiente ejecución programada de la tarea</string>
+  <string name="chores_track_now">Registrar ejecución de la tarea del hogar ahora</string>
+  <string name="chores_skip_next">Omitir la siguiente ejecución programada de la tarea</string>
+  <string name="chores_reschedule">Reprogramar la próxima ejecución</string>
+  <string name="chores_next_tracking">Próximo registro estimado</string>
+  <string name="chores_last_tracked">Último registro</string>
+  <string name="chores_assigned_to">Asignada a</string>
+  <string name="chores_assignment">Asignación</string>
+  <string name="chores_rescheduled">Reprogramado</string>
+  <string name="chores_reassigned">Reasignado</string>
+  <string name="chores_status_overdue">Fecha límite superada</string>
+  <string name="chores_status_due_today">Con fecha límite hoy</string>
+  <string name="chores_status_due_soon">Fecha límite próxima</string>
+  <string name="chores_tracked">Registrada ejecución de tarea del hogar %1$s en %2$s</string>
+  <string name="chores_undone">Ejecución de tarea del hogar deshecha</string>
+  <string name="chore_field">Tarea del hogar</string>
+  <string name="chore_name">Nombre de la tarea del hogar</string>
+  <string name="chore_required">Debe seleccionar una tarea del hogar</string>
+  <string name="chore_tracked_time">Fecha de registro</string>
+  <string name="chore_date_required">Se requiere una fecha</string>
+  <string name="chore_done_by">Hecho por</string>
+  <string name="chore_skip">Saltar</string>
+  <string name="chore_tracked_count">Recuento registrado</string>
+  <string name="chore_average_frequency">Frecuencia media de ejecución</string>
+  <string name="chore_last_done_by">Última vez hecho por</string>
+  <string name="chore_never">nunca</string>
+  <string name="chore_unknown">Desconocido</string>
+  <string name="chore_reset">Reiniciar</string>
+  <string name="chore_scheduled_time">Hora de seguimiento programada</string>
+  <string name="chore_time_of_tracking">Hora del registro</string>
+  <string name="chore_skipped">Omitido</string>
+  <string name="chore_undo">Deshacer ejecución de tarea del hogar</string>
+  <string name="grocycode_chore">Tarea del hogar</string>
+  <string name="chores_assigned_to_me">Asignadas a mí</string>
+  <string name="chores_track_failed">No se ha podido registrar la ejecución de la tarea</string>
+  <string name="chores_detail_hint">Registra una tarea o abre el diario para verlo aquí</string>
+  <string name="chore_undo_failed">No se ha podido deshacer la ejecución de la tarea</string>
+  <string name="chore_tracked_late">Registrada después de lo programado</string>
+  <string name="chore_code_unknown">No se ha encontrado ninguna tarea para este código</string>
+  <plurals name="chore_hours">
+    <item quantity="one">%1$d hora</item>
+    <item quantity="many">%1$d horas</item>
+    <item quantity="other">%1$d horas</item>
+  </plurals>
+  <plurals name="start_chores_overdue">
+    <item quantity="one">%1$d tarea del hogar debería haberse hecho.</item>
+    <item quantity="many">%1$d tareas del hogar deberían haberse hecho.</item>
+    <item quantity="other">%1$d tareas del hogar deberían haberse hecho.</item>
+  </plurals>
+  <plurals name="start_chores_due_today">
+    <item quantity="one">%1$d tarea del hogar debe hacerse hoy.</item>
+    <item quantity="many">%1$d tareas del hogar deben hacerse hoy.</item>
+    <item quantity="other">%1$d tareas del hogar deben hacerse hoy.</item>
+  </plurals>
+  <plurals name="start_chores_due_soon">
+    <item quantity="one">%1$d tarea del hogar debe hacerse %2$s.</item>
+    <item quantity="many">%1$d tareas del hogar deben hacerse %2$s.</item>
+    <item quantity="other">%1$d tareas del hogar deben hacerse %2$s.</item>
+  </plurals>
+  <plurals name="start_chores_assigned_to_me">
+    <item quantity="one">%1$d tarea del hogar asignada a mí.</item>
+    <item quantity="many">%1$d tareas del hogar asignadas a mí.</item>
+    <item quantity="other">%1$d tareas del hogar asignadas a mí.</item>
+  </plurals>
 </resources>

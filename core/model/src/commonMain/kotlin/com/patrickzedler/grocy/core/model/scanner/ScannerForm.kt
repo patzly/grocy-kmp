@@ -8,6 +8,7 @@ enum class ScannerForm {
     INVENTORY,
     SHOPPING_LIST_ITEM,
     BARCODE,
+    CHORE_TRACKING,
     ;
 
     companion object {

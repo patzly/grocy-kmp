@@ -13,6 +13,10 @@ import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
 import com.patrickzedler.grocy.core.model.recipes.RecipesView
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
+import com.patrickzedler.grocy.core.model.chores.ChoresJournalGrouping
+import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
+import com.patrickzedler.grocy.core.model.chores.ChoresOverviewGrouping
+import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.model.stock.StockOverviewField
@@ -175,5 +179,25 @@ class WebSettingsStoreTest {
             ),
             WebSettingsStore(storage).shoppingModeSettings.first(),
         )
+    }
+
+    @Test
+    fun choresOverviewOptionsSurviveARestart() = runTest {
+        val storage = InMemoryStorage()
+        val options = ChoresOverviewOptions(grouping = ChoresOverviewGrouping.ASSIGNED_TO)
+
+        WebSettingsStore(storage).setChoresOverviewOptions(options)
+
+        assertEquals(options, WebSettingsStore(storage).choresOverviewOptions.first())
+    }
+
+    @Test
+    fun choresJournalOptionsSurviveARestart() = runTest {
+        val storage = InMemoryStorage()
+        val options = ChoresJournalOptions(grouping = ChoresJournalGrouping.CHORE)
+
+        WebSettingsStore(storage).setChoresJournalOptions(options)
+
+        assertEquals(options, WebSettingsStore(storage).choresJournalOptions.first())
     }
 }

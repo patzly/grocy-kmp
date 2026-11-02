@@ -2,6 +2,8 @@ package com.patrickzedler.grocy.feature.start.impl
 
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.navigation.DetailRoute
+import com.patrickzedler.grocy.feature.chores.api.ChoreTrackingRoute
+import com.patrickzedler.grocy.feature.chores.api.ChoresOverviewRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ProductsRoute
 import com.patrickzedler.grocy.feature.recipes.api.MealPlanRoute
@@ -29,9 +31,11 @@ class StartSectionTest {
         assertEquals(MasterDataRoute, StartSection.MASTER_DATA.route)
         assertEquals(RecipesRoute(), StartSection.RECIPES.route)
         assertEquals(MealPlanRoute(), StartSection.MEAL_PLAN.route)
+        assertEquals(ChoresOverviewRoute, StartSection.CHORES.route)
         // List-detail scenes of their own, never beside the start screen
         assertFalse(StartSection.SHOPPING_LIST.route is DetailRoute)
         assertFalse(StartSection.RECIPES.route is DetailRoute)
+        assertFalse(StartSection.CHORES.route is DetailRoute)
         // The meal plan needs the whole window
         assertFalse(StartSection.MEAL_PLAN.route is DetailRoute)
     }
@@ -61,6 +65,22 @@ class StartSectionTest {
     }
 
     @Test
+    fun choreTrackingOpensBesideTheOverviewInWideWindows() {
+        assertEquals(
+            listOf(ChoresOverviewRoute, ChoreTrackingRoute()),
+            choreTrackingRoutes(isBesideDetail = true),
+        )
+    }
+
+    @Test
+    fun choreTrackingOpensAloneInNarrowWindows() {
+        assertEquals(
+            listOf(ChoreTrackingRoute(inList = false)),
+            choreTrackingRoutes(isBesideDetail = false),
+        )
+    }
+
+    @Test
     fun shownPageMarksItsSection() {
         assertEquals(StartSection.STOCK_OVERVIEW, startSectionOf(StockOverviewRoute))
         assertEquals(StartSection.MASTER_DATA, startSectionOf(MasterDataRoute))
@@ -74,6 +94,7 @@ class StartSectionTest {
                 StartSection.SHOPPING_LIST,
                 StartSection.RECIPES,
                 StartSection.MEAL_PLAN,
+                StartSection.CHORES,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig()),
@@ -83,12 +104,18 @@ class StartSectionTest {
                 StartSection.STOCK_OVERVIEW,
                 StartSection.RECIPES,
                 StartSection.MEAL_PLAN,
+                StartSection.CHORES,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig(shoppingList = false)),
         )
         assertEquals(
-            listOf(StartSection.RECIPES, StartSection.MEAL_PLAN, StartSection.MASTER_DATA),
+            listOf(
+                StartSection.RECIPES,
+                StartSection.MEAL_PLAN,
+                StartSection.CHORES,
+                StartSection.MASTER_DATA,
+            ),
             availableSections(ServerConfig(stock = false)),
         )
         assertEquals(
@@ -96,6 +123,7 @@ class StartSectionTest {
                 StartSection.STOCK_OVERVIEW,
                 StartSection.SHOPPING_LIST,
                 StartSection.RECIPES,
+                StartSection.CHORES,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig(recipesMealPlan = false)),
@@ -104,10 +132,12 @@ class StartSectionTest {
             listOf(
                 StartSection.STOCK_OVERVIEW,
                 StartSection.SHOPPING_LIST,
+                StartSection.CHORES,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig(recipes = false)),
         )
+        assertFalse(StartSection.CHORES in availableSections(ServerConfig(chores = false)))
     }
 
     @Test
@@ -119,12 +149,18 @@ class StartSectionTest {
     @Test
     fun recipesAreAGroupOfTheirOwnBetweenStockAndMasterData() {
         assertEquals(
-            listOf(StartGroup.STOCK, StartGroup.RECIPES, StartGroup.MASTER_DATA),
+            listOf(StartGroup.STOCK, StartGroup.RECIPES, StartGroup.CHORES, StartGroup.MASTER_DATA),
             StartGroup.entries,
         )
         assertEquals(StartGroup.RECIPES, StartSection.RECIPES.group)
         // Like Grocy's menu, the meal plan follows the recipes
         assertEquals(StartGroup.RECIPES, StartSection.MEAL_PLAN.group)
+    }
+
+    @Test
+    fun choresAreAGroupOfTheirOwnBelowTheMealPlan() {
+        assertEquals(StartGroup.CHORES, StartSection.CHORES.group)
+        assertEquals(StartSection.MEAL_PLAN.ordinal + 1, StartSection.CHORES.ordinal)
     }
 
     @Test

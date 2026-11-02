@@ -1152,4 +1152,73 @@
   <string name="recipe_nesting_recipe">Ricetta</string>
   <string name="recipe_nesting_recipe_required">È richiesta una ricetta</string>
   <string name="recipe_nesting_delete_question">Sei sicuro di voler rimuovere la ricetta inclusa "%1$s"?</string>
+  <string name="chores_overview_title">Riepilogo delle faccende</string>
+  <string name="chore_tracking_title">Tracciamento delle faccende</string>
+  <string name="chores_journal_title">Diario delle faccende</string>
+  <string name="chore_journal">Diario delle Faccende</string>
+  <string name="chore_overview">Riepilogo della faccenda</string>
+  <string name="chores_track_next">Tieni traccia della prossima faccenda programmata</string>
+  <string name="chores_track_now">Traccia l'esecuzione delle faccende ora</string>
+  <string name="chores_skip_next">Salta la prossima faccenda programmata</string>
+  <string name="chores_reschedule">Riprogramma la prossima esecuzione</string>
+  <string name="chores_next_tracking">Prossima esecuzione</string>
+  <string name="chores_last_tracked">Ultima esecuzione</string>
+  <string name="chores_assigned_to">Assegnato a</string>
+  <string name="chores_assignment">Incarico</string>
+  <string name="chores_rescheduled">Riprogrammato</string>
+  <string name="chores_reassigned">Riassegnato</string>
+  <string name="chores_status_overdue">In ritardo</string>
+  <string name="chores_status_due_today">Da fare oggi</string>
+  <string name="chores_status_due_soon">In scadenza</string>
+  <string name="chores_tracked">Prevista esecuzione della faccenda%1$s il %2$s</string>
+  <string name="chores_undone">Esecuzione faccenda annullata con successo</string>
+  <string name="chore_field">Faccenda</string>
+  <string name="chore_name">Nome della faccenda</string>
+  <string name="chore_required">Devi selezionare una faccenda</string>
+  <string name="chore_tracked_time">Ora di esecuzione</string>
+  <string name="chore_date_required">È necessaria una data</string>
+  <string name="chore_done_by">Realizzato da</string>
+  <string name="chore_skip">Salta</string>
+  <string name="chore_tracked_count">Numero di esecuzioni</string>
+  <string name="chore_average_frequency">Frequenza media di esecuzione</string>
+  <string name="chore_last_done_by">Ultima realizzazione di</string>
+  <string name="chore_never">mai</string>
+  <string name="chore_unknown">Sconosciuto</string>
+  <string name="chore_reset">Ripristinare</string>
+  <string name="chore_scheduled_time">Tempo di tracciamento programmato</string>
+  <string name="chore_time_of_tracking">Tempo di tracciamento</string>
+  <string name="chore_skipped">Saltato</string>
+  <string name="chore_undo">Annulla esecuzione faccenda</string>
+  <string name="grocycode_chore">Faccenda</string>
+  <string name="chores_assigned_to_me">Assegnate a me</string>
+  <string name="chores_track_failed">Non è stato possibile registrare l'esecuzione della faccenda</string>
+  <string name="chores_detail_hint">Registra una faccenda o apri il diario per vederlo qui</string>
+  <string name="chore_undo_failed">Non è stato possibile annullare l'esecuzione della faccenda</string>
+  <string name="chore_tracked_late">Registrata dopo la pianificazione</string>
+  <string name="chore_code_unknown">Nessuna faccenda trovata per questo codice</string>
+  <plurals name="chore_hours">
+    <item quantity="one">%1$d ora</item>
+    <item quantity="many">%1$d ore</item>
+    <item quantity="other">%1$d ore</item>
+  </plurals>
+  <plurals name="start_chores_overdue">
+    <item quantity="one">%1$d faccenda in ritardo da fare .</item>
+    <item quantity="many">%1$d faccende in ritardo da fare.</item>
+    <item quantity="other">%1$d faccende in ritardo da fare.</item>
+  </plurals>
+  <plurals name="start_chores_due_today">
+    <item quantity="one">%1$d faccenda che dovrebbe essere fatta oggi.</item>
+    <item quantity="many">%1$d faccende dovrebbero essere fatte oggi.</item>
+    <item quantity="other">%1$d faccende dovrebbero essere fatte oggi.</item>
+  </plurals>
+  <plurals name="start_chores_due_soon">
+    <item quantity="one">%1$d faccenda in scadenza da fare %2$s.</item>
+    <item quantity="many">%1$d faccende in scadenza da fare %2$s.</item>
+    <item quantity="other">%1$d faccende in scadenza da fare %2$s.</item>
+  </plurals>
+  <plurals name="start_chores_assigned_to_me">
+    <item quantity="one">%1$d faccenda è assegnata a me.</item>
+    <item quantity="many">%1$d faccende sono assegnate a me.</item>
+    <item quantity="other">%1$d faccende sono assegnate a me.</item>
+  </plurals>
 </resources>

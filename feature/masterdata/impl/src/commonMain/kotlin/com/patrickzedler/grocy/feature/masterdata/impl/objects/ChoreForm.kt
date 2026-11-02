@@ -7,10 +7,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.forms.ChangeError
 import com.patrickzedler.grocy.core.forms.FieldError
 import com.patrickzedler.grocy.core.forms.ObjectField
 import com.patrickzedler.grocy.core.forms.ObjectFormState
 import com.patrickzedler.grocy.core.forms.ObjectFormViewModel
+import com.patrickzedler.grocy.core.forms.changeErrorOf
 import com.patrickzedler.grocy.core.forms.minimumAmount
 import com.patrickzedler.grocy.core.model.User
 import com.patrickzedler.grocy.core.model.masterdata.Chore
@@ -21,17 +23,21 @@ import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.Weekday
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.text.decimalPlaces
-import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.grocyDateTimeOf
 import com.patrickzedler.grocy.core.model.text.localNowMillis
+import com.patrickzedler.grocy.core.model.text.normalizedDateTime
 import com.patrickzedler.grocy.core.model.text.parseDecimal
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 /** The chore form's inputs as typed; a new chore starts with the first choices like Grocy's. */
 internal data class ChoreValues(
@@ -159,22 +165,6 @@ internal fun Chore.toValues(decimals: Int, decimalSeparator: Char) = ChoreValues
     productAmount = productAmount?.let { formatDecimal(it, decimals, decimalSeparator) }.orEmpty(),
 )
 
-/**
- * "YYYY-MM-DD HH:MM(:SS)" as Grocy's "YYYY-MM-DD HH:MM:SS", null if it is none. A date alone
- * (Grocy stores some start dates so) is its midnight, like Grocy's date picker shows it.
- */
-internal fun normalizedDateTime(text: String): String? {
-    val match = DATE_TIME.matchEntire(text.trim()) ?: return null
-    val (date, hours, minutes, seconds) = match.destructured
-    if (hours.isEmpty()) return "$date 00:00:00".takeIf { epochDayOf(date) != null }
-    if (epochDayOf(date) == null || hours.toInt() > MAX_HOUR || minutes.toInt() > MAX_MINUTE ||
-        (seconds.isNotEmpty() && seconds.toInt() > MAX_MINUTE)
-    ) {
-        return null
-    }
-    return "$date $hours:$minutes:${seconds.ifEmpty { "00" }}"
-}
-
 /** The pickers of the chore form. */
 internal enum class ChoreChoice { PERIOD_TYPE, ASSIGNMENT_TYPE, PRODUCT }
 
@@ -246,7 +236,16 @@ internal class ChoreViewModel(
     var decimals by mutableStateOf(DEFAULT_DECIMALS)
         private set
 
+    /** Grocy's server settings of the chore's grocycode. */
+    var config by mutableStateOf(ServerConfig())
+        private set
+
     private var original: Chore? = null
+
+    private val labelChannel = Channel<ChangeError?>(Channel.BUFFERED)
+
+    /** The results of [printLabel], null when printed. */
+    val labelResults: Flow<ChangeError?> = labelChannel.receiveAsFlow()
 
     val options: StateFlow<ChoreOptions> = combine(
         repository.users,
@@ -262,12 +261,20 @@ internal class ChoreViewModel(
     }
 
     override suspend fun createForm(id: Int?): ChoreFormState? {
-        features = ChoreFormFeatures.of(repository.serverConfig.first())
+        config = repository.serverConfig.first()
+        features = ChoreFormFeatures.of(config)
         decimals = repository.userSettings.first().stockDecimalPlacesAmounts
         if (id == null) return ChoreFormState(ChoreValues(startDate = now()))
         val chore = repository.chores.first().find { it.id == id } ?: return null
         original = chore
         return ChoreFormState(chore.toValues(decimals, decimalSeparator))
+    }
+
+    /** Grocy's "Print on label printer" of the saved chore's grocycode. */
+    fun printLabel() {
+        viewModelScope.launch {
+            labelChannel.send(changeErrorOf { repository.printChoreLabel(objectId) })
+        }
     }
 
     override suspend fun userfieldValues(id: Int): Map<String, String?> =
@@ -286,6 +293,3 @@ internal class ChoreViewModel(
 }
 
 private const val MAX_DAY_OF_MONTH = 31
-private const val MAX_HOUR = 23
-private const val MAX_MINUTE = 59
-private val DATE_TIME = Regex("""(\d{4}-\d{2}-\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2}))?)?""")

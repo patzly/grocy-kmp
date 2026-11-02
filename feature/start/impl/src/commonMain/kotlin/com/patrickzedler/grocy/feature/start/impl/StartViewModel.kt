@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.feature.start.impl
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.patrickzedler.grocy.core.data.chores.ChoresRepository
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
@@ -9,6 +10,8 @@ import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.data.util.RefreshController
 import com.patrickzedler.grocy.core.data.util.RefreshState
+import com.patrickzedler.grocy.core.model.chores.ChoresSummary
+import com.patrickzedler.grocy.core.model.chores.choresSummaryOf
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.recipes.MealPlanEntry
@@ -23,7 +26,9 @@ import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListSummary
 import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
 import com.patrickzedler.grocy.core.model.stock.StockSummary
 import com.patrickzedler.grocy.core.model.stock.stockSummaryOf
+import com.patrickzedler.grocy.core.model.text.grocyDateTimeOf
 import com.patrickzedler.grocy.core.model.text.isoDateOf
+import com.patrickzedler.grocy.core.model.text.localNowMillis
 import com.patrickzedler.grocy.core.model.text.todayEpochDay
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.masterdata_batteries_count
@@ -139,6 +144,9 @@ internal data class StartUiState(
     val checksRecipeStock: Boolean = true,
     /** What is planned for today ([mealPlanTodayOf]), null without the meal plan feature. */
     val mealPlanToday: List<String>? = null,
+    /** Null without the chores feature or before the first download stored any chore. */
+    val chores: ChoresSummary? = null,
+    val choresDueSoonDays: Int = 0,
 )
 
 /**
@@ -152,8 +160,10 @@ internal class StartViewModel(
     private val shoppingLists: ShoppingListRepository,
     private val recipes: RecipesRepository,
     private val mealPlan: MealPlanRepository,
+    private val chores: ChoresRepository,
     val serverConfig: StateFlow<ServerConfig?>,
     private val today: () -> Long = ::todayEpochDay,
+    private val now: () -> String = { grocyDateTimeOf(localNowMillis()) },
 ) : ViewModel() {
 
     private val refreshController = RefreshController(viewModelScope) {
@@ -164,6 +174,7 @@ internal class StartViewModel(
             if (config.stock && config.shoppingList) launch { shoppingLists.refresh() }
             if (config.recipes) launch { recipes.refresh() }
             if (config.recipes && config.recipesMealPlan) launch { mealPlan.refresh() }
+            if (config.chores) launch { chores.refresh() }
         }
     }
     val refresh: StateFlow<RefreshState> = refreshController.state
@@ -190,17 +201,26 @@ internal class StartViewModel(
         ::Pair,
     )
 
+    private val choresPart = combine(chores.current, chores.currentUserId, ::Pair)
+
     val state: StateFlow<StartUiState?> = combine(
-        serverConfig.filterNotNull(),
-        repository.userSettings,
+        combine(serverConfig.filterNotNull(), repository.userSettings, ::Pair),
         stockData,
         counts,
         recipesSummary,
-    ) { config, settings, stockData, counts, (recipes, mealPlanToday) ->
+        choresPart,
+    ) { (config, settings), stockData, counts, (recipes, mealPlanToday), (current, userId) ->
         stateOf(config, settings, stockData, counts).copy(
             recipes = recipes.takeIf { config.recipes && it.count > 0 },
             checksRecipeStock = config.stock,
             mealPlanToday = mealPlanToday.takeIf { config.recipes && config.recipesMealPlan },
+            chores = choresSummaryOf(
+                chores = current,
+                now = now(),
+                dueSoonDays = settings.choresDueSoonDays,
+                userId = userId.takeIf { config.choresAssignments },
+            ).takeIf { config.chores && it.count > 0 },
+            choresDueSoonDays = settings.choresDueSoonDays,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), null)
 

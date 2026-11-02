@@ -1079,4 +1079,63 @@
   <string name="recipe_nesting_recipe">食譜</string>
   <string name="recipe_nesting_recipe_required">食譜為必填項目</string>
   <string name="recipe_nesting_delete_question">確定要移除包含的食譜「%1$s」嗎？</string>
+  <string name="chores_overview_title">家務總覽</string>
+  <string name="chore_tracking_title">家務追蹤</string>
+  <string name="chores_journal_title">家務日誌</string>
+  <string name="chore_journal">家務日誌</string>
+  <string name="chore_overview">家務總覽</string>
+  <string name="chores_track_next">追蹤下一個家務排程</string>
+  <string name="chores_track_now">立即追蹤家務執行</string>
+  <string name="chores_skip_next">跳過下次執行</string>
+  <string name="chores_reschedule">重新安排下次執行的時間</string>
+  <string name="chores_next_tracking">預計下次追蹤</string>
+  <string name="chores_last_tracked">上次追蹤</string>
+  <string name="chores_assigned_to">分配給</string>
+  <string name="chores_assignment">分配</string>
+  <string name="chores_rescheduled">已被重新安排</string>
+  <string name="chores_reassigned">重新分配</string>
+  <string name="chores_status_overdue">逾期</string>
+  <string name="chores_status_due_today">今日到期</string>
+  <string name="chores_status_due_soon">即將到期</string>
+  <string name="chores_tracked">於 %2$s 追蹤家務 %1$s 執行狀況</string>
+  <string name="chores_undone">取消家務執行成功</string>
+  <string name="chore_field">家務</string>
+  <string name="chore_name">家務名稱</string>
+  <string name="chore_required">請選擇一件家務</string>
+  <string name="chore_tracked_time">追蹤時間</string>
+  <string name="chore_date_required">日期為必填項目</string>
+  <string name="chore_done_by">完成者</string>
+  <string name="chore_skip">跳過</string>
+  <string name="chore_tracked_count">追蹤次數</string>
+  <string name="chore_average_frequency">平均執行頻率</string>
+  <string name="chore_last_done_by">上次完成者</string>
+  <string name="chore_never">永不</string>
+  <string name="chore_unknown">不明</string>
+  <string name="chore_reset">重設</string>
+  <string name="chore_scheduled_time">排定的追蹤時間</string>
+  <string name="chore_time_of_tracking">記錄時間</string>
+  <string name="chore_skipped">已跳過</string>
+  <string name="chore_undo">取消家務執行</string>
+  <string name="grocycode_chore">家務</string>
+  <string name="chores_assigned_to_me">指派給我</string>
+  <string name="chores_track_failed">無法追蹤家務執行</string>
+  <string name="chores_detail_hint">記錄家務或開啟日誌以在此查看</string>
+  <string name="chore_undo_failed">無法復原家務執行</string>
+  <string name="chore_tracked_late">在排定時間之後追蹤</string>
+  <string name="chore_code_unknown">找不到此代碼對應的家務</string>
+  <plurals name="chore_hours">
+    <item quantity="other">%1$d 小時</item>
+  </plurals>
+  <plurals name="start_chores_overdue">
+    <item quantity="other">%1$d 件家務早該完成。</item>
+  </plurals>
+  <plurals name="start_chores_due_today">
+    <item quantity="other">%1$d件家務應在今天完成。</item>
+  </plurals>
+  <plurals name="start_chores_due_soon">
+    <item quantity="other">%1$d 件家務需要完成 %2$s。</item>
+  </plurals>
+  <plurals name="start_chores_assigned_to_me">
+    <item quantity="other">%1$d 件家務分配給我。</item>
+  </plurals>
 </resources>

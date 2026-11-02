@@ -1152,4 +1152,73 @@
   <string name="recipe_nesting_recipe">Receita</string>
   <string name="recipe_nesting_recipe_required">A receita é obrigatória</string>
   <string name="recipe_nesting_delete_question">Você tem certeza que deseja remover a receita agregada "%1$s"?</string>
+  <string name="chores_overview_title">Tarefas Domésticas</string>
+  <string name="chore_tracking_title">Monitorar tarefa doméstica</string>
+  <string name="chores_journal_title">Diários</string>
+  <string name="chore_journal">Diário</string>
+  <string name="chore_overview">DETALHES</string>
+  <string name="chores_track_next">Acompanhe o cronograma da próxima tarefa doméstica</string>
+  <string name="chores_track_now">Acompanhe a execução da tarefa doméstica agora</string>
+  <string name="chores_skip_next">Ignorar a programação da próxima tarefa doméstica</string>
+  <string name="chores_reschedule">Reprogramar a próxima execução</string>
+  <string name="chores_next_tracking">Próximo previsto</string>
+  <string name="chores_last_tracked">Última execução em</string>
+  <string name="chores_assigned_to">Atribuído a</string>
+  <string name="chores_assignment">Atribuição</string>
+  <string name="chores_rescheduled">Reprogramado</string>
+  <string name="chores_reassigned">Reatribuído</string>
+  <string name="chores_status_overdue">Vencido</string>
+  <string name="chores_status_due_today">Vence hoje</string>
+  <string name="chores_status_due_soon">Vencendo em breve</string>
+  <string name="chores_tracked">Acompanhamento da tarefa doméstica %1$s de %2$s</string>
+  <string name="chores_undone">Execução de tarefa doméstica desfeita com sucesso</string>
+  <string name="chore_field">Tarefa</string>
+  <string name="chore_name">Nome da tarefa</string>
+  <string name="chore_required">Você precisa selecionar uma tarefa</string>
+  <string name="chore_tracked_time">Registo de tempo</string>
+  <string name="chore_date_required">Data é necessária</string>
+  <string name="chore_done_by">Feito por</string>
+  <string name="chore_skip">Pular</string>
+  <string name="chore_tracked_count">Total de Registros</string>
+  <string name="chore_average_frequency">Frequência média de execução</string>
+  <string name="chore_last_done_by">Em</string>
+  <string name="chore_never">nunca</string>
+  <string name="chore_unknown">Não informado</string>
+  <string name="chore_reset">Redefinir</string>
+  <string name="chore_scheduled_time">Horário programado de rastreamento</string>
+  <string name="chore_time_of_tracking">Tempo de rastreamento</string>
+  <string name="chore_skipped">Ignorado</string>
+  <string name="chore_undo">Desfazer execução de tarefa doméstica</string>
+  <string name="grocycode_chore">Tarefa</string>
+  <string name="chores_assigned_to_me">Atribuídas a mim</string>
+  <string name="chores_track_failed">Não foi possível registrar a execução da tarefa</string>
+  <string name="chores_detail_hint">Registre uma tarefa ou abra o diário para vê-lo aqui</string>
+  <string name="chore_undo_failed">Não foi possível desfazer a execução da tarefa</string>
+  <string name="chore_tracked_late">Registrada após o agendamento</string>
+  <string name="chore_code_unknown">Nenhuma tarefa encontrada para este código</string>
+  <plurals name="chore_hours">
+    <item quantity="one">%1$d hora</item>
+    <item quantity="many">%1$d horas</item>
+    <item quantity="other">%1$d horas</item>
+  </plurals>
+  <plurals name="start_chores_overdue">
+    <item quantity="one">%1$d atrasada.</item>
+    <item quantity="many">%1$d atrasadas.</item>
+    <item quantity="other">%1$d atrasadas.</item>
+  </plurals>
+  <plurals name="start_chores_due_today">
+    <item quantity="one">%1$d prevista para hoje.</item>
+    <item quantity="many">%1$d previstas para hoje.</item>
+    <item quantity="other">%1$d previstas para hoje.</item>
+  </plurals>
+  <plurals name="start_chores_due_soon">
+    <item quantity="one">%1$d próxima do prazo %2$s.</item>
+    <item quantity="many">%1$d próximas do prazo %2$s.</item>
+    <item quantity="other">%1$d perto do prazo %2$s.</item>
+  </plurals>
+  <plurals name="start_chores_assigned_to_me">
+    <item quantity="one">%1$d atribuída a mim.</item>
+    <item quantity="many">%1$d atribuídas a mim.</item>
+    <item quantity="other">%1$d atribuídas a mim.</item>
+  </plurals>
 </resources>

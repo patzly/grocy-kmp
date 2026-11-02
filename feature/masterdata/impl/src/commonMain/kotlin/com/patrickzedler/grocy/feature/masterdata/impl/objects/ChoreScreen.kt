@@ -2,46 +2,51 @@ package com.patrickzedler.grocy.feature.masterdata.impl.objects
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.design.component.clickCursor
+import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
+import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
-import com.patrickzedler.grocy.core.design.component.clickCursor
-import com.patrickzedler.grocy.core.design.component.confirm
-import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.forms.actionMessage
 import com.patrickzedler.grocy.core.forms.ChipIcon
 import com.patrickzedler.grocy.core.forms.DateKeyboardType
 import com.patrickzedler.grocy.core.forms.DatePickerButton
 import com.patrickzedler.grocy.core.forms.DropdownItem
+import com.patrickzedler.grocy.core.forms.fieldErrorText
+import com.patrickzedler.grocy.core.forms.filterChipElevation
 import com.patrickzedler.grocy.core.forms.FormFrame
 import com.patrickzedler.grocy.core.forms.GroupItems
 import com.patrickzedler.grocy.core.forms.ObjectField
 import com.patrickzedler.grocy.core.forms.ObjectFormScreen
 import com.patrickzedler.grocy.core.forms.TextItem
-import com.patrickzedler.grocy.core.forms.fieldErrorText
-import com.patrickzedler.grocy.core.forms.filterChipElevation
 import com.patrickzedler.grocy.core.model.masterdata.ChoreAssignmentType
 import com.patrickzedler.grocy.core.model.masterdata.ChorePeriodType
 import com.patrickzedler.grocy.core.model.masterdata.Weekday
-import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.productcard.GrocycodeItem
+import com.patrickzedler.grocy.core.productcard.rememberGrocycodeDownload
 import com.patrickzedler.grocy.core.resources.chore_assign_to
 import com.patrickzedler.grocy.core.resources.chore_assign_to_required
 import com.patrickzedler.grocy.core.resources.chore_assignment_info_in_alphabetical_order
@@ -83,6 +88,10 @@ import com.patrickzedler.grocy.core.resources.chore_tuesday
 import com.patrickzedler.grocy.core.resources.chore_users_unavailable
 import com.patrickzedler.grocy.core.resources.chore_wednesday
 import com.patrickzedler.grocy.core.resources.chore_weekdays
+import com.patrickzedler.grocy.core.resources.grocycode_chore
+import com.patrickzedler.grocy.core.resources.grocycode_print_failed
+import com.patrickzedler.grocy.core.resources.grocycode_printed
+import com.patrickzedler.grocy.core.resources.grocycode_title
 import com.patrickzedler.grocy.core.resources.ic_rounded_check
 import com.patrickzedler.grocy.core.resources.ic_rounded_edit_attributes
 import com.patrickzedler.grocy.core.resources.product_active
@@ -90,9 +99,12 @@ import com.patrickzedler.grocy.core.resources.product_description
 import com.patrickzedler.grocy.core.resources.product_name
 import com.patrickzedler.grocy.core.resources.product_name_required
 import com.patrickzedler.grocy.core.resources.products_configure_userfields
-import org.jetbrains.compose.resources.StringResource
+import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.scanner.writer.Grocycode
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 /** Grocy's chore form: schedule, assignment and the product an execution consumes. */
@@ -104,6 +116,16 @@ internal fun ChoreScreen(
     modifier: Modifier = Modifier,
 ) {
     val options by viewModel.options.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val downloadGrocycode = rememberGrocycodeDownload(snackbarHostState)
+    LaunchedEffect(viewModel) {
+        viewModel.labelResults.collect { error ->
+            snackbarHostState.showSnackbar(
+                error?.actionMessage(Res.string.grocycode_print_failed)
+                    ?: getString(Res.string.grocycode_printed),
+            )
+        }
+    }
 
     ObjectFormScreen(
         title = stringResource(
@@ -112,6 +134,7 @@ internal fun ChoreScreen(
         viewModel = viewModel,
         frame = frame,
         modifier = modifier,
+        snackbarHostState = snackbarHostState,
         toolbarActions = {
             FloatingToolbarIconButton(
                 painter = painterResource(Res.drawable.ic_rounded_edit_attributes),
@@ -358,6 +381,27 @@ internal fun ChoreScreen(
                             count = count,
                         )
                     },
+                )
+            }
+        }
+
+        // Grocy shows a chore's grocycode once it exists
+        if (!viewModel.isNew) {
+            val config = viewModel.config
+            val code = Grocycode.chore(viewModel.objectId)
+            segmentedGroup(key = "grocycode", title = Res.string.grocycode_title) {
+                GrocycodeItem(
+                    code = code,
+                    objectName = stringResource(Res.string.grocycode_chore),
+                    twoDimensional = config.grocycode2D,
+                    onDownloadClick = { downloadGrocycode(code, config.grocycode2D) },
+                    onPrintClick = if (config.labelPrinter && config.labelPrinterRunsOnServer) {
+                        viewModel::printLabel
+                    } else {
+                        null
+                    },
+                    index = 0,
+                    count = 1,
                 )
             }
         }

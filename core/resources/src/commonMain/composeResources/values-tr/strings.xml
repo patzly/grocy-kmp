@@ -1115,4 +1115,68 @@
   <string name="recipe_nesting_recipe">Tarif</string>
   <string name="recipe_nesting_recipe_required">Bir tarif gerekiyor</string>
   <string name="recipe_nesting_delete_question">Dahil edilen "%1$s" tarifini kaldırmak istediğinizden emin misiniz?</string>
+  <string name="chores_overview_title">Ev işlerine genel bakış</string>
+  <string name="chore_tracking_title">Ev işleri takibi</string>
+  <string name="chores_journal_title">Ev işi günlüğü</string>
+  <string name="chore_journal">Ev işi günlüğü</string>
+  <string name="chore_overview">Ev işlerine genel bakış</string>
+  <string name="chores_track_next">Sonraki görev programını takip et</string>
+  <string name="chores_track_now">İş yürütmeyi şimdi izleyin</string>
+  <string name="chores_skip_next">Sonraki iş programını atla</string>
+  <string name="chores_reschedule">Sonraki yürütmeyi yeniden planla</string>
+  <string name="chores_next_tracking">Sonraki tahmini takip</string>
+  <string name="chores_last_tracked">Son takip</string>
+  <string name="chores_assigned_to">Atanan kişi</string>
+  <string name="chores_assignment">Atama</string>
+  <string name="chores_rescheduled">Yeniden planlandı</string>
+  <string name="chores_reassigned">Yeniden atandı</string>
+  <string name="chores_status_overdue">Tamamlanma süresi geçmiş</string>
+  <string name="chores_status_due_today">Bugün süresi doluyor</string>
+  <string name="chores_status_due_soon">Tamamlanma süresi yakında</string>
+  <string name="chores_tracked">%1$s'in %2$s üzerindeki uygulaması takip edildi</string>
+  <string name="chores_undone">Ev işi başarıyla geri alındı</string>
+  <string name="chore_field">Ev işi</string>
+  <string name="chore_name">Ev işi adı</string>
+  <string name="chore_required">Ev işi seçmeniz lazım</string>
+  <string name="chore_tracked_time">Takip edilen süre</string>
+  <string name="chore_date_required">Bir tarih gereklidir</string>
+  <string name="chore_done_by">Tamamlanma tarihi</string>
+  <string name="chore_skip">Geç</string>
+  <string name="chore_tracked_count">Takip sayısı</string>
+  <string name="chore_average_frequency">Ortalama yürütme sıklığı</string>
+  <string name="chore_last_done_by">Son tamamlanma tarih</string>
+  <string name="chore_never">asla</string>
+  <string name="chore_unknown">Bilinmeyen</string>
+  <string name="chore_reset">Sıfırla</string>
+  <string name="chore_scheduled_time">Planlanan takip zamanı</string>
+  <string name="chore_time_of_tracking">Kayıt zamanı</string>
+  <string name="chore_skipped">Atlandı</string>
+  <string name="chore_undo">Ev işi uygulamasını geri al</string>
+  <string name="grocycode_chore">Ev işi</string>
+  <string name="chores_assigned_to_me">Bana atanan</string>
+  <string name="chores_track_failed">Ev işinin yapılışı kaydedilemedi</string>
+  <string name="chores_detail_hint">Burada görmek için bir ev işi kaydedin veya günlüğü açın</string>
+  <string name="chore_undo_failed">Ev işinin yapılışı geri alınamadı</string>
+  <string name="chore_tracked_late">Planlanan zamandan sonra kaydedildi</string>
+  <string name="chore_code_unknown">Bu kod için ev işi bulunamadı</string>
+  <plurals name="chore_hours">
+    <item quantity="one">%1$d saat</item>
+    <item quantity="other">%1$d saat</item>
+  </plurals>
+  <plurals name="start_chores_overdue">
+    <item quantity="one">%1$d ev işinin yapılma zamanı geçti.</item>
+    <item quantity="other">%1$d ev işinin yapılma zamanı geçti.</item>
+  </plurals>
+  <plurals name="start_chores_due_today">
+    <item quantity="one">%1$d işin bugün tamamlanmasının son günü.</item>
+    <item quantity="other">%1$d işin bugün tamamlanmasının son günü.</item>
+  </plurals>
+  <plurals name="start_chores_due_soon">
+    <item quantity="one">%1$d ev işinin yapılması gerekli %2$s.</item>
+    <item quantity="other">%1$d ev işinin yapılması gerekli %2$s.</item>
+  </plurals>
+  <plurals name="start_chores_assigned_to_me">
+    <item quantity="one">%1$d görev bana atandı.</item>
+    <item quantity="other">%1$d görevler bana atandı.</item>
+  </plurals>
 </resources>

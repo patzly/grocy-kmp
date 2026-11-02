@@ -49,6 +49,37 @@ fun timeOfDayOf(dateTime: String): Pair<Int, Int>? {
 }
 
 /**
+ * The date [months] before [epochDay] like SQLite's `DATE(day, '-6 months')`, which moves a day
+ * beyond the month's end into the next month.
+ */
+fun monthsBefore(epochDay: Long, months: Int): String {
+    val (year, month, day) = civilFromDays(epochDay)
+    val total = year.toInt() * 12 + (month - 1) - months
+    val first = daysFromCivil(total / 12, total % 12 + 1, 1)
+    return isoDateOf(first + day - 1)
+}
+
+/**
+ * "YYYY-MM-DD HH:MM(:SS)" as Grocy's "YYYY-MM-DD HH:MM:SS", null if it is none. A date alone
+ * (Grocy stores some start dates so) is its midnight, like Grocy's date picker shows it.
+ */
+fun normalizedDateTime(text: String): String? {
+    val match = DATE_TIME.matchEntire(text.trim()) ?: return null
+    val (date, hours, minutes, seconds) = match.destructured
+    if (hours.isEmpty()) return "$date 00:00:00".takeIf { epochDayOf(date) != null }
+    if (epochDayOf(date) == null || hours.toInt() > MAX_HOUR || minutes.toInt() > MAX_MINUTE ||
+        (seconds.isNotEmpty() && seconds.toInt() > MAX_MINUTE)
+    ) {
+        return null
+    }
+    return "$date $hours:$minutes:${seconds.ifEmpty { "00" }}"
+}
+
+/** "YYYY-MM-DD" with an existing date, null otherwise. */
+fun normalizedDate(text: String): String? =
+    text.trim().takeIf { ISO_DATE.matches(it) && epochDayOf(it) != null }
+
+/**
  * How far [epochDay] lies from [today], rounded like Grocy's "3 days ago": days below 26 days,
  * months below 320 days, years from there on.
  */
@@ -161,6 +192,10 @@ private val ISO_DATE = Regex("""(\d{4})-(\d{2})-(\d{2})""")
 
 // The time after a date: "2026-10-24 08:30" or "2026-10-24 08:30:00"
 private val TIME_OF_DAY = Regex("""^\d{4}-\d{2}-\d{2}[ T](\d{2}):(\d{2})(:\d{2})?$""")
+
+private const val MAX_HOUR = 23
+private const val MAX_MINUTE = 59
+private val DATE_TIME = Regex("""(\d{4}-\d{2}-\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2}))?)?""")
 
 // moment.js: "a month" from 26 days on, "a year" from 320 days on
 private const val DAYS_UP_TO_MONTHS = 25.5

@@ -107,8 +107,10 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
   item 16 dp above the bar: Material lays a toolbar with FAB out 80 dp high and centers the 64 dp
   bar in it, so the layout lies 8 dp lower; it hides
   while scrolling down only in windows of compact height below 480 dp, a phone in landscape,
-  `hidesToolbarOnScroll`; snackbars never cover it: they lie 16 dp above it (Material's snackbar brings 12 dp padding) and follow it while it
-  slides out and back in, `snackbarLift`; `secondContent` adds a second list beside the first
+  `hidesToolbarOnScroll`; snackbars never cover it: they lie 16 dp above it (a snackbar brings 12 dp margin; a pane's toolbar lies the
+  margin higher, `snackbarSpace`) and follow it while it
+  slides out and back in, `snackbarLift`; `ScreenSnackbar` spans one of two panes up to that margin, elsewhere it has
+  Material's limit of 624 dp, which Material's own composable always applies (`snackbarMaxWidth`); `secondContent` adds a second list beside the first
   from 840 dp width, `showsSecondColumn`), `SegmentedSwitchItem`,
   `SupportingLines` for every multi-line supporting content in lazy lists (Material sizes items
   by the slot's baselines, a reused column kept those of its former line count, so items stayed

@@ -4,6 +4,9 @@ import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.SystemInfo
 import com.patrickzedler.grocy.core.model.User
 import com.patrickzedler.grocy.core.model.masterdata.Battery
+import com.patrickzedler.grocy.core.model.chores.ChoreDetails
+import com.patrickzedler.grocy.core.model.chores.ChoreExecution
+import com.patrickzedler.grocy.core.model.chores.CurrentChore
 import com.patrickzedler.grocy.core.model.masterdata.Chore
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
@@ -44,7 +47,10 @@ import com.patrickzedler.grocy.core.model.stock.StockLogEntry
 import com.patrickzedler.grocy.core.model.stock.TransferBooking
 import com.patrickzedler.grocy.core.network.dto.AveragePriceDto
 import com.patrickzedler.grocy.core.network.dto.BatteryDto
+import com.patrickzedler.grocy.core.network.dto.ChoreDetailsDto
 import com.patrickzedler.grocy.core.network.dto.ChoreDto
+import com.patrickzedler.grocy.core.network.dto.ChoreLogDto
+import com.patrickzedler.grocy.core.network.dto.CurrentChoreDto
 import com.patrickzedler.grocy.core.network.dto.CreatedObjectDto
 import com.patrickzedler.grocy.core.network.dto.ErrorDto
 import com.patrickzedler.grocy.core.network.dto.LastPurchaseDto
@@ -204,6 +210,97 @@ class GrocyApi(
             body = jsonBody(buildJsonObject { put("chore_id", id) }),
         )
         return id
+    }
+
+    /** Grocy's chores overview: the active chores with when they are due. */
+    suspend fun currentChores(connection: ServerConnection): List<CurrentChore> =
+        get<List<CurrentChoreDto>>(connection, "chores").map { it.toModel() }
+
+    /** What Grocy's "Chore overview" card shows of chore [id]. */
+    suspend fun choreDetails(connection: ServerConnection, id: Int): ChoreDetails =
+        get<ChoreDetailsDto>(connection, "chores", id.toString()).toModel(id)
+
+    /** The chores journal, newest first: executions since [since] ("YYYY-MM-DD", all without). */
+    suspend fun choreExecutions(
+        connection: ServerConnection,
+        since: String?,
+    ): List<ChoreExecution> = get<List<ChoreLogDto>>(
+        connection,
+        "objects",
+        CHORES_LOG,
+        query = buildList {
+            since?.let { add("query[]" to "tracked_time>=$it") }
+            add("order" to "tracked_time:desc")
+        },
+    ).map { it.toModel() }
+
+    suspend fun choreExecution(connection: ServerConnection, id: Int): ChoreExecution =
+        get<ChoreLogDto>(connection, "objects", CHORES_LOG, id.toString()).toModel()
+
+    /**
+     * Tracks an execution of chore [id] at [trackedTime] ("YYYY-MM-DD" or with time); without
+     * [doneByUserId] by the logged in user. Returns the execution as the server stored it.
+     */
+    suspend fun trackChore(
+        connection: ServerConnection,
+        id: Int,
+        trackedTime: String,
+        doneByUserId: Int?,
+        skipped: Boolean,
+    ): ChoreExecution = decode<ChoreLogDto>(
+        execute(
+            connection,
+            HttpMethod.Post,
+            listOf(CHORES, id.toString(), "execute"),
+            body = jsonBody(
+                buildJsonObject {
+                    put("tracked_time", trackedTime)
+                    doneByUserId?.let { put("done_by", it) }
+                    put("skipped", skipped)
+                },
+            ),
+        ),
+    ).toModel()
+
+    suspend fun undoChoreExecution(connection: ServerConnection, id: Int) {
+        execute(
+            connection,
+            HttpMethod.Post,
+            listOf(CHORES, "executions", id.toString(), "undo"),
+            body = jsonBody(JsonObject(emptyMap())),
+        )
+    }
+
+    /**
+     * Grocy's "Reschedule next execution" of chore [id]: both null is its "Reset". Grocy assigns
+     * the next execution again afterwards.
+     */
+    suspend fun rescheduleChore(
+        connection: ServerConnection,
+        id: Int,
+        date: String?,
+        assignedUserId: Int?,
+    ) {
+        saveObject(
+            connection,
+            CHORES,
+            id,
+            buildJsonObject {
+                put("rescheduled_date", date)
+                put("rescheduled_next_execution_assigned_to_user_id", assignedUserId)
+            },
+        )
+        execute(
+            connection,
+            HttpMethod.Post,
+            listOf(CHORES, "executions", "calculate-next-assignments"),
+            body = jsonBody(buildJsonObject { put("chore_id", id) }),
+        )
+    }
+
+    /** Prints the chore's grocycode on the label printer, from the server. */
+    suspend fun printChoreLabel(connection: ServerConnection, id: Int) {
+        execute(connection, HttpMethod.Get, listOf(CHORES, id.toString(), "printlabel"))
     }
 
     suspend fun batteries(connection: ServerConnection): List<Battery> =
@@ -1274,6 +1371,7 @@ class GrocyApi(
         private const val QUANTITY_UNITS = "quantity_units"
         private const val STORES = "shopping_locations"
         private const val CHORES = "chores"
+        private const val CHORES_LOG = "chores_log"
         private const val BATTERIES = "batteries"
         private const val TASK_CATEGORIES = "task_categories"
         private const val USERENTITIES = "userentities"

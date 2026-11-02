@@ -7,9 +7,8 @@ import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.nameFor
 import com.patrickzedler.grocy.core.model.stock.StockLogEntry
 import com.patrickzedler.grocy.core.model.stock.StockTransactionType
-import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.model.text.formatDecimal
-import com.patrickzedler.grocy.core.model.text.isoDateOf
+import com.patrickzedler.grocy.core.model.text.monthsBefore
 
 /** Grocy's date ranges of the journal in months, the last one for everything. */
 internal val JournalRanges = listOf(1, 6, 12, 24, JOURNAL_ALL_MONTHS)
@@ -23,15 +22,7 @@ internal const val JOURNAL_ALL_MONTHS = 9999
  */
 internal fun journalSince(today: Long, months: Int): String? {
     if (months >= JOURNAL_ALL_MONTHS) return null
-    val (year, month, day) = isoDateOf(today).split('-').map { it.toInt() }
-    val total = year * 12 + (month - 1) - months
-    val targetYear = total / 12
-    val targetMonth = total % 12 + 1
-    // SQLite moves a day beyond the month's end into the next month
-    val first = epochDayOf(
-        "${targetYear.toString().padStart(4, '0')}-${targetMonth.toString().padStart(2, '0')}-01",
-    ) ?: error("Invalid date")
-    return isoDateOf(first + day - 1)
+    return monthsBefore(today, months)
 }
 
 /** The filters of Grocy's journal pages. */

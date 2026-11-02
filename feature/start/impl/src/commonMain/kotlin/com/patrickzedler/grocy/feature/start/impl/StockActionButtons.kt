@@ -25,6 +25,8 @@ import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.smallIconButtonSize
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.resources.chore_tracking_title
+import com.patrickzedler.grocy.core.resources.ic_rounded_play_arrow
 import com.patrickzedler.grocy.core.resources.action_more_options
 import com.patrickzedler.grocy.core.resources.ic_rounded_add
 import com.patrickzedler.grocy.core.resources.ic_rounded_fact_check
@@ -159,6 +161,23 @@ internal fun ShoppingListButtons(
             animatedItem { itemModifier, interactionSource ->
                 QuickIconButton(button, itemModifier, interactionSource)
             }
+        }
+    }
+}
+
+/** Grocy's "Chore tracking" as the chores item's only action, a wide button with a start arrow. */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+internal fun ChoreTrackingButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val button = QuickButton(
+        Res.string.chore_tracking_title,
+        Res.drawable.ic_rounded_play_arrow,
+        onClick,
+    )
+    // The group only makes the pressed button grow
+    ButtonGroup(overflowIndicator = {}, modifier = modifier) {
+        animatedItem { itemModifier, interactionSource ->
+            QuickIconButton(button, itemModifier, interactionSource)
         }
     }
 }

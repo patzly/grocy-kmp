@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.apps.shared
 
 import com.patrickzedler.grocy.core.data.auth.AuthRepository
+import com.patrickzedler.grocy.core.data.chores.ChoresRepository
 import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
@@ -9,6 +10,8 @@ import com.patrickzedler.grocy.core.data.server.GROCY_GITHUB_REPOSITORY
 import com.patrickzedler.grocy.core.data.server.ServerRepository
 import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
+import com.patrickzedler.grocy.core.data.settings.ChoresJournalOptionsRepository
+import com.patrickzedler.grocy.core.data.settings.ChoresOverviewOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ScannerFormsRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
@@ -27,6 +30,7 @@ import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.createGrocyHttpClient
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.feature.about.impl.AboutDependencies
+import com.patrickzedler.grocy.feature.chores.impl.ChoresDependencies
 import com.patrickzedler.grocy.feature.login.impl.LoginDependencies
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataDependencies
 import com.patrickzedler.grocy.feature.settings.impl.SettingsDependencies
@@ -108,6 +112,15 @@ class AppGraph(
         )
     }
 
+    /** Grocy's chores, what the server computes for them and their journal. */
+    private val choresRepository by lazy {
+        ChoresRepository(
+            api = grocyApi,
+            database = platform.database,
+            connection = { platform.credentialStore.connection.first() },
+        )
+    }
+
     /** The logged in server and its version, read right at app start. */
     private val serverRepository = ServerRepository(
         connection = platform.credentialStore.connection,
@@ -155,6 +168,12 @@ class AppGraph(
     private val recipesOptionsRepository =
         RecipesOptionsRepository(platform.settingsStore, appScope)
 
+    private val choresOverviewOptionsRepository =
+        ChoresOverviewOptionsRepository(platform.settingsStore, appScope)
+
+    private val choresJournalOptionsRepository =
+        ChoresJournalOptionsRepository(platform.settingsStore, appScope)
+
     /** Decoders of the engine that scans right now, provided to every scanner by GrocyApp. */
     internal val barcodeDecoderFactory: Flow<BarcodeDecoderFactory> by lazy {
         scannerRepository.activeEngine.map {
@@ -197,6 +216,8 @@ class AppGraph(
             get() = this@AppGraph.recipesRepository
         override val mealPlanRepository: MealPlanRepository
             get() = this@AppGraph.mealPlanRepository
+        override val choresRepository: ChoresRepository
+            get() = this@AppGraph.choresRepository
         override val stockRepository: StockRepository
             get() = this@AppGraph.stockRepository
         override val shoppingListRepository: ShoppingListRepository
@@ -262,6 +283,19 @@ class AppGraph(
             get() = recipesOptionsRepository
         override val mealPlanRepository: MealPlanRepository
             get() = this@AppGraph.mealPlanRepository
+    }
+
+    internal val choresDependencies: ChoresDependencies = object : ChoresDependencies {
+        override val masterDataRepository: MasterDataRepository
+            get() = this@AppGraph.masterDataRepository
+        override val choresRepository: ChoresRepository
+            get() = this@AppGraph.choresRepository
+        override val choresOverviewOptions: ChoresOverviewOptionsRepository
+            get() = choresOverviewOptionsRepository
+        override val choresJournalOptions: ChoresJournalOptionsRepository
+            get() = choresJournalOptionsRepository
+        override val scannerForms: ScannerFormsRepository
+            get() = scannerFormsRepository
     }
 
     init {
