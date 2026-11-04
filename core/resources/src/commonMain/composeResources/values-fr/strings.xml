@@ -1256,4 +1256,28 @@
     <item quantity="many">%1$d tâches sont dues %2$s.</item>
     <item quantity="other">%1$d tâches à réaliser %2$s.</item>
   </plurals>
+  <string name="notifications_daily">Notification quotidienne</string>
+  <string name="notifications_time">Heure</string>
+  <string name="notifications_show_names">Afficher les noms</string>
+  <string name="notifications_show_names_hint">Les énumère dans la notification au lieu d'indiquer seulement leur nombre</string>
+  <string name="notifications_only_mine">Uniquement ce qui m'est assigné</string>
+  <string name="notifications_show_now">Afficher maintenant</string>
+  <string name="notifications_show_now_hint">Montre ce que dit la notification en ce moment</string>
+  <string name="notifications_nothing">Rien à signaler pour le moment</string>
+  <string name="notifications_stale">Dernier état connu, le serveur n'a pas pu être joint</string>
+  <string name="notifications_blocked">Les notifications sont bloquées</string>
+  <string name="notifications_blocked_settings">Appuyez pour les autoriser dans les paramètres système.</string>
+  <string name="notifications_blocked_browser">Autorisez-les dans les paramètres du site de votre navigateur.</string>
+  <string name="notifications_blocked_request">Appuyez pour les autoriser.</string>
+  <string name="notifications_exact">Les notifications peuvent arriver en retard</string>
+  <string name="notifications_exact_hint">Appuyez pour autoriser les alarmes et rappels pour Grocy, afin qu'elles arrivent exactement à l'heure.</string>
+  <string name="notifications_battery">L'optimisation de la batterie est activée</string>
+  <string name="notifications_battery_hint">Elle peut empêcher les notifications d'obtenir l'état actuel à temps. Appuyez pour la désactiver pour Grocy.</string>
+  <string name="notifications_browser">Notifications dans le navigateur</string>
+  <string name="notifications_browser_hint">Les navigateurs ne les affichent que lorsque Grocy est ouvert, y compris en arrière-plan. S'il était fermé à l'heure choisie, elles arrivent à la prochaine ouverture.</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="one">%1$d entrée est prévue aujourd'hui.</item>
+    <item quantity="many">%1$d entrées sont prévues aujourd'hui.</item>
+    <item quantity="other">%1$d entrées sont prévues aujourd'hui.</item>
+  </plurals>
 </resources>

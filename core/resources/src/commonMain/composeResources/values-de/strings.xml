@@ -1211,4 +1211,27 @@
     <item quantity="one">%1$d Aufgabe steht an %2$s.</item>
     <item quantity="other">%1$d Aufgaben stehen an %2$s.</item>
   </plurals>
+  <string name="notifications_daily">Tägliche Benachrichtigung</string>
+  <string name="notifications_time">Uhrzeit</string>
+  <string name="notifications_show_names">Namen anzeigen</string>
+  <string name="notifications_show_names_hint">Führt sie in der Benachrichtigung auf, statt nur zu sagen, wie viele es sind</string>
+  <string name="notifications_only_mine">Nur was mir zugewiesen ist</string>
+  <string name="notifications_show_now">Jetzt anzeigen</string>
+  <string name="notifications_show_now_hint">Zeigt, was die Benachrichtigung gerade sagt</string>
+  <string name="notifications_nothing">Gerade gibt es nichts zu melden</string>
+  <string name="notifications_stale">Letzter bekannter Stand, der Server war nicht erreichbar</string>
+  <string name="notifications_blocked">Benachrichtigungen sind blockiert</string>
+  <string name="notifications_blocked_settings">Tippe, um sie in den Systemeinstellungen zu erlauben.</string>
+  <string name="notifications_blocked_browser">Erlaube sie in den Website-Einstellungen deines Browsers.</string>
+  <string name="notifications_blocked_request">Tippe, um sie zu erlauben.</string>
+  <string name="notifications_exact">Benachrichtigungen können verspätet kommen</string>
+  <string name="notifications_exact_hint">Tippe, um Grocy Wecker und Erinnerungen zu erlauben, damit sie genau pünktlich kommen.</string>
+  <string name="notifications_battery">Akku-Optimierung ist aktiv</string>
+  <string name="notifications_battery_hint">Sie kann verhindern, dass Benachrichtigungen rechtzeitig den aktuellen Stand laden. Tippe, um sie für Grocy auszuschalten.</string>
+  <string name="notifications_browser">Benachrichtigungen im Browser</string>
+  <string name="notifications_browser_hint">Browser zeigen sie nur, solange Grocy geöffnet ist, auch im Hintergrund. War es zur gewählten Uhrzeit geschlossen, kommen sie beim nächsten Öffnen.</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="one">%1$d Eintrag ist für heute geplant.</item>
+    <item quantity="other">%1$d Einträge sind für heute geplant.</item>
+  </plurals>
 </resources>

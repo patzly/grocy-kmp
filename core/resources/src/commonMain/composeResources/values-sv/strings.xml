@@ -1210,4 +1210,27 @@
     <item quantity="one">%1$d uppgift ska utföras %2$s.</item>
     <item quantity="other">%1$d uppgifter ska utföras %2$s.</item>
   </plurals>
+  <string name="notifications_daily">Daglig avisering</string>
+  <string name="notifications_time">Tid</string>
+  <string name="notifications_show_names">Visa namn</string>
+  <string name="notifications_show_names_hint">Listar dem i aviseringen i stället för att bara säga hur många de är</string>
+  <string name="notifications_only_mine">Bara det som är tilldelat mig</string>
+  <string name="notifications_show_now">Visa nu</string>
+  <string name="notifications_show_now_hint">Visar vad aviseringen säger just nu</string>
+  <string name="notifications_nothing">Inget att rapportera just nu</string>
+  <string name="notifications_stale">Senast kända läge, servern kunde inte nås</string>
+  <string name="notifications_blocked">Aviseringar är blockerade</string>
+  <string name="notifications_blocked_settings">Tryck för att tillåta dem i systeminställningarna.</string>
+  <string name="notifications_blocked_browser">Tillåt dem i webbplatsinställningarna i din webbläsare.</string>
+  <string name="notifications_blocked_request">Tryck för att tillåta dem.</string>
+  <string name="notifications_exact">Aviseringar kan komma sent</string>
+  <string name="notifications_exact_hint">Tryck för att tillåta alarm och påminnelser för Grocy, så att de kommer exakt i tid.</string>
+  <string name="notifications_battery">Batterioptimering är på</string>
+  <string name="notifications_battery_hint">Den kan hindra aviseringar från att hämta aktuellt läge i tid. Tryck för att stänga av den för Grocy.</string>
+  <string name="notifications_browser">Aviseringar i webbläsaren</string>
+  <string name="notifications_browser_hint">Webbläsare visar dem bara medan Grocy är öppet, även i bakgrunden. Om det var stängt vid vald tid kommer de nästa gång du öppnar det.</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="one">%1$d post är planerad för idag.</item>
+    <item quantity="other">%1$d poster är planerade för idag.</item>
+  </plurals>
 </resources>

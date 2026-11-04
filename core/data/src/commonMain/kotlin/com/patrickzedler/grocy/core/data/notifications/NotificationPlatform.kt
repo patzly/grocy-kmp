@@ -1,0 +1,26 @@
+package com.patrickzedler.grocy.core.data.notifications
+
+import com.patrickzedler.grocy.core.model.notifications.NotificationKind
+import com.patrickzedler.grocy.core.model.notifications.NotificationSummary
+
+/** Shows notifications the way the platform does; at most one per kind at a time. */
+interface Notifier {
+    /** Shows [summary], replacing the one of its kind; [silently] does not alert the user again. */
+    suspend fun show(summary: NotificationSummary, silently: Boolean)
+
+    suspend fun cancel(kind: NotificationKind)
+
+    /** Whether the one of [kind] is still there, not dismissed by the user. */
+    suspend fun isShowing(kind: NotificationKind): Boolean
+}
+
+/** Wakes the app so [NotificationRepository.check] runs at a time. */
+interface NotificationAlarm {
+    /**
+     * Replaces the alarm with one at [localMillis] (local time like `localNowMillis`), which
+     * fires at once when that passed already.
+     */
+    fun set(localMillis: Long)
+
+    fun cancel()
+}

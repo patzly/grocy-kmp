@@ -1165,4 +1165,26 @@
   <plurals name="start_tasks_due_soon">
     <item quantity="other">%1$d件任务要去完成 %2$s。</item>
   </plurals>
+  <string name="notifications_daily">每日通知</string>
+  <string name="notifications_time">时间</string>
+  <string name="notifications_show_names">显示名称</string>
+  <string name="notifications_show_names_hint">在通知中列出它们,而不只是显示数量</string>
+  <string name="notifications_only_mine">仅分配给我的</string>
+  <string name="notifications_show_now">立即显示</string>
+  <string name="notifications_show_now_hint">显示通知当前的内容</string>
+  <string name="notifications_nothing">目前没有需要通知的内容</string>
+  <string name="notifications_stale">最后已知状态,无法连接到服务器</string>
+  <string name="notifications_blocked">通知已被阻止</string>
+  <string name="notifications_blocked_settings">点按以在系统设置中允许。</string>
+  <string name="notifications_blocked_browser">请在浏览器的网站设置中允许。</string>
+  <string name="notifications_blocked_request">点按以允许。</string>
+  <string name="notifications_exact">通知可能延迟</string>
+  <string name="notifications_exact_hint">点按以允许 Grocy 使用闹钟和提醒,使通知准时送达。</string>
+  <string name="notifications_battery">电池优化已开启</string>
+  <string name="notifications_battery_hint">它可能使通知无法及时获取当前状态。点按以为 Grocy 关闭。</string>
+  <string name="notifications_browser">浏览器中的通知</string>
+  <string name="notifications_browser_hint">浏览器仅在 Grocy 打开时(包括在后台)显示通知。如果在所选时间已关闭,通知会在下次打开时送达。</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="other">今天计划了 %1$d 个条目。</item>
+  </plurals>
 </resources>

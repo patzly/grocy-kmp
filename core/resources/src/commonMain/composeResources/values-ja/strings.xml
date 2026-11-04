@@ -1166,4 +1166,26 @@
   <plurals name="start_tasks_due_soon">
     <item quantity="other">まもなく期限 %1$d 件 %2$s。</item>
   </plurals>
+  <string name="notifications_daily">毎日の通知</string>
+  <string name="notifications_time">時刻</string>
+  <string name="notifications_show_names">名前を表示</string>
+  <string name="notifications_show_names_hint">件数だけでなく、通知に一覧で表示します</string>
+  <string name="notifications_only_mine">自分に割り当てられたものだけ</string>
+  <string name="notifications_show_now">今すぐ表示</string>
+  <string name="notifications_show_now_hint">現時点の通知内容を表示します</string>
+  <string name="notifications_nothing">現在お知らせすることはありません</string>
+  <string name="notifications_stale">最後に確認した状態です。サーバーに接続できませんでした</string>
+  <string name="notifications_blocked">通知がブロックされています</string>
+  <string name="notifications_blocked_settings">タップしてシステム設定で許可してください。</string>
+  <string name="notifications_blocked_browser">ブラウザのサイト設定で許可してください。</string>
+  <string name="notifications_blocked_request">タップして許可してください。</string>
+  <string name="notifications_exact">通知が遅れる場合があります</string>
+  <string name="notifications_exact_hint">タップして Grocy のアラームとリマインダーを許可すると、正確な時刻に届きます。</string>
+  <string name="notifications_battery">バッテリーの最適化がオンです</string>
+  <string name="notifications_battery_hint">通知が最新の状態を時間内に取得できない場合があります。タップして Grocy でオフにしてください。</string>
+  <string name="notifications_browser">ブラウザでの通知</string>
+  <string name="notifications_browser_hint">ブラウザでは、Grocy が開いている間(バックグラウンドを含む)のみ表示されます。選択した時刻に閉じていた場合は、次に開いたときに届きます。</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="other">本日の予定は %1$d 件です。</item>
+  </plurals>
 </resources>

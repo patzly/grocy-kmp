@@ -5,6 +5,8 @@ import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
 import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.notifications.NotificationDeliveries
+import com.patrickzedler.grocy.core.model.notifications.NotificationSettings
 import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
 import com.patrickzedler.grocy.core.model.scanner.ScannerForm
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
@@ -66,4 +68,20 @@ interface SettingsStore {
     val tasksOverviewOptions: Flow<TasksOverviewOptions>
 
     suspend fun setTasksOverviewOptions(options: TasksOverviewOptions)
+
+    /** Which notifications the user turned on, none until changed. */
+    val notificationSettings: Flow<NotificationSettings>
+
+    suspend fun setNotificationSettings(settings: NotificationSettings)
+
+    /**
+     * The settings as stored right now, also what another tab of the web app stored since this
+     * one started; what decides whether to notify.
+     */
+    suspend fun readNotificationSettings(): NotificationSettings
+
+    /** What was delivered as stored right now, so tabs of the web app do not notify twice. */
+    suspend fun readNotificationDeliveries(): NotificationDeliveries
+
+    suspend fun setNotificationDeliveries(deliveries: NotificationDeliveries)
 }

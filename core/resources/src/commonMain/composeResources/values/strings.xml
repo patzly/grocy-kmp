@@ -1229,4 +1229,28 @@
     <item quantity="one">%1$d task is due %2$s.</item>
     <item quantity="other">%1$d tasks are due %2$s.</item>
   </plurals>
+  <!-- Notifications -->
+  <string name="notifications_daily">Daily notification</string>
+  <string name="notifications_time">Time</string>
+  <string name="notifications_show_names">Show names</string>
+  <string name="notifications_show_names_hint">Lists them in the notification instead of only saying how many there are</string>
+  <string name="notifications_only_mine">Only what is assigned to me</string>
+  <string name="notifications_show_now">Show now</string>
+  <string name="notifications_show_now_hint">Shows what the notification says right now</string>
+  <string name="notifications_nothing">Nothing to tell about right now</string>
+  <string name="notifications_stale">Last known state, the server could not be reached</string>
+  <string name="notifications_blocked">Notifications are blocked</string>
+  <string name="notifications_blocked_settings">Tap to allow them in the system settings.</string>
+  <string name="notifications_blocked_browser">Allow them in the site settings of your browser.</string>
+  <string name="notifications_blocked_request">Tap to allow them.</string>
+  <string name="notifications_exact">Notifications may come late</string>
+  <string name="notifications_exact_hint">Tap to allow Grocy alarms and reminders, so they come exactly on time.</string>
+  <string name="notifications_battery">Battery optimization is on</string>
+  <string name="notifications_battery_hint">It can keep notifications from getting the current state in time. Tap to turn it off for Grocy.</string>
+  <string name="notifications_browser">Notifications in the browser</string>
+  <string name="notifications_browser_hint">Browsers only show them while Grocy is open, also in the background. If it was closed at the chosen time, they come the next time you open it.</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="one">%1$d entry is planned for today.</item>
+    <item quantity="other">%1$d entries are planned for today.</item>
+  </plurals>
 </resources>

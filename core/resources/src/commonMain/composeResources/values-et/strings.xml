@@ -1211,4 +1211,27 @@
     <item quantity="one">%1$d ülesanne vajab peatselt tegemist %2$s.</item>
     <item quantity="other">%1$d ülesannet vajab peatselt tegemist %2$s.</item>
   </plurals>
+  <string name="notifications_daily">Igapäevane teavitus</string>
+  <string name="notifications_time">Kellaaeg</string>
+  <string name="notifications_show_names">Kuva nimed</string>
+  <string name="notifications_show_names_hint">Loetleb need teavituses, selle asemel et öelda ainult nende arvu</string>
+  <string name="notifications_only_mine">Ainult mulle määratud</string>
+  <string name="notifications_show_now">Kuva kohe</string>
+  <string name="notifications_show_now_hint">Näitab, mida teavitus praegu ütleks</string>
+  <string name="notifications_nothing">Praegu pole millestki teatada</string>
+  <string name="notifications_stale">Viimane teadaolev seis, serveriga ei saadud ühendust</string>
+  <string name="notifications_blocked">Teavitused on blokeeritud</string>
+  <string name="notifications_blocked_settings">Puuduta, et lubada need süsteemi seadetes.</string>
+  <string name="notifications_blocked_browser">Luba need oma brauseri saidiseadetes.</string>
+  <string name="notifications_blocked_request">Puuduta, et need lubada.</string>
+  <string name="notifications_exact">Teavitused võivad hilineda</string>
+  <string name="notifications_exact_hint">Puuduta, et lubada Grocyle äratused ja meeldetuletused, et teavitused tuleksid täpselt õigel ajal.</string>
+  <string name="notifications_battery">Aku optimeerimine on sees</string>
+  <string name="notifications_battery_hint">See võib takistada teavitustel õigel ajal värsket seisu saamast. Puuduta, et see Grocy jaoks välja lülitada.</string>
+  <string name="notifications_browser">Teavitused brauseris</string>
+  <string name="notifications_browser_hint">Brauserid näitavad neid ainult siis, kui Grocy on avatud, ka taustal. Kui see oli valitud ajal suletud, tulevad need järgmisel avamisel.</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="one">Tänaseks on planeeritud %1$d kirje.</item>
+    <item quantity="other">Tänaseks on planeeritud %1$d kirjet.</item>
+  </plurals>
 </resources>

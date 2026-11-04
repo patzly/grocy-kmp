@@ -15,6 +15,7 @@ kotlin {
             implementation(projects.core.design)
             implementation(projects.core.navigation)
             implementation(projects.core.network)
+            implementation(projects.core.resources)
             implementation(projects.core.ui)
             // PlatformDependencies exposes the barcode decoders of the platform by engine
             api(projects.core.scanner)
@@ -42,6 +43,7 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.core)
             implementation(libs.androidx.core.splashscreen)
             // A popup closing during a predictive back gesture crashed older versions
             implementation(libs.androidx.navigationevent.compose)

@@ -5,6 +5,8 @@ import com.patrickzedler.grocy.core.data.chores.ChoresRepository
 import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.notifications.NotificationRepository
+import com.patrickzedler.grocy.core.data.notifications.RepositoryNotificationDataSource
 import com.patrickzedler.grocy.core.data.scanner.ScannerRepository
 import com.patrickzedler.grocy.core.data.server.GROCY_GITHUB_REPOSITORY
 import com.patrickzedler.grocy.core.data.server.ServerRepository
@@ -26,6 +28,7 @@ import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
 import com.patrickzedler.grocy.core.data.update.UpdateRepository
+import com.patrickzedler.grocy.core.model.notifications.NotificationKind
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.network.GrocyApi
@@ -44,10 +47,14 @@ import com.patrickzedler.grocy.feature.stock.impl.StockDependencies
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 /**
  * Manual dependency injection: creates every shared object once and hands it to the features.
@@ -189,6 +196,54 @@ class AppGraph(
     private val choresJournalOptionsRepository =
         ChoresJournalOptionsRepository(platform.settingsStore, appScope)
 
+    /** The daily notifications; the alarm and the app starting check what is due. */
+    private val notificationRepository: NotificationRepository by lazy {
+        NotificationRepository(
+            settingsStore = platform.settingsStore,
+            connection = platform.credentialStore.connection,
+            serverConfig = masterDataRepository.serverConfig,
+            dataSource = RepositoryNotificationDataSource(
+                masterData = masterDataRepository,
+                stock = stockRepository,
+                chores = choresRepository,
+                tasks = tasksRepository,
+                recipes = recipesRepository,
+                mealPlan = mealPlanRepository,
+                timeout = NOTIFICATION_REFRESH_TIMEOUT,
+            ),
+            notifier = platform.notifier,
+            alarm = platform.createNotificationAlarm(appScope) {
+                notificationRepository.check()
+            },
+            scope = appScope,
+        )
+    }
+
+    private val mutableOpenedNotification = MutableStateFlow<NotificationKind?>(null)
+
+    /** The notification the user opened, until the navigation showed its feature. */
+    internal val openedNotification = mutableOpenedNotification.asStateFlow()
+
+    /** The user opened the notification of [kind]: shows its feature. */
+    fun openNotification(kind: NotificationKind) {
+        mutableOpenedNotification.value = kind
+    }
+
+    internal fun notificationOpened() {
+        mutableOpenedNotification.value = null
+    }
+
+    /** What the alarm of the system runs; [onFinished] once the app may go back to sleep. */
+    internal fun checkNotifications(onFinished: () -> Unit) {
+        appScope.launch {
+            try {
+                notificationRepository.check()
+            } finally {
+                onFinished()
+            }
+        }
+    }
+
     /** Decoders of the engine that scans right now, provided to every scanner by GrocyApp. */
     internal val barcodeDecoderFactory: Flow<BarcodeDecoderFactory> by lazy {
         scannerRepository.activeEngine.map {
@@ -220,6 +275,8 @@ class AppGraph(
             get() = this@AppGraph.masterDataRepository
         override val shoppingModeSettings: ShoppingModeSettingsRepository
             get() = shoppingModeSettingsRepository
+        override val notificationRepository: NotificationRepository
+            get() = this@AppGraph.notificationRepository
 
         override fun restartApp() = platform.restartApp()
     }
@@ -328,6 +385,8 @@ class AppGraph(
         // Items checked off and notes edited offline when the app was last used; creating the
         // repository also makes it send them whenever the device gets a network
         shoppingListRepository.sendPendingInBackground()
+        // Catches up what was missed while the app could not run and keeps the alarm set
+        notificationRepository.start()
     }
 
     internal val aboutDependencies: AboutDependencies = object : AboutDependencies {
@@ -339,6 +398,9 @@ class AppGraph(
             get() = platform.versionName
     }
 }
+
+/** Android keeps the app running for about this long after an alarm without trouble. */
+private val NOTIFICATION_REFRESH_TIMEOUT = 20.seconds
 
 /** Where the app's releases are published, also for update checks outside Google Play. */
 private const val GITHUB_REPOSITORY = "patzly/grocy-kmp"

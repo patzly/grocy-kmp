@@ -3,6 +3,8 @@ package com.patrickzedler.grocy.apps.shared
 import com.patrickzedler.grocy.core.data.credentials.CredentialStore
 import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.log.LogReader
+import com.patrickzedler.grocy.core.data.notifications.NotificationAlarm
+import com.patrickzedler.grocy.core.data.notifications.Notifier
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.update.AppUpdater
 import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
@@ -10,6 +12,7 @@ import com.patrickzedler.grocy.core.database.GrocyDatabase
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -46,6 +49,16 @@ interface PlatformDependencies {
      * for every other Android build, its service worker on the web.
      */
     fun createAppUpdater(gitHubReleases: GitHubReleases): AppUpdater
+
+    /** Shows the daily notifications. */
+    val notifier: Notifier
+
+    /**
+     * Wakes the app for notifications: an alarm of the system on Android, which starts the app
+     * and calls [AppGraph.checkNotifications], a timer of the open page on the web that calls
+     * [onDue] in [scope].
+     */
+    fun createNotificationAlarm(scope: CoroutineScope, onDue: suspend () -> Unit): NotificationAlarm
 
     /** Starts the app anew: a new process on Android, a reload of the page on the web. */
     fun restartApp()

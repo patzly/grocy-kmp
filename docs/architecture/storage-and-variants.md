@@ -14,7 +14,8 @@ Credential and settings stores, and the FOSS vs Play variant. Moved from CLAUDE.
   the appearance, the stock overview's table options (`StockOverviewOptions.of`: unknown
   values of a newer version fall back to the defaults) and the shopping list's
   (`shopping_list_fields`/`shopping_list_grouping`, on the web `grocy.shoppingListFields`/
-  `grocy.shoppingListGrouping`).
+  `grocy.shoppingListGrouping`), the notification settings and what was delivered
+  (`NotificationSettings`, `NotificationDeliveries`).
 - Web stores access the browser only through `KeyValueStorage` (`BrowserLocalStorage` in
   production, an in-memory one in tests). Blocked or full browser storage must not crash the app:
   values are then kept for the session only.

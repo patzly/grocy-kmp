@@ -10,6 +10,8 @@ import com.patrickzedler.grocy.core.data.credentials.AndroidCredentialStore
 import com.patrickzedler.grocy.core.data.credentials.CredentialStore
 import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.log.LogReader
+import com.patrickzedler.grocy.core.data.notifications.NotificationAlarm
+import com.patrickzedler.grocy.core.data.notifications.Notifier
 import com.patrickzedler.grocy.core.database.GrocyDatabase
 import com.patrickzedler.grocy.core.database.createGrocyDatabase
 import com.patrickzedler.grocy.core.data.settings.AndroidSettingsStore
@@ -20,6 +22,7 @@ import com.patrickzedler.grocy.core.data.update.GitHubAppUpdater
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -80,6 +83,14 @@ class AndroidPlatformDependencies(
                 openUrl = ::openInBrowser,
             ),
         )
+
+    override val notifier: Notifier by lazy { AndroidNotifier(appContext) }
+
+    // The system's alarm starts NotificationAlarmReceiver, also when the app is not running
+    override fun createNotificationAlarm(
+        scope: CoroutineScope,
+        onDue: suspend () -> Unit,
+    ): NotificationAlarm = AndroidNotificationAlarm(appContext)
 
     override fun restartApp() {
         val launchIntent = appContext.packageManager

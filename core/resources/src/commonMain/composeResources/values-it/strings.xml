@@ -1256,4 +1256,28 @@
     <item quantity="many">%1$d compiti da fare %2$s.</item>
     <item quantity="other">%1$d compiti da fare %2$s.</item>
   </plurals>
+  <string name="notifications_daily">Notifica giornaliera</string>
+  <string name="notifications_time">Ora</string>
+  <string name="notifications_show_names">Mostra i nomi</string>
+  <string name="notifications_show_names_hint">Li elenca nella notifica invece di indicare solo quanti sono</string>
+  <string name="notifications_only_mine">Solo ciò che è assegnato a me</string>
+  <string name="notifications_show_now">Mostra ora</string>
+  <string name="notifications_show_now_hint">Mostra cosa dice la notifica in questo momento</string>
+  <string name="notifications_nothing">Niente da segnalare al momento</string>
+  <string name="notifications_stale">Ultimo stato noto, il server non era raggiungibile</string>
+  <string name="notifications_blocked">Le notifiche sono bloccate</string>
+  <string name="notifications_blocked_settings">Tocca per consentirle nelle impostazioni di sistema.</string>
+  <string name="notifications_blocked_browser">Consentile nelle impostazioni del sito del tuo browser.</string>
+  <string name="notifications_blocked_request">Tocca per consentirle.</string>
+  <string name="notifications_exact">Le notifiche potrebbero arrivare in ritardo</string>
+  <string name="notifications_exact_hint">Tocca per consentire a Grocy sveglie e promemoria, così arrivano esattamente in orario.</string>
+  <string name="notifications_battery">L'ottimizzazione della batteria è attiva</string>
+  <string name="notifications_battery_hint">Può impedire alle notifiche di ottenere in tempo lo stato attuale. Tocca per disattivarla per Grocy.</string>
+  <string name="notifications_browser">Notifiche nel browser</string>
+  <string name="notifications_browser_hint">I browser le mostrano solo mentre Grocy è aperto, anche in background. Se era chiuso all'ora scelta, arrivano alla prossima apertura.</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="one">%1$d voce pianificata per oggi.</item>
+    <item quantity="many">%1$d voci pianificate per oggi.</item>
+    <item quantity="other">%1$d voci pianificate per oggi.</item>
+  </plurals>
 </resources>

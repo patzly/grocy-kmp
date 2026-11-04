@@ -7,6 +7,10 @@ import com.patrickzedler.grocy.core.model.AppPaletteStyle
 import com.patrickzedler.grocy.core.model.AppTheme
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.notifications.NotificationDeliveries
+import com.patrickzedler.grocy.core.model.notifications.NotificationDelivery
+import com.patrickzedler.grocy.core.model.notifications.NotificationKind
+import com.patrickzedler.grocy.core.model.notifications.NotificationSettings
 import com.patrickzedler.grocy.core.model.recipes.RecipeField
 import com.patrickzedler.grocy.core.model.recipes.RecipeGrouping
 import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
@@ -211,5 +215,37 @@ class WebSettingsStoreTest {
         WebSettingsStore(storage).setTasksOverviewOptions(options)
 
         assertEquals(options, WebSettingsStore(storage).tasksOverviewOptions.first())
+    }
+
+    @Test
+    fun notificationSettingsAreStoredAndReadBack() = runTest {
+        val storage = InMemoryStorage()
+        val settings = NotificationSettings().let {
+            it.with(NotificationKind.STOCK, it[NotificationKind.STOCK].copy(enabled = true))
+        }
+
+        WebSettingsStore(storage).setNotificationSettings(settings)
+
+        assertEquals(settings, WebSettingsStore(storage).notificationSettings.first())
+    }
+
+    @Test
+    fun whatAnotherTabStoredIsRead() = runTest {
+        val storage = InMemoryStorage()
+        val thisTab = WebSettingsStore(storage)
+        val otherTab = WebSettingsStore(storage)
+        val settings = NotificationSettings().let {
+            it.with(NotificationKind.TASKS, it[NotificationKind.TASKS].copy(enabled = true))
+        }
+        val deliveries = NotificationDeliveries(
+            mapOf(NotificationKind.TASKS to NotificationDelivery(day = 20_000)),
+        )
+
+        otherTab.setNotificationSettings(settings)
+        otherTab.setNotificationDeliveries(deliveries)
+
+        assertEquals(settings, thisTab.readNotificationSettings())
+        assertEquals(settings, thisTab.notificationSettings.first())
+        assertEquals(deliveries, thisTab.readNotificationDeliveries())
     }
 }

@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.apps.shared
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -28,6 +29,8 @@ class MainActivity : ComponentActivity() {
         splashScreen.setKeepOnScreenCondition { !isContentReady }
 
         val graph = (application as AppGraphOwner).graph
+        // Recreating the activity must not open the notification's feature again
+        if (savedInstanceState == null) openNotificationOf(intent)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
             recreateOnLanguageChange(graph)
         }
@@ -37,6 +40,16 @@ class MainActivity : ComponentActivity() {
                 onContentReady = { isContentReady = true },
             )
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        openNotificationOf(intent)
+    }
+
+    private fun openNotificationOf(intent: Intent) {
+        val kind = AndroidNotifier.openedKindOf(intent) ?: return
+        (application as AppGraphOwner).graph.openNotification(kind)
     }
 
     /** Before Android 13 a new language only applies to activities created afterwards. */

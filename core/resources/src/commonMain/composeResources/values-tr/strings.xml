@@ -1210,4 +1210,27 @@
     <item quantity="one">%1$d görevin yapılma zamanı geçti %2$s.</item>
     <item quantity="other">%1$d adet görevin yapılma zamanı geçti %2$s.</item>
   </plurals>
+  <string name="notifications_daily">Günlük bildirim</string>
+  <string name="notifications_time">Saat</string>
+  <string name="notifications_show_names">Adları göster</string>
+  <string name="notifications_show_names_hint">Yalnızca kaç tane olduğunu söylemek yerine bildirimde listeler</string>
+  <string name="notifications_only_mine">Yalnızca bana atananlar</string>
+  <string name="notifications_show_now">Şimdi göster</string>
+  <string name="notifications_show_now_hint">Bildirimin şu anda ne söylediğini gösterir</string>
+  <string name="notifications_nothing">Şu anda bildirilecek bir şey yok</string>
+  <string name="notifications_stale">Bilinen son durum, sunucuya ulaşılamadı</string>
+  <string name="notifications_blocked">Bildirimler engellendi</string>
+  <string name="notifications_blocked_settings">Sistem ayarlarında izin vermek için dokunun.</string>
+  <string name="notifications_blocked_browser">Tarayıcınızın site ayarlarında izin verin.</string>
+  <string name="notifications_blocked_request">İzin vermek için dokunun.</string>
+  <string name="notifications_exact">Bildirimler geç gelebilir</string>
+  <string name="notifications_exact_hint">Tam zamanında gelmeleri için Grocy'ye alarm ve hatırlatıcı izni vermek üzere dokunun.</string>
+  <string name="notifications_battery">Pil optimizasyonu açık</string>
+  <string name="notifications_battery_hint">Bildirimlerin güncel durumu zamanında almasını engelleyebilir. Grocy için kapatmak üzere dokunun.</string>
+  <string name="notifications_browser">Tarayıcıda bildirimler</string>
+  <string name="notifications_browser_hint">Tarayıcılar bunları yalnızca Grocy açıkken gösterir, arka planda da. Seçilen saatte kapalıysa bir sonraki açışınızda gelirler.</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="one">Bugün için %1$d kayıt planlandı.</item>
+    <item quantity="other">Bugün için %1$d kayıt planlandı.</item>
+  </plurals>
 </resources>

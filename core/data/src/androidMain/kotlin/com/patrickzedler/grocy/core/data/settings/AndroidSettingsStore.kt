@@ -11,6 +11,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
+import com.patrickzedler.grocy.core.model.notifications.NotificationDeliveries
+import com.patrickzedler.grocy.core.model.notifications.NotificationSettings
 import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
@@ -22,6 +24,7 @@ import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
@@ -149,6 +152,24 @@ class AndroidSettingsStore(
         dataStore.edit { it[TASKS_OVERVIEW_OPTIONS] = options.stored() }
     }
 
+    override val notificationSettings: Flow<NotificationSettings> = preferences
+        .map { NotificationSettings.of(it[NOTIFICATION_SETTINGS]) }
+        .distinctUntilChanged()
+
+    override suspend fun setNotificationSettings(settings: NotificationSettings) {
+        dataStore.edit { it[NOTIFICATION_SETTINGS] = settings.stored() }
+    }
+
+    override suspend fun readNotificationSettings(): NotificationSettings =
+        notificationSettings.first()
+
+    override suspend fun readNotificationDeliveries(): NotificationDeliveries =
+        NotificationDeliveries.of(preferences.first()[NOTIFICATION_DELIVERIES])
+
+    override suspend fun setNotificationDeliveries(deliveries: NotificationDeliveries) {
+        dataStore.edit { it[NOTIFICATION_DELIVERIES] = deliveries.stored() }
+    }
+
     override val recipesOptions: Flow<RecipesOptions> = preferences
         .map {
             RecipesOptions.of(
@@ -199,5 +220,7 @@ class AndroidSettingsStore(
         val CHORES_OVERVIEW_OPTIONS = stringPreferencesKey("chores_overview_options")
         val CHORES_JOURNAL_OPTIONS = stringPreferencesKey("chores_journal_options")
         val TASKS_OVERVIEW_OPTIONS = stringPreferencesKey("tasks_overview_options")
+        val NOTIFICATION_SETTINGS = stringPreferencesKey("notification_settings")
+        val NOTIFICATION_DELIVERIES = stringPreferencesKey("notification_deliveries")
     }
 }

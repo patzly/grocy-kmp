@@ -23,6 +23,7 @@ import com.patrickzedler.grocy.core.model.recipes.MealPlanSection
 import com.patrickzedler.grocy.core.model.recipes.Recipe
 import com.patrickzedler.grocy.core.model.recipes.RecipeFulfillment
 import com.patrickzedler.grocy.core.model.recipes.RecipeStatus
+import com.patrickzedler.grocy.core.model.recipes.mealPlanNamesOf
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListSummary
@@ -113,22 +114,7 @@ internal fun mealPlanTodayOf(
     recipes: List<Recipe>,
     products: List<Product>,
     today: Long,
-): List<String> {
-    val day = isoDateOf(today)
-    val order = sections.withIndex().associate { (index, section) -> section.id to index }
-    val recipeNames = recipes.associate { it.id to it.name }
-    val productNames = products.associate { it.id to it.name }
-    return entries
-        .filter { it.day == day }
-        .sortedWith(compareBy<MealPlanEntry> { order[it.sectionId] ?: -1 }.thenBy { it.id })
-        .mapNotNull { entry ->
-            when (entry.type) {
-                MealPlanEntryType.RECIPE -> entry.recipeId?.let { recipeNames[it] }
-                MealPlanEntryType.PRODUCT -> entry.productId?.let { productNames[it] }
-                MealPlanEntryType.NOTE -> entry.note?.takeIf { it.isNotBlank() }
-            }
-        }
-}
+): List<String> = mealPlanNamesOf(entries, sections, recipes, products, today)
 
 /** What the start screen's sections tell about the stored data. */
 internal data class StartUiState(

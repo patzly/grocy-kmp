@@ -1256,4 +1256,28 @@
     <item quantity="many">%1$d tasques per fer %2$s.</item>
     <item quantity="other">%1$d tasques per fer %2$s.</item>
   </plurals>
+  <string name="notifications_daily">Notificació diària</string>
+  <string name="notifications_time">Hora</string>
+  <string name="notifications_show_names">Mostra els noms</string>
+  <string name="notifications_show_names_hint">Els llista a la notificació en lloc de dir només quants n'hi ha</string>
+  <string name="notifications_only_mine">Només el que tinc assignat</string>
+  <string name="notifications_show_now">Mostra ara</string>
+  <string name="notifications_show_now_hint">Mostra el que diu la notificació ara mateix</string>
+  <string name="notifications_nothing">Ara mateix no hi ha res a dir</string>
+  <string name="notifications_stale">Últim estat conegut, no s'ha pogut contactar amb el servidor</string>
+  <string name="notifications_blocked">Les notificacions estan bloquejades</string>
+  <string name="notifications_blocked_settings">Toca per permetre-les a la configuració del sistema.</string>
+  <string name="notifications_blocked_browser">Permet-les a la configuració del lloc del navegador.</string>
+  <string name="notifications_blocked_request">Toca per permetre-les.</string>
+  <string name="notifications_exact">Les notificacions poden arribar tard</string>
+  <string name="notifications_exact_hint">Toca per permetre alarmes i recordatoris a Grocy, perquè arribin exactament a l'hora.</string>
+  <string name="notifications_battery">L'optimització de la bateria està activada</string>
+  <string name="notifications_battery_hint">Pot impedir que les notificacions obtinguin l'estat actual a temps. Toca per desactivar-la per a Grocy.</string>
+  <string name="notifications_browser">Notificacions al navegador</string>
+  <string name="notifications_browser_hint">Els navegadors només les mostren mentre Grocy està obert, també en segon pla. Si estava tancat a l'hora triada, arriben la pròxima vegada que l'obris.</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="one">%1$d entrada planificada per avui.</item>
+    <item quantity="many">%1$d entrades planificades per avui.</item>
+    <item quantity="other">%1$d entrades planificades per avui.</item>
+  </plurals>
 </resources>

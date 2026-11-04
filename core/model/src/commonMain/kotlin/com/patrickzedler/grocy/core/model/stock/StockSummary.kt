@@ -37,19 +37,7 @@ fun stockSummaryOf(
 ): StockSummary {
     val shown = products.filter { !it.hideOnStockOverview }.associateBy { it.id }
     val shownStock = stock.filter { it.productId in shown }
-    val dueStatuses = if (config.stockBestBeforeDateTracking) {
-        shownStock.mapNotNull { amount ->
-            val date = amount.bestBeforeDate?.takeIf { it != StockEntry.NEVER_OVERDUE }
-            val day = date?.let(::epochDayOf)
-            if (day == null || amount.amount <= 0) {
-                null
-            } else {
-                dueStatusOf(day, today, dueSoonDays, shown.getValue(amount.productId).dueType)
-            }
-        }
-    } else {
-        emptyList()
-    }
+    val dueStatuses = dueProductsOf(shown, stock, config, dueSoonDays, today).map { it.second }
     val belowMinStock = info.filter { it.amountMissing != null && it.productId in shown }
     return StockSummary(
         productCount = shownStock.size,
@@ -61,4 +49,25 @@ fun stockSummaryOf(
         belowMinStockOnShoppingListCount = belowMinStock
             .count { it.onShoppingList && config.shoppingList },
     )
+}
+
+/**
+ * The products of [shown] (by id) with stock of their own and a due date that can be overdue, with
+ * their status on the day [today]; none without due date tracking.
+ */
+fun dueProductsOf(
+    shown: Map<Int, Product>,
+    stock: List<StockAmount>,
+    config: ServerConfig,
+    dueSoonDays: Int,
+    today: Long,
+): List<Pair<Product, DueStatus>> {
+    if (!config.stockBestBeforeDateTracking) return emptyList()
+    return stock.mapNotNull { amount ->
+        val product = shown[amount.productId] ?: return@mapNotNull null
+        val date = amount.bestBeforeDate?.takeIf { it != StockEntry.NEVER_OVERDUE }
+        val day = date?.let(::epochDayOf)
+        if (day == null || amount.amount <= 0) return@mapNotNull null
+        dueStatusOf(day, today, dueSoonDays, product.dueType)?.let { product to it }
+    }
 }

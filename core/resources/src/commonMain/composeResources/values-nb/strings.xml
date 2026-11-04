@@ -1211,4 +1211,27 @@
     <item quantity="one">%1$d oppgave må gjøres %2$s.</item>
     <item quantity="other">%1$d oppgaver må gjøres %2$s.</item>
   </plurals>
+  <string name="notifications_daily">Daglig varsel</string>
+  <string name="notifications_time">Klokkeslett</string>
+  <string name="notifications_show_names">Vis navn</string>
+  <string name="notifications_show_names_hint">Lister dem opp i varselet i stedet for bare å si hvor mange det er</string>
+  <string name="notifications_only_mine">Bare det som er tildelt meg</string>
+  <string name="notifications_show_now">Vis nå</string>
+  <string name="notifications_show_now_hint">Viser hva varselet sier akkurat nå</string>
+  <string name="notifications_nothing">Ingenting å melde akkurat nå</string>
+  <string name="notifications_stale">Siste kjente status, serveren kunne ikke nås</string>
+  <string name="notifications_blocked">Varsler er blokkert</string>
+  <string name="notifications_blocked_settings">Trykk for å tillate dem i systeminnstillingene.</string>
+  <string name="notifications_blocked_browser">Tillat dem i nettstedsinnstillingene i nettleseren.</string>
+  <string name="notifications_blocked_request">Trykk for å tillate dem.</string>
+  <string name="notifications_exact">Varsler kan komme for sent</string>
+  <string name="notifications_exact_hint">Trykk for å gi Grocy tillatelse til alarmer og påminnelser, så de kommer nøyaktig til rett tid.</string>
+  <string name="notifications_battery">Batterioptimalisering er på</string>
+  <string name="notifications_battery_hint">Den kan hindre varsler i å hente gjeldende status i tide. Trykk for å slå den av for Grocy.</string>
+  <string name="notifications_browser">Varsler i nettleseren</string>
+  <string name="notifications_browser_hint">Nettlesere viser dem bare mens Grocy er åpen, også i bakgrunnen. Hvis den var lukket på valgt tidspunkt, kommer de neste gang du åpner den.</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="one">%1$d oppføring er planlagt i dag.</item>
+    <item quantity="other">%1$d oppføringer er planlagt i dag.</item>
+  </plurals>
 </resources>

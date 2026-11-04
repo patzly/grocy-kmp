@@ -1,5 +1,7 @@
 package com.patrickzedler.grocy.core.model.recipes
 
+import com.patrickzedler.grocy.core.model.masterdata.Product
+import com.patrickzedler.grocy.core.model.text.isoDateOf
 import com.patrickzedler.grocy.core.model.text.weekdayOf
 import com.patrickzedler.grocy.core.model.text.yearWeekOf
 
@@ -97,3 +99,31 @@ const val TODAY_FIRST_DAY = -1
 
 /** Days a week of the meal plan shows. */
 const val DAYS_PER_WEEK = 7
+
+/**
+ * What the meal plan has planned for [today]: the names of its recipes and products and its
+ * notes, in the order of their sections like Grocy's day, then as planned. Entries of deleted
+ * recipes or products are left out like Grocy does.
+ */
+fun mealPlanNamesOf(
+    entries: List<MealPlanEntry>,
+    sections: List<MealPlanSection>,
+    recipes: List<Recipe>,
+    products: List<Product>,
+    today: Long,
+): List<String> {
+    val day = isoDateOf(today)
+    val order = sections.withIndex().associate { (index, section) -> section.id to index }
+    val recipeNames = recipes.associate { it.id to it.name }
+    val productNames = products.associate { it.id to it.name }
+    return entries
+        .filter { it.day == day }
+        .sortedWith(compareBy<MealPlanEntry> { order[it.sectionId] ?: -1 }.thenBy { it.id })
+        .mapNotNull { entry ->
+            when (entry.type) {
+                MealPlanEntryType.RECIPE -> entry.recipeId?.let { recipeNames[it] }
+                MealPlanEntryType.PRODUCT -> entry.productId?.let { productNames[it] }
+                MealPlanEntryType.NOTE -> entry.note?.takeIf { it.isNotBlank() }
+            }
+        }
+}

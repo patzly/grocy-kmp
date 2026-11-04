@@ -1301,4 +1301,29 @@
     <item quantity="many">%1$d úloh má byť splnených %2$s.</item>
     <item quantity="other">%1$d úloh má byť splnených %2$s.</item>
   </plurals>
+  <string name="notifications_daily">Denné oznámenie</string>
+  <string name="notifications_time">Čas</string>
+  <string name="notifications_show_names">Zobraziť názvy</string>
+  <string name="notifications_show_names_hint">Vypíše ich v oznámení namiesto samotného počtu</string>
+  <string name="notifications_only_mine">Len to, čo je priradené mne</string>
+  <string name="notifications_show_now">Zobraziť teraz</string>
+  <string name="notifications_show_now_hint">Zobrazí, čo by oznámenie hovorilo práve teraz</string>
+  <string name="notifications_nothing">Momentálne nie je čo oznamovať</string>
+  <string name="notifications_stale">Posledný známy stav, server nebol dostupný</string>
+  <string name="notifications_blocked">Oznámenia sú blokované</string>
+  <string name="notifications_blocked_settings">Klepnutím ich povolíte v nastaveniach systému.</string>
+  <string name="notifications_blocked_browser">Povoľte ich v nastaveniach stránky vo svojom prehliadači.</string>
+  <string name="notifications_blocked_request">Klepnutím ich povolíte.</string>
+  <string name="notifications_exact">Oznámenia môžu prísť neskoro</string>
+  <string name="notifications_exact_hint">Klepnutím povolíte Grocy budíky a pripomenutia, aby prišli presne načas.</string>
+  <string name="notifications_battery">Optimalizácia batérie je zapnutá</string>
+  <string name="notifications_battery_hint">Môže oznámeniam brániť v tom, aby včas získali aktuálny stav. Klepnutím ju pre Grocy vypnete.</string>
+  <string name="notifications_browser">Oznámenia v prehliadači</string>
+  <string name="notifications_browser_hint">Prehliadače ich zobrazujú len vtedy, keď je Grocy otvorené, aj na pozadí. Ak bolo vo zvolenom čase zatvorené, prídu pri ďalšom otvorení.</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="one">Na dnes je naplánovaná %1$d položka.</item>
+    <item quantity="few">Na dnes sú naplánované %1$d položky.</item>
+    <item quantity="many">Na dnes je naplánovaných %1$d položky.</item>
+    <item quantity="other">Na dnes je naplánovaných %1$d položiek.</item>
+  </plurals>
 </resources>

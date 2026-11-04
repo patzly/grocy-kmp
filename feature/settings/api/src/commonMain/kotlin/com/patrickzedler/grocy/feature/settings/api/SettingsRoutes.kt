@@ -66,6 +66,11 @@ data object UserSettingsRoute : DetailRoute
 @SerialName("settings/shopping-mode")
 data class ShoppingModeSettingsRoute(val inSettings: Boolean = true) : DetailRoute
 
+/** The daily notifications per feature of the server, kept on the device. */
+@Serializable
+@SerialName("settings/notifications")
+data object NotificationSettingsRoute : DetailRoute
+
 /** Recent errors of the app: logcat on Android, the errors the web app recorded. */
 @Serializable
 @SerialName("settings/log")
@@ -81,6 +86,7 @@ val settingsRouteSerializers = SerializersModule {
         subclass(UserSettingsRoute::class, UserSettingsRoute.serializer())
         subclass(StockSettingsRoute::class, StockSettingsRoute.serializer())
         subclass(ShoppingModeSettingsRoute::class, ShoppingModeSettingsRoute.serializer())
+        subclass(NotificationSettingsRoute::class, NotificationSettingsRoute.serializer())
         subclass(LogRoute::class, LogRoute.serializer())
     }
 }

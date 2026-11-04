@@ -31,3 +31,4 @@ How every platform checks for and installs updates. Moved from CLAUDE.md.
   sends `skipWaiting` and reloads on `controllerchange`. Requests to other origins (Grocy
   servers) are never cached. Builds without id (`dev`, also the dev server) register no worker
   and do not check automatically, so local builds always run fresh code.
+  The worker also answers taps on notifications (`docs/features/notifications.md`).

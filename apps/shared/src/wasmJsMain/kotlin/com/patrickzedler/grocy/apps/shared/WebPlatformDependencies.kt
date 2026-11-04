@@ -6,6 +6,8 @@ import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.language.WebAppLanguageStore
 import com.patrickzedler.grocy.core.data.log.BrowserErrorLog
 import com.patrickzedler.grocy.core.data.log.LogReader
+import com.patrickzedler.grocy.core.data.notifications.NotificationAlarm
+import com.patrickzedler.grocy.core.data.notifications.Notifier
 import com.patrickzedler.grocy.core.database.GrocyDatabase
 import com.patrickzedler.grocy.core.database.createGrocyDatabase
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
@@ -16,6 +18,7 @@ import com.patrickzedler.grocy.core.data.update.ServiceWorkerAppUpdater
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -52,6 +55,13 @@ class WebPlatformDependencies(
     // The web app is deployed, not released; its service worker knows the newest version
     override fun createAppUpdater(gitHubReleases: GitHubReleases): AppUpdater =
         ServiceWorkerAppUpdater(buildId)
+
+    override val notifier: Notifier by lazy { BrowserNotifier() }
+
+    override fun createNotificationAlarm(
+        scope: CoroutineScope,
+        onDue: suspend () -> Unit,
+    ): NotificationAlarm = BrowserNotificationAlarm(scope, onDue)
 
     // Like every reload, the page keeps its back stack and history
     override fun restartApp() = reloadPage()

@@ -1301,4 +1301,29 @@
     <item quantity="many">Zadania bliskie terminu realizacji: %1$d %2$s.</item>
     <item quantity="other">Zadania bliskie terminu realizacji: %1$d %2$s.</item>
   </plurals>
+  <string name="notifications_daily">Codzienne powiadomienie</string>
+  <string name="notifications_time">Godzina</string>
+  <string name="notifications_show_names">Pokaż nazwy</string>
+  <string name="notifications_show_names_hint">Wymienia je w powiadomieniu zamiast podawać tylko ich liczbę</string>
+  <string name="notifications_only_mine">Tylko to, co przypisano do mnie</string>
+  <string name="notifications_show_now">Pokaż teraz</string>
+  <string name="notifications_show_now_hint">Pokazuje, co powiadomienie mówi w tej chwili</string>
+  <string name="notifications_nothing">W tej chwili nie ma o czym informować</string>
+  <string name="notifications_stale">Ostatni znany stan, nie można połączyć się z serwerem</string>
+  <string name="notifications_blocked">Powiadomienia są zablokowane</string>
+  <string name="notifications_blocked_settings">Dotknij, aby zezwolić na nie w ustawieniach systemu.</string>
+  <string name="notifications_blocked_browser">Zezwól na nie w ustawieniach witryny w przeglądarce.</string>
+  <string name="notifications_blocked_request">Dotknij, aby na nie zezwolić.</string>
+  <string name="notifications_exact">Powiadomienia mogą się spóźniać</string>
+  <string name="notifications_exact_hint">Dotknij, aby zezwolić Grocy na alarmy i przypomnienia, by przychodziły dokładnie na czas.</string>
+  <string name="notifications_battery">Optymalizacja baterii jest włączona</string>
+  <string name="notifications_battery_hint">Może uniemożliwiać powiadomieniom pobranie aktualnego stanu na czas. Dotknij, aby wyłączyć ją dla Grocy.</string>
+  <string name="notifications_browser">Powiadomienia w przeglądarce</string>
+  <string name="notifications_browser_hint">Przeglądarki pokazują je tylko wtedy, gdy Grocy jest otwarte, także w tle. Jeśli o wybranej godzinie było zamknięte, przyjdą przy następnym otwarciu.</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="one">Na dziś zaplanowano %1$d pozycję.</item>
+    <item quantity="few">Na dziś zaplanowano %1$d pozycje.</item>
+    <item quantity="many">Na dziś zaplanowano %1$d pozycji.</item>
+    <item quantity="other">Na dziś zaplanowano %1$d pozycji.</item>
+  </plurals>
 </resources>

@@ -8,7 +8,7 @@ Current state: login (demo, QR code, manual, Home Assistant ingress on Android),
 scanner, update checks, the start screen, About, the settings (General, Server, Grocy settings),
 Grocy's stock overview, master data with all their forms, the stock bookings, the shopping list
 and its shopping mode, the recipes with their cards and forms, the meal plan, the chores with
-their tracking and journal, the tasks.
+their tracking and journal, the tasks, the daily notifications.
 
 ## Details
 
@@ -35,6 +35,8 @@ tasks need.
   dialogs and sections, the recipes Grocy keeps for it.
 - `docs/features/chores.md`: the chores overview with its card, tracking and journal.
 - `docs/features/tasks.md`: the tasks with their filters, table options, actions and form.
+- `docs/features/notifications.md`: the daily notifications per feature: settings, alarm, current
+  state before notifying, what browsers allow.
 - `docs/features/stock-pages.md`: stock entries, stock journal and journal summary.
 - `docs/features/product-overview.md`: the product overview card (`core:productcard`), price
   chart, grocycodes, "Add to shopping list".

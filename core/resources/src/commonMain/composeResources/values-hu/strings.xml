@@ -1211,4 +1211,27 @@
     <item quantity="one">%1$d feladatot kell elvégezni %2$s.</item>
     <item quantity="other">%1$d feladatot kell elvégezni %2$s.</item>
   </plurals>
+  <string name="notifications_daily">Napi értesítés</string>
+  <string name="notifications_time">Időpont</string>
+  <string name="notifications_show_names">Nevek megjelenítése</string>
+  <string name="notifications_show_names_hint">Felsorolja őket az értesítésben, ahelyett hogy csak a számukat írná ki</string>
+  <string name="notifications_only_mine">Csak ami hozzám van rendelve</string>
+  <string name="notifications_show_now">Megjelenítés most</string>
+  <string name="notifications_show_now_hint">Megmutatja, mit mond az értesítés most</string>
+  <string name="notifications_nothing">Jelenleg nincs miről értesíteni</string>
+  <string name="notifications_stale">Utolsó ismert állapot, a szerver nem volt elérhető</string>
+  <string name="notifications_blocked">Az értesítések le vannak tiltva</string>
+  <string name="notifications_blocked_settings">Koppints az engedélyezésükhöz a rendszerbeállításokban.</string>
+  <string name="notifications_blocked_browser">Engedélyezd őket a böngésződ webhelybeállításaiban.</string>
+  <string name="notifications_blocked_request">Koppints az engedélyezésükhöz.</string>
+  <string name="notifications_exact">Az értesítések késhetnek</string>
+  <string name="notifications_exact_hint">Koppints, hogy engedélyezd a Grocy számára az ébresztőket és emlékeztetőket, így pontosan időben érkeznek.</string>
+  <string name="notifications_battery">Az akkumulátor-optimalizálás be van kapcsolva</string>
+  <string name="notifications_battery_hint">Megakadályozhatja, hogy az értesítések időben megkapják az aktuális állapotot. Koppints a kikapcsolásához a Grocy esetén.</string>
+  <string name="notifications_browser">Értesítések a böngészőben</string>
+  <string name="notifications_browser_hint">A böngészők csak addig jelenítik meg őket, amíg a Grocy nyitva van, a háttérben is. Ha a választott időpontban zárva volt, a következő megnyitáskor érkeznek.</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="one">%1$d bejegyzés van mára tervezve.</item>
+    <item quantity="other">%1$d bejegyzés van mára tervezve.</item>
+  </plurals>
 </resources>

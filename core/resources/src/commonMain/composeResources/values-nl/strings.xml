@@ -1211,4 +1211,27 @@
     <item quantity="one">%1$d taak moet worden gedaan %2$s.</item>
     <item quantity="other">%1$d taken moeten worden gedaan %2$s.</item>
   </plurals>
+  <string name="notifications_daily">Dagelijkse melding</string>
+  <string name="notifications_time">Tijd</string>
+  <string name="notifications_show_names">Namen tonen</string>
+  <string name="notifications_show_names_hint">Somt ze op in de melding in plaats van alleen het aantal te noemen</string>
+  <string name="notifications_only_mine">Alleen wat aan mij is toegewezen</string>
+  <string name="notifications_show_now">Nu tonen</string>
+  <string name="notifications_show_now_hint">Toont wat de melding op dit moment zegt</string>
+  <string name="notifications_nothing">Er is op dit moment niets te melden</string>
+  <string name="notifications_stale">Laatst bekende stand, de server was niet bereikbaar</string>
+  <string name="notifications_blocked">Meldingen zijn geblokkeerd</string>
+  <string name="notifications_blocked_settings">Tik om ze toe te staan in de systeeminstellingen.</string>
+  <string name="notifications_blocked_browser">Sta ze toe in de site-instellingen van je browser.</string>
+  <string name="notifications_blocked_request">Tik om ze toe te staan.</string>
+  <string name="notifications_exact">Meldingen kunnen te laat komen</string>
+  <string name="notifications_exact_hint">Tik om Grocy wekkers en herinneringen toe te staan, zodat ze precies op tijd komen.</string>
+  <string name="notifications_battery">Batterijoptimalisatie staat aan</string>
+  <string name="notifications_battery_hint">Dit kan voorkomen dat meldingen op tijd de actuele stand ophalen. Tik om het voor Grocy uit te zetten.</string>
+  <string name="notifications_browser">Meldingen in de browser</string>
+  <string name="notifications_browser_hint">Browsers tonen ze alleen zolang Grocy open is, ook op de achtergrond. Was het op de gekozen tijd gesloten, dan komen ze de volgende keer dat je het opent.</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="one">%1$d item is gepland voor vandaag.</item>
+    <item quantity="other">%1$d items zijn gepland voor vandaag.</item>
+  </plurals>
 </resources>

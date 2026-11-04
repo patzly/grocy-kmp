@@ -1305,4 +1305,29 @@ Po zaškrtnutí nebude brán zřetel na množství produktu v nákupním seznamu
     <item quantity="many">%1$d úkolů má být splněno %2$s.</item>
     <item quantity="other">%1$d úkolů má být splněno %2$s.</item>
   </plurals>
+  <string name="notifications_daily">Denní oznámení</string>
+  <string name="notifications_time">Čas</string>
+  <string name="notifications_show_names">Zobrazit názvy</string>
+  <string name="notifications_show_names_hint">Vypíše je v oznámení místo pouhého počtu</string>
+  <string name="notifications_only_mine">Jen to, co je přiřazeno mně</string>
+  <string name="notifications_show_now">Zobrazit nyní</string>
+  <string name="notifications_show_now_hint">Zobrazí, co by oznámení říkalo právě teď</string>
+  <string name="notifications_nothing">Momentálně není co oznamovat</string>
+  <string name="notifications_stale">Poslední známý stav, server nebyl dostupný</string>
+  <string name="notifications_blocked">Oznámení jsou blokována</string>
+  <string name="notifications_blocked_settings">Klepnutím je povolíte v nastavení systému.</string>
+  <string name="notifications_blocked_browser">Povolte je v nastavení webu ve svém prohlížeči.</string>
+  <string name="notifications_blocked_request">Klepnutím je povolíte.</string>
+  <string name="notifications_exact">Oznámení mohou přijít pozdě</string>
+  <string name="notifications_exact_hint">Klepnutím povolíte Grocy budíky a připomenutí, aby přišla přesně včas.</string>
+  <string name="notifications_battery">Optimalizace baterie je zapnutá</string>
+  <string name="notifications_battery_hint">Může oznámením bránit v tom, aby včas získala aktuální stav. Klepnutím ji pro Grocy vypnete.</string>
+  <string name="notifications_browser">Oznámení v prohlížeči</string>
+  <string name="notifications_browser_hint">Prohlížeče je zobrazují jen tehdy, když je Grocy otevřené, i na pozadí. Pokud bylo ve zvolený čas zavřené, přijdou při příštím otevření.</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="one">Na dnešek je naplánována %1$d položka.</item>
+    <item quantity="few">Na dnešek jsou naplánovány %1$d položky.</item>
+    <item quantity="many">Na dnešek je naplánováno %1$d položky.</item>
+    <item quantity="other">Na dnešek je naplánováno %1$d položek.</item>
+  </plurals>
 </resources>

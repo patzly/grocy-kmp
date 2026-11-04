@@ -4,6 +4,8 @@ import com.patrickzedler.grocy.core.data.BrowserLocalStorage
 import com.patrickzedler.grocy.core.data.KeyValueStorage
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
+import com.patrickzedler.grocy.core.model.notifications.NotificationDeliveries
+import com.patrickzedler.grocy.core.model.notifications.NotificationSettings
 import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
@@ -163,6 +165,29 @@ class WebSettingsStore internal constructor(
         tasksOverviewOptionsState.value = options
     }
 
+    private val notificationSettingsState =
+        MutableStateFlow(NotificationSettings.of(storage.get(NOTIFICATION_SETTINGS)))
+
+    override val notificationSettings: Flow<NotificationSettings> =
+        notificationSettingsState.asStateFlow()
+
+    override suspend fun setNotificationSettings(settings: NotificationSettings) {
+        storage.set(NOTIFICATION_SETTINGS, settings.stored())
+        notificationSettingsState.value = settings
+    }
+
+    override suspend fun readNotificationSettings(): NotificationSettings =
+        NotificationSettings.of(storage.get(NOTIFICATION_SETTINGS)).also {
+            notificationSettingsState.value = it
+        }
+
+    override suspend fun readNotificationDeliveries(): NotificationDeliveries =
+        NotificationDeliveries.of(storage.get(NOTIFICATION_DELIVERIES))
+
+    override suspend fun setNotificationDeliveries(deliveries: NotificationDeliveries) {
+        storage.set(NOTIFICATION_DELIVERIES, deliveries.stored())
+    }
+
     private val recipesOptionsState = MutableStateFlow(
         RecipesOptions.of(
             fields = storage.get(RECIPES_FIELDS),
@@ -211,5 +236,7 @@ class WebSettingsStore internal constructor(
         const val CHORES_OVERVIEW_OPTIONS = "grocy.choresOverviewOptions"
         const val CHORES_JOURNAL_OPTIONS = "grocy.choresJournalOptions"
         const val TASKS_OVERVIEW_OPTIONS = "grocy.tasksOverviewOptions"
+        const val NOTIFICATION_SETTINGS = "grocy.notificationSettings"
+        const val NOTIFICATION_DELIVERIES = "grocy.notificationDeliveries"
     }
 }

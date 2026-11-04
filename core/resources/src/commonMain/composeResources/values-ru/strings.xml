@@ -1301,4 +1301,29 @@
     <item quantity="many">Подходит срок %1$d задач %2$s.</item>
     <item quantity="other">Подходит срок %1$d задач %2$s.</item>
   </plurals>
+  <string name="notifications_daily">Ежедневное уведомление</string>
+  <string name="notifications_time">Время</string>
+  <string name="notifications_show_names">Показывать названия</string>
+  <string name="notifications_show_names_hint">Перечисляет их в уведомлении, а не только указывает количество</string>
+  <string name="notifications_only_mine">Только назначенное мне</string>
+  <string name="notifications_show_now">Показать сейчас</string>
+  <string name="notifications_show_now_hint">Показывает, что сообщает уведомление прямо сейчас</string>
+  <string name="notifications_nothing">Сейчас сообщать не о чем</string>
+  <string name="notifications_stale">Последнее известное состояние, сервер был недоступен</string>
+  <string name="notifications_blocked">Уведомления заблокированы</string>
+  <string name="notifications_blocked_settings">Нажмите, чтобы разрешить их в настройках системы.</string>
+  <string name="notifications_blocked_browser">Разрешите их в настройках сайта в браузере.</string>
+  <string name="notifications_blocked_request">Нажмите, чтобы разрешить их.</string>
+  <string name="notifications_exact">Уведомления могут приходить с опозданием</string>
+  <string name="notifications_exact_hint">Нажмите, чтобы разрешить Grocy будильники и напоминания, тогда они будут приходить точно вовремя.</string>
+  <string name="notifications_battery">Оптимизация батареи включена</string>
+  <string name="notifications_battery_hint">Она может помешать уведомлениям вовремя получить текущее состояние. Нажмите, чтобы отключить её для Grocy.</string>
+  <string name="notifications_browser">Уведомления в браузере</string>
+  <string name="notifications_browser_hint">Браузеры показывают их, только пока Grocy открыт, в том числе в фоне. Если в выбранное время он был закрыт, они придут при следующем открытии.</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="one">На сегодня запланирована %1$d запись.</item>
+    <item quantity="few">На сегодня запланированы %1$d записи.</item>
+    <item quantity="many">На сегодня запланировано %1$d записей.</item>
+    <item quantity="other">На сегодня запланировано %1$d записи.</item>
+  </plurals>
 </resources>

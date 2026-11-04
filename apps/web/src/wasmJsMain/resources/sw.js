@@ -36,6 +36,22 @@ self.addEventListener('message', (event) => {
     if (event.data === 'skipWaiting') self.skipWaiting();
 });
 
+// A tap on a notification (BrowserNotifier in apps:shared) shows its feature, in the open app if
+// there is one
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    const kind = event.notification.data?.kind;
+    event.waitUntil((async () => {
+        const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+        if (windows.length === 0) {
+            await self.clients.openWindow(`./?notification=${kind}`);
+            return;
+        }
+        windows[0].postMessage({ notificationKind: kind });
+        await windows[0].focus();
+    })());
+});
+
 self.addEventListener('fetch', (event) => {
     const request = event.request;
     if (request.method !== 'GET') return;

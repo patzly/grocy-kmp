@@ -1211,4 +1211,27 @@
     <item quantity="one">%1$d εργασία πρέπει να γίνει %2$s.</item>
     <item quantity="other">%1$d εργασίες πρέπει να γίνουν %2$s.</item>
   </plurals>
+  <string name="notifications_daily">Ημερήσια ειδοποίηση</string>
+  <string name="notifications_time">Ώρα</string>
+  <string name="notifications_show_names">Εμφάνιση ονομάτων</string>
+  <string name="notifications_show_names_hint">Τα παραθέτει στην ειδοποίηση αντί να λέει μόνο πόσα είναι</string>
+  <string name="notifications_only_mine">Μόνο όσα έχουν ανατεθεί σε εμένα</string>
+  <string name="notifications_show_now">Εμφάνιση τώρα</string>
+  <string name="notifications_show_now_hint">Δείχνει τι λέει η ειδοποίηση αυτή τη στιγμή</string>
+  <string name="notifications_nothing">Δεν υπάρχει τίποτα να αναφερθεί αυτή τη στιγμή</string>
+  <string name="notifications_stale">Τελευταία γνωστή κατάσταση, ο διακομιστής δεν ήταν προσβάσιμος</string>
+  <string name="notifications_blocked">Οι ειδοποιήσεις είναι αποκλεισμένες</string>
+  <string name="notifications_blocked_settings">Πατήστε για να τις επιτρέψετε στις ρυθμίσεις συστήματος.</string>
+  <string name="notifications_blocked_browser">Επιτρέψτε τις στις ρυθμίσεις ιστότοπου του προγράμματος περιήγησης.</string>
+  <string name="notifications_blocked_request">Πατήστε για να τις επιτρέψετε.</string>
+  <string name="notifications_exact">Οι ειδοποιήσεις μπορεί να καθυστερήσουν</string>
+  <string name="notifications_exact_hint">Πατήστε για να επιτρέψετε στο Grocy ξυπνητήρια και υπενθυμίσεις, ώστε να έρχονται ακριβώς στην ώρα τους.</string>
+  <string name="notifications_battery">Η βελτιστοποίηση μπαταρίας είναι ενεργή</string>
+  <string name="notifications_battery_hint">Μπορεί να εμποδίσει τις ειδοποιήσεις να λάβουν εγκαίρως την τρέχουσα κατάσταση. Πατήστε για να την απενεργοποιήσετε για το Grocy.</string>
+  <string name="notifications_browser">Ειδοποιήσεις στο πρόγραμμα περιήγησης</string>
+  <string name="notifications_browser_hint">Τα προγράμματα περιήγησης τις εμφανίζουν μόνο όσο το Grocy είναι ανοιχτό, και στο παρασκήνιο. Αν ήταν κλειστό την επιλεγμένη ώρα, έρχονται την επόμενη φορά που θα το ανοίξετε.</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="one">%1$d καταχώριση είναι προγραμματισμένη για σήμερα.</item>
+    <item quantity="other">%1$d καταχωρίσεις είναι προγραμματισμένες για σήμερα.</item>
+  </plurals>
 </resources>

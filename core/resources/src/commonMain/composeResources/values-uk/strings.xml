@@ -1300,4 +1300,29 @@
     <item quantity="many">%1$d завдань має бути виконано %2$s.</item>
     <item quantity="other">%1$d завдань має бути виконано %2$s.</item>
   </plurals>
+  <string name="notifications_daily">Щоденне сповіщення</string>
+  <string name="notifications_time">Час</string>
+  <string name="notifications_show_names">Показувати назви</string>
+  <string name="notifications_show_names_hint">Перелічує їх у сповіщенні, а не лише вказує кількість</string>
+  <string name="notifications_only_mine">Лише призначене мені</string>
+  <string name="notifications_show_now">Показати зараз</string>
+  <string name="notifications_show_now_hint">Показує, що повідомляє сповіщення саме зараз</string>
+  <string name="notifications_nothing">Зараз немає про що повідомляти</string>
+  <string name="notifications_stale">Останній відомий стан, сервер був недоступний</string>
+  <string name="notifications_blocked">Сповіщення заблоковано</string>
+  <string name="notifications_blocked_settings">Торкніться, щоб дозволити їх у налаштуваннях системи.</string>
+  <string name="notifications_blocked_browser">Дозвольте їх у налаштуваннях сайту у браузері.</string>
+  <string name="notifications_blocked_request">Торкніться, щоб дозволити їх.</string>
+  <string name="notifications_exact">Сповіщення можуть надходити із запізненням</string>
+  <string name="notifications_exact_hint">Торкніться, щоб дозволити Grocy будильники й нагадування, тоді вони надходитимуть точно вчасно.</string>
+  <string name="notifications_battery">Оптимізацію батареї ввімкнено</string>
+  <string name="notifications_battery_hint">Вона може завадити сповіщенням вчасно отримати поточний стан. Торкніться, щоб вимкнути її для Grocy.</string>
+  <string name="notifications_browser">Сповіщення у браузері</string>
+  <string name="notifications_browser_hint">Браузери показують їх, лише поки Grocy відкрито, зокрема у фоні. Якщо у вибраний час його було закрито, вони надійдуть під час наступного відкриття.</string>
+  <plurals name="notifications_meal_plan_today">
+    <item quantity="one">На сьогодні заплановано %1$d запис.</item>
+    <item quantity="few">На сьогодні заплановано %1$d записи.</item>
+    <item quantity="many">На сьогодні заплановано %1$d записів.</item>
+    <item quantity="other">На сьогодні заплановано %1$d запису.</item>
+  </plurals>
 </resources>

@@ -4,6 +4,7 @@ import com.patrickzedler.grocy.core.data.auth.AuthRepository
 import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.notifications.NotificationRepository
 import com.patrickzedler.grocy.core.data.server.ServerRepository
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
@@ -27,6 +28,9 @@ interface SettingsDependencies {
 
     /** How the shopping mode syncs and shows the list, read at app start. */
     val shoppingModeSettings: ShoppingModeSettingsRepository
+
+    /** The daily notifications per feature and when they come. */
+    val notificationRepository: NotificationRepository
 
     /** After the configuration was reloaded, so every screen reads it anew. */
     fun restartApp()

@@ -319,9 +319,10 @@ private fun PickDateDialog(
     }
 }
 
+/** Material's time picker dialog, opening at [initial] (hour and minute). */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun PickTimeDialog(
+fun PickTimeDialog(
     initial: Pair<Int, Int>?,
     onPick: (hour: Int, minute: Int) -> Unit,
     onDismissRequest: () -> Unit,

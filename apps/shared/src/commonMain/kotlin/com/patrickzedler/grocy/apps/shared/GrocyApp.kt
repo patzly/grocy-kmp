@@ -22,7 +22,10 @@ import com.patrickzedler.grocy.core.design.LocalPointerKind
 import com.patrickzedler.grocy.core.design.rememberPointerKindState
 import com.patrickzedler.grocy.core.design.rememberResourcesReady
 import com.patrickzedler.grocy.core.design.trackPointerKind
+import com.patrickzedler.grocy.core.model.notifications.NotificationKind
 import com.patrickzedler.grocy.core.navigation.GrocyNavDisplay
+import com.patrickzedler.grocy.core.navigation.Navigator
+import com.patrickzedler.grocy.core.navigation.Route
 import com.patrickzedler.grocy.core.navigation.rememberNavigator
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.core.scanner.LocalBarcodeDecoderFactory
@@ -34,14 +37,17 @@ import com.patrickzedler.grocy.feature.about.api.AboutRoute
 import com.patrickzedler.grocy.feature.about.api.aboutRouteSerializers
 import com.patrickzedler.grocy.feature.about.impl.aboutEntries
 import com.patrickzedler.grocy.feature.login.api.LoginChoiceRoute
+import com.patrickzedler.grocy.feature.chores.api.ChoresOverviewRoute
 import com.patrickzedler.grocy.feature.chores.api.choresRouteSerializers
 import com.patrickzedler.grocy.feature.chores.impl.choresEntries
+import com.patrickzedler.grocy.feature.tasks.api.TasksRoute
 import com.patrickzedler.grocy.feature.tasks.api.tasksRouteSerializers
 import com.patrickzedler.grocy.feature.tasks.impl.tasksEntries
 import com.patrickzedler.grocy.feature.login.api.loginRouteSerializers
 import com.patrickzedler.grocy.feature.login.impl.loginEntries
 import com.patrickzedler.grocy.feature.masterdata.api.masterDataRouteSerializers
 import com.patrickzedler.grocy.feature.masterdata.impl.masterDataEntries
+import com.patrickzedler.grocy.feature.recipes.api.MealPlanRoute
 import com.patrickzedler.grocy.feature.recipes.api.recipesRouteSerializers
 import com.patrickzedler.grocy.feature.recipes.impl.recipesEntries
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
@@ -52,6 +58,7 @@ import com.patrickzedler.grocy.feature.shoppinglist.impl.shoppingListEntries
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import com.patrickzedler.grocy.feature.start.api.startRouteSerializers
 import com.patrickzedler.grocy.feature.start.impl.startEntry
+import com.patrickzedler.grocy.feature.stock.api.StockOverviewRoute
 import com.patrickzedler.grocy.feature.stock.api.stockRouteSerializers
 import com.patrickzedler.grocy.feature.stock.impl.stockEntries
 import kotlinx.coroutines.launch
@@ -133,6 +140,13 @@ private fun GrocyNavigation(
         }
     }
 
+    val openedNotification by graph.openedNotification.collectAsStateWithLifecycle()
+    LaunchedEffect(openedNotification, isLoggedIn) {
+        val kind = openedNotification ?: return@LaunchedEffect
+        if (isLoggedIn) navigator.showFeatureOf(kind)
+        graph.notificationOpened()
+    }
+
     // The app menu of the features' screens leads to the settings and About
     val appMenuLinks = remember(navigator) {
         AppMenuLinks(
@@ -154,6 +168,20 @@ private fun GrocyNavigation(
             tasksEntries(graph.tasksDependencies, navigator)
         }
     }
+}
+
+/** Shows the feature of a notification on top, so back returns to what the user was doing. */
+private fun Navigator.showFeatureOf(kind: NotificationKind) {
+    val route = notificationRouteOf(kind)
+    if (currentRoute != route) navigate(route)
+}
+
+/** The page a notification of [kind] opens. */
+internal fun notificationRouteOf(kind: NotificationKind): Route = when (kind) {
+    NotificationKind.STOCK -> StockOverviewRoute
+    NotificationKind.CHORES -> ChoresOverviewRoute
+    NotificationKind.TASKS -> TasksRoute
+    NotificationKind.MEAL_PLAN -> MealPlanRoute()
 }
 
 /**

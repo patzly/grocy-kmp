@@ -5,6 +5,8 @@ import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
+import com.patrickzedler.grocy.core.model.notifications.NotificationDeliveries
+import com.patrickzedler.grocy.core.model.notifications.NotificationSettings
 import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
 import com.patrickzedler.grocy.core.model.scanner.ScannerForm
 import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
@@ -47,6 +49,8 @@ class FakeSettingsStore(
     choresOverviewOptions: ChoresOverviewOptions = ChoresOverviewOptions(),
     choresJournalOptions: ChoresJournalOptions = ChoresJournalOptions(),
     tasksOverviewOptions: TasksOverviewOptions = TasksOverviewOptions(),
+    notificationSettings: NotificationSettings = NotificationSettings(),
+    notificationDeliveries: NotificationDeliveries = NotificationDeliveries(),
 ) : SettingsStore {
 
     override val checkUnlockKey = MutableStateFlow(checkUnlockKey)
@@ -107,6 +111,24 @@ class FakeSettingsStore(
 
     override suspend fun setTasksOverviewOptions(options: TasksOverviewOptions) {
         tasksOverviewOptions.value = options
+    }
+
+    override val notificationSettings = MutableStateFlow(notificationSettings)
+
+    override suspend fun setNotificationSettings(settings: NotificationSettings) {
+        notificationSettings.value = settings
+    }
+
+    override suspend fun readNotificationSettings(): NotificationSettings =
+        notificationSettings.value
+
+    val notificationDeliveries = MutableStateFlow(notificationDeliveries)
+
+    override suspend fun readNotificationDeliveries(): NotificationDeliveries =
+        notificationDeliveries.value
+
+    override suspend fun setNotificationDeliveries(deliveries: NotificationDeliveries) {
+        notificationDeliveries.value = deliveries
     }
 
     override val recipesOptions = MutableStateFlow(recipesOptions)

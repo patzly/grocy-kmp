@@ -19,6 +19,7 @@ import com.patrickzedler.grocy.feature.settings.api.GeneralSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsPageRoute
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.LogRoute
+import com.patrickzedler.grocy.feature.settings.api.NotificationSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.ShoppingModeSettingsRoute
@@ -33,6 +34,8 @@ import com.patrickzedler.grocy.feature.settings.impl.grocy.GrocySettingsScreen
 import com.patrickzedler.grocy.feature.settings.impl.grocy.GrocySettingsViewModel
 import com.patrickzedler.grocy.feature.settings.impl.log.LogScreen
 import com.patrickzedler.grocy.feature.settings.impl.log.LogViewModel
+import com.patrickzedler.grocy.feature.settings.impl.notifications.NotificationSettingsScreen
+import com.patrickzedler.grocy.feature.settings.impl.notifications.NotificationSettingsViewModel
 import com.patrickzedler.grocy.feature.settings.impl.server.ServerSettingsScreen
 import com.patrickzedler.grocy.feature.settings.impl.server.ServerSettingsViewModel
 import com.patrickzedler.grocy.feature.settings.impl.shoppingmode.ShoppingModeSettingsScreen
@@ -199,6 +202,21 @@ fun EntryProviderScope<NavKey>.settingsEntries(
         )
     }
 
+    entry<NotificationSettingsRoute>(metadata = detailPaneMetadata(SettingsRoute)) {
+        NotificationSettingsScreen(
+            viewModel = viewModel {
+                NotificationSettingsViewModel(
+                    repository = dependencies.notificationRepository,
+                    serverConfig = dependencies.serverRepository.serverConfig,
+                )
+            },
+            menuViewModel = settingsMenuViewModel(dependencies),
+            menuActions = menuActions,
+            onBackClick = navigator::goBack,
+            pane = ScreenPane.Detail.takeIf { showsDetailBesideList() },
+        )
+    }
+
     entry<LogRoute> {
         LogScreen(
             viewModel = viewModel { LogViewModel(dependencies.logReader) },
@@ -214,6 +232,7 @@ internal val SettingsCategory.route: DetailRoute?
         SettingsCategory.GENERAL -> GeneralSettingsRoute
         SettingsCategory.SERVER -> ServerSettingsRoute
         SettingsCategory.GROCY -> GrocySettingsRoute
+        SettingsCategory.NOTIFICATIONS -> NotificationSettingsRoute
         SettingsCategory.SHOPPING_MODE -> ShoppingModeSettingsRoute()
         else -> null
     }

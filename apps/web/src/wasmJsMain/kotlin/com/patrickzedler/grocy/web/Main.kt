@@ -11,6 +11,7 @@ import androidx.compose.ui.window.ComposeViewport
 import com.patrickzedler.grocy.apps.shared.AppGraph
 import com.patrickzedler.grocy.apps.shared.GrocyApp
 import com.patrickzedler.grocy.apps.shared.WebPlatformDependencies
+import com.patrickzedler.grocy.apps.shared.observeNotificationClicks
 import com.patrickzedler.grocy.core.design.component.observeBrowserKeyboard
 import com.patrickzedler.grocy.core.model.isRightToLeft
 
@@ -22,6 +23,7 @@ fun main() {
         WebPlatformDependencies(versionName = APP_VERSION_NAME, buildId = APP_BUILD_ID),
     )
     observeBrowserKeyboard(VIEWPORT_CONTAINER_ID)
+    observeNotificationClicks(graph)
     // Android takes the direction from the language itself, Compose on the web does not
     val layoutDirection = if (isRightToLeft(browserLanguage())) {
         LayoutDirection.Rtl

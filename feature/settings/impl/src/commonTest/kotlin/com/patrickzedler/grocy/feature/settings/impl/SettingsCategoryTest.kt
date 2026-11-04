@@ -5,6 +5,7 @@ import com.patrickzedler.grocy.feature.settings.api.GrocySettingsPage
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsPageRoute
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.LogRoute
+import com.patrickzedler.grocy.feature.settings.api.NotificationSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.ShoppingModeSettingsRoute
@@ -21,6 +22,7 @@ class SettingsCategoryTest {
         assertEquals(GeneralSettingsRoute, SettingsCategory.GENERAL.route)
         assertEquals(ServerSettingsRoute, SettingsCategory.SERVER.route)
         assertEquals(GrocySettingsRoute, SettingsCategory.GROCY.route)
+        assertEquals(NotificationSettingsRoute, SettingsCategory.NOTIFICATIONS.route)
         assertEquals(ShoppingModeSettingsRoute(), SettingsCategory.SHOPPING_MODE.route)
     }
 
