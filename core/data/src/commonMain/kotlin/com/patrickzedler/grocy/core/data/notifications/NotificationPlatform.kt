@@ -5,8 +5,11 @@ import com.patrickzedler.grocy.core.model.notifications.NotificationSummary
 
 /** Shows notifications the way the platform does; at most one per kind at a time. */
 interface Notifier {
-    /** Shows [summary], replacing the one of its kind; [silently] does not alert the user again. */
-    suspend fun show(summary: NotificationSummary, silently: Boolean)
+    /**
+     * Shows [summary], replacing the one of its kind; [silently] does not alert the user again.
+     * Returns false when the platform did not take it, e.g. because notifications are blocked.
+     */
+    suspend fun show(summary: NotificationSummary, silently: Boolean): Boolean
 
     suspend fun cancel(kind: NotificationKind)
 

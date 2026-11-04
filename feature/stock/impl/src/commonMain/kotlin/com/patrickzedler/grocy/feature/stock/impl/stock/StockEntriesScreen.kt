@@ -34,6 +34,7 @@ import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.edgeToEdgeItem
 import com.patrickzedler.grocy.core.design.component.insetItems
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.ClearFilterChip
 import com.patrickzedler.grocy.core.forms.DropdownFilterChip
 import com.patrickzedler.grocy.core.forms.FilterChipRow
@@ -93,6 +94,7 @@ import com.patrickzedler.grocy.core.resources.stock_entry_spoiled
 import com.patrickzedler.grocy.core.resources.stock_entry_updated
 import com.patrickzedler.grocy.core.scanner.writer.Grocycode
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -185,9 +187,9 @@ private fun StockEntryEvents(
     snackbarHostState: SnackbarHostState,
 ) {
     LaunchedEffect(viewModel) {
-        viewModel.events.collect { event ->
+        viewModel.events.collectLatest { event ->
             suspend fun showUndoable(message: String, bookingId: Int?) {
-                val result = snackbarHostState.showSnackbar(
+                val result = snackbarHostState.showNewestSnackbar(
                     message = message,
                     actionLabel = bookingId?.let { getString(Res.string.action_undo) },
                     duration = SnackbarDuration.Long,
@@ -210,23 +212,22 @@ private fun StockEntryEvents(
                     bookingId = event.bookingId,
                 )
                 is StockEntryEvent.Opened -> {
-                    event.movedTo?.let {
-                        snackbarHostState.showSnackbar(getString(Res.string.stock_entry_moved, it))
-                    }
+                    val opened = getString(
+                        Res.string.stock_entry_opened_message,
+                        event.amount,
+                        event.productName,
+                    )
+                    val moved = event.movedTo?.let { getString(Res.string.stock_entry_moved, it) }
                     showUndoable(
-                        message = getString(
-                            Res.string.stock_entry_opened_message,
-                            event.amount,
-                            event.productName,
-                        ),
+                        message = listOfNotNull(opened, moved).joinToString("\n"),
                         bookingId = event.bookingId,
                     )
                 }
                 is StockEntryEvent.Edited ->
                     showUndoable(getString(Res.string.stock_entry_updated), event.bookingId)
                 StockEntryEvent.Undone ->
-                    snackbarHostState.showSnackbar(getString(Res.string.stock_booking_undone))
-                is StockEntryEvent.Failed -> snackbarHostState.showSnackbar(
+                    snackbarHostState.showNewestSnackbar(getString(Res.string.stock_booking_undone))
+                is StockEntryEvent.Failed -> snackbarHostState.showNewestSnackbar(
                     event.error.actionMessage(Res.string.stock_booking_failed),
                 )
             }

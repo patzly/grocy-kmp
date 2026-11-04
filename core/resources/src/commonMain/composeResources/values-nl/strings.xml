@@ -112,6 +112,11 @@
   <string name="scanner_retry">Opnieuw proberen</string>
   <string name="scanner_torch_on">Zaklamp aanzetten</string>
   <string name="scanner_torch_off">Zaklamp uitzetten</string>
+  <string name="scanner_engine">Scannerengine</string>
+  <string name="scanner_engine_zxing_description">Open source, beschikbaar op elk apparaat</string>
+  <string name="scanner_engine_ml_kit_description">Van Google, meestal sneller en betrouwbaarder</string>
+  <string name="scanner_engine_ml_kit_locked">Vereist de ontgrendel-app</string>
+  <string name="scanner_unlock_ml_kit">ML Kit ontgrendelen</string>
 
   <!-- About -->
   <string name="about_version">Versie</string>
@@ -1219,6 +1224,7 @@
   <string name="notifications_show_now">Nu tonen</string>
   <string name="notifications_show_now_hint">Toont wat de melding op dit moment zegt</string>
   <string name="notifications_nothing">Er is op dit moment niets te melden</string>
+  <string name="notifications_show_failed">De melding kon niet worden weergegeven. Controleer of meldingen zijn toegestaan.</string>
   <string name="notifications_stale">Laatst bekende stand, de server was niet bereikbaar</string>
   <string name="notifications_blocked">Meldingen zijn geblokkeerd</string>
   <string name="notifications_blocked_settings">Tik om ze toe te staan in de systeeminstellingen.</string>

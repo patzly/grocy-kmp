@@ -112,6 +112,11 @@
   <string name="scanner_retry">Prøv igjen</string>
   <string name="scanner_torch_on">Slå på lommelykten</string>
   <string name="scanner_torch_off">Slå av lommelykten</string>
+  <string name="scanner_engine">Skannermotor</string>
+  <string name="scanner_engine_zxing_description">Åpen kildekode, tilgjengelig på alle enheter</string>
+  <string name="scanner_engine_ml_kit_description">Fra Google, vanligvis raskere og mer pålitelig</string>
+  <string name="scanner_engine_ml_kit_locked">Krever opplåsingsappen</string>
+  <string name="scanner_unlock_ml_kit">Lås opp ML Kit</string>
 
   <!-- About -->
   <string name="about_version">Versjon</string>
@@ -1219,6 +1224,7 @@
   <string name="notifications_show_now">Vis nå</string>
   <string name="notifications_show_now_hint">Viser hva varselet sier akkurat nå</string>
   <string name="notifications_nothing">Ingenting å melde akkurat nå</string>
+  <string name="notifications_show_failed">Varselet kunne ikke vises. Sjekk at varsler er tillatt.</string>
   <string name="notifications_stale">Siste kjente status, serveren kunne ikke nås</string>
   <string name="notifications_blocked">Varsler er blokkert</string>
   <string name="notifications_blocked_settings">Trykk for å tillate dem i systeminnstillingene.</string>

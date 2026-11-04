@@ -112,6 +112,11 @@
   <string name="scanner_retry">Proovi uuesti</string>
   <string name="scanner_torch_on">Lülita taskulamp sisse</string>
   <string name="scanner_torch_off">Lülita taskulamp välja</string>
+  <string name="scanner_engine">Skanneri mootor</string>
+  <string name="scanner_engine_zxing_description">Avatud lähtekoodiga, saadaval igas seadmes</string>
+  <string name="scanner_engine_ml_kit_description">Google'ilt, tavaliselt kiirem ja usaldusväärsem</string>
+  <string name="scanner_engine_ml_kit_locked">Vajab avamisrakendust</string>
+  <string name="scanner_unlock_ml_kit">Ava ML Kit</string>
 
   <!-- About -->
   <string name="about_version">Versioon</string>
@@ -1219,6 +1224,7 @@
   <string name="notifications_show_now">Kuva kohe</string>
   <string name="notifications_show_now_hint">Näitab, mida teavitus praegu ütleks</string>
   <string name="notifications_nothing">Praegu pole millestki teatada</string>
+  <string name="notifications_show_failed">Teavitust ei saanud kuvada. Kontrolli, kas teavitused on lubatud.</string>
   <string name="notifications_stale">Viimane teadaolev seis, serveriga ei saadud ühendust</string>
   <string name="notifications_blocked">Teavitused on blokeeritud</string>
   <string name="notifications_blocked_settings">Puuduta, et lubada need süsteemi seadetes.</string>

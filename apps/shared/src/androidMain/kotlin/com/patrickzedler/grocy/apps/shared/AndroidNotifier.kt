@@ -17,9 +17,9 @@ internal class AndroidNotifier(private val context: Context) : Notifier {
 
     private val manager = NotificationManagerCompat.from(context)
 
-    override suspend fun show(summary: NotificationSummary, silently: Boolean) {
+    override suspend fun show(summary: NotificationSummary, silently: Boolean): Boolean {
         // Without the permission the system would drop it; a call must not fail because of that
-        if (!manager.areNotificationsEnabled()) return
+        if (!manager.areNotificationsEnabled()) return false
         createChannel(summary.kind)
         val text = notificationTextOf(summary)
         val notification = NotificationCompat.Builder(context, summary.kind.channelId)
@@ -34,10 +34,12 @@ internal class AndroidNotifier(private val context: Context) : Notifier {
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
             .setSilent(silently)
             .build()
-        try {
+        return try {
             manager.notify(summary.kind.notificationId, notification)
+            true
         } catch (_: SecurityException) {
             // The permission was revoked just now; the settings page tells the user
+            false
         }
     }
 

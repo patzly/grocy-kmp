@@ -112,6 +112,11 @@
   <string name="scanner_retry">重试</string>
   <string name="scanner_torch_on">打开手电筒</string>
   <string name="scanner_torch_off">关闭手电筒</string>
+  <string name="scanner_engine">扫描引擎</string>
+  <string name="scanner_engine_zxing_description">开源，所有设备均可使用</string>
+  <string name="scanner_engine_ml_kit_description">来自 Google，通常更快更可靠</string>
+  <string name="scanner_engine_ml_kit_locked">需要解锁应用</string>
+  <string name="scanner_unlock_ml_kit">解锁 ML Kit</string>
 
   <!-- About -->
   <string name="about_version">版本</string>
@@ -1173,6 +1178,7 @@
   <string name="notifications_show_now">立即显示</string>
   <string name="notifications_show_now_hint">显示通知当前的内容</string>
   <string name="notifications_nothing">目前没有需要通知的内容</string>
+  <string name="notifications_show_failed">无法显示通知。请检查是否已允许通知。</string>
   <string name="notifications_stale">最后已知状态,无法连接到服务器</string>
   <string name="notifications_blocked">通知已被阻止</string>
   <string name="notifications_blocked_settings">点按以在系统设置中允许。</string>

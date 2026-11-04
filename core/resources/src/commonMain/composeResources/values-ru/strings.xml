@@ -112,6 +112,11 @@
   <string name="scanner_retry">Повторить</string>
   <string name="scanner_torch_on">Включить фонарик</string>
   <string name="scanner_torch_off">Выключить фонарик</string>
+  <string name="scanner_engine">Движок сканера</string>
+  <string name="scanner_engine_zxing_description">Открытый исходный код, доступен на любом устройстве</string>
+  <string name="scanner_engine_ml_kit_description">От Google, обычно быстрее и надёжнее</string>
+  <string name="scanner_engine_ml_kit_locked">Требуется приложение разблокировки</string>
+  <string name="scanner_unlock_ml_kit">Разблокировать ML Kit</string>
 
   <!-- About -->
   <string name="about_version">Версия</string>
@@ -1309,6 +1314,7 @@
   <string name="notifications_show_now">Показать сейчас</string>
   <string name="notifications_show_now_hint">Показывает, что сообщает уведомление прямо сейчас</string>
   <string name="notifications_nothing">Сейчас сообщать не о чем</string>
+  <string name="notifications_show_failed">Не удалось показать уведомление. Проверьте, разрешены ли уведомления.</string>
   <string name="notifications_stale">Последнее известное состояние, сервер был недоступен</string>
   <string name="notifications_blocked">Уведомления заблокированы</string>
   <string name="notifications_blocked_settings">Нажмите, чтобы разрешить их в настройках системы.</string>

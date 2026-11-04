@@ -12,10 +12,18 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarDefaults
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -41,19 +49,63 @@ internal fun snackbarMaxWidth(pane: ScreenPane?): Dp =
     if (pane == ScreenPane.List || pane == ScreenPane.Detail) Dp.Unspecified else SnackbarMaxWidth
 
 /**
- * Material's snackbar, whose own composable always has its width limit, with [maxWidth] and the
- * haptics of the app's buttons.
+ * Shows a snackbar at once, in place of the one on screen: Material shows only one at a time, and
+ * Android's own snackbars replace the current one too. [SnackbarHostState.showSnackbar] instead
+ * waits in line, so a few quick actions would keep messages coming long after they happened.
+ * Event loops collect with `collectLatest`, so that the next event ends the wait for this result.
+ */
+suspend fun SnackbarHostState.showNewestSnackbar(
+    message: String,
+    actionLabel: String? = null,
+    withDismissAction: Boolean = false,
+    duration: SnackbarDuration = if (actionLabel == null) {
+        SnackbarDuration.Short
+    } else {
+        SnackbarDuration.Indefinite
+    },
+): SnackbarResult {
+    currentSnackbarData?.dismiss()
+    return showSnackbar(message, actionLabel, withDismissAction, duration)
+}
+
+/**
+ * Material's snackbar, whose own composable always has its width limit, with [maxWidth], the
+ * haptics of the app's buttons, and swiping it away to either side.
  */
 @Composable
 internal fun ScreenSnackbar(data: SnackbarData, maxWidth: Dp) {
+    // One state per message, the next one must not start out swiped away
+    key(data) {
+        val swipeState = rememberSwipeToDismissBoxState()
+        val haptic = LocalHapticFeedback.current
+
+        LaunchedEffect(swipeState.currentValue) {
+            if (swipeState.currentValue != SwipeToDismissBoxValue.Settled) {
+                haptic.confirm()
+                data.dismiss()
+            }
+        }
+
+        SwipeToDismissBox(
+            state = swipeState,
+            backgroundContent = {},
+            modifier = Modifier
+                .padding(SnackbarMargin)
+                .widthIn(max = maxWidth)
+                .fillMaxWidth(),
+        ) {
+            SnackbarSurface(data)
+        }
+    }
+}
+
+@Composable
+private fun SnackbarSurface(data: SnackbarData) {
     val haptic = LocalHapticFeedback.current
     val visuals = data.visuals
 
     Surface(
-        modifier = Modifier
-            .padding(SnackbarMargin)
-            .widthIn(max = maxWidth)
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.small,
         color = SnackbarDefaults.color,
         contentColor = SnackbarDefaults.contentColor,

@@ -112,6 +112,11 @@
   <string name="scanner_retry">Δοκιμάστε ξανά</string>
   <string name="scanner_torch_on">Ενεργοποίηση φακού</string>
   <string name="scanner_torch_off">Απενεργοποίηση φακού</string>
+  <string name="scanner_engine">Μηχανή σαρωτή</string>
+  <string name="scanner_engine_zxing_description">Ανοιχτού κώδικα, διαθέσιμη σε κάθε συσκευή</string>
+  <string name="scanner_engine_ml_kit_description">Από την Google, συνήθως πιο γρήγορη και αξιόπιστη</string>
+  <string name="scanner_engine_ml_kit_locked">Απαιτεί την εφαρμογή ξεκλειδώματος</string>
+  <string name="scanner_unlock_ml_kit">Ξεκλείδωμα του ML Kit</string>
 
   <!-- About -->
   <string name="about_version">Έκδοση</string>
@@ -1219,6 +1224,7 @@
   <string name="notifications_show_now">Εμφάνιση τώρα</string>
   <string name="notifications_show_now_hint">Δείχνει τι λέει η ειδοποίηση αυτή τη στιγμή</string>
   <string name="notifications_nothing">Δεν υπάρχει τίποτα να αναφερθεί αυτή τη στιγμή</string>
+  <string name="notifications_show_failed">Δεν ήταν δυνατή η εμφάνιση της ειδοποίησης. Ελέγξτε ότι οι ειδοποιήσεις επιτρέπονται.</string>
   <string name="notifications_stale">Τελευταία γνωστή κατάσταση, ο διακομιστής δεν ήταν προσβάσιμος</string>
   <string name="notifications_blocked">Οι ειδοποιήσεις είναι αποκλεισμένες</string>
   <string name="notifications_blocked_settings">Πατήστε για να τις επιτρέψετε στις ρυθμίσεις συστήματος.</string>

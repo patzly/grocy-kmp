@@ -66,6 +66,11 @@ data object UserSettingsRoute : DetailRoute
 @SerialName("settings/shopping-mode")
 data class ShoppingModeSettingsRoute(val inSettings: Boolean = true) : DetailRoute
 
+/** The scanner's engine, from what this app ships and has unlocked, kept on the device. */
+@Serializable
+@SerialName("settings/scanner")
+data object ScannerSettingsRoute : DetailRoute
+
 /** The daily notifications per feature of the server, kept on the device. */
 @Serializable
 @SerialName("settings/notifications")
@@ -86,6 +91,7 @@ val settingsRouteSerializers = SerializersModule {
         subclass(UserSettingsRoute::class, UserSettingsRoute.serializer())
         subclass(StockSettingsRoute::class, StockSettingsRoute.serializer())
         subclass(ShoppingModeSettingsRoute::class, ShoppingModeSettingsRoute.serializer())
+        subclass(ScannerSettingsRoute::class, ScannerSettingsRoute.serializer())
         subclass(NotificationSettingsRoute::class, NotificationSettingsRoute.serializer())
         subclass(LogRoute::class, LogRoute.serializer())
     }

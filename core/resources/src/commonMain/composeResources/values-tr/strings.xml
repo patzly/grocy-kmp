@@ -112,6 +112,11 @@
   <string name="scanner_retry">Tekrar dene</string>
   <string name="scanner_torch_on">El fenerini aç</string>
   <string name="scanner_torch_off">El fenerini kapat</string>
+  <string name="scanner_engine">Tarayıcı motoru</string>
+  <string name="scanner_engine_zxing_description">Açık kaynak, her cihazda kullanılabilir</string>
+  <string name="scanner_engine_ml_kit_description">Google'dan, genellikle daha hızlı ve güvenilir</string>
+  <string name="scanner_engine_ml_kit_locked">Kilit açma uygulaması gerekir</string>
+  <string name="scanner_unlock_ml_kit">ML Kit kilidini aç</string>
 
   <!-- About -->
   <string name="about_version">Sürüm</string>
@@ -1218,6 +1223,7 @@
   <string name="notifications_show_now">Şimdi göster</string>
   <string name="notifications_show_now_hint">Bildirimin şu anda ne söylediğini gösterir</string>
   <string name="notifications_nothing">Şu anda bildirilecek bir şey yok</string>
+  <string name="notifications_show_failed">Bildirim gösterilemedi. Bildirimlere izin verildiğini kontrol edin.</string>
   <string name="notifications_stale">Bilinen son durum, sunucuya ulaşılamadı</string>
   <string name="notifications_blocked">Bildirimler engellendi</string>
   <string name="notifications_blocked_settings">Sistem ayarlarında izin vermek için dokunun.</string>

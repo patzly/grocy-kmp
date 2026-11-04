@@ -112,6 +112,11 @@
   <string name="scanner_retry">Erneut versuchen</string>
   <string name="scanner_torch_on">Taschenlampe einschalten</string>
   <string name="scanner_torch_off">Taschenlampe ausschalten</string>
+  <string name="scanner_engine">Scanner-Engine</string>
+  <string name="scanner_engine_zxing_description">Open Source, auf jedem Gerät verfügbar</string>
+  <string name="scanner_engine_ml_kit_description">Von Google, meist schneller und zuverlässiger</string>
+  <string name="scanner_engine_ml_kit_locked">Benötigt die Freischalt-App</string>
+  <string name="scanner_unlock_ml_kit">ML Kit freischalten</string>
 
   <!-- About -->
   <string name="about_version">Version</string>
@@ -1219,6 +1224,7 @@
   <string name="notifications_show_now">Jetzt anzeigen</string>
   <string name="notifications_show_now_hint">Zeigt, was die Benachrichtigung gerade sagt</string>
   <string name="notifications_nothing">Gerade gibt es nichts zu melden</string>
+  <string name="notifications_show_failed">Die Benachrichtigung konnte nicht angezeigt werden. Prüfe, ob Benachrichtigungen erlaubt sind.</string>
   <string name="notifications_stale">Letzter bekannter Stand, der Server war nicht erreichbar</string>
   <string name="notifications_blocked">Benachrichtigungen sind blockiert</string>
   <string name="notifications_blocked_settings">Tippe, um sie in den Systemeinstellungen zu erlauben.</string>

@@ -112,6 +112,11 @@
   <string name="scanner_retry">Försök igen</string>
   <string name="scanner_torch_on">Tänd ficklampan</string>
   <string name="scanner_torch_off">Släck ficklampan</string>
+  <string name="scanner_engine">Skannermotor</string>
+  <string name="scanner_engine_zxing_description">Öppen källkod, tillgänglig på alla enheter</string>
+  <string name="scanner_engine_ml_kit_description">Från Google, oftast snabbare och mer tillförlitlig</string>
+  <string name="scanner_engine_ml_kit_locked">Kräver upplåsningsappen</string>
+  <string name="scanner_unlock_ml_kit">Lås upp ML Kit</string>
 
   <!-- About -->
   <string name="about_version">Version</string>
@@ -1218,6 +1223,7 @@
   <string name="notifications_show_now">Visa nu</string>
   <string name="notifications_show_now_hint">Visar vad aviseringen säger just nu</string>
   <string name="notifications_nothing">Inget att rapportera just nu</string>
+  <string name="notifications_show_failed">Aviseringen kunde inte visas. Kontrollera att aviseringar är tillåtna.</string>
   <string name="notifications_stale">Senast kända läge, servern kunde inte nås</string>
   <string name="notifications_blocked">Aviseringar är blockerade</string>
   <string name="notifications_blocked_settings">Tryck för att tillåta dem i systeminställningarna.</string>

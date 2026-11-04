@@ -37,6 +37,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.edgeToEdgeItem
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.insetItems
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.ClearFilterChip
 import com.patrickzedler.grocy.core.forms.dateTimeText
 import com.patrickzedler.grocy.core.forms.DisabledAlpha
@@ -84,6 +85,7 @@ import com.patrickzedler.grocy.core.resources.stock_overview_fields
 import com.patrickzedler.grocy.core.resources.stock_overview_group_by
 import com.patrickzedler.grocy.core.resources.stock_overview_grouped_by
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
@@ -118,8 +120,8 @@ internal fun BatteriesJournalScreen(
         onErrorShown = viewModel::onErrorShown,
     )
     LaunchedEffect(viewModel) {
-        viewModel.events.collect { event ->
-            snackbarHostState.showSnackbar(
+        viewModel.events.collectLatest { event ->
+            snackbarHostState.showNewestSnackbar(
                 when (event) {
                     BatteriesJournalEvent.Undone -> getString(Res.string.batteries_undone)
                     is BatteriesJournalEvent.Failed ->

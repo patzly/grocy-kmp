@@ -112,6 +112,11 @@
   <string name="scanner_retry">Réessayer</string>
   <string name="scanner_torch_on">Allumer la lampe torche</string>
   <string name="scanner_torch_off">Éteindre la lampe torche</string>
+  <string name="scanner_engine">Moteur du scanner</string>
+  <string name="scanner_engine_zxing_description">Open source, disponible sur tous les appareils</string>
+  <string name="scanner_engine_ml_kit_description">De Google, généralement plus rapide et plus fiable</string>
+  <string name="scanner_engine_ml_kit_locked">Nécessite l'application de déverrouillage</string>
+  <string name="scanner_unlock_ml_kit">Déverrouiller ML Kit</string>
 
   <!-- About -->
   <string name="about_version">Version</string>
@@ -1264,6 +1269,7 @@
   <string name="notifications_show_now">Afficher maintenant</string>
   <string name="notifications_show_now_hint">Montre ce que dit la notification en ce moment</string>
   <string name="notifications_nothing">Rien à signaler pour le moment</string>
+  <string name="notifications_show_failed">La notification n'a pas pu être affichée. Vérifiez que les notifications sont autorisées.</string>
   <string name="notifications_stale">Dernier état connu, le serveur n'a pas pu être joint</string>
   <string name="notifications_blocked">Les notifications sont bloquées</string>
   <string name="notifications_blocked_settings">Appuyez pour les autoriser dans les paramètres système.</string>

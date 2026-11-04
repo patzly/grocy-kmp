@@ -59,6 +59,7 @@ import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.rememberStatusColors
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.FieldChip
 import com.patrickzedler.grocy.core.forms.FieldChipView
 import com.patrickzedler.grocy.core.forms.GroupItems
@@ -120,6 +121,7 @@ import com.patrickzedler.grocy.feature.recipes.impl.list.StatusChip
 import com.patrickzedler.grocy.feature.recipes.impl.list.recipeStatusChips
 import com.patrickzedler.grocy.feature.recipes.impl.list.statusChipsOf
 import com.patrickzedler.grocy.feature.recipes.impl.list.statusFieldChip
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
@@ -356,8 +358,8 @@ internal fun IngredientOverviewHost(
 @Composable
 internal fun RecipeEvents(viewModel: RecipeViewModel, snackbarHostState: SnackbarHostState) {
     LaunchedEffect(viewModel) {
-        viewModel.events.collect { event ->
-            snackbarHostState.showSnackbar(
+        viewModel.events.collectLatest { event ->
+            snackbarHostState.showNewestSnackbar(
                 when (event) {
                     is RecipeEvent.Consumed ->
                         getString(Res.string.recipe_consumed, event.recipeName)

@@ -1,11 +1,13 @@
 package com.patrickzedler.grocy.feature.settings.impl.notifications
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.SnackbarHostState
@@ -23,7 +25,9 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.patrickzedler.grocy.core.data.notifications.ShowNowResult
 import com.patrickzedler.grocy.core.design.withTabularNumbers
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ScreenPane
@@ -32,6 +36,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.PickTimeDialog
 import com.patrickzedler.grocy.core.forms.clockTimeText
 import com.patrickzedler.grocy.core.model.notifications.NotificationKind
@@ -60,6 +65,7 @@ import com.patrickzedler.grocy.core.resources.notifications_exact
 import com.patrickzedler.grocy.core.resources.notifications_exact_hint
 import com.patrickzedler.grocy.core.resources.notifications_nothing
 import com.patrickzedler.grocy.core.resources.notifications_only_mine
+import com.patrickzedler.grocy.core.resources.notifications_show_failed
 import com.patrickzedler.grocy.core.resources.notifications_show_names
 import com.patrickzedler.grocy.core.resources.notifications_show_names_hint
 import com.patrickzedler.grocy.core.resources.notifications_show_now
@@ -75,6 +81,7 @@ import com.patrickzedler.grocy.core.resources.tasks_title
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuActions
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuViewModel
 import com.patrickzedler.grocy.feature.settings.impl.SettingsScaffold
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
@@ -111,8 +118,16 @@ internal fun NotificationSettingsScreen(
         pendingShowNow = null
     }
     LaunchedEffect(viewModel) {
-        viewModel.nothingToShow.collect {
-            snackbarHostState.showSnackbar(getString(Res.string.notifications_nothing))
+        viewModel.showNowProblems.collectLatest { problem ->
+            snackbarHostState.showNewestSnackbar(
+                getString(
+                    if (problem == ShowNowResult.FAILED) {
+                        Res.string.notifications_show_failed
+                    } else {
+                        Res.string.notifications_nothing
+                    },
+                ),
+            )
         }
     }
 
@@ -309,6 +324,7 @@ private fun LazyListScope.notificationGroup(
                 index = index,
                 count = count,
                 icon = false,
+                isLoading = viewModel.showingNow == kind,
                 onClick = onShowNow,
             )
         }
@@ -355,6 +371,7 @@ private fun NoticeItem(
     count: Int,
     isError: Boolean = false,
     icon: Boolean = isError,
+    isLoading: Boolean = false,
     onClick: (() -> Unit)? = null,
 ) {
     val haptic = LocalHapticFeedback.current
@@ -398,6 +415,11 @@ private fun NoticeItem(
             modifier = Modifier.fillMaxWidth().clickCursor(),
             verticalAlignment = Alignment.CenterVertically,
             leadingContent = leading,
+            trailingContent = if (isLoading) {
+                { LoadingIndicator(modifier = Modifier.size(40.dp)) }
+            } else {
+                null
+            },
             supportingContent = supporting,
             content = { Text(stringResource(title)) },
         )

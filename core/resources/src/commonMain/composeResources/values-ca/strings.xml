@@ -112,6 +112,11 @@
   <string name="scanner_retry">Tornar-ho a provar</string>
   <string name="scanner_torch_on">Encendre la llanterna</string>
   <string name="scanner_torch_off">Apagar la llanterna</string>
+  <string name="scanner_engine">Motor de l'escàner</string>
+  <string name="scanner_engine_zxing_description">Codi obert, disponible a tots els dispositius</string>
+  <string name="scanner_engine_ml_kit_description">De Google, normalment més ràpid i fiable</string>
+  <string name="scanner_engine_ml_kit_locked">Requereix l'aplicació de desbloqueig</string>
+  <string name="scanner_unlock_ml_kit">Desbloqueja ML Kit</string>
 
   <!-- About -->
   <string name="about_version">Versió</string>
@@ -1264,6 +1269,7 @@
   <string name="notifications_show_now">Mostra ara</string>
   <string name="notifications_show_now_hint">Mostra el que diu la notificació ara mateix</string>
   <string name="notifications_nothing">Ara mateix no hi ha res a dir</string>
+  <string name="notifications_show_failed">No s'ha pogut mostrar la notificació. Comprova que les notificacions estan permeses.</string>
   <string name="notifications_stale">Últim estat conegut, no s'ha pogut contactar amb el servidor</string>
   <string name="notifications_blocked">Les notificacions estan bloquejades</string>
   <string name="notifications_blocked_settings">Toca per permetre-les a la configuració del sistema.</string>

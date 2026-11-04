@@ -39,6 +39,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.actionMessage
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.grocycode_description
@@ -54,6 +55,7 @@ import com.patrickzedler.grocy.core.scanner.writer.Grocycode
 import com.patrickzedler.grocy.core.scanner.writer.PngWriter
 import com.patrickzedler.grocy.core.ui.SavedFile
 import com.patrickzedler.grocy.core.ui.rememberFileSaver
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
@@ -190,7 +192,7 @@ fun rememberGrocycodeDownload(
     val save = rememberFileSaver(mimeType = PNG) { success ->
         if (!success) {
             scope.launch {
-                snackbarHostState.showSnackbar(getString(Res.string.grocycode_save_failed))
+                snackbarHostState.showNewestSnackbar(getString(Res.string.grocycode_save_failed))
             }
         }
     }
@@ -216,8 +218,8 @@ fun rememberGrocycodeDownload(
 @Composable
 fun LabelPrintEffect(labels: LabelPrintViewModel, snackbarHostState: SnackbarHostState) {
     LaunchedEffect(labels) {
-        labels.results.collect { result ->
-            snackbarHostState.showSnackbar(
+        labels.results.collectLatest { result ->
+            snackbarHostState.showNewestSnackbar(
                 when (result) {
                     LabelPrintResult.Printed -> getString(Res.string.grocycode_printed)
                     is LabelPrintResult.Failed ->

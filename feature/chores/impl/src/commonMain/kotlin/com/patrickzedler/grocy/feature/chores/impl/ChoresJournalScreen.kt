@@ -38,6 +38,7 @@ import com.patrickzedler.grocy.core.design.component.edgeToEdgeItem
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.insetItems
 import com.patrickzedler.grocy.core.design.component.rememberStatusColors
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.ClearFilterChip
 import com.patrickzedler.grocy.core.forms.dateTimeText
 import com.patrickzedler.grocy.core.forms.DisabledAlpha
@@ -95,6 +96,7 @@ import com.patrickzedler.grocy.core.resources.stock_overview_fields
 import com.patrickzedler.grocy.core.resources.stock_overview_group_by
 import com.patrickzedler.grocy.core.resources.stock_overview_grouped_by
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
@@ -129,8 +131,8 @@ internal fun ChoresJournalScreen(
         onErrorShown = viewModel::onErrorShown,
     )
     LaunchedEffect(viewModel) {
-        viewModel.events.collect { event ->
-            snackbarHostState.showSnackbar(
+        viewModel.events.collectLatest { event ->
+            snackbarHostState.showNewestSnackbar(
                 when (event) {
                     ChoresJournalEvent.Undone -> getString(Res.string.chores_undone)
                     is ChoresJournalEvent.Failed ->

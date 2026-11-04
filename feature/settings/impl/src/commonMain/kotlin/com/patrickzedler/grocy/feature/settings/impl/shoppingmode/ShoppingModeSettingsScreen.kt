@@ -11,6 +11,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.resources.shopping_mode
 import com.patrickzedler.grocy.core.resources.shopping_mode_auto_sync
 import com.patrickzedler.grocy.core.resources.shopping_mode_auto_sync_hint
 import com.patrickzedler.grocy.core.resources.shopping_mode_done_last
@@ -22,6 +23,7 @@ import com.patrickzedler.grocy.feature.settings.impl.SettingNumberItem
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuActions
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuViewModel
 import com.patrickzedler.grocy.feature.settings.impl.SettingsScaffold
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -34,13 +36,14 @@ internal fun ShoppingModeSettingsScreen(
     menuViewModel: SettingsMenuViewModel,
     menuActions: SettingsMenuActions,
     onBackClick: () -> Unit,
+    inSettings: Boolean,
     modifier: Modifier = Modifier,
     pane: ScreenPane? = null,
 ) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
 
     SettingsScaffold(
-        title = stringResource(Res.string.shopping_mode_settings),
+        title = stringResource(shoppingModeSettingsTitle(inSettings)),
         menuViewModel = menuViewModel,
         menuActions = menuActions,
         onBackClick = onBackClick,
@@ -51,6 +54,10 @@ internal fun ShoppingModeSettingsScreen(
         settings?.let { shoppingModeSettings(viewModel, it) }
     }
 }
+
+/** In the settings "settings" is clear, opened from the shopping mode the name needs it. */
+internal fun shoppingModeSettingsTitle(inSettings: Boolean): StringResource =
+    if (inSettings) Res.string.shopping_mode else Res.string.shopping_mode_settings
 
 private fun LazyListScope.shoppingModeSettings(
     viewModel: ShoppingModeSettingsViewModel,

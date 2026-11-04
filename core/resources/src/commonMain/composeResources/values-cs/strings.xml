@@ -112,6 +112,11 @@
   <string name="scanner_retry">Zkusit znovu</string>
   <string name="scanner_torch_on">Zapnout svítilnu</string>
   <string name="scanner_torch_off">Vypnout svítilnu</string>
+  <string name="scanner_engine">Modul skeneru</string>
+  <string name="scanner_engine_zxing_description">Otevřený zdrojový kód, dostupný na každém zařízení</string>
+  <string name="scanner_engine_ml_kit_description">Od Googlu, obvykle rychlejší a spolehlivější</string>
+  <string name="scanner_engine_ml_kit_locked">Vyžaduje odemykací aplikaci</string>
+  <string name="scanner_unlock_ml_kit">Odemknout ML Kit</string>
 
   <!-- About -->
   <string name="about_version">Verze</string>
@@ -1313,6 +1318,7 @@ Po zaškrtnutí nebude brán zřetel na množství produktu v nákupním seznamu
   <string name="notifications_show_now">Zobrazit nyní</string>
   <string name="notifications_show_now_hint">Zobrazí, co by oznámení říkalo právě teď</string>
   <string name="notifications_nothing">Momentálně není co oznamovat</string>
+  <string name="notifications_show_failed">Oznámení se nepodařilo zobrazit. Zkontrolujte, zda jsou oznámení povolena.</string>
   <string name="notifications_stale">Poslední známý stav, server nebyl dostupný</string>
   <string name="notifications_blocked">Oznámení jsou blokována</string>
   <string name="notifications_blocked_settings">Klepnutím je povolíte v nastavení systému.</string>

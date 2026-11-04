@@ -43,7 +43,7 @@ import com.patrickzedler.grocy.core.resources.settings_reset
 import com.patrickzedler.grocy.core.resources.settings_reset_description
 import com.patrickzedler.grocy.core.resources.settings_scanner
 import com.patrickzedler.grocy.core.resources.settings_server
-import com.patrickzedler.grocy.core.resources.shopping_mode_settings
+import com.patrickzedler.grocy.core.resources.shopping_mode
 import com.patrickzedler.grocy.core.resources.title_settings
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
@@ -84,7 +84,7 @@ internal enum class SettingsCategory(
         icon = Res.drawable.ic_rounded_notifications,
     ),
     SHOPPING_MODE(
-        title = Res.string.shopping_mode_settings,
+        title = Res.string.shopping_mode,
         icon = Res.drawable.ic_rounded_storefront,
     ),
 }

@@ -38,6 +38,7 @@ import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.edgeToEdgeItem
 import com.patrickzedler.grocy.core.design.component.insetItems
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.ClearFilterChip
 import com.patrickzedler.grocy.core.forms.DisabledAlpha
 import com.patrickzedler.grocy.core.forms.DropdownFilterChip
@@ -100,6 +101,7 @@ import com.patrickzedler.grocy.core.resources.transaction_transfer_from
 import com.patrickzedler.grocy.core.resources.transaction_transfer_to
 import com.patrickzedler.grocy.core.scanner.writer.Grocycode
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
@@ -133,8 +135,8 @@ internal fun StockJournalScreen(
     )
     LabelPrintEffect(actions.labels, snackbarHostState)
     LaunchedEffect(viewModel) {
-        viewModel.events.collect { event ->
-            snackbarHostState.showSnackbar(
+        viewModel.events.collectLatest { event ->
+            snackbarHostState.showNewestSnackbar(
                 when (event) {
                     JournalEvent.Undone -> getString(Res.string.stock_booking_undone)
                     is JournalEvent.Failed ->

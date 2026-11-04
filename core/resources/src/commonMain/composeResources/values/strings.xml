@@ -134,6 +134,13 @@
   <string name="scanner_retry">Try again</string>
   <string name="scanner_torch_on">Turn on flashlight</string>
   <string name="scanner_torch_off">Turn off flashlight</string>
+  <string name="scanner_engine_zxing" translatable="false">ZXing</string>
+  <string name="scanner_engine_ml_kit" translatable="false">ML Kit</string>
+  <string name="scanner_engine">Scanner engine</string>
+  <string name="scanner_engine_zxing_description">Open source, available on every device</string>
+  <string name="scanner_engine_ml_kit_description">From Google, usually faster and more reliable</string>
+  <string name="scanner_engine_ml_kit_locked">Requires the unlock app</string>
+  <string name="scanner_unlock_ml_kit">Unlock ML Kit</string>
 
   <!-- About -->
   <string name="about_version">Version</string>
@@ -1238,6 +1245,7 @@
   <string name="notifications_show_now">Show now</string>
   <string name="notifications_show_now_hint">Shows what the notification says right now</string>
   <string name="notifications_nothing">Nothing to tell about right now</string>
+  <string name="notifications_show_failed">The notification could not be shown. Check that notifications are allowed.</string>
   <string name="notifications_stale">Last known state, the server could not be reached</string>
   <string name="notifications_blocked">Notifications are blocked</string>
   <string name="notifications_blocked_settings">Tap to allow them in the system settings.</string>

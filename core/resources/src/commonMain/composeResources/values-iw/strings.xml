@@ -112,6 +112,11 @@
   <string name="scanner_retry">ניסיון חוזר</string>
   <string name="scanner_torch_on">הדלקת הפנס</string>
   <string name="scanner_torch_off">כיבוי הפנס</string>
+  <string name="scanner_engine">מנוע הסורק</string>
+  <string name="scanner_engine_zxing_description">קוד פתוח, זמין בכל מכשיר</string>
+  <string name="scanner_engine_ml_kit_description">של Google, בדרך כלל מהיר ואמין יותר</string>
+  <string name="scanner_engine_ml_kit_locked">נדרשת אפליקציית הפתיחה</string>
+  <string name="scanner_unlock_ml_kit">פתיחת ML Kit</string>
 
   <!-- About -->
   <string name="about_version">גרסה</string>
@@ -1264,6 +1269,7 @@
   <string name="notifications_show_now">הצגה כעת</string>
   <string name="notifications_show_now_hint">מציג מה ההתראה אומרת כרגע</string>
   <string name="notifications_nothing">אין על מה לדווח כרגע</string>
+  <string name="notifications_show_failed">לא ניתן היה להציג את ההתראה. יש לוודא שההתראות מותרות.</string>
   <string name="notifications_stale">המצב הידוע האחרון, לא ניתן היה להתחבר לשרת</string>
   <string name="notifications_blocked">ההתראות חסומות</string>
   <string name="notifications_blocked_settings">יש להקיש כדי לאפשר אותן בהגדרות המערכת.</string>

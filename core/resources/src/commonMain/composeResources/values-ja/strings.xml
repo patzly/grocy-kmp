@@ -112,6 +112,11 @@
   <string name="scanner_retry">再試行</string>
   <string name="scanner_torch_on">ライトをオン</string>
   <string name="scanner_torch_off">ライトをオフ</string>
+  <string name="scanner_engine">スキャナーエンジン</string>
+  <string name="scanner_engine_zxing_description">オープンソース、すべてのデバイスで利用可能</string>
+  <string name="scanner_engine_ml_kit_description">Google 製、通常はより高速で高精度</string>
+  <string name="scanner_engine_ml_kit_locked">ロック解除アプリが必要です</string>
+  <string name="scanner_unlock_ml_kit">ML Kit をロック解除</string>
 
   <!-- About -->
   <string name="about_version">バージョン</string>
@@ -1174,6 +1179,7 @@
   <string name="notifications_show_now">今すぐ表示</string>
   <string name="notifications_show_now_hint">現時点の通知内容を表示します</string>
   <string name="notifications_nothing">現在お知らせすることはありません</string>
+  <string name="notifications_show_failed">通知を表示できませんでした。通知が許可されているか確認してください。</string>
   <string name="notifications_stale">最後に確認した状態です。サーバーに接続できませんでした</string>
   <string name="notifications_blocked">通知がブロックされています</string>
   <string name="notifications_blocked_settings">タップしてシステム設定で許可してください。</string>

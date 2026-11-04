@@ -27,6 +27,7 @@ import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_cancel
 import com.patrickzedler.grocy.core.resources.action_copy
@@ -65,6 +66,7 @@ import com.patrickzedler.grocy.core.resources.objects_delete_task_category
 import com.patrickzedler.grocy.core.resources.objects_delete_userentity
 import com.patrickzedler.grocy.core.resources.objects_delete_userfield
 import com.patrickzedler.grocy.core.resources.objects_merge_failed
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -100,11 +102,13 @@ fun ObjectActionsHost(
     val currentOnDone by rememberUpdatedState(onDone)
 
     LaunchedEffect(actions) {
-        actions.events.collect { event ->
+        actions.events.collectLatest { event ->
             when (event) {
                 ObjectActionEvent.Offline ->
-                    snackbarHostState.showSnackbar(getString(Res.string.objects_action_offline))
-                is ObjectActionEvent.Failed -> snackbarHostState.showSnackbar(
+                    snackbarHostState.showNewestSnackbar(
+                        getString(Res.string.objects_action_offline),
+                    )
+                is ObjectActionEvent.Failed -> snackbarHostState.showNewestSnackbar(
                     listOfNotNull(
                         getString(event.action.failure),
                         event.serverMessage?.let {

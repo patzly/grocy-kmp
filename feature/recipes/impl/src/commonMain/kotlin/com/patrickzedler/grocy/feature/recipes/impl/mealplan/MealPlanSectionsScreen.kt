@@ -20,6 +20,7 @@ import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.SupportingLines
 import com.patrickzedler.grocy.core.design.component.insetItems
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.DeleteDialog
 import com.patrickzedler.grocy.core.forms.ListDetailItem
 import com.patrickzedler.grocy.core.forms.actionMessage
@@ -40,6 +41,7 @@ import com.patrickzedler.grocy.core.resources.meal_plan_sections_title
 import com.patrickzedler.grocy.core.resources.objects_delete_failed
 import com.patrickzedler.grocy.core.resources.objects_sort_number_value
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -68,8 +70,10 @@ internal fun MealPlanSectionsScreen(
         onErrorShown = viewModel::onErrorShown,
     )
     LaunchedEffect(viewModel) {
-        viewModel.failures.collect { error ->
-            snackbarHostState.showSnackbar(error.actionMessage(Res.string.objects_delete_failed))
+        viewModel.failures.collectLatest { error ->
+            snackbarHostState.showNewestSnackbar(
+                error.actionMessage(Res.string.objects_delete_failed),
+            )
         }
     }
     when (val dialog = viewModel.dialog) {

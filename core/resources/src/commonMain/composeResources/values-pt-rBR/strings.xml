@@ -112,6 +112,11 @@
   <string name="scanner_retry">Tentar novamente</string>
   <string name="scanner_torch_on">Ligar a lanterna</string>
   <string name="scanner_torch_off">Desligar a lanterna</string>
+  <string name="scanner_engine">Mecanismo do leitor</string>
+  <string name="scanner_engine_zxing_description">Código aberto, disponível em todos os dispositivos</string>
+  <string name="scanner_engine_ml_kit_description">Do Google, geralmente mais rápido e confiável</string>
+  <string name="scanner_engine_ml_kit_locked">Requer o app de desbloqueio</string>
+  <string name="scanner_unlock_ml_kit">Desbloquear o ML Kit</string>
 
   <!-- About -->
   <string name="about_version">Versão</string>
@@ -1264,6 +1269,7 @@
   <string name="notifications_show_now">Mostrar agora</string>
   <string name="notifications_show_now_hint">Mostra o que a notificação diz neste momento</string>
   <string name="notifications_nothing">Nada a informar no momento</string>
+  <string name="notifications_show_failed">Não foi possível mostrar a notificação. Verifique se as notificações estão permitidas.</string>
   <string name="notifications_stale">Último estado conhecido, não foi possível acessar o servidor</string>
   <string name="notifications_blocked">As notificações estão bloqueadas</string>
   <string name="notifications_blocked_settings">Toque para permiti-las nas configurações do sistema.</string>

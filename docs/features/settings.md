@@ -7,11 +7,18 @@ Settings plan: the overview lists the categories General (language, theme, contr
 server, Grocy's "Settings" menu), Network (loading timeout, Tor with Orbot, HTTP proxy), Behavior
 (navigation, date and keyboard settings, Open Food Facts / Open Beauty Facts), Scanner (engine,
 front camera, 2D formats, barcode formats, external scanners), Notifications (per feature)
-and Shopping mode settings (`storefront`) as one group (`SettingsCategory`), then "Backup and restore" and "Reset all" as a second group.
-Built so far: the overview, General (language, theme, contrast), Server, Notifications
-(`docs/features/notifications.md`), Shopping mode settings
+and Shopping mode (`storefront`) as one group (`SettingsCategory`), then "Backup and restore" and "Reset all" as a second group.
+Built so far: the overview, General (language, theme, contrast), Server, Scanner (the engine
+only, `ScannerSettingsRoute`: a single choice of `ScannerRepository.availableEngines`, saved at
+once. The Play app offers ZXing and ML Kit; locked, ML Kit stays visible and disabled with an item
+below it that explains the unlock app and opens it on Google Play, shown only where Google Play
+is installed like the key item in About. Returning to the page checks the installed apps again,
+so a bought key enables ML Kit at once without selecting it. FOSS and web offer ZXing alone and
+mention nothing of the unlock app), Notifications
+(`docs/features/notifications.md`), Shopping mode
 (`ShoppingModeSettingsRoute`, also opened by the shopping mode's menu as a screen of its own
-with `inSettings = false`: auto sync with its interval in seconds, at least
+with `inSettings = false`, which is then titled "Shopping mode settings": auto sync with its
+interval in seconds, at least
 `ShoppingModeSettings.MIN_SYNC_INTERVAL_SECONDS`, saved once typing pauses and only when valid,
 "Keep screen on" and "Show checked items at the bottom"; kept on the device in `SettingsStore`
 (DataStore keys `shopping_mode_*`, `grocy.shoppingMode*` on the web), read at app start by

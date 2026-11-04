@@ -36,6 +36,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedTexts
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.design.dynamicColorFollowsSystemContrast
 import com.patrickzedler.grocy.core.design.isDynamicColorAvailable
 import com.patrickzedler.grocy.core.model.AppColor
@@ -127,7 +128,9 @@ internal fun GeneralSettingsScreen(
     LaunchedEffect(viewModel.demoServerSwitchFailed) {
         if (viewModel.demoServerSwitchFailed) {
             // Cleared afterwards, a new key would cancel the snackbar while it shows
-            snackbarHostState.showSnackbar(getString(Res.string.settings_server_demo_switch_failed))
+            snackbarHostState.showNewestSnackbar(
+                getString(Res.string.settings_server_demo_switch_failed),
+            )
             viewModel.onDemoServerSwitchFailureShown()
         }
     }

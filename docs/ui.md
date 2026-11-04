@@ -151,3 +151,12 @@ Long texts (changelog, licenses) are files in `composeResources/files/`, rendere
 (`#_` for tabular numbers), `__` subtitles, `**bold**` / `<b>`, `=> ` / `> ` link lines,
 `? ` note and `! ` warning boxes in the size of the surrounding paragraphs (`bodyMedium` in
 dialogs), `?- ` / `!- ` boxes with small text (`bodySmall`).
+
+## Snackbars
+
+Only one snackbar shows at a time and the newest replaces it at once, as Material asks and Android's
+own snackbars do. `SnackbarHostState.showSnackbar` would wait in line, so screens call
+`showNewestSnackbar` (`core:design`) and event loops use `collectLatest`, whose next event also ends
+the wait for an "Undo" result. What belongs together is one message, e.g. a booking with Grocy's
+warning about it (`BookingNote`) below its "Undo". `ScreenSnackbar` can be swiped away to either side
+(Material's `SwipeToDismissBox`), screen readers get the host's dismiss action.

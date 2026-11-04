@@ -5,6 +5,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.actionMessage
 import com.patrickzedler.grocy.core.forms.dateTimeText
 import com.patrickzedler.grocy.core.resources.Res
@@ -14,23 +15,24 @@ import com.patrickzedler.grocy.core.resources.batteries_tracked
 import com.patrickzedler.grocy.core.resources.batteries_undone
 import com.patrickzedler.grocy.core.resources.grocycode_print_failed
 import com.patrickzedler.grocy.core.resources.grocycode_printed
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.getString
 
 /** The messages of [actions] with Grocy's "Undo", in [snackbarHostState]. */
 @Composable
 internal fun BatteryActionsHost(actions: BatteryActions, snackbarHostState: SnackbarHostState) {
     LaunchedEffect(actions) {
-        actions.events.collect { event ->
+        actions.events.collectLatest { event ->
             when (event) {
                 is BatteryEvent.Tracked -> showTracked(event, snackbarHostState, actions::undo)
                 BatteryEvent.Undone ->
-                    snackbarHostState.showSnackbar(getString(Res.string.batteries_undone))
+                    snackbarHostState.showNewestSnackbar(getString(Res.string.batteries_undone))
                 BatteryEvent.LabelPrinted ->
-                    snackbarHostState.showSnackbar(getString(Res.string.grocycode_printed))
-                is BatteryEvent.LabelFailed -> snackbarHostState.showSnackbar(
+                    snackbarHostState.showNewestSnackbar(getString(Res.string.grocycode_printed))
+                is BatteryEvent.LabelFailed -> snackbarHostState.showNewestSnackbar(
                     event.error.actionMessage(Res.string.grocycode_print_failed),
                 )
-                is BatteryEvent.Failed -> snackbarHostState.showSnackbar(
+                is BatteryEvent.Failed -> snackbarHostState.showNewestSnackbar(
                     event.error.actionMessage(Res.string.batteries_track_failed),
                 )
             }
@@ -44,7 +46,7 @@ internal suspend fun showTracked(
     snackbarHostState: SnackbarHostState,
     onUndo: (BatteryEvent.Tracked) -> Unit,
 ) {
-    val result = snackbarHostState.showSnackbar(
+    val result = snackbarHostState.showNewestSnackbar(
         message = getString(
             Res.string.batteries_tracked,
             event.batteryName,

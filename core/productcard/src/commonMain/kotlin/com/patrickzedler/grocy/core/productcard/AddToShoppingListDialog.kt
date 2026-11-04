@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalLocale
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.FormDialog
 import com.patrickzedler.grocy.core.forms.UserfieldItem
 import com.patrickzedler.grocy.core.forms.saveMessage
@@ -14,6 +15,7 @@ import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.product_overview_add_to_shopping_list
 import com.patrickzedler.grocy.core.resources.product_userfields
 import com.patrickzedler.grocy.core.resources.shopping_list_added
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
@@ -28,9 +30,9 @@ internal fun AddToShoppingListHost(
 ) {
     val language = LocalLocale.current.toLanguageTag()
     LaunchedEffect(viewModel) {
-        viewModel.added.collect { added ->
+        viewModel.added.collectLatest { added ->
             val amount = parseDecimal(added.amount) ?: 0.0
-            snackbarHostState.showSnackbar(
+            snackbarHostState.showNewestSnackbar(
                 getString(
                     Res.string.shopping_list_added,
                     listOfNotNull(added.amount, added.unit?.unit?.nameFor(amount, language))

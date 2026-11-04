@@ -25,6 +25,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
+/** What [NotificationRepository.showNow] did. */
+enum class ShowNowResult { SHOWN, NOTHING_TO_TELL, FAILED }
+
 /**
  * The daily notifications: when to show them, what they say and that each comes once a day.
  *
@@ -214,24 +217,31 @@ class NotificationRepository(
             false
         } else {
             notifier.show(summary.copy(isStale = isStale), silently)
-            true
         }
     }
 
     /**
-     * Shows what the notification of [kind] would say right now, whatever its time is. Returns
-     * false when there is nothing to tell.
+     * Shows what the notification of [kind] would say right now, whatever its time is. The one
+     * already there goes first: platforms replace it without a sound or a popup, which for a tap
+     * on "Show now" would look as if nothing happened.
      */
-    suspend fun showNow(kind: NotificationKind): Boolean {
+    suspend fun showNow(kind: NotificationKind): ShowNowResult {
         val fresh = dataSource.refresh(setOf(kind))
         val settings = settingsStore.readNotificationSettings()
-        return showOrCancel(
-            kind = kind,
-            settings = settings,
-            time = now(),
-            isStale = kind !in fresh,
-            silently = false,
-        )
+        return try {
+            val summary = dataSource.summary(kind, settings[kind], now())
+            notifier.cancel(kind)
+            when {
+                summary.sections.isEmpty() -> ShowNowResult.NOTHING_TO_TELL
+                notifier.show(summary.copy(isStale = kind !in fresh), silently = false) ->
+                    ShowNowResult.SHOWN
+                else -> ShowNowResult.FAILED
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            ShowNowResult.FAILED
+        }
     }
 
     private companion object {

@@ -63,6 +63,7 @@ import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.insetItems
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.design.component.smallIconButtonSize
 import com.patrickzedler.grocy.core.forms.actionMessage
 import com.patrickzedler.grocy.core.model.masterdata.nameFor
@@ -545,11 +546,11 @@ private fun MealPlanEvents(
     val language = LocalLocale.current.toLanguageTag()
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
-            // Messages with "Undo" wait for it, the next ones queue in the host meanwhile
+            // Messages with "Undo" wait for it, the next one takes its place meanwhile
             launch {
                 when (event) {
                     is MealPlanEvent.Deleted -> {
-                        val result = snackbarHostState.showSnackbar(
+                        val result = snackbarHostState.showNewestSnackbar(
                             message = getString(Res.string.meal_plan_deleted),
                             actionLabel = getString(Res.string.action_undo),
                             duration = SnackbarDuration.Long,
@@ -563,7 +564,7 @@ private fun MealPlanEvents(
                             formatDecimal(event.amount, MAX_DECIMALS, platformDecimalSeparator()),
                             event.unit?.nameFor(event.amount, language),
                         ).joinToString(" ")
-                        val result = snackbarHostState.showSnackbar(
+                        val result = snackbarHostState.showNewestSnackbar(
                             message = getString(Res.string.booking_consumed, amount, event.name),
                             actionLabel = event.transactionId?.let {
                                 getString(Res.string.action_undo)
@@ -575,20 +576,26 @@ private fun MealPlanEvents(
                             viewModel.undoTransaction(transaction)
                         }
                     }
-                    is MealPlanEvent.RecipeConsumed -> snackbarHostState.showSnackbar(
+                    is MealPlanEvent.RecipeConsumed -> snackbarHostState.showNewestSnackbar(
                         getString(Res.string.recipe_consumed, event.name),
                     )
                     MealPlanEvent.WeekConsumed ->
-                        snackbarHostState.showSnackbar(getString(Res.string.meal_plan_week_consumed))
+                        snackbarHostState.showNewestSnackbar(
+                            getString(Res.string.meal_plan_week_consumed),
+                        )
                     MealPlanEvent.PutOnShoppingList ->
-                        snackbarHostState.showSnackbar(getString(Res.string.recipe_missing_added))
+                        snackbarHostState.showNewestSnackbar(
+                            getString(Res.string.recipe_missing_added),
+                        )
                     MealPlanEvent.DayCopied ->
-                        snackbarHostState.showSnackbar(getString(Res.string.meal_plan_day_copied))
+                        snackbarHostState.showNewestSnackbar(
+                            getString(Res.string.meal_plan_day_copied),
+                        )
                     MealPlanEvent.Undone ->
-                        snackbarHostState.showSnackbar(getString(Res.string.booking_undone))
+                        snackbarHostState.showNewestSnackbar(getString(Res.string.booking_undone))
                     MealPlanEvent.Restored -> Unit
                     is MealPlanEvent.OpenRecipe -> currentOnRecipeOpen(event.recipeId)
-                    is MealPlanEvent.Failed -> snackbarHostState.showSnackbar(
+                    is MealPlanEvent.Failed -> snackbarHostState.showNewestSnackbar(
                         event.error.actionMessage(event.action.failure),
                     )
                 }

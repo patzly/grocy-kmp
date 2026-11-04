@@ -42,6 +42,7 @@ import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.edgeToEdgeItem
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.insetItems
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.actionMessage
 import com.patrickzedler.grocy.core.forms.emptyListItem
 import com.patrickzedler.grocy.core.forms.searchItem
@@ -81,6 +82,7 @@ import com.patrickzedler.grocy.core.resources.shopping_mode
 import com.patrickzedler.grocy.core.resources.stock_overview_group_not_set
 import com.patrickzedler.grocy.core.resources.stock_overview_total_value
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -262,11 +264,11 @@ private fun ShoppingListEvents(
 ) {
     val currentOnPurchase by rememberUpdatedState(onPurchase)
     LaunchedEffect(viewModel) {
-        viewModel.events.collect { event ->
+        viewModel.events.collectLatest { event ->
             when (event) {
                 is ShoppingListEvent.OpenPurchase ->
                     currentOnPurchase(event.purchase, event.progress)
-                is ShoppingListEvent.Failed -> snackbarHostState.showSnackbar(
+                is ShoppingListEvent.Failed -> snackbarHostState.showNewestSnackbar(
                     event.error.actionMessage(
                         when (event.action) {
                             ShoppingListAction.DELETE_ITEM,

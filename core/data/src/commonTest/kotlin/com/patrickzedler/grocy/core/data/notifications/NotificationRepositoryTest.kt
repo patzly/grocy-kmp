@@ -32,9 +32,13 @@ class NotificationRepositoryTest {
         val showing = mutableSetOf<NotificationKind>()
         val cancelled = mutableListOf<NotificationKind>()
 
-        override suspend fun show(summary: NotificationSummary, silently: Boolean) {
+        var isBlocked = false
+
+        override suspend fun show(summary: NotificationSummary, silently: Boolean): Boolean {
+            if (isBlocked) return false
             shown += summary to silently
             showing += summary.kind
+            return true
         }
 
         override suspend fun cancel(kind: NotificationKind) {
@@ -344,9 +348,8 @@ class NotificationRepositoryTest {
         val environment = Environment(this)
         environment.notifier.showing.clear()
         val throwing = object : Notifier by environment.notifier {
-            override suspend fun show(summary: NotificationSummary, silently: Boolean) {
+            override suspend fun show(summary: NotificationSummary, silently: Boolean): Boolean =
                 error("Boom")
-            }
         }
         val repository = NotificationRepository(
             settingsStore = environment.store,
@@ -416,11 +419,35 @@ class NotificationRepositoryTest {
     fun showNowTellsWhetherThereIsAnythingAndLeavesTheDailyOneAlone() = runTest {
         val environment = Environment(this).apply { time = at(8) }
 
-        assertTrue(environment.repository.showNow(NotificationKind.STOCK))
+        assertEquals(ShowNowResult.SHOWN, environment.repository.showNow(NotificationKind.STOCK))
         environment.source.names = emptyList()
-        assertFalse(environment.repository.showNow(NotificationKind.STOCK))
+        assertEquals(
+            ShowNowResult.NOTHING_TO_TELL,
+            environment.repository.showNow(NotificationKind.STOCK),
+        )
 
         assertEquals(NotificationDeliveries(), environment.store.readNotificationDeliveries())
+    }
+
+    @Test
+    fun showNowAlertsAgainInsteadOfSilentlyReplacingTheOneThere() = runTest {
+        val environment = Environment(this).apply { time = at(8) }
+        environment.repository.showNow(NotificationKind.STOCK)
+        environment.notifier.cancelled.clear()
+
+        environment.repository.showNow(NotificationKind.STOCK)
+
+        assertEquals(listOf(NotificationKind.STOCK), environment.notifier.cancelled)
+        assertEquals(2, environment.notifier.shown.size)
+        assertFalse(environment.notifier.shown.last().second)
+    }
+
+    @Test
+    fun showNowReportsWhenThePlatformDoesNotShowIt() = runTest {
+        val environment = Environment(this).apply { time = at(8) }
+        environment.notifier.isBlocked = true
+
+        assertEquals(ShowNowResult.FAILED, environment.repository.showNow(NotificationKind.STOCK))
     }
 
     @Test

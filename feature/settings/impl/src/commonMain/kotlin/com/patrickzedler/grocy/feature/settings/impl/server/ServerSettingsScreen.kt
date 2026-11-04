@@ -41,6 +41,7 @@ import com.patrickzedler.grocy.core.design.component.TextDialog
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.design.withTabularNumbers
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.resources.Res
@@ -107,7 +108,7 @@ internal fun ServerSettingsScreen(
             null -> return@LaunchedEffect
         }
         // Cleared afterwards, a new key would cancel the snackbar while it shows
-        snackbarHostState.showSnackbar(getString(message))
+        snackbarHostState.showNewestSnackbar(getString(message))
         viewModel.onErrorShown()
     }
 
@@ -118,7 +119,7 @@ internal fun ServerSettingsScreen(
             null -> return@LaunchedEffect
         }
         // Cleared afterwards, a new key would cancel the snackbar while it shows
-        snackbarHostState.showSnackbar(getString(message))
+        snackbarHostState.showNewestSnackbar(getString(message))
         viewModel.onReloadErrorShown()
     }
 

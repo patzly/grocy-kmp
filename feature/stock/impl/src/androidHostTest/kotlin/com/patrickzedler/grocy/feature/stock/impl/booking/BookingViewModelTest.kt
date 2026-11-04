@@ -7,6 +7,7 @@ import com.patrickzedler.grocy.core.forms.FormFocusTarget
 import com.patrickzedler.grocy.core.forms.ScannerFieldState
 import com.patrickzedler.grocy.core.model.stock.BookingKind
 import com.patrickzedler.grocy.core.model.text.epochDayOf
+import com.patrickzedler.grocy.core.testing.MasterDataJson
 import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
 import io.ktor.http.HttpMethod
 import io.ktor.http.content.TextContent
@@ -399,6 +400,30 @@ class BookingViewModelTest {
     fun otherBookingsHaveNoShoppingListHint() = runTest(dispatcher) {
         assertNull(viewModel(BookingKind.PURCHASE, BookingPreset(productId = 1)).shoppingListItem)
         assertNull(viewModel(BookingKind.CONSUME).shoppingListItem)
+    }
+
+    @Test
+    fun aWarningOfGrocyIsPartOfTheBookingsOneMessage() = runTest(dispatcher) {
+        server.respond(
+            "/api/stock/products/1",
+            body = MasterDataJson.MILK_DETAILS.trimEnd().removeSuffix("}") +
+                ""","next_due_date":"2026-12-01"}""",
+        )
+        val viewModel = viewModel(BookingKind.PURCHASE)
+        viewModel.selectProduct(1)
+        advanceUntilIdle()
+        viewModel.form.amount.setTextAndPlaceCursorAtEnd("2")
+        viewModel.form.dueDate.setTextAndPlaceCursorAtEnd("2026-11-30")
+
+        viewModel.events.test {
+            viewModel.book()
+            advanceUntilIdle()
+
+            val event = awaitItem()
+            assertIs<BookingEvent.Booked>(event)
+            assertEquals(BookingNote.DueEarlier, event.note)
+            expectNoEvents()
+        }
     }
 
     @Test

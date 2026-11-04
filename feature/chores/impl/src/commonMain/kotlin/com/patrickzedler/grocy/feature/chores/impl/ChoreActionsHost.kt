@@ -20,6 +20,7 @@ import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapp
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.DateKeyboardType
 import com.patrickzedler.grocy.core.forms.dateTimeText
 import com.patrickzedler.grocy.core.forms.DatePickerButton
@@ -44,6 +45,7 @@ import com.patrickzedler.grocy.core.resources.chores_undone
 import com.patrickzedler.grocy.core.resources.grocycode_print_failed
 import com.patrickzedler.grocy.core.resources.grocycode_printed
 import com.patrickzedler.grocy.core.resources.ic_rounded_settings_backup_restore
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -59,17 +61,17 @@ internal fun ChoreActionsHost(
     snackbarHostState: SnackbarHostState,
 ) {
     LaunchedEffect(actions) {
-        actions.events.collect { event ->
+        actions.events.collectLatest { event ->
             when (event) {
                 is ChoreEvent.Tracked -> showTracked(event, snackbarHostState, actions::undo)
                 ChoreEvent.Undone ->
-                    snackbarHostState.showSnackbar(getString(Res.string.chores_undone))
+                    snackbarHostState.showNewestSnackbar(getString(Res.string.chores_undone))
                 ChoreEvent.LabelPrinted ->
-                    snackbarHostState.showSnackbar(getString(Res.string.grocycode_printed))
-                is ChoreEvent.LabelFailed -> snackbarHostState.showSnackbar(
+                    snackbarHostState.showNewestSnackbar(getString(Res.string.grocycode_printed))
+                is ChoreEvent.LabelFailed -> snackbarHostState.showNewestSnackbar(
                     event.error.actionMessage(Res.string.grocycode_print_failed),
                 )
-                is ChoreEvent.Failed -> snackbarHostState.showSnackbar(
+                is ChoreEvent.Failed -> snackbarHostState.showNewestSnackbar(
                     event.error.actionMessage(Res.string.chores_track_failed),
                 )
             }
@@ -92,7 +94,7 @@ internal suspend fun showTracked(
     snackbarHostState: SnackbarHostState,
     onUndo: (ChoreEvent.Tracked) -> Unit,
 ) {
-    val result = snackbarHostState.showSnackbar(
+    val result = snackbarHostState.showNewestSnackbar(
         message = getString(
             Res.string.chores_tracked,
             event.choreName,

@@ -4,6 +4,7 @@ import com.patrickzedler.grocy.core.data.notifications.NotificationAlarm
 import com.patrickzedler.grocy.core.data.notifications.NotificationDataSource
 import com.patrickzedler.grocy.core.data.notifications.NotificationRepository
 import com.patrickzedler.grocy.core.data.notifications.Notifier
+import com.patrickzedler.grocy.core.data.notifications.ShowNowResult
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.notifications.NotificationKind
 import com.patrickzedler.grocy.core.model.notifications.NotificationKindSettings
@@ -16,6 +17,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,7 +44,7 @@ class NotificationSettingsViewModelTest {
 
     private val notifier = object : Notifier {
         val cancelled = mutableListOf<NotificationKind>()
-        override suspend fun show(summary: NotificationSummary, silently: Boolean) = Unit
+        override suspend fun show(summary: NotificationSummary, silently: Boolean) = true
         override suspend fun cancel(kind: NotificationKind) {
             cancelled += kind
         }
@@ -153,7 +155,19 @@ class NotificationSettingsViewModelTest {
 
         viewModel.showNow(NotificationKind.STOCK)
 
-        assertEquals(Unit, viewModel.nothingToShow.first())
+        assertEquals(ShowNowResult.NOTHING_TO_TELL, viewModel.showNowProblems.first())
+    }
+
+    @Test
+    fun showNowIsMarkedWhileItRunsAndNotStartedTwice() = runTest(dispatcher) {
+        val viewModel = viewModel(this)
+
+        viewModel.showNow(NotificationKind.STOCK)
+        viewModel.showNow(NotificationKind.CHORES)
+
+        assertEquals(NotificationKind.STOCK, viewModel.showingNow)
+        advanceUntilIdle()
+        assertNull(viewModel.showingNow)
     }
 
     @Test

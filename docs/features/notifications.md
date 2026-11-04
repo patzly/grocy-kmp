@@ -19,6 +19,11 @@ sentences), each opens the feature's page.
   kind and day; what was missed (device off, app force stopped) comes on the next check of the same
   day. Turning a kind on or changing its time never fires at once for a time that passed
   (`deliveriesAfterChange`). After a logout everything counts as delivered today.
+- "Show now" removes the kind's notification first, because platforms replace one with the same
+  tag or id without a sound or popup, which would look as if nothing happened. The item shows a
+  loading indicator while it downloads. It says so when there is nothing to tell
+  (`ShowNowResult.NOTHING_TO_TELL`) or the platform did not take it (`FAILED`, `Notifier.show`
+  returns false).
 - Current state: every notification downloads first (`RepositoryNotificationDataSource`, at most
   20 seconds, per kind on its own). If the server cannot be reached it does not wait: it shows what
   is stored, computed for today and marked as last known state, and tries again every 15 minutes,

@@ -10,6 +10,7 @@ import androidx.compose.ui.focus.FocusRequester
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.FocusRequestEffect
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FieldError
 import com.patrickzedler.grocy.core.forms.FormFocusTarget
@@ -115,7 +116,7 @@ private fun ProductItem(
                     onBarcodeScanned = { barcode ->
                         if (!form.onScanned(barcode.value)) {
                             scope.launch {
-                                snackbarHostState.showSnackbar(
+                                snackbarHostState.showNewestSnackbar(
                                     getString(Res.string.product_parent_not_found),
                                 )
                             }

@@ -112,6 +112,11 @@
   <string name="scanner_retry">Spróbuj ponownie</string>
   <string name="scanner_torch_on">Włącz latarkę</string>
   <string name="scanner_torch_off">Wyłącz latarkę</string>
+  <string name="scanner_engine">Silnik skanera</string>
+  <string name="scanner_engine_zxing_description">Otwarte oprogramowanie, dostępne na każdym urządzeniu</string>
+  <string name="scanner_engine_ml_kit_description">Od Google, zwykle szybszy i bardziej niezawodny</string>
+  <string name="scanner_engine_ml_kit_locked">Wymaga aplikacji odblokowującej</string>
+  <string name="scanner_unlock_ml_kit">Odblokuj ML Kit</string>
 
   <!-- About -->
   <string name="about_version">Wersja</string>
@@ -1309,6 +1314,7 @@
   <string name="notifications_show_now">Pokaż teraz</string>
   <string name="notifications_show_now_hint">Pokazuje, co powiadomienie mówi w tej chwili</string>
   <string name="notifications_nothing">W tej chwili nie ma o czym informować</string>
+  <string name="notifications_show_failed">Nie udało się wyświetlić powiadomienia. Sprawdź, czy powiadomienia są dozwolone.</string>
   <string name="notifications_stale">Ostatni znany stan, nie można połączyć się z serwerem</string>
   <string name="notifications_blocked">Powiadomienia są zablokowane</string>
   <string name="notifications_blocked_settings">Dotknij, aby zezwolić na nie w ustawieniach systemu.</string>

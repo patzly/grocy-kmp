@@ -36,6 +36,7 @@ import com.patrickzedler.grocy.core.design.component.SupportingLines
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.DeleteDialog
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FormFrame
@@ -444,7 +445,9 @@ private fun RelatedDialogs(viewModel: RecipeFormViewModel, snackbarHostState: Sn
     val deleteError = viewModel.relatedDeleteError
     LaunchedEffect(deleteError) {
         deleteError ?: return@LaunchedEffect
-        snackbarHostState.showSnackbar(deleteError.actionMessage(Res.string.objects_delete_failed))
+        snackbarHostState.showNewestSnackbar(
+            deleteError.actionMessage(Res.string.objects_delete_failed),
+        )
         viewModel.onDeleteErrorShown()
     }
 }

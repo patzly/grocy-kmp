@@ -60,6 +60,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -182,6 +183,7 @@ class AppGraph(
             settingsStore = platform.settingsStore,
             unlockRepository = unlockRepository,
             availableEngines = platform.barcodeDecoders.keys,
+            scope = appScope,
         )
     }
 
@@ -281,7 +283,7 @@ class AppGraph(
 
     /** Decoders of the engine that scans right now, provided to every scanner by GrocyApp. */
     internal val barcodeDecoderFactory: Flow<BarcodeDecoderFactory> by lazy {
-        scannerRepository.activeEngine.map {
+        scannerRepository.activeEngine.filterNotNull().map {
             platform.barcodeDecoders[it] ?: BarcodeDecoderFactory.Zxing
         }
     }
@@ -300,6 +302,8 @@ class AppGraph(
             get() = platform.appLanguageStore
         override val unlockRepository: UnlockRepository
             get() = this@AppGraph.unlockRepository
+        override val scannerRepository: ScannerRepository
+            get() = this@AppGraph.scannerRepository
         override val logReader: LogReader
             get() = platform.logReader
         override val serverRepository: ServerRepository

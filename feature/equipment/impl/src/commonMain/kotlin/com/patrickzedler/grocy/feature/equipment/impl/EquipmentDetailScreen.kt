@@ -40,6 +40,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.insetItem
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_retry
 import com.patrickzedler.grocy.core.resources.data_load_failed
@@ -98,7 +99,7 @@ internal fun EquipmentDetailScreen(
     val save = rememberFileSaver(mimeType = PDF) { success ->
         if (!success) {
             scope.launch {
-                snackbarHostState.showSnackbar(getString(Res.string.equipment_save_failed))
+                snackbarHostState.showNewestSnackbar(getString(Res.string.equipment_save_failed))
             }
         }
     }

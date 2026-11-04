@@ -5,6 +5,7 @@ import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.notifications.NotificationRepository
+import com.patrickzedler.grocy.core.data.scanner.ScannerRepository
 import com.patrickzedler.grocy.core.data.server.ServerRepository
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
@@ -25,6 +26,9 @@ interface SettingsDependencies {
 
     /** The user's settings on the server and the objects of their presets. */
     val masterDataRepository: MasterDataRepository
+
+    /** The scanner's engine and the ones this app ships. */
+    val scannerRepository: ScannerRepository
 
     /** How the shopping mode syncs and shows the list, read at app start. */
     val shoppingModeSettings: ShoppingModeSettingsRepository

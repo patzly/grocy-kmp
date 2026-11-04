@@ -40,6 +40,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.rememberFormFocus
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.navigation.DetailRoute
 import com.patrickzedler.grocy.core.navigation.LeaveGuard
 import com.patrickzedler.grocy.core.navigation.Navigator
@@ -57,6 +58,7 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_vertical_align_top
 import com.patrickzedler.grocy.core.resources.product_userfields
 import com.patrickzedler.grocy.core.ui.AppMenuDialogs
 import com.patrickzedler.grocy.core.ui.rememberAppMenu
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
@@ -179,7 +181,7 @@ fun <F : ObjectFormState<*>> ObjectFormScreen(
     }
 
     LaunchedEffect(viewModel) {
-        viewModel.events.collect { event ->
+        viewModel.events.collectLatest { event ->
             val leaving = leaveAfterSave
             leaveAfterSave = false
             when (event) {
@@ -187,11 +189,11 @@ fun <F : ObjectFormState<*>> ObjectFormScreen(
                 ObjectFormEvent.Created -> if (leaving) {
                     leave()
                 } else {
-                    snackbarHostState.showSnackbar(getString(Res.string.data_saved))
+                    snackbarHostState.showNewestSnackbar(getString(Res.string.data_saved))
                 }
                 ObjectFormEvent.Offline ->
-                    snackbarHostState.showSnackbar(getString(Res.string.data_save_offline))
-                is ObjectFormEvent.Failed -> snackbarHostState.showSnackbar(
+                    snackbarHostState.showNewestSnackbar(getString(Res.string.data_save_offline))
+                is ObjectFormEvent.Failed -> snackbarHostState.showNewestSnackbar(
                     listOfNotNull(
                         getString(Res.string.data_save_failed),
                         event.serverMessage?.let {

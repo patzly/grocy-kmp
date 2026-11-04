@@ -20,6 +20,7 @@ import com.patrickzedler.grocy.feature.settings.api.GrocySettingsPageRoute
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.LogRoute
 import com.patrickzedler.grocy.feature.settings.api.NotificationSettingsRoute
+import com.patrickzedler.grocy.feature.settings.api.ScannerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.ShoppingModeSettingsRoute
@@ -36,6 +37,8 @@ import com.patrickzedler.grocy.feature.settings.impl.log.LogScreen
 import com.patrickzedler.grocy.feature.settings.impl.log.LogViewModel
 import com.patrickzedler.grocy.feature.settings.impl.notifications.NotificationSettingsScreen
 import com.patrickzedler.grocy.feature.settings.impl.notifications.NotificationSettingsViewModel
+import com.patrickzedler.grocy.feature.settings.impl.scanner.ScannerSettingsScreen
+import com.patrickzedler.grocy.feature.settings.impl.scanner.ScannerSettingsViewModel
 import com.patrickzedler.grocy.feature.settings.impl.server.ServerSettingsScreen
 import com.patrickzedler.grocy.feature.settings.impl.server.ServerSettingsViewModel
 import com.patrickzedler.grocy.feature.settings.impl.shoppingmode.ShoppingModeSettingsScreen
@@ -185,6 +188,21 @@ fun EntryProviderScope<NavKey>.settingsEntries(
         )
     }
 
+    entry<ScannerSettingsRoute>(metadata = detailPaneMetadata(SettingsRoute)) {
+        ScannerSettingsScreen(
+            viewModel = viewModel {
+                ScannerSettingsViewModel(
+                    scannerRepository = dependencies.scannerRepository,
+                    unlockRepository = dependencies.unlockRepository,
+                )
+            },
+            menuViewModel = settingsMenuViewModel(dependencies),
+            menuActions = menuActions,
+            onBackClick = navigator::goBack,
+            pane = ScreenPane.Detail.takeIf { showsDetailBesideList() },
+        )
+    }
+
     // Beside the categories, or from the shopping mode a screen of its own
     entry<ShoppingModeSettingsRoute>(
         metadata = { route ->
@@ -198,6 +216,7 @@ fun EntryProviderScope<NavKey>.settingsEntries(
             menuViewModel = settingsMenuViewModel(dependencies),
             menuActions = menuActions,
             onBackClick = navigator::goBack,
+            inSettings = route.inSettings,
             pane = ScreenPane.Detail.takeIf { route.inSettings && showsDetailBesideList() },
         )
     }
@@ -232,6 +251,7 @@ internal val SettingsCategory.route: DetailRoute?
         SettingsCategory.GENERAL -> GeneralSettingsRoute
         SettingsCategory.SERVER -> ServerSettingsRoute
         SettingsCategory.GROCY -> GrocySettingsRoute
+        SettingsCategory.SCANNER -> ScannerSettingsRoute
         SettingsCategory.NOTIFICATIONS -> NotificationSettingsRoute
         SettingsCategory.SHOPPING_MODE -> ShoppingModeSettingsRoute()
         else -> null

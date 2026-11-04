@@ -11,6 +11,7 @@ import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.DateKeyboardType
 import com.patrickzedler.grocy.core.forms.DatePickerButton
 import com.patrickzedler.grocy.core.forms.DeleteDialog
@@ -48,6 +49,7 @@ import com.patrickzedler.grocy.core.resources.recipe_ingredient_of
 import com.patrickzedler.grocy.core.resources.recipe_missing_added
 import com.patrickzedler.grocy.core.resources.recipes_add_to_meal_plan
 import com.patrickzedler.grocy.core.resources.recipes_delete_question
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -122,16 +124,18 @@ internal fun RecipeActionsHost(
     val currentOnDone by rememberUpdatedState(onDone)
 
     LaunchedEffect(actions) {
-        actions.events.collect { event ->
+        actions.events.collectLatest { event ->
             when (event) {
                 RecipeActionEvent.AddedToMealPlan ->
-                    snackbarHostState.showSnackbar(getString(Res.string.meal_plan_added))
+                    snackbarHostState.showNewestSnackbar(getString(Res.string.meal_plan_added))
                 RecipeActionEvent.Printed ->
-                    snackbarHostState.showSnackbar(getString(Res.string.grocycode_printed))
+                    snackbarHostState.showNewestSnackbar(getString(Res.string.grocycode_printed))
                 RecipeActionEvent.PutOnShoppingList ->
-                    snackbarHostState.showSnackbar(getString(Res.string.recipe_missing_added))
+                    snackbarHostState.showNewestSnackbar(getString(Res.string.recipe_missing_added))
                 is RecipeActionEvent.Failed ->
-                    snackbarHostState.showSnackbar(event.error.actionMessage(event.action.failure))
+                    snackbarHostState.showNewestSnackbar(
+                        event.error.actionMessage(event.action.failure),
+                    )
                 is RecipeActionEvent.Copied, is RecipeActionEvent.Deleted -> currentOnDone(event)
             }
         }

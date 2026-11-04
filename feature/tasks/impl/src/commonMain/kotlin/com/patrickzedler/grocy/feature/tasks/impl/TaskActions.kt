@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import com.patrickzedler.grocy.core.data.tasks.TasksRepository
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.ChangeError
 import com.patrickzedler.grocy.core.forms.actionMessage
 import com.patrickzedler.grocy.core.forms.changeErrorOf
@@ -18,6 +19,7 @@ import com.patrickzedler.grocy.core.resources.task_completed
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -75,10 +77,10 @@ internal class TaskActions(
 @Composable
 internal fun TaskActionsHost(actions: TaskActions, snackbarHostState: SnackbarHostState) {
     LaunchedEffect(actions) {
-        actions.events.collect { event ->
+        actions.events.collectLatest { event ->
             when (event) {
                 is TaskEvent.Completed -> {
-                    val result = snackbarHostState.showSnackbar(
+                    val result = snackbarHostState.showNewestSnackbar(
                         message = getString(
                             Res.string.task_completed,
                             event.taskName,
@@ -89,7 +91,7 @@ internal fun TaskActionsHost(actions: TaskActions, snackbarHostState: SnackbarHo
                     )
                     if (result == SnackbarResult.ActionPerformed) actions.undo(event.taskId)
                 }
-                is TaskEvent.Failed -> snackbarHostState.showSnackbar(
+                is TaskEvent.Failed -> snackbarHostState.showNewestSnackbar(
                     event.error.actionMessage(Res.string.task_change_failed),
                 )
             }

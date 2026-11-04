@@ -51,6 +51,7 @@ import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.rememberFormFocus
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.ChangeError
 import com.patrickzedler.grocy.core.forms.DateKeyboardType
 import com.patrickzedler.grocy.core.forms.DatePickerButton
@@ -163,6 +164,7 @@ import com.patrickzedler.grocy.core.resources.stock_entry_opened
 import com.patrickzedler.grocy.core.resources.stock_entry_spoiled
 import com.patrickzedler.grocy.core.resources.stock_overview_default_location
 import com.patrickzedler.grocy.core.scanner.BarcodeScanner
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
@@ -956,7 +958,16 @@ private fun UnknownCodeDialog(
     }
 }
 
-/** Shows the page's messages: bookings with "Undo", Grocy's warnings and errors. */
+private suspend fun noteText(note: BookingNote): String = when (note) {
+    BookingNote.DueEarlier -> getString(Res.string.booking_due_earlier)
+    is BookingNote.Frozen -> listOfNotNull(
+        getString(Res.string.booking_frozen),
+        getString(Res.string.booking_should_not_be_frozen).takeIf { note.shouldNotBeFrozen },
+    ).joinToString("\n")
+    BookingNote.Thawed -> getString(Res.string.booking_thawed)
+}
+
+/** Shows the page's messages: bookings with "Undo" and Grocy's warnings, errors. */
 @Composable
 private fun BookingEvents(
     viewModel: BookingViewModel,
@@ -965,12 +976,20 @@ private fun BookingEvents(
 ) {
     val language = LocalLocale.current.toLanguageTag()
     LaunchedEffect(viewModel) {
+        var shown: Job? = null
         viewModel.events.collect { event ->
+            // Leaving waits, so "Undo" of the booking that just led here can still be reached
+            if (event == BookingEvent.Done) {
+                shown?.join()
+                onDone()
+                return@collect
+            }
+            shown?.cancel()
             val decimals = viewModel.options.value?.settings?.stockDecimalPlacesAmounts ?: 4
             fun amount(value: Double, unit: QuantityUnit?) =
                 amountText(value, unit, decimals, language)
             suspend fun withUndo(message: String, transactionId: String?) {
-                val result = snackbarHostState.showSnackbar(
+                val result = snackbarHostState.showNewestSnackbar(
                     message = message,
                     actionLabel = transactionId?.let { getString(Res.string.action_undo) },
                     withDismissAction = true,
@@ -979,70 +998,71 @@ private fun BookingEvents(
                     viewModel.undo(transactionId)
                 }
             }
-            when (event) {
-                is BookingEvent.Booked -> withUndo(
-                    when (event.kind) {
-                        BookingKind.PURCHASE -> getString(
-                            Res.string.booking_purchased,
-                            amount(event.amount, event.unit),
-                            event.productName,
-                        )
-                        BookingKind.CONSUME -> getString(
-                            Res.string.booking_consumed,
-                            amount(event.amount, event.unit),
-                            event.productName,
-                        )
-                        BookingKind.TRANSFER -> getString(
-                            Res.string.booking_transferred,
-                            amount(event.amount, event.unit),
-                            event.productName,
-                            event.fromLocation.orEmpty(),
-                            event.toLocation.orEmpty(),
-                        )
-                        BookingKind.INVENTORY -> getString(
-                            Res.string.booking_inventoried,
-                            event.productName,
-                            amount(event.amount, event.unit),
-                        )
-                    },
-                    event.transactionId,
-                )
-
-                is BookingEvent.Opened -> {
-                    val opened = getString(
-                        Res.string.booking_opened,
-                        amount(event.amount, event.unit),
-                        event.productName,
+            shown = launch {
+                when (event) {
+                    is BookingEvent.Booked -> withUndo(
+                        listOfNotNull(
+                            when (event.kind) {
+                                BookingKind.PURCHASE -> getString(
+                                    Res.string.booking_purchased,
+                                    amount(event.amount, event.unit),
+                                    event.productName,
+                                )
+                                BookingKind.CONSUME -> getString(
+                                    Res.string.booking_consumed,
+                                    amount(event.amount, event.unit),
+                                    event.productName,
+                                )
+                                BookingKind.TRANSFER -> getString(
+                                    Res.string.booking_transferred,
+                                    amount(event.amount, event.unit),
+                                    event.productName,
+                                    event.fromLocation.orEmpty(),
+                                    event.toLocation.orEmpty(),
+                                )
+                                BookingKind.INVENTORY -> getString(
+                                    Res.string.booking_inventoried,
+                                    event.productName,
+                                    amount(event.amount, event.unit),
+                                )
+                            },
+                            event.note?.let { noteText(it) },
+                        ).joinToString("\n"),
+                        event.transactionId,
                     )
-                    val moved = event.movedTo?.let { getString(Res.string.booking_moved_to, it) }
-                    withUndo(listOfNotNull(opened, moved).joinToString("\n"), event.transactionId)
-                }
 
-                BookingEvent.DueEarlier ->
-                    snackbarHostState.showSnackbar(getString(Res.string.booking_due_earlier))
-                is BookingEvent.Frozen -> snackbarHostState.showSnackbar(
-                    listOfNotNull(
-                        getString(Res.string.booking_frozen),
-                        getString(Res.string.booking_should_not_be_frozen)
-                            .takeIf { event.shouldNotBeFrozen },
-                    ).joinToString("\n"),
-                )
-                BookingEvent.Thawed ->
-                    snackbarHostState.showSnackbar(getString(Res.string.booking_thawed))
-                BookingEvent.NotOffered ->
-                    snackbarHostState.showSnackbar(getString(Res.string.booking_not_in_stock))
-                BookingEvent.ScanModeIncomplete -> snackbarHostState.showSnackbar(
-                    getString(Res.string.booking_scan_mode_incomplete),
-                )
-                is BookingEvent.Failed -> snackbarHostState.showSnackbar(
-                    event.error.actionMessage(Res.string.stock_booking_failed),
-                )
-                BookingEvent.Undone ->
-                    snackbarHostState.showSnackbar(getString(Res.string.booking_undone))
-                is BookingEvent.UndoFailed -> snackbarHostState.showSnackbar(
-                    event.error.actionMessage(Res.string.stock_booking_failed),
-                )
-                BookingEvent.Done -> onDone()
+                    is BookingEvent.Opened -> {
+                        val opened = getString(
+                            Res.string.booking_opened,
+                            amount(event.amount, event.unit),
+                            event.productName,
+                        )
+                        val moved = event.movedTo?.let {
+                            getString(Res.string.booking_moved_to, it)
+                        }
+                        withUndo(
+                            listOfNotNull(opened, moved).joinToString("\n"),
+                            event.transactionId,
+                        )
+                    }
+
+                    BookingEvent.NotOffered ->
+                        snackbarHostState.showNewestSnackbar(
+                            getString(Res.string.booking_not_in_stock),
+                        )
+                    BookingEvent.ScanModeIncomplete -> snackbarHostState.showNewestSnackbar(
+                        getString(Res.string.booking_scan_mode_incomplete),
+                    )
+                    is BookingEvent.Failed -> snackbarHostState.showNewestSnackbar(
+                        event.error.actionMessage(Res.string.stock_booking_failed),
+                    )
+                    BookingEvent.Undone ->
+                        snackbarHostState.showNewestSnackbar(getString(Res.string.booking_undone))
+                    is BookingEvent.UndoFailed -> snackbarHostState.showNewestSnackbar(
+                        event.error.actionMessage(Res.string.stock_booking_failed),
+                    )
+                    BookingEvent.Done -> Unit
+                }
             }
         }
     }

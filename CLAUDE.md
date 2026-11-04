@@ -5,8 +5,8 @@ management server. It is a full rewrite of the old Grocy Android app in Kotlin M
 Compose Multiplatform. Targets: Android (phone, Wear OS) and Web (Kotlin/Wasm). No iOS or desktop.
 
 Current state: login (demo, QR code, manual, Home Assistant ingress on Android), the barcode
-scanner, update checks, the start screen, About, the settings (General, Server, Grocy settings),
-Grocy's stock overview, master data with all their forms, the stock bookings, the shopping list
+scanner, update checks, the start screen, About, the settings (General, Server, Grocy settings,
+Scanner), Grocy's stock overview, master data with all their forms, the stock bookings, the shopping list
 and its shopping mode, the recipes with their cards and forms, the meal plan, the chores with
 their tracking and journal, the tasks, the batteries with their tracking and journal, the equipment
 with its manuals, the daily notifications.

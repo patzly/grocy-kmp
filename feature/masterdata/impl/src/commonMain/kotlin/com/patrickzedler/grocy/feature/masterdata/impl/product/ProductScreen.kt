@@ -56,6 +56,7 @@ import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.rememberFormFocus
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.ChoiceItem
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.DueDaysPickerButton
@@ -202,6 +203,7 @@ import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionsVie
 import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ResolvedConversionsDialog
 import com.patrickzedler.grocy.feature.masterdata.impl.related.barcodesGroup
 import com.patrickzedler.grocy.feature.masterdata.impl.related.conversionsGroup
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
@@ -298,7 +300,7 @@ internal fun ProductScreen(
     }
 
     LaunchedEffect(viewModel) {
-        viewModel.events.collect { event ->
+        viewModel.events.collectLatest { event ->
             val leaving = leaveAfterSave
             leaveAfterSave = false
             when (event) {
@@ -306,11 +308,11 @@ internal fun ProductScreen(
                 ProductEvent.Created -> if (leaving) {
                     leave()
                 } else {
-                    snackbarHostState.showSnackbar(getString(Res.string.data_saved))
+                    snackbarHostState.showNewestSnackbar(getString(Res.string.data_saved))
                 }
                 ProductEvent.Offline ->
-                    snackbarHostState.showSnackbar(getString(Res.string.data_save_offline))
-                is ProductEvent.Failed -> snackbarHostState.showSnackbar(
+                    snackbarHostState.showNewestSnackbar(getString(Res.string.data_save_offline))
+                is ProductEvent.Failed -> snackbarHostState.showNewestSnackbar(
                     listOfNotNull(
                         getString(Res.string.data_save_failed),
                         event.serverMessage?.let {
@@ -824,9 +826,13 @@ private fun GeneralItems(
                                 val product = viewModel.productForCode(options, barcode.value)
                                 when {
                                     product == null ->
-                                        scope.launch { snackbarHostState.showSnackbar(notFound) }
+                                        scope.launch {
+                                            snackbarHostState.showNewestSnackbar(notFound)
+                                        }
                                     candidates.none { it.id == product.id } ->
-                                        scope.launch { snackbarHostState.showSnackbar(notAllowed) }
+                                        scope.launch {
+                                            snackbarHostState.showNewestSnackbar(notAllowed)
+                                        }
                                     else -> {
                                         form.parentProductId = product.id
                                         showScanner = false

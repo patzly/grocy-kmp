@@ -35,6 +35,7 @@ import com.patrickzedler.grocy.core.model.stock.BookingResult
 import com.patrickzedler.grocy.core.model.stock.ConsumeBooking
 import com.patrickzedler.grocy.core.model.stock.InventoryBooking
 import com.patrickzedler.grocy.core.model.stock.OpenBooking
+import com.patrickzedler.grocy.core.model.stock.ProductStockDetails
 import com.patrickzedler.grocy.core.model.stock.PurchaseBooking
 import com.patrickzedler.grocy.core.model.stock.TransferBooking
 import com.patrickzedler.grocy.core.model.text.epochDayOf
@@ -78,6 +79,17 @@ internal data class BookingPreset(
 internal data class ShoppingListItemPurchase(val position: Int?, val count: Int?)
 
 /** What a booking says afterwards, Grocy's messages; amounts in the stock unit. */
+/** What Grocy tells about a booking besides the booking, part of its one message. */
+internal sealed interface BookingNote {
+    /** "This is due earlier than already in stock items". */
+    data object DueEarlier : BookingNote
+
+    /** Moved into a freezer, [shouldNotBeFrozen] warns about it. */
+    data class Frozen(val shouldNotBeFrozen: Boolean) : BookingNote
+
+    data object Thawed : BookingNote
+}
+
 internal sealed interface BookingEvent {
     data class Booked(
         val kind: BookingKind,
@@ -87,6 +99,7 @@ internal sealed interface BookingEvent {
         val productName: String,
         val fromLocation: String? = null,
         val toLocation: String? = null,
+        val note: BookingNote? = null,
     ) : BookingEvent
 
     data class Opened(
@@ -97,14 +110,6 @@ internal sealed interface BookingEvent {
         /** The location the opened part moved to (`move_on_open`). */
         val movedTo: String?,
     ) : BookingEvent
-
-    /** "This is due earlier than already in stock items". */
-    data object DueEarlier : BookingEvent
-
-    /** Moved into a freezer, [shouldNotBeFrozen] warns about it. */
-    data class Frozen(val shouldNotBeFrozen: Boolean) : BookingEvent
-
-    data object Thawed : BookingEvent
 
     /** "This product is not in stock". */
     data object NotOffered : BookingEvent
@@ -731,30 +736,10 @@ internal class BookingViewModel(
                 productName = product.name,
                 fromLocation = locationName(form.locationId),
                 toLocation = locationName(form.toLocationId),
+                note = bookingNote(options, product, details),
             )
         }
         eventChannel.send(event)
-        if (kind == BookingKind.PURCHASE && !open) {
-            val dueDate = form.dueDate.text.toString()
-            val next = details.nextDueDate
-            if (options.config.stockBestBeforeDateTracking &&
-                options.settings.showWarningOnPurchaseWhenDueDateIsEarlierThanNext &&
-                next != null && dueDate.isNotBlank() && dueDate < next
-            ) {
-                eventChannel.send(BookingEvent.DueEarlier)
-            }
-        }
-        if (kind == BookingKind.TRANSFER) {
-            val from = options.locations.firstOrNull { it.id == form.locationId }
-            val to = options.locations.firstOrNull { it.id == form.toLocationId }
-            if (from != null && to != null) {
-                if (!from.isFreezer && to.isFreezer) {
-                    eventChannel.send(BookingEvent.Frozen(product.shouldNotBeFrozen))
-                } else if (from.isFreezer && !to.isFreezer) {
-                    eventChannel.send(BookingEvent.Thawed)
-                }
-            }
-        }
         val itemId = preset.shoppingListItemId
         if (itemId != null && kind == BookingKind.PURCHASE && product.id == preset.productId) {
             changeErrorOf { removeShoppingListItem?.invoke(itemId) }
@@ -762,6 +747,34 @@ internal class BookingViewModel(
             return
         }
         reset(open)
+    }
+
+    /** What Grocy also tells about a booking, said by its one message. */
+    private fun bookingNote(
+        options: BookingOptions,
+        product: Product,
+        details: ProductStockDetails,
+    ): BookingNote? = when (kind) {
+        BookingKind.PURCHASE -> {
+            val dueDate = form.dueDate.text.toString()
+            val next = details.nextDueDate
+            BookingNote.DueEarlier.takeIf {
+                options.config.stockBestBeforeDateTracking &&
+                    options.settings.showWarningOnPurchaseWhenDueDateIsEarlierThanNext &&
+                    next != null && dueDate.isNotBlank() && dueDate < next
+            }
+        }
+        BookingKind.TRANSFER -> {
+            val from = options.locations.firstOrNull { it.id == form.locationId }
+            val to = options.locations.firstOrNull { it.id == form.toLocationId }
+            when {
+                from == null || to == null -> null
+                !from.isFreezer && to.isFreezer -> BookingNote.Frozen(product.shouldNotBeFrozen)
+                from.isFreezer && !to.isFreezer -> BookingNote.Thawed
+                else -> null
+            }
+        }
+        else -> null
     }
 
     /** The barcode of Grocy's "Add as barcode" flow, and the used barcode's last price. */

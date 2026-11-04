@@ -30,6 +30,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.actionMessage
 import com.patrickzedler.grocy.core.forms.ChipIcon
 import com.patrickzedler.grocy.core.forms.DateKeyboardType
@@ -101,6 +102,7 @@ import com.patrickzedler.grocy.core.resources.product_name_required
 import com.patrickzedler.grocy.core.resources.products_configure_userfields
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.scanner.writer.Grocycode
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
@@ -119,8 +121,8 @@ internal fun ChoreScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val downloadGrocycode = rememberGrocycodeDownload(snackbarHostState)
     LaunchedEffect(viewModel) {
-        viewModel.labelResults.collect { error ->
-            snackbarHostState.showSnackbar(
+        viewModel.labelResults.collectLatest { error ->
+            snackbarHostState.showNewestSnackbar(
                 error?.actionMessage(Res.string.grocycode_print_failed)
                     ?: getString(Res.string.grocycode_printed),
             )

@@ -112,6 +112,11 @@
   <string name="scanner_retry">Riprova</string>
   <string name="scanner_torch_on">Accendi la torcia</string>
   <string name="scanner_torch_off">Spegni la torcia</string>
+  <string name="scanner_engine">Motore dello scanner</string>
+  <string name="scanner_engine_zxing_description">Open source, disponibile su ogni dispositivo</string>
+  <string name="scanner_engine_ml_kit_description">Di Google, di solito più veloce e affidabile</string>
+  <string name="scanner_engine_ml_kit_locked">Richiede l'app di sblocco</string>
+  <string name="scanner_unlock_ml_kit">Sblocca ML Kit</string>
 
   <!-- About -->
   <string name="about_version">Versione</string>
@@ -1264,6 +1269,7 @@
   <string name="notifications_show_now">Mostra ora</string>
   <string name="notifications_show_now_hint">Mostra cosa dice la notifica in questo momento</string>
   <string name="notifications_nothing">Niente da segnalare al momento</string>
+  <string name="notifications_show_failed">Impossibile mostrare la notifica. Verifica che le notifiche siano consentite.</string>
   <string name="notifications_stale">Ultimo stato noto, il server non era raggiungibile</string>
   <string name="notifications_blocked">Le notifiche sono bloccate</string>
   <string name="notifications_blocked_settings">Tocca per consentirle nelle impostazioni di sistema.</string>

@@ -1,11 +1,15 @@
 package com.patrickzedler.grocy.feature.settings.impl
 
+import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.resources.shopping_mode
+import com.patrickzedler.grocy.core.resources.shopping_mode_settings
 import com.patrickzedler.grocy.feature.settings.api.GeneralSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsPage
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsPageRoute
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.LogRoute
 import com.patrickzedler.grocy.feature.settings.api.NotificationSettingsRoute
+import com.patrickzedler.grocy.feature.settings.api.ScannerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.ShoppingModeSettingsRoute
@@ -13,6 +17,7 @@ import com.patrickzedler.grocy.feature.settings.api.StockSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.UserSettingsRoute
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import com.patrickzedler.grocy.feature.settings.impl.shoppingmode.shoppingModeSettingsTitle
 import kotlin.test.assertNull
 
 class SettingsCategoryTest {
@@ -22,8 +27,19 @@ class SettingsCategoryTest {
         assertEquals(GeneralSettingsRoute, SettingsCategory.GENERAL.route)
         assertEquals(ServerSettingsRoute, SettingsCategory.SERVER.route)
         assertEquals(GrocySettingsRoute, SettingsCategory.GROCY.route)
+        assertEquals(ScannerSettingsRoute, SettingsCategory.SCANNER.route)
         assertEquals(NotificationSettingsRoute, SettingsCategory.NOTIFICATIONS.route)
         assertEquals(ShoppingModeSettingsRoute(), SettingsCategory.SHOPPING_MODE.route)
+    }
+
+    @Test
+    fun shoppingModeIsNamedWithoutSettingsInsideTheSettings() {
+        assertEquals(Res.string.shopping_mode, SettingsCategory.SHOPPING_MODE.title)
+        assertEquals(Res.string.shopping_mode, shoppingModeSettingsTitle(inSettings = true))
+        assertEquals(
+            Res.string.shopping_mode_settings,
+            shoppingModeSettingsTitle(inSettings = false),
+        )
     }
 
     @Test
@@ -31,6 +47,7 @@ class SettingsCategoryTest {
         assertEquals(SettingsCategory.GENERAL, settingsCategoryOf(GeneralSettingsRoute))
         assertEquals(SettingsCategory.SERVER, settingsCategoryOf(ServerSettingsRoute))
         assertEquals(SettingsCategory.GROCY, settingsCategoryOf(GrocySettingsRoute))
+        assertEquals(SettingsCategory.SCANNER, settingsCategoryOf(ScannerSettingsRoute))
         assertEquals(
             SettingsCategory.SHOPPING_MODE,
             settingsCategoryOf(ShoppingModeSettingsRoute()),

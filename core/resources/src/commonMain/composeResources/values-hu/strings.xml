@@ -112,6 +112,11 @@
   <string name="scanner_retry">Újrapróbálás</string>
   <string name="scanner_torch_on">Zseblámpa bekapcsolása</string>
   <string name="scanner_torch_off">Zseblámpa kikapcsolása</string>
+  <string name="scanner_engine">Szkennermotor</string>
+  <string name="scanner_engine_zxing_description">Nyílt forráskódú, minden eszközön elérhető</string>
+  <string name="scanner_engine_ml_kit_description">A Google-tól, általában gyorsabb és megbízhatóbb</string>
+  <string name="scanner_engine_ml_kit_locked">A feloldó alkalmazás szükséges hozzá</string>
+  <string name="scanner_unlock_ml_kit">ML Kit feloldása</string>
 
   <!-- About -->
   <string name="about_version">Verzió</string>
@@ -1219,6 +1224,7 @@
   <string name="notifications_show_now">Megjelenítés most</string>
   <string name="notifications_show_now_hint">Megmutatja, mit mond az értesítés most</string>
   <string name="notifications_nothing">Jelenleg nincs miről értesíteni</string>
+  <string name="notifications_show_failed">Az értesítést nem sikerült megjeleníteni. Ellenőrizd, hogy engedélyezve vannak-e az értesítések.</string>
   <string name="notifications_stale">Utolsó ismert állapot, a szerver nem volt elérhető</string>
   <string name="notifications_blocked">Az értesítések le vannak tiltva</string>
   <string name="notifications_blocked_settings">Koppints az engedélyezésükhöz a rendszerbeállításokban.</string>

@@ -4,6 +4,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.model.server.UserSettingValue
 import com.patrickzedler.grocy.core.model.text.decimalPlaces
 import com.patrickzedler.grocy.core.model.text.formatDecimal
@@ -17,6 +18,7 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -74,8 +76,8 @@ internal fun UserSettingEventEffect(
     snackbarHostState: SnackbarHostState,
 ) {
     LaunchedEffect(events) {
-        events.collect { event ->
-            snackbarHostState.showSnackbar(
+        events.collectLatest { event ->
+            snackbarHostState.showNewestSnackbar(
                 when (event) {
                     UserSettingEvent.Offline -> getString(Res.string.data_save_offline)
                     is UserSettingEvent.Failed -> listOfNotNull(

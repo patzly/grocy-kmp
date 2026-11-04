@@ -20,10 +20,12 @@ import kotlinx.coroutines.launch
  */
 internal class BrowserNotifier : Notifier {
 
-    override suspend fun show(summary: NotificationSummary, silently: Boolean) {
+    override suspend fun show(summary: NotificationSummary, silently: Boolean): Boolean {
         val text = notificationTextOf(summary)
         val body = listOfNotNull(text.details, text.note).joinToString("\n")
-        showBrowserNotification(text.title, body, summary.kind.name).await<JsAny?>()
+        return showBrowserNotification(text.title, body, summary.kind.name)
+            .await<JsBoolean>()
+            .toBoolean()
     }
 
     override suspend fun cancel(kind: NotificationKind) {
@@ -82,39 +84,43 @@ fun observeNotificationClicks(graph: AppGraph) {
 @JsFun(
     """(title, body, kind) => {
         if (typeof Notification === 'undefined' || Notification.permission !== 'granted') {
-            return Promise.resolve(null);
+            return Promise.resolve(false);
         }
         const options = { body, tag: kind, icon: 'icons/icon-192.png', data: { kind } };
         const page = () => {
-            const notification = new Notification(title, options);
-            notification.onclick = () => {
-                window.focus();
-                notification.close();
-                window.dispatchEvent(new CustomEvent('grocy-notification', { detail: kind }));
-            };
-            (window.grocyNotifications ??= {})[kind] = notification;
-            notification.onclose = () => {
-                if (window.grocyNotifications[kind] === notification) {
-                    delete window.grocyNotifications[kind];
-                }
-            };
+            // Throws on Android, whose browsers only let workers notify
+            try {
+                const notification = new Notification(title, options);
+                notification.onclick = () => {
+                    window.focus();
+                    notification.close();
+                    window.dispatchEvent(new CustomEvent('grocy-notification', { detail: kind }));
+                };
+                (window.grocyNotifications ??= {})[kind] = notification;
+                notification.onclose = () => {
+                    if (window.grocyNotifications[kind] === notification) {
+                        delete window.grocyNotifications[kind];
+                    }
+                };
+                return true;
+            } catch {
+                return false;
+            }
         };
-        if (!('serviceWorker' in navigator)) {
-            page();
-            return Promise.resolve(null);
-        }
+        if (!('serviceWorker' in navigator)) return Promise.resolve(page());
         return navigator.serviceWorker.getRegistration().then((registration) => {
-            if (registration?.active) return registration.showNotification(title, options);
-            page();
-            return null;
-        }).catch(() => null);
+            if (registration?.active) {
+                return registration.showNotification(title, options).then(() => true);
+            }
+            return page();
+        }).catch(() => false);
     }""",
 )
 private external fun showBrowserNotification(
     title: String,
     body: String,
     kind: String,
-): Promise<JsAny?>
+): Promise<JsBoolean>
 
 @JsFun(
     """(kind) => {

@@ -112,6 +112,11 @@
   <string name="scanner_retry">Skúsiť znova</string>
   <string name="scanner_torch_on">Zapnúť baterku</string>
   <string name="scanner_torch_off">Vypnúť baterku</string>
+  <string name="scanner_engine">Modul skenera</string>
+  <string name="scanner_engine_zxing_description">Otvorený zdrojový kód, dostupný na každom zariadení</string>
+  <string name="scanner_engine_ml_kit_description">Od Googlu, zvyčajne rýchlejší a spoľahlivejší</string>
+  <string name="scanner_engine_ml_kit_locked">Vyžaduje odomykaciu aplikáciu</string>
+  <string name="scanner_unlock_ml_kit">Odomknúť ML Kit</string>
 
   <!-- About -->
   <string name="about_version">Verzia</string>
@@ -1309,6 +1314,7 @@
   <string name="notifications_show_now">Zobraziť teraz</string>
   <string name="notifications_show_now_hint">Zobrazí, čo by oznámenie hovorilo práve teraz</string>
   <string name="notifications_nothing">Momentálne nie je čo oznamovať</string>
+  <string name="notifications_show_failed">Oznámenie sa nepodarilo zobraziť. Skontrolujte, či sú oznámenia povolené.</string>
   <string name="notifications_stale">Posledný známy stav, server nebol dostupný</string>
   <string name="notifications_blocked">Oznámenia sú blokované</string>
   <string name="notifications_blocked_settings">Klepnutím ich povolíte v nastaveniach systému.</string>

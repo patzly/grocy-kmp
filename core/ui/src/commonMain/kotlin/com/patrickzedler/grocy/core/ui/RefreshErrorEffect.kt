@@ -6,6 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import com.patrickzedler.grocy.core.data.util.RefreshError
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.data_load_failed
 import com.patrickzedler.grocy.core.resources.data_offline
@@ -30,7 +31,7 @@ fun RefreshErrorEffect(
             RefreshError.FAILED -> Res.string.data_load_failed
         }
         // Cleared afterwards, a new key would cancel the snackbar while it shows
-        snackbarHostState.showSnackbar(getString(message))
+        snackbarHostState.showNewestSnackbar(getString(message))
         currentOnErrorShown()
     }
 }

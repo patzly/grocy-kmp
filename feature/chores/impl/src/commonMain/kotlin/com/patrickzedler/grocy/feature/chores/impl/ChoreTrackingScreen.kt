@@ -25,6 +25,7 @@ import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.rememberFormFocus
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.DateKeyboardType
 import com.patrickzedler.grocy.core.forms.DatePickerButton
 import com.patrickzedler.grocy.core.forms.DropdownItem
@@ -55,6 +56,7 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_info
 import com.patrickzedler.grocy.core.resources.ic_rounded_vertical_align_top
 import com.patrickzedler.grocy.core.resources.product_userfields
 import com.patrickzedler.grocy.core.scanner.BarcodeScanner
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
@@ -93,17 +95,17 @@ internal fun ChoreTrackingScreen(
         if (startsOver && listState.canScrollBackward) listState.animateScrollToItem(0)
     }
     LaunchedEffect(viewModel) {
-        viewModel.events.collect { event ->
+        viewModel.events.collectLatest { event ->
             when (event) {
-                ChoreTrackingEvent.UnknownCode -> snackbarHostState.showSnackbar(
+                ChoreTrackingEvent.UnknownCode -> snackbarHostState.showNewestSnackbar(
                     getString(Res.string.chore_code_unknown),
                 )
                 is ChoreTrackingEvent.Result -> when (val result = event.event) {
                     is ChoreEvent.Tracked ->
                         showTracked(result, snackbarHostState, viewModel::undo)
                     ChoreEvent.Undone ->
-                        snackbarHostState.showSnackbar(getString(Res.string.chores_undone))
-                    is ChoreEvent.Failed -> snackbarHostState.showSnackbar(
+                        snackbarHostState.showNewestSnackbar(getString(Res.string.chores_undone))
+                    is ChoreEvent.Failed -> snackbarHostState.showNewestSnackbar(
                         result.error.actionMessage(Res.string.chores_track_failed),
                     )
                     else -> Unit

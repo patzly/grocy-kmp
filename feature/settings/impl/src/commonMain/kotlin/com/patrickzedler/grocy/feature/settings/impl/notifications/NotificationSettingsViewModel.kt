@@ -1,8 +1,12 @@
 package com.patrickzedler.grocy.feature.settings.impl.notifications
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.notifications.NotificationRepository
+import com.patrickzedler.grocy.core.data.notifications.ShowNowResult
 import com.patrickzedler.grocy.core.model.notifications.NotificationKind
 import com.patrickzedler.grocy.core.model.notifications.NotificationKindSettings
 import com.patrickzedler.grocy.core.model.notifications.NotificationSettings
@@ -24,10 +28,14 @@ internal class NotificationSettingsViewModel(
     /** Read at app start, so the page shows the stored values in its first frame. */
     val settings: StateFlow<NotificationSettings?> = repository.settings
 
-    private val nothingToShowChannel = Channel<Unit>(Channel.BUFFERED)
+    private val showNowProblemChannel = Channel<ShowNowResult>(Channel.BUFFERED)
 
-    /** "Show now" found nothing to tell about. */
-    val nothingToShow: Flow<Unit> = nothingToShowChannel.receiveAsFlow()
+    /** "Show now" had nothing to tell about or could not show it; success speaks for itself. */
+    val showNowProblems: Flow<ShowNowResult> = showNowProblemChannel.receiveAsFlow()
+
+    /** Whose "Show now" is downloading the current state, which can take a moment. */
+    var showingNow by mutableStateOf<NotificationKind?>(null)
+        private set
 
     fun setEnabled(kind: NotificationKind, enabled: Boolean) =
         update(kind) { it.copy(enabled = enabled) }
@@ -46,8 +54,12 @@ internal class NotificationSettingsViewModel(
         update(kind) { it.copy(onlyMine = onlyMine) }
 
     fun showNow(kind: NotificationKind) {
+        if (showingNow != null) return
+        showingNow = kind
         viewModelScope.launch {
-            if (!repository.showNow(kind)) nothingToShowChannel.send(Unit)
+            val result = repository.showNow(kind)
+            showingNow = null
+            if (result != ShowNowResult.SHOWN) showNowProblemChannel.send(result)
         }
     }
 

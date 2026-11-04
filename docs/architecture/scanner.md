@@ -19,8 +19,10 @@
   ML Kit) `isUnlocked`, else ZXing. ZXing is always the default; unlocking (key installed, or the
   key check turned off by 10 long presses on the key item in About) never switches the engine,
   the user selects ML Kit themselves. `GrocyApp` provides the matching factory through
-  `LocalBarcodeDecoderFactory`, so screens only call `BarcodeScanner`. There is no settings
-  screen yet to change the engine.
+  `LocalBarcodeDecoderFactory`, so screens only call `BarcodeScanner`. The user chooses in the
+  settings (`ScannerSettingsRoute`, `docs/features/settings.md`). `activeEngine` is an eager
+  `StateFlow` of the app scope. A key removed later shows and uses ZXing but keeps the stored
+  choice, so ML Kit returns with the key.
 - Permission: asked only when the user taps the scanner's button (`rememberCameraAccess`);
   granted cameras start right away. Android detects "denied for good" and opens the app settings;
   browsers get a hint for the site settings. The camera stops when the scanner leaves the
