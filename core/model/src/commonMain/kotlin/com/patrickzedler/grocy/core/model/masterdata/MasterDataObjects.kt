@@ -86,6 +86,13 @@ data class TaskCategory(
     val userfields: Map<String, String?> = emptyMap(),
 )
 
+/** An object of a [Userentity]: nothing but the values of the entity's userfields. */
+data class Userobject(
+    val id: Int,
+    val userentityId: Int,
+    val userfields: Map<String, String?> = emptyMap(),
+)
+
 /** An entity the user defined, whose fields are userfields of `userentity-<name>`. */
 data class Userentity(
     val id: Int,

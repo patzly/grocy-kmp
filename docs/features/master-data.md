@@ -194,3 +194,22 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   userfields, picture or unmatched text differ from the loaded or last saved state; back button,
   back gesture and browser back) asks in `UnsavedChangesDialog` (saveable, survives rotation):
   save (and leave once saved), discard, or cancel.
+
+## Objects of userentities
+
+Grocy's `/userobjects/<name>` and `/userobject/<name>/<id>` (`userobjects/`, `UserobjectsRoute`,
+`UserobjectRoute`). Entities with "Show in sidebar menu" are items of the start screen right above
+the master data, every entity's menu in the userentities list opens it too.
+
+- `/objects/userobjects` has no field values (its `userfields` stay null, they are stored under
+  `userentity-<name>`), so `MasterDataRepository.refreshUserobjects` asks
+  `/userfields/userentity-<name>/<id>` per object, at most six at a time. That is why it runs when
+  the page opens and not with `refresh`. Stored in `userobjects` for offline use; changes are
+  online only. An entity without fields answers `[]` instead of an object.
+- The list (`buildUserobjectRows`) shows Grocy's columns (`show_as_column_in_tables`): the first
+  value names the item, the others follow as lines, sorted by any of them, first one first.
+  Without any column every field shows, Grocy's rows would be empty; pictures and files show
+  nothing as text. An object without values is "#id".
+- The form (`UserobjectViewModel`) has only the entity's fields, the first one focused for a new
+  object; saving goes back to the list like Grocy (`closesWhenCreated`).
+- The sidebar's icon (`icon_css_class`, Font Awesome) is not shown, every entity has the same one.

@@ -304,4 +304,21 @@ class StartViewModelTest {
             batteryTrackingRoutes(isBesideDetail = false),
         )
     }
+
+    @Test
+    fun userentitiesOfGrocysSidebarAreListed() = runTest(dispatcher) {
+        server.respond(
+            "/api/objects/userentities",
+            body = """[{"id":1,"name":"books","caption":"Books","show_in_sidebar_menu":1},""" +
+                """{"id":2,"name":"hidden","caption":"Hidden","show_in_sidebar_menu":0}]""",
+        )
+        val viewModel = viewModel()
+        backgroundScope.launch { viewModel.state.collect {} }
+        advanceUntilIdle()
+
+        assertEquals(
+            listOf("Books"),
+            viewModel.state.value?.sidebarUserentities?.map { it.caption },
+        )
+    }
 }

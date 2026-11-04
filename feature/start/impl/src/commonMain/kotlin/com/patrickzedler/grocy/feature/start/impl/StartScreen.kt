@@ -39,10 +39,10 @@ import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.model.batteries.BatteriesSummary
 import com.patrickzedler.grocy.core.model.chores.ChoresSummary
-import com.patrickzedler.grocy.core.model.tasks.TasksSummary
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListSummary
 import com.patrickzedler.grocy.core.model.stock.StockSummary
+import com.patrickzedler.grocy.core.model.tasks.TasksSummary
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.app_name
@@ -52,32 +52,28 @@ import com.patrickzedler.grocy.core.resources.equipment_count
 import com.patrickzedler.grocy.core.resources.equipment_title
 import com.patrickzedler.grocy.core.resources.ic_rounded_battery_charging_full
 import com.patrickzedler.grocy.core.resources.ic_rounded_build
-import com.patrickzedler.grocy.core.resources.masterdata_batteries_count
-import com.patrickzedler.grocy.core.resources.start_batteries_due_soon
-import com.patrickzedler.grocy.core.resources.start_batteries_due_today
-import com.patrickzedler.grocy.core.resources.start_batteries_overdue
 import com.patrickzedler.grocy.core.resources.ic_rounded_calendar_month
+import com.patrickzedler.grocy.core.resources.ic_rounded_checklist
 import com.patrickzedler.grocy.core.resources.ic_rounded_cleaning_services
 import com.patrickzedler.grocy.core.resources.ic_rounded_database
+import com.patrickzedler.grocy.core.resources.ic_rounded_dataset
 import com.patrickzedler.grocy.core.resources.ic_rounded_kitchen
 import com.patrickzedler.grocy.core.resources.ic_rounded_menu_book
 import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_cart
+import com.patrickzedler.grocy.core.resources.masterdata_batteries_count
 import com.patrickzedler.grocy.core.resources.masterdata_chores_count
 import com.patrickzedler.grocy.core.resources.masterdata_title
 import com.patrickzedler.grocy.core.resources.meal_plan_title
 import com.patrickzedler.grocy.core.resources.recipes_title
 import com.patrickzedler.grocy.core.resources.shopping_list_list
 import com.patrickzedler.grocy.core.resources.shopping_list_list_with_count
+import com.patrickzedler.grocy.core.resources.start_batteries_due_soon
+import com.patrickzedler.grocy.core.resources.start_batteries_due_today
+import com.patrickzedler.grocy.core.resources.start_batteries_overdue
 import com.patrickzedler.grocy.core.resources.start_chores_assigned_to_me
 import com.patrickzedler.grocy.core.resources.start_chores_due_soon
 import com.patrickzedler.grocy.core.resources.start_chores_due_today
 import com.patrickzedler.grocy.core.resources.start_chores_overdue
-import com.patrickzedler.grocy.core.resources.ic_rounded_checklist
-import com.patrickzedler.grocy.core.resources.start_tasks_due_soon
-import com.patrickzedler.grocy.core.resources.start_tasks_due_today
-import com.patrickzedler.grocy.core.resources.start_tasks_overdue
-import com.patrickzedler.grocy.core.resources.tasks_count
-import com.patrickzedler.grocy.core.resources.tasks_title
 import com.patrickzedler.grocy.core.resources.start_list_join
 import com.patrickzedler.grocy.core.resources.start_meal_plan_nothing
 import com.patrickzedler.grocy.core.resources.start_meal_plan_today
@@ -99,7 +95,12 @@ import com.patrickzedler.grocy.core.resources.start_stock_some_on_lists
 import com.patrickzedler.grocy.core.resources.start_stock_within_days
 import com.patrickzedler.grocy.core.resources.start_summary_intro_end
 import com.patrickzedler.grocy.core.resources.start_summary_intro_list
+import com.patrickzedler.grocy.core.resources.start_tasks_due_soon
+import com.patrickzedler.grocy.core.resources.start_tasks_due_today
+import com.patrickzedler.grocy.core.resources.start_tasks_overdue
 import com.patrickzedler.grocy.core.resources.stock_overview_title
+import com.patrickzedler.grocy.core.resources.tasks_count
+import com.patrickzedler.grocy.core.resources.tasks_title
 import com.patrickzedler.grocy.core.ui.AppMenuDialogs
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
 import com.patrickzedler.grocy.core.ui.rememberAppMenu
@@ -202,6 +203,7 @@ internal fun StartScreen(
     onChoreTrackingClick: () -> Unit,
     onTaskCreateClick: () -> Unit,
     onBatteryTrackingClick: () -> Unit,
+    onUserentityClick: (name: String) -> Unit,
     onAboutClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -237,6 +239,7 @@ internal fun StartScreen(
         onChoreTrackingClick = onChoreTrackingClick,
         onTaskCreateClick = onTaskCreateClick,
         onBatteryTrackingClick = onBatteryTrackingClick,
+        onUserentityClick = onUserentityClick,
         menuItems = appMenu.items,
         modifier = modifier,
     )
@@ -261,6 +264,7 @@ private fun StartContent(
     onChoreTrackingClick: () -> Unit,
     onTaskCreateClick: () -> Unit,
     onBatteryTrackingClick: () -> Unit,
+    onUserentityClick: (name: String) -> Unit,
     menuItems: List<AppBarMenuItem>,
     modifier: Modifier = Modifier,
 ) {
@@ -282,6 +286,24 @@ private fun StartContent(
             }
         }
         sections.groupBy { it.group }.forEach { (group, groupSections) ->
+            // Like Grocy's sidebar: the user's own entities right above the master data
+            val userentities = state?.sidebarUserentities.orEmpty()
+            if (group == StartGroup.MASTER_DATA && userentities.isNotEmpty()) {
+                segmentedGroup(key = "userentities") {
+                    userentities.forEachIndexed { index, userentity ->
+                        PageItem(
+                            icon = Res.drawable.ic_rounded_dataset,
+                            title = userentity.caption,
+                            summary = userentity.description?.ifBlank { null }
+                                ?.let { SectionSummary(intro = it, bullets = emptyList()) },
+                            index = index,
+                            count = userentities.size,
+                            onClick = { onUserentityClick(userentity.name) },
+                            selected = false.takeIf { isBesideDetail },
+                        )
+                    }
+                }
+            }
             segmentedGroup(key = group.name) {
                 groupSections.forEachIndexed { index, section ->
                     SectionItem(
@@ -638,6 +660,29 @@ private fun SectionItem(
     selected: Boolean?,
     below: SectionButtons? = null,
 ) {
+    PageItem(
+        icon = section.icon,
+        title = stringResource(section.title),
+        summary = summary,
+        index = index,
+        count = count,
+        onClick = onClick,
+        selected = selected,
+        below = below,
+    )
+}
+
+@Composable
+private fun PageItem(
+    icon: DrawableResource,
+    title: String,
+    summary: SectionSummary?,
+    index: Int,
+    count: Int,
+    onClick: () -> Unit,
+    selected: Boolean?,
+    below: SectionButtons? = null,
+) {
     val haptic = LocalHapticFeedback.current
     val click = {
         haptic.confirm()
@@ -648,12 +693,12 @@ private fun SectionItem(
     val modifier = Modifier.fillMaxWidth().clickCursor()
     val leading = @Composable {
         LeadingTrailingContentWrapper {
-            Icon(painterResource(section.icon), contentDescription = null)
+            Icon(painterResource(icon), contentDescription = null)
         }
     }
-    val title = @Composable {
+    val titleContent = @Composable {
         Text(
-            text = stringResource(section.title),
+            text = title,
             style = MaterialTheme.typography.bodyLargeEmphasized,
         )
     }
@@ -687,7 +732,7 @@ private fun SectionItem(
             leadingContent = leading,
             supportingContent = supporting,
             contentPadding = contentPadding,
-            content = title,
+            content = titleContent,
         )
     } else {
         SegmentedListItem(
@@ -699,7 +744,7 @@ private fun SectionItem(
             leadingContent = leading,
             supportingContent = supporting,
             contentPadding = contentPadding,
-            content = title,
+            content = titleContent,
         )
     }
 }
@@ -748,6 +793,7 @@ private fun StartScreenPreview() {
             onChoreTrackingClick = {},
             onTaskCreateClick = {},
             onBatteryTrackingClick = {},
+            onUserentityClick = {},
             menuItems = emptyList(),
         )
     }

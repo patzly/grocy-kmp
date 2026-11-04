@@ -51,9 +51,9 @@ import com.patrickzedler.grocy.core.resources.merge_same
 import com.patrickzedler.grocy.core.resources.objects_action_offline
 import com.patrickzedler.grocy.core.resources.objects_delete_barcode
 import com.patrickzedler.grocy.core.resources.objects_delete_battery
-import com.patrickzedler.grocy.core.resources.objects_delete_equipment
 import com.patrickzedler.grocy.core.resources.objects_delete_chore
 import com.patrickzedler.grocy.core.resources.objects_delete_conversion
+import com.patrickzedler.grocy.core.resources.objects_delete_equipment
 import com.patrickzedler.grocy.core.resources.objects_delete_failed
 import com.patrickzedler.grocy.core.resources.objects_delete_location
 import com.patrickzedler.grocy.core.resources.objects_delete_product
@@ -65,6 +65,7 @@ import com.patrickzedler.grocy.core.resources.objects_delete_task
 import com.patrickzedler.grocy.core.resources.objects_delete_task_category
 import com.patrickzedler.grocy.core.resources.objects_delete_userentity
 import com.patrickzedler.grocy.core.resources.objects_delete_userfield
+import com.patrickzedler.grocy.core.resources.objects_delete_userobject
 import com.patrickzedler.grocy.core.resources.objects_merge_failed
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.StringResource
@@ -170,6 +171,7 @@ private fun deleteQuestionOf(entity: String): StringResource = when (entity) {
     MasterDataRepository.TASK_CATEGORIES -> Res.string.objects_delete_task_category
     MasterDataRepository.TASKS -> Res.string.objects_delete_task
     MasterDataRepository.USERENTITIES -> Res.string.objects_delete_userentity
+    MasterDataRepository.USEROBJECTS -> Res.string.objects_delete_userobject
     MasterDataRepository.PRODUCT_BARCODES -> Res.string.objects_delete_barcode
     MasterDataRepository.QU_CONVERSIONS -> Res.string.objects_delete_conversion
     else -> Res.string.objects_delete_userfield

@@ -56,8 +56,9 @@ import androidx.room3.RoomDatabaseConstructor
         BatteryChargeCycleEntity::class,
         BatteryDetailsEntity::class,
         EquipmentEntity::class,
+        UserobjectEntity::class,
     ],
-    version = 13,
+    version = 14,
     autoMigrations = [
         // 2 adds product_thumbnails
         AutoMigration(from = 1, to = 2),
@@ -87,6 +88,8 @@ import androidx.room3.RoomDatabaseConstructor
         AutoMigration(from = 11, to = 12),
         // 13 adds the batteries overview, journal and overview cards and the equipment
         AutoMigration(from = 12, to = 13),
+        // 14 adds the objects of userentities with their field values
+        AutoMigration(from = 13, to = 14),
     ],
 )
 @ConstructedBy(GrocyDatabaseConstructor::class)

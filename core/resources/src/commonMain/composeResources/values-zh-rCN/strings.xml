@@ -1282,4 +1282,9 @@
   <string name="wear_login_connect">连接</string>
   <string name="wear_login_failed">无法连接到服务器</string>
   <string name="wear_list_empty">购物清单为空</string>
+  <string name="userobject_create">创建 %1$s</string>
+  <string name="userobject_edit">编辑 %1$s</string>
+  <string name="objects_delete_userobject">确定要删除此用户对象吗？</string>
+  <string name="userobject_no_fields">还没有字段，请通过“配置字段”添加。</string>
+  <string name="userentity_show_objects">显示对象</string>
 </resources>

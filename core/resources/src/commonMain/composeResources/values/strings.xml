@@ -1358,4 +1358,9 @@
   <string name="wear_login_connect">Connect</string>
   <string name="wear_login_failed">Could not connect to the server</string>
   <string name="wear_list_empty">The shopping list is empty</string>
+  <string name="userobject_create">Create %1$s</string>
+  <string name="userobject_edit">Edit %1$s</string>
+  <string name="objects_delete_userobject">Are you sure you want to delete this userobject?</string>
+  <string name="userobject_no_fields">This has no fields yet, add them with "Configure fields".</string>
+  <string name="userentity_show_objects">Show objects</string>
 </resources>

@@ -1283,4 +1283,9 @@
   <string name="wear_login_connect">接続</string>
   <string name="wear_login_failed">サーバーに接続できませんでした</string>
   <string name="wear_list_empty">買い物リストは空です</string>
+  <string name="userobject_create">%1$s を作成</string>
+  <string name="userobject_edit">%1$s を編集</string>
+  <string name="objects_delete_userobject">このユーザーオブジェクトを削除しますか？</string>
+  <string name="userobject_no_fields">まだフィールドがありません。「フィールドを設定」で追加してください。</string>
+  <string name="userentity_show_objects">オブジェクトを表示</string>
 </resources>

@@ -1432,4 +1432,9 @@
   <string name="wear_login_connect">Підключити</string>
   <string name="wear_login_failed">Не вдалося підключитися до сервера</string>
   <string name="wear_list_empty">Список покупок порожній</string>
+  <string name="userobject_create">Створити %1$s</string>
+  <string name="userobject_edit">Змінити %1$s</string>
+  <string name="objects_delete_userobject">Видалити цей об'єкт користувача?</string>
+  <string name="userobject_no_fields">Полів поки немає, додайте їх через «Налаштувати поля».</string>
+  <string name="userentity_show_objects">Показати об'єкти</string>
 </resources>

@@ -1332,4 +1332,9 @@
   <string name="wear_login_connect">Anslut</string>
   <string name="wear_login_failed">Det gick inte att ansluta till servern</string>
   <string name="wear_list_empty">Inköpslistan är tom</string>
+  <string name="userobject_create">Skapa %1$s</string>
+  <string name="userobject_edit">Redigera %1$s</string>
+  <string name="objects_delete_userobject">Vill du verkligen ta bort det här användarobjektet?</string>
+  <string name="userobject_no_fields">Det har inga fält ännu, lägg till dem med ”Konfigurera fält”.</string>
+  <string name="userentity_show_objects">Visa objekt</string>
 </resources>

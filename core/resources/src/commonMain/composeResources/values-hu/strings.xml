@@ -1333,4 +1333,9 @@
   <string name="wear_login_connect">Csatlakozás</string>
   <string name="wear_login_failed">Nem sikerült csatlakozni a szerverhez</string>
   <string name="wear_list_empty">A bevásárlólista üres</string>
+  <string name="userobject_create">%1$s létrehozása</string>
+  <string name="userobject_edit">%1$s szerkesztése</string>
+  <string name="objects_delete_userobject">Biztosan törli ezt a felhasználói objektumot?</string>
+  <string name="userobject_no_fields">Még nincsenek mezői, adja hozzá őket a „Mezők beállítása” használatával.</string>
+  <string name="userentity_show_objects">Objektumok megjelenítése</string>
 </resources>

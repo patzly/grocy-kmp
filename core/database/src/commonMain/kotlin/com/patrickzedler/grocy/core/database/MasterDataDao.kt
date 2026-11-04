@@ -62,6 +62,21 @@ interface MasterDataDao {
     @Query("SELECT * FROM task_categories ORDER BY name COLLATE NOCASE")
     fun observeTaskCategories(): Flow<List<TaskCategoryEntity>>
 
+    @Query("SELECT * FROM userobjects WHERE userentityId = :userentityId ORDER BY id")
+    fun observeUserobjects(userentityId: Int): Flow<List<UserobjectEntity>>
+
+    @Query("DELETE FROM userobjects WHERE userentityId = :userentityId")
+    suspend fun deleteUserobjects(userentityId: Int)
+
+    @Insert
+    suspend fun insertUserobjects(userobjects: List<UserobjectEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertUserobject(userobject: UserobjectEntity)
+
+    @Query("DELETE FROM userobjects WHERE id = :id")
+    suspend fun deleteUserobject(id: Int)
+
     @Query("SELECT * FROM userentities ORDER BY name COLLATE NOCASE")
     fun observeUserentities(): Flow<List<UserentityEntity>>
 

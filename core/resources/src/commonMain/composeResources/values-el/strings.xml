@@ -1333,4 +1333,9 @@
   <string name="wear_login_connect">Σύνδεση</string>
   <string name="wear_login_failed">Δεν ήταν δυνατή η σύνδεση στον διακομιστή</string>
   <string name="wear_list_empty">Η λίστα αγορών είναι κενή</string>
+  <string name="userobject_create">Δημιουργία %1$s</string>
+  <string name="userobject_edit">Επεξεργασία %1$s</string>
+  <string name="objects_delete_userobject">Θέλετε σίγουρα να διαγράψετε αυτό το αντικείμενο χρήστη;</string>
+  <string name="userobject_no_fields">Δεν έχει ακόμη πεδία, προσθέστε τα με τη «Ρύθμιση πεδίων».</string>
+  <string name="userentity_show_objects">Εμφάνιση αντικειμένων</string>
 </resources>

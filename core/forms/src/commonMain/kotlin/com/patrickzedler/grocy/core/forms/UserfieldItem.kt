@@ -40,6 +40,7 @@ fun UserfieldItem(
     index: Int,
     count: Int,
     isLastField: Boolean = false,
+    autoFocus: Boolean = false,
 ) {
     val haptic = LocalHapticFeedback.current
     val field = input.userfield
@@ -131,6 +132,7 @@ fun UserfieldItem(
             label = field.caption,
             withTime = field.type == UserfieldType.DATETIME,
             error = errorText,
+            autoFocus = autoFocus,
             isLastField = isLastField,
             index = index,
             count = count,
@@ -147,6 +149,7 @@ fun UserfieldItem(
                 else -> KeyboardType.Text
             },
             multiLine = field.type == UserfieldType.TEXT_MULTI_LINE,
+            autoFocus = autoFocus,
             isLastField = isLastField,
             stepper = if (field.type in NumberTypes) NumberStepper() else null,
             index = index,

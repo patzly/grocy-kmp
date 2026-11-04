@@ -1333,4 +1333,9 @@
   <string name="wear_login_connect">Verbinden</string>
   <string name="wear_login_failed">Verbindung zum Server fehlgeschlagen</string>
   <string name="wear_list_empty">Die Einkaufsliste ist leer</string>
+  <string name="userobject_create">%1$s erstellen</string>
+  <string name="userobject_edit">%1$s bearbeiten</string>
+  <string name="objects_delete_userobject">Möchtest du dieses Benutzerobjekt wirklich löschen?</string>
+  <string name="userobject_no_fields">Das hat noch keine Felder, füge sie über „Felder konfigurieren“ hinzu.</string>
+  <string name="userentity_show_objects">Objekte anzeigen</string>
 </resources>

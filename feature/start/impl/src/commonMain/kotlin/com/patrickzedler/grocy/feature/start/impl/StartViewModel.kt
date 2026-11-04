@@ -5,22 +5,21 @@ import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.batteries.BatteriesRepository
 import com.patrickzedler.grocy.core.data.chores.ChoresRepository
 import com.patrickzedler.grocy.core.data.equipment.EquipmentRepository
-import com.patrickzedler.grocy.core.data.tasks.TasksRepository
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
+import com.patrickzedler.grocy.core.data.tasks.TasksRepository
 import com.patrickzedler.grocy.core.data.util.RefreshController
 import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.model.batteries.BatteriesSummary
 import com.patrickzedler.grocy.core.model.batteries.batteriesSummaryOf
 import com.patrickzedler.grocy.core.model.chores.ChoresSummary
 import com.patrickzedler.grocy.core.model.chores.choresSummaryOf
-import com.patrickzedler.grocy.core.model.tasks.TasksSummary
-import com.patrickzedler.grocy.core.model.tasks.tasksSummaryOf
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
+import com.patrickzedler.grocy.core.model.masterdata.Userentity
 import com.patrickzedler.grocy.core.model.recipes.MealPlanEntry
 import com.patrickzedler.grocy.core.model.recipes.MealPlanEntryType
 import com.patrickzedler.grocy.core.model.recipes.MealPlanSection
@@ -34,6 +33,8 @@ import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListSummary
 import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
 import com.patrickzedler.grocy.core.model.stock.StockSummary
 import com.patrickzedler.grocy.core.model.stock.stockSummaryOf
+import com.patrickzedler.grocy.core.model.tasks.TasksSummary
+import com.patrickzedler.grocy.core.model.tasks.tasksSummaryOf
 import com.patrickzedler.grocy.core.model.text.grocyDateTimeOf
 import com.patrickzedler.grocy.core.model.text.isoDateOf
 import com.patrickzedler.grocy.core.model.text.localNowMillis
@@ -148,6 +149,8 @@ internal data class StartUiState(
     val batteriesDueSoonDays: Int = 0,
     /** Null without the equipment feature or before the first download stored any piece. */
     val equipmentCount: Int? = null,
+    /** The userentities Grocy shows in its sidebar. */
+    val sidebarUserentities: List<Userentity> = emptyList(),
 )
 
 /**
@@ -252,6 +255,8 @@ internal class StartViewModel(
             batteriesDueSoonDays = settings.batteriesDueSoonDays,
             equipmentCount = allEquipment.size.takeIf { config.equipment && it > 0 },
         )
+    }.combine(repository.userentities) { state, userentities ->
+        state.copy(sidebarUserentities = userentities.filter { it.showInSidebarMenu })
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), null)
 
     init {

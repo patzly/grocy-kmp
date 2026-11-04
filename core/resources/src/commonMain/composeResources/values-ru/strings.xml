@@ -1433,4 +1433,9 @@
   <string name="wear_login_connect">Подключить</string>
   <string name="wear_login_failed">Не удалось подключиться к серверу</string>
   <string name="wear_list_empty">Список покупок пуст</string>
+  <string name="userobject_create">Создать %1$s</string>
+  <string name="userobject_edit">Изменить %1$s</string>
+  <string name="objects_delete_userobject">Удалить этот пользовательский объект?</string>
+  <string name="userobject_no_fields">Полей пока нет, добавьте их через «Настроить поля».</string>
+  <string name="userentity_show_objects">Показать объекты</string>
 </resources>

@@ -1383,4 +1383,9 @@
   <string name="wear_login_connect">Ligar</string>
   <string name="wear_login_failed">Não foi possível ligar ao servidor</string>
   <string name="wear_list_empty">A lista de compras está vazia</string>
+  <string name="userobject_create">Criar %1$s</string>
+  <string name="userobject_edit">Editar %1$s</string>
+  <string name="objects_delete_userobject">Tem a certeza de que pretende eliminar este objeto de utilizador?</string>
+  <string name="userobject_no_fields">Ainda não tem campos, adicione-os em "Configurar campos".</string>
+  <string name="userentity_show_objects">Mostrar objetos</string>
 </resources>

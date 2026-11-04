@@ -3,14 +3,14 @@ package com.patrickzedler.grocy.core.network
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.SystemInfo
 import com.patrickzedler.grocy.core.model.User
-import com.patrickzedler.grocy.core.model.equipment.Equipment
-import com.patrickzedler.grocy.core.model.masterdata.Battery
 import com.patrickzedler.grocy.core.model.batteries.BatteryChargeCycle
 import com.patrickzedler.grocy.core.model.batteries.BatteryDetails
 import com.patrickzedler.grocy.core.model.batteries.CurrentBattery
 import com.patrickzedler.grocy.core.model.chores.ChoreDetails
 import com.patrickzedler.grocy.core.model.chores.ChoreExecution
 import com.patrickzedler.grocy.core.model.chores.CurrentChore
+import com.patrickzedler.grocy.core.model.equipment.Equipment
+import com.patrickzedler.grocy.core.model.masterdata.Battery
 import com.patrickzedler.grocy.core.model.masterdata.Chore
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
@@ -23,9 +23,9 @@ import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConvers
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.masterdata.TaskCategory
-import com.patrickzedler.grocy.core.model.tasks.Task
 import com.patrickzedler.grocy.core.model.masterdata.Userentity
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
+import com.patrickzedler.grocy.core.model.masterdata.Userobject
 import com.patrickzedler.grocy.core.model.recipes.MealPlanEntry
 import com.patrickzedler.grocy.core.model.recipes.MealPlanRecipe
 import com.patrickzedler.grocy.core.model.recipes.MealPlanSection
@@ -50,17 +50,18 @@ import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockLogEntry
 import com.patrickzedler.grocy.core.model.stock.TransferBooking
+import com.patrickzedler.grocy.core.model.tasks.Task
 import com.patrickzedler.grocy.core.network.dto.AveragePriceDto
 import com.patrickzedler.grocy.core.network.dto.BatteryChargeCycleDto
 import com.patrickzedler.grocy.core.network.dto.BatteryDetailsDto
 import com.patrickzedler.grocy.core.network.dto.BatteryDto
-import com.patrickzedler.grocy.core.network.dto.CurrentBatteryDto
-import com.patrickzedler.grocy.core.network.dto.EquipmentDto
 import com.patrickzedler.grocy.core.network.dto.ChoreDetailsDto
 import com.patrickzedler.grocy.core.network.dto.ChoreDto
 import com.patrickzedler.grocy.core.network.dto.ChoreLogDto
-import com.patrickzedler.grocy.core.network.dto.CurrentChoreDto
 import com.patrickzedler.grocy.core.network.dto.CreatedObjectDto
+import com.patrickzedler.grocy.core.network.dto.CurrentBatteryDto
+import com.patrickzedler.grocy.core.network.dto.CurrentChoreDto
+import com.patrickzedler.grocy.core.network.dto.EquipmentDto
 import com.patrickzedler.grocy.core.network.dto.ErrorDto
 import com.patrickzedler.grocy.core.network.dto.LastPurchaseDto
 import com.patrickzedler.grocy.core.network.dto.LocationDto
@@ -96,6 +97,7 @@ import com.patrickzedler.grocy.core.network.dto.TaskDto
 import com.patrickzedler.grocy.core.network.dto.UserDto
 import com.patrickzedler.grocy.core.network.dto.UserentityDto
 import com.patrickzedler.grocy.core.network.dto.UserfieldDto
+import com.patrickzedler.grocy.core.network.dto.UserobjectDto
 import com.patrickzedler.grocy.core.network.dto.VolatileStockDto
 import com.patrickzedler.grocy.core.network.dto.flag
 import com.patrickzedler.grocy.core.network.dto.toJson
@@ -124,9 +126,11 @@ import kotlin.io.encoding.Base64
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.put
 
 /**
@@ -465,6 +469,40 @@ class GrocyApi(
             body = jsonBody(JsonObject(emptyMap())),
         )
     }
+
+    /**
+     * The objects of the userentity [userentity]. Grocy's list has no field values, they are
+     * under the entity's name of the fields, not under "userobjects": [userobjectValues].
+     */
+    suspend fun userobjects(
+        connection: ServerConnection,
+        userentity: Userentity,
+    ): List<Userobject> =
+        get<List<UserobjectDto>>(connection, "objects", USEROBJECTS)
+            .filter { it.userentityId == userentity.id }
+            .map { Userobject(it.id, userentity.id) }
+
+    /** The field values of object [id] of the entity whose fields are [userfieldEntity]. */
+    suspend fun userobjectValues(
+        connection: ServerConnection,
+        userfieldEntity: String,
+        id: Int,
+    ): Map<String, String?> {
+        val answer = get<JsonElement>(connection, "userfields", userfieldEntity, id.toString())
+        // Without any fields PHP's empty array arrives as a JSON list
+        return (answer as? JsonObject).orEmpty().mapValues { (_, value) ->
+            (value as? JsonPrimitive)?.contentOrNull
+        }
+    }
+
+    /** Creates an object of the entity [userentityId] or re-saves object [id], returns its id. */
+    suspend fun saveUserobject(connection: ServerConnection, id: Int, userentityId: Int): Int =
+        saveObject(
+            connection,
+            USEROBJECTS,
+            id,
+            buildJsonObject { put("userentity_id", userentityId) },
+        )
 
     suspend fun userentities(connection: ServerConnection): List<Userentity> =
         get<List<UserentityDto>>(connection, "objects", USERENTITIES).map { it.toModel() }
@@ -1525,6 +1563,7 @@ class GrocyApi(
         private const val TASK_CATEGORIES = "task_categories"
         private const val TASKS = "tasks"
         private const val USERENTITIES = "userentities"
+        private const val USEROBJECTS = "userobjects"
         private const val USERFIELDS = "userfields"
         private const val PRODUCT_PICTURES = "productpictures"
         private const val RECIPES = "recipes"

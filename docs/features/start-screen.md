@@ -52,7 +52,7 @@ it never closes the page beside it first, on purpose), an About
 screen, the Settings overview (`feature:settings`), the master data (`feature:masterdata`): the
 overview of Grocy's master data categories, the list and form of every category (products with
 their overview dialog, locations, stores, quantity units, product groups, chores, batteries,
-task categories, userfields, userentities), with the product's barcodes, grocycode and
+task categories, userfields, userentities and their objects), with the product's barcodes, grocycode and
 conversion overrides, the default conversions of units, "Add to shopping list", the stock
 settings ("Presets for new products"); Grocy's stock overview, stock pages of products (stock
 entries, stock journal, journal summary) and stock bookings Purchase, Consume, Transfer and

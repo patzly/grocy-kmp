@@ -1332,4 +1332,9 @@
   <string name="wear_login_connect">Bağlan</string>
   <string name="wear_login_failed">Sunucuya bağlanılamadı</string>
   <string name="wear_list_empty">Alışveriş listesi boş</string>
+  <string name="userobject_create">%1$s oluştur</string>
+  <string name="userobject_edit">%1$s düzenle</string>
+  <string name="objects_delete_userobject">Bu kullanıcı nesnesini silmek istediğinizden emin misiniz?</string>
+  <string name="userobject_no_fields">Henüz alanı yok, "Alanları yapılandır" ile ekleyin.</string>
+  <string name="userentity_show_objects">Nesneleri göster</string>
 </resources>

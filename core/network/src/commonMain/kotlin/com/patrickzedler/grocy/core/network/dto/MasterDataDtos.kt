@@ -349,6 +349,12 @@ internal fun TaskCategory.toJson(): JsonObject = buildJsonObject {
 }
 
 @Serializable
+internal data class UserobjectDto(
+    val id: Int,
+    @SerialName("userentity_id") val userentityId: FlexInt = null,
+)
+
+@Serializable
 internal data class UserentityDto(
     val id: Int,
     val name: String,

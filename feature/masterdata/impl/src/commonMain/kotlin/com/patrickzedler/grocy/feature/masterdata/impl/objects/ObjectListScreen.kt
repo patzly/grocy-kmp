@@ -33,6 +33,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
+import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.ButtonGroupOverflowIndicator
@@ -82,6 +83,7 @@ import com.patrickzedler.grocy.core.resources.objects_empty
 import com.patrickzedler.grocy.core.resources.objects_empty_filtered
 import com.patrickzedler.grocy.core.resources.products_configure_userfields
 import com.patrickzedler.grocy.core.resources.products_disabled
+import com.patrickzedler.grocy.core.resources.userentity_show_objects
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -108,6 +110,7 @@ internal fun ObjectListScreen(
     onObjectClick: (Int) -> Unit,
     onAddClick: () -> Unit,
     onConfigureUserfieldsClick: (entity: String) -> Unit,
+    onShowUserobjectsClick: (name: String) -> Unit,
     onActionDone: (ObjectActionEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -146,6 +149,7 @@ internal fun ObjectListScreen(
             onObjectClick = onObjectClick,
             onAddClick = onAddClick,
             onConfigureUserfieldsClick = onConfigureUserfieldsClick,
+            onShowUserobjectsClick = onShowUserobjectsClick,
             onSearchClick = viewModel::showSearch,
             onCloseSearchClick = viewModel::hideSearch,
             onFilterChange = viewModel::setFilter,
@@ -163,6 +167,7 @@ private class ObjectListActions(
     val onObjectClick: (Int) -> Unit,
     val onAddClick: () -> Unit,
     val onConfigureUserfieldsClick: (entity: String) -> Unit,
+    val onShowUserobjectsClick: (name: String) -> Unit,
     val onSearchClick: () -> Unit,
     val onCloseSearchClick: () -> Unit,
     val onFilterChange: ((ObjectFilter) -> ObjectFilter) -> Unit,
@@ -332,12 +337,30 @@ private fun LazyListScope.objectItems(
             index = index,
             count = state.rows.size,
             onClick = { actions.onObjectClick(row.id) },
-            menuItems = objectActionItems(actions.objectActions, row.id),
+            menuItems = userobjectsMenuItem(kind, row, actions) +
+                objectActionItems(actions.objectActions, row.id),
             onConfigureFieldsClick = row.entity
                 ?.takeIf { kind == ObjectListKind.USERENTITIES }
                 ?.let { entity -> { actions.onConfigureUserfieldsClick(entity) } },
         )
     }
+}
+
+/** The way to a userentity's objects also for those not in Grocy's sidebar. */
+@Composable
+private fun userobjectsMenuItem(
+    kind: ObjectListKind,
+    row: ObjectRow,
+    actions: ObjectListActions,
+): List<AppBarMenuItem> {
+    if (kind != ObjectListKind.USERENTITIES) return emptyList()
+    val name = row.entity?.removePrefix(MasterDataRepository.USERENTITY_PREFIX)
+        ?: return emptyList()
+    return listOf(
+        AppBarMenuItem(stringResource(Res.string.userentity_show_objects)) {
+            actions.onShowUserobjectsClick(name)
+        },
+    )
 }
 
 @Composable

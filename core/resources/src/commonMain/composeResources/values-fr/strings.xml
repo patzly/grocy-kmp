@@ -1383,4 +1383,9 @@
   <string name="wear_login_connect">Connecter</string>
   <string name="wear_login_failed">Connexion au serveur impossible</string>
   <string name="wear_list_empty">La liste de courses est vide</string>
+  <string name="userobject_create">Créer %1$s</string>
+  <string name="userobject_edit">Modifier %1$s</string>
+  <string name="objects_delete_userobject">Voulez-vous vraiment supprimer cet objet utilisateur ?</string>
+  <string name="userobject_no_fields">Pas encore de champs, ajoutez-les avec « Configurer les champs ».</string>
+  <string name="userentity_show_objects">Afficher les objets</string>
 </resources>

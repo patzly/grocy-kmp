@@ -20,23 +20,27 @@ import com.patrickzedler.grocy.core.model.masterdata.ProductOverview
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnitConversion
 import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
-import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.masterdata.TaskCategory
 import com.patrickzedler.grocy.core.model.masterdata.Userentity
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
+import com.patrickzedler.grocy.core.model.masterdata.Userobject
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettingValue
 import com.patrickzedler.grocy.core.model.server.UserSettings
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import kotlin.random.Random
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.builtins.nullable
@@ -441,6 +445,63 @@ class MasterDataRepository(
         }
     }
 
+    /** The objects of a userentity with their values, as last downloaded. */
+    fun userobjects(userentityId: Int): Flow<List<Userobject>> =
+        dao.observeUserobjects(userentityId).map { list -> list.map { it.toModel() } }
+
+    /**
+     * Downloads the objects of the userentity [name]. Not part of [refresh]: Grocy has their
+     * values only one object per request, which only the entity's page is worth.
+     *
+     * @throws GrocyApiException e.g. [GrocyApiException.Unreachable] when offline; the stored
+     *   objects stay as they were.
+     */
+    suspend fun refreshUserobjects(name: String) {
+        val known = userentities.first().firstOrNull { it.name == name }
+        // Opened from a link before the entities were downloaded
+        if (known == null) refresh()
+        val userentity = known ?: userentities.first().firstOrNull { it.name == name } ?: return
+        val connection = requireConnection()
+        val fieldEntity = USERENTITY_PREFIX + name
+        val parallel = Semaphore(MAX_PARALLEL_VALUE_REQUESTS)
+        val objects = coroutineScope {
+            api.userobjects(connection, userentity).map { userobject ->
+                async {
+                    parallel.withPermit {
+                        userobject.copy(
+                            userfields = api.userobjectValues(
+                                connection,
+                                fieldEntity,
+                                userobject.id,
+                            ),
+                        )
+                    }
+                }
+            }.awaitAll()
+        }
+        database.withWriteTransaction {
+            dao.deleteUserobjects(userentity.id)
+            dao.insertUserobjects(objects.map { it.toEntity() })
+        }
+    }
+
+    /** Creates or re-saves an object of [userentity] with the changed values of its fields. */
+    suspend fun saveUserobject(
+        userentity: Userentity,
+        id: Int,
+        userfields: Map<String, String?>,
+    ): Int {
+        val fieldEntity = USERENTITY_PREFIX + userentity.name
+        return saveObject(
+            entity = fieldEntity,
+            userfields = userfields,
+            save = { api.saveUserobject(it, id, userentity.id) },
+        ) { connection, savedId ->
+            val values = api.userobjectValues(connection, fieldEntity, savedId)
+            dao.upsertUserobject(Userobject(savedId, userentity.id, values).toEntity())
+        }
+    }
+
     /** Userentities have no userfields of their own. */
     suspend fun saveUserentity(userentity: Userentity): Int =
         saveObject(USERENTITIES, emptyMap(), { api.saveUserentity(it, userentity) }) { c, id ->
@@ -497,6 +558,7 @@ class MasterDataRepository(
             TASKS -> database.taskDao().deleteTask(id)
             EQUIPMENT -> database.equipmentDao().deleteEquipment(id)
             USERENTITIES -> dao.deleteUserentity(id)
+            USEROBJECTS -> dao.deleteUserobject(id)
             USERFIELDS -> dao.deleteUserfield(id)
             PRODUCT_BARCODES -> dao.deleteProductBarcode(id)
             QU_CONVERSIONS -> {
@@ -624,6 +686,8 @@ class MasterDataRepository(
         const val TASKS = "tasks"
         const val EQUIPMENT = "equipment"
         const val USERENTITIES = "userentities"
+        const val USEROBJECTS = "userobjects"
+        private const val MAX_PARALLEL_VALUE_REQUESTS = 6
         const val USERFIELDS = "userfields"
         const val PRODUCT_BARCODES = "product_barcodes"
         const val QU_CONVERSIONS = "quantity_unit_conversions"

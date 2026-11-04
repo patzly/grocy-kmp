@@ -1333,4 +1333,9 @@
   <string name="wear_login_connect">Koble til</string>
   <string name="wear_login_failed">Kunne ikke koble til serveren</string>
   <string name="wear_list_empty">Handlelisten er tom</string>
+  <string name="userobject_create">Opprett %1$s</string>
+  <string name="userobject_edit">Rediger %1$s</string>
+  <string name="objects_delete_userobject">Er du sikker på at du vil slette dette brukerobjektet?</string>
+  <string name="userobject_no_fields">Dette har ingen felt ennå, legg dem til med «Konfigurer felt».</string>
+  <string name="userentity_show_objects">Vis objekter</string>
 </resources>

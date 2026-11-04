@@ -46,6 +46,8 @@ import com.patrickzedler.grocy.feature.masterdata.api.UserentitiesRoute
 import com.patrickzedler.grocy.feature.masterdata.api.UserentityRoute
 import com.patrickzedler.grocy.feature.masterdata.api.UserfieldRoute
 import com.patrickzedler.grocy.feature.masterdata.api.UserfieldsRoute
+import com.patrickzedler.grocy.feature.masterdata.api.UserobjectRoute
+import com.patrickzedler.grocy.feature.masterdata.api.UserobjectsRoute
 import com.patrickzedler.grocy.feature.masterdata.impl.barcode.ProductBarcodesViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.conversion.ConversionsViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.ChoreScreen
@@ -56,7 +58,6 @@ import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectListViewMod
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.SimpleObjectScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.SimpleObjectViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.UserentityScreen
-import com.patrickzedler.grocy.feature.masterdata.impl.product.productFactsTexts
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.UserentityViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.UserfieldScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.UserfieldViewModel
@@ -64,8 +65,13 @@ import com.patrickzedler.grocy.feature.masterdata.impl.objects.entity
 import com.patrickzedler.grocy.feature.masterdata.impl.product.ProductRelated
 import com.patrickzedler.grocy.feature.masterdata.impl.product.ProductScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.product.ProductViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.product.productFactsTexts
 import com.patrickzedler.grocy.feature.masterdata.impl.products.ProductsScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.products.ProductsViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.userobjects.UserobjectScreen
+import com.patrickzedler.grocy.feature.masterdata.impl.userobjects.UserobjectViewModel
+import com.patrickzedler.grocy.feature.masterdata.impl.userobjects.UserobjectsScreen
+import com.patrickzedler.grocy.feature.masterdata.impl.userobjects.UserobjectsViewModel
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.StockSettingsRoute
@@ -255,6 +261,7 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
             // A new userfield belongs to the filtered entity, like in Grocy
             onAddClick = { navigator.openDetail(UserfieldRoute(entity = route.entity)) },
             onConfigureUserfieldsClick = openUserfields,
+            onShowUserobjectsClick = { navigator.navigate(UserobjectsRoute(it)) },
             onActionDone = listActionDone(navigator, { UserfieldRoute(it) }) {
                 (it as? UserfieldRoute)?.id
             },
@@ -277,6 +284,42 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
         repository = repository,
         navigator = navigator,
     )
+    entry<UserobjectsRoute>(
+        metadata = listPaneMetadata(USEROBJECTS_SCENE) {
+            SelectHint(MasterDataCategory.USERENTITIES)
+        },
+    ) { route ->
+        UserobjectsScreen(
+            viewModel = viewModel { UserobjectsViewModel(route.entity, repository) },
+            objectActions = viewModel {
+                ObjectActionsViewModel(MasterDataRepository.USEROBJECTS, repository)
+            },
+            menuItems = appMenuItems(),
+            selectedId = (navigator.currentRoute as? UserobjectRoute)?.id,
+            isBesideDetail = showsDetailBesideList(),
+            onBackClick = { navigator.goBack(from = route) },
+            onObjectClick = { navigator.openDetail(UserobjectRoute(route.entity, it)) },
+            onAddClick = { navigator.openDetail(UserobjectRoute(route.entity)) },
+            onConfigureFieldsClick = {
+                openUserfields(MasterDataRepository.USERENTITY_PREFIX + route.entity)
+            },
+            onActionDone = listActionDone(
+                navigator,
+                detail = { UserobjectRoute(route.entity, it) },
+            ) { (it as? UserobjectRoute)?.id },
+        )
+    }
+    entry<UserobjectRoute>(metadata = detailPaneMetadata(USEROBJECTS_SCENE)) { route ->
+        UserobjectScreen(
+            viewModel = viewModel { UserobjectViewModel(route.entity, route.id, repository) },
+            frame = formFrame(navigator, route, MasterDataRepository.USEROBJECTS, repository) {
+                UserobjectRoute(route.entity, it)
+            },
+            onConfigureFieldsClick = {
+                openUserfields(MasterDataRepository.USERENTITY_PREFIX + route.entity)
+            },
+        )
+    }
     entry<UserentityRoute>(metadata = detailPaneMetadata(ObjectListKind.USERENTITIES)) { route ->
         UserentityScreen(
             viewModel = viewModel { UserentityViewModel(route.id, repository) },
@@ -345,6 +388,7 @@ private inline fun <reified L : Route, reified D : DetailRoute> EntryProviderSco
             onObjectClick = { id -> navigator.openDetail(detail(id)) },
             onAddClick = { navigator.openDetail(detail(null)) },
             onConfigureUserfieldsClick = { navigator.navigate(UserfieldsRoute(it)) },
+            onShowUserobjectsClick = { navigator.navigate(UserobjectsRoute(it)) },
             onActionDone = listActionDone(navigator, detail) { (it as? D)?.let(detailId) },
         )
     }
@@ -391,6 +435,9 @@ private fun stockPageActions(
 // The app language, a change restarts the app, so ViewModels keep it
 @Composable
 private fun appLanguage(): String = LocalLocale.current.toLanguageTag()
+
+// Every userentity's page is the same scene, only one is open at a time
+private const val USEROBJECTS_SCENE = "userobjects"
 
 /** The detail pane beside a list until an item is chosen. */
 @Composable

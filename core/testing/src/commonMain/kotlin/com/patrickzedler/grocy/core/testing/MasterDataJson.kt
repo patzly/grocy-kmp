@@ -444,6 +444,7 @@ object MasterDataJson {
         "/api/objects/tasks/3" to OLD_TASK,
         "/api/objects/tasks/$CREATED_ID" to CREATED_TASK,
         "/api/objects/userentities" to USERENTITIES,
+        "/api/objects/userobjects" to "[]",
         "/api/users" to USERS,
         "/api/objects/userfields" to USERFIELDS,
         "/api/system/config" to SERVER_CONFIG,

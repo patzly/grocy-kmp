@@ -60,6 +60,7 @@ import com.patrickzedler.grocy.core.ui.AppMenuDialogs
 import com.patrickzedler.grocy.core.ui.rememberAppMenu
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -125,6 +126,8 @@ fun <F : ObjectFormState<*>> ObjectFormScreen(
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     toolbarActions: @Composable RowScope.() -> Unit = {},
+    userfieldsTitle: StringResource? = Res.string.product_userfields,
+    focusFirstUserfield: Boolean = false,
     content: LazyListScope.(form: F) -> Unit,
 ) {
     val listState = rememberLazyListState()
@@ -245,7 +248,7 @@ fun <F : ObjectFormState<*>> ObjectFormScreen(
                 is ObjectFormLoad.Ready -> {
                     content(load.form)
                     if (load.userfields.isNotEmpty()) {
-                        segmentedGroup(key = "userfields", title = Res.string.product_userfields) {
+                        segmentedGroup(key = "userfields", title = userfieldsTitle) {
                             val errors = viewModel.userfieldErrors
                             load.userfields.forEachIndexed { index, input ->
                                 UserfieldItem(
@@ -254,6 +257,7 @@ fun <F : ObjectFormState<*>> ObjectFormScreen(
                                     index = index,
                                     count = load.userfields.size,
                                     isLastField = index == load.userfields.lastIndex,
+                                    autoFocus = focusFirstUserfield && index == 0,
                                 )
                             }
                         }

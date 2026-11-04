@@ -18,9 +18,10 @@ import com.patrickzedler.grocy.feature.about.api.AboutRoute
 import com.patrickzedler.grocy.feature.batteries.api.BatteriesOverviewRoute
 import com.patrickzedler.grocy.feature.batteries.api.BatteryTrackingRoute
 import com.patrickzedler.grocy.feature.chores.api.ChoreTrackingRoute
-import com.patrickzedler.grocy.feature.equipment.api.EquipmentRoute
 import com.patrickzedler.grocy.feature.chores.api.ChoresOverviewRoute
+import com.patrickzedler.grocy.feature.equipment.api.EquipmentRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
+import com.patrickzedler.grocy.feature.masterdata.api.UserobjectsRoute
 import com.patrickzedler.grocy.feature.recipes.api.MealPlanRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipesRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
@@ -98,6 +99,8 @@ fun EntryProviderScope<NavKey>.startEntry(
             onBatteryTrackingClick = {
                 navigator.navigateAll(batteryTrackingRoutes(isBesideDetail))
             },
+            // Grocy's sidebar entry of a userentity, a scene of its own like the other lists
+            onUserentityClick = { name -> navigator.navigate(UserobjectsRoute(name)) },
             onDemoWarningClick = {
                 navigator.navigateAll(listOf(SettingsRoute, ServerSettingsRoute))
             },

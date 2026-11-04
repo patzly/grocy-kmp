@@ -1383,4 +1383,9 @@
   <string name="wear_login_connect">התחברות</string>
   <string name="wear_login_failed">לא ניתן היה להתחבר לשרת</string>
   <string name="wear_list_empty">רשימת הקניות ריקה</string>
+  <string name="userobject_create">יצירת %1$s</string>
+  <string name="userobject_edit">עריכת %1$s</string>
+  <string name="objects_delete_userobject">למחוק את אובייקט המשתמש הזה?</string>
+  <string name="userobject_no_fields">עדיין אין שדות, אפשר להוסיף אותם דרך „הגדרת שדות”.</string>
+  <string name="userentity_show_objects">הצגת אובייקטים</string>
 </resources>

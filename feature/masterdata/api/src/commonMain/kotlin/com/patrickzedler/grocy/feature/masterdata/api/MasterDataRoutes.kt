@@ -102,6 +102,16 @@ data class UserfieldRoute(val id: Int? = null, val entity: String? = null) : Det
 @SerialName("masterdata/userentities")
 data object UserentitiesRoute : Route
 
+/** Grocy's page of the userentity [entity] (its name), opened from its sidebar entry. */
+@Serializable
+@SerialName("userobjects")
+data class UserobjectsRoute(val entity: String) : Route
+
+/** An object of the userentity [entity], a new one without [id]. */
+@Serializable
+@SerialName("userobject")
+data class UserobjectRoute(val entity: String, val id: Int? = null) : DetailRoute
+
 @Serializable
 @SerialName("masterdata/userentity")
 data class UserentityRoute(val id: Int? = null) : DetailRoute
@@ -129,5 +139,7 @@ val masterDataRouteSerializers = SerializersModule {
         subclass(UserfieldRoute::class, UserfieldRoute.serializer())
         subclass(UserentitiesRoute::class, UserentitiesRoute.serializer())
         subclass(UserentityRoute::class, UserentityRoute.serializer())
+        subclass(UserobjectsRoute::class, UserobjectsRoute.serializer())
+        subclass(UserobjectRoute::class, UserobjectRoute.serializer())
     }
 }

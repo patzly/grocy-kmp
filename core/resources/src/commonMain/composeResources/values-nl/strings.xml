@@ -1333,4 +1333,9 @@
   <string name="wear_login_connect">Verbinden</string>
   <string name="wear_login_failed">Kan geen verbinding maken met de server</string>
   <string name="wear_list_empty">De boodschappenlijst is leeg</string>
+  <string name="userobject_create">%1$s maken</string>
+  <string name="userobject_edit">%1$s bewerken</string>
+  <string name="objects_delete_userobject">Weet je zeker dat je dit gebruikersobject wilt verwijderen?</string>
+  <string name="userobject_no_fields">Dit heeft nog geen velden, voeg ze toe met 'Velden configureren'.</string>
+  <string name="userentity_show_objects">Objecten tonen</string>
 </resources>

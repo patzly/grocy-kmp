@@ -25,17 +25,17 @@ import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.masterdata.StockLabelType
 import com.patrickzedler.grocy.core.model.masterdata.Store
 import com.patrickzedler.grocy.core.model.masterdata.TaskCategory
-import com.patrickzedler.grocy.core.model.tasks.Task
 import com.patrickzedler.grocy.core.model.masterdata.Userentity
 import com.patrickzedler.grocy.core.model.masterdata.Userfield
 import com.patrickzedler.grocy.core.model.masterdata.UserfieldType
+import com.patrickzedler.grocy.core.model.masterdata.Userobject
 import com.patrickzedler.grocy.core.model.masterdata.Weekday
-import com.patrickzedler.grocy.core.model.recipes.Recipe
 import com.patrickzedler.grocy.core.model.recipes.MealPlanEntry
 import com.patrickzedler.grocy.core.model.recipes.MealPlanEntryType
 import com.patrickzedler.grocy.core.model.recipes.MealPlanRecipe
 import com.patrickzedler.grocy.core.model.recipes.MealPlanRecipeType
 import com.patrickzedler.grocy.core.model.recipes.MealPlanSection
+import com.patrickzedler.grocy.core.model.recipes.Recipe
 import com.patrickzedler.grocy.core.model.recipes.RecipeFulfillment
 import com.patrickzedler.grocy.core.model.recipes.RecipeIngredient
 import com.patrickzedler.grocy.core.model.recipes.RecipeNesting
@@ -46,6 +46,7 @@ import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockLogEntry
+import com.patrickzedler.grocy.core.model.tasks.Task
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.builtins.nullable
@@ -134,6 +135,10 @@ fun ProductEntity.toModel() = Product(
     pictureFileName = pictureFileName,
     userfields = decodeUserfieldValues(userfields),
 )
+
+fun Userobject.toEntity() = UserobjectEntity(id, userentityId, encodeUserfieldValues(userfields))
+
+fun UserobjectEntity.toModel() = Userobject(id, userentityId, decodeUserfieldValues(userfields))
 
 private fun encodeUserfieldValues(values: Map<String, String?>): String =
     Json.encodeToString(userfieldValuesSerializer, values)

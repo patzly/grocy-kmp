@@ -1437,4 +1437,9 @@ Po zaškrtnutí nebude brán zřetel na množství produktu v nákupním seznamu
   <string name="wear_login_connect">Připojit</string>
   <string name="wear_login_failed">K serveru se nepodařilo připojit</string>
   <string name="wear_list_empty">Nákupní seznam je prázdný</string>
+  <string name="userobject_create">Vytvořit %1$s</string>
+  <string name="userobject_edit">Upravit %1$s</string>
+  <string name="objects_delete_userobject">Opravdu chcete smazat tento uživatelský objekt?</string>
+  <string name="userobject_no_fields">Zatím nemá žádná pole, přidejte je pomocí „Nastavit pole“.</string>
+  <string name="userentity_show_objects">Zobrazit objekty</string>
 </resources>

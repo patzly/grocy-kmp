@@ -1333,4 +1333,9 @@
   <string name="wear_login_connect">Ühenda</string>
   <string name="wear_login_failed">Serveriga ei saanud ühendust</string>
   <string name="wear_list_empty">Ostunimekiri on tühi</string>
+  <string name="userobject_create">Loo %1$s</string>
+  <string name="userobject_edit">Muuda: %1$s</string>
+  <string name="objects_delete_userobject">Kas soovid selle kasutajaobjekti kindlasti kustutada?</string>
+  <string name="userobject_no_fields">Sellel pole veel välju, lisa need valikuga „Seadista väljad“.</string>
+  <string name="userentity_show_objects">Näita objekte</string>
 </resources>
