@@ -5,6 +5,7 @@ import androidx.compose.ui.text.TextRange
 import app.cash.turbine.test
 import com.patrickzedler.grocy.core.forms.FormFocusTarget
 import com.patrickzedler.grocy.core.forms.ScannerFieldState
+import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.stock.BookingKind
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.testing.MasterDataJson
@@ -27,6 +28,8 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.double
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonObject
@@ -42,6 +45,15 @@ class BookingViewModelTest {
     @BeforeTest
     fun setUp() {
         Dispatchers.setMain(dispatcher)
+        server.respond(
+            "/api/objects/product_barcodes",
+            body = """{"created_object_id":77}""",
+            method = HttpMethod.Post,
+        )
+        server.respond(
+            "/api/objects/product_barcodes/77",
+            body = """{"id":77,"product_id":1,"barcode":"123456"}""",
+        )
         val booked = """[{"id":9,"product_id":1,"transaction_id":"tx1","stock_id":"s1"}]"""
         for (action in listOf("add", "consume", "open", "transfer", "inventory")) {
             server.respond("/api/stock/products/1/$action", body = booked, method = HttpMethod.Post)
@@ -466,6 +478,79 @@ class BookingViewModelTest {
         assertEquals("123456", barcode["barcode"]!!.jsonPrimitive.content)
         assertEquals(1, barcode["product_id"]!!.jsonPrimitive.int)
         assertNull(viewModel.form.pendingBarcode)
+    }
+
+    @Test
+    fun aBarcodeOfAPurchaseKeepsItsAmountByDefault() = runTest(dispatcher) {
+        val viewModel = viewModel(BookingKind.PURCHASE)
+
+        val barcode = bookWithNewBarcode(viewModel)
+
+        assertEquals(3.0, barcode["amount"]!!.jsonPrimitive.double)
+    }
+
+    @Test
+    fun theSettingLeavesTheAmountOutOfTheBarcode() = runTest(dispatcher) {
+        environment.repository.refresh()
+        val viewModel = BookingViewModel(
+            kind = BookingKind.PURCHASE,
+            masterData = environment.repository,
+            stock = environment.stockRepository,
+            today = { epochDayOf("2026-05-01")!! },
+            decimalSeparator = '.',
+            barcodeUsesAmount = { false },
+        )
+        advanceUntilIdle()
+
+        val barcode = bookWithNewBarcode(viewModel)
+
+        assertNull(barcode["amount"]?.jsonPrimitive?.contentOrNull)
+        assertNull(barcode["qu_id"]?.jsonPrimitive?.contentOrNull)
+    }
+
+    private suspend fun TestScope.bookWithNewBarcode(viewModel: BookingViewModel): JsonObject {
+        viewModel.onCode("123456", scanMode = false)
+        viewModel.assignUnknownCode()
+        viewModel.selectProduct(1)
+        advanceUntilIdle()
+        viewModel.form.amount.setTextAndPlaceCursorAtEnd("3")
+        viewModel.form.dueDate.setTextAndPlaceCursorAtEnd("2026-11-30")
+        viewModel.book()
+        advanceUntilIdle()
+        return server.requestsTo("/api/objects/product_barcodes", HttpMethod.Post)
+            .single()
+            .let { Json.parseToJsonElement((it.body as TextContent).text).jsonObject }
+    }
+
+    @Test
+    fun aProductCreatedForAnUnknownCodeIsChosenWhenItsBarcodeArrives() = runTest(dispatcher) {
+        val viewModel = viewModel(BookingKind.PURCHASE)
+        viewModel.onCode("123456", scanMode = false)
+        viewModel.keepUnknownCodeForNewProduct()
+        advanceUntilIdle()
+        assertNull(viewModel.form.product)
+
+        environment.repository.saveProductBarcode(
+            ProductBarcode(id = 0, productId = 1, barcode = "123456"),
+            emptyMap(),
+        )
+        advanceUntilIdle()
+
+        assertEquals(1, viewModel.form.product?.id)
+        assertEquals(FormFocusTarget.NEXT_FIELD, viewModel.scanner.focusTarget)
+    }
+
+    @Test
+    fun anotherProductsNewBarcodeChoosesNothing() = runTest(dispatcher) {
+        val viewModel = viewModel(BookingKind.PURCHASE)
+
+        environment.repository.saveProductBarcode(
+            ProductBarcode(id = 0, productId = 1, barcode = "123456"),
+            emptyMap(),
+        )
+        advanceUntilIdle()
+
+        assertNull(viewModel.form.product)
     }
 
     @Test

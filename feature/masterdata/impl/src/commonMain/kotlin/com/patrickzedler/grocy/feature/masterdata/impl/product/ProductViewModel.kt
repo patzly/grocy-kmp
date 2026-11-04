@@ -1,12 +1,17 @@
 package com.patrickzedler.grocy.feature.masterdata.impl.product
 
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.masterdata.PictureChange
+import com.patrickzedler.grocy.core.data.productfacts.ProductFactsRepository
+import com.patrickzedler.grocy.core.data.productfacts.ProductFactsResult
+import com.patrickzedler.grocy.core.data.productfacts.isLookupBarcode
 import com.patrickzedler.grocy.core.forms.FieldError
 import com.patrickzedler.grocy.core.forms.UserfieldError
 import com.patrickzedler.grocy.core.forms.UserfieldInput
@@ -19,15 +24,18 @@ import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.ProductGroup
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.Store
+import com.patrickzedler.grocy.core.model.productfacts.ProductFacts
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -69,6 +77,20 @@ internal sealed interface ProductEvent {
     data object Offline : ProductEvent
 
     data class Failed(val serverMessage: String?) : ProductEvent
+
+    /** None of the enabled databases knows the [barcode]. */
+    data class FactsNotFound(val barcode: String) : ProductEvent
+
+    /** The databases could not be asked, the form stays as it is. */
+    data object FactsFailed : ProductEvent
+}
+
+/** The lookup of a new product's barcode in the open product databases. */
+internal sealed interface ProductFactsState {
+    data class Loading(val barcode: String) : ProductFactsState
+
+    /** The form was filled in from [source]. */
+    data class Filled(val source: String) : ProductFactsState
 }
 
 /**
@@ -79,7 +101,25 @@ internal class ProductViewModel(
     productId: Int?,
     private val repository: MasterDataRepository,
     private val decimalSeparator: Char = platformDecimalSeparator(),
+    /** The scanned code a new product is created for, Grocy's "Add as new product". */
+    barcode: String? = null,
+    private val productFacts: ProductFactsRepository? = null,
+    private val language: String = "en",
+    private val factsTexts: ProductFactsTexts = ProductFactsTexts(),
 ) : ViewModel() {
+
+    /** The code that is added as barcode of the new product once it is created. */
+    var pendingBarcode by mutableStateOf(barcode)
+        private set
+
+    var factsState by mutableStateOf<ProductFactsState?>(null)
+        private set
+
+    /** Whether a new product can be filled in from the databases the user turned on. */
+    val canLookUpFacts: Boolean
+        get() = isNew && productFacts?.isEnabled == true
+
+    private var factsJob: Job? = null
 
     /** The edited product's id, [MasterDataRepository.NEW_PRODUCT_ID] until it is created. */
     var productId by mutableStateOf(productId ?: MasterDataRepository.NEW_PRODUCT_ID)
@@ -195,6 +235,58 @@ internal class ProductViewModel(
             decimals = decimals,
             energyUnit = config.energyUnit,
         )
+        pendingBarcode?.takeIf { canLookUpFacts && isLookupBarcode(it) }?.let(::lookUpFacts)
+    }
+
+    /** Fills what is empty in the new product's form from what the databases know of [code]. */
+    fun lookUpFacts(code: String) {
+        val facts = productFacts ?: return
+        val state = loadState as? ProductLoadState.Ready ?: return
+        pendingBarcode = code
+        factsState = ProductFactsState.Loading(code)
+        factsJob?.cancel()
+        factsJob = viewModelScope.launch {
+            when (val result = facts.lookUp(code, language)) {
+                is ProductFactsResult.Found -> fill(state, result.facts)
+                ProductFactsResult.NotFound -> {
+                    factsState = null
+                    eventChannel.send(ProductEvent.FactsNotFound(code))
+                }
+                ProductFactsResult.Failed -> {
+                    factsState = null
+                    eventChannel.send(ProductEvent.FactsFailed)
+                }
+            }
+        }
+    }
+
+    private suspend fun fill(state: ProductLoadState.Ready, found: ProductFacts) {
+        val options = options.filterNotNull().first()
+        var filledEnergy = found.fillInto(
+            form = state.form,
+            options = options,
+            texts = factsTexts,
+            decimals = state.decimals,
+            decimalSeparator = decimalSeparator,
+        )
+        if (pictureChange == PictureChange.Keep && pictureFileName == null) {
+            productFacts?.picture(found)?.let { bytes ->
+                pictureChange = PictureChange.Replace(bytes, "${found.barcode}.jpg")
+            }
+        }
+        factsState = ProductFactsState.Filled(found.source.title)
+        // Energy is per stock unit: it follows the unit until the user types their own
+        snapshotFlow { state.form.quIdStock }.collect { quId ->
+            if (state.form.calories.text.toString() != filledEnergy) return@collect
+            val energy = found.energyText(
+                options.quantityUnits,
+                quId,
+                state.decimals,
+                decimalSeparator,
+            ) ?: return@collect
+            state.form.calories.setTextAndPlaceCursorAtEnd(energy)
+            filledEnergy = energy
+        }
     }
 
     /** Products that can be the parent: active ones without a parent, not this one. */
@@ -258,7 +350,8 @@ internal class ProductViewModel(
                     pictureChange = PictureChange.Keep
                     savedValues = values
                     savedUserfields = state.userfields.associate { it.userfield.name to it.value }
-                    ProductEvent.Created
+                    factsJob?.cancel()
+                    savePendingBarcode(id) ?: ProductEvent.Created
                 } else {
                     ProductEvent.Saved
                 }
@@ -275,6 +368,24 @@ internal class ProductViewModel(
             eventChannel.send(event)
         }
         return true
+    }
+
+    /** The code the product was created for; the event of a failure, which keeps the product. */
+    private suspend fun savePendingBarcode(id: Int): ProductEvent? {
+        val code = pendingBarcode ?: return null
+        pendingBarcode = null
+        return try {
+            repository.saveProductBarcode(ProductBarcode(0, id, code), emptyMap())
+            null
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: GrocyApiException.Unreachable) {
+            ProductEvent.Offline
+        } catch (e: GrocyApiException.HttpError) {
+            ProductEvent.Failed(e.serverMessage)
+        } catch (_: GrocyApiException) {
+            ProductEvent.Failed(null)
+        }
     }
 
     /** The saved picture as image bytes, scaled by the server; null without one. */

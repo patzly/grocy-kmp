@@ -8,7 +8,13 @@ server, Grocy's "Settings" menu), Network (loading timeout, Tor with Orbot, HTTP
 (navigation, date and keyboard settings, Open Food Facts / Open Beauty Facts), Scanner (engine,
 front camera, 2D formats, barcode formats, external scanners), Notifications (per feature)
 and Shopping mode (`storefront`) as one group (`SettingsCategory`), then "Backup and restore" and "Reset all" as a second group.
-Built so far: the overview, General (language, theme, contrast), Server, Scanner (the engine
+Built so far: the overview, General (language, theme, contrast), Server, Behavior
+(`BehaviorSettingsRoute`: `BehaviorSettings`, kept on the device in `SettingsStore`, DataStore
+keys `behavior_*`, `grocy.behavior*` on the web, read at app start by
+`BehaviorSettingsRepository`; first the product databases, each off by default, see
+`docs/features/product-facts.md`; then "Enter dates with keyboard", off by default, with the order
+of typed dates below it while on, and "Use amount for barcode generation", on by default as
+before the setting existed; navigation settings of the plan are not built), Scanner (the engine
 only, `ScannerSettingsRoute`: a single choice of `ScannerRepository.availableEngines`, saved at
 once. The Play app offers ZXing and ML Kit; locked, ML Kit stays visible and disabled with an item
 below it that explains the unlock app and opens it on Google Play, shown only where Google Play

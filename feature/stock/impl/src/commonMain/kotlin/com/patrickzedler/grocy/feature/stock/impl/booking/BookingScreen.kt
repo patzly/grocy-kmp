@@ -53,8 +53,7 @@ import com.patrickzedler.grocy.core.design.component.rememberFormFocus
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.ChangeError
-import com.patrickzedler.grocy.core.forms.DateKeyboardType
-import com.patrickzedler.grocy.core.forms.DatePickerButton
+import com.patrickzedler.grocy.core.forms.DateTextItem
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FormFocusTarget
 import com.patrickzedler.grocy.core.forms.GroupItem
@@ -183,7 +182,7 @@ internal fun BookingScreen(
     actions: StockPageActions,
     menuItems: List<AppBarMenuItem>,
     onBackClick: () -> Unit,
-    onNewProductClick: () -> Unit,
+    onNewProductClick: (String) -> Unit,
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
     pane: ScreenPane? = null,
@@ -212,7 +211,7 @@ internal fun BookingScreen(
             onAssign = viewModel::assignUnknownCode,
             onCreate = {
                 viewModel.keepUnknownCodeForNewProduct()
-                onNewProductClick()
+                onNewProductClick(code)
             },
             onDismissRequest = viewModel::dismissUnknownCode,
         )
@@ -668,14 +667,12 @@ private fun purchasedDateItem(viewModel: BookingViewModel, options: BookingOptio
     if (!options.settings.showPurchasedDateOnPurchase) return null
     return { index, count ->
         val form = viewModel.form
-        TextItem(
+        DateTextItem(
             state = form.purchasedDate,
-            keyboardType = DateKeyboardType,
             label = stringResource(Res.string.data_purchased_date),
             error = form.errors[BookingField.PURCHASED_DATE]?.let {
                 dateErrorText(it, Res.string.booking_purchased_date_required)
             },
-            trailingAction = { DatePickerButton(form.purchasedDate, withTime = false) },
             index = index,
             count = count,
         )
@@ -688,9 +685,8 @@ private fun dueDateItem(viewModel: BookingViewModel, options: BookingOptions): G
         val form = viewModel.form
         val date = form.dueDate.text.toString()
         val neverOverdue = date == NEVER_OVERDUE_DATE
-        TextItem(
+        DateTextItem(
             state = form.dueDate,
-            keyboardType = DateKeyboardType,
             isLastField = keyboardEndField(viewModel.kind, options.config) == BookingField.DUE_DATE,
             label = stringResource(Res.string.data_due_date),
             hint = stringResource(Res.string.booking_date_before_today)
@@ -699,11 +695,6 @@ private fun dueDateItem(viewModel: BookingViewModel, options: BookingOptions): G
                 dateErrorText(it, Res.string.booking_due_date_required)
             },
             enabled = !neverOverdue,
-            trailingAction = if (neverOverdue) {
-                null
-            } else {
-                { DatePickerButton(form.dueDate, withTime = false) }
-            },
             index = index,
             count = count,
         )

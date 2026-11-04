@@ -6,7 +6,19 @@ import com.patrickzedler.grocy.core.model.AppContrast
 import com.patrickzedler.grocy.core.model.AppPaletteStyle
 import com.patrickzedler.grocy.core.model.AppTheme
 import com.patrickzedler.grocy.core.model.AppearanceSettings
+import com.patrickzedler.grocy.core.model.BehaviorSettings
+import com.patrickzedler.grocy.core.model.DateInputOrder
+import com.patrickzedler.grocy.core.model.ProductFactsSource
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalGrouping
+import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalOptions
+import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewGrouping
+import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewOptions
+import com.patrickzedler.grocy.core.model.chores.ChoresJournalGrouping
+import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
+import com.patrickzedler.grocy.core.model.chores.ChoresOverviewGrouping
+import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
+import com.patrickzedler.grocy.core.model.equipment.EquipmentOptions
 import com.patrickzedler.grocy.core.model.notifications.NotificationDeliveries
 import com.patrickzedler.grocy.core.model.notifications.NotificationDelivery
 import com.patrickzedler.grocy.core.model.notifications.NotificationKind
@@ -17,22 +29,13 @@ import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
 import com.patrickzedler.grocy.core.model.recipes.RecipesView
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
-import com.patrickzedler.grocy.core.model.chores.ChoresJournalGrouping
-import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
-import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalGrouping
-import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalOptions
-import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewGrouping
-import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewOptions
-import com.patrickzedler.grocy.core.model.equipment.EquipmentOptions
-import com.patrickzedler.grocy.core.model.tasks.TasksOverviewGrouping
-import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
-import com.patrickzedler.grocy.core.model.chores.ChoresOverviewGrouping
-import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.model.stock.StockOverviewField
 import com.patrickzedler.grocy.core.model.stock.StockOverviewGrouping
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
+import com.patrickzedler.grocy.core.model.tasks.TasksOverviewGrouping
+import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -156,6 +159,21 @@ class WebSettingsStoreTest {
         WebSettingsStore(storage).setShoppingListOptions(options)
 
         assertEquals(options, WebSettingsStore(storage).shoppingListOptions.first())
+    }
+
+    @Test
+    fun behaviorSettingsAreStoredAndRestored() = runTest {
+        val storage = InMemoryStorage()
+        val settings = BehaviorSettings(
+            productFactsSources = setOf(ProductFactsSource.FOOD, ProductFactsSource.BEAUTY),
+            dateKeyboard = true,
+            dateInputOrder = DateInputOrder.MONTH_FIRST,
+            barcodeUsesAmount = false,
+        )
+
+        WebSettingsStore(storage).setBehaviorSettings(settings)
+
+        assertEquals(settings, WebSettingsStore(storage).behaviorSettings.first())
     }
 
     @Test

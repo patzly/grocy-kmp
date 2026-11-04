@@ -96,8 +96,14 @@ A new form with a scanner adds a `ScannerForm` entry, gets its state from
 
 ## Choosing the keyboard
 
-- Numbers `KeyboardType.Decimal` or `Number`; dates without time `DateKeyboardType` (digits and
-  "-"); addresses `Uri`.
+- Numbers `KeyboardType.Decimal` or `Number`; addresses `Uri`.
+- Dates always use `DateTextItem`. By default it needs no keyboard: the field is a button for
+  Material's date picker (with "Clear"), the keyboard's way through the form passes it, Tab
+  stops on it, and a refused submit opens the picker of the first invalid date. With "Enter dates
+  with keyboard" it is a number field of digits only, the separators are shown, not typed
+  (`typedDateSeparators`), and the form's state keeps Grocy's format as soon as the digits name a
+  date (`grocyDateOfTyped`). The order follows the language (`languageDateOrder`) unless the user
+  chose one, both through `LocalDateInput`.
 - `autoCorrect = false` for what is no language (codes). Pickers and the search turn it off
   themselves.
 - Secrets use `RoundedSecureTextField` with `ContentType.Password` for password managers.

@@ -54,3 +54,9 @@ of them, from the start screen's buttons and the product overview's menu):
   (`BookingViewModel.shoppingListItem`) says what happens: Grocy's "Add this item to stock", or
   "Adding shopping list item %s of %s" for "Add all list items to stock"
   (`shoppingListPosition`, `shoppingListCount` of the route), and that booking removes the item.
+- An unknown code's "Add as new product" opens the product form with the code
+  (`ProductRoute(barcode)`, `docs/features/product-facts.md`), which adds it as barcode together
+  with the new product. The page waits for that barcode (`BookingViewModel.newProductCode`) and
+  then chooses the product, so the booking goes on after coming back. A purchase then updates
+  that barcode; only with "Use amount for barcode generation" (`barcodeUsesAmount`, on by
+  default) it adds the amount and unit that were booked.

@@ -12,8 +12,7 @@ import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
-import com.patrickzedler.grocy.core.forms.DateKeyboardType
-import com.patrickzedler.grocy.core.forms.DatePickerButton
+import com.patrickzedler.grocy.core.forms.DateTextItem
 import com.patrickzedler.grocy.core.forms.DeleteDialog
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FormDialog
@@ -187,15 +186,13 @@ private fun MealPlanDialog(
         SegmentedGroup {
             GroupItems(
                 { index, count ->
-                    TextItem(
+                    DateTextItem(
                         state = state.day,
-                        keyboardType = DateKeyboardType,
                         label = stringResource(Res.string.meal_plan_day),
                         error = fieldErrorText(
                             errors[MealPlanField.DAY],
                             Res.string.meal_plan_day_required,
                         ),
-                        trailingAction = { DatePickerButton(state.day, withTime = false) },
                         index = index,
                         count = count,
                     )

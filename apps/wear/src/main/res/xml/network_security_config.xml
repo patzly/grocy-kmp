@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config xmlns:tools="http://schemas.android.com/tools">
+  <!--
+      Self-hosted Grocy servers often run on plain HTTP in the home network or use a
+      certificate from a private CA installed on the device. Restricting cleartext to the
+      local network is not possible, the configuration only matches domain names.
+  -->
+  <base-config
+    cleartextTrafficPermitted="true"
+    tools:ignore="InsecureBaseConfiguration,AcceptsUserCertificates">
+    <trust-anchors>
+      <certificates src="system" />
+      <certificates src="user" />
+    </trust-anchors>
+  </base-config>
+</network-security-config>

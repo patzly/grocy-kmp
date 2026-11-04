@@ -10,8 +10,7 @@ import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.LocalFormFocus
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
-import com.patrickzedler.grocy.core.forms.DateKeyboardType
-import com.patrickzedler.grocy.core.forms.DatePickerButton
+import com.patrickzedler.grocy.core.forms.DateTextItem
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FormFrame
 import com.patrickzedler.grocy.core.forms.GroupItems
@@ -101,15 +100,12 @@ internal fun TaskScreen(
                     )
                 },
                 { index, count ->
-                    TextItem(
+                    DateTextItem(
                         state = form.dueDate,
-                        keyboardType = DateKeyboardType,
                         label = stringResource(Res.string.task_due),
-                        hint = "YYYY-MM-DD",
                         error = fieldErrorText(errors[ObjectField.DUE_DATE]),
                         index = index,
                         count = count,
-                        trailingAction = { DatePickerButton(form.dueDate, withTime = false) },
                     )
                 },
                 { index, count ->

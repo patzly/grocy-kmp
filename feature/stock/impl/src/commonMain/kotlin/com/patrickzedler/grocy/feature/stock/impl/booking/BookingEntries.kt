@@ -102,6 +102,9 @@ private fun BookingEntry(
                 stock = dependencies.stockRepository,
                 preset = preset,
                 removeShoppingListItem = { shoppingLists.deleteItem(it) },
+                barcodeUsesAmount = {
+                    dependencies.behaviorSettings.settings.value?.barcodeUsesAmount != false
+                },
                 scanner = dependencies.scannerForms.fieldState(
                     kind.scannerForm,
                     hasValue = preset.productId != null,
@@ -111,8 +114,8 @@ private fun BookingEntry(
         actions = stockPageActions(dependencies, navigator),
         menuItems = appMenuItems(),
         onBackClick = navigator::goBack,
-        // Grocy's "Add as new product": the barcode waits for the product to be chosen
-        onNewProductClick = { navigator.navigate(ProductRoute()) },
+        // Grocy's "Add as new product": the form adds the barcode, the page then chooses it
+        onNewProductClick = { code -> navigator.navigate(ProductRoute(barcode = code)) },
         onDone = navigator::goBack,
         pane = ScreenPane.Detail.takeIf { besideStart && showsDetailBesideList() },
     )

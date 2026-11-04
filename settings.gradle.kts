@@ -91,6 +91,7 @@ include(":core:productcard")
 include(":core:scanner")
 include(":core:scanner-mlkit")
 include(":core:update-play")
+include(":core:wear")
 include(":core:testing")
 
 // Feature Modules

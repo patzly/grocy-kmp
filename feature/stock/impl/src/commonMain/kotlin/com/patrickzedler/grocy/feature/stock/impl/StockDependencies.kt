@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.stock.impl
 
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.settings.BehaviorSettingsRepository
 import com.patrickzedler.grocy.core.data.settings.ScannerFormsRepository
 import com.patrickzedler.grocy.core.data.settings.StockOverviewOptionsRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
@@ -18,6 +19,9 @@ interface StockDependencies {
 
     /** Fields, grouping and sort of the stock overview, read at app start. */
     val stockOverviewOptions: StockOverviewOptionsRepository
+
+    /** Whether a barcode created by a purchase keeps the amount, read at app start. */
+    val behaviorSettings: BehaviorSettingsRepository
 
     /** The product overview's "Add to shopping list" and purchases of shopping list items. */
     val shoppingListRepository: ShoppingListRepository

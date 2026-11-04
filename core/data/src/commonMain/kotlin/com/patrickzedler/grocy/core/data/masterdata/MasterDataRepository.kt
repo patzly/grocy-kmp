@@ -233,6 +233,28 @@ class MasterDataRepository(
         }
     }
 
+    /**
+     * Downloads only what names the items of a shopping list, for the watch, which never needs
+     * the rest of the master data.
+     *
+     * @throws GrocyApiException e.g. [GrocyApiException.Unreachable] when offline; the local
+     *   data stays as it was.
+     */
+    suspend fun refreshProductsAndUnits() {
+        val connection = requireConnection()
+        val (products, units) = coroutineScope {
+            val products = async { api.products(connection) }
+            val units = async { api.quantityUnits(connection) }
+            products.await() to units.await()
+        }
+        database.withWriteTransaction {
+            dao.deleteProducts()
+            dao.insertProducts(products.map { it.toEntity() })
+            dao.deleteQuantityUnits()
+            dao.insertQuantityUnits(units.map { it.toEntity() })
+        }
+    }
+
     private suspend fun storeResolvedConversions(resolved: List<ResolvedQuantityUnitConversion>) {
         dao.deleteResolvedQuantityUnitConversions()
         dao.insertResolvedQuantityUnitConversions(resolved.map { it.toEntity() })

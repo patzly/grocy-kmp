@@ -21,9 +21,8 @@ import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
-import com.patrickzedler.grocy.core.forms.DateKeyboardType
 import com.patrickzedler.grocy.core.forms.dateTimeText
-import com.patrickzedler.grocy.core.forms.DatePickerButton
+import com.patrickzedler.grocy.core.forms.DateTextItem
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FormDialog
 import com.patrickzedler.grocy.core.forms.TextItem
@@ -129,18 +128,14 @@ private fun RescheduleDialog(
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)) {
             val count = if (hasUsers) 2 else 1
-            TextItem(
+            DateTextItem(
+                withTime = !form.chore.trackDateOnly,
                 state = form.date,
                 label = stringResource(Res.string.chores_next_tracking),
-                hint = if (form.chore.trackDateOnly) "YYYY-MM-DD" else "YYYY-MM-DD HH:MM:SS",
                 error = fieldErrorText(form.dateError, Res.string.chore_date_required),
-                keyboardType = DateKeyboardType,
                 isLastField = !hasUsers,
                 index = 0,
                 count = count,
-                trailingAction = {
-                    DatePickerButton(form.date, withTime = !form.chore.trackDateOnly)
-                },
             )
             if (hasUsers) {
                 DropdownItem(

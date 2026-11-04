@@ -14,7 +14,17 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.data)
+    implementation(projects.core.database)
+    implementation(projects.core.network)
+    implementation(projects.core.resources)
+    implementation(projects.core.wear)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.wear.compose.foundation)
     implementation(libs.androidx.wear.compose.material3)
+    implementation(libs.androidx.wear.compose.navigation)
+    implementation(libs.androidx.wear.input)
+    implementation(libs.jetbrains.lifecycle.runtime.compose)
+    implementation(libs.jetbrains.lifecycle.viewmodel.compose)
+    implementation(libs.play.services.wearable)
 }

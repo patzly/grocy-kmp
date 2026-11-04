@@ -19,6 +19,7 @@ import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
+import com.patrickzedler.grocy.core.model.BehaviorSettings
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -47,6 +48,7 @@ class FakeSettingsStore(
     stockOverviewOptions: StockOverviewOptions = StockOverviewOptions(),
     shoppingListOptions: ShoppingListOptions = ShoppingListOptions(),
     shoppingModeSettings: ShoppingModeSettings = ShoppingModeSettings(),
+    behaviorSettings: BehaviorSettings = BehaviorSettings(),
     scannerForms: Set<ScannerForm> = emptySet(),
     recipesOptions: RecipesOptions = RecipesOptions(),
     choresOverviewOptions: ChoresOverviewOptions = ChoresOverviewOptions(),
@@ -93,6 +95,12 @@ class FakeSettingsStore(
 
     override suspend fun setShoppingModeSettings(settings: ShoppingModeSettings) {
         shoppingModeSettings.value = settings
+    }
+
+    override val behaviorSettings = MutableStateFlow(behaviorSettings)
+
+    override suspend fun setBehaviorSettings(settings: BehaviorSettings) {
+        behaviorSettings.value = settings
     }
 
     override val scannerForms = MutableStateFlow(scannerForms)

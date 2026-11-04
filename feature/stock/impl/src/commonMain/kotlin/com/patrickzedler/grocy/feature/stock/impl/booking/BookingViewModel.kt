@@ -141,6 +141,8 @@ internal class BookingViewModel(
     private val removeShoppingListItem: (suspend (Int) -> Unit)? = null,
     private val today: () -> Long = ::todayEpochDay,
     private val decimalSeparator: Char = platformDecimalSeparator(),
+    /** Whether a barcode this page creates keeps the amount and unit that were booked. */
+    private val barcodeUsesAmount: () -> Boolean = { true },
     /** The product's scanner and where the focus goes around it. */
     val scanner: ScannerFieldState = ScannerFieldState(hasValue = preset.productId != null),
 ) : ViewModel() {
@@ -200,7 +202,13 @@ internal class BookingViewModel(
     /** Book as soon as the chosen product's stock is loaded (scan mode, shopping list flow). */
     private var submitWhenReady = false
 
+    /** The code Grocy's "Add as new product" left for the product form. */
+    private var newProductCode: String? = null
+
     init {
+        viewModelScope.launch {
+            this@BookingViewModel.options.filterNotNull().collect(::chooseCreatedProduct)
+        }
         viewModelScope.launch {
             val options = options.filterNotNull().first()
             form.userfields = userfieldInputs(options.userfields, values = null)
@@ -324,10 +332,24 @@ internal class BookingViewModel(
         scanner.requestFocus(FormFocusTarget.CODE_FIELD)
     }
 
-    /** Grocy's "Add as new product": the barcode is added to the product once it is booked. */
+    /**
+     * Grocy's "Add as new product": the product form adds the barcode with the product, which
+     * this page then chooses; the booking adds what it knows to that barcode.
+     */
     fun keepUnknownCodeForNewProduct() {
         form.pendingBarcode = unknownCode
+        newProductCode = unknownCode
         unknownCode = null
+    }
+
+    private fun chooseCreatedProduct(options: BookingOptions) {
+        val code = newProductCode ?: return
+        val barcode = options.barcodes.firstOrNull { it.barcode == code } ?: return
+        val product = options.products.firstOrNull { it.id == barcode.productId } ?: return
+        newProductCode = null
+        form.usedBarcode = null
+        choose(options, product)
+        scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
     }
 
     fun setUnit(quId: Int?) {
@@ -781,15 +803,16 @@ internal class BookingViewModel(
     private suspend fun saveBarcodes(productId: Int) {
         form.pendingBarcode?.let { code ->
             val withDefaults = kind == BookingKind.PURCHASE
+            val withAmount = withDefaults && barcodeUsesAmount()
+            // The product form may have created it already
+            val existing = options.value?.barcodes
+                ?.firstOrNull { it.barcode == code && it.productId == productId }
             changeErrorOf {
                 masterData.saveProductBarcode(
-                    ProductBarcode(
-                        id = 0,
-                        productId = productId,
-                        barcode = code,
-                        quId = form.quId.takeIf { withDefaults },
+                    (existing ?: ProductBarcode(0, productId, code)).copy(
+                        quId = form.quId.takeIf { withAmount },
                         amount = parseDecimal(form.amount.text.toString())
-                            .takeIf { withDefaults },
+                            .takeIf { withAmount },
                         storeId = form.storeId.takeIf { withDefaults || isInventory() },
                         note = form.note.text.toString()
                             .takeIf { (withDefaults || isInventory()) && it.isNotBlank() },

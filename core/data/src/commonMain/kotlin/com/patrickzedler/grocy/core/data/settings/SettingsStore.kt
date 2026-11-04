@@ -7,6 +7,7 @@ import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
 import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
 import com.patrickzedler.grocy.core.model.AppearanceSettings
+import com.patrickzedler.grocy.core.model.BehaviorSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.notifications.NotificationDeliveries
 import com.patrickzedler.grocy.core.model.notifications.NotificationSettings
@@ -51,6 +52,11 @@ interface SettingsStore {
     val recipesOptions: Flow<RecipesOptions>
 
     suspend fun setRecipesOptions(options: RecipesOptions)
+
+    /** Product databases, date input and barcodes of new products, the defaults until changed. */
+    val behaviorSettings: Flow<BehaviorSettings>
+
+    suspend fun setBehaviorSettings(settings: BehaviorSettings)
 
     /** The forms that open with their scanner, because it was used there last. */
     val scannerForms: Flow<Set<ScannerForm>>

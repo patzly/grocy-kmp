@@ -3,6 +3,7 @@ package com.patrickzedler.grocy.core.design.component
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
@@ -52,6 +53,8 @@ fun RoundedTextField(
     supportingText: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
     inputTransformation: InputTransformation? = null,
+    outputTransformation: OutputTransformation? = null,
+    readOnly: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onKeyboardAction: KeyboardActionHandler? = null,
     lineLimits: TextFieldLineLimits = TextFieldLineLimits.SingleLine,
@@ -85,6 +88,8 @@ fun RoundedTextField(
         supportingText = supportingText,
         isError = isError,
         inputTransformation = inputTransformation,
+        outputTransformation = outputTransformation,
+        readOnly = readOnly,
         keyboardOptions = keyboardOptions,
         onKeyboardAction = onKeyboardAction,
         lineLimits = lineLimits,

@@ -6,10 +6,11 @@ Compose Multiplatform. Targets: Android (phone, Wear OS) and Web (Kotlin/Wasm). 
 
 Current state: login (demo, QR code, manual, Home Assistant ingress on Android), the barcode
 scanner, update checks, the start screen, About, the settings (General, Server, Grocy settings,
-Scanner), Grocy's stock overview, master data with all their forms, the stock bookings, the shopping list
-and its shopping mode, the recipes with their cards and forms, the meal plan, the chores with
-their tracking and journal, the tasks, the batteries with their tracking and journal, the equipment
-with its manuals, the daily notifications.
+Behavior, Scanner), Grocy's stock overview, master data with all their forms, the stock bookings,
+the shopping list and its shopping mode, the recipes with their cards and forms, the meal plan, the
+chores with their tracking and journal, the tasks, the batteries with their tracking and journal,
+the equipment with its manuals, the daily notifications, new products filled in from open product
+databases, the Wear OS app with the shopping list.
 
 ## Details
 
@@ -45,6 +46,8 @@ tasks need.
   chart, grocycodes, "Add to shopping list".
 - `docs/features/master-data.md`: master data lists and forms, list-detail scenes, menus, pull to
   refresh, products, barcodes, conversions.
+- `docs/features/product-facts.md`: Open Food Facts and its sister databases, what they fill in.
+- `docs/features/wear.md`: the Wear OS app, its login from the phone and offline check offs.
 - `docs/features/settings.md`: settings categories, Grocy settings, server, appearance, language.
 - `docs/architecture/build.md`: build logic, yarn.lock, convention plugins, adding a feature.
 - `docs/architecture/web-navigation.md`: browser history, entry decorators, navigationevent.
@@ -208,7 +211,7 @@ apps/
                  Android MainActivity, launcher icons, themes, splash, backup + network config
   android-foss/  Android app, FossApplication -> AppGraph(isPlayVariant = false)
   android-play/  Android app, PlayApplication -> AppGraph(isPlayVariant = true), <queries> for unlock app
-  wear/          standalone Wear OS app (Android only, not KMP, own placeholder UI)
+  wear/          standalone Wear OS app (Android only, not KMP), its screens and WearGraph
   web/           Kotlin/Wasm browser app, main() + index.html loading screen
 core/
   model/         plain models: ServerConnection, User, SystemInfo, UnlockState, theme enums
@@ -228,6 +231,8 @@ core/
   scanner/       BarcodeScanner composable, BarcodeDecoder interface, ZXing on Android + Web
   scanner-mlkit/ ML Kit implementation of BarcodeDecoder, closed source, only for android-play
   update-play/   Google Play in-app updates (PlayAppUpdater), closed source, only for android-play
+  wear/          the watch's login sync (Wearable Data Layer, closed source) and WearViewModel, only
+                 for android-play and apps:wear
   testing/       test fakes (FakeGrocyServer, FakeCredentialStore, ...), only a commonTest dependency
 feature/<name>/
   api/           @Serializable routes + <name>RouteSerializers (no UI)
@@ -297,6 +302,7 @@ object. Platform specifics come in through `PlatformDependencies` (`AndroidPlatf
 - Secrets are encrypted at rest and kept out of `toString` and logs. FOSS and Play differ only
   through nullability (`unlockChecker`), never build flags; closed-source code only enters
   through `android-play`. Details: `docs/architecture/storage-and-variants.md`.
+- Dates are entered with `DateTextItem` (`core:forms`), never a plain text field.
 - Always use `BarcodeScanner` as an item of a group; details in `docs/architecture/scanner.md`.
 
 ### Theming and UI

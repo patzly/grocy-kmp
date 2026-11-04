@@ -1,10 +1,14 @@
 package com.patrickzedler.grocy.core.forms
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.MaterialTheme
@@ -12,9 +16,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
@@ -30,6 +39,8 @@ import com.patrickzedler.grocy.core.design.component.RoundedTextField
 import com.patrickzedler.grocy.core.design.component.SearchableDropdownField
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
+import com.patrickzedler.grocy.core.design.component.clickCursor
+import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.data_date_invalid
 import com.patrickzedler.grocy.core.resources.data_not_before_now
@@ -72,6 +83,8 @@ fun fieldErrorText(error: FieldError?, requiredMessage: StringResource? = null):
  * @param isLastField the keyboard's action submits the form instead of going on, outside of a
  *   form it closes the keyboard.
  * @param autoCorrect off for what is no language, like codes.
+ * @param onFieldClick makes the field a button instead of an input, e.g. for a date picker: it
+ *   shows its value, tapping it calls this, and the keyboard's way through the form passes it.
  */
 @Composable
 fun TextItem(
@@ -93,6 +106,9 @@ fun TextItem(
     autoFocus: Boolean = false,
     isLastField: Boolean = false,
     autoCorrect: Boolean = true,
+    inputTransformation: InputTransformation? = null,
+    outputTransformation: OutputTransformation? = null,
+    onFieldClick: (() -> Unit)? = null,
     onFocusChange: (Boolean) -> Unit = {},
 ) {
     val form = LocalFormFocus.current
@@ -103,8 +119,21 @@ fun TextItem(
                 state = state,
                 modifier = fieldModifier
                     .then(focusRequester?.let { Modifier.focusRequester(it) } ?: Modifier)
+                    .then(
+                        if (onFieldClick != null) {
+                            // The button above it takes focus and semantics
+                            Modifier
+                                .focusProperties { canFocus = false }
+                                .clearAndSetSemantics {}
+                        } else {
+                            Modifier
+                        },
+                    )
                     .onFocusChanged { onFocusChange(it.isFocused) },
                 enabled = enabled,
+                readOnly = onFieldClick != null,
+                inputTransformation = inputTransformation,
+                outputTransformation = outputTransformation,
                 label = { Text(label) },
                 trailingIcon = trailingAction,
                 suffix = suffix?.let { { Text(it) } },
@@ -147,7 +176,29 @@ fun TextItem(
                 },
             )
         }
-        if (stepper == null) {
+        if (onFieldClick != null) {
+            val description = listOfNotNull(label, state.text.toString().ifEmpty { null }, error)
+                .joinToString(", ")
+            val haptic = LocalHapticFeedback.current
+            Box(Modifier.fillMaxWidth()) {
+                field(Modifier.fillMaxWidth())
+                Box(
+                    Modifier
+                        .matchParentSize()
+                        .clickCursor(enabled)
+                        .semantics { contentDescription = description }
+                        .clickable(
+                            enabled = enabled,
+                            role = Role.Button,
+                            interactionSource = null,
+                            indication = null,
+                        ) {
+                            haptic.confirm()
+                            onFieldClick()
+                        },
+                )
+            }
+        } else if (stepper == null) {
             field(Modifier.fillMaxWidth())
         } else {
             NumberStepperField(

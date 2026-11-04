@@ -4,7 +4,7 @@ import com.patrickzedler.grocy.core.model.ServerConnection
 import kotlinx.serialization.json.Json
 
 /** JSON form of [ServerConnection] for storage, shared by all platforms. */
-internal object ServerConnectionCodec {
+object ServerConnectionCodec {
 
     private val json = Json {
         ignoreUnknownKeys = true

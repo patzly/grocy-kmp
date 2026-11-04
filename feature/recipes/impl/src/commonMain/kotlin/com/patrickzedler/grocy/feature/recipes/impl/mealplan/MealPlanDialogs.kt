@@ -5,8 +5,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
-import com.patrickzedler.grocy.core.forms.DateKeyboardType
-import com.patrickzedler.grocy.core.forms.DatePickerButton
+import com.patrickzedler.grocy.core.forms.DateTextItem
 import com.patrickzedler.grocy.core.forms.DeleteDialog
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FormDialog
@@ -112,15 +111,13 @@ private fun MealPlanEntryDialog(
         // One group whatever the type, a note alone would leave groups of single items
         SegmentedGroup {
             val day: GroupItem = { index, count ->
-                TextItem(
+                DateTextItem(
                     state = state.day,
-                    keyboardType = DateKeyboardType,
                     label = stringResource(Res.string.meal_plan_day),
                     error = fieldErrorText(
                         errors[MealPlanEntryField.DAY],
                         Res.string.meal_plan_day_required,
                     ),
-                    trailingAction = { DatePickerButton(state.day, withTime = false) },
                     index = index,
                     count = count,
                 )
@@ -282,14 +279,12 @@ private fun CopyDayDialog(
         SegmentedGroup {
             GroupItems(
                 { index, count ->
-                    TextItem(
+                    DateTextItem(
                         state = state.toDay,
                         autoFocus = true,
                         isLastField = true,
-                        keyboardType = DateKeyboardType,
                         label = stringResource(Res.string.meal_plan_day),
                         error = fieldErrorText(state.error, Res.string.meal_plan_day_required),
-                        trailingAction = { DatePickerButton(state.toDay, withTime = false) },
                         index = index,
                         count = count,
                     )
@@ -308,7 +303,11 @@ internal fun MealPlanSectionDialog(
 ) {
     FormDialog(
         title = stringResource(
-            if (state.isNew) Res.string.meal_plan_section_create else Res.string.meal_plan_section_edit,
+            if (state.isNew) {
+                Res.string.meal_plan_section_create
+            } else {
+                Res.string.meal_plan_section_edit
+            },
         ),
         isSaving = state.isSaving,
         error = state.error?.saveMessage(),

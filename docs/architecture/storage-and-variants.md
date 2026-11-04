@@ -32,4 +32,6 @@ the ML Kit scanner. Closed-source code only enters through `android-play`: it pa
 `additionalBarcodeDecoders = mapOf(ML_KIT to MlKitBarcodeDecoderFactory)` to
 `AndroidPlatformDependencies`; `apps:shared` never depends on `core:scanner-mlkit`. The same
 goes for updates: `PlayApplication` wraps the GitHub updater in `PlayAppUpdater`
-(`core:update-play`) through the `appUpdater` parameter.
+(`core:update-play`) through the `appUpdater` parameter. And for the watch: `PlayApplication`
+publishes the login with `PhoneConnectionPublisher` (`core:wear`, `docs/features/wear.md`), the
+FOSS app does not, its users log in on the watch through the phone's keyboard.

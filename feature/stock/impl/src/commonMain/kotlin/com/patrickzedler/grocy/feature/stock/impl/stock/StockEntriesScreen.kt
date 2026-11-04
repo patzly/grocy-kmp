@@ -63,7 +63,6 @@ import com.patrickzedler.grocy.core.resources.data_product
 import com.patrickzedler.grocy.core.resources.grocycode_download_of
 import com.patrickzedler.grocy.core.resources.grocycode_print_of
 import com.patrickzedler.grocy.core.resources.grocycode_stock_entry
-import com.patrickzedler.grocy.core.resources.ic_rounded_box
 import com.patrickzedler.grocy.core.resources.ic_rounded_event
 import com.patrickzedler.grocy.core.resources.ic_rounded_restaurant
 import com.patrickzedler.grocy.core.resources.objects_empty
@@ -157,7 +156,6 @@ internal fun StockEntriesScreen(
             },
             onEditClick = viewModel::edit,
             onConsumeClick = { viewModel.consume(it, spoiled = false) },
-            onOpenClick = viewModel::open,
         )
     }
 
@@ -274,7 +272,6 @@ private fun LazyListScope.stockEntryItems(
     menu: @Composable (StockEntryItem) -> List<List<AppBarMenuItem>>,
     onEditClick: (StockEntry) -> Unit,
     onConsumeClick: (StockEntry) -> Unit,
-    onOpenClick: (StockEntry) -> Unit,
 ) {
     if (state.items.isEmpty()) {
         emptyListItem(
@@ -296,24 +293,14 @@ private fun LazyListScope.stockEntryItems(
             state = state,
             index = index,
             count = state.items.size,
-            buttons = buildList {
-                add(
-                    ItemButton(
-                        painter = painterResource(Res.drawable.ic_rounded_restaurant),
-                        description = stringResource(Res.string.stock_entry_consume),
-                        enabled = !isBooking,
-                    ) { onConsumeClick(item.entry) },
-                )
-                if (state.config.stockProductOpenedTracking) {
-                    add(
-                        ItemButton(
-                            painter = painterResource(Res.drawable.ic_rounded_box),
-                            description = stringResource(Res.string.stock_entry_open),
-                            enabled = item.canOpen && !isBooking,
-                        ) { onOpenClick(item.entry) },
-                    )
-                }
-            },
+            // One button only, on phones a second one leaves the texts too little room
+            buttons = listOf(
+                ItemButton(
+                    painter = painterResource(Res.drawable.ic_rounded_restaurant),
+                    description = stringResource(Res.string.stock_entry_consume),
+                    enabled = !isBooking,
+                ) { onConsumeClick(item.entry) },
+            ),
             menuGroups = menu(item),
             onClick = { onEditClick(item.entry) },
         )
@@ -341,7 +328,11 @@ private fun stockEntryMenu(
                 actions.shoppingList.open(productId)
             }.takeIf { config.shoppingList },
         ),
-        listOf(
+        listOfNotNull(
+            AppBarMenuItem(
+                text = stringResource(Res.string.stock_entry_open),
+                enabled = item.canOpen && !viewModel.isBooking,
+            ) { viewModel.open(entry) }.takeIf { config.stockProductOpenedTracking },
             AppBarMenuItem(stringResource(Res.string.stock_entry_consume_spoiled)) {
                 viewModel.consume(entry, spoiled = true)
             },

@@ -56,6 +56,7 @@ import com.patrickzedler.grocy.feature.masterdata.impl.objects.ObjectListViewMod
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.SimpleObjectScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.SimpleObjectViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.UserentityScreen
+import com.patrickzedler.grocy.feature.masterdata.impl.product.productFactsTexts
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.UserentityViewModel
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.UserfieldScreen
 import com.patrickzedler.grocy.feature.masterdata.impl.objects.UserfieldViewModel
@@ -139,7 +140,16 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
     entry<ProductRoute>(metadata = detailPaneMetadata(ProductsRoute)) { route ->
         val language = appLanguage()
         ProductScreen(
-            viewModel = viewModel { ProductViewModel(route.productId, repository) },
+            viewModel = viewModel {
+                ProductViewModel(
+                    productId = route.productId,
+                    repository = repository,
+                    barcode = route.barcode,
+                    productFacts = dependencies.productFactsRepository,
+                    language = language,
+                    factsTexts = productFactsTexts(),
+                )
+            },
             frame = formFrame(navigator, route, MasterDataRepository.PRODUCTS, repository) {
                 ProductRoute(it)
             },

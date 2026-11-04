@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.masterdata.impl
 
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.productfacts.ProductFactsRepository
 import com.patrickzedler.grocy.core.data.settings.ScannerFormsRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
@@ -19,6 +20,9 @@ interface MasterDataDependencies {
 
     /** The stored server configuration, read at app start (null for the moment until then). */
     val serverConfig: StateFlow<ServerConfig?>
+
+    /** The open product databases, which fill in new products by their barcode. */
+    val productFactsRepository: ProductFactsRepository
 
     /** The product overview's "Add to shopping list". */
     val shoppingListRepository: ShoppingListRepository

@@ -7,6 +7,7 @@ import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.notifications.NotificationRepository
 import com.patrickzedler.grocy.core.data.notifications.RepositoryNotificationDataSource
+import com.patrickzedler.grocy.core.data.productfacts.ProductFactsRepository
 import com.patrickzedler.grocy.core.data.scanner.ScannerRepository
 import com.patrickzedler.grocy.core.data.server.GROCY_GITHUB_REPOSITORY
 import com.patrickzedler.grocy.core.data.server.ServerRepository
@@ -21,6 +22,7 @@ import com.patrickzedler.grocy.core.data.settings.ChoresJournalOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ChoresOverviewOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.TasksOverviewOptionsRepository
 import com.patrickzedler.grocy.core.data.tasks.TasksRepository
+import com.patrickzedler.grocy.core.data.settings.BehaviorSettingsRepository
 import com.patrickzedler.grocy.core.data.settings.ScannerFormsRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
@@ -38,6 +40,8 @@ import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.createGrocyHttpClient
+import com.patrickzedler.grocy.core.model.ServerConnection
+import com.patrickzedler.grocy.core.network.ProductFactsApi
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.feature.about.impl.AboutDependencies
 import com.patrickzedler.grocy.feature.batteries.impl.BatteriesDependencies
@@ -79,6 +83,10 @@ class AppGraph(
     private val httpClient by lazy { createGrocyHttpClient() }
 
     private val grocyApi by lazy { GrocyApi(httpClient) }
+
+    /** The server logged in to, for the Play app, which hands it to a paired watch. */
+    val connection: Flow<ServerConnection?>
+        get() = platform.credentialStore.connection
 
     internal val authRepository by lazy {
         AuthRepository(platform.credentialStore, grocyApi) { masterDataRepository.clear() }
@@ -209,6 +217,23 @@ class AppGraph(
     private val shoppingModeSettingsRepository =
         ShoppingModeSettingsRepository(platform.settingsStore, appScope)
 
+    /** Product databases and date input; read right at app start, date fields show it. */
+    internal val behaviorSettingsRepository =
+        BehaviorSettingsRepository(platform.settingsStore, appScope)
+
+    private val productFactsRepository by lazy {
+        ProductFactsRepository(
+            api = ProductFactsApi(
+                httpClient = httpClient,
+                userAgent = "GrocyKMP/${platform.versionName} " +
+                    "(https://github.com/$GITHUB_REPOSITORY)",
+            ),
+            enabledSources = {
+                behaviorSettingsRepository.settings.value?.productFactsSources.orEmpty()
+            },
+        )
+    }
+
     private val scannerFormsRepository = ScannerFormsRepository(platform.settingsStore, appScope)
 
     private val recipesOptionsRepository =
@@ -312,6 +337,9 @@ class AppGraph(
             get() = this@AppGraph.authRepository
         override val masterDataRepository: MasterDataRepository
             get() = this@AppGraph.masterDataRepository
+        override val behaviorSettings: BehaviorSettingsRepository
+            get() = behaviorSettingsRepository
+
         override val shoppingModeSettings: ShoppingModeSettingsRepository
             get() = shoppingModeSettingsRepository
         override val notificationRepository: NotificationRepository
@@ -346,6 +374,9 @@ class AppGraph(
     }
 
     internal val masterDataDependencies: MasterDataDependencies = object : MasterDataDependencies {
+        override val productFactsRepository: ProductFactsRepository
+            get() = this@AppGraph.productFactsRepository
+
         override val scannerForms: ScannerFormsRepository
             get() = scannerFormsRepository
         override val masterDataRepository: MasterDataRepository
@@ -375,6 +406,9 @@ class AppGraph(
         }
 
     internal val stockDependencies: StockDependencies = object : StockDependencies {
+        override val behaviorSettings: BehaviorSettingsRepository
+            get() = behaviorSettingsRepository
+
         override val scannerForms: ScannerFormsRepository
             get() = scannerFormsRepository
         override val masterDataRepository: MasterDataRepository

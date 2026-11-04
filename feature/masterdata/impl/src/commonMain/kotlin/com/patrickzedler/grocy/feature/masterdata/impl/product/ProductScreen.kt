@@ -31,6 +31,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.foundation.layout.size
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.KeyboardType
@@ -150,6 +154,13 @@ import com.patrickzedler.grocy.core.resources.product_parent
 import com.patrickzedler.grocy.core.resources.product_parent_disabled
 import com.patrickzedler.grocy.core.resources.product_parent_not_allowed
 import com.patrickzedler.grocy.core.resources.product_parent_not_found
+import com.patrickzedler.grocy.core.resources.ic_rounded_barcode
+import com.patrickzedler.grocy.core.resources.product_facts_failed
+import com.patrickzedler.grocy.core.resources.product_facts_filled
+import com.patrickzedler.grocy.core.resources.product_facts_look_up
+import com.patrickzedler.grocy.core.resources.product_facts_look_up_hint
+import com.patrickzedler.grocy.core.resources.product_facts_looking_up
+import com.patrickzedler.grocy.core.resources.product_facts_not_found
 import com.patrickzedler.grocy.core.resources.product_picture
 import com.patrickzedler.grocy.core.resources.product_picture_none
 import com.patrickzedler.grocy.core.resources.product_picture_will_delete
@@ -238,6 +249,7 @@ internal fun ProductScreen(
     val conversions by related.conversions.items.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     var showPictureDialog by rememberSaveable { mutableStateOf(false) }
+    var showFactsDialog by rememberSaveable { mutableStateOf(false) }
     // Saveable, so the question and the pending leave survive rotating the device
     var showUnsavedDialog by rememberSaveable { mutableStateOf(false) }
     var leaveAfterSave by rememberSaveable { mutableStateOf(false) }
@@ -312,6 +324,12 @@ internal fun ProductScreen(
                 }
                 ProductEvent.Offline ->
                     snackbarHostState.showNewestSnackbar(getString(Res.string.data_save_offline))
+                is ProductEvent.FactsNotFound -> snackbarHostState.showNewestSnackbar(
+                    getString(Res.string.product_facts_not_found, event.barcode),
+                )
+                ProductEvent.FactsFailed -> snackbarHostState.showNewestSnackbar(
+                    getString(Res.string.product_facts_failed),
+                )
                 is ProductEvent.Failed -> snackbarHostState.showNewestSnackbar(
                     listOfNotNull(
                         getString(Res.string.data_save_failed),
@@ -373,6 +391,14 @@ internal fun ProductScreen(
             val currentOptions = options
             when {
                 state is ProductLoadState.Ready && currentOptions != null -> {
+                    if (viewModel.canLookUpFacts) {
+                        segmentedGroup(key = "facts") {
+                            ProductFactsItem(
+                                state = viewModel.factsState,
+                                onClick = { showFactsDialog = true },
+                            )
+                        }
+                    }
                     productForm(
                         state = state,
                         options = currentOptions,
@@ -423,6 +449,15 @@ internal fun ProductScreen(
         )
     }
 
+    if (showFactsDialog) {
+        ProductFactsDialog(
+            onLookUp = { code ->
+                showFactsDialog = false
+                viewModel.lookUpFacts(code)
+            },
+            onDismissRequest = { showFactsDialog = false },
+        )
+    }
     if (showPictureDialog) {
         PictureDialog(
             savedFileName = viewModel.pictureFileName,
@@ -432,6 +467,51 @@ internal fun ProductScreen(
             onDismissRequest = { showPictureDialog = false },
         )
     }
+}
+
+/** Looks up a barcode for a new product and tells what came of it. */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun ProductFactsItem(state: ProductFactsState?, onClick: () -> Unit) {
+    val haptic = LocalHapticFeedback.current
+    val isLoading = state is ProductFactsState.Loading
+
+    SegmentedListItem(
+        onClick = {
+            haptic.confirm()
+            onClick()
+        },
+        enabled = !isLoading,
+        shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
+        colors = SegmentedListDefaults.colors(),
+        modifier = Modifier.fillMaxWidth().clickCursor(enabled = !isLoading),
+        verticalAlignment = Alignment.CenterVertically,
+        leadingContent = {
+            LeadingTrailingContentWrapper {
+                if (isLoading) {
+                    LoadingIndicator(Modifier.size(24.dp))
+                } else {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_rounded_barcode),
+                        contentDescription = null,
+                    )
+                }
+            }
+        },
+        supportingContent = {
+            Text(
+                text = when (state) {
+                    is ProductFactsState.Loading ->
+                        stringResource(Res.string.product_facts_looking_up, state.barcode)
+                    is ProductFactsState.Filled ->
+                        stringResource(Res.string.product_facts_filled, state.source)
+                    null -> stringResource(Res.string.product_facts_look_up_hint)
+                },
+                modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+            )
+        },
+        content = { Text(stringResource(Res.string.product_facts_look_up)) },
+    )
 }
 
 private fun LazyListScope.productForm(

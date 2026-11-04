@@ -22,6 +22,7 @@ import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
 import com.patrickzedler.grocy.core.model.scanner.ScannerForm
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
+import com.patrickzedler.grocy.core.model.BehaviorSettings
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import kotlinx.coroutines.flow.Flow
@@ -100,6 +101,27 @@ class AndroidSettingsStore(
         dataStore.edit {
             it[SHOPPING_LIST_FIELDS] = ShoppingListOptions.storedFields(options.fields)
             it[SHOPPING_LIST_GROUPING] = options.grouping.name
+        }
+    }
+
+    override val behaviorSettings: Flow<BehaviorSettings> = preferences
+        .map {
+            BehaviorSettings.of(
+                productFactsSources = it[BEHAVIOR_PRODUCT_FACTS],
+                dateKeyboard = it[BEHAVIOR_DATE_KEYBOARD],
+                dateInputOrder = it[BEHAVIOR_DATE_ORDER],
+                barcodeUsesAmount = it[BEHAVIOR_BARCODE_AMOUNT],
+            )
+        }
+        .distinctUntilChanged()
+
+    override suspend fun setBehaviorSettings(settings: BehaviorSettings) {
+        dataStore.edit {
+            it[BEHAVIOR_PRODUCT_FACTS] =
+                BehaviorSettings.storedSources(settings.productFactsSources)
+            it[BEHAVIOR_DATE_KEYBOARD] = settings.dateKeyboard
+            it[BEHAVIOR_DATE_ORDER] = settings.dateInputOrder.name
+            it[BEHAVIOR_BARCODE_AMOUNT] = settings.barcodeUsesAmount
         }
     }
 
@@ -234,6 +256,10 @@ class AndroidSettingsStore(
         val STOCK_OVERVIEW_ASCENDING = booleanPreferencesKey("stock_overview_ascending")
         val SHOPPING_LIST_FIELDS = stringPreferencesKey("shopping_list_fields")
         val SHOPPING_LIST_GROUPING = stringPreferencesKey("shopping_list_grouping")
+        val BEHAVIOR_PRODUCT_FACTS = stringPreferencesKey("behavior_product_facts")
+        val BEHAVIOR_DATE_KEYBOARD = booleanPreferencesKey("behavior_date_keyboard")
+        val BEHAVIOR_DATE_ORDER = stringPreferencesKey("behavior_date_order")
+        val BEHAVIOR_BARCODE_AMOUNT = booleanPreferencesKey("behavior_barcode_amount")
         val SHOPPING_MODE_AUTO_SYNC = booleanPreferencesKey("shopping_mode_auto_sync")
         val SHOPPING_MODE_SYNC_INTERVAL = intPreferencesKey("shopping_mode_sync_interval")
         val SHOPPING_MODE_KEEP_SCREEN_ON = booleanPreferencesKey("shopping_mode_keep_screen_on")

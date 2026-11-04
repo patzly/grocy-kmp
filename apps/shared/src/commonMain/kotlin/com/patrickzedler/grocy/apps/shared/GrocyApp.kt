@@ -28,6 +28,9 @@ import com.patrickzedler.grocy.core.navigation.Navigator
 import com.patrickzedler.grocy.core.navigation.Route
 import com.patrickzedler.grocy.core.navigation.rememberNavigator
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
+import com.patrickzedler.grocy.core.forms.DateInputSettings
+import com.patrickzedler.grocy.core.forms.LocalDateInput
+import com.patrickzedler.grocy.core.model.text.languageDateOrder
 import com.patrickzedler.grocy.core.scanner.LocalBarcodeDecoderFactory
 import com.patrickzedler.grocy.core.ui.AppMenuLinks
 import com.patrickzedler.grocy.core.ui.LocalAppMenuLinks
@@ -99,11 +102,17 @@ fun GrocyApp(
 
         val pointerKind = rememberPointerKindState()
         val unlockState by graph.unlockRepository.unlockState.collectAsStateWithLifecycle()
+        val behavior by graph.behaviorSettingsRepository.settings.collectAsStateWithLifecycle()
+        val languageOrder = remember { languageDateOrder() }
 
         CompositionLocalProvider(
             LocalBarcodeDecoderFactory provides barcodeDecoderFactory,
             LocalPointerKind provides pointerKind,
             LocalUnlockState provides unlockState,
+            LocalDateInput provides DateInputSettings(
+                keyboard = behavior?.dateKeyboard == true,
+                order = behavior?.dateInputOrder?.fixed ?: languageOrder,
+            ),
         ) {
             // Screen transitions fade, this keeps the window or page behind them out of sight
             Box(

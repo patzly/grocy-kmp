@@ -26,7 +26,11 @@ data object ProductsRoute : Route
 /** Edits the product with [productId], or creates a new product without one. */
 @Serializable
 @SerialName("masterdata/product")
-data class ProductRoute(val productId: Int? = null) : DetailRoute
+data class ProductRoute(
+    val productId: Int? = null,
+    /** A scanned code a new product is created for, Grocy's "Add as new product". */
+    val barcode: String? = null,
+) : DetailRoute
 
 @Serializable
 @SerialName("masterdata/locations")

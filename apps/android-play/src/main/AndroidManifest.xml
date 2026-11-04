@@ -10,5 +10,19 @@
     android:name=".PlayApplication"
     android:icon="${appIcon}"
     android:label="${appLabel}"
-    android:localeConfig="@xml/locales_config" />
+    android:localeConfig="@xml/locales_config">
+
+    <!-- Starts the app when a watch asks for the login, the app then publishes it -->
+    <service
+      android:name=".WatchRequestService"
+      android:exported="true">
+      <intent-filter>
+        <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+        <data
+          android:host="*"
+          android:path="/grocy/request-connection"
+          android:scheme="wear" />
+      </intent-filter>
+    </service>
+  </application>
 </manifest>

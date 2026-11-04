@@ -15,6 +15,7 @@ import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
 import com.patrickzedler.grocy.core.model.scanner.ScannerForm
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
+import com.patrickzedler.grocy.core.model.BehaviorSettings
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import kotlinx.coroutines.flow.Flow
@@ -104,6 +105,28 @@ class WebSettingsStore internal constructor(
         storage.set(SHOPPING_LIST_FIELDS, ShoppingListOptions.storedFields(options.fields))
         storage.set(SHOPPING_LIST_GROUPING, options.grouping.name)
         shoppingListOptionsState.value = options
+    }
+
+    private val behaviorSettingsState = MutableStateFlow(
+        BehaviorSettings.of(
+            productFactsSources = storage.get(BEHAVIOR_PRODUCT_FACTS),
+            dateKeyboard = storage.get(BEHAVIOR_DATE_KEYBOARD)?.toBooleanStrictOrNull(),
+            dateInputOrder = storage.get(BEHAVIOR_DATE_ORDER),
+            barcodeUsesAmount = storage.get(BEHAVIOR_BARCODE_AMOUNT)?.toBooleanStrictOrNull(),
+        ),
+    )
+
+    override val behaviorSettings: Flow<BehaviorSettings> = behaviorSettingsState.asStateFlow()
+
+    override suspend fun setBehaviorSettings(settings: BehaviorSettings) {
+        storage.set(
+            BEHAVIOR_PRODUCT_FACTS,
+            BehaviorSettings.storedSources(settings.productFactsSources),
+        )
+        storage.set(BEHAVIOR_DATE_KEYBOARD, settings.dateKeyboard.toString())
+        storage.set(BEHAVIOR_DATE_ORDER, settings.dateInputOrder.name)
+        storage.set(BEHAVIOR_BARCODE_AMOUNT, settings.barcodeUsesAmount.toString())
+        behaviorSettingsState.value = settings
     }
 
     private val shoppingModeSettingsState = MutableStateFlow(
@@ -259,6 +282,10 @@ class WebSettingsStore internal constructor(
         const val STOCK_OVERVIEW_ASCENDING = "grocy.stockOverviewAscending"
         const val SHOPPING_LIST_FIELDS = "grocy.shoppingListFields"
         const val SHOPPING_LIST_GROUPING = "grocy.shoppingListGrouping"
+        const val BEHAVIOR_PRODUCT_FACTS = "grocy.behaviorProductFacts"
+        const val BEHAVIOR_DATE_KEYBOARD = "grocy.behaviorDateKeyboard"
+        const val BEHAVIOR_DATE_ORDER = "grocy.behaviorDateOrder"
+        const val BEHAVIOR_BARCODE_AMOUNT = "grocy.behaviorBarcodeAmount"
         const val SHOPPING_MODE_AUTO_SYNC = "grocy.shoppingModeAutoSync"
         const val SHOPPING_MODE_SYNC_INTERVAL = "grocy.shoppingModeSyncInterval"
         const val SHOPPING_MODE_KEEP_SCREEN_ON = "grocy.shoppingModeKeepScreenOn"

@@ -126,20 +126,24 @@ fun UserfieldItem(
             )
         }
 
+        UserfieldType.DATE, UserfieldType.DATETIME -> DateTextItem(
+            state = input.text,
+            label = field.caption,
+            withTime = field.type == UserfieldType.DATETIME,
+            error = errorText,
+            isLastField = isLastField,
+            index = index,
+            count = count,
+        )
+
         else -> TextItem(
             state = input.text,
             label = field.caption,
             error = errorText,
-            hint = when (field.type) {
-                UserfieldType.DATE -> "YYYY-MM-DD"
-                UserfieldType.DATETIME -> "YYYY-MM-DD HH:MM:SS"
-                else -> null
-            },
             keyboardType = when (field.type) {
                 UserfieldType.NUMBER_INTEGRAL -> KeyboardType.Number
                 UserfieldType.NUMBER_DECIMAL, UserfieldType.NUMBER_CURRENCY -> KeyboardType.Decimal
                 UserfieldType.LINK -> KeyboardType.Uri
-                UserfieldType.DATE -> DateKeyboardType
                 else -> KeyboardType.Text
             },
             multiLine = field.type == UserfieldType.TEXT_MULTI_LINE,
@@ -147,13 +151,6 @@ fun UserfieldItem(
             stepper = if (field.type in NumberTypes) NumberStepper() else null,
             index = index,
             count = count,
-            trailingAction = if (field.type == UserfieldType.DATE ||
-                field.type == UserfieldType.DATETIME
-            ) {
-                { DatePickerButton(input.text, withTime = field.type == UserfieldType.DATETIME) }
-            } else {
-                null
-            },
         )
     }
 }

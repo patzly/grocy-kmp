@@ -7,4 +7,6 @@ dependencies {
     // Closed source, which is why only this app may use it
     implementation(projects.core.scannerMlkit)
     implementation(projects.core.updatePlay)
+    implementation(projects.core.wear)
+    implementation(libs.play.services.wearable)
 }

@@ -4,11 +4,25 @@ import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import app.cash.turbine.test
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.masterdata.PictureChange
+import com.patrickzedler.grocy.core.data.productfacts.ProductFactsRepository
 import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.model.ProductFactsSource
+import com.patrickzedler.grocy.core.model.productfacts.ProductFacts
+import com.patrickzedler.grocy.core.network.ProductFactsApi
+import com.patrickzedler.grocy.core.network.createGrocyHttpClient
 import com.patrickzedler.grocy.core.testing.MasterDataJson
 import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
+import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.MockEngineConfig
+import io.ktor.client.engine.mock.respond
+import io.ktor.client.engine.mock.respondError
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.content.TextContent
+import io.ktor.http.headersOf
+import io.ktor.http.isSuccess
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -46,6 +60,177 @@ class ProductViewModelTest {
         return ProductViewModel(productId, environment.repository, decimalSeparator = '.').also {
             advanceUntilIdle()
         }
+    }
+
+    /** A view model for a new product with a database that knows [FACTS_JSON]. */
+    private suspend fun TestScope.factsViewModel(
+        barcode: String? = "3017620422003",
+        sources: Set<ProductFactsSource> = setOf(ProductFactsSource.FOOD),
+    ): ProductViewModel {
+        environment.repository.refresh()
+        return ProductViewModel(
+            productId = null,
+            repository = environment.repository,
+            decimalSeparator = '.',
+            barcode = barcode,
+            productFacts = ProductFactsRepository(
+                ProductFactsApi(factsClient(), "test"),
+                enabledSources = { sources },
+            ),
+            language = "en",
+        ).also { advanceUntilIdle() }
+    }
+
+    private val factsStatus =
+        mutableMapOf("/api/v2/product/3017620422003.json" to HttpStatusCode.OK)
+
+    private fun factsClient() = createGrocyHttpClient(
+        MockEngine(
+            MockEngineConfig().apply {
+                dispatcher = this@ProductViewModelTest.dispatcher
+                addHandler { request ->
+                    val path = request.url.encodedPath
+                    val status = factsStatus[path]
+                    when {
+                        path.endsWith(".jpg") -> respond(byteArrayOf(1, 2, 3))
+                        status == null -> respondError(HttpStatusCode.NotFound)
+                        !status.isSuccess() -> respondError(status)
+                        else -> respond(
+                            FACTS_JSON,
+                            headers = headersOf(
+                                HttpHeaders.ContentType,
+                                ContentType.Application.Json.toString(),
+                            ),
+                        )
+                    }
+                }
+            },
+        ),
+    )
+
+    @Test
+    fun aScannedCodeFillsInTheNewProduct() = runTest(dispatcher) {
+        val viewModel = factsViewModel()
+
+        val form = viewModel.ready.form
+        assertEquals("Nutella", form.name.text.toString())
+        assertEquals(
+            "Hazelnut spread\nFerrero · 400 g\nSugar\n100 g: FAT 30.9 g",
+            form.description.text.toString(),
+        )
+        assertEquals(
+            ProductFactsState.Filled("Open Food Facts"),
+            viewModel.factsState,
+        )
+        val picture = assertIs<PictureChange.Replace>(viewModel.pictureChange)
+        assertEquals("3017620422003.jpg", picture.fileName)
+        assertTrue(picture.bytes.contentEquals(byteArrayOf(1, 2, 3)))
+    }
+
+    @Test
+    fun energyIsPerStockUnitAndFollowsItUntilTheUserTypesTheirOwn() = runTest(dispatcher) {
+        val viewModel = factsViewModel()
+        val form = viewModel.ready.form
+        val gram = viewModel.options.value!!.quantityUnits.first()
+        val perPackage = "2156"
+        form.changeStockUnit(null)
+        advanceUntilIdle()
+        assertEquals(perPackage, form.calories.text.toString())
+
+        form.calories.setTextAndPlaceCursorAtEnd("7")
+        form.changeStockUnit(gram.id)
+        advanceUntilIdle()
+
+        assertEquals("7", form.calories.text.toString())
+    }
+
+    @Test
+    fun groupAndStoreAreOnlyFilledInWhereOneOfTheUsersHasTheName() = runTest(dispatcher) {
+        val viewModel = factsViewModel()
+        val form = viewModel.ready.form
+        assertEquals(1, form.productGroupId)
+        assertEquals(1, form.storeId)
+        form.productGroupId = null
+        form.storeId = null
+
+        ProductFacts(
+            source = ProductFactsSource.FOOD,
+            barcode = "3017620422003",
+            categories = listOf("Spreads"),
+            stores = listOf("Corner shop"),
+        ).fillInto(form, viewModel.options.value!!, ProductFactsTexts(), 2, '.')
+
+        assertNull(form.productGroupId)
+        assertNull(form.storeId)
+    }
+
+    @Test
+    fun whatTheUserEnteredStays() = runTest(dispatcher) {
+        val viewModel = factsViewModel(barcode = null)
+        val form = viewModel.ready.form
+        form.name.setTextAndPlaceCursorAtEnd("Mine")
+
+        viewModel.lookUpFacts("3017620422003")
+        advanceUntilIdle()
+
+        assertEquals("Mine", form.name.text.toString())
+        assertTrue(form.description.text.isNotEmpty())
+    }
+
+    @Test
+    fun anUnknownBarcodeSaysSoAndKeepsTheForm() = runTest(dispatcher) {
+        factsStatus.clear()
+        val viewModel = factsViewModel(barcode = null)
+
+        viewModel.events.test {
+            viewModel.lookUpFacts("4000000000000")
+            advanceUntilIdle()
+
+            assertEquals(ProductEvent.FactsNotFound("4000000000000"), awaitItem())
+        }
+        assertEquals("", viewModel.ready.form.name.text.toString())
+        assertNull(viewModel.factsState)
+    }
+
+    @Test
+    fun anUnreachableDatabaseSaysSo() = runTest(dispatcher) {
+        factsStatus["/api/v2/product/4000000000000.json"] = HttpStatusCode.ServiceUnavailable
+        val viewModel = factsViewModel(barcode = null)
+
+        viewModel.events.test {
+            viewModel.lookUpFacts("4000000000000")
+            advanceUntilIdle()
+
+            assertEquals(ProductEvent.FactsFailed, awaitItem())
+        }
+    }
+
+    @Test
+    fun withoutEnabledDatabasesNothingIsAskedOrOffered() = runTest(dispatcher) {
+        val viewModel = factsViewModel(sources = emptySet())
+
+        assertFalse(viewModel.canLookUpFacts)
+        assertEquals("", viewModel.ready.form.name.text.toString())
+        assertEquals("3017620422003", viewModel.pendingBarcode)
+    }
+
+    @Test
+    fun theScannedCodeBecomesTheNewProductsBarcode() = runTest(dispatcher) {
+        val viewModel = factsViewModel(sources = emptySet())
+        val form = viewModel.ready.form
+        form.name.setTextAndPlaceCursorAtEnd("Created")
+        form.locationId = viewModel.options.value!!.locations.first().id
+        val unit = viewModel.options.value!!.quantityUnits.first().id
+        form.changeStockUnit(unit)
+
+        assertTrue(viewModel.save())
+        advanceUntilIdle()
+
+        val body = environment.server
+            .requestsTo("/api/objects/product_barcodes", HttpMethod.Post)
+            .single().body as TextContent
+        assertTrue("3017620422003" in body.text)
+        assertNull(viewModel.pendingBarcode)
     }
 
     private val ProductViewModel.ready: ProductLoadState.Ready
@@ -316,5 +501,16 @@ class ProductViewModelTest {
     @Test
     fun newIdIsUsedForNewProducts() {
         assertEquals(0, MasterDataRepository.NEW_PRODUCT_ID)
+    }
+
+    private companion object {
+        val FACTS_JSON = """
+            {"status":1,"product":{"product_name":"Nutella","generic_name":"Hazelnut spread",
+            "brands":"Ferrero","quantity":"400 g","product_quantity":400,
+            "product_quantity_unit":"g","ingredients_text":"Sugar",
+            "categories":"Snacks, dairy","stores":"Corner shop,supermarket",
+            "image_front_url":"https://images.openfoodfacts.org/front.jpg",
+            "nutriments":{"energy-kcal_100g":539,"fat_100g":30.9}}}
+        """.trimIndent()
     }
 }

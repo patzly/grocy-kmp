@@ -10,7 +10,8 @@ Grocy's stock entries, stock journal and journal summary (`stock/`, `journal/` o
   offline use; bookings (consume, consume as spoiled, open, edit, undo) are online only and
   download the entries again. Entries show Grocy's columns and due highlighting
   (`dueStatusOf`: overdue/expired by due type, due soon by `stock_due_soon_days`), price per
-  price unit; their menu holds Grocy's other actions in its groups. Booking messages offer
+  price unit; the item has one button, "Consume", so phones keep room for the texts; "Mark as
+  opened" and Grocy's other actions are in its menu, in Grocy's groups. Booking messages offer
   "Undo" in the snackbar. The journal filters by product, type, location, user and Grocy's
   date ranges (`journalSince`, SQLite month arithmetic), searches, undoes; the summary sums
   every booking not undone per product, type and user (Grocy's view is not exposed).

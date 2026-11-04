@@ -24,8 +24,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.rememberFormFocus
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
-import com.patrickzedler.grocy.core.forms.DateKeyboardType
-import com.patrickzedler.grocy.core.forms.DatePickerButton
+import com.patrickzedler.grocy.core.forms.DateTextItem
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FormFocusTarget
 import com.patrickzedler.grocy.core.forms.GroupItems
@@ -194,22 +193,18 @@ internal fun BatteryTrackingScreen(
                         )
                     },
                     { index, count ->
-                        TextItem(
+                        DateTextItem(
+                            withTime = true,
                             state = viewModel.trackedTime,
                             label = stringResource(Res.string.chore_tracked_time),
-                            hint = "YYYY-MM-DD HH:MM:SS",
                             error = fieldErrorText(
                                 viewModel.errors[BatteryTrackingField.TRACKED_TIME],
                                 Res.string.chore_date_required,
                             ),
-                            keyboardType = DateKeyboardType,
                             isLastField = !hasUserfields,
                             index = index,
                             count = count,
                             focusRequester = timeFocus,
-                            trailingAction = {
-                                DatePickerButton(viewModel.trackedTime, withTime = true)
-                            },
                         )
                     },
                 )

@@ -13,6 +13,7 @@ kotlin {
             implementation(projects.core.data)
             implementation(projects.core.database)
             implementation(projects.core.design)
+            implementation(projects.core.forms)
             implementation(projects.core.navigation)
             implementation(projects.core.network)
             implementation(projects.core.resources)

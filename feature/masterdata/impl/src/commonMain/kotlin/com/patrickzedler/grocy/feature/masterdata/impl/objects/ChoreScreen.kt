@@ -33,8 +33,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedTexts
 import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.actionMessage
 import com.patrickzedler.grocy.core.forms.ChipIcon
-import com.patrickzedler.grocy.core.forms.DateKeyboardType
-import com.patrickzedler.grocy.core.forms.DatePickerButton
+import com.patrickzedler.grocy.core.forms.DateTextItem
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.fieldErrorText
 import com.patrickzedler.grocy.core.forms.filterChipElevation
@@ -249,21 +248,17 @@ internal fun ChoreScreen(
                     null
                 },
                 { index, count ->
-                    TextItem(
+                    DateTextItem(
+                        withTime = !form.trackDateOnly,
                         state = form.startDate,
-                        keyboardType = DateKeyboardType,
                         label = stringResource(Res.string.chore_start_date),
-                        hint = "YYYY-MM-DD HH:MM:SS\n" +
-                            stringResource(Res.string.chore_start_date_hint),
+                        hint = stringResource(Res.string.chore_start_date_hint),
                         error = fieldErrorText(
                             errors[ObjectField.START_DATE],
                             Res.string.chore_start_date_required,
                         ),
                         index = index,
                         count = count,
-                        trailingAction = {
-                            DatePickerButton(form.startDate, withTime = !form.trackDateOnly)
-                        },
                     )
                 },
                 { index, count ->

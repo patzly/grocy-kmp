@@ -26,8 +26,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.rememberFormFocus
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
-import com.patrickzedler.grocy.core.forms.DateKeyboardType
-import com.patrickzedler.grocy.core.forms.DatePickerButton
+import com.patrickzedler.grocy.core.forms.DateTextItem
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FormFocusTarget
 import com.patrickzedler.grocy.core.forms.GroupItems
@@ -213,30 +212,19 @@ internal fun ChoreTrackingScreen(
                         )
                     },
                     { index, count ->
-                        TextItem(
+                        DateTextItem(
+                            withTime = !viewModel.trackDateOnly,
                             state = viewModel.trackedTime,
                             label = stringResource(Res.string.chore_tracked_time),
-                            hint = if (viewModel.trackDateOnly) {
-                                "YYYY-MM-DD"
-                            } else {
-                                "YYYY-MM-DD HH:MM:SS"
-                            },
                             error = fieldErrorText(
                                 viewModel.errors[ChoreTrackingField.TRACKED_TIME],
                                 Res.string.chore_date_required,
                             ),
-                            keyboardType = DateKeyboardType,
                             // Who did it is prefilled, what is left are the userfields
                             isLastField = !hasUserfields,
                             index = index,
                             count = count,
                             focusRequester = timeFocus,
-                            trailingAction = {
-                                DatePickerButton(
-                                    viewModel.trackedTime,
-                                    withTime = !viewModel.trackDateOnly,
-                                )
-                            },
                         )
                     },
                     if (current.users.isNotEmpty()) {

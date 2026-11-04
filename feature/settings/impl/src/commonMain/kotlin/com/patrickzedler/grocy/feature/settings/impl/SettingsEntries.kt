@@ -20,6 +20,7 @@ import com.patrickzedler.grocy.feature.settings.api.GrocySettingsPageRoute
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.LogRoute
 import com.patrickzedler.grocy.feature.settings.api.NotificationSettingsRoute
+import com.patrickzedler.grocy.feature.settings.api.BehaviorSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.ScannerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
@@ -37,6 +38,8 @@ import com.patrickzedler.grocy.feature.settings.impl.log.LogScreen
 import com.patrickzedler.grocy.feature.settings.impl.log.LogViewModel
 import com.patrickzedler.grocy.feature.settings.impl.notifications.NotificationSettingsScreen
 import com.patrickzedler.grocy.feature.settings.impl.notifications.NotificationSettingsViewModel
+import com.patrickzedler.grocy.feature.settings.impl.behavior.BehaviorSettingsScreen
+import com.patrickzedler.grocy.feature.settings.impl.behavior.BehaviorSettingsViewModel
 import com.patrickzedler.grocy.feature.settings.impl.scanner.ScannerSettingsScreen
 import com.patrickzedler.grocy.feature.settings.impl.scanner.ScannerSettingsViewModel
 import com.patrickzedler.grocy.feature.settings.impl.server.ServerSettingsScreen
@@ -188,6 +191,16 @@ fun EntryProviderScope<NavKey>.settingsEntries(
         )
     }
 
+    entry<BehaviorSettingsRoute>(metadata = detailPaneMetadata(SettingsRoute)) {
+        BehaviorSettingsScreen(
+            viewModel = viewModel { BehaviorSettingsViewModel(dependencies.behaviorSettings) },
+            menuViewModel = settingsMenuViewModel(dependencies),
+            menuActions = menuActions,
+            onBackClick = navigator::goBack,
+            pane = ScreenPane.Detail.takeIf { showsDetailBesideList() },
+        )
+    }
+
     entry<ScannerSettingsRoute>(metadata = detailPaneMetadata(SettingsRoute)) {
         ScannerSettingsScreen(
             viewModel = viewModel {
@@ -251,6 +264,7 @@ internal val SettingsCategory.route: DetailRoute?
         SettingsCategory.GENERAL -> GeneralSettingsRoute
         SettingsCategory.SERVER -> ServerSettingsRoute
         SettingsCategory.GROCY -> GrocySettingsRoute
+        SettingsCategory.BEHAVIOR -> BehaviorSettingsRoute
         SettingsCategory.SCANNER -> ScannerSettingsRoute
         SettingsCategory.NOTIFICATIONS -> NotificationSettingsRoute
         SettingsCategory.SHOPPING_MODE -> ShoppingModeSettingsRoute()

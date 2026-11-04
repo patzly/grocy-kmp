@@ -8,8 +8,7 @@ import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
-import com.patrickzedler.grocy.core.forms.DateKeyboardType
-import com.patrickzedler.grocy.core.forms.DatePickerButton
+import com.patrickzedler.grocy.core.forms.DateTextItem
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FormDialog
 import com.patrickzedler.grocy.core.forms.GroupItems
@@ -230,11 +229,9 @@ private fun DateItem(
     val isDue = field == StockEntryField.DUE_DATE
     val text = if (isDue) state.dueDate else state.purchasedDate
     val enabled = !isDue || !state.neverOverdue
-    TextItem(
+    DateTextItem(
         state = text,
-        keyboardType = DateKeyboardType,
         label = label,
-        hint = "YYYY-MM-DD",
         error = fieldErrorText(
             state.errors[field],
             if (isDue) {
@@ -246,10 +243,5 @@ private fun DateItem(
         enabled = enabled,
         index = index,
         count = count,
-        trailingAction = if (enabled) {
-            { DatePickerButton(text, withTime = false) }
-        } else {
-            null
-        },
     )
 }

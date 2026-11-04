@@ -61,6 +61,9 @@ npm-zxing-wasm = "3.1.5"
 
 # Wear OS
 androidx-wear-compose = "1.7.1"
+androidx-wear-input = "1.2.0"
+# The Wearable Data Layer that hands the login from the phone to the watch
+play-services-wearable = "19.0.0"
 
 # Testing
 turbine = "1.2.1"
@@ -145,6 +148,10 @@ room3-gradlePlugin = { module = "androidx.room3:room3-gradle-plugin", version.re
 # Wear OS UI
 androidx-wear-compose-foundation = { module = "androidx.wear.compose:compose-foundation", version.ref = "androidx-wear-compose" }
 androidx-wear-compose-material3 = { module = "androidx.wear.compose:compose-material3", version.ref = "androidx-wear-compose" }
+androidx-wear-compose-navigation = { module = "androidx.wear.compose:compose-navigation", version.ref = "androidx-wear-compose" }
+androidx-wear-input = { module = "androidx.wear:wear-input", version.ref = "androidx-wear-input" }
+play-services-wearable = { module = "com.google.android.gms:play-services-wearable", version.ref = "play-services-wearable" }
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinx-coroutines" }
 
 [plugins]
 # Core plugins

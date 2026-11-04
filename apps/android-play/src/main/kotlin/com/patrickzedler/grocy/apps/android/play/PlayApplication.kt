@@ -8,11 +8,17 @@ import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.scanner.mlkit.MlKitBarcodeDecoderFactory
 import com.patrickzedler.grocy.core.update.play.PlayAppUpdater
 import com.patrickzedler.grocy.core.update.play.ResumedActivityTracker
+import com.patrickzedler.grocy.core.wear.PhoneConnectionPublisher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
 class PlayApplication : Application(), AppGraphOwner {
 
     // The Play update screen starts from the activity in front
     private val activityTracker = ResumedActivityTracker()
+
+    private val publisherScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     override val graph: AppGraph by lazy {
         AppGraph(
@@ -36,5 +42,7 @@ class PlayApplication : Application(), AppGraphOwner {
     override fun onCreate() {
         super.onCreate()
         registerActivityLifecycleCallbacks(activityTracker)
+        // Zero click: whoever is logged in here is logged in on the paired watch too
+        PhoneConnectionPublisher(this, graph.connection, publisherScope).start()
     }
 }
