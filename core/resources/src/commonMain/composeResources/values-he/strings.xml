@@ -903,6 +903,11 @@
   <string name="booking_unknown_code_message">אין אפשרות לעבד את „%1$s” לכדי מוצר, איך להמשיך?</string>
   <string name="booking_add_as_new_product">הוספה כמוצר חדש</string>
   <string name="booking_add_as_barcode">הוספה כברקוד למוצר קיים</string>
+  <string name="booking_add_as_new_product_with_barcode">הוספה כמוצר חדש ומילוי מראש של הברקוד</string>
+  <string name="booking_external_barcode_lookup">חיפוש ברקוד חיצוני</string>
+  <string name="booking_external_lookup_nothing_found">לא נמצא דבר עבור הברקוד שצוין</string>
+  <string name="booking_scan_again">סריקה חוזרת</string>
+  <string name="product_picker_workflow_hint">יש להקליד שם מוצר חדש או ברקוד וללחוץ על Enter או לצאת מהשדה כדי להתחיל תהליך</string>
   <string name="booking_unit_required">נדרשת יחידת כמות</string>
   <string name="booking_tare_info">טיפול במשקל טרה פעיל - נא לשקול את כלל המוצר עם האריזה, הכמות שתפורסם תחושב אוטומטית</string>
   <string name="booking_purchased_date_required">נדרש תאריך רכישה</string>

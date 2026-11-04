@@ -894,6 +894,11 @@
   <string name="booking_unknown_code_message">"%1$s" could not be resolved to a product, how do you want to proceed?</string>
   <string name="booking_add_as_new_product">Add as new product</string>
   <string name="booking_add_as_barcode">Add as barcode to existing product</string>
+  <string name="booking_add_as_new_product_with_barcode">Add as new product and prefill barcode</string>
+  <string name="booking_external_barcode_lookup">External barcode lookup</string>
+  <string name="booking_external_lookup_nothing_found">Nothing was found for the given barcode</string>
+  <string name="booking_scan_again">Scan again</string>
+  <string name="product_picker_workflow_hint">Type a new product name or barcode and press Enter or leave the field to start a workflow</string>
   <string name="booking_unit_required">A quantity unit is required</string>
   <string name="booking_tare_info">Tare weight handling enabled - please weigh the whole container, the amount to be posted will be automatically calculated</string>
   <string name="booking_purchased_date_required">A purchased date is required</string>

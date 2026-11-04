@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.semantics.collapse
 import androidx.compose.ui.semantics.expand
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
@@ -84,7 +85,10 @@ data class DropdownOption(
  * @param autoFocus takes the focus once when the form opens.
  * @param isLastField the keyboard's action submits the form of [LocalFormFocus].
  * @param onSubmitText can use text submitted by the keyboard itself, e.g. as a code, with whether
- *   a suggestion would take it otherwise; true when it did.
+ *   a suggestion containing that text would take it otherwise; true when it did.
+ * @param submitsTextOnLeave text naming no option also goes to [onSubmitText] when the field loses
+ *   the focus, like Grocy's product picker.
+ * @param textResetKey a new value replaces typed text with the current choice's label.
  * @param onKeyboardNext replaces going on to the next field, e.g. for a field whose next field
  *   only takes the focus after a choice.
  * @param onFocusChange whether the field has the focus.
@@ -106,6 +110,8 @@ fun SearchableDropdownField(
     autoFocus: Boolean = false,
     isLastField: Boolean = false,
     onSubmitText: ((text: String, hasSuggestion: Boolean) -> Boolean)? = null,
+    submitsTextOnLeave: Boolean = false,
+    textResetKey: Any? = null,
     onKeyboardNext: (() -> Unit)? = null,
     onFocusChange: (Boolean) -> Unit = {},
 ) {
@@ -132,6 +138,9 @@ fun SearchableDropdownField(
     // The choice this field reported last; other changes come from outside (e.g. a scan)
     var reportedId by remember { mutableStateOf(selectedId) }
     val isUnmatched = isTyped && dropdownTextMatch(options, textState.text) == NoMatch
+    // Text already handed to onSubmitText, so losing the focus to its answer does not ask again
+    var submittedText by remember { mutableStateOf<String?>(null) }
+    var resetKey by remember { mutableStateOf(textResetKey) }
 
     fun write(text: String) {
         writtenText = text
@@ -146,12 +155,19 @@ fun SearchableDropdownField(
             write(selectedLabel)
         }
     }
+    LaunchedEffect(textResetKey) {
+        if (textResetKey != resetKey) {
+            resetKey = textResetKey
+            write(selectedLabel)
+        }
+    }
     LaunchedEffect(isUnmatched) { currentOnUnmatchedChange(isUnmatched) }
     LaunchedEffect(textState) {
         snapshotFlow { textState.text.toString() }.collect { text ->
             if (text == writtenText) return@collect
             writtenText = text
             isTyped = true
+            submittedText = null
             val match = dropdownTextMatch(currentOptions, text)
             // A fully typed option needs no suggestions anymore, typing on shows them again
             if (isFocused) expanded = match == null || match == NoMatch
@@ -178,6 +194,12 @@ fun SearchableDropdownField(
         write(options.firstOrNull { it.id == id }?.label.orEmpty())
     }
 
+    fun submitText(text: String): Boolean {
+        val used = onSubmitText?.invoke(text, hasLiteralSuggestion(matches, text)) == true
+        if (used) submittedText = text
+        return used
+    }
+
     // What the keyboard's action makes of typed text; true when that gave the field its value
     fun useTypedText(): Boolean {
         if (!isTyped) return false
@@ -188,7 +210,7 @@ fun SearchableDropdownField(
             write(selectedLabel)
             return true
         }
-        if (text.isNotEmpty() && onSubmitText?.invoke(text, matches.isNotEmpty()) == true) {
+        if (text.isNotEmpty() && submitText(text)) {
             close()
             return true
         }
@@ -246,6 +268,13 @@ fun SearchableDropdownField(
                         close()
                         // A matching text shows the option's own spelling
                         if (isTyped && !isUnmatched) write(selectedLabel)
+                        val text = textState.text.toString().trim()
+                        if (submitsTextOnLeave && isUnmatched && text != submittedText) {
+                            submitText(text)
+                        }
+                    } else if (!isFocused && focus.isFocused && submittedText != null) {
+                        // Back from the question about it, typing replaces it like in Grocy
+                        textState.edit { selection = TextRange(0, length) }
                     }
                     if (isFocused != focus.isFocused) onFocusChange(focus.isFocused)
                     isFocused = focus.isFocused
@@ -395,6 +424,12 @@ internal fun typedChoice(
     text: CharSequence,
     matches: List<DropdownOption>,
 ): Int? = if (isTyped && text.isNotBlank()) matches.firstOrNull()?.id else null
+
+/** Whether one of the [matches] contains [text], unlike those only found by forgiving a typo. */
+internal fun hasLiteralSuggestion(matches: List<DropdownOption>, text: String): Boolean =
+    matches.any { option ->
+        (listOf(option.label) + option.searchTexts).any { it.contains(text, ignoreCase = true) }
+    }
 
 /** Result of [dropdownTextMatch] for a text that names no option. */
 internal const val NoMatch = Int.MIN_VALUE

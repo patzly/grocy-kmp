@@ -847,6 +847,11 @@
   <string name="booking_unknown_code_message">物品「%1$s」の処理に失敗しました。どうしますか？</string>
   <string name="booking_add_as_new_product">新規物品として追加</string>
   <string name="booking_add_as_barcode">既存の物品にバーコードで追加</string>
+  <string name="booking_add_as_new_product_with_barcode">新規物品として追加してバーコードで事前入力</string>
+  <string name="booking_external_barcode_lookup">外部バーコード検索</string>
+  <string name="booking_external_lookup_nothing_found">指定されたバーコードは見つかりませんでした</string>
+  <string name="booking_scan_again">もう一度スキャン</string>
+  <string name="product_picker_workflow_hint">新しい物品名またはバーコードを入力し、Enter を押すかフィールドから移動するとワークフローを開始します</string>
   <string name="booking_unit_required">単位は必須項目です</string>
   <string name="booking_tare_info">容器重量処理が有効です。容器の重量を入力してください。編集時には物品の実際の重量が自動計算されます</string>
   <string name="booking_purchased_date_required">購入日は必須項目です</string>

@@ -875,6 +875,11 @@
   <string name="booking_unknown_code_message">Το προϊόν% s είναι κάτω από το καθορισμένο ελάχιστο. ποσό αποθέματοςΔεν ήταν δυνατή η επίλυση του "%1$s" σε ένα προϊόν, πώς θέλετε να προχωρήσετε;</string>
   <string name="booking_add_as_new_product">Προσθήκη ως νέο προϊόν</string>
   <string name="booking_add_as_barcode">Προσθέστε ως γραμμωτό κώδικα στο υπάρχον προϊόν</string>
+  <string name="booking_add_as_new_product_with_barcode">Προσθήκη ως νέο προϊόν με προσυμπλήρωση γραμμωτού κώδικα</string>
+  <string name="booking_external_barcode_lookup">Εξωτερική αναζήτηση γραμμωτού κώδικα</string>
+  <string name="booking_external_lookup_nothing_found">Δεν βρέθηκε τίποτα για τον συγκεκριμένο γραμμωτό κώδικα</string>
+  <string name="booking_scan_again">Νέα σάρωση</string>
+  <string name="product_picker_workflow_hint">Πληκτρολογήστε όνομα νέου προϊόντος ή γραμμωτό κώδικα και πατήστε Enter ή βγείτε από το πεδίο για να ξεκινήσει μια ροή εργασίας</string>
   <string name="booking_unit_required">Απαιτείται μονάδα ποσότητας</string>
   <string name="booking_tare_info">Επόμενη εκτιμώμενη παρακολούθησηΟ χειρισμός απόβαρου βάρους ενεργοποιήθηκε - ζυγίστε ολόκληρο το δοχείο, το ποσό που θα δημοσιευτεί θα υπολογιστεί αυτόματα</string>
   <string name="booking_purchased_date_required">Απαιτείται ημερομηνία αγοράς</string>

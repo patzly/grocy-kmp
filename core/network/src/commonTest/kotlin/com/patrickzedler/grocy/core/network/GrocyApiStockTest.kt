@@ -58,6 +58,26 @@ class GrocyApiStockTest {
         get() = Json.parseToJsonElement((body as TextContent).text).jsonObject
 
     @Test
+    fun externalBarcodeLookupAddsTheProductAndReturnsItsId() = runTest {
+        requests.clear()
+        val api = api { json("""{"name":"Found","id":"12","__barcode":"123"}""") }
+
+        val id = api.externalBarcodeLookup(CONNECTION, "123")
+
+        assertEquals(12, id)
+        val url = requests.single().url
+        assertTrue(url.encodedPath.endsWith("/stock/barcodes/external-lookup/123"), url.toString())
+        assertEquals("true", url.parameters["add"])
+    }
+
+    @Test
+    fun externalBarcodeLookupFindsNothing() = runTest {
+        val api = api { json("null") }
+
+        assertNull(api.externalBarcodeLookup(CONNECTION, "123"))
+    }
+
+    @Test
     fun barcodeIsSavedLikeGrocysFormWithoutTheLastPrice() = runTest {
         val api = api { json("""{"created_object_id":7}""") }
         val barcode = ProductBarcode(

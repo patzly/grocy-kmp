@@ -3,7 +3,10 @@ package com.patrickzedler.grocy.feature.recipes.impl.mealplan
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.FormFocusTarget
+import com.patrickzedler.grocy.core.forms.ScannerFieldState
 import com.patrickzedler.grocy.core.model.masterdata.Product
+import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
 import com.patrickzedler.grocy.core.model.recipes.MealPlanEntry
@@ -12,7 +15,9 @@ import com.patrickzedler.grocy.core.model.recipes.MealPlanSection
 import com.patrickzedler.grocy.core.model.recipes.Recipe
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class MealPlanDialogStateTest {
 
@@ -21,6 +26,14 @@ class MealPlanDialogStateTest {
     private val choices = MealPlanChoices(
         recipes = listOf(Recipe(1, "Pancakes", baseServings = 4.0)),
         products = listOf(Product(id = 1, name = "Milk", quIdStock = 1)),
+        allProducts = listOf(
+            Product(id = 1, name = "Milk", quIdStock = 1),
+            Product(id = 2, name = "Old", quIdStock = 1, active = false),
+        ),
+        barcodes = listOf(
+            ProductBarcode(1, productId = 1, barcode = "4001"),
+            ProductBarcode(2, productId = 2, barcode = "4002"),
+        ),
         sections = listOf(MealPlanSection(MealPlanSection.DEFAULT_ID, "", -1)),
         units = listOf(piece, pack),
         // 1 Piece is 1/6 Pack
@@ -33,6 +46,106 @@ class MealPlanDialogStateTest {
 
     private fun dialog(type: MealPlanEntryType, original: MealPlanEntry? = null) =
         MealPlanEntryDialogState(type, original, day = "2026-11-02", choices = choices)
+
+    private fun scanning() = MealPlanEntryDialogState(
+        MealPlanEntryType.PRODUCT,
+        original = null,
+        day = "2026-11-02",
+        choices = choices,
+        scanner = ScannerFieldState(hasValue = false).also { it.toggle() },
+    )
+
+    @Test
+    fun aBarcodeTypedIntoTheProductFieldChoosesItsProduct() {
+        val state = dialog(MealPlanEntryType.PRODUCT)
+
+        assertTrue(state.onProductTextSubmitted("4001", hasSuggestion = false))
+
+        assertEquals(1, state.productId)
+        assertNull(state.unknownProduct.input)
+    }
+
+    @Test
+    fun unknownTextAsksGrocysQuestionWhichOnlyAssigns() {
+        val state = dialog(MealPlanEntryType.PRODUCT)
+
+        assertTrue(state.onProductTextSubmitted("Brand new", hasSuggestion = false))
+
+        assertEquals("Brand new", state.unknownProduct.input)
+        assertFalse(state.unknownProduct.canCreate)
+    }
+
+    @Test
+    fun anInactiveProductsNameIsGrocysErrorNotTheQuestion() {
+        val state = dialog(MealPlanEntryType.PRODUCT)
+
+        assertTrue(state.onProductTextSubmitted("Old", hasSuggestion = false))
+
+        assertTrue(state.unknownProduct.isNotOffered)
+        assertNull(state.unknownProduct.input)
+        assertNull(state.productId)
+    }
+
+    @Test
+    fun aScannedInactiveProductKeepsScanningWithGrocysError() {
+        val state = scanning()
+
+        state.onScanned("4002")
+
+        assertTrue(state.unknownProduct.isNotOffered)
+        assertTrue(state.scanner.isOpen)
+    }
+
+    @Test
+    fun aScannedProductClosesTheScannerForTheAmount() {
+        val state = scanning()
+
+        state.onScanned("4001")
+
+        assertEquals(1, state.productId)
+        assertFalse(state.scanner.isOpen)
+        assertEquals(FormFocusTarget.NEXT_FIELD, state.scanner.focusTarget)
+    }
+
+    @Test
+    fun anUnknownScanClosesTheScannerForTheQuestion() {
+        val state = scanning()
+
+        state.onScanned("999")
+
+        assertEquals("999", state.unknownProduct.input)
+        assertFalse(state.scanner.isOpen)
+    }
+
+    @Test
+    fun scanAgainOpensTheScannerWithoutTheText() {
+        val state = scanning()
+        state.onScanned("999")
+
+        state.unknownProduct.scanAgain()
+        state.scanAgain()
+
+        assertNull(state.unknownProduct.input)
+        assertTrue(state.scanner.isOpen)
+    }
+
+    @Test
+    fun textLeftBehindForTheScannerAsksNothing() {
+        val state = scanning()
+
+        assertFalse(state.onProductTextSubmitted("Unfinis", hasSuggestion = false))
+
+        assertNull(state.unknownProduct.input)
+    }
+
+    @Test
+    fun textASuggestionWouldTakeIsLeftToIt() {
+        val state = dialog(MealPlanEntryType.PRODUCT)
+
+        assertFalse(state.onProductTextSubmitted("Mil", hasSuggestion = true))
+
+        assertNull(state.unknownProduct.input)
+    }
 
     @Test
     fun aNewEntryStartsOnItsDayInTheDefaultSection() {

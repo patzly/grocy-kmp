@@ -179,6 +179,7 @@ fun EntryProviderScope<NavKey>.recipesEntries(
                     recipes = recipes,
                     masterData = masterData,
                     stock = dependencies.stockRepository,
+                    scannerForms = dependencies.scannerForms,
                     initialDay = route.start,
                 )
             },
@@ -214,6 +215,7 @@ fun EntryProviderScope<NavKey>.recipesEntries(
                     repository = masterData,
                     recipes = recipes,
                     language = language,
+                    scannerForms = dependencies.scannerForms,
                 )
             },
             frame = formFrame(
@@ -227,6 +229,11 @@ fun EntryProviderScope<NavKey>.recipesEntries(
             },
             onConfigureUserfieldsClick = {
                 navigator.navigate(UserfieldsRoute(RecipesRepository.RECIPES))
+            },
+            onOpenProduct = { request ->
+                navigator.navigate(
+                    ProductRoute(request.productId, request.barcode, request.name, true),
+                )
             },
         )
     }

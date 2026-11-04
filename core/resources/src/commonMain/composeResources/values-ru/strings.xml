@@ -931,6 +931,11 @@
   <string name="booking_unknown_code_message">"%1$s" не может быть преобразован к существующему продукту. Как вы хотите продолжить?</string>
   <string name="booking_add_as_new_product">Добавить как новый продукт</string>
   <string name="booking_add_as_barcode">Добавить в качестве штрихкода к существующему продукту</string>
+  <string name="booking_add_as_new_product_with_barcode">Добавить новый продукт, заполнив штрихкод</string>
+  <string name="booking_external_barcode_lookup">Внешний поиск штрихкода</string>
+  <string name="booking_external_lookup_nothing_found">Ничего не было найдено по указанному штрих-коду</string>
+  <string name="booking_scan_again">Сканировать снова</string>
+  <string name="product_picker_workflow_hint">Введите название нового продукта или штрихкод и нажмите Enter или покиньте поле, чтобы запустить процесс</string>
   <string name="booking_unit_required">Необходима единица измерения</string>
   <string name="booking_tare_info">Включён расчёт с учётом тары - пожалуйста, взвесьте весь контейнер, изменения в количестве будут автоматически рассчитаны</string>
   <string name="booking_purchased_date_required">Укажите дату покупки</string>

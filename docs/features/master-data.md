@@ -213,3 +213,34 @@ the master data, every entity's menu in the userentities list opens it too.
 - The form (`UserobjectViewModel`) has only the entity's fields, the first one focused for a new
   object; saving goes back to the list like Grocy (`closesWhenCreated`).
 - The sidebar's icon (`icon_css_class`, Font Awesome) is not shown, every entity has the same one.
+
+## Unknown products ("Create or assign product")
+
+Grocy's product picker asks what to do with text or a code that names no product
+(`UnknownProductFlow`, `UnknownProductDialog` of `core:forms`). It asks on Enter, the keyboard's
+action, a scan, and when the text leaves the field (`submitsTextOnLeave`), unless a suggestion
+contains the text: a suggestion only found by forgiving a typo can still be tapped, but Enter asks,
+so a new name never silently becomes a similar product.
+
+| Form | Answers |
+| --- | --- |
+| Purchase, inventory, shopping list item | new product, barcode, new product with barcode, external lookup, scan again |
+| Consume, transfer | barcode, scan again |
+| Recipe ingredient | new product, barcode, new product with barcode, scan again (Grocy's recipes have no lookup) |
+| Meal plan product | barcode, scan again (Grocy's barcode button reloads its page without any effect, the app saves it) |
+| Product form's parent | none (`disallowAllProductWorkflows`) |
+
+- Text or a code of a product the picker does not offer, like an inactive one, does not ask: the
+  field clears, keeps the focus and shows Grocy's "This product is not in stock"
+  (`onTextWithoutProduct`, `showNotOffered`), the text Grocy shows on every page, not only those
+  about stock. A grocycode is no name or barcode, so Grocy asks for one of those.
+- "Add as new product" opens `ProductRoute(name)`, "... and prefill barcode" `ProductRoute(barcode)`,
+  both with `returnsWhenSaved` like Grocy's `returnto`. The form then chooses the product that
+  appeared (`takeCreatedProduct`): the new id, or the one with that barcode. Choosing another
+  product stops waiting for it.
+- "Add as barcode" clears the field, a hint names the code, and the form saves it with the next
+  chosen product (`savePendingBarcode`, a booking with its own values).
+- "External barcode lookup" asks the server's plugin (`STOCK_BARCODE_LOOKUP_PLUGIN`,
+  `barcodes/external-lookup?add=true`), which creates the product; its form opens for checking.
+  This is the server's own lookup, separate from the app's `docs/features/product-facts.md`.
+- Grocy's letters (P, B, A, E, C) answer on a hardware keyboard and are shown then.

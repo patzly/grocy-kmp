@@ -931,6 +931,11 @@
   <string name="booking_unknown_code_message">Žádný uložený produkt se nejmenuje „%1$s“. Jak chcete pokračovat?</string>
   <string name="booking_add_as_new_product">Přidat jako nový produkt</string>
   <string name="booking_add_as_barcode">Přidat jako čárový kód k existujícímu produktu</string>
+  <string name="booking_add_as_new_product_with_barcode">Přidat jako nový produkt a předvyplnit čárový kód</string>
+  <string name="booking_external_barcode_lookup">Čtení čárového kódu modulem aplikace</string>
+  <string name="booking_external_lookup_nothing_found">Pro tento čárový kód nebylo nic nalezeno</string>
+  <string name="booking_scan_again">Skenovat znovu</string>
+  <string name="product_picker_workflow_hint">Zadejte název nového produktu nebo čárový kód a stiskněte Enter nebo opusťte pole pro spuštění postupu</string>
   <string name="booking_unit_required">Měrná jednotka je povinný údaj</string>
   <string name="booking_tare_info">Je aktivní tára, prosím zvažte včetně nádoby, její váha bude automaticky odečtena</string>
   <string name="booking_purchased_date_required">Datum nákupu je povinné</string>

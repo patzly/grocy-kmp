@@ -903,6 +903,11 @@
   <string name="booking_unknown_code_message">"%1$s" n'a pas été retrouvé en tant que produit, comment voulez-vous procéder ?</string>
   <string name="booking_add_as_new_product">Ajouter un nouveau produit</string>
   <string name="booking_add_as_barcode">Ajouter en tant que code-barres à un produit existant</string>
+  <string name="booking_add_as_new_product_with_barcode">Ajouter un nouveau produit et pré-renseigner le code-barres</string>
+  <string name="booking_external_barcode_lookup">Lecture externe de codes-barres</string>
+  <string name="booking_external_lookup_nothing_found">Rien n'a été trouvé pour le code-barres reçu</string>
+  <string name="booking_scan_again">Scanner à nouveau</string>
+  <string name="product_picker_workflow_hint">Saisissez le nom d'un nouveau produit ou un code-barres et appuyez sur Entrée ou quittez le champ pour lancer un processus</string>
   <string name="booking_unit_required">Une unité est requise</string>
   <string name="booking_tare_info">Mode pesée activé, veuillez saisir le poids total sans tenir compte du récipient, appelé aussi "poids brut".</string>
   <string name="booking_purchased_date_required">Date d'achat obligatoire</string>

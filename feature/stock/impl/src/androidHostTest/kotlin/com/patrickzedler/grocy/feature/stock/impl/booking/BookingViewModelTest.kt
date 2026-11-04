@@ -3,6 +3,8 @@ package com.patrickzedler.grocy.feature.stock.impl.booking
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.ui.text.TextRange
 import app.cash.turbine.test
+import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.forms.ExternalLookupResult
 import com.patrickzedler.grocy.core.forms.FormFocusTarget
 import com.patrickzedler.grocy.core.forms.ScannerFieldState
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
@@ -11,6 +13,7 @@ import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.testing.MasterDataJson
 import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
 import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.TextContent
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -286,10 +289,24 @@ class BookingViewModelTest {
             scanner = ScannerFieldState(rememberedOpen = true),
         )
 
-        viewModel.onScanned("grcy:p:3")
+        viewModel.onScanned("Old cheese")
         advanceUntilIdle()
 
         assertTrue(viewModel.scanner.isOpen)
+    }
+
+    @Test
+    fun aGrocycodeThisPageDoesNotOfferAsksLikeInGrocy() = runTest(dispatcher) {
+        val viewModel = viewModel(
+            BookingKind.CONSUME,
+            scanner = ScannerFieldState(rememberedOpen = true),
+        )
+
+        viewModel.onScanned("grcy:p:3")
+        advanceUntilIdle()
+
+        assertEquals("grcy:p:3", viewModel.unknownProduct.input)
+        assertFalse(viewModel.scanner.isOpen)
     }
 
     @Test
@@ -302,7 +319,7 @@ class BookingViewModelTest {
         viewModel.onScanned("123456")
         assertFalse(viewModel.scanner.isOpen)
 
-        viewModel.dismissUnknownCode()
+        viewModel.dismissUnknownProduct()
         assertTrue(viewModel.scanner.isOpen)
     }
 
@@ -323,7 +340,7 @@ class BookingViewModelTest {
 
         assertFalse(viewModel.onTextSubmitted("Mil", hasSuggestion = true))
 
-        assertNull(viewModel.unknownCode)
+        assertNull(viewModel.unknownProduct.input)
     }
 
     @Test
@@ -332,7 +349,7 @@ class BookingViewModelTest {
 
         assertTrue(viewModel.onTextSubmitted("123456", hasSuggestion = false))
 
-        assertEquals("123456", viewModel.unknownCode)
+        assertEquals("123456", viewModel.unknownProduct.input)
     }
 
     @Test
@@ -463,8 +480,9 @@ class BookingViewModelTest {
         val viewModel = viewModel(BookingKind.PURCHASE)
 
         viewModel.onCode("123456", scanMode = false)
-        assertEquals("123456", viewModel.unknownCode)
-        viewModel.assignUnknownCode()
+        assertEquals("123456", viewModel.unknownProduct.input)
+        viewModel.unknownProduct.addAsBarcode()
+        viewModel.onBarcodeAssigned()
         viewModel.selectProduct(1)
         advanceUntilIdle()
         viewModel.form.amount.setTextAndPlaceCursorAtEnd("1")
@@ -477,7 +495,117 @@ class BookingViewModelTest {
             .let { Json.parseToJsonElement((it.body as TextContent).text).jsonObject }
         assertEquals("123456", barcode["barcode"]!!.jsonPrimitive.content)
         assertEquals(1, barcode["product_id"]!!.jsonPrimitive.int)
-        assertNull(viewModel.form.pendingBarcode)
+        assertNull(viewModel.unknownProduct.pendingBarcode)
+    }
+
+    @Test
+    fun aProductThePageDoesNotOfferShowsGrocysErrorUnderTheField() = runTest(dispatcher) {
+        val viewModel = viewModel(BookingKind.PURCHASE)
+        val key = viewModel.unknownProduct.fieldResetKey
+
+        assertTrue(viewModel.onTextSubmitted("Old cheese", hasSuggestion = false))
+
+        assertTrue(viewModel.unknownProduct.isNotOffered)
+        assertNull(viewModel.unknownProduct.input)
+        assertTrue(viewModel.unknownProduct.fieldResetKey != key)
+        assertEquals(FormFocusTarget.CODE_FIELD, viewModel.scanner.focusTarget)
+    }
+
+    @Test
+    fun choosingAProductEndsGrocysError() = runTest(dispatcher) {
+        val viewModel = viewModel(BookingKind.PURCHASE)
+        viewModel.onTextSubmitted("Old cheese", hasSuggestion = false)
+
+        viewModel.selectProduct(1)
+        advanceUntilIdle()
+
+        assertFalse(viewModel.unknownProduct.isNotOffered)
+    }
+
+    @Test
+    fun aScannedProductThePageDoesNotOfferKeepsScanningWithGrocysError() = runTest(dispatcher) {
+        val viewModel = viewModel(BookingKind.PURCHASE)
+        if (!viewModel.scanner.isOpen) viewModel.scanner.toggle()
+
+        viewModel.onScanned("Old cheese")
+
+        assertTrue(viewModel.unknownProduct.isNotOffered)
+        assertTrue(viewModel.scanner.isOpen)
+    }
+
+    @Test
+    fun aProductCreatedForATypedNameIsChosenWhenItArrives() = runTest(dispatcher) {
+        val viewModel = viewModel(BookingKind.PURCHASE)
+        val products = viewModel.options.value!!.products
+        assertTrue(viewModel.onTextSubmitted("Brand new", hasSuggestion = false))
+        assertEquals("Brand new", viewModel.unknownProduct.input)
+
+        val request = viewModel.unknownProduct.newProductWithName(products)
+        assertEquals("Brand new", request.name)
+        assertNull(viewModel.unknownProduct.pendingBarcode)
+        val created = environment.repository.saveProduct(
+            products.first().copy(id = MasterDataRepository.NEW_OBJECT_ID, name = "Brand new"),
+        )
+        advanceUntilIdle()
+
+        assertEquals(created, viewModel.form.product?.id)
+        assertEquals(FormFocusTarget.NEXT_FIELD, viewModel.scanner.focusTarget)
+    }
+
+    @Test
+    fun choosingAnotherProductStopsWaitingForTheCreatedOne() = runTest(dispatcher) {
+        val viewModel = viewModel(BookingKind.PURCHASE)
+        val products = viewModel.options.value!!.products
+        viewModel.onCode("Brand new", scanMode = false)
+        viewModel.unknownProduct.newProductWithName(products)
+
+        viewModel.selectProduct(1)
+        advanceUntilIdle()
+        environment.repository.saveProduct(
+            products.first().copy(id = MasterDataRepository.NEW_OBJECT_ID, name = "Brand new"),
+        )
+        advanceUntilIdle()
+
+        assertEquals(1, viewModel.form.product?.id)
+    }
+
+    @Test
+    fun consumeOnlyOffersToAssignLikeGrocy() = runTest(dispatcher) {
+        assertFalse(viewModel(BookingKind.CONSUME).unknownProduct.canCreate)
+        assertTrue(viewModel(BookingKind.INVENTORY).unknownProduct.canCreate)
+    }
+
+    @Test
+    fun textLeftBehindForTheScannerAsksNothing() = runTest(dispatcher) {
+        val viewModel = viewModel(BookingKind.PURCHASE)
+        viewModel.scanner.toggle()
+        if (!viewModel.scanner.isOpen) viewModel.scanner.toggle()
+
+        assertFalse(viewModel.onTextSubmitted("Unfinis", hasSuggestion = false))
+
+        assertNull(viewModel.unknownProduct.input)
+    }
+
+    @Test
+    fun aFoundExternalLookupOpensTheProductAndChoosesItsBarcode() = runTest(dispatcher) {
+        server.respond(
+            "/api/stock/barcodes/external-lookup/123456",
+            HttpStatusCode.OK,
+            """{"id":"1","name":"Found"}""",
+        )
+        val viewModel = viewModel(BookingKind.PURCHASE)
+        viewModel.onCode("123456", scanMode = false)
+
+        viewModel.events.test {
+            viewModel.lookUpExternally()
+            advanceUntilIdle()
+
+            assertEquals(
+                BookingEvent.ExternalLookup(ExternalLookupResult.Found(1)),
+                awaitItem(),
+            )
+        }
+        assertNull(viewModel.unknownProduct.input)
     }
 
     @Test
@@ -510,7 +638,8 @@ class BookingViewModelTest {
 
     private suspend fun TestScope.bookWithNewBarcode(viewModel: BookingViewModel): JsonObject {
         viewModel.onCode("123456", scanMode = false)
-        viewModel.assignUnknownCode()
+        viewModel.unknownProduct.addAsBarcode()
+        viewModel.onBarcodeAssigned()
         viewModel.selectProduct(1)
         advanceUntilIdle()
         viewModel.form.amount.setTextAndPlaceCursorAtEnd("3")
@@ -526,7 +655,7 @@ class BookingViewModelTest {
     fun aProductCreatedForAnUnknownCodeIsChosenWhenItsBarcodeArrives() = runTest(dispatcher) {
         val viewModel = viewModel(BookingKind.PURCHASE)
         viewModel.onCode("123456", scanMode = false)
-        viewModel.keepUnknownCodeForNewProduct()
+        viewModel.unknownProduct.newProductWithBarcode()
         advanceUntilIdle()
         assertNull(viewModel.form.product)
 

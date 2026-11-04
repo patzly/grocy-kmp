@@ -5,14 +5,17 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
+import com.patrickzedler.grocy.core.forms.ExternalLookupResult
 import com.patrickzedler.grocy.core.forms.FieldError
 import com.patrickzedler.grocy.core.forms.FormFocusTarget
 import com.patrickzedler.grocy.core.forms.ObjectField
 import com.patrickzedler.grocy.core.forms.ObjectFormState
 import com.patrickzedler.grocy.core.forms.ObjectFormViewModel
 import com.patrickzedler.grocy.core.forms.ScannerFieldState
+import com.patrickzedler.grocy.core.forms.UnknownProductFlow
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
@@ -27,7 +30,14 @@ import com.patrickzedler.grocy.core.productcard.itemUnits
 import com.patrickzedler.grocy.core.productcard.productIdForCode
 import com.patrickzedler.grocy.core.productcard.toItem
 import com.patrickzedler.grocy.core.productcard.validate
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
 /**
  * Grocy's shopping list item form: list, product (also scanned), amount in one of the
@@ -40,9 +50,10 @@ import kotlinx.coroutines.flow.first
 internal class ShoppingListItemFormState(
     val inputs: ShoppingListItemInputs,
     initialProductId: Int?,
-    val products: List<Product>,
-    private val barcodes: List<ProductBarcode>,
-    private val resolved: List<ResolvedQuantityUnitConversion>,
+    products: List<Product>,
+    private var allProducts: List<Product>,
+    barcodes: List<ProductBarcode>,
+    resolved: List<ResolvedQuantityUnitConversion>,
     private val quantityUnits: List<QuantityUnit>,
     /** Whether the item is done, which the form never changes. */
     val done: Boolean,
@@ -52,6 +63,15 @@ internal class ShoppingListItemFormState(
 
     var productId by mutableStateOf(initialProductId)
         private set
+
+    var products by mutableStateOf(products)
+        private set
+
+    private var barcodes = barcodes
+    private var resolved = resolved
+
+    /** Grocy's "Create or assign product" for what names no product. */
+    val unknownProduct = UnknownProductFlow()
 
     var isProductUnmatched by mutableStateOf(false)
 
@@ -70,6 +90,7 @@ internal class ShoppingListItemFormState(
     fun selectProduct(id: Int?) {
         if (id == productId) return
         productId = id
+        if (id != null) unknownProduct.stopWaiting()
         val product = products.firstOrNull { it.id == id }
         val units = itemUnits(product, resolved, quantityUnits)
         inputs.setUnits(
@@ -83,21 +104,74 @@ internal class ShoppingListItemFormState(
         if (product != null) scanner.onValueChosen()
     }
 
-    /** A scanned code: its product is chosen and the amount is next; false if it has none. */
-    fun onScanned(code: String): Boolean {
-        val product = productForCode(code) ?: return false
+    /** A scanned code: its product is chosen and the amount is next, else Grocy's question. */
+    fun onScanned(code: String) {
+        val product = productForCode(code)
+        if (product == null) {
+            unknownProduct.onTextWithoutProduct(code, false, allProducts, barcodes)
+            // A code the form does not offer keeps scanning, a question needs its answer
+            if (unknownProduct.input != null) scanner.closeWithoutFocus()
+            return
+        }
+        unknownProduct.stopWaiting()
         selectProduct(product.id)
         scanner.onScanned()
+        scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
+    }
+
+    /**
+     * Text submitted in the product field, which a barcode reader types like a keyboard, or left
+     * standing in it: a code chooses its product, other text asks Grocy's question unless a
+     * suggestion would take it; so does the scanner opening, which only takes the focus away.
+     */
+    fun onTextSubmitted(text: String, hasSuggestion: Boolean): Boolean {
+        if (scanner.isOpen) return false
+        val product = productForCode(text)
+        if (product == null) {
+            val used = unknownProduct
+                .onTextWithoutProduct(text, hasSuggestion, allProducts, barcodes)
+            // Grocy's error leaves the focus in the field for the next try
+            if (unknownProduct.isNotOffered) scanner.requestFocus(FormFocusTarget.CODE_FIELD)
+            return used
+        }
+        unknownProduct.stopWaiting()
+        selectProduct(product.id)
         scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
         return true
     }
 
-    /** Text submitted in the product field, which a barcode reader types like a keyboard. */
-    fun onTextSubmitted(text: String): Boolean {
-        val product = productForCode(text) ?: return false
-        selectProduct(product.id)
-        scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
-        return true
+    fun dismissUnknownProduct() {
+        unknownProduct.dismiss()
+        scanner.onFormReset()
+    }
+
+    /** Grocy's "Add as barcode to existing product": the user chooses the product now. */
+    fun onBarcodeAssigned() {
+        selectProduct(null)
+        scanner.requestFocus(FormFocusTarget.CODE_FIELD)
+    }
+
+    /** Grocy's camera button in the question: on with the next code. */
+    fun scanAgain() {
+        selectProduct(null)
+        if (!scanner.isOpen) scanner.toggle()
+    }
+
+    /** A product created meanwhile becomes a choice; the one the question waited for is chosen. */
+    fun updateChoices(
+        allProducts: List<Product>,
+        products: List<Product>,
+        barcodes: List<ProductBarcode>,
+        resolved: List<ResolvedQuantityUnitConversion>,
+    ) {
+        this.allProducts = allProducts
+        this.products = products
+        this.barcodes = barcodes
+        this.resolved = resolved
+        unknownProduct.takeCreatedProduct(products, barcodes)?.let { created ->
+            selectProduct(created.id)
+            scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
+        }
     }
 
     /** The product of a scanned grocycode or barcode, null if none of the choices. */
@@ -123,6 +197,14 @@ internal class ShoppingListItemViewModel(
         ScannerFieldState(hasValue = it)
     },
 ) : ObjectFormViewModel<ShoppingListItemValues, ShoppingListItemFormState>(id, masterData) {
+
+    /** The server's barcode plugin, which Grocy's question offers. */
+    val barcodeLookupPlugin: Flow<String?> = repository.serverConfig.map { it.barcodeLookupPlugin }
+
+    private val externalLookups = Channel<ExternalLookupResult>(Channel.BUFFERED)
+
+    /** What Grocy's "External barcode lookup" found, for the screen to show. */
+    val externalLookupResults: Flow<ExternalLookupResult> = externalLookups.receiveAsFlow()
 
     override val userfieldEntity = MasterDataRepository.SHOPPING_LIST
 
@@ -168,10 +250,11 @@ internal class ShoppingListItemViewModel(
                 ?: "1",
             initialNote = item?.note.orEmpty(),
         )
-        return ShoppingListItemFormState(
+        val form = ShoppingListItemFormState(
             inputs = inputs,
             initialProductId = product?.id,
             products = products,
+            allProducts = repository.products.first(),
             barcodes = repository.productBarcodes.first(),
             resolved = resolved,
             quantityUnits = quantityUnits,
@@ -183,6 +266,28 @@ internal class ShoppingListItemViewModel(
                 }
             },
         )
+        viewModelScope.launch {
+            combine(
+                repository.products,
+                repository.productBarcodes,
+                repository.resolvedQuantityUnitConversions,
+            ) { allProducts, barcodes, conversions ->
+                form.updateChoices(
+                    allProducts,
+                    allProducts.filter { it.active }.sortedBy { it.name.lowercase() },
+                    barcodes,
+                    conversions,
+                )
+            }.collect()
+        }
+        return form
+    }
+
+    /** Grocy's "External barcode lookup"; a found product is shown for checking, then chosen. */
+    fun lookUpExternally(form: ShoppingListItemFormState) {
+        viewModelScope.launch {
+            externalLookups.send(form.unknownProduct.lookUpExternally(repository))
+        }
     }
 
     override suspend fun userfieldValues(id: Int): Map<String, String?> =
@@ -199,8 +304,11 @@ internal class ShoppingListItemViewModel(
         id: Int,
         form: ShoppingListItemFormState,
         userfields: Map<String, String?>,
-    ): Int = shoppingLists.saveItem(
-        item = form.values().toItem(id, form.done, form.inputs.unit),
-        userfields = userfields,
-    )
+    ): Int {
+        form.productId?.let { form.unknownProduct.savePendingBarcode(it, repository) }
+        return shoppingLists.saveItem(
+            item = form.values().toItem(id, form.done, form.inputs.unit),
+            userfields = userfields,
+        )
+    }
 }

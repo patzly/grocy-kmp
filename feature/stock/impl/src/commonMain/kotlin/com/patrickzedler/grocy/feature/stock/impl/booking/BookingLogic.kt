@@ -40,7 +40,7 @@ internal sealed interface CodeMatch {
         val stockId: String? = null,
     ) : CodeMatch
 
-    /** A known product the page does not offer, e.g. one not in stock on the consume page. */
+    /** The name or barcode of a product the page does not offer, e.g. one not in stock. */
     data object NotOffered : CodeMatch
 
     /** Nothing known, Grocy's "Create or assign product" workflow. */
@@ -61,13 +61,13 @@ internal fun matchCode(
     val grocycode = ProductGrocycode.parse(trimmed)
     val barcode = if (grocycode == null) barcodes.firstOrNull { it.barcode == trimmed } else null
     val productId = grocycode?.productId ?: barcode?.productId
-        ?: return if (all.any { it.name.equals(trimmed, ignoreCase = true) }) {
+    val product = offered.firstOrNull { it.id == productId }
+        // Grocy only looks for a barcode or name then, which a grocycode is neither of
+        ?: return if (barcode != null || all.any { it.name.equals(trimmed, ignoreCase = true) }) {
             CodeMatch.NotOffered
         } else {
             CodeMatch.Unknown
         }
-    val product = offered.firstOrNull { it.id == productId }
-        ?: return if (all.any { it.id == productId }) CodeMatch.NotOffered else CodeMatch.Unknown
     return CodeMatch.Found(product, barcode, grocycode?.stockId)
 }
 

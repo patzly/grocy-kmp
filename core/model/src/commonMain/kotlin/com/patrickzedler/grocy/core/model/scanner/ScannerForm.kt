@@ -10,6 +10,8 @@ enum class ScannerForm {
     BARCODE,
     CHORE_TRACKING,
     BATTERY_TRACKING,
+    RECIPE_INGREDIENT,
+    MEAL_PLAN_PRODUCT,
     ;
 
     companion object {

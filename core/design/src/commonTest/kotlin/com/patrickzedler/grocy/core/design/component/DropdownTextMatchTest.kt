@@ -49,4 +49,15 @@ class DropdownTextMatchTest {
         assertTrue(selectsOnFocus(KeyboardType.Number))
         assertFalse(selectsOnFocus(KeyboardType.Text))
     }
+
+    @Test
+    fun onlyASuggestionContainingTheTextIsLiteral() {
+        val milk = DropdownOption(1, "Milk", searchTexts = listOf("4001"))
+
+        assertTrue(hasLiteralSuggestion(listOf(milk), "mil"))
+        assertTrue(hasLiteralSuggestion(listOf(milk), "400"))
+        // Found by forgiving a typo: a new name, not this product
+        assertFalse(hasLiteralSuggestion(listOf(milk), "Milh"))
+        assertFalse(hasLiteralSuggestion(emptyList(), "Milk"))
+    }
 }

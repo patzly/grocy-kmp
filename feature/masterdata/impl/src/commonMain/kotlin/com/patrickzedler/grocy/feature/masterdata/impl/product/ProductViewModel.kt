@@ -101,8 +101,12 @@ internal class ProductViewModel(
     productId: Int?,
     private val repository: MasterDataRepository,
     private val decimalSeparator: Char = platformDecimalSeparator(),
-    /** The scanned code a new product is created for, Grocy's "Add as new product". */
+    /** The code a new product is created for, Grocy's "Add as new product and prefill barcode". */
     barcode: String? = null,
+    /** The text a new product is named after, Grocy's "Add as new product". */
+    private val presetName: String? = null,
+    /** Goes back once the product is created, like Grocy's `returnto`. */
+    val returnsWhenSaved: Boolean = false,
     private val productFacts: ProductFactsRepository? = null,
     private val language: String = "en",
     private val factsTexts: ProductFactsTexts = ProductFactsTexts(),
@@ -216,6 +220,7 @@ internal class ProductViewModel(
         val decimals = settings.stockDecimalPlacesAmounts
         val values = product?.toFormValues(decimals, decimalSeparator)
             ?: newProductValues(settings.productPresets, features)
+                .let { new -> presetName?.let { new.copy(name = it) } ?: new }
         original = product
         originalDescriptionText = values.description
         val userfields = repository.userfields(MasterDataRepository.PRODUCTS).first().map { field ->

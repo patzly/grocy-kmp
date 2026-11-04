@@ -257,6 +257,8 @@ fun DropdownItem(
     autoFocus: Boolean = false,
     isLastField: Boolean = false,
     onSubmitText: ((text: String, hasSuggestion: Boolean) -> Boolean)? = null,
+    submitsTextOnLeave: Boolean = false,
+    textResetKey: Any? = null,
     onKeyboardNext: (() -> Unit)? = null,
     onFocusChange: (Boolean) -> Unit = {},
 ) {
@@ -276,6 +278,8 @@ fun DropdownItem(
             autoFocus = autoFocus,
             isLastField = isLastField,
             onSubmitText = onSubmitText,
+            submitsTextOnLeave = submitsTextOnLeave,
+            textResetKey = textResetKey,
             onKeyboardNext = onKeyboardNext,
             onFocusChange = onFocusChange,
         )

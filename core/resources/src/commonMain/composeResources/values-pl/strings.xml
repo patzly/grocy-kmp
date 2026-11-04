@@ -931,6 +931,11 @@
   <string name="booking_unknown_code_message">Produkt "%1$s" nie istnieje. Co dalej?</string>
   <string name="booking_add_as_new_product">Dodaj jako nowy produkt</string>
   <string name="booking_add_as_barcode">Dodaj jako kod kreskowy do istniejącego produktu</string>
+  <string name="booking_add_as_new_product_with_barcode">Dodaj jako nowy produkt i dodaj kod kreskowy</string>
+  <string name="booking_external_barcode_lookup">Wyszukanie kodu kreskowego w zewnętrznej aplikacji</string>
+  <string name="booking_external_lookup_nothing_found">Nie znaleziono niczego dla podanego kodu kreskowego</string>
+  <string name="booking_scan_again">Skanuj ponownie</string>
+  <string name="product_picker_workflow_hint">Wpisz nazwę nowego produktu lub kod kreskowy i naciśnij Enter albo opuść pole, aby rozpocząć proces</string>
   <string name="booking_unit_required">Jednostka ilości jest wymagana</string>
   <string name="booking_tare_info">Włączona obsługa masy tary - zważ całe opakowanie, kwota zostanie automatycznie obliczona</string>
   <string name="booking_purchased_date_required">Data zakupu jest wymagana</string>

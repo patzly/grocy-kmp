@@ -875,6 +875,11 @@
   <string name="booking_unknown_code_message">%1$s nem feleltethető meg terméknek, hogyan folytatod?</string>
   <string name="booking_add_as_new_product">Új termék hozzáadása</string>
   <string name="booking_add_as_barcode">Hozzáadás vonalkódként létező termékhez</string>
+  <string name="booking_add_as_new_product_with_barcode">Hozzáadás új termékként és a vonalkód kitöltése</string>
+  <string name="booking_external_barcode_lookup">Külső vonalkódkeresés</string>
+  <string name="booking_external_lookup_nothing_found">Nem található semmi a megadott vonalkódhoz</string>
+  <string name="booking_scan_again">Újraolvasás</string>
+  <string name="product_picker_workflow_hint">Írj be egy új terméknevet vagy vonalkódot, majd nyomj Entert vagy lépj ki a mezőből a folyamat elindításához</string>
   <string name="booking_unit_required">A mennyiségi egység megadása kötelező</string>
   <string name="booking_tare_info">Tárázás bekapcsolva - kérlek mérd le az egész tárolót, a megfelelő érték automatán számolódik</string>
   <string name="booking_purchased_date_required">A vásárlás dátumának megadása kötelező</string>

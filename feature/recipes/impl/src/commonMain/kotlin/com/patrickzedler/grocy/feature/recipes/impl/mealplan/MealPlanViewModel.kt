@@ -8,11 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
+import com.patrickzedler.grocy.core.data.settings.ScannerFormsRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.data.util.RefreshController
 import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.forms.ChangeError
+import com.patrickzedler.grocy.core.forms.ScannerFieldState
 import com.patrickzedler.grocy.core.forms.changeErrorOf
+import com.patrickzedler.grocy.core.forms.fieldState
 import com.patrickzedler.grocy.core.forms.ignoringServerErrors
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.recipes.DAYS_PER_WEEK
@@ -20,6 +23,7 @@ import com.patrickzedler.grocy.core.model.recipes.MealPlanEntry
 import com.patrickzedler.grocy.core.model.recipes.MealPlanEntryType
 import com.patrickzedler.grocy.core.model.recipes.MealPlanSection
 import com.patrickzedler.grocy.core.model.recipes.mealPlanWeekStart
+import com.patrickzedler.grocy.core.model.scanner.ScannerForm
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.text.isoDateOf
 import com.patrickzedler.grocy.core.model.text.localeFirstDayOfWeek
@@ -108,6 +112,7 @@ internal class MealPlanViewModel(
     private val recipes: RecipesRepository,
     private val masterData: MasterDataRepository,
     private val stock: StockRepository,
+    private val scannerForms: ScannerFormsRepository? = null,
     initialDay: String? = null,
     private val today: () -> Long = ::todayEpochDay,
     private val localeFirstDay: () -> Int = ::localeFirstDayOfWeek,
@@ -211,7 +216,10 @@ internal class MealPlanViewModel(
         state.isSaving = true
         state.error = null
         viewModelScope.launch {
-            val error = changeErrorOf { mealPlan.saveEntry(entry) }
+            val error = changeErrorOf {
+                entry.productId?.let { state.unknownProduct.savePendingBarcode(it, masterData) }
+                mealPlan.saveEntry(entry)
+            }
             state.isSaving = false
             if (error == null) {
                 if ((dialog as? MealPlanDialog.Entry)?.state === state) dialog = null
@@ -364,16 +372,25 @@ internal class MealPlanViewModel(
     private fun openEntryDialog(type: MealPlanEntryType, original: MealPlanEntry?, day: String) {
         if (isRunning) return
         viewModelScope.launch {
+            val allProducts = masterData.products.first()
             val choices = MealPlanChoices(
                 recipes = recipes.recipes.first(),
-                products = masterData.products.first().filter { it.active },
+                products = allProducts.filter { it.active },
+                allProducts = allProducts,
+                barcodes = masterData.productBarcodes.first(),
                 sections = mealPlan.sections.first().ifEmpty { listOf(DefaultSection) },
                 units = masterData.quantityUnits.first(),
                 conversions = masterData.resolvedQuantityUnitConversions.first(),
                 decimals = masterData.userSettings.first().stockDecimalPlacesAmounts,
                 decimalSeparator = decimalSeparator,
             )
-            dialog = MealPlanDialog.Entry(MealPlanEntryDialogState(type, original, day, choices))
+            // Only a new product entry starts in its picker, or with the scanner used there last
+            val hasValue = original != null || type != MealPlanEntryType.PRODUCT
+            val scanner = scannerForms?.fieldState(ScannerForm.MEAL_PLAN_PRODUCT, hasValue)
+                ?: ScannerFieldState(hasValue = hasValue)
+            dialog = MealPlanDialog.Entry(
+                MealPlanEntryDialogState(type, original, day, choices, scanner),
+            )
         }
     }
 

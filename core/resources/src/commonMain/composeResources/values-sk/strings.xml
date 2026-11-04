@@ -931,6 +931,11 @@
   <string name="booking_unknown_code_message">"%1$s" nebol rozoznaný ako výrobok, ako si želáte pokračovať?</string>
   <string name="booking_add_as_new_product">Pridať nový výrobok</string>
   <string name="booking_add_as_barcode">Pridať ako čiarový kód k existujúcemu výrobku</string>
+  <string name="booking_add_as_new_product_with_barcode">Pridať ako nový produkt a predvyplniť čiarový kód</string>
+  <string name="booking_external_barcode_lookup">Externé vyhľadávanie čiarového kódu</string>
+  <string name="booking_external_lookup_nothing_found">Pre zadaný čiarový kód sa nič nenašlo</string>
+  <string name="booking_scan_again">Skenovať znova</string>
+  <string name="product_picker_workflow_hint">Zadajte názov nového produktu alebo čiarový kód a stlačte Enter alebo opustite pole na spustenie postupu</string>
   <string name="booking_unit_required">Je vyžadovaná jednotka množstva</string>
   <string name="booking_tare_info">Je aktívna tara. Prosím, odvážte celý výrobok, vrátane obalu, jeho hmotnosť bude automaticky odrátaná.</string>
   <string name="booking_purchased_date_required">Vyžaduje sa zadanie dátumu kúpy</string>

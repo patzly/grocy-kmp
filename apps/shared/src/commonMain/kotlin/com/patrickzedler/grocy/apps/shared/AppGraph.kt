@@ -422,6 +422,8 @@ class AppGraph(
     }
 
     internal val recipesDependencies: RecipesDependencies = object : RecipesDependencies {
+        override val scannerForms: ScannerFormsRepository
+            get() = scannerFormsRepository
         override val masterDataRepository: MasterDataRepository
             get() = this@AppGraph.masterDataRepository
         override val recipesRepository: RecipesRepository

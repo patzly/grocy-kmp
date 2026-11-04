@@ -930,6 +930,11 @@
   <string name="booking_unknown_code_message">"%1$s" не розпізнається як продукт. Як бути?</string>
   <string name="booking_add_as_new_product">Додати як новий продукт</string>
   <string name="booking_add_as_barcode">Додати як варіант штрихкоду до існуючого продукту</string>
+  <string name="booking_add_as_new_product_with_barcode">Додати як новий продукт із таким штрихкодом</string>
+  <string name="booking_external_barcode_lookup">Зовнішній пошук штрихкоду</string>
+  <string name="booking_external_lookup_nothing_found">Для вказаного штрихкоду нічого не знайдено</string>
+  <string name="booking_scan_again">Сканувати знову</string>
+  <string name="product_picker_workflow_hint">Введіть назву нового продукту або штрихкод і натисніть Enter або вийдіть із поля, щоб розпочати процес</string>
   <string name="booking_unit_required">Одиниця вимірювання є обов'язковою</string>
   <string name="booking_tare_info">Задіяно використання тари - будь ласка зважте разом з тарою. Кількість буде обчислено автоматично</string>
   <string name="booking_purchased_date_required">Необхідна дата придбання</string>

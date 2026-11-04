@@ -146,6 +146,7 @@ class GrocyApiMasterDataTest {
                     """"FEATURE_FLAG_STOCK_PRICE_TRACKING":"0",""" +
                     """"FEATURE_FLAG_LABEL_PRINTER":"1",""" +
                     """"FEATURE_FLAG_DISABLE_BROWSER_BARCODE_CAMERA_SCANNING":true,""" +
+                    """"STOCK_BARCODE_LOOKUP_PLUGIN":"DemoPlugin",""" +
                     """"ENERGY_UNIT":"kJ","LABEL_PRINTER_WEBHOOK":"https://secret.example"}""",
             )
         }
@@ -157,6 +158,7 @@ class GrocyApiMasterDataTest {
         assertTrue(config.labelPrinter)
         assertFalse(config.browserBarcodeCameraScanning)
         assertEquals("kJ", config.energyUnit)
+        assertEquals("DemoPlugin", config.barcodeLookupPlugin)
         assertEquals("USD", config.currency)
         // Missing flags keep Grocy's defaults
         assertTrue(config.stockProductFreezing)

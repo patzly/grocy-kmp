@@ -903,6 +903,11 @@
   <string name="booking_unknown_code_message">"%1$s" no se pudo asociar a ningún producto, ¿cómo quiere proceder?</string>
   <string name="booking_add_as_new_product">Añadir como un nuevo producto</string>
   <string name="booking_add_as_barcode">Añadir como código de barras de un producto existente</string>
+  <string name="booking_add_as_new_product_with_barcode">Añadir como producto nuevo y rellenar el código de barras</string>
+  <string name="booking_external_barcode_lookup">Búsqueda externa de código de barras</string>
+  <string name="booking_external_lookup_nothing_found">No se encontró nada para el código de barras indicado</string>
+  <string name="booking_scan_again">Escanear de nuevo</string>
+  <string name="product_picker_workflow_hint">Escribe un nombre de producto nuevo o un código de barras y pulsa Intro o sal del campo para iniciar un flujo de trabajo</string>
   <string name="booking_unit_required">Es necesaria una unidad</string>
   <string name="booking_tare_info">Peso del contenedor activado. Por favor, pesa el contenedor entero, la cantidad será calculada automáticamente</string>
   <string name="booking_purchased_date_required">Es necesaria la fecha de compra</string>

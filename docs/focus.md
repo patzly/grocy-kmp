@@ -32,7 +32,7 @@ and waits for the window's focus, without which a dialog would not get its keybo
 ## Scanner or keyboard
 
 Forms whose first field can be scanned (Purchase, Consume, Transfer, Inventory, shopping list
-item, barcode dialog, chore and battery tracking) remember per form (`ScannerForm`) what the user entered with last:
+item, recipe ingredient, meal plan product, barcode dialog, chore and battery tracking) remember per form (`ScannerForm`) what the user entered with last:
 
 - The form opens with the scanner and no keyboard if the scanner was used last, else with the
   focus in the field and the keyboard. It shows that in its first frame, the repository is an
@@ -75,6 +75,9 @@ A new form with a scanner adds a `ScannerForm` entry, gets its state from
   field while it has no product, because the disabled amount cannot take it.
 - A barcode reader types like a keyboard and ends with Enter: pickers that accept codes use
   `onSubmitText`, so a code works like a scanned one, in scan mode too.
+- Product pickers with Grocy's "Create or assign product" ask for text no suggestion contains, also
+  when the focus leaves the field (`submitsTextOnLeave`, `docs/features/master-data.md`). After
+  "Cancel" the field takes the focus back with its text selected, so typing replaces it.
 
 ## Submitting
 

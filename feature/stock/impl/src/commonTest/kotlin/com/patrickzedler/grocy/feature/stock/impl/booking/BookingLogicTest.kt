@@ -63,11 +63,19 @@ class BookingLogicTest {
     }
 
     @Test
-    fun knownProductsThePageDoesNotOfferAreNotOffered() {
+    fun namesAndBarcodesOfProductsThePageDoesNotOfferAreNotOffered() {
+        val offered = listOf(milk)
+        val barcode = ProductBarcode(1, productId = 3, barcode = "4001")
+
+        assertEquals(CodeMatch.NotOffered, matchCode("bread", offered, products, emptyList()))
+        assertEquals(CodeMatch.NotOffered, matchCode("4001", offered, products, listOf(barcode)))
+    }
+
+    @Test
+    fun aGrocycodeOfAProductThePageDoesNotOfferIsUnknownLikeInGrocy() {
         val offered = listOf(milk)
 
-        assertEquals(CodeMatch.NotOffered, matchCode("grcy:p:4", offered, products, emptyList()))
-        assertEquals(CodeMatch.NotOffered, matchCode("bread", offered, products, emptyList()))
+        assertEquals(CodeMatch.Unknown, matchCode("grcy:p:3", offered, products, emptyList()))
     }
 
     @Test

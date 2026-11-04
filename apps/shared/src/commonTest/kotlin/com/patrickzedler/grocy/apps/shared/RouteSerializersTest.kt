@@ -90,6 +90,7 @@ class RouteSerializersTest {
         ProductsRoute,
         ProductRoute(),
         ProductRoute(productId = 7),
+        ProductRoute(name = "New", returnsWhenSaved = true),
         LocationsRoute,
         LocationRoute(),
         LocationRoute(id = 3),

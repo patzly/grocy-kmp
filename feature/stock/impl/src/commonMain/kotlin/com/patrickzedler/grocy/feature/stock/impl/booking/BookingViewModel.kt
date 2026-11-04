@@ -11,7 +11,9 @@ import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.forms.ChangeError
+import com.patrickzedler.grocy.core.forms.ExternalLookupResult
 import com.patrickzedler.grocy.core.forms.FormFocusTarget
+import com.patrickzedler.grocy.core.forms.UnknownProductFlow
 import com.patrickzedler.grocy.core.forms.ScannerFieldState
 import com.patrickzedler.grocy.core.forms.changeErrorOf
 import com.patrickzedler.grocy.core.forms.changedValues
@@ -91,6 +93,8 @@ internal sealed interface BookingNote {
 }
 
 internal sealed interface BookingEvent {
+    data class ExternalLookup(val result: ExternalLookupResult) : BookingEvent
+
     data class Booked(
         val kind: BookingKind,
         val transactionId: String?,
@@ -112,7 +116,6 @@ internal sealed interface BookingEvent {
     ) : BookingEvent
 
     /** "This product is not in stock". */
-    data object NotOffered : BookingEvent
 
     data object ScanModeIncomplete : BookingEvent
 
@@ -190,9 +193,10 @@ internal class BookingViewModel(
     var recipes by mutableStateOf<Map<Int, String>>(emptyMap())
         private set
 
-    /** A code that names no product, for Grocy's "Create or assign product" question. */
-    var unknownCode by mutableStateOf<String?>(null)
-        private set
+    /** Grocy's "Create or assign product"; consume and transfer only assign, like Grocy. */
+    val unknownProduct = UnknownProductFlow(
+        canCreate = kind == BookingKind.PURCHASE || kind == BookingKind.INVENTORY,
+    )
 
     private val eventChannel = Channel<BookingEvent>(Channel.BUFFERED)
     val events: Flow<BookingEvent> = eventChannel.receiveAsFlow()
@@ -201,9 +205,6 @@ internal class BookingViewModel(
 
     /** Book as soon as the chosen product's stock is loaded (scan mode, shopping list flow). */
     private var submitWhenReady = false
-
-    /** The code Grocy's "Add as new product" left for the product form. */
-    private var newProductCode: String? = null
 
     init {
         viewModelScope.launch {
@@ -255,6 +256,7 @@ internal class BookingViewModel(
             clearProduct()
             return
         }
+        unknownProduct.stopWaiting()
         form.usedBarcode = null
         choose(options, product)
         scanner.onValueChosen()
@@ -278,12 +280,14 @@ internal class BookingViewModel(
     }
 
     /**
-     * Text submitted in the product field, which a barcode reader types like a keyboard: a code
-     * is used like a scanned one, other text only when no suggestion would take it, for Grocy's
-     * "Create or assign product". False leaves it to the suggestions.
+     * Text submitted in the product field, which a barcode reader types like a keyboard, or left
+     * standing in it: a code is used like a scanned one, other text only when no suggestion would
+     * take it, for Grocy's "Create or assign product". False leaves it to the suggestions; so does
+     * the scanner opening, which takes the focus away without an answer in mind.
      */
     fun onTextSubmitted(text: String, hasSuggestion: Boolean): Boolean {
         val options = options.value ?: return false
+        if (scanner.isOpen) return false
         val match = matchCode(text, offeredProducts(options), options.products, options.barcodes)
         if (match == CodeMatch.Unknown && hasSuggestion) return false
         onCode(text, isScanMode(options))
@@ -300,6 +304,7 @@ internal class BookingViewModel(
         val match = matchCode(code, offeredProducts(options), options.products, options.barcodes)
         when (match) {
             is CodeMatch.Found -> {
+                unknownProduct.stopWaiting()
                 form.usedBarcode = match.barcode
                 choose(options, match.product, match.barcode, match.stockId, scanMode)
                 if (!scanMode) scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
@@ -307,46 +312,45 @@ internal class BookingViewModel(
 
             CodeMatch.NotOffered -> {
                 clearProduct()
-                viewModelScope.launch { eventChannel.send(BookingEvent.NotOffered) }
+                unknownProduct.showNotOffered()
+                // Scanning goes on with the next code, typing with the next text
+                if (!scanner.isOpen) scanner.requestFocus(FormFocusTarget.CODE_FIELD)
             }
 
-            CodeMatch.Unknown -> unknownCode = code.trim()
+            CodeMatch.Unknown -> unknownProduct.ask(code)
         }
         return match
     }
 
-    fun dismissUnknownCode() {
-        unknownCode = null
+    fun dismissUnknownProduct() {
+        unknownProduct.dismiss()
         scanner.onFormReset()
     }
 
-    /**
-     * Grocy's "Add as barcode to existing product": the user chooses the product, the booking
-     * adds the barcode to it.
-     */
-    fun assignUnknownCode() {
-        form.pendingBarcode = unknownCode
-        unknownCode = null
+    /** Grocy's "Add as barcode to existing product": the user chooses the product now. */
+    fun onBarcodeAssigned() {
         clearProduct()
-        // Now the product is typed
         scanner.requestFocus(FormFocusTarget.CODE_FIELD)
     }
 
-    /**
-     * Grocy's "Add as new product": the product form adds the barcode with the product, which
-     * this page then chooses; the booking adds what it knows to that barcode.
-     */
-    fun keepUnknownCodeForNewProduct() {
-        form.pendingBarcode = unknownCode
-        newProductCode = unknownCode
-        unknownCode = null
+    /** Grocy's camera button in the question: on with the next code. */
+    fun scanAgain() {
+        clearProduct()
+        if (!scanner.isOpen) scanner.toggle()
+    }
+
+    /** Grocy's "External barcode lookup"; a found product is shown for checking, then chosen. */
+    fun lookUpExternally() {
+        viewModelScope.launch {
+            eventChannel.send(
+                BookingEvent.ExternalLookup(unknownProduct.lookUpExternally(masterData)),
+            )
+        }
     }
 
     private fun chooseCreatedProduct(options: BookingOptions) {
-        val code = newProductCode ?: return
-        val barcode = options.barcodes.firstOrNull { it.barcode == code } ?: return
-        val product = options.products.firstOrNull { it.id == barcode.productId } ?: return
-        newProductCode = null
+        val product = unknownProduct.takeCreatedProduct(options.products, options.barcodes)
+            ?: return
         form.usedBarcode = null
         choose(options, product)
         scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
@@ -801,7 +805,7 @@ internal class BookingViewModel(
 
     /** The barcode of Grocy's "Add as barcode" flow, and the used barcode's last price. */
     private suspend fun saveBarcodes(productId: Int) {
-        form.pendingBarcode?.let { code ->
+        unknownProduct.pendingBarcode?.let { code ->
             val withDefaults = kind == BookingKind.PURCHASE
             val withAmount = withDefaults && barcodeUsesAmount()
             // The product form may have created it already
@@ -820,7 +824,7 @@ internal class BookingViewModel(
                     userfields = emptyMap(),
                 )
             }?.let { eventChannel.send(BookingEvent.Failed(it)) }
-            form.pendingBarcode = null
+            unknownProduct.onBarcodeSaved()
         }
         val used = form.usedBarcode
         val price = parseDecimal(form.price.text.toString())

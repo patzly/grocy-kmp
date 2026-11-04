@@ -151,6 +151,8 @@ fun EntryProviderScope<NavKey>.masterDataEntries(
                     productId = route.productId,
                     repository = repository,
                     barcode = route.barcode,
+                    presetName = route.name,
+                    returnsWhenSaved = route.returnsWhenSaved,
                     productFacts = dependencies.productFactsRepository,
                     language = language,
                     factsTexts = productFactsTexts(),

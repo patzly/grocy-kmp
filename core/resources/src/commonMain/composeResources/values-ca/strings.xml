@@ -903,6 +903,11 @@
   <string name="booking_unknown_code_message">"%1$s" no s'ha pogut identificar com a producte, com vols procedir?</string>
   <string name="booking_add_as_new_product">Afegir com a nou producte</string>
   <string name="booking_add_as_barcode">Afegir com a codi de barres a un producte existent</string>
+  <string name="booking_add_as_new_product_with_barcode">Afegir com a nou producte amb el codi de barres</string>
+  <string name="booking_external_barcode_lookup">Cerca externa de codis de barres</string>
+  <string name="booking_external_lookup_nothing_found">No s'ha trobat res per al codi de barres indicat</string>
+  <string name="booking_scan_again">Torna a escanejar</string>
+  <string name="product_picker_workflow_hint">Escriu el nom d'un producte nou o un codi de barres i prem Retorn o surt del camp per iniciar un flux de treball</string>
   <string name="booking_unit_required">Es requereix una unitat</string>
   <string name="booking_tare_info">Maneig de la tara habilitat - si us plau pesa tot el contenidor, la quantitat publicada es calcularà automàticament</string>
   <string name="booking_purchased_date_required">Es requereix una data de compra</string>

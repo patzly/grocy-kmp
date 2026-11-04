@@ -874,6 +874,11 @@
   <string name="booking_unknown_code_message">"%1$s" kunde inte hittas som produkt, hur vill du fortsätta?</string>
   <string name="booking_add_as_new_product">Lägg till som ny produkt</string>
   <string name="booking_add_as_barcode">Lägg till som streckkod till befintlig produkt</string>
+  <string name="booking_add_as_new_product_with_barcode">Lägg till som ny produkt och fyll i streckkod</string>
+  <string name="booking_external_barcode_lookup">Extern streckkodssökning</string>
+  <string name="booking_external_lookup_nothing_found">Inget hittades för den angivna streckkoden</string>
+  <string name="booking_scan_again">Skanna igen</string>
+  <string name="product_picker_workflow_hint">Skriv ett nytt produktnamn eller en streckkod och tryck på Enter eller lämna fältet för att starta ett arbetsflöde</string>
   <string name="booking_unit_required">En mängdenhet krävs</string>
   <string name="booking_tare_info">Hantering av taravikt är aktiverad – väg hela behållaren. Mängden som ska registreras beräknas automatiskt.</string>
   <string name="booking_purchased_date_required">Inköpsdatum krävs</string>

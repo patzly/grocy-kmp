@@ -15,9 +15,9 @@ of them, from the start screen's buttons and the product overview's menu):
   top". The pure logic is tested: `bookableProducts` (purchase and inventory: active
   with own stock; consume: in stock, sub products included; transfer: own stock in stock),
   `matchCode` (barcode, grocycode `grcy:p:<id>[:<stock_id>]` of `ProductGrocycode`, a known
-  product the page does not offer is "not in stock", an unknown code asks Grocy's "Create or
-  assign product": add as barcode to the product chosen next, or as new product, the barcode
-  is saved with the booking), `pricePerStockUnit` (unit or total price, the tare weight left
+  name or barcode the page does not offer is Grocy's "not in stock" under the field, anything else
+  (also a grocycode of a product not offered) asks Grocy's "Create or assign product", see
+  `docs/features/master-data.md`), `pricePerStockUnit` (unit or total price, the tare weight left
   out), `purchaseDueDate` (the product's default only into an empty field, a freezer's over
   it), `amountLimits`/`validateBooking` (Grocy's number picker rules: smallest step, stock at
   the location or the chosen entry as maximum, parents without maximum, gross weight above
@@ -54,9 +54,7 @@ of them, from the start screen's buttons and the product overview's menu):
   (`BookingViewModel.shoppingListItem`) says what happens: Grocy's "Add this item to stock", or
   "Adding shopping list item %s of %s" for "Add all list items to stock"
   (`shoppingListPosition`, `shoppingListCount` of the route), and that booking removes the item.
-- An unknown code's "Add as new product" opens the product form with the code
-  (`ProductRoute(barcode)`, `docs/features/product-facts.md`), which adds it as barcode together
-  with the new product. The page waits for that barcode (`BookingViewModel.newProductCode`) and
-  then chooses the product, so the booking goes on after coming back. A purchase then updates
-  that barcode; only with "Use amount for barcode generation" (`barcodeUsesAmount`, on by
-  default) it adds the amount and unit that were booked.
+- Grocy's "Create or assign product" (`BookingViewModel.unknownProduct`, rules in
+  `docs/features/master-data.md`): consume and transfer only assign, like Grocy. A barcode added
+  this way is saved with the booking. A purchase updates that barcode; only with "Use amount for
+  barcode generation" (`barcodeUsesAmount`, on by default) it adds the amount and unit booked.

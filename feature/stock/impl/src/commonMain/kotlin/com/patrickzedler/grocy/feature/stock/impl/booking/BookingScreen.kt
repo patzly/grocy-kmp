@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -14,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -23,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -41,21 +38,20 @@ import com.patrickzedler.grocy.core.design.component.LocalFormFocus
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.NumberStepper
-import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
-import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
-import com.patrickzedler.grocy.core.design.component.clickCursor
-import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.rememberFormFocus
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.ChangeError
 import com.patrickzedler.grocy.core.forms.DateTextItem
 import com.patrickzedler.grocy.core.forms.DropdownItem
+import com.patrickzedler.grocy.core.forms.ExternalLookupResult
 import com.patrickzedler.grocy.core.forms.FormFocusTarget
+import com.patrickzedler.grocy.core.forms.ProductFormRequest
+import com.patrickzedler.grocy.core.forms.UnknownProductDialog
 import com.patrickzedler.grocy.core.forms.GroupItem
 import com.patrickzedler.grocy.core.forms.GroupItems
 import com.patrickzedler.grocy.core.forms.ScannerToggleButton
@@ -80,9 +76,9 @@ import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_cancel
 import com.patrickzedler.grocy.core.resources.action_scroll_to_top
 import com.patrickzedler.grocy.core.resources.action_undo
-import com.patrickzedler.grocy.core.resources.booking_add_as_barcode
-import com.patrickzedler.grocy.core.resources.booking_add_as_new_product
 import com.patrickzedler.grocy.core.resources.booking_add_barcode_hint
+import com.patrickzedler.grocy.core.resources.booking_external_lookup_nothing_found
+import com.patrickzedler.grocy.core.resources.product_picker_workflow_hint
 import com.patrickzedler.grocy.core.resources.booking_amount_not_equal
 import com.patrickzedler.grocy.core.resources.booking_applies_to_added
 import com.patrickzedler.grocy.core.resources.booking_consumed
@@ -125,8 +121,6 @@ import com.patrickzedler.grocy.core.resources.booking_transferred
 import com.patrickzedler.grocy.core.resources.booking_undone
 import com.patrickzedler.grocy.core.resources.booking_unit_price
 import com.patrickzedler.grocy.core.resources.booking_unit_required
-import com.patrickzedler.grocy.core.resources.booking_unknown_code_message
-import com.patrickzedler.grocy.core.resources.booking_unknown_code_title
 import com.patrickzedler.grocy.core.resources.booking_use_specific_entry
 import com.patrickzedler.grocy.core.resources.booking_use_specific_entry_hint
 import com.patrickzedler.grocy.core.resources.data_amount
@@ -182,7 +176,7 @@ internal fun BookingScreen(
     actions: StockPageActions,
     menuItems: List<AppBarMenuItem>,
     onBackClick: () -> Unit,
-    onNewProductClick: (String) -> Unit,
+    onOpenProduct: (ProductFormRequest) -> Unit,
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
     pane: ScreenPane? = null,
@@ -202,20 +196,18 @@ internal fun BookingScreen(
         if (startsOver && listState.canScrollBackward) listState.animateScrollToItem(0)
     }
 
-    BookingEvents(viewModel, snackbarHostState, onDone)
+    BookingEvents(viewModel, snackbarHostState, onOpenProduct, onDone)
     LabelPrintEffect(actions.labels, snackbarHostState)
-    viewModel.unknownCode?.let { code ->
-        UnknownCodeDialog(
-            code = code,
-            canCreate = kind == BookingKind.PURCHASE || kind == BookingKind.INVENTORY,
-            onAssign = viewModel::assignUnknownCode,
-            onCreate = {
-                viewModel.keepUnknownCodeForNewProduct()
-                onNewProductClick(code)
-            },
-            onDismissRequest = viewModel::dismissUnknownCode,
-        )
-    }
+    UnknownProductDialog(
+        flow = viewModel.unknownProduct,
+        products = currentOptions?.products.orEmpty(),
+        lookupPlugin = currentOptions?.config?.barcodeLookupPlugin,
+        onOpenProduct = onOpenProduct,
+        onBarcodeAssigned = viewModel::onBarcodeAssigned,
+        onScanAgain = viewModel::scanAgain,
+        onLookUp = viewModel::lookUpExternally,
+        onDismissRequest = viewModel::dismissUnknownProduct,
+    )
 
     CompositionLocalProvider(LocalFormFocus provides formFocus) {
         SegmentedListScreen(
@@ -368,8 +360,12 @@ private fun productItem(
         selectedId = form.product?.id,
         onSelectedIdChange = viewModel::selectProduct,
         onUnmatchedChange = { form.isProductUnmatched = it },
-        hint = form.pendingBarcode?.let { stringResource(Res.string.booking_add_barcode_hint, it) },
+        hint = viewModel.unknownProduct.pendingBarcode
+            ?.let { stringResource(Res.string.booking_add_barcode_hint, it) }
+            ?: stringResource(Res.string.product_picker_workflow_hint),
         error = when {
+            viewModel.unknownProduct.isNotOffered ->
+                stringResource(Res.string.booking_not_in_stock)
             context is ProductContext.Failed -> stringResource(
                 if (context.error == ChangeError.Offline) {
                     Res.string.data_offline
@@ -385,6 +381,8 @@ private fun productItem(
         count = count,
         focusRequester = focusRequester,
         onSubmitText = viewModel::onTextSubmitted,
+        submitsTextOnLeave = true,
+        textResetKey = viewModel.unknownProduct.fieldResetKey,
         // The amount takes the focus only with a product, without one typing goes on here
         onKeyboardNext = viewModel::goToAmount,
         onFocusChange = scanner::onFieldFocusChange,
@@ -905,50 +903,6 @@ private fun noteItem(viewModel: BookingViewModel): GroupItem = { index, count ->
     )
 }
 
-/** Grocy's question for a code that names no product. */
-@Composable
-private fun UnknownCodeDialog(
-    code: String,
-    canCreate: Boolean,
-    onAssign: () -> Unit,
-    onCreate: () -> Unit,
-    onDismissRequest: () -> Unit,
-) {
-    val haptic = LocalHapticFeedback.current
-    @Composable
-    fun Action(text: StringResource, onClick: () -> Unit) {
-        TextButton(
-            onClick = {
-                haptic.confirm()
-                onClick()
-            },
-            modifier = Modifier.clickCursor(),
-            shapes = ButtonDefaults.shapes(),
-        ) {
-            Text(stringResource(text))
-        }
-    }
-
-    ScrollableAlertDialog(onDismissRequest = onDismissRequest) {
-        ScrollableAlertDialogContent(
-            title = { Text(stringResource(Res.string.booking_unknown_code_title)) },
-            confirmButton = { Action(Res.string.booking_add_as_barcode, onAssign) },
-            dismissButton = if (canCreate) {
-                { Action(Res.string.booking_add_as_new_product, onCreate) }
-            } else {
-                null
-            },
-            extraButton = { Action(Res.string.action_cancel, onDismissRequest) },
-        ) {
-            Text(
-                text = stringResource(Res.string.booking_unknown_code_message, code),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-    }
-}
-
 private suspend fun noteText(note: BookingNote): String = when (note) {
     BookingNote.DueEarlier -> getString(Res.string.booking_due_earlier)
     is BookingNote.Frozen -> listOfNotNull(
@@ -963,6 +917,7 @@ private suspend fun noteText(note: BookingNote): String = when (note) {
 private fun BookingEvents(
     viewModel: BookingViewModel,
     snackbarHostState: SnackbarHostState,
+    onOpenProduct: (ProductFormRequest) -> Unit,
     onDone: () -> Unit,
 ) {
     val language = LocalLocale.current.toLanguageTag()
@@ -1037,10 +992,16 @@ private fun BookingEvents(
                         )
                     }
 
-                    BookingEvent.NotOffered ->
-                        snackbarHostState.showNewestSnackbar(
-                            getString(Res.string.booking_not_in_stock),
+                    is BookingEvent.ExternalLookup -> when (val result = event.result) {
+                        is ExternalLookupResult.Found ->
+                            onOpenProduct(ProductFormRequest(productId = result.productId))
+                        ExternalLookupResult.NotFound -> snackbarHostState.showNewestSnackbar(
+                            getString(Res.string.booking_external_lookup_nothing_found),
                         )
+                        is ExternalLookupResult.Failed -> snackbarHostState.showNewestSnackbar(
+                            result.error.actionMessage(Res.string.data_load_failed),
+                        )
+                    }
                     BookingEvent.ScanModeIncomplete -> snackbarHostState.showNewestSnackbar(
                         getString(Res.string.booking_scan_mode_incomplete),
                     )

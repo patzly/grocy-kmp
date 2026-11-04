@@ -4,6 +4,7 @@ import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
 import com.patrickzedler.grocy.core.data.settings.RecipesOptionsRepository
+import com.patrickzedler.grocy.core.data.settings.ScannerFormsRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 
@@ -25,4 +26,7 @@ interface RecipesDependencies {
 
     /** Grocy's meal plan and its sections. */
     val mealPlanRepository: MealPlanRepository
+
+    /** Whether the ingredient and meal plan forms open with their scanner. */
+    val scannerForms: ScannerFormsRepository
 }

@@ -846,6 +846,11 @@
   <string name="booking_unknown_code_message">「%1$s」尚無對應物品，如何進行下一步？</string>
   <string name="booking_add_as_new_product">新增為新物品</string>
   <string name="booking_add_as_barcode">作為條碼附加到現有物品</string>
+  <string name="booking_add_as_new_product_with_barcode">新增為新物品並預填入條碼</string>
+  <string name="booking_external_barcode_lookup">外部條碼查詢</string>
+  <string name="booking_external_lookup_nothing_found">找不到指定條碼的相關內容</string>
+  <string name="booking_scan_again">重新掃描</string>
+  <string name="product_picker_workflow_hint">輸入新物品名稱或條碼，然後按 Enter 鍵或離開此欄位以開始工作流程</string>
   <string name="booking_unit_required">數量單位為必填項目</string>
   <string name="booking_tare_info">啟用皮重處理：請將整個容器秤重，填入數量將自動計算。</string>
   <string name="booking_purchased_date_required">購買日期為必填項目</string>

@@ -1,20 +1,31 @@
 package com.patrickzedler.grocy.feature.recipes.impl.form
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.text.input.KeyboardType
 import com.patrickzedler.grocy.core.design.component.DropdownOption
+import com.patrickzedler.grocy.core.design.component.FocusRequestEffect
 import com.patrickzedler.grocy.core.design.component.NumberStepper
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FormDialog
+import com.patrickzedler.grocy.core.forms.FormFocusTarget
 import com.patrickzedler.grocy.core.forms.GroupItems
 import com.patrickzedler.grocy.core.forms.ObjectField
+import com.patrickzedler.grocy.core.forms.ProductFormRequest
+import com.patrickzedler.grocy.core.forms.ScannerToggleButton
 import com.patrickzedler.grocy.core.forms.TextItem
+import com.patrickzedler.grocy.core.forms.UnknownProductDialog
 import com.patrickzedler.grocy.core.forms.fieldErrorText
 import com.patrickzedler.grocy.core.forms.saveMessage
 import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.resources.booking_add_barcode_hint
+import com.patrickzedler.grocy.core.resources.booking_not_in_stock
 import com.patrickzedler.grocy.core.resources.booking_product_required
+import com.patrickzedler.grocy.core.resources.product_picker_workflow_hint
 import com.patrickzedler.grocy.core.resources.booking_unit_required
 import com.patrickzedler.grocy.core.resources.data_amount
 import com.patrickzedler.grocy.core.resources.data_note
@@ -38,6 +49,7 @@ import com.patrickzedler.grocy.core.resources.recipe_nesting_edit
 import com.patrickzedler.grocy.core.resources.recipe_nesting_recipe
 import com.patrickzedler.grocy.core.resources.recipe_nesting_recipe_required
 import com.patrickzedler.grocy.core.resources.shopping_list_settings_round_up
+import com.patrickzedler.grocy.core.scanner.BarcodeScanner
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -47,6 +59,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun IngredientDialog(
     state: IngredientDialogState,
+    onOpenProduct: (ProductFormRequest) -> Unit,
     onSave: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
@@ -67,20 +80,70 @@ internal fun IngredientDialog(
         onSave = onSave,
         onDismissRequest = onDismissRequest,
     ) {
+        val scanner = state.scanner
+        UnknownProductDialog(
+            flow = state.unknownProduct,
+            products = state.products,
+            onOpenProduct = onOpenProduct,
+            onBarcodeAssigned = state::onBarcodeAssigned,
+            onScanAgain = state::scanAgain,
+            onDismissRequest = state::dismissUnknownProduct,
+        )
+        val productFocus = remember { FocusRequester() }
+        FocusRequestEffect(
+            scanner.focusTarget == FormFocusTarget.CODE_FIELD,
+            productFocus,
+            scanner::onFocusHandled,
+        )
+        val amountFocus = remember { FocusRequester() }
+        FocusRequestEffect(
+            scanner.focusTarget == FormFocusTarget.NEXT_FIELD,
+            amountFocus,
+            scanner::onFocusHandled,
+        )
         SegmentedGroup {
             GroupItems(
                 { index, count ->
                     DropdownItem(
                         label = stringResource(Res.string.data_product),
-                        autoFocus = state.isNew,
+                        focusRequester = productFocus,
+                        onFocusChange = scanner::onFieldFocusChange,
                         options = state.products.map { DropdownOption(it.id, it.name) },
                         selectedId = state.productId,
                         onSelectedIdChange = state::selectProduct,
                         onUnmatchedChange = { state.isProductUnmatched = it },
-                        error = fieldErrorText(
-                            errors[IngredientField.PRODUCT],
-                            Res.string.booking_product_required,
-                        ),
+                        hint = state.unknownProduct.pendingBarcode
+                            ?.let { stringResource(Res.string.booking_add_barcode_hint, it) }
+                            ?: stringResource(Res.string.product_picker_workflow_hint),
+                        error = if (state.unknownProduct.isNotOffered) {
+                            stringResource(Res.string.booking_not_in_stock)
+                        } else {
+                            fieldErrorText(
+                                errors[IngredientField.PRODUCT],
+                                Res.string.booking_product_required,
+                            )
+                        },
+                        onSubmitText = state::onTextSubmitted,
+                        submitsTextOnLeave = true,
+                        textResetKey = state.unknownProduct.fieldResetKey,
+                        below = if (scanner.isOpen) {
+                            {
+                                BarcodeScanner(
+                                    onBarcodeScanned = { state.onScanned(it.value) },
+                                    shape = MaterialTheme.shapes.small,
+                                    containerColor =
+                                        MaterialTheme.colorScheme.surfaceContainerHighest,
+                                )
+                            }
+                        } else {
+                            null
+                        },
+                        trailingAction = {
+                            ScannerToggleButton(
+                                isScannerOpen = scanner.isOpen,
+                                onClick = scanner::toggle,
+                            )
+                        },
                         index = index,
                         count = count,
                     )
@@ -110,6 +173,7 @@ internal fun IngredientDialog(
                 { index, count ->
                     TextItem(
                         state = state.amount,
+                        focusRequester = amountFocus,
                         autoFocus = !state.isNew,
                         label = stringResource(Res.string.data_amount),
                         error = fieldErrorText(errors[IngredientField.AMOUNT]),

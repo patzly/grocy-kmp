@@ -7,6 +7,8 @@ import com.patrickzedler.grocy.core.testing.MasterDataJson
 import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
 import io.ktor.http.HttpMethod
 import io.ktor.http.content.TextContent
+import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.forms.FormFocusTarget
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -176,6 +178,67 @@ class RecipeFormViewModelTest {
             """{"recipe_id":1,"includes_recipe_id":2,"servings":2.0}""",
             (post.body as TextContent).text,
         )
+    }
+
+    @Test
+    fun aNameNoProductHasAsksAndTheCreatedProductIsChosen() = runTest(dispatcher) {
+        val viewModel = viewModel(id = 1)
+        viewModel.openIngredient()
+        advanceUntilIdle()
+        val dialog = viewModel.ingredientDialog!!
+        val template = dialog.products.first()
+
+        assertTrue(dialog.onTextSubmitted("Brand new", hasSuggestion = false))
+        assertEquals("Brand new", dialog.unknownProduct.input)
+        dialog.unknownProduct.newProductWithName(dialog.products)
+        val created = environment.repository.saveProduct(
+            template.copy(id = MasterDataRepository.NEW_OBJECT_ID, name = "Brand new"),
+        )
+        advanceUntilIdle()
+
+        assertEquals(created, dialog.productId)
+    }
+
+    @Test
+    fun aNewIngredientStartsInTheProductFieldAnEditedOneWithoutIt() = runTest(dispatcher) {
+        val viewModel = viewModel(id = 1)
+
+        viewModel.openIngredient()
+        advanceUntilIdle()
+        assertEquals(FormFocusTarget.CODE_FIELD, viewModel.ingredientDialog!!.scanner.focusTarget)
+        viewModel.dismissIngredient()
+
+        viewModel.openIngredient(viewModel.related.value.ingredients.first().id)
+        advanceUntilIdle()
+        assertNull(viewModel.ingredientDialog!!.scanner.focusTarget)
+    }
+
+    @Test
+    fun anInactiveProductsNameShowsGrocysErrorInsteadOfTheQuestion() = runTest(dispatcher) {
+        val viewModel = viewModel(id = 1)
+        viewModel.openIngredient()
+        advanceUntilIdle()
+        val dialog = viewModel.ingredientDialog!!
+
+        assertTrue(dialog.onTextSubmitted("Old cheese", hasSuggestion = false))
+
+        assertTrue(dialog.unknownProduct.isNotOffered)
+        assertNull(dialog.unknownProduct.input)
+    }
+
+    @Test
+    fun aScannedUnknownCodeClosesTheScannerForTheQuestion() = runTest(dispatcher) {
+        val viewModel = viewModel(id = 1)
+        viewModel.openIngredient()
+        advanceUntilIdle()
+        val dialog = viewModel.ingredientDialog!!
+        dialog.scanner.toggle()
+        if (!dialog.scanner.isOpen) dialog.scanner.toggle()
+
+        dialog.onScanned("999999")
+
+        assertEquals("999999", dialog.unknownProduct.input)
+        assertFalse(dialog.scanner.isOpen)
     }
 
     @Test

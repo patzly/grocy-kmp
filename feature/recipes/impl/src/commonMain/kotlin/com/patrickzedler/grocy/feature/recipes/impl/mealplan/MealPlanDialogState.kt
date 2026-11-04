@@ -10,10 +10,14 @@ import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.forms.AmountUnit
 import com.patrickzedler.grocy.core.forms.ChangeError
 import com.patrickzedler.grocy.core.forms.FieldError
+import com.patrickzedler.grocy.core.forms.FormFocusTarget
+import com.patrickzedler.grocy.core.forms.ScannerFieldState
+import com.patrickzedler.grocy.core.forms.UnknownProductFlow
 import com.patrickzedler.grocy.core.forms.minimumAmount
 import com.patrickzedler.grocy.core.forms.numberError
 import com.patrickzedler.grocy.core.forms.productAmountUnits
 import com.patrickzedler.grocy.core.model.masterdata.Product
+import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
 import com.patrickzedler.grocy.core.model.recipes.MealPlanEntry
@@ -23,6 +27,7 @@ import com.patrickzedler.grocy.core.model.recipes.Recipe
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.parseDecimal
+import com.patrickzedler.grocy.core.productcard.productIdForCode
 
 /** The inputs of Grocy's meal plan dialogs that can be invalid. */
 internal enum class MealPlanEntryField { DAY, RECIPE, SERVINGS, PRODUCT, AMOUNT, UNIT }
@@ -31,6 +36,9 @@ internal enum class MealPlanEntryField { DAY, RECIPE, SERVINGS, PRODUCT, AMOUNT,
 internal class MealPlanChoices(
     val recipes: List<Recipe>,
     val products: List<Product>,
+    /** Also the inactive ones, which Grocy's picker names as not in stock. */
+    val allProducts: List<Product> = products,
+    val barcodes: List<ProductBarcode> = emptyList(),
     val sections: List<MealPlanSection>,
     val units: List<QuantityUnit>,
     val conversions: List<ResolvedQuantityUnitConversion>,
@@ -50,6 +58,8 @@ internal class MealPlanEntryDialogState(
     val original: MealPlanEntry?,
     day: String,
     val choices: MealPlanChoices,
+    /** The product's scanner, as it was left in the last new product entry. */
+    val scanner: ScannerFieldState = ScannerFieldState(hasValue = true),
 ) {
     private val decimals = choices.decimals
 
@@ -68,6 +78,9 @@ internal class MealPlanEntryDialogState(
 
     var isRecipeUnmatched by mutableStateOf(false)
     var isProductUnmatched by mutableStateOf(false)
+
+    /** Grocy's "Create or assign product"; its meal plan only assigns. */
+    val unknownProduct = UnknownProductFlow(canCreate = false)
     var isUnitUnmatched by mutableStateOf(false)
     var isSectionUnmatched by mutableStateOf(false)
     var errors by mutableStateOf<Map<MealPlanEntryField, FieldError>>(emptyMap())
@@ -99,9 +112,76 @@ internal class MealPlanEntryDialogState(
         servings.setTextAndPlaceCursorAtEnd(number(recipe.baseServings))
     }
 
+    private fun productForCode(code: String): Product? = productIdForCode(code, choices.barcodes)
+        ?.let { id -> choices.products.firstOrNull { it.id == id } }
+
+    /** A scanned code: its product is chosen and the amount is next, else like Grocy's picker. */
+    fun onScanned(code: String) {
+        val product = productForCode(code)
+        if (product == null) {
+            unknownProduct.onTextWithoutProduct(
+                code,
+                false,
+                choices.allProducts,
+                choices.barcodes,
+            )
+            // A code the form does not offer keeps scanning, a question needs its answer
+            if (unknownProduct.input != null) scanner.closeWithoutFocus()
+            return
+        }
+        selectProduct(product.id)
+        scanner.onScanned()
+        scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
+    }
+
+    /**
+     * Text submitted or left standing in the product field, which a barcode reader types like a
+     * keyboard: a code chooses its product, other text goes the way of Grocy's picker. The scanner
+     * opening only takes the focus away, which asks nothing.
+     */
+    fun onProductTextSubmitted(text: String, hasSuggestion: Boolean): Boolean {
+        if (scanner.isOpen) return false
+        val product = productForCode(text)
+        if (product != null) {
+            selectProduct(product.id)
+            scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
+            return true
+        }
+        val used = unknownProduct.onTextWithoutProduct(
+            text,
+            hasSuggestion,
+            choices.allProducts,
+            choices.barcodes,
+        )
+        // Grocy's error leaves the focus in the field for the next try
+        if (unknownProduct.isNotOffered) scanner.requestFocus(FormFocusTarget.CODE_FIELD)
+        return used
+    }
+
+    fun dismissUnknownProduct() {
+        unknownProduct.dismiss()
+        scanner.onFormReset()
+    }
+
+    /** Grocy's "Add as barcode to existing product": the user chooses the product now. */
+    fun onBarcodeAssigned() {
+        selectProduct(null)
+        scanner.requestFocus(FormFocusTarget.CODE_FIELD)
+    }
+
+    /** Grocy's camera button in the question: on with the next code. */
+    fun scanAgain() {
+        selectProduct(null)
+        if (!scanner.isOpen) scanner.toggle()
+    }
+
     /** Like Grocy's picker: a chosen product starts with 1 in its stock unit. */
     fun selectProduct(id: Int?) {
         val changed = id != productId
+        if (id != null) {
+            unknownProduct.stopWaiting()
+            scanner.onValueChosen()
+        }
         productId = id
         if (id == null || !changed) return
         quId = stockUnitOf(id)

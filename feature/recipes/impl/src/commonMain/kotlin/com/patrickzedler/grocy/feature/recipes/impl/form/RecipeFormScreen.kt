@@ -43,6 +43,7 @@ import com.patrickzedler.grocy.core.forms.FormFrame
 import com.patrickzedler.grocy.core.forms.GroupItems
 import com.patrickzedler.grocy.core.forms.ObjectField
 import com.patrickzedler.grocy.core.forms.ObjectFormLoad
+import com.patrickzedler.grocy.core.forms.ProductFormRequest
 import com.patrickzedler.grocy.core.forms.ObjectFormScreen
 import com.patrickzedler.grocy.core.forms.PictureDialog
 import com.patrickzedler.grocy.core.forms.ProductThumbnail
@@ -104,6 +105,7 @@ internal fun RecipeFormScreen(
     /** Prints the grocycode on the label printer and shows its messages. */
     actions: RecipeActionsViewModel,
     onConfigureUserfieldsClick: () -> Unit,
+    onOpenProduct: (ProductFormRequest) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -112,7 +114,7 @@ internal fun RecipeFormScreen(
     var showPictureDialog by rememberSaveable { mutableStateOf(false) }
     val downloadGrocycode = rememberGrocycodeDownload(snackbarHostState)
 
-    RelatedDialogs(viewModel, snackbarHostState)
+    RelatedDialogs(viewModel, snackbarHostState, onOpenProduct)
     val form = (viewModel.load as? ObjectFormLoad.Ready)?.form
     if (showPictureDialog && form != null) {
         PictureDialog(
@@ -411,10 +413,15 @@ private fun AddItem(enabled: Boolean, index: Int, count: Int, onClick: () -> Uni
 
 /** The ingredient and included recipe dialogs, Grocy's questions before removing them. */
 @Composable
-private fun RelatedDialogs(viewModel: RecipeFormViewModel, snackbarHostState: SnackbarHostState) {
+private fun RelatedDialogs(
+    viewModel: RecipeFormViewModel,
+    snackbarHostState: SnackbarHostState,
+    onOpenProduct: (ProductFormRequest) -> Unit,
+) {
     viewModel.ingredientDialog?.let { state ->
         IngredientDialog(
             state = state,
+            onOpenProduct = onOpenProduct,
             onSave = viewModel::saveIngredient,
             onDismissRequest = viewModel::dismissIngredient,
         )

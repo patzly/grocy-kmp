@@ -874,6 +874,11 @@
   <string name="booking_unknown_code_message">"%1$s" bir ürünle eşleşmiyor, nasıl ilerlemek istersin?</string>
   <string name="booking_add_as_new_product">Yeni ürün olarak ekle</string>
   <string name="booking_add_as_barcode">Var olan ürüne barkod olarak ekle</string>
+  <string name="booking_add_as_new_product_with_barcode">Yeni ürün olarak ekle ve barkodu otomatik doldur</string>
+  <string name="booking_external_barcode_lookup">Harici barkod arama</string>
+  <string name="booking_external_lookup_nothing_found">Verilen barkod için hiçbir şey bulunamadı</string>
+  <string name="booking_scan_again">Yeniden tara</string>
+  <string name="product_picker_workflow_hint">Bir iş akışı başlatmak için yeni bir ürün adı veya barkod yazın ve Enter'a basın ya da alandan çıkın</string>
   <string name="booking_unit_required">Miktar birim zorunlu</string>
   <string name="booking_tare_info">Dara ağırlığı kontrolü aktif edildi - lütfen tüm konteyneri tartın, gönderilecek olan veri otomatik olarak hesaplanacaktır</string>
   <string name="booking_purchased_date_required">Satın alındığı tarih gerekli</string>

@@ -875,6 +875,11 @@
   <string name="booking_unknown_code_message">"%1$s" kon niet aan een product gelinkt worden, hoe wil je verder gaan?</string>
   <string name="booking_add_as_new_product">Voeg toe als nieuw product</string>
   <string name="booking_add_as_barcode">Voeg toe als streepjescode bij bestaand product</string>
+  <string name="booking_add_as_new_product_with_barcode">Voeg toe als nieuw product en vul streepjescode in</string>
+  <string name="booking_external_barcode_lookup">Externe barcode opzoeken</string>
+  <string name="booking_external_lookup_nothing_found">Niets gevonden voor de opgegeven streepjescodes</string>
+  <string name="booking_scan_again">Opnieuw scannen</string>
+  <string name="product_picker_workflow_hint">Typ een nieuwe productnaam of streepjescode en druk op Enter of verlaat het veld om een workflow te starten</string>
   <string name="booking_unit_required">Een hoeveelheidseenheid is vereist</string>
   <string name="booking_tare_info">Tare weight handling ingeschakeld: weeg de hele container af, het te boeken aantal wordt automatisch berekend</string>
   <string name="booking_purchased_date_required">Een aanschafdatum is vereist</string>

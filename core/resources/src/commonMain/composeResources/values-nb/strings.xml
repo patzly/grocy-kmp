@@ -875,6 +875,11 @@
   <string name="booking_unknown_code_message">"%1$s" kunne ikke bli tildelt et produkt, hvordan ønsker du å fortsette?</string>
   <string name="booking_add_as_new_product">Legg til som nytt produkt</string>
   <string name="booking_add_as_barcode">Legg til strekkode til eksisterende produkt</string>
+  <string name="booking_add_as_new_product_with_barcode">Legg til som nytt produkt og fyll ut strekkode</string>
+  <string name="booking_external_barcode_lookup">Ekstern strekkodesøk</string>
+  <string name="booking_external_lookup_nothing_found">Fant ingenting for den angitte strekkoden</string>
+  <string name="booking_scan_again">Skann på nytt</string>
+  <string name="product_picker_workflow_hint">Skriv inn et nytt produktnavn eller en strekkode og trykk Enter eller forlat feltet for å starte en arbeidsflyt</string>
   <string name="booking_unit_required">Forpakning mengde/størrelse kreves</string>
   <string name="booking_tare_info">Tara vekt funksjon på - vennligst vei hele beholderen. Mengden vil automatisk bli kalkulert</string>
   <string name="booking_purchased_date_required">En innkjøpsdato kreves</string>

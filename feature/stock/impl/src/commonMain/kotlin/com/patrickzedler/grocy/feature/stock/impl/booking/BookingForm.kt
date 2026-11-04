@@ -98,9 +98,6 @@ internal class BookingForm(today: String) {
     /** The barcode the product was found by, whose defaults it took (purchase). */
     var usedBarcode by mutableStateOf<ProductBarcode?>(null)
 
-    /** A barcode that will be added to the chosen product with the booking. */
-    var pendingBarcode by mutableStateOf<String?>(null)
-
     var errors by mutableStateOf<Map<BookingField, BookingError>>(emptyMap())
     var userfieldErrors by mutableStateOf<Map<String, UserfieldError>>(emptyMap())
     var isBooking by mutableStateOf(false)

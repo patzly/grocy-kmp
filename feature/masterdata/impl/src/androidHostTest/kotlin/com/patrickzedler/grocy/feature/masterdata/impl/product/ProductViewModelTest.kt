@@ -62,6 +62,24 @@ class ProductViewModelTest {
         }
     }
 
+    @Test
+    fun aNewProductStartsWithTheNameItWasAskedForAndIsNotChangedYet() = runTest(dispatcher) {
+        environment.repository.refresh()
+        val viewModel = ProductViewModel(
+            productId = null,
+            repository = environment.repository,
+            decimalSeparator = '.',
+            presetName = "Brand new",
+            returnsWhenSaved = true,
+        )
+        advanceUntilIdle()
+
+        val state = assertIs<ProductLoadState.Ready>(viewModel.loadState)
+        assertEquals("Brand new", state.form.name.text.toString())
+        assertFalse(viewModel.hasUnsavedChanges)
+        assertTrue(viewModel.returnsWhenSaved)
+    }
+
     /** A view model for a new product with a database that knows [FACTS_JSON]. */
     private suspend fun TestScope.factsViewModel(
         barcode: String? = "3017620422003",

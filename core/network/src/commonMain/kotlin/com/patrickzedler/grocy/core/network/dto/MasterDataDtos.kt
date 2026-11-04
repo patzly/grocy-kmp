@@ -28,6 +28,10 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
+/** What Grocy's external barcode lookup returns; the rest is its plugin's own. */
+@Serializable
+internal data class ExternalBarcodeLookupDto(val id: FlexInt = null)
+
 @Serializable
 internal data class ProductDto(
     val id: Int,

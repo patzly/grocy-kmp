@@ -426,6 +426,18 @@ class MasterDataRepository(
         }
 
     /**
+     * Grocy's "External barcode lookup": the server's plugin creates the product it finds for
+     * [barcode], which is then downloaded; returns its id, null when nothing was found.
+     *
+     * @throws GrocyApiException e.g. [GrocyApiException.Unreachable] when offline.
+     */
+    suspend fun externalBarcodeLookup(barcode: String): Int? {
+        val id = api.externalBarcodeLookup(requireConnection(), barcode) ?: return null
+        refresh()
+        return id
+    }
+
+    /**
      * Creates or updates a conversion like Grocy's conversion form; the conversions Grocy
      * derives change with it, so they are downloaded again.
      */

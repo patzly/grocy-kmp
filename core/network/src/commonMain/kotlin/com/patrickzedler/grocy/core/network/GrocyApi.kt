@@ -69,6 +69,7 @@ import com.patrickzedler.grocy.core.network.dto.MealPlanEntryDto
 import com.patrickzedler.grocy.core.network.dto.MealPlanSectionDto
 import com.patrickzedler.grocy.core.network.dto.NORMAL_RECIPE_TYPE
 import com.patrickzedler.grocy.core.network.dto.PriceHistoryDto
+import com.patrickzedler.grocy.core.network.dto.ExternalBarcodeLookupDto
 import com.patrickzedler.grocy.core.network.dto.ProductBarcodeDto
 import com.patrickzedler.grocy.core.network.dto.ProductDetailsDto
 import com.patrickzedler.grocy.core.network.dto.ProductDto
@@ -523,6 +524,20 @@ class GrocyApi(
 
     suspend fun productBarcode(connection: ServerConnection, id: Int): ProductBarcode =
         get<ProductBarcodeDto>(connection, "objects", PRODUCT_BARCODES, id.toString()).toModel()
+
+    /**
+     * Grocy's "External barcode lookup": its plugin looks [barcode] up and the server creates the
+     * product it finds, with that barcode. Returns the product's id, null when nothing was found.
+     */
+    suspend fun externalBarcodeLookup(connection: ServerConnection, barcode: String): Int? {
+        val response = execute(
+            connection,
+            HttpMethod.Get,
+            listOf("stock", "barcodes", "external-lookup", barcode),
+            listOf("add" to "true"),
+        )
+        return decode<ExternalBarcodeLookupDto?>(response)?.id
+    }
 
     /** Creates the barcode without id or updates it; returns its id. */
     suspend fun saveProductBarcode(connection: ServerConnection, barcode: ProductBarcode): Int =

@@ -18,8 +18,8 @@ on in the settings (Behavior), because barcodes then leave the device.
 
 ## When it runs
 
-- A purchase or inventory scans an unknown code, "Add as new product": `ProductRoute(barcode)`
-  looks up at once and adds the code as barcode with the new product.
+- Grocy's question for an unknown code, "Add as new product and prefill barcode":
+  `ProductRoute(barcode)` looks up at once and adds the code as barcode with the new product.
 - A new product's form offers "Look up barcode" first while a database is on
   (`ProductFactsDialog`: typed or scanned, a scan looks up at once, the camera opens only when
   asked for).

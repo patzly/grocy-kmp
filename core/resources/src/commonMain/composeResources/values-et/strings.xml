@@ -875,6 +875,11 @@
   <string name="booking_unknown_code_message">"%1$s" ei saanud tootele lisada, kuidas tahad edasi käituda?</string>
   <string name="booking_add_as_new_product">Lisa uue tootena</string>
   <string name="booking_add_as_barcode">Lisa triipkoodina olemasolevale tootele</string>
+  <string name="booking_add_as_new_product_with_barcode">Lisa uue tootena ja täida vöötkood</string>
+  <string name="booking_external_barcode_lookup">Väline vöötkoodi otsing</string>
+  <string name="booking_external_lookup_nothing_found">Antud vöötkoodi kohta ei leitud midagi</string>
+  <string name="booking_scan_again">Skanni uuesti</string>
+  <string name="product_picker_workflow_hint">Sisesta uue toote nimi või vöötkood ja vajuta Enter või lahku väljalt, et alustada töövoogu</string>
   <string name="booking_unit_required">Kogusühik on nõutud</string>
   <string name="booking_tare_info">Taara raskuse arvestamine lubatud - palun kaalu kogu konteiner, postitatav summa arvutatakse automaatselt</string>
   <string name="booking_purchased_date_required">Ostukuupäev on nõutud</string>

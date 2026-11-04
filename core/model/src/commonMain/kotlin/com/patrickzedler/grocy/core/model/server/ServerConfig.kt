@@ -21,6 +21,8 @@ data class ServerConfig(
     val tasks: Boolean = true,
     val batteries: Boolean = true,
     val equipment: Boolean = true,
+    /** Grocy's `STOCK_BARCODE_LOOKUP_PLUGIN`, null when the server looks up nothing. */
+    val barcodeLookupPlugin: String? = null,
     val labelPrinter: Boolean = false,
     /**
      * The server runs the label printer's webhook itself. Otherwise Grocy's web frontend calls

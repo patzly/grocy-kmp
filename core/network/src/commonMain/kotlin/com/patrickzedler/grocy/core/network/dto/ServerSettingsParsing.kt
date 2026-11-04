@@ -55,6 +55,8 @@ internal fun JsonObject.toServerConfig(): ServerConfig {
             flag("FEATURE_FLAG_STOCK_PRODUCT_FREEZING", defaults.stockProductFreezing),
         browserBarcodeCameraScanning =
             !flag("FEATURE_FLAG_DISABLE_BROWSER_BARCODE_CAMERA_SCANNING", false),
+        barcodeLookupPlugin = primitive("STOCK_BARCODE_LOOKUP_PLUGIN")?.content
+            ?.takeIf { it.isNotBlank() },
         energyUnit = primitive("ENERGY_UNIT")?.content?.takeIf { it.isNotBlank() }
             ?: defaults.energyUnit,
         currency = primitive("CURRENCY")?.content?.trim()?.uppercase()

@@ -903,6 +903,11 @@
   <string name="booking_unknown_code_message">"%1$s" não pode ser resolvido como um produto, como deseja proceder?</string>
   <string name="booking_add_as_new_product">Adicionar como produto novo</string>
   <string name="booking_add_as_barcode">adicionar código de barras à um produto existente</string>
+  <string name="booking_add_as_new_product_with_barcode">adicionar um novo produto e seu código de barras</string>
+  <string name="booking_external_barcode_lookup">Leitor externo de código de barras (via plugin)</string>
+  <string name="booking_external_lookup_nothing_found">Nada foi encontrado com esse código de barras</string>
+  <string name="booking_scan_again">Escanear novamente</string>
+  <string name="product_picker_workflow_hint">Digite o nome de um novo produto ou código de barras e pressione Enter ou saia do campo para iniciar um fluxo de trabalho</string>
   <string name="booking_unit_required">A unidade é obrigatória</string>
   <string name="booking_tare_info">Manuseio de tara ativado. Pese todo o conteúdo e o valor a ser lançado será calculado automaticamente</string>
   <string name="booking_purchased_date_required">Uma data de compra é obrigatória</string>

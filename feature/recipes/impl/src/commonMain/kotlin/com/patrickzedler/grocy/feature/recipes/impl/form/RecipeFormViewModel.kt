@@ -10,28 +10,37 @@ import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.masterdata.PictureChange
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
+import com.patrickzedler.grocy.core.data.settings.ScannerFormsRepository
 import com.patrickzedler.grocy.core.forms.AmountUnit
 import com.patrickzedler.grocy.core.forms.ChangeError
 import com.patrickzedler.grocy.core.forms.FieldError
 import com.patrickzedler.grocy.core.forms.ObjectField
+import com.patrickzedler.grocy.core.forms.FormFocusTarget
 import com.patrickzedler.grocy.core.forms.ObjectFormViewModel
+import com.patrickzedler.grocy.core.forms.ScannerFieldState
+import com.patrickzedler.grocy.core.forms.UnknownProductFlow
 import com.patrickzedler.grocy.core.forms.changeErrorOf
+import com.patrickzedler.grocy.core.forms.fieldState
 import com.patrickzedler.grocy.core.forms.ignoringServerErrors
 import com.patrickzedler.grocy.core.forms.productAmountUnits
 import com.patrickzedler.grocy.core.model.masterdata.Product
+import com.patrickzedler.grocy.core.model.masterdata.ProductBarcode
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
 import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
 import com.patrickzedler.grocy.core.model.masterdata.nameFor
 import com.patrickzedler.grocy.core.model.recipes.Recipe
+import com.patrickzedler.grocy.core.model.scanner.ScannerForm
 import com.patrickzedler.grocy.core.model.recipes.RecipeIngredient
 import com.patrickzedler.grocy.core.model.recipes.RecipeNesting
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.parseDecimal
+import com.patrickzedler.grocy.core.productcard.productIdForCode
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -64,13 +73,25 @@ internal class IngredientDialogState(
     val original: RecipeIngredient?,
     initial: IngredientFormValues,
     val recipeName: String,
-    val products: List<Product>,
+    products: List<Product>,
+    private var allProducts: List<Product>,
+    barcodes: List<ProductBarcode>,
     private val allUnits: List<QuantityUnit>,
-    private val conversions: List<ResolvedQuantityUnitConversion>,
+    conversions: List<ResolvedQuantityUnitConversion>,
     val decimals: Int,
     val showsStockOptions: Boolean,
     val showsPriceFactor: Boolean,
+    /** The product's scanner, as it was left in the last new ingredient. */
+    val scanner: ScannerFieldState = ScannerFieldState(hasValue = id != MasterDataRepository.NEW_OBJECT_ID),
 ) {
+    var products by mutableStateOf(products)
+        private set
+    private var barcodes by mutableStateOf(barcodes)
+    private var conversions by mutableStateOf(conversions)
+
+    /** Grocy's "Create or assign product" for what names no product. */
+    val unknownProduct = UnknownProductFlow()
+
     var productId by mutableStateOf(initial.productId)
     var onlyCheckSingleUnitInStock by mutableStateOf(initial.onlyCheckSingleUnitInStock)
     val amount = TextFieldState(initial.amount)
@@ -106,8 +127,81 @@ internal class IngredientDialogState(
             }
         }
 
+    private fun productForCode(code: String): Product? = productIdForCode(code, barcodes)
+        ?.let { id -> products.firstOrNull { it.id == id } }
+
+    /** A scanned code: its product is chosen and the amount is next, else like Grocy's picker. */
+    fun onScanned(code: String) {
+        val product = productForCode(code)
+        if (product == null) {
+            unknownProduct.onTextWithoutProduct(code, false, allProducts, barcodes)
+            // A code the form does not offer keeps scanning, a question needs its answer
+            if (unknownProduct.input != null) scanner.closeWithoutFocus()
+            return
+        }
+        selectProduct(product.id)
+        scanner.onScanned()
+        scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
+    }
+
+    /**
+     * Text submitted or left standing in the product field, which a barcode reader types like a
+     * keyboard: a code chooses its product, other text goes the way of Grocy's picker. The scanner
+     * opening only takes the focus away, which asks nothing.
+     */
+    fun onTextSubmitted(text: String, hasSuggestion: Boolean): Boolean {
+        if (scanner.isOpen) return false
+        val product = productForCode(text)
+        if (product != null) {
+            selectProduct(product.id)
+            scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
+            return true
+        }
+        val used = unknownProduct.onTextWithoutProduct(text, hasSuggestion, allProducts, barcodes)
+        // Grocy's error leaves the focus in the field for the next try
+        if (unknownProduct.isNotOffered) scanner.requestFocus(FormFocusTarget.CODE_FIELD)
+        return used
+    }
+
+    fun dismissUnknownProduct() {
+        unknownProduct.dismiss()
+        scanner.onFormReset()
+    }
+
+    /** Grocy's "Add as barcode to existing product": the user chooses the product now. */
+    fun onBarcodeAssigned() {
+        selectProduct(null)
+        scanner.requestFocus(FormFocusTarget.CODE_FIELD)
+    }
+
+    /** Grocy's camera button in the question: on with the next code. */
+    fun scanAgain() {
+        selectProduct(null)
+        if (!scanner.isOpen) scanner.toggle()
+    }
+
+    /** A product created meanwhile becomes a choice; the one the question waited for is chosen. */
+    fun updateChoices(
+        products: List<Product>,
+        barcodes: List<ProductBarcode>,
+        conversions: List<ResolvedQuantityUnitConversion>,
+    ) {
+        allProducts = products
+        this.products = products.filter { it.active || it.id == original?.productId }
+        this.barcodes = barcodes
+        this.conversions = conversions
+        unknownProduct.takeCreatedProduct(this.products, barcodes)?.let { created ->
+            selectProduct(created.id)
+            scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
+        }
+    }
+
     /** Grocy's choices for a newly chosen product: its stock unit, its fulfillment check. */
     fun selectProduct(id: Int?) {
+        if (id != null) {
+            unknownProduct.stopWaiting()
+            scanner.onValueChosen()
+        }
         productId = id
         val product = products.firstOrNull { it.id == id } ?: return
         if (!onlyCheckSingleUnitInStock) quId = product.quIdStock
@@ -178,6 +272,7 @@ internal class RecipeFormViewModel(
     private val recipes: RecipesRepository,
     private val language: String,
     private val decimalSeparator: Char = platformDecimalSeparator(),
+    private val scannerForms: ScannerFormsRepository? = null,
 ) : ObjectFormViewModel<RecipeFormValues, RecipeFormState>(id, repository) {
 
     override val userfieldEntity: String = RecipesRepository.RECIPES
@@ -217,6 +312,16 @@ internal class RecipeFormViewModel(
 
     init {
         start()
+        // A product created from the ingredient dialog's question becomes its choice
+        viewModelScope.launch {
+            combine(
+                repository.products,
+                repository.productBarcodes,
+                repository.resolvedQuantityUnitConversions,
+            ) { products, barcodes, conversions ->
+                ingredientDialog?.updateChoices(products, barcodes, conversions)
+            }.collect()
+        }
     }
 
     override suspend fun createForm(id: Int?): RecipeFormState? {
@@ -292,11 +397,17 @@ internal class RecipeFormViewModel(
                 initial = initial,
                 recipeName = recipes.recipe(recipeId).first()?.name.orEmpty(),
                 products = choices,
+                allProducts = products,
+                barcodes = repository.productBarcodes.first(),
                 allUnits = units,
                 conversions = conversions,
                 decimals = amountDecimals,
                 showsStockOptions = config.stock,
                 showsPriceFactor = config.stockPriceTracking,
+                scanner = scannerForms?.fieldState(
+                    ScannerForm.RECIPE_INGREDIENT,
+                    hasValue = original != null,
+                ) ?: ScannerFieldState(hasValue = original != null),
             )
         }
     }
@@ -321,7 +432,10 @@ internal class RecipeFormViewModel(
                 supportsRoundUp = supportsRoundUp,
                 decimals = form.decimals,
             )
-            val error = changeErrorOf { recipes.saveIngredient(ingredient) }
+            val error = changeErrorOf {
+                form.unknownProduct.savePendingBarcode(ingredient.productId, repository)
+                recipes.saveIngredient(ingredient)
+            }
             form.isSaving = false
             if (error == null) {
                 if (ingredientDialog === form) ingredientDialog = null

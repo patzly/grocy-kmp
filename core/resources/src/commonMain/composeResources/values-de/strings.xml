@@ -875,6 +875,11 @@
   <string name="booking_unknown_code_message">"%1$s" konnte nicht zu einem Produkt aufgelöst werden, wie möchtest du weiter machen?</string>
   <string name="booking_add_as_new_product">Als neues Produkt hinzufügen</string>
   <string name="booking_add_as_barcode">Barcode vorhandenem Produkt zuweisen</string>
+  <string name="booking_add_as_new_product_with_barcode">Neues Produkt erstellen und Barcode vorbelegen</string>
+  <string name="booking_external_barcode_lookup">Externe Barcode-Suche</string>
+  <string name="booking_external_lookup_nothing_found">Für den angegebenen Barcode wurde nichts gefunden</string>
+  <string name="booking_scan_again">Erneut scannen</string>
+  <string name="product_picker_workflow_hint">Gib einen neuen Produktnamen oder Barcode ein und drücke die Eingabetaste oder verlasse das Feld, um einen Workflow zu starten</string>
   <string name="booking_unit_required">Eine Mengeneinheit muss ausgewählt werden</string>
   <string name="booking_tare_info">Taragewichtbehandlung aktiviert - bitte den gesamten Behälter wiegen, die zu buchende Menge wird automatisch berechnet</string>
   <string name="booking_purchased_date_required">Ein Einkaufsdatum ist erforderlich</string>

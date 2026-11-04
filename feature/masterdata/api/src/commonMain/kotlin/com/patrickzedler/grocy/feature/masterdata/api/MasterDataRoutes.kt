@@ -28,8 +28,12 @@ data object ProductsRoute : Route
 @SerialName("masterdata/product")
 data class ProductRoute(
     val productId: Int? = null,
-    /** A scanned code a new product is created for, Grocy's "Add as new product". */
+    /** A code a new product is created for, Grocy's "Add as new product and prefill barcode". */
     val barcode: String? = null,
+    /** The text a new product is named after, Grocy's "Add as new product". */
+    val name: String? = null,
+    /** Back to the form that asked for the product once it is saved, like Grocy's `returnto`. */
+    val returnsWhenSaved: Boolean = false,
 ) : DetailRoute
 
 @Serializable

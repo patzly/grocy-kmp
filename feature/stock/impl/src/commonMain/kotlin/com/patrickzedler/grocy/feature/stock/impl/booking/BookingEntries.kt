@@ -114,8 +114,12 @@ private fun BookingEntry(
         actions = stockPageActions(dependencies, navigator),
         menuItems = appMenuItems(),
         onBackClick = navigator::goBack,
-        // Grocy's "Add as new product": the form adds the barcode, the page then chooses it
-        onNewProductClick = { code -> navigator.navigate(ProductRoute(barcode = code)) },
+        // Grocy's "Add as new product": the page chooses the product when it comes back
+        onOpenProduct = { request ->
+            navigator.navigate(
+                ProductRoute(request.productId, request.barcode, request.name, true),
+            )
+        },
         onDone = navigator::goBack,
         pane = ScreenPane.Detail.takeIf { besideStart && showsDetailBesideList() },
     )

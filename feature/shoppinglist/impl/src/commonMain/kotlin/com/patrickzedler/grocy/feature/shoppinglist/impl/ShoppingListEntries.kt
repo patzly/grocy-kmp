@@ -148,6 +148,11 @@ fun EntryProviderScope<NavKey>.shoppingListEntries(
                 repository = repository,
                 inList = route.inList,
             ) { ShoppingListItemRoute(it) },
+            onOpenProduct = { request ->
+                navigator.navigate(
+                    ProductRoute(request.productId, request.barcode, request.name, true),
+                )
+            },
         )
     }
 

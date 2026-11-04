@@ -846,6 +846,11 @@
   <string name="booking_unknown_code_message">没有找到对应的产品“%1$s”，您想要执行哪一项操作？</string>
   <string name="booking_add_as_new_product">添加为新产品</string>
   <string name="booking_add_as_barcode">作为条码添加到现有产品</string>
+  <string name="booking_add_as_new_product_with_barcode">作为新产品添加并录入条码</string>
+  <string name="booking_external_barcode_lookup">外部条码查询</string>
+  <string name="booking_external_lookup_nothing_found">没有找到指定条码的相关内容</string>
+  <string name="booking_scan_again">重新扫描</string>
+  <string name="product_picker_workflow_hint">输入新产品名称或条码，然后按 Enter 键或离开此字段以开始工作流程</string>
   <string name="booking_unit_required">请填写数量单位</string>
   <string name="booking_tare_info">已启用去皮功能--请称重整个容器，提交数量后将自动计算净重</string>
   <string name="booking_purchased_date_required">请填写采购日期</string>

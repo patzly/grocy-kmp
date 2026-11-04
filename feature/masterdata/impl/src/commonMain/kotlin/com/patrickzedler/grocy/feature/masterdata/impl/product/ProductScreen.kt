@@ -317,7 +317,7 @@ internal fun ProductScreen(
             leaveAfterSave = false
             when (event) {
                 ProductEvent.Saved -> leave()
-                ProductEvent.Created -> if (leaving) {
+                ProductEvent.Created -> if (leaving || viewModel.returnsWhenSaved) {
                     leave()
                 } else {
                     snackbarHostState.showNewestSnackbar(getString(Res.string.data_saved))

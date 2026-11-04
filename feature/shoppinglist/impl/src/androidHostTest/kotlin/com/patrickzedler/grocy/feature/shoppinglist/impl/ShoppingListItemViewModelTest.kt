@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.feature.shoppinglist.impl
 
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import app.cash.turbine.test
+import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.forms.FormFocusTarget
 import com.patrickzedler.grocy.core.forms.ObjectField
 import com.patrickzedler.grocy.core.forms.ObjectFormEvent
@@ -125,7 +126,7 @@ class ShoppingListItemViewModelTest {
         val viewModel = viewModel()
         viewModel.form.scanner.toggle()
 
-        assertTrue(viewModel.form.onScanned("grcy:p:1"))
+        viewModel.form.onScanned("grcy:p:1")
 
         assertEquals(1, viewModel.form.productId)
         assertFalse(viewModel.form.scanner.isOpen)
@@ -133,20 +134,98 @@ class ShoppingListItemViewModelTest {
     }
 
     @Test
-    fun unknownScanKeepsScanning() = runTest(dispatcher) {
+    fun anUnknownScanClosesTheScannerForGrocysQuestion() = runTest(dispatcher) {
         val viewModel = viewModel()
-        viewModel.form.scanner.toggle()
+        if (!viewModel.form.scanner.isOpen) viewModel.form.scanner.toggle()
 
-        assertFalse(viewModel.form.onScanned("unknown"))
+        viewModel.form.onScanned("unknown")
 
-        assertTrue(viewModel.form.scanner.isOpen)
+        assertEquals("unknown", viewModel.form.unknownProduct.input)
+        assertFalse(viewModel.form.scanner.isOpen)
+    }
+
+    @Test
+    fun anInactiveProductsNameShowsGrocysErrorInsteadOfTheQuestion() = runTest(dispatcher) {
+        val viewModel = viewModel()
+
+        assertTrue(viewModel.form.onTextSubmitted("Old cheese", hasSuggestion = false))
+
+        assertTrue(viewModel.form.unknownProduct.isNotOffered)
+        assertNull(viewModel.form.unknownProduct.input)
+        assertNull(viewModel.form.productId)
+        assertEquals(FormFocusTarget.CODE_FIELD, viewModel.form.scanner.focusTarget)
+    }
+
+    @Test
+    fun choosingAProductAfterwardsEndsGrocysError() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        viewModel.form.onTextSubmitted("Old cheese", hasSuggestion = false)
+
+        viewModel.form.selectProduct(1)
+
+        assertFalse(viewModel.form.unknownProduct.isNotOffered)
+    }
+
+    @Test
+    fun aTypedNameWithoutSuggestionAsksGrocysQuestion() = runTest(dispatcher) {
+        val viewModel = viewModel()
+
+        assertTrue(viewModel.form.onTextSubmitted("Brand new", hasSuggestion = false))
+
+        assertEquals("Brand new", viewModel.form.unknownProduct.input)
+    }
+
+    @Test
+    fun aProductCreatedForTheNameIsChosenWithItsUnits() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        val form = viewModel.form
+        val template = form.products.first()
+        form.onTextSubmitted("Brand new", hasSuggestion = false)
+        assertEquals("Brand new", form.unknownProduct.newProductWithName(form.products).name)
+
+        val created = environment.repository.saveProduct(
+            template.copy(id = MasterDataRepository.NEW_OBJECT_ID, name = "Brand new"),
+        )
+        advanceUntilIdle()
+
+        assertEquals(created, form.productId)
+        assertTrue(form.products.any { it.id == created })
+        assertEquals(FormFocusTarget.NEXT_FIELD, form.scanner.focusTarget)
+    }
+
+    @Test
+    fun aBarcodeAddedByTheQuestionIsSavedWithTheItem() = runTest(dispatcher) {
+        environment.server.respond(
+            "/api/objects/product_barcodes",
+            body = """{"created_object_id":77}""",
+            method = HttpMethod.Post,
+        )
+        environment.server.respond(
+            "/api/objects/product_barcodes/77",
+            body = """{"id":77,"product_id":1,"barcode":"123456"}""",
+        )
+        val viewModel = viewModel()
+        val form = viewModel.form
+        form.onTextSubmitted("123456", hasSuggestion = false)
+        form.unknownProduct.addAsBarcode()
+        form.onBarcodeAssigned()
+        form.selectProduct(1)
+
+        viewModel.save()
+        advanceUntilIdle()
+
+        val body = environment.server
+            .requestsTo("/api/objects/product_barcodes", HttpMethod.Post)
+            .single().let { (it.body as TextContent).text }
+        assertTrue("\"barcode\":\"123456\"" in body, body)
+        assertNull(form.unknownProduct.pendingBarcode)
     }
 
     @Test
     fun aBarcodeReaderTypesTheCodeIntoTheProductField() = runTest(dispatcher) {
         val viewModel = viewModel()
 
-        assertTrue(viewModel.form.onTextSubmitted("grcy:p:1"))
+        assertTrue(viewModel.form.onTextSubmitted("grcy:p:1", hasSuggestion = false))
 
         assertEquals(1, viewModel.form.productId)
         assertEquals(FormFocusTarget.NEXT_FIELD, viewModel.form.scanner.focusTarget)
@@ -156,7 +235,7 @@ class ShoppingListItemViewModelTest {
     fun textThatIsNoCodeIsLeftToTheSuggestions() = runTest(dispatcher) {
         val viewModel = viewModel()
 
-        assertFalse(viewModel.form.onTextSubmitted("Mil"))
+        assertFalse(viewModel.form.onTextSubmitted("Mil", hasSuggestion = true))
     }
 
     @Test
