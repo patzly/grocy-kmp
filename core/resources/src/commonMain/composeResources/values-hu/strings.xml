@@ -1234,4 +1234,61 @@
     <item quantity="one">%1$d bejegyzés van mára tervezve.</item>
     <item quantity="other">%1$d bejegyzés van mára tervezve.</item>
   </plurals>
+  <string name="batteries_overview_title">Elemek áttekintése</string>
+  <string name="battery_tracking_title">Elemek követése</string>
+  <string name="batteries_journal_title">Elem napló</string>
+  <string name="battery_journal">Elem napló</string>
+  <string name="battery_overview">Elemek áttekintése</string>
+  <string name="batteries_track">Töltési ciklus követése</string>
+  <string name="batteries_last_charged">Legutóbb feltöltve</string>
+  <string name="batteries_next_charge">Következő tervezett töltési ciklus</string>
+  <string name="batteries_status_overdue">Lejárt</string>
+  <string name="batteries_status_due_today">Ma esedékes</string>
+  <string name="batteries_status_due_soon">Hamarosan esedékes</string>
+  <string name="batteries_tracked">A(z) %1$s elem %2$s időpontban feltöltve</string>
+  <string name="batteries_undone">Töltési ciklus sikeresen visszavonva</string>
+  <string name="battery_field">Elem</string>
+  <string name="battery_required">Választanod kell választanod egy elemet</string>
+  <string name="battery_charge_cycles_count">Töltési ciklusok száma</string>
+  <string name="battery_undo">Töltési ciklus visszavonása</string>
+  <string name="grocycode_battery">Elem</string>
+  <string name="data_not_before_now">Ez csak jelenlegi dátumnál korábbi dátum lehet csak</string>
+  <string name="equipment_title">Eszközök</string>
+  <string name="equipment_create">Eszköz létrehozása</string>
+  <string name="equipment_edit">Eszköz szerkesztése</string>
+  <string name="equipment_notes">Jegyzetek</string>
+  <string name="equipment_manual">Használati útmutató</string>
+  <string name="equipment_no_manual">A kiválasztott eszköznek nincs használati útmutatója</string>
+  <string name="equipment_no_file">Nincs fájl kiválasztva</string>
+  <string name="equipment_download">Fájl letöltése</string>
+  <string name="equipment_fullscreen">Teljes képernyős megjelenítés</string>
+  <string name="equipment_manual_none">Nincs fájl kiválasztva</string>
+  <string name="equipment_manual_will_delete">Az aktuális fájl törlődik mentéskor</string>
+  <string name="objects_delete_equipment">Biztosan törölni szeretnéd a(z) "%1$s" eszközt?</string>
+  <string name="batteries_track_failed">A töltési ciklust nem sikerült rögzíteni</string>
+  <string name="batteries_detail_hint">Rögzíts egy töltési ciklust vagy nyisd meg a naplót, hogy itt láthasd</string>
+  <string name="battery_undo_failed">A töltési ciklust nem sikerült visszavonni</string>
+  <string name="battery_code_unknown">Ehhez a kódhoz nem található elem</string>
+  <string name="equipment_no_notes">A kiválasztott eszközhöz nincs jegyzet</string>
+  <string name="equipment_no_preview">Ez a fájl itt nem jeleníthető meg, de letöltheted.</string>
+  <string name="equipment_save_failed">A fájlt nem sikerült menteni</string>
+  <string name="equipment_choose_file">PDF-fájl kiválasztása</string>
+  <string name="equipment_detail_hint">Válassz egy eszközt a listából, hogy itt láthasd</string>
+  <string name="pdf_page">%1$d. oldal / %2$d</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="one">%1$d elem feltöltésére lejárt a határidő.</item>
+    <item quantity="other">%1$d elem feltöltésére lejárt a határidő.</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="one">%1$d elem feltöltendő ma.</item>
+    <item quantity="other">%1$d elem feltöltendő ma.</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="one">%1$d elem feltöltése esedékes %2$s.</item>
+    <item quantity="other">%1$d elem feltöltése esedékes %2$s.</item>
+  </plurals>
+  <plurals name="equipment_count">
+    <item quantity="one">%1$d eszköz</item>
+    <item quantity="other">%1$d eszköz</item>
+  </plurals>
 </resources>

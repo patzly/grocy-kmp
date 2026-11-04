@@ -1,5 +1,8 @@
 package com.patrickzedler.grocy.core.data.settings
 
+import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewOptions
+import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalOptions
+import com.patrickzedler.grocy.core.model.equipment.EquipmentOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
 import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
@@ -84,4 +87,19 @@ interface SettingsStore {
     suspend fun readNotificationDeliveries(): NotificationDeliveries
 
     suspend fun setNotificationDeliveries(deliveries: NotificationDeliveries)
+
+    /** How the user set up the batteries overview. */
+    val batteriesOverviewOptions: Flow<BatteriesOverviewOptions>
+
+    suspend fun setBatteriesOverviewOptions(options: BatteriesOverviewOptions)
+
+    /** How the user set up the batteries journal. */
+    val batteriesJournalOptions: Flow<BatteriesJournalOptions>
+
+    suspend fun setBatteriesJournalOptions(options: BatteriesJournalOptions)
+
+    /** How the user set up the equipment list. */
+    val equipmentOptions: Flow<EquipmentOptions>
+
+    suspend fun setEquipmentOptions(options: EquipmentOptions)
 }

@@ -12,10 +12,17 @@ object Grocycode {
 
     fun chore(choreId: Int): String = "$MAGIC:c:$choreId"
 
+    fun battery(batteryId: Int): String = "$MAGIC:b:$batteryId"
+
     /** The chore of a scanned grocycode, null for every other code. */
-    fun choreIdOf(code: String): Int? {
+    fun choreIdOf(code: String): Int? = idOf(code, type = "c")
+
+    /** The battery of a scanned grocycode, null for every other code. */
+    fun batteryIdOf(code: String): Int? = idOf(code, type = "b")
+
+    private fun idOf(code: String, type: String): Int? {
         val parts = code.trim().split(':')
-        if (parts.size < CHORE_CODE_PARTS || parts[0] != MAGIC || parts[1] != "c") return null
+        if (parts.size < OBJECT_CODE_PARTS || parts[0] != MAGIC || parts[1] != type) return null
         return parts[2].toIntOrNull()
     }
 
@@ -24,5 +31,5 @@ object Grocycode {
         if (twoDimensional) DataMatrixWriter.write(code) else Code128Writer.write(code)
 
     private const val MAGIC = "grcy"
-    private const val CHORE_CODE_PARTS = 3
+    private const val OBJECT_CODE_PARTS = 3
 }

@@ -24,6 +24,7 @@ class RepositoryNotificationDataSourceTest {
         stock = environment.stockRepository,
         chores = environment.choresRepository,
         tasks = environment.tasksRepository,
+        batteries = environment.batteriesRepository,
         recipes = environment.recipesRepository,
         mealPlan = environment.mealPlanRepository,
         timeout = 20.seconds,
@@ -89,5 +90,19 @@ class RepositoryNotificationDataSourceTest {
         )
 
         assertEquals(listOf("Mow the lawn"), summary.sections.single().names)
+    }
+
+    @Test
+    fun batteriesNotifyAboutWhatTheServerComputed() = runTest(dispatcher) {
+        val fresh = source.refresh(setOf(NotificationKind.BATTERIES))
+
+        val summary = source.summary(
+            NotificationKind.BATTERIES,
+            NotificationSettings()[NotificationKind.BATTERIES],
+            now,
+        )
+
+        assertEquals(setOf(NotificationKind.BATTERIES), fresh)
+        assertEquals(listOf("Remote"), summary.sections.single().names)
     }
 }

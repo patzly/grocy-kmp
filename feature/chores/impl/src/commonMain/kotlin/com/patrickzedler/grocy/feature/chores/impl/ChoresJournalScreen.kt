@@ -39,6 +39,7 @@ import com.patrickzedler.grocy.core.design.component.insetItem
 import com.patrickzedler.grocy.core.design.component.insetItems
 import com.patrickzedler.grocy.core.design.component.rememberStatusColors
 import com.patrickzedler.grocy.core.forms.ClearFilterChip
+import com.patrickzedler.grocy.core.forms.dateTimeText
 import com.patrickzedler.grocy.core.forms.DisabledAlpha
 import com.patrickzedler.grocy.core.forms.DropdownFilterChip
 import com.patrickzedler.grocy.core.forms.FieldChip
@@ -401,7 +402,7 @@ private fun journalChips(
     val dateOnly = item.trackDateOnly
     val critical = rememberStatusColors().critical
     val trackedLabel = stringResource(Res.string.chore_tracked_time)
-    val tracked = choreDateTimeText(execution.trackedTime, dateOnly)
+    val tracked = dateTimeText(execution.trackedTime, dateOnly)
     val late = stringResource(Res.string.chore_tracked_late)
     return buildList {
         if (ChoresJournalField.TRACKED_TIME in fields) {
@@ -424,7 +425,7 @@ private fun journalChips(
         execution.scheduledExecutionTime
             ?.takeIf { ChoresJournalField.SCHEDULED_TRACKING_TIME in fields }
             ?.let { scheduled ->
-                val text = choreDateTimeText(scheduled, dateOnly)
+                val text = dateTimeText(scheduled, dateOnly)
                 add(
                     FieldChip(
                         text = text,
@@ -440,7 +441,7 @@ private fun journalChips(
             ?.takeIf { ChoresJournalField.TIME_OF_TRACKING in fields }
             ?.let { created ->
                 // When it was entered is always a moment, also for chores tracked by date
-                val text = choreDateTimeText(created, dateOnly = false)
+                val text = dateTimeText(created, dateOnly = false)
                 add(
                     FieldChip(
                         text = text,
@@ -470,7 +471,7 @@ private fun journalChips(
         execution.undoneTimestamp?.takeIf { execution.undone }?.let { time ->
             val text = stringResource(
                 Res.string.journal_undone_on,
-                choreDateTimeText(time, dateOnly = false),
+                dateTimeText(time, dateOnly = false),
             )
             add(FieldChip(text, text, Res.drawable.ic_rounded_undo))
         }

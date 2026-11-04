@@ -166,6 +166,7 @@ class ObjectActionsViewModel(
             repository.productGroups.first().find { it.id == id }?.name
         MasterDataRepository.CHORES -> repository.chores.first().find { it.id == id }?.name
         MasterDataRepository.BATTERIES -> repository.batteries.first().find { it.id == id }?.name
+        MasterDataRepository.EQUIPMENT -> repository.equipmentName(id)
         MasterDataRepository.TASK_CATEGORIES ->
             repository.taskCategories.first().find { it.id == id }?.name
         MasterDataRepository.TASKS -> repository.taskName(id)

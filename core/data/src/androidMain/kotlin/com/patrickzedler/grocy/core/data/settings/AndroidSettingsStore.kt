@@ -9,6 +9,9 @@ import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewOptions
+import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalOptions
+import com.patrickzedler.grocy.core.model.equipment.EquipmentOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
 import com.patrickzedler.grocy.core.model.notifications.NotificationDeliveries
@@ -170,6 +173,30 @@ class AndroidSettingsStore(
         dataStore.edit { it[NOTIFICATION_DELIVERIES] = deliveries.stored() }
     }
 
+    override val batteriesOverviewOptions: Flow<BatteriesOverviewOptions> = preferences
+        .map { BatteriesOverviewOptions.of(it[BATTERIES_OVERVIEW_OPTIONS]) }
+        .distinctUntilChanged()
+
+    override suspend fun setBatteriesOverviewOptions(options: BatteriesOverviewOptions) {
+        dataStore.edit { it[BATTERIES_OVERVIEW_OPTIONS] = options.stored() }
+    }
+
+    override val batteriesJournalOptions: Flow<BatteriesJournalOptions> = preferences
+        .map { BatteriesJournalOptions.of(it[BATTERIES_JOURNAL_OPTIONS]) }
+        .distinctUntilChanged()
+
+    override suspend fun setBatteriesJournalOptions(options: BatteriesJournalOptions) {
+        dataStore.edit { it[BATTERIES_JOURNAL_OPTIONS] = options.stored() }
+    }
+
+    override val equipmentOptions: Flow<EquipmentOptions> = preferences
+        .map { EquipmentOptions.of(it[EQUIPMENT_OPTIONS]) }
+        .distinctUntilChanged()
+
+    override suspend fun setEquipmentOptions(options: EquipmentOptions) {
+        dataStore.edit { it[EQUIPMENT_OPTIONS] = options.stored() }
+    }
+
     override val recipesOptions: Flow<RecipesOptions> = preferences
         .map {
             RecipesOptions.of(
@@ -220,6 +247,9 @@ class AndroidSettingsStore(
         val CHORES_OVERVIEW_OPTIONS = stringPreferencesKey("chores_overview_options")
         val CHORES_JOURNAL_OPTIONS = stringPreferencesKey("chores_journal_options")
         val TASKS_OVERVIEW_OPTIONS = stringPreferencesKey("tasks_overview_options")
+        val BATTERIES_OVERVIEW_OPTIONS = stringPreferencesKey("batteries_overview_options")
+        val BATTERIES_JOURNAL_OPTIONS = stringPreferencesKey("batteries_journal_options")
+        val EQUIPMENT_OPTIONS = stringPreferencesKey("equipment_options")
         val NOTIFICATION_SETTINGS = stringPreferencesKey("notification_settings")
         val NOTIFICATION_DELIVERIES = stringPreferencesKey("notification_deliveries")
     }

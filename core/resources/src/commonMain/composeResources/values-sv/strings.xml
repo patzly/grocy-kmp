@@ -1233,4 +1233,61 @@
     <item quantity="one">%1$d post är planerad för idag.</item>
     <item quantity="other">%1$d poster är planerade för idag.</item>
   </plurals>
+  <string name="batteries_overview_title">Översikt över batterier</string>
+  <string name="battery_tracking_title">Registrera laddningscykler</string>
+  <string name="batteries_journal_title">Batterilogg</string>
+  <string name="battery_journal">Batterilogg</string>
+  <string name="battery_overview">Batteriöversikt</string>
+  <string name="batteries_track">Registrera laddningscykel</string>
+  <string name="batteries_last_charged">Senast laddat</string>
+  <string name="batteries_next_charge">Nästa planerade laddningscykel</string>
+  <string name="batteries_status_overdue">Förfallen</string>
+  <string name="batteries_status_due_today">Förfaller idag</string>
+  <string name="batteries_status_due_soon">Förfaller snart</string>
+  <string name="batteries_tracked">Registrerade laddningscykeln för batteriet %1$s den %2$s</string>
+  <string name="batteries_undone">Laddningscykeln har ångrats</string>
+  <string name="battery_field">Batteri</string>
+  <string name="battery_required">Du måste välja ett batteri</string>
+  <string name="battery_charge_cycles_count">Antal laddcykler</string>
+  <string name="battery_undo">Ångra laddningscykel</string>
+  <string name="grocycode_battery">Batteri</string>
+  <string name="data_not_before_now">Detta kan bara vara tidigare än nu</string>
+  <string name="equipment_title">Utrustning</string>
+  <string name="equipment_create">Skapa utrustning</string>
+  <string name="equipment_edit">Redigera utrustning</string>
+  <string name="equipment_notes">Anteckningar</string>
+  <string name="equipment_manual">Bruksanvisning</string>
+  <string name="equipment_no_manual">Den valda utrustningen har ingen bruksanvisning</string>
+  <string name="equipment_no_file">Ingen fil vald</string>
+  <string name="equipment_download">Ladda ner fil</string>
+  <string name="equipment_fullscreen">Expandera till fullskärm</string>
+  <string name="equipment_manual_none">Ingen fil vald</string>
+  <string name="equipment_manual_will_delete">Den aktuella filen raderas när du sparar</string>
+  <string name="objects_delete_equipment">Är du säker på att du vill radera utrustningen "%1$s"?</string>
+  <string name="batteries_track_failed">Laddningscykeln kunde inte registreras</string>
+  <string name="batteries_detail_hint">Registrera en laddningscykel eller öppna journalen för att se den här</string>
+  <string name="battery_undo_failed">Laddningscykeln kunde inte ångras</string>
+  <string name="battery_code_unknown">Inget batteri hittades för den här koden</string>
+  <string name="equipment_no_notes">Den valda utrustningen har inga anteckningar</string>
+  <string name="equipment_no_preview">Den här filen kan inte visas här, men du kan ladda ner den.</string>
+  <string name="equipment_save_failed">Filen kunde inte sparas</string>
+  <string name="equipment_choose_file">Välj en PDF-fil</string>
+  <string name="equipment_detail_hint">Välj utrustning i listan för att se den här</string>
+  <string name="pdf_page">Sida %1$d av %2$d</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="one">%1$d batteri borde redan ha laddats.</item>
+    <item quantity="other">%1$d batterier borde redan ha laddats.</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="one">%1$d batteri ska laddas idag.</item>
+    <item quantity="other">%1$d batterier ska laddas idag.</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="one">%1$d batteri behöver laddas %2$s.</item>
+    <item quantity="other">%1$d batterier behöver laddas %2$s.</item>
+  </plurals>
+  <plurals name="equipment_count">
+    <item quantity="one">%1$d utrustning</item>
+    <item quantity="other">%1$d utrustningar</item>
+  </plurals>
 </resources>

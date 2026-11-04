@@ -25,7 +25,9 @@ import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.smallIconButtonSize
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.resources.battery_tracking_title
 import com.patrickzedler.grocy.core.resources.chore_tracking_title
+import com.patrickzedler.grocy.core.resources.ic_rounded_battery_charging_full
 import com.patrickzedler.grocy.core.resources.task_create
 import com.patrickzedler.grocy.core.resources.ic_rounded_play_arrow
 import com.patrickzedler.grocy.core.resources.action_more_options
@@ -188,6 +190,26 @@ internal fun ChoreTrackingButton(onClick: () -> Unit, modifier: Modifier = Modif
 @Composable
 internal fun TaskCreateButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     val button = QuickButton(Res.string.task_create, Res.drawable.ic_rounded_add, onClick)
+    // The group only makes the pressed button grow
+    ButtonGroup(overflowIndicator = {}, modifier = modifier) {
+        animatedItem { itemModifier, interactionSource ->
+            QuickIconButton(button, itemModifier, interactionSource)
+        }
+    }
+}
+
+/**
+ * Grocy's "Battery tracking" as the batteries item's only action, a wide button with a charging
+ * battery.
+ */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+internal fun BatteryTrackingButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val button = QuickButton(
+        Res.string.battery_tracking_title,
+        Res.drawable.ic_rounded_battery_charging_full,
+        onClick,
+    )
     // The group only makes the pressed button grow
     ButtonGroup(overflowIndicator = {}, modifier = modifier) {
         animatedItem { itemModifier, interactionSource ->

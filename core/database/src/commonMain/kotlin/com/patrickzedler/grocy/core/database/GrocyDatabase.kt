@@ -52,8 +52,12 @@ import androidx.room3.RoomDatabaseConstructor
         ChoreExecutionEntity::class,
         ChoreDetailsEntity::class,
         TaskEntity::class,
+        CurrentBatteryEntity::class,
+        BatteryChargeCycleEntity::class,
+        BatteryDetailsEntity::class,
+        EquipmentEntity::class,
     ],
-    version = 12,
+    version = 13,
     autoMigrations = [
         // 2 adds product_thumbnails
         AutoMigration(from = 1, to = 2),
@@ -81,6 +85,8 @@ import androidx.room3.RoomDatabaseConstructor
         AutoMigration(from = 10, to = 11),
         // 12 adds the tasks
         AutoMigration(from = 11, to = 12),
+        // 13 adds the batteries overview, journal and overview cards and the equipment
+        AutoMigration(from = 12, to = 13),
     ],
 )
 @ConstructedBy(GrocyDatabaseConstructor::class)
@@ -98,6 +104,10 @@ abstract class GrocyDatabase : RoomDatabase() {
     abstract fun choreDao(): ChoreDao
 
     abstract fun taskDao(): TaskDao
+
+    abstract fun batteryDao(): BatteryDao
+
+    abstract fun equipmentDao(): EquipmentDao
 }
 
 // Room generates the actual objects for every platform

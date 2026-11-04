@@ -1234,4 +1234,61 @@
     <item quantity="one">Tänaseks on planeeritud %1$d kirje.</item>
     <item quantity="other">Tänaseks on planeeritud %1$d kirjet.</item>
   </plurals>
+  <string name="batteries_overview_title">Patareide ülevaade</string>
+  <string name="battery_tracking_title">Patareide jälgimine</string>
+  <string name="batteries_journal_title">Patareide päevik</string>
+  <string name="battery_journal">Patarei päevik</string>
+  <string name="battery_overview">Patarei ülevaade</string>
+  <string name="batteries_track">Jälgi laadimistsüklit</string>
+  <string name="batteries_last_charged">Viimati laetud</string>
+  <string name="batteries_next_charge">Järgmine plaanitud laadimistsükkel</string>
+  <string name="batteries_status_overdue">Üle aja</string>
+  <string name="batteries_status_due_today">Täna teha</string>
+  <string name="batteries_status_due_soon">Vajab tegemist</string>
+  <string name="batteries_tracked">Jälgitud patarei %1$s laadimistsüklit kuupäeval%2$s</string>
+  <string name="batteries_undone">Laadimistsükkel edukalt tagasivõetud</string>
+  <string name="battery_field">Patarei</string>
+  <string name="battery_required">Pead valima patarei</string>
+  <string name="battery_charge_cycles_count">Laadimistsüklite arv</string>
+  <string name="battery_undo">Laadimistsükli tagasivõtmine</string>
+  <string name="grocycode_battery">Patarei</string>
+  <string name="data_not_before_now">See saab olla vaid enne praegust hetke</string>
+  <string name="equipment_title">Tehnika</string>
+  <string name="equipment_create">Loo tehnika</string>
+  <string name="equipment_edit">Muuda tehnikat</string>
+  <string name="equipment_notes">Märkmed</string>
+  <string name="equipment_manual">Juhend</string>
+  <string name="equipment_no_manual">Valitud tehnikal pole juhendit</string>
+  <string name="equipment_no_file">Faili pole valitud</string>
+  <string name="equipment_download">Laadi fail alla</string>
+  <string name="equipment_fullscreen">Täisekraanile</string>
+  <string name="equipment_manual_none">Faili pole valitud</string>
+  <string name="equipment_manual_will_delete">Praegune fail kustutatakse salvestamisel</string>
+  <string name="objects_delete_equipment">Kas soovite kindlasti seadme "%1$s" kustutada?</string>
+  <string name="batteries_track_failed">Laadimistsüklit ei õnnestunud registreerida</string>
+  <string name="batteries_detail_hint">Registreerige laadimistsükkel või avage päevik, et seda siin näha</string>
+  <string name="battery_undo_failed">Laadimistsüklit ei õnnestunud tagasi võtta</string>
+  <string name="battery_code_unknown">Selle koodiga akut ei leitud</string>
+  <string name="equipment_no_notes">Valitud seadmel pole märkmeid</string>
+  <string name="equipment_no_preview">Seda faili ei saa siin kuvada, kuid saate selle alla laadida.</string>
+  <string name="equipment_save_failed">Faili ei õnnestunud salvestada</string>
+  <string name="equipment_choose_file">Vali PDF-fail</string>
+  <string name="equipment_detail_hint">Valige loendist seade, et seda siin näha</string>
+  <string name="pdf_page">Lehekülg %1$d/%2$d</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="one">%1$d patarei vajab vahetust.</item>
+    <item quantity="other">%1$d patareid vajab vahetust.</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="one">%1$d patarei vajab täna laadimist.</item>
+    <item quantity="other">%1$d patareid vajab täna laadimist.</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="one">%1$d patarei vajab peatselt vahetust %2$s.</item>
+    <item quantity="other">%1$d patareid vajab peatselt vahetust %2$s.</item>
+  </plurals>
+  <plurals name="equipment_count">
+    <item quantity="one">%1$d seade</item>
+    <item quantity="other">%1$d seadet</item>
+  </plurals>
 </resources>

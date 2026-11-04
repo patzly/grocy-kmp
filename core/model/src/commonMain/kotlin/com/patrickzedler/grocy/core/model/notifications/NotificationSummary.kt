@@ -1,8 +1,12 @@
 package com.patrickzedler.grocy.core.model.notifications
 
+import com.patrickzedler.grocy.core.model.batteries.BatteryDueStatus
+import com.patrickzedler.grocy.core.model.batteries.CurrentBattery
+import com.patrickzedler.grocy.core.model.batteries.batteryDueStatusOf
 import com.patrickzedler.grocy.core.model.chores.ChoreDueStatus
 import com.patrickzedler.grocy.core.model.chores.CurrentChore
 import com.patrickzedler.grocy.core.model.chores.choreDueStatusOf
+import com.patrickzedler.grocy.core.model.masterdata.Battery
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
 import com.patrickzedler.grocy.core.model.recipes.MealPlanEntry
@@ -116,6 +120,29 @@ fun tasksNotificationSections(
             NotificationTopic.TASKS_DUE_TODAY -> names(TaskDueStatus.DUE_TODAY)
             // Like Grocy's message and filter, what is due today is due soon as well
             else -> names(TaskDueStatus.DUE_TODAY, TaskDueStatus.DUE_SOON)
+        }
+    })
+}
+
+/** The batteries like Grocy's status filter at [now] ("YYYY-MM-DD HH:MM:SS"). */
+fun batteriesNotificationSections(
+    current: List<CurrentBattery>,
+    batteries: List<Battery>,
+    settings: NotificationKindSettings,
+    dueSoonDays: Int,
+    now: String,
+): List<NotificationSection> {
+    val shown = batteries.associateBy { it.id }
+    fun names(vararg statuses: BatteryDueStatus) = current
+        .filter { batteryDueStatusOf(it.nextEstimatedChargeTime, now, dueSoonDays) in statuses }
+        .mapNotNull { shown[it.batteryId]?.name }
+        .sortedBy { it.lowercase() }
+    return sectionsOf(settings, kind = NotificationKind.BATTERIES, names = { topic ->
+        when (topic) {
+            NotificationTopic.BATTERIES_OVERDUE -> names(BatteryDueStatus.OVERDUE)
+            NotificationTopic.BATTERIES_DUE_TODAY -> names(BatteryDueStatus.DUE_TODAY)
+            // Like Grocy's message and filter, what is due today is due soon as well
+            else -> names(BatteryDueStatus.DUE_TODAY, BatteryDueStatus.DUE_SOON)
         }
     })
 }

@@ -1,6 +1,10 @@
 package com.patrickzedler.grocy.feature.start.impl
 
+import com.patrickzedler.grocy.core.data.batteries.BatteriesRepository
+import com.patrickzedler.grocy.feature.batteries.api.BatteriesOverviewRoute
+import com.patrickzedler.grocy.feature.batteries.api.BatteryTrackingRoute
 import com.patrickzedler.grocy.core.data.chores.ChoresRepository
+import com.patrickzedler.grocy.core.data.equipment.EquipmentRepository
 import com.patrickzedler.grocy.core.data.tasks.TasksRepository
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
@@ -18,6 +22,7 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
@@ -53,6 +58,8 @@ class StartViewModelTest {
         mealPlan = MealPlanRepository(server.api, database, connection, recipes),
         chores = ChoresRepository(server.api, database, connection),
         tasks = TasksRepository(server.api, database, connection),
+        batteries = BatteriesRepository(server.api, database, connection),
+        equipment = EquipmentRepository(server.api, database, connection),
         serverConfig = config,
         today = { epochDayOf(today)!! },
         now = { "$today 12:00:00" },
@@ -259,5 +266,42 @@ class StartViewModelTest {
 
         assertNull(viewModel.state.value!!.chores)
         assertEquals(0, server.requestsTo("/api/chores", HttpMethod.Get).size)
+    }
+
+    @Test
+    fun batteriesAndEquipmentAreCountedLikeGrocysMessages() = runTest(dispatcher) {
+        val viewModel = viewModel(today = "2026-11-04")
+        advanceUntilIdle()
+
+        val state = viewModel.state.value!!
+        assertEquals(2, state.batteries?.count)
+        assertEquals(1, state.batteries?.overdue)
+        assertEquals(2, state.equipmentCount)
+    }
+
+    @Test
+    fun aFeatureTurnedOffHidesItsSectionAndItsSummary() = runTest(dispatcher) {
+        config.value = ServerConfig(batteries = false, equipment = false)
+        val viewModel = viewModel(today = "2026-11-04")
+        advanceUntilIdle()
+
+        val state = viewModel.state.value!!
+        assertNull(state.batteries)
+        assertNull(state.equipmentCount)
+        val sections = availableSections(config.value)
+        assertFalse(StartSection.BATTERIES in sections)
+        assertFalse(StartSection.EQUIPMENT in sections)
+    }
+
+    @Test
+    fun batteryTrackingOpensBesideTheOverviewOnlyWhereItFits() {
+        assertEquals(
+            listOf(BatteriesOverviewRoute, BatteryTrackingRoute()),
+            batteryTrackingRoutes(isBesideDetail = true),
+        )
+        assertEquals(
+            listOf(BatteryTrackingRoute(inList = false)),
+            batteryTrackingRoutes(isBesideDetail = false),
+        )
     }
 }

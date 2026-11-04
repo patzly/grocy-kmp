@@ -1280,4 +1280,65 @@
     <item quantity="two">%1$d רשומות מתוכננות להיום.</item>
     <item quantity="other">%1$d רשומות מתוכננות להיום.</item>
   </plurals>
+  <string name="batteries_overview_title">סקירת סוללות</string>
+  <string name="battery_tracking_title">מעקב סוללות</string>
+  <string name="batteries_journal_title">יומן סוללות</string>
+  <string name="battery_journal">יומן סוללה</string>
+  <string name="battery_overview">סקירת סוללה</string>
+  <string name="batteries_track">מעקב אחר מחזור טעינה</string>
+  <string name="batteries_last_charged">טעינה אחרונה</string>
+  <string name="batteries_next_charge">מחזור הטעינה המתוכנן הבא</string>
+  <string name="batteries_status_overdue">מועד הסיום חלף</string>
+  <string name="batteries_status_due_today">מסתיים היום</string>
+  <string name="batteries_status_due_soon">מועד הסיום מתקרב</string>
+  <string name="batteries_tracked">מחזור טעינה של הסוללה %1$s ב־%2$s נעקב</string>
+  <string name="batteries_undone">מחזור הטעינה בוטל בהצלחה</string>
+  <string name="battery_field">סוללה</string>
+  <string name="battery_required">עליך לבחור בסוללה</string>
+  <string name="battery_charge_cycles_count">ספירת מחזורי טעינה</string>
+  <string name="battery_undo">ביטול מחזור טעינה</string>
+  <string name="grocycode_battery">סוללה</string>
+  <string name="data_not_before_now">זה יכול להיות רק בעבר</string>
+  <string name="equipment_title">ציוד</string>
+  <string name="equipment_create">יצירת ציוד</string>
+  <string name="equipment_edit">עריכת ציוד</string>
+  <string name="equipment_notes">הערות</string>
+  <string name="equipment_manual">הוראות הפעלה</string>
+  <string name="equipment_no_manual">לציוד הנבחר אין הוראות הפעלה</string>
+  <string name="equipment_no_file">לא נבחר קובץ</string>
+  <string name="equipment_download">הורדת קובץ</string>
+  <string name="equipment_fullscreen">הרחבה למסך מלא</string>
+  <string name="equipment_manual_none">לא נבחר קובץ</string>
+  <string name="equipment_manual_will_delete">הקובץ הנוכחי יימחק עם השמירה</string>
+  <string name="objects_delete_equipment">למחוק את הציוד „%1$s”?</string>
+  <string name="batteries_track_failed">לא ניתן היה לתעד את מחזור הטעינה</string>
+  <string name="batteries_detail_hint">תעדו מחזור טעינה או פתחו את היומן כדי לראות אותו כאן</string>
+  <string name="battery_undo_failed">לא ניתן היה לבטל את מחזור הטעינה</string>
+  <string name="battery_code_unknown">לא נמצאה סוללה עבור קוד זה</string>
+  <string name="equipment_no_notes">לציוד שנבחר אין הערות</string>
+  <string name="equipment_no_preview">לא ניתן להציג כאן את הקובץ, אך אפשר להוריד אותו.</string>
+  <string name="equipment_save_failed">לא ניתן היה לשמור את הקובץ</string>
+  <string name="equipment_choose_file">בחירת קובץ PDF</string>
+  <string name="equipment_detail_hint">בחרו ציוד מהרשימה כדי לראות אותו כאן</string>
+  <string name="pdf_page">עמוד %1$d מתוך %2$d</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="one">סוללה אחת כבר אמורה הייתה להיטען.</item>
+    <item quantity="two">%1$d סוללות כבר היו אמורות להיטען.</item>
+    <item quantity="other">%1$d סוללות כבר היו אמורות להיטען.</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="one">סוללה אמורה להיטען היום.</item>
+    <item quantity="two">%1$d סוללות אמורות להיטען היום.</item>
+    <item quantity="other">%1$d סוללות אמורות להיטען היום.</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="one">סוללה אחת שיש לטעון בקרוב %2$s.</item>
+    <item quantity="two">%1$d סוללות שיש לטעון בקרוב %2$s.</item>
+    <item quantity="other">%1$d סוללות שיש לטעון בקרוב %2$s.</item>
+  </plurals>
+  <plurals name="equipment_count">
+    <item quantity="one">פריט ציוד אחד</item>
+    <item quantity="two">%1$d פריטי ציוד</item>
+    <item quantity="other">%1$d פריטי ציוד</item>
+  </plurals>
 </resources>

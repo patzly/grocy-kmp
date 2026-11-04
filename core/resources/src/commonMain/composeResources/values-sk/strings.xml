@@ -1326,4 +1326,69 @@
     <item quantity="many">Na dnes je naplánovaných %1$d položky.</item>
     <item quantity="other">Na dnes je naplánovaných %1$d položiek.</item>
   </plurals>
+  <string name="batteries_overview_title">Prehľad batérií</string>
+  <string name="battery_tracking_title">Záznam stavu batérií</string>
+  <string name="batteries_journal_title">Denník batérií</string>
+  <string name="battery_journal">Denník batérie</string>
+  <string name="battery_overview">Prehľad batérií</string>
+  <string name="batteries_track">Zaznamenať nabíjací cyklus</string>
+  <string name="batteries_last_charged">Naposledy nabité</string>
+  <string name="batteries_next_charge">Ďalšie plánované nabíjanie</string>
+  <string name="batteries_status_overdue">Už malo byť splnené</string>
+  <string name="batteries_status_due_today">Termín dnes</string>
+  <string name="batteries_status_due_soon">Blížiaci sa termín splnenia</string>
+  <string name="batteries_tracked">Priebeh nabíjania batérie %1$s %2$s</string>
+  <string name="batteries_undone">Nabíjanie batérie úspešne zrušené</string>
+  <string name="battery_field">Batéria</string>
+  <string name="battery_required">Musíte vybrať batériu</string>
+  <string name="battery_charge_cycles_count">Počet nabíjacích cyklov</string>
+  <string name="battery_undo">Zrušiť nabíjanie</string>
+  <string name="grocycode_battery">Batéria</string>
+  <string name="data_not_before_now">Toto môže byť iba v minulosti</string>
+  <string name="equipment_title">Vybavenie</string>
+  <string name="equipment_create">Vytvoriť vybavenie</string>
+  <string name="equipment_edit">Upraviť vybavenie</string>
+  <string name="equipment_notes">Poznámky</string>
+  <string name="equipment_manual">Návod na použitie</string>
+  <string name="equipment_no_manual">Vybrané vybavenie nemá návod na použitie</string>
+  <string name="equipment_no_file">Nie je vybraný žiadny súbor</string>
+  <string name="equipment_download">Stiahnuť súbor</string>
+  <string name="equipment_fullscreen">Rozšíriť na celú obrazovku</string>
+  <string name="equipment_manual_none">Nie je vybraný žiadny súbor</string>
+  <string name="equipment_manual_will_delete">Aktuálny súbor sa pri uložení odstráni</string>
+  <string name="objects_delete_equipment">Naozaj chcete odstrániť vybavenie "%1$s"?</string>
+  <string name="batteries_track_failed">Nabíjací cyklus sa nepodarilo zaznamenať</string>
+  <string name="batteries_detail_hint">Zaznamenajte nabíjací cyklus alebo otvorte denník a uvidíte ho tu</string>
+  <string name="battery_undo_failed">Nabíjací cyklus sa nepodarilo vrátiť späť</string>
+  <string name="battery_code_unknown">Pre tento kód sa nenašla žiadna batéria</string>
+  <string name="equipment_no_notes">Vybrané vybavenie nemá poznámky</string>
+  <string name="equipment_no_preview">Tento súbor sa tu nedá zobraziť, ale môžete si ho stiahnuť.</string>
+  <string name="equipment_save_failed">Súbor sa nepodarilo uložiť</string>
+  <string name="equipment_choose_file">Vybrať súbor PDF</string>
+  <string name="equipment_detail_hint">Vyberte vybavenie zo zoznamu a uvidíte ho tu</string>
+  <string name="pdf_page">Strana %1$d z %2$d</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="one">%1$d batéria už mala byť nabitá.</item>
+    <item quantity="few">%1$d batérie už mali byť nabité.</item>
+    <item quantity="many">%1$d batérií už malo byť nabitých.</item>
+    <item quantity="other">%1$d batérií už malo byť nabitých.</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="one">%1$d batériu treba dnes nabiť.</item>
+    <item quantity="few">%1$d batérie treba dnes nabiť.</item>
+    <item quantity="many">%1$d batérií treba dnes nabiť.</item>
+    <item quantity="other">%1$d batérií treba dnes nabiť.</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="one">%1$d batéria by mala byť nabitá %2$s.</item>
+    <item quantity="few">%1$d batérie by mali byť nabité %2$s.</item>
+    <item quantity="many">%1$d batérií by malo byť nabitých %2$s.</item>
+    <item quantity="other">%1$d batérií by malo byť nabitých %2$s.</item>
+  </plurals>
+  <plurals name="equipment_count">
+    <item quantity="one">%1$d kus vybavenia</item>
+    <item quantity="few">%1$d kusy vybavenia</item>
+    <item quantity="many">%1$d kusa vybavenia</item>
+    <item quantity="other">%1$d kusov vybavenia</item>
+  </plurals>
 </resources>

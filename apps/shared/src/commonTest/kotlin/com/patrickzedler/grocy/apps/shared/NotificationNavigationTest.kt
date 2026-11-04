@@ -7,6 +7,7 @@ import com.patrickzedler.grocy.core.model.notifications.NotificationTopic
 import com.patrickzedler.grocy.feature.chores.api.ChoresOverviewRoute
 import com.patrickzedler.grocy.feature.recipes.api.MealPlanRoute
 import com.patrickzedler.grocy.feature.stock.api.StockOverviewRoute
+import com.patrickzedler.grocy.feature.batteries.api.BatteriesOverviewRoute
 import com.patrickzedler.grocy.feature.tasks.api.TasksRoute
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -18,6 +19,7 @@ class NotificationNavigationTest {
         assertEquals(StockOverviewRoute, notificationRouteOf(NotificationKind.STOCK))
         assertEquals(ChoresOverviewRoute, notificationRouteOf(NotificationKind.CHORES))
         assertEquals(TasksRoute, notificationRouteOf(NotificationKind.TASKS))
+        assertEquals(BatteriesOverviewRoute, notificationRouteOf(NotificationKind.BATTERIES))
         assertEquals(MealPlanRoute(), notificationRouteOf(NotificationKind.MEAL_PLAN))
     }
 

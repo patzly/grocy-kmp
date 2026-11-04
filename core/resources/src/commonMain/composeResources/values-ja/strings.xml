@@ -1188,4 +1188,57 @@
   <plurals name="notifications_meal_plan_today">
     <item quantity="other">本日の予定は %1$d 件です。</item>
   </plurals>
+  <string name="batteries_overview_title">電池一覧</string>
+  <string name="battery_tracking_title">電池交換の実行</string>
+  <string name="batteries_journal_title">電池履歴</string>
+  <string name="battery_journal">電池履歴</string>
+  <string name="battery_overview">電池一覧</string>
+  <string name="batteries_track">電池交換を実行</string>
+  <string name="batteries_last_charged">直近の実行</string>
+  <string name="batteries_next_charge">次回予定</string>
+  <string name="batteries_status_overdue">期限超過</string>
+  <string name="batteries_status_due_today">本日期限</string>
+  <string name="batteries_status_due_soon">まもなく期限</string>
+  <string name="batteries_tracked">実行した電池交換: %2$s %1$s</string>
+  <string name="batteries_undone">充電サイクルを元に戻しました</string>
+  <string name="battery_field">電池</string>
+  <string name="battery_required">電池を選択する必要があります</string>
+  <string name="battery_charge_cycles_count">電池交換回数</string>
+  <string name="battery_undo">充電サイクルを元に戻す</string>
+  <string name="grocycode_battery">電池</string>
+  <string name="data_not_before_now">過去しか指定できません</string>
+  <string name="equipment_title">機器一覧</string>
+  <string name="equipment_create">新規作成/機器</string>
+  <string name="equipment_edit">機器を編集</string>
+  <string name="equipment_notes">メモ</string>
+  <string name="equipment_manual">取扱説明書</string>
+  <string name="equipment_no_manual">選択した機器に取扱説明書はありません</string>
+  <string name="equipment_no_file">ファイルが選択されていません</string>
+  <string name="equipment_download">ファイルをダウンロード</string>
+  <string name="equipment_fullscreen">フルスクリーン拡大</string>
+  <string name="equipment_manual_none">ファイルが選択されていません</string>
+  <string name="equipment_manual_will_delete">現在のファイルは保存時に削除されます</string>
+  <string name="objects_delete_equipment">機器「%1$s」を削除してもよろしいですか？</string>
+  <string name="batteries_track_failed">充電サイクルを記録できませんでした</string>
+  <string name="batteries_detail_hint">充電サイクルを記録するか履歴を開くと、ここに表示されます</string>
+  <string name="battery_undo_failed">充電サイクルを取り消せませんでした</string>
+  <string name="battery_code_unknown">このコードの電池は見つかりませんでした</string>
+  <string name="equipment_no_notes">選択した設備にメモはありません</string>
+  <string name="equipment_no_preview">このファイルはここに表示できませんが、ダウンロードできます。</string>
+  <string name="equipment_save_failed">ファイルを保存できませんでした</string>
+  <string name="equipment_choose_file">PDF ファイルを選択</string>
+  <string name="equipment_detail_hint">一覧から設備を選択すると、ここに表示されます</string>
+  <string name="pdf_page">%1$d / %2$d ページ</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="other">期限超過 %1$d 件。</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="other">本日期限 %1$d 件。</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="other">まもなく期限 %1$d 件 %2$s。</item>
+  </plurals>
+  <plurals name="equipment_count">
+    <item quantity="other">%1$d 件の設備</item>
+  </plurals>
 </resources>

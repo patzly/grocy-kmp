@@ -1234,4 +1234,61 @@
     <item quantity="one">%1$d oppføring er planlagt i dag.</item>
     <item quantity="other">%1$d oppføringer er planlagt i dag.</item>
   </plurals>
+  <string name="batteries_overview_title">Batterioversikt</string>
+  <string name="battery_tracking_title">Batteriregistrering</string>
+  <string name="batteries_journal_title">Batterilogg</string>
+  <string name="battery_journal">Batterilogg</string>
+  <string name="battery_overview">Batterioversikt</string>
+  <string name="batteries_track">Registrer ladesyklus</string>
+  <string name="batteries_last_charged">Sist ladet</string>
+  <string name="batteries_next_charge">Neste planlagte oppladning</string>
+  <string name="batteries_status_overdue">Forfalt</string>
+  <string name="batteries_status_due_today">Skal gjøres i dag</string>
+  <string name="batteries_status_due_soon">Forfaller snart</string>
+  <string name="batteries_tracked">Registrert lading av batteri %1$s den %2$s</string>
+  <string name="batteries_undone">Ladesyklus fjernet</string>
+  <string name="battery_field">Batteri</string>
+  <string name="battery_required">Du må velge et batteri</string>
+  <string name="battery_charge_cycles_count">Antall oppladninger</string>
+  <string name="battery_undo">Angre ladesyklus</string>
+  <string name="grocycode_battery">Batteri</string>
+  <string name="data_not_before_now">Dette kan kun være før nå tid</string>
+  <string name="equipment_title">Instruksjonsmanualer</string>
+  <string name="equipment_create">Opprett instruksjonmanualer for et utstyr</string>
+  <string name="equipment_edit">Endre instruksjonsmanual</string>
+  <string name="equipment_notes">Notater</string>
+  <string name="equipment_manual">Instruksjonsmanual</string>
+  <string name="equipment_no_manual">Merket utstyr har ingen instruksjonsmanual</string>
+  <string name="equipment_no_file">Produktbilde ikke valgt</string>
+  <string name="equipment_download">Last ned fil</string>
+  <string name="equipment_fullscreen">Full skjerm</string>
+  <string name="equipment_manual_none">Produktbilde ikke valgt</string>
+  <string name="equipment_manual_will_delete">Nåværende fil vil bli slettet når du lagrer</string>
+  <string name="objects_delete_equipment">Er du sikker på at du vil slette utstyr "%1$s"?</string>
+  <string name="batteries_track_failed">Ladesyklusen kunne ikke registreres</string>
+  <string name="batteries_detail_hint">Registrer en ladesyklus eller åpne journalen for å se den her</string>
+  <string name="battery_undo_failed">Ladesyklusen kunne ikke angres</string>
+  <string name="battery_code_unknown">Fant ikke noe batteri for denne koden</string>
+  <string name="equipment_no_notes">Det valgte utstyret har ingen notater</string>
+  <string name="equipment_no_preview">Denne filen kan ikke vises her, men du kan laste den ned.</string>
+  <string name="equipment_save_failed">Filen kunne ikke lagres</string>
+  <string name="equipment_choose_file">Velg en PDF-fil</string>
+  <string name="equipment_detail_hint">Velg utstyr fra listen for å se det her</string>
+  <string name="pdf_page">Side %1$d av %2$d</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="one">%1$d batteri har forfalt frist for å bli ladet.</item>
+    <item quantity="other">%1$d batterier har forfalt frist for å bli ladet.</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="one">%1$d batteri må skiftes i dag.</item>
+    <item quantity="other">%1$d batterier må skiftes i dag.</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="one">%1$d batteri må lades %2$s.</item>
+    <item quantity="other">%1$d batterier må lades %2$s.</item>
+  </plurals>
+  <plurals name="equipment_count">
+    <item quantity="one">%1$d utstyr</item>
+    <item quantity="other">%1$d utstyr</item>
+  </plurals>
 </resources>

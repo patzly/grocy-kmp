@@ -38,6 +38,11 @@ import com.patrickzedler.grocy.feature.about.api.aboutRouteSerializers
 import com.patrickzedler.grocy.feature.about.impl.aboutEntries
 import com.patrickzedler.grocy.feature.login.api.LoginChoiceRoute
 import com.patrickzedler.grocy.feature.chores.api.ChoresOverviewRoute
+import com.patrickzedler.grocy.feature.batteries.api.BatteriesOverviewRoute
+import com.patrickzedler.grocy.feature.batteries.api.batteriesRouteSerializers
+import com.patrickzedler.grocy.feature.batteries.impl.batteriesEntries
+import com.patrickzedler.grocy.feature.equipment.api.equipmentRouteSerializers
+import com.patrickzedler.grocy.feature.equipment.impl.equipmentEntries
 import com.patrickzedler.grocy.feature.chores.api.choresRouteSerializers
 import com.patrickzedler.grocy.feature.chores.impl.choresEntries
 import com.patrickzedler.grocy.feature.tasks.api.TasksRoute
@@ -68,7 +73,7 @@ internal val routeSerializers =
     startRouteSerializers + loginRouteSerializers + aboutRouteSerializers +
         settingsRouteSerializers + masterDataRouteSerializers + stockRouteSerializers +
         shoppingListRouteSerializers + recipesRouteSerializers + choresRouteSerializers +
-        tasksRouteSerializers
+        tasksRouteSerializers + batteriesRouteSerializers + equipmentRouteSerializers
 
 /**
  * Shared entry point of the Android and web apps.
@@ -166,6 +171,8 @@ private fun GrocyNavigation(
             recipesEntries(graph.recipesDependencies, navigator)
             choresEntries(graph.choresDependencies, navigator)
             tasksEntries(graph.tasksDependencies, navigator)
+            batteriesEntries(graph.batteriesDependencies, navigator)
+            equipmentEntries(graph.equipmentDependencies, navigator)
         }
     }
 }
@@ -181,6 +188,7 @@ internal fun notificationRouteOf(kind: NotificationKind): Route = when (kind) {
     NotificationKind.STOCK -> StockOverviewRoute
     NotificationKind.CHORES -> ChoresOverviewRoute
     NotificationKind.TASKS -> TasksRoute
+    NotificationKind.BATTERIES -> BatteriesOverviewRoute
     NotificationKind.MEAL_PLAN -> MealPlanRoute()
 }
 

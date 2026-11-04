@@ -92,6 +92,7 @@ class NotificationSettingsTest {
         assertFalse(NotificationKind.STOCK.isAvailable(ServerConfig(stock = false)))
         assertFalse(NotificationKind.CHORES.isAvailable(ServerConfig(chores = false)))
         assertFalse(NotificationKind.TASKS.isAvailable(ServerConfig(tasks = false)))
+        assertFalse(NotificationKind.BATTERIES.isAvailable(ServerConfig(batteries = false)))
         assertFalse(NotificationKind.MEAL_PLAN.isAvailable(ServerConfig(recipes = false)))
         assertFalse(NotificationKind.MEAL_PLAN.isAvailable(ServerConfig(recipesMealPlan = false)))
         NotificationKind.entries.forEach { assertTrue(it.isAvailable(ServerConfig())) }

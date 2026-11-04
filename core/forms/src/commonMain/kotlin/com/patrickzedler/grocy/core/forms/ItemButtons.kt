@@ -3,7 +3,6 @@
 package com.patrickzedler.grocy.core.forms
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -27,7 +26,6 @@ import com.patrickzedler.grocy.core.design.component.animatedItem
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.smallIconButtonSize
-import com.patrickzedler.grocy.core.design.component.touchTargetRoom
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_more_options
 import com.patrickzedler.grocy.core.resources.ic_rounded_more_vert
@@ -66,8 +64,6 @@ fun ItemButtons(
                 )
             }
         },
-        // The item's padding plus the room single buttons keep for their touch targets
-        modifier = Modifier.padding(horizontal = touchTargetRoom(IconButtonWidthOption.Narrow)),
     ) {
         buttons.forEach { button ->
             animatedItem(

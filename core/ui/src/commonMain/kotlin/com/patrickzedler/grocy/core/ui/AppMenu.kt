@@ -36,7 +36,10 @@ val LocalAppMenuLinks = staticCompositionLocalOf<AppMenuLinks?> { null }
 class AppMenu internal constructor(
     val items: List<AppBarMenuItem>,
     internal val dialog: MutableState<AppDialog?>,
-)
+) {
+    val isDialogOpen: Boolean
+        get() = dialog.value != null
+}
 
 /**
  * Settings, About, Help and Send feedback: the overflow menu of every screen except About and

@@ -37,6 +37,7 @@ import com.patrickzedler.grocy.core.design.component.SupportingBulletList
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.model.batteries.BatteriesSummary
 import com.patrickzedler.grocy.core.model.chores.ChoresSummary
 import com.patrickzedler.grocy.core.model.tasks.TasksSummary
 import com.patrickzedler.grocy.core.model.server.ServerConfig
@@ -45,7 +46,16 @@ import com.patrickzedler.grocy.core.model.stock.StockSummary
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.app_name
+import com.patrickzedler.grocy.core.resources.batteries_overview_title
 import com.patrickzedler.grocy.core.resources.chores_overview_title
+import com.patrickzedler.grocy.core.resources.equipment_count
+import com.patrickzedler.grocy.core.resources.equipment_title
+import com.patrickzedler.grocy.core.resources.ic_rounded_battery_charging_full
+import com.patrickzedler.grocy.core.resources.ic_rounded_build
+import com.patrickzedler.grocy.core.resources.masterdata_batteries_count
+import com.patrickzedler.grocy.core.resources.start_batteries_due_soon
+import com.patrickzedler.grocy.core.resources.start_batteries_due_today
+import com.patrickzedler.grocy.core.resources.start_batteries_overdue
 import com.patrickzedler.grocy.core.resources.ic_rounded_calendar_month
 import com.patrickzedler.grocy.core.resources.ic_rounded_cleaning_services
 import com.patrickzedler.grocy.core.resources.ic_rounded_database
@@ -146,6 +156,18 @@ internal enum class StartSection(
         StartGroup.CHORES,
         { it.tasks },
     ),
+    BATTERIES(
+        Res.string.batteries_overview_title,
+        Res.drawable.ic_rounded_battery_charging_full,
+        StartGroup.CHORES,
+        { it.batteries },
+    ),
+    EQUIPMENT(
+        Res.string.equipment_title,
+        Res.drawable.ic_rounded_build,
+        StartGroup.CHORES,
+        { it.equipment },
+    ),
     MASTER_DATA(
         Res.string.masterdata_title,
         Res.drawable.ic_rounded_database,
@@ -179,6 +201,7 @@ internal fun StartScreen(
     onShoppingModeClick: () -> Unit,
     onChoreTrackingClick: () -> Unit,
     onTaskCreateClick: () -> Unit,
+    onBatteryTrackingClick: () -> Unit,
     onAboutClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -213,6 +236,7 @@ internal fun StartScreen(
         onShoppingModeClick = onShoppingModeClick,
         onChoreTrackingClick = onChoreTrackingClick,
         onTaskCreateClick = onTaskCreateClick,
+        onBatteryTrackingClick = onBatteryTrackingClick,
         menuItems = appMenu.items,
         modifier = modifier,
     )
@@ -236,6 +260,7 @@ private fun StartContent(
     onShoppingModeClick: () -> Unit,
     onChoreTrackingClick: () -> Unit,
     onTaskCreateClick: () -> Unit,
+    onBatteryTrackingClick: () -> Unit,
     menuItems: List<AppBarMenuItem>,
     modifier: Modifier = Modifier,
 ) {
@@ -282,8 +307,12 @@ private fun StartContent(
                             StartSection.TASKS -> SectionButtons(0.dp) {
                                 TaskCreateButton(onClick = onTaskCreateClick)
                             }
+                            StartSection.BATTERIES -> SectionButtons(0.dp) {
+                                BatteryTrackingButton(onClick = onBatteryTrackingClick)
+                            }
                             StartSection.RECIPES,
                             StartSection.MEAL_PLAN,
+                            StartSection.EQUIPMENT,
                             StartSection.MASTER_DATA,
                             -> null
                         },
@@ -312,6 +341,9 @@ private fun sectionSummary(section: StartSection, state: StartUiState): SectionS
         StartSection.MEAL_PLAN -> state.mealPlanToday?.let { mealPlanSummary(it) }
         StartSection.CHORES -> state.chores?.let { choresSummary(it, state.choresDueSoonDays) }
         StartSection.TASKS -> state.tasks?.let { tasksSummary(it, state.tasksDueSoonDays) }
+        StartSection.BATTERIES ->
+            state.batteries?.let { batteriesSummary(it, state.batteriesDueSoonDays) }
+        StartSection.EQUIPMENT -> state.equipmentCount?.let { equipmentSummary(it) }
         StartSection.MASTER_DATA -> state.masterDataCounts
             .map { (count, number) -> pluralStringResource(count.text, number, number) }
             .takeIf { it.isNotEmpty() }
@@ -497,6 +529,51 @@ private fun tasksSummary(summary: TasksSummary, dueSoonDays: Int): SectionSummar
 }
 
 /**
+ * How many batteries there are, then like Grocy's messages above its batteries overview what is
+ * overdue and due; numbers of 0 are left out.
+ */
+@Composable
+private fun batteriesSummary(summary: BatteriesSummary, dueSoonDays: Int): SectionSummary {
+    val text = pluralStringResource(
+        Res.plurals.masterdata_batteries_count,
+        summary.count,
+        summary.count,
+    )
+    val bullets = listOfNotNull(
+        summary.overdue.takeIf { it > 0 }?.let {
+            pluralStringResource(Res.plurals.start_batteries_overdue, it, it)
+        },
+        summary.dueToday.takeIf { it > 0 }?.let {
+            pluralStringResource(Res.plurals.start_batteries_due_today, it, it)
+        },
+        summary.dueSoon.takeIf { it > 0 && dueSoonDays > 0 }?.let {
+            val within = pluralStringResource(
+                Res.plurals.start_stock_within_days,
+                dueSoonDays,
+                dueSoonDays,
+            )
+            pluralStringResource(Res.plurals.start_batteries_due_soon, it, it, within)
+        },
+    )
+    val intro = if (bullets.isEmpty()) {
+        stringResource(Res.string.start_summary_intro_end, text)
+    } else {
+        stringResource(Res.string.start_summary_intro_list, text)
+    }
+    return SectionSummary(intro, bullets)
+}
+
+/** How many pieces of equipment there are. */
+@Composable
+private fun equipmentSummary(count: Int): SectionSummary = SectionSummary(
+    intro = stringResource(
+        Res.string.start_summary_intro_end,
+        pluralStringResource(Res.plurals.equipment_count, count, count),
+    ),
+    bullets = emptyList(),
+)
+
+/**
  * How many chores there are, then like Grocy's messages above its chores overview what is
  * overdue, due and assigned to the user; numbers of 0 are left out.
  */
@@ -670,6 +747,7 @@ private fun StartScreenPreview() {
             onShoppingModeClick = {},
             onChoreTrackingClick = {},
             onTaskCreateClick = {},
+            onBatteryTrackingClick = {},
             menuItems = emptyList(),
         )
     }

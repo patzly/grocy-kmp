@@ -1325,4 +1325,69 @@
     <item quantity="many">На сьогодні заплановано %1$d записів.</item>
     <item quantity="other">На сьогодні заплановано %1$d запису.</item>
   </plurals>
+  <string name="batteries_overview_title">Огляд акумуляторів</string>
+  <string name="battery_tracking_title">Відстеження акумуляторів</string>
+  <string name="batteries_journal_title">Журнал батарей</string>
+  <string name="battery_journal">Журнал батарей</string>
+  <string name="battery_overview">Огляд батарей</string>
+  <string name="batteries_track">Відмітити цикл зарядки</string>
+  <string name="batteries_last_charged">Востаннє заряжалась</string>
+  <string name="batteries_next_charge">Наступний запланований цикл заряду</string>
+  <string name="batteries_status_overdue">Вийшли з строку придатності</string>
+  <string name="batteries_status_due_today">Термін сьогодні</string>
+  <string name="batteries_status_due_soon">Скоро зіпсується</string>
+  <string name="batteries_tracked">Відмічено цикл зарядки батареї %1$s о %2$s</string>
+  <string name="batteries_undone">Цикл зарядки скасовано</string>
+  <string name="battery_field">Акумулятор</string>
+  <string name="battery_required">Ви маєте обрати батарею</string>
+  <string name="battery_charge_cycles_count">Кількість циклів зарядки</string>
+  <string name="battery_undo">Скасувати цикл зарядки</string>
+  <string name="grocycode_battery">Акумулятор</string>
+  <string name="data_not_before_now">Це може бути лише у минулому</string>
+  <string name="equipment_title">Обладнання</string>
+  <string name="equipment_create">Створити обладнання</string>
+  <string name="equipment_edit">Редагувати обладнання</string>
+  <string name="equipment_notes">Нотатки</string>
+  <string name="equipment_manual">Інструкція</string>
+  <string name="equipment_no_manual">Обране обладнання не має інструкції</string>
+  <string name="equipment_no_file">Файл не обрано</string>
+  <string name="equipment_download">Завантажити файл</string>
+  <string name="equipment_fullscreen">На весь екран</string>
+  <string name="equipment_manual_none">Файл не обрано</string>
+  <string name="equipment_manual_will_delete">Поточний файл буде видалено при збереженні</string>
+  <string name="objects_delete_equipment">Ви дійсно хочете видалити обладнання "%1$s"?</string>
+  <string name="batteries_track_failed">Не вдалося записати цикл заряджання</string>
+  <string name="batteries_detail_hint">Запишіть цикл заряджання або відкрийте журнал, щоб побачити його тут</string>
+  <string name="battery_undo_failed">Не вдалося скасувати цикл заряджання</string>
+  <string name="battery_code_unknown">Для цього коду батарею не знайдено</string>
+  <string name="equipment_no_notes">Вибране обладнання не має нотаток</string>
+  <string name="equipment_no_preview">Цей файл не можна показати тут, але його можна завантажити.</string>
+  <string name="equipment_save_failed">Не вдалося зберегти файл</string>
+  <string name="equipment_choose_file">Вибрати файл PDF</string>
+  <string name="equipment_detail_hint">Виберіть обладнання зі списку, щоб побачити його тут</string>
+  <string name="pdf_page">Сторінка %1$d з %2$d</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="one">Вже потрібно було зарядити %1$d батарею.</item>
+    <item quantity="few">Вже потрібно було зарядити %1$d батареї.</item>
+    <item quantity="many">Вже потрібно було зарядити %1$d батарей.</item>
+    <item quantity="other">Вже потрібно було зарядити %1$d батарей.</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="one">%1$d батарею потрібно зарядити сьогодні.</item>
+    <item quantity="few">%1$d батареї потрібно зарядити сьогодні.</item>
+    <item quantity="many">%1$d батарей потрібно зарядити сьогодні.</item>
+    <item quantity="other">%1$d батарей потрібно зарядити сьогодні.</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="one">Настав час зарядити %1$d батарею %2$s.</item>
+    <item quantity="few">Настав час зарядити %1$d батареї %2$s.</item>
+    <item quantity="many">Настав час зарядити %1$d батарей %2$s.</item>
+    <item quantity="other">Настав час зарядити %1$d батарей %2$s.</item>
+  </plurals>
+  <plurals name="equipment_count">
+    <item quantity="one">%1$d одиниця обладнання</item>
+    <item quantity="few">%1$d одиниці обладнання</item>
+    <item quantity="many">%1$d одиниць обладнання</item>
+    <item quantity="other">%1$d одиниці обладнання</item>
+  </plurals>
 </resources>

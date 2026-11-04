@@ -118,6 +118,7 @@ fun SegmentedListScreen(
     subtitle: String? = null,
     navigationIcon: @Composable () -> Unit = {},
     actions: List<AppBarAction> = emptyList(),
+    onMenuExpandedChange: (Boolean) -> Unit = {},
     menuItems: List<AppBarMenuItem> = emptyList(),
     actionMenuItems: List<AppBarMenuItem> = emptyList(),
     actionMenuGroups: List<List<AppBarMenuItem>> = emptyList(),
@@ -279,6 +280,7 @@ fun SegmentedListScreen(
                                     groups = menuGroups,
                                     modifier = modifier,
                                     interactionSource = interactionSource,
+                                    onExpandedChange = onMenuExpandedChange,
                                 )
                             },
                         )

@@ -1326,4 +1326,69 @@
     <item quantity="many">Na dziś zaplanowano %1$d pozycji.</item>
     <item quantity="other">Na dziś zaplanowano %1$d pozycji.</item>
   </plurals>
+  <string name="batteries_overview_title">Przegląd baterii</string>
+  <string name="battery_tracking_title">Śledzenie baterii</string>
+  <string name="batteries_journal_title">Dziennik baterii</string>
+  <string name="battery_journal">Dziennik baterii</string>
+  <string name="battery_overview">Przegląd baterii</string>
+  <string name="batteries_track">Śledź cykl ładowania</string>
+  <string name="batteries_last_charged">Ostatnio ładowane</string>
+  <string name="batteries_next_charge">Następny planowany cykl ładowania</string>
+  <string name="batteries_status_overdue">Po terminie</string>
+  <string name="batteries_status_due_today">Do dzisiaj</string>
+  <string name="batteries_status_due_soon">Blisko terminu</string>
+  <string name="batteries_tracked">Naładowano baterię %1$s dnia %2$s</string>
+  <string name="batteries_undone">Pomyślnie anulowano cykl ładowania</string>
+  <string name="battery_field">Bateria</string>
+  <string name="battery_required">Musisz wybrać baterię</string>
+  <string name="battery_charge_cycles_count">Ilość cykli ładowania</string>
+  <string name="battery_undo">Anuluj cykl ładowania</string>
+  <string name="grocycode_battery">Bateria</string>
+  <string name="data_not_before_now">Wartość musi być przed dniem dzisiejszym</string>
+  <string name="equipment_title">Wyposażenie</string>
+  <string name="equipment_create">Dodaj wyposażenie</string>
+  <string name="equipment_edit">Edytuj wyposażenie</string>
+  <string name="equipment_notes">Notatki</string>
+  <string name="equipment_manual">Instrukcja obsługi</string>
+  <string name="equipment_no_manual">Wybrany element wyposażenia nie ma instrukcji obsługi</string>
+  <string name="equipment_no_file">Nie wybrano pliku</string>
+  <string name="equipment_download">Pobierz plik</string>
+  <string name="equipment_fullscreen">Pokaż w pełnym ekranie</string>
+  <string name="equipment_manual_none">Nie wybrano pliku</string>
+  <string name="equipment_manual_will_delete">Bieżący plik zostanie usunięty podczas zapisu</string>
+  <string name="objects_delete_equipment">Czy na pewno chcesz usunąć wyposażenie "%1$s"?</string>
+  <string name="batteries_track_failed">Nie udało się zapisać cyklu ładowania</string>
+  <string name="batteries_detail_hint">Zapisz cykl ładowania lub otwórz dziennik, aby zobaczyć go tutaj</string>
+  <string name="battery_undo_failed">Nie udało się cofnąć cyklu ładowania</string>
+  <string name="battery_code_unknown">Nie znaleziono baterii dla tego kodu</string>
+  <string name="equipment_no_notes">Wybrane wyposażenie nie ma notatek</string>
+  <string name="equipment_no_preview">Tego pliku nie można tu wyświetlić, ale możesz go pobrać.</string>
+  <string name="equipment_save_failed">Nie udało się zapisać pliku</string>
+  <string name="equipment_choose_file">Wybierz plik PDF</string>
+  <string name="equipment_detail_hint">Wybierz wyposażenie z listy, aby zobaczyć je tutaj</string>
+  <string name="pdf_page">Strona %1$d z %2$d</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="one">Baterie po terminie ładowania: %1$d.</item>
+    <item quantity="few">Baterie po terminie ładowania: %1$d.</item>
+    <item quantity="many">Baterie po terminie ładowania: %1$d.</item>
+    <item quantity="other">Baterie po terminie ładowania: %1$d.</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="one">%1$d bateria ma zostać naładowana dzisiaj.</item>
+    <item quantity="few">%1$d baterie mają zostać naładowane dzisiaj.</item>
+    <item quantity="many">%1$d baterii ma zostać naładowanych dzisiaj.</item>
+    <item quantity="other">%1$d baterii ma zostać naładowanych dzisiaj.</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="one">Baterie bliskie terminu ładowania: %1$d %2$s.</item>
+    <item quantity="few">Baterie bliskie terminu ładowania: %1$d %2$s.</item>
+    <item quantity="many">Baterie bliskie terminu ładowania: %1$d %2$s.</item>
+    <item quantity="other">Baterie bliskie terminu ładowania: %1$d %2$s.</item>
+  </plurals>
+  <plurals name="equipment_count">
+    <item quantity="one">%1$d element wyposażenia</item>
+    <item quantity="few">%1$d elementy wyposażenia</item>
+    <item quantity="many">%1$d elementów wyposażenia</item>
+    <item quantity="other">%1$d elementu wyposażenia</item>
+  </plurals>
 </resources>

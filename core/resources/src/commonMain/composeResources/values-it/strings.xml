@@ -1280,4 +1280,65 @@
     <item quantity="many">%1$d voci pianificate per oggi.</item>
     <item quantity="other">%1$d voci pianificate per oggi.</item>
   </plurals>
+  <string name="batteries_overview_title">Riepilogo delle batterie</string>
+  <string name="battery_tracking_title">Dati sulle batterie</string>
+  <string name="batteries_journal_title">Diario delle batterie</string>
+  <string name="battery_journal">Diario delle Batterie</string>
+  <string name="battery_overview">Riepilogo della batteria</string>
+  <string name="batteries_track">Monitora il ciclo di ricarica</string>
+  <string name="batteries_last_charged">Ultima ricarica</string>
+  <string name="batteries_next_charge">Prossima ricarica</string>
+  <string name="batteries_status_overdue">In ritardo</string>
+  <string name="batteries_status_due_today">Da fare oggi</string>
+  <string name="batteries_status_due_soon">In scadenza</string>
+  <string name="batteries_tracked">Prevista carica delle batterie %1$s il %2$s</string>
+  <string name="batteries_undone">Ciclo di carica annullato correttamente</string>
+  <string name="battery_field">Batteria</string>
+  <string name="battery_required">Devi selezionare una batteria</string>
+  <string name="battery_charge_cycles_count">Numero di ricariche</string>
+  <string name="battery_undo">Annulla ricarica</string>
+  <string name="grocycode_battery">Batteria</string>
+  <string name="data_not_before_now">Questo può essere solo prima d'ora</string>
+  <string name="equipment_title">Attrezzatura</string>
+  <string name="equipment_create">Crea attrezzatura</string>
+  <string name="equipment_edit">Modifica attrezzatura</string>
+  <string name="equipment_notes">Note</string>
+  <string name="equipment_manual">Manuale di istruzioni</string>
+  <string name="equipment_no_manual">L'attrezzatura selezionata non ha un manuale di istruzioni</string>
+  <string name="equipment_no_file">Nessun file selezionato</string>
+  <string name="equipment_download">Scarica il file</string>
+  <string name="equipment_fullscreen">Espandi a schermo intero</string>
+  <string name="equipment_manual_none">Nessun file selezionato</string>
+  <string name="equipment_manual_will_delete">Il file corrente verrà eliminato al salvataggio</string>
+  <string name="objects_delete_equipment">Sei sicuro di voler eliminare l'attrezzatura "%1$s"?</string>
+  <string name="batteries_track_failed">Non è stato possibile registrare il ciclo di ricarica</string>
+  <string name="batteries_detail_hint">Registra un ciclo di ricarica o apri il diario per vederlo qui</string>
+  <string name="battery_undo_failed">Non è stato possibile annullare il ciclo di ricarica</string>
+  <string name="battery_code_unknown">Nessuna batteria trovata per questo codice</string>
+  <string name="equipment_no_notes">L'attrezzatura selezionata non ha note</string>
+  <string name="equipment_no_preview">Questo file non può essere mostrato qui, ma puoi scaricarlo.</string>
+  <string name="equipment_save_failed">Non è stato possibile salvare il file</string>
+  <string name="equipment_choose_file">Scegli un file PDF</string>
+  <string name="equipment_detail_hint">Scegli un'attrezzatura dall'elenco per vederla qui</string>
+  <string name="pdf_page">Pagina %1$d di %2$d</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="one">%1$d batteria è in ritardo di essere ricaricata.</item>
+    <item quantity="many">%1$d batterie sono in ritardo di essere ricaricate.</item>
+    <item quantity="other">%1$d batterie sono in ritardo di essere ricaricate.</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="one">%1$d batteria che dovrebbe essere caricata oggi.</item>
+    <item quantity="many">%1$d batterie che dovrebbero essere caricate oggi.</item>
+    <item quantity="other">%1$d batterie che dovrebbero essere caricate oggi.</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="one">%1$d batteria deve essere caricata %2$s.</item>
+    <item quantity="many">%1$d batterie devono essere caricate %2$s.</item>
+    <item quantity="other">%1$d batterie devono essere caricate %2$s.</item>
+  </plurals>
+  <plurals name="equipment_count">
+    <item quantity="one">%1$d attrezzatura</item>
+    <item quantity="many">%1$d attrezzature</item>
+    <item quantity="other">%1$d attrezzature</item>
+  </plurals>
 </resources>

@@ -161,9 +161,17 @@ class NotificationSettingsViewModelTest {
         val config = ServerConfig(chores = false, recipesMealPlan = false)
 
         assertEquals(
-            listOf(NotificationKind.STOCK, NotificationKind.TASKS),
+            listOf(NotificationKind.STOCK, NotificationKind.TASKS, NotificationKind.BATTERIES),
             shownNotificationKinds(config),
         )
+    }
+
+    @Test
+    fun batteriesHideWithTheirFeatureAndAreAssignedToNobody() {
+        val shown = shownNotificationKinds(ServerConfig(batteries = false))
+
+        assertTrue(NotificationKind.BATTERIES !in shown)
+        assertTrue(!canNotifyOnlyMine(NotificationKind.BATTERIES, ServerConfig()))
     }
 
     @Test

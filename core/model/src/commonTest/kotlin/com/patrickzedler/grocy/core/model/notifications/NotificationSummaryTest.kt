@@ -1,6 +1,8 @@
 package com.patrickzedler.grocy.core.model.notifications
 
+import com.patrickzedler.grocy.core.model.batteries.CurrentBattery
 import com.patrickzedler.grocy.core.model.chores.CurrentChore
+import com.patrickzedler.grocy.core.model.masterdata.Battery
 import com.patrickzedler.grocy.core.model.masterdata.DueType
 import com.patrickzedler.grocy.core.model.masterdata.Product
 import com.patrickzedler.grocy.core.model.masterdata.StockAmount
@@ -247,6 +249,52 @@ class NotificationSummaryTest {
                 NotificationSection(NotificationTopic.MEAL_PLAN_TODAY, listOf("Eat out", "Soup")),
             ),
             told,
+        )
+    }
+
+    @Test
+    fun batteriesAreNamedLikeGrocysFilterAndDueSoonIsOffByDefault() {
+        val settings = NotificationSettings()[NotificationKind.BATTERIES]
+        val current = listOf(
+            CurrentBattery(1, nextEstimatedChargeTime = "2026-11-01 08:00:00"),
+            CurrentBattery(2, nextEstimatedChargeTime = "2026-11-04 20:00:00"),
+            CurrentBattery(3, nextEstimatedChargeTime = "2026-11-06 08:00:00"),
+            CurrentBattery(4),
+            // Not known yet, it has no name to tell
+            CurrentBattery(5, nextEstimatedChargeTime = "2026-11-01 08:00:00"),
+        )
+        val batteries = listOf(
+            Battery(1, "Remote"),
+            Battery(2, "Scale"),
+            Battery(3, "Torch"),
+            Battery(4, "Spare"),
+        )
+
+        val sections = batteriesNotificationSections(
+            current = current,
+            batteries = batteries,
+            settings = settings,
+            dueSoonDays = 5,
+            now = "2026-11-04 12:00:00",
+        )
+        val withDueSoon = batteriesNotificationSections(
+            current = current,
+            batteries = batteries,
+            settings = settings.copy(topics = NotificationKind.BATTERIES.topics.toSet()),
+            dueSoonDays = 5,
+            now = "2026-11-04 12:00:00",
+        )
+
+        assertEquals(
+            listOf(
+                NotificationSection(NotificationTopic.BATTERIES_OVERDUE, listOf("Remote")),
+                NotificationSection(NotificationTopic.BATTERIES_DUE_TODAY, listOf("Scale")),
+            ),
+            sections,
+        )
+        assertEquals(
+            listOf("Scale", "Torch"),
+            withDueSoon.single { it.topic == NotificationTopic.BATTERIES_DUE_SOON }.names,
         )
     }
 }

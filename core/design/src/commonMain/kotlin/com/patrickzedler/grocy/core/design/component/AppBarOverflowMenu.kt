@@ -57,13 +57,14 @@ class AppBarMenuItem(
 /**
  * The narrow three dots button at the end of a top app bar and its menu: one expressive menu
  * group per entry of [groups], empty groups are left out. In a button group, pass the item's
- * modifier and interaction source.
+ * modifier and interaction source. [onExpandedChange] tells when it opens and closes.
  */
 @Composable
 fun AppBarOverflowMenu(
     groups: List<List<AppBarMenuItem>>,
     modifier: Modifier = Modifier,
     interactionSource: MutableInteractionSource? = null,
+    onExpandedChange: (Boolean) -> Unit = {},
 ) {
     val shownGroups = groups.filter { it.isNotEmpty() }
     if (shownGroups.isEmpty()) return
@@ -74,14 +75,20 @@ fun AppBarOverflowMenu(
         AppBarIconButton(
             painter = painterResource(Res.drawable.ic_rounded_more_vert),
             contentDescription = stringResource(Res.string.action_more_options),
-            onClick = { showMenu = true },
+            onClick = {
+                showMenu = true
+                onExpandedChange(true)
+            },
             narrow = true,
             interactionSource = interactionSource,
         )
         OverflowMenuPopup(
             expanded = showMenu,
             groups = shownGroups,
-            onDismissRequest = { showMenu = false },
+            onDismissRequest = {
+                showMenu = false
+                onExpandedChange(false)
+            },
         )
     }
 }

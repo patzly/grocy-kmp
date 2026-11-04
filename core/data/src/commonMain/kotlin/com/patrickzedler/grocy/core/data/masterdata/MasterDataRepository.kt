@@ -446,6 +446,10 @@ class MasterDataRepository(
         return id
     }
 
+    /** The name of equipment [id] as stored, which Grocy's question before deleting it shows. */
+    suspend fun equipmentName(id: Int): String? =
+        database.equipmentDao().observeEquipment().first().find { it.id == id }?.name
+
     /** The name of task [id] as stored, which Grocy's question before deleting it shows. */
     suspend fun taskName(id: Int): String? =
         database.taskDao().observeTasks().first().find { it.id == id }?.name
@@ -469,6 +473,7 @@ class MasterDataRepository(
             BATTERIES -> dao.deleteBattery(id)
             TASK_CATEGORIES -> dao.deleteTaskCategory(id)
             TASKS -> database.taskDao().deleteTask(id)
+            EQUIPMENT -> database.equipmentDao().deleteEquipment(id)
             USERENTITIES -> dao.deleteUserentity(id)
             USERFIELDS -> dao.deleteUserfield(id)
             PRODUCT_BARCODES -> dao.deleteProductBarcode(id)
@@ -595,6 +600,7 @@ class MasterDataRepository(
         const val BATTERIES = "batteries"
         const val TASK_CATEGORIES = "task_categories"
         const val TASKS = "tasks"
+        const val EQUIPMENT = "equipment"
         const val USERENTITIES = "userentities"
         const val USERFIELDS = "userfields"
         const val PRODUCT_BARCODES = "product_barcodes"

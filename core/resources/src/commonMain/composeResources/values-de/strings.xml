@@ -1234,4 +1234,61 @@
     <item quantity="one">%1$d Eintrag ist für heute geplant.</item>
     <item quantity="other">%1$d Einträge sind für heute geplant.</item>
   </plurals>
+  <string name="batteries_overview_title">Batterienübersicht</string>
+  <string name="battery_tracking_title">Batterie-Ladezyklus</string>
+  <string name="batteries_journal_title">Batteriejournal</string>
+  <string name="battery_journal">Batteriejournal</string>
+  <string name="battery_overview">Batterieübersicht</string>
+  <string name="batteries_track">Ladezyklus erfassen</string>
+  <string name="batteries_last_charged">Zuletzt geladen</string>
+  <string name="batteries_next_charge">Nächster geplanter Ladezyklus</string>
+  <string name="batteries_status_overdue">Überfällig</string>
+  <string name="batteries_status_due_today">Heute fällig</string>
+  <string name="batteries_status_due_soon">Bald fällig</string>
+  <string name="batteries_tracked">Ladezyklus für Batterie %1$s am %2$s erfasst</string>
+  <string name="batteries_undone">Ladezyklus erfolgreich rückgängig gemacht</string>
+  <string name="battery_field">Batterie</string>
+  <string name="battery_required">Eine Batterie muss ausgewählt werden</string>
+  <string name="battery_charge_cycles_count">Ladezyklen</string>
+  <string name="battery_undo">Ladezyklus rückgängig machen</string>
+  <string name="grocycode_battery">Batterie</string>
+  <string name="data_not_before_now">Dies kann nur vor jetzt sein</string>
+  <string name="equipment_title">Ausstattung</string>
+  <string name="equipment_create">Ausstattung erstellen</string>
+  <string name="equipment_edit">Ausstattung bearbeiten</string>
+  <string name="equipment_notes">Notizen</string>
+  <string name="equipment_manual">Bedienungsanleitung</string>
+  <string name="equipment_no_manual">Die ausgewählte Ausstattung hat keine Bedienungsanleitung</string>
+  <string name="equipment_no_file">Keine Datei ausgewählt</string>
+  <string name="equipment_download">Datei herunterladen</string>
+  <string name="equipment_fullscreen">Auf ganzen Bildschirm vergrößern</string>
+  <string name="equipment_manual_none">Keine Datei ausgewählt</string>
+  <string name="equipment_manual_will_delete">Die aktuelle Datei wird beim Speichern gelöscht</string>
+  <string name="objects_delete_equipment">Ausstattung "%1$s" wirklich löschen?</string>
+  <string name="batteries_track_failed">Der Ladezyklus konnte nicht erfasst werden</string>
+  <string name="batteries_detail_hint">Erfasse einen Ladezyklus oder öffne das Journal, um es hier zu sehen</string>
+  <string name="battery_undo_failed">Der Ladezyklus konnte nicht rückgängig gemacht werden</string>
+  <string name="battery_code_unknown">Für diesen Code wurde keine Batterie gefunden</string>
+  <string name="equipment_no_notes">Die ausgewählte Ausstattung hat keine Notizen</string>
+  <string name="equipment_no_preview">Diese Datei kann hier nicht angezeigt werden, du kannst sie aber herunterladen.</string>
+  <string name="equipment_save_failed">Die Datei konnte nicht gespeichert werden</string>
+  <string name="equipment_choose_file">PDF-Datei auswählen</string>
+  <string name="equipment_detail_hint">Wähle eine Ausstattung aus der Liste, um sie hier zu sehen</string>
+  <string name="pdf_page">Seite %1$d von %2$d</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="one">%1$d Batterie ist überfällig.</item>
+    <item quantity="other">%1$d Batterien sind überfällig.</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="one">%1$d Batterie muss heute geladen werden.</item>
+    <item quantity="other">%1$d Batterien müssen heute geladen werden.</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="one">%1$d Batterie muss geladen werden %2$s.</item>
+    <item quantity="other">%1$d Batterien müssen geladen werden %2$s.</item>
+  </plurals>
+  <plurals name="equipment_count">
+    <item quantity="one">%1$d Ausstattungsgegenstand</item>
+    <item quantity="other">%1$d Ausstattungsgegenstände</item>
+  </plurals>
 </resources>

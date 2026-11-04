@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.core.data.notifications
 
+import com.patrickzedler.grocy.core.data.batteries.BatteriesRepository
 import com.patrickzedler.grocy.core.data.chores.ChoresRepository
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
@@ -9,6 +10,7 @@ import com.patrickzedler.grocy.core.data.tasks.TasksRepository
 import com.patrickzedler.grocy.core.model.notifications.NotificationKind
 import com.patrickzedler.grocy.core.model.notifications.NotificationKindSettings
 import com.patrickzedler.grocy.core.model.notifications.NotificationSummary
+import com.patrickzedler.grocy.core.model.notifications.batteriesNotificationSections
 import com.patrickzedler.grocy.core.model.notifications.choresNotificationSections
 import com.patrickzedler.grocy.core.model.notifications.mealPlanNotificationSections
 import com.patrickzedler.grocy.core.model.notifications.notificationDayOf
@@ -51,6 +53,7 @@ class RepositoryNotificationDataSource(
     private val stock: StockRepository,
     private val chores: ChoresRepository,
     private val tasks: TasksRepository,
+    private val batteries: BatteriesRepository,
     private val recipes: RecipesRepository,
     private val mealPlan: MealPlanRepository,
     private val timeout: Duration,
@@ -82,6 +85,7 @@ class RepositoryNotificationDataSource(
             NotificationKind.STOCK -> stock.refreshOverview(config.shoppingList)
             NotificationKind.CHORES -> chores.refresh()
             NotificationKind.TASKS -> tasks.refresh()
+            NotificationKind.BATTERIES -> batteries.refresh()
             NotificationKind.MEAL_PLAN -> coroutineScope {
                 launch { mealPlan.refresh() }
                 launch { recipes.refresh() }
@@ -135,6 +139,18 @@ class RepositoryNotificationDataSource(
                 ),
                 showNames = settings.showNames,
                 dueSoonDays = userSettings.tasksDueSoonDays,
+            )
+            NotificationKind.BATTERIES -> NotificationSummary(
+                kind = kind,
+                sections = batteriesNotificationSections(
+                    current = batteries.current.first(),
+                    batteries = masterData.batteries.first(),
+                    settings = settings,
+                    dueSoonDays = userSettings.batteriesDueSoonDays,
+                    now = grocyDateTimeOf(now),
+                ),
+                showNames = settings.showNames,
+                dueSoonDays = userSettings.batteriesDueSoonDays,
             )
             NotificationKind.MEAL_PLAN -> NotificationSummary(
                 kind = kind,

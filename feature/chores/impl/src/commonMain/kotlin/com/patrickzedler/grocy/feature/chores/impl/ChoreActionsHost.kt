@@ -21,6 +21,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.forms.DateKeyboardType
+import com.patrickzedler.grocy.core.forms.dateTimeText
 import com.patrickzedler.grocy.core.forms.DatePickerButton
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.FormDialog
@@ -95,7 +96,7 @@ internal suspend fun showTracked(
         message = getString(
             Res.string.chores_tracked,
             event.choreName,
-            choreDateTimeText(event.trackedTime, event.trackDateOnly),
+            dateTimeText(event.trackedTime, event.trackDateOnly),
         ),
         actionLabel = getString(Res.string.action_undo),
         duration = SnackbarDuration.Long,

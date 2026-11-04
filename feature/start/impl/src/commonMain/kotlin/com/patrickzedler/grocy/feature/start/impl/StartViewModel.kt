@@ -2,7 +2,9 @@ package com.patrickzedler.grocy.feature.start.impl
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.patrickzedler.grocy.core.data.batteries.BatteriesRepository
 import com.patrickzedler.grocy.core.data.chores.ChoresRepository
+import com.patrickzedler.grocy.core.data.equipment.EquipmentRepository
 import com.patrickzedler.grocy.core.data.tasks.TasksRepository
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
@@ -11,6 +13,8 @@ import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.data.util.RefreshController
 import com.patrickzedler.grocy.core.data.util.RefreshState
+import com.patrickzedler.grocy.core.model.batteries.BatteriesSummary
+import com.patrickzedler.grocy.core.model.batteries.batteriesSummaryOf
 import com.patrickzedler.grocy.core.model.chores.ChoresSummary
 import com.patrickzedler.grocy.core.model.chores.choresSummaryOf
 import com.patrickzedler.grocy.core.model.tasks.TasksSummary
@@ -139,6 +143,11 @@ internal data class StartUiState(
     /** Null without the tasks feature or before the first download stored any task to do. */
     val tasks: TasksSummary? = null,
     val tasksDueSoonDays: Int = 0,
+    /** Null without the batteries feature or before the first download stored any battery. */
+    val batteries: BatteriesSummary? = null,
+    val batteriesDueSoonDays: Int = 0,
+    /** Null without the equipment feature or before the first download stored any piece. */
+    val equipmentCount: Int? = null,
 )
 
 /**
@@ -154,6 +163,8 @@ internal class StartViewModel(
     private val mealPlan: MealPlanRepository,
     private val chores: ChoresRepository,
     private val tasks: TasksRepository,
+    private val batteries: BatteriesRepository,
+    private val equipment: EquipmentRepository,
     val serverConfig: StateFlow<ServerConfig?>,
     private val today: () -> Long = ::todayEpochDay,
     private val now: () -> String = { grocyDateTimeOf(localNowMillis()) },
@@ -169,6 +180,8 @@ internal class StartViewModel(
             if (config.recipes && config.recipesMealPlan) launch { mealPlan.refresh() }
             if (config.chores) launch { chores.refresh() }
             if (config.tasks) launch { tasks.refresh() }
+            if (config.batteries) launch { batteries.refresh() }
+            if (config.equipment) launch { equipment.refresh() }
         }
     }
     val refresh: StateFlow<RefreshState> = refreshController.state
@@ -202,14 +215,24 @@ internal class StartViewModel(
         ::Triple,
     )
 
+    private val batteriesPart = combine(
+        batteries.current,
+        equipment.equipment,
+        ::Pair,
+    )
+
+    private val householdPart = combine(choresPart, batteriesPart, ::Pair)
+
     val state: StateFlow<StartUiState?> = combine(
         combine(serverConfig.filterNotNull(), repository.userSettings, ::Pair),
         stockData,
         counts,
         recipesSummary,
-        choresPart,
-    ) { (config, settings), stockData, counts, (recipes, mealPlanToday), choresPart ->
+        householdPart,
+    ) { (config, settings), stockData, counts, (recipes, mealPlanToday), household ->
+        val (choresPart, batteriesPart) = household
         val (current, userId, allTasks) = choresPart
+        val (currentBatteries, allEquipment) = batteriesPart
         stateOf(config, settings, stockData, counts).copy(
             recipes = recipes.takeIf { config.recipes && it.count > 0 },
             checksRecipeStock = config.stock,
@@ -224,6 +247,10 @@ internal class StartViewModel(
             tasks = tasksSummaryOf(allTasks, today(), settings.tasksDueSoonDays)
                 .takeIf { config.tasks && it.count > 0 },
             tasksDueSoonDays = settings.tasksDueSoonDays,
+            batteries = batteriesSummaryOf(currentBatteries, now(), settings.batteriesDueSoonDays)
+                .takeIf { config.batteries && it.count > 0 },
+            batteriesDueSoonDays = settings.batteriesDueSoonDays,
+            equipmentCount = allEquipment.size.takeIf { config.equipment && it > 0 },
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), null)
 

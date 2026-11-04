@@ -5,11 +5,15 @@ import com.patrickzedler.grocy.core.model.notifications.NotificationSection
 import com.patrickzedler.grocy.core.model.notifications.NotificationSummary
 import com.patrickzedler.grocy.core.model.notifications.NotificationTopic
 import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.resources.masterdata_batteries
 import com.patrickzedler.grocy.core.resources.masterdata_chores
 import com.patrickzedler.grocy.core.resources.meal_plan_title
 import com.patrickzedler.grocy.core.resources.notifications_meal_plan_today
 import com.patrickzedler.grocy.core.resources.notifications_stale
 import com.patrickzedler.grocy.core.resources.product_group_stock
+import com.patrickzedler.grocy.core.resources.start_batteries_due_soon
+import com.patrickzedler.grocy.core.resources.start_batteries_due_today
+import com.patrickzedler.grocy.core.resources.start_batteries_overdue
 import com.patrickzedler.grocy.core.resources.start_chores_due_soon
 import com.patrickzedler.grocy.core.resources.start_chores_due_today
 import com.patrickzedler.grocy.core.resources.start_chores_overdue
@@ -42,6 +46,7 @@ internal suspend fun notificationTitleOf(kind: NotificationKind): String = getSt
         NotificationKind.STOCK -> Res.string.product_group_stock
         NotificationKind.CHORES -> Res.string.masterdata_chores
         NotificationKind.TASKS -> Res.string.tasks_title
+        NotificationKind.BATTERIES -> Res.string.masterdata_batteries
         NotificationKind.MEAL_PLAN -> Res.string.meal_plan_title
     },
 )
@@ -88,6 +93,12 @@ private suspend fun sentenceOf(section: NotificationSection, dueSoonDays: Int): 
             getPluralString(Res.plurals.start_tasks_due_today, count, count)
         NotificationTopic.TASKS_DUE_SOON ->
             getPluralString(Res.plurals.start_tasks_due_soon, count, count, within())
+        NotificationTopic.BATTERIES_OVERDUE ->
+            getPluralString(Res.plurals.start_batteries_overdue, count, count)
+        NotificationTopic.BATTERIES_DUE_TODAY ->
+            getPluralString(Res.plurals.start_batteries_due_today, count, count)
+        NotificationTopic.BATTERIES_DUE_SOON ->
+            getPluralString(Res.plurals.start_batteries_due_soon, count, count, within())
         NotificationTopic.MEAL_PLAN_TODAY ->
             getPluralString(Res.plurals.notifications_meal_plan_today, count, count)
     }

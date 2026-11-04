@@ -1187,4 +1187,57 @@
   <plurals name="notifications_meal_plan_today">
     <item quantity="other">今天計畫了 %1$d 個項目。</item>
   </plurals>
+  <string name="batteries_overview_title">電池總覽</string>
+  <string name="battery_tracking_title">電池追蹤</string>
+  <string name="batteries_journal_title">電池日誌</string>
+  <string name="battery_journal">電池日誌</string>
+  <string name="battery_overview">電池總覽</string>
+  <string name="batteries_track">追蹤電池充電</string>
+  <string name="batteries_last_charged">上次充電</string>
+  <string name="batteries_next_charge">預計下次充電</string>
+  <string name="batteries_status_overdue">逾期</string>
+  <string name="batteries_status_due_today">今日到期</string>
+  <string name="batteries_status_due_soon">即將到期</string>
+  <string name="batteries_tracked">於 %2$s 追蹤電池 %1$s 充電狀況</string>
+  <string name="batteries_undone">取消充電成功</string>
+  <string name="battery_field">電池</string>
+  <string name="battery_required">請選擇一組電池</string>
+  <string name="battery_charge_cycles_count">充電次數</string>
+  <string name="battery_undo">取消充電</string>
+  <string name="grocycode_battery">電池</string>
+  <string name="data_not_before_now">這只能在目前時間之前</string>
+  <string name="equipment_title">設備</string>
+  <string name="equipment_create">新增設備</string>
+  <string name="equipment_edit">編輯設備</string>
+  <string name="equipment_notes">備註</string>
+  <string name="equipment_manual">說明書</string>
+  <string name="equipment_no_manual">所選設備沒有說明書</string>
+  <string name="equipment_no_file">未選擇檔案</string>
+  <string name="equipment_download">下載檔案</string>
+  <string name="equipment_fullscreen">全螢幕模式</string>
+  <string name="equipment_manual_none">未選擇檔案</string>
+  <string name="equipment_manual_will_delete">現有檔案將會在存檔時被刪除</string>
+  <string name="objects_delete_equipment">確定要刪除設備「%1$s」嗎?</string>
+  <string name="batteries_track_failed">無法記錄充電週期</string>
+  <string name="batteries_detail_hint">記錄充電週期或開啟日誌後會顯示在這裡</string>
+  <string name="battery_undo_failed">無法復原充電週期</string>
+  <string name="battery_code_unknown">找不到此代碼對應的電池</string>
+  <string name="equipment_no_notes">所選設備沒有備註</string>
+  <string name="equipment_no_preview">此檔案無法在此顯示,但可以下載。</string>
+  <string name="equipment_save_failed">無法儲存檔案</string>
+  <string name="equipment_choose_file">選擇 PDF 檔案</string>
+  <string name="equipment_detail_hint">從清單中選擇設備後會顯示在這裡</string>
+  <string name="pdf_page">第 %1$d 頁,共 %2$d 頁</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="other">%1$d 組電池早該充電。</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="other">%1$d顆電池今天需要充電。</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="other">%1$d 組電池需要充電 %2$s。</item>
+  </plurals>
+  <plurals name="equipment_count">
+    <item quantity="other">%1$d 件設備</item>
+  </plurals>
 </resources>

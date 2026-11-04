@@ -1280,4 +1280,65 @@
     <item quantity="many">%1$d entrées sont prévues aujourd'hui.</item>
     <item quantity="other">%1$d entrées sont prévues aujourd'hui.</item>
   </plurals>
+  <string name="batteries_overview_title">Aperçu des piles</string>
+  <string name="battery_tracking_title">Suivi des piles</string>
+  <string name="batteries_journal_title">Journal des piles</string>
+  <string name="battery_journal">Journal des piles</string>
+  <string name="battery_overview">Aperçu des piles</string>
+  <string name="batteries_track">Indiquer les cycles de charge</string>
+  <string name="batteries_last_charged">Dernière recharge</string>
+  <string name="batteries_next_charge">Prochaine recharge planifiée</string>
+  <string name="batteries_status_overdue">En retard</string>
+  <string name="batteries_status_due_today">A faire aujourd'hui</string>
+  <string name="batteries_status_due_soon">À réaliser bientôt</string>
+  <string name="batteries_tracked">Suivi de la recharge des piles%1$s sur %2$s</string>
+  <string name="batteries_undone">Le cycle de charge a bien été annulé</string>
+  <string name="battery_field">Pile</string>
+  <string name="battery_required">Vous devez sélectionner une pile</string>
+  <string name="battery_charge_cycles_count">Nombre de recharges</string>
+  <string name="battery_undo">Annuler le cycle de charge</string>
+  <string name="grocycode_battery">Pile</string>
+  <string name="data_not_before_now">Ne peut être qu'antérieur à maintenant</string>
+  <string name="equipment_title">Équipement</string>
+  <string name="equipment_create">Créer un équipement</string>
+  <string name="equipment_edit">Modifier un équipement</string>
+  <string name="equipment_notes">Remarques</string>
+  <string name="equipment_manual">Manuel d'utilisation</string>
+  <string name="equipment_no_manual">L'équipement sélectionné n'a pas de manuel d'utilisation</string>
+  <string name="equipment_no_file">Aucun fichier sélectionné</string>
+  <string name="equipment_download">Télécharger le fichier</string>
+  <string name="equipment_fullscreen">Mettre en plein écran</string>
+  <string name="equipment_manual_none">Aucun fichier sélectionné</string>
+  <string name="equipment_manual_will_delete">Le fichier courant sera supprimé lors de la sauvegarde</string>
+  <string name="objects_delete_equipment">Êtes-vous sûr de vouloir supprimer l'équipement "%1$s" ?</string>
+  <string name="batteries_track_failed">Le cycle de charge n'a pas pu être enregistré</string>
+  <string name="batteries_detail_hint">Enregistrez un cycle de charge ou ouvrez le journal pour le voir ici</string>
+  <string name="battery_undo_failed">Le cycle de charge n'a pas pu être annulé</string>
+  <string name="battery_code_unknown">Aucune batterie trouvée pour ce code</string>
+  <string name="equipment_no_notes">L'équipement sélectionné n'a pas de notes</string>
+  <string name="equipment_no_preview">Ce fichier ne peut pas être affiché ici, mais vous pouvez le télécharger.</string>
+  <string name="equipment_save_failed">Le fichier n'a pas pu être enregistré</string>
+  <string name="equipment_choose_file">Choisir un fichier PDF</string>
+  <string name="equipment_detail_hint">Choisissez un équipement de la liste pour le voir ici</string>
+  <string name="pdf_page">Page %1$d sur %2$d</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="one">%1$d pile à recharger en retard.</item>
+    <item quantity="many">%1$d piles à recharger en retard.</item>
+    <item quantity="other">%1$d piles à recharger en retard.</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="one">%1$d pile à recharger aujourd'hui.</item>
+    <item quantity="many">%1$d piles à recharger aujourd'hui.</item>
+    <item quantity="other">%1$d piles à recharger aujourd'hui.</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="one">%1$d pile à recharger %2$s.</item>
+    <item quantity="many">%1$d piles à recharger %2$s.</item>
+    <item quantity="other">%1$d piles à recharger %2$s.</item>
+  </plurals>
+  <plurals name="equipment_count">
+    <item quantity="one">%1$d équipement</item>
+    <item quantity="many">%1$d équipements</item>
+    <item quantity="other">%1$d équipements</item>
+  </plurals>
 </resources>

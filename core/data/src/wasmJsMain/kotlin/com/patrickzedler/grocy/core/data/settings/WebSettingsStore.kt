@@ -2,6 +2,9 @@ package com.patrickzedler.grocy.core.data.settings
 
 import com.patrickzedler.grocy.core.data.BrowserLocalStorage
 import com.patrickzedler.grocy.core.data.KeyValueStorage
+import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewOptions
+import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalOptions
+import com.patrickzedler.grocy.core.model.equipment.EquipmentOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
 import com.patrickzedler.grocy.core.model.notifications.NotificationDeliveries
@@ -188,6 +191,39 @@ class WebSettingsStore internal constructor(
         storage.set(NOTIFICATION_DELIVERIES, deliveries.stored())
     }
 
+    private val batteriesOverviewOptionsState =
+        MutableStateFlow(BatteriesOverviewOptions.of(storage.get(BATTERIES_OVERVIEW_OPTIONS)))
+
+    override val batteriesOverviewOptions: Flow<BatteriesOverviewOptions> =
+        batteriesOverviewOptionsState.asStateFlow()
+
+    override suspend fun setBatteriesOverviewOptions(options: BatteriesOverviewOptions) {
+        storage.set(BATTERIES_OVERVIEW_OPTIONS, options.stored())
+        batteriesOverviewOptionsState.value = options
+    }
+
+    private val batteriesJournalOptionsState =
+        MutableStateFlow(BatteriesJournalOptions.of(storage.get(BATTERIES_JOURNAL_OPTIONS)))
+
+    override val batteriesJournalOptions: Flow<BatteriesJournalOptions> =
+        batteriesJournalOptionsState.asStateFlow()
+
+    override suspend fun setBatteriesJournalOptions(options: BatteriesJournalOptions) {
+        storage.set(BATTERIES_JOURNAL_OPTIONS, options.stored())
+        batteriesJournalOptionsState.value = options
+    }
+
+    private val equipmentOptionsState =
+        MutableStateFlow(EquipmentOptions.of(storage.get(EQUIPMENT_OPTIONS)))
+
+    override val equipmentOptions: Flow<EquipmentOptions> =
+        equipmentOptionsState.asStateFlow()
+
+    override suspend fun setEquipmentOptions(options: EquipmentOptions) {
+        storage.set(EQUIPMENT_OPTIONS, options.stored())
+        equipmentOptionsState.value = options
+    }
+
     private val recipesOptionsState = MutableStateFlow(
         RecipesOptions.of(
             fields = storage.get(RECIPES_FIELDS),
@@ -236,6 +272,9 @@ class WebSettingsStore internal constructor(
         const val CHORES_OVERVIEW_OPTIONS = "grocy.choresOverviewOptions"
         const val CHORES_JOURNAL_OPTIONS = "grocy.choresJournalOptions"
         const val TASKS_OVERVIEW_OPTIONS = "grocy.tasksOverviewOptions"
+        const val BATTERIES_OVERVIEW_OPTIONS = "grocy.batteriesOverviewOptions"
+        const val BATTERIES_JOURNAL_OPTIONS = "grocy.batteriesJournalOptions"
+        const val EQUIPMENT_OPTIONS = "grocy.equipmentOptions"
         const val NOTIFICATION_SETTINGS = "grocy.notificationSettings"
         const val NOTIFICATION_DELIVERIES = "grocy.notificationDeliveries"
     }

@@ -17,7 +17,9 @@ Test setup, fakes and platform caveats. Moved from CLAUDE.md.
     `FakeAppLanguageStore`.
   - `FakeGrocyServer` also serves the master data of `MasterDataJson` (Milk, Bread, a disabled
     product, a sub product, units, barcode, stock, userfield, config, settings, the product
-    overview of Milk with two prices, chores Vacuum and a disabled one, a battery, the tasks Mow the
+    overview of Milk with two prices, chores Vacuum and a disabled one, the batteries Remote (due) and Spare (no interval) with their
+    overview, card, journal and tracking answers, the equipment Drill (manual, notes, a file userfield)
+    and Ladder, the tasks Mow the
     lawn, Buy seeds and the done Old task with their POST answers, a task category, a userentity, users, a chore userfield, the shopping lists 1 "Shopping list" with
     notes and 2 "Hardware store", item 5 (Milk, 6 pieces shown as a Pack, note "Low fat") and the
     done note item 6 "Batteries"), answers POST of the chores' next assignments, of the shopping

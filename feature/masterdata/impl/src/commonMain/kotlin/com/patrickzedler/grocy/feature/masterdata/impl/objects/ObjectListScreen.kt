@@ -51,7 +51,6 @@ import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.edgeToEdgeItem
 import com.patrickzedler.grocy.core.design.component.insetItems
 import com.patrickzedler.grocy.core.design.component.smallIconButtonSize
-import com.patrickzedler.grocy.core.design.component.touchTargetRoom
 import com.patrickzedler.grocy.core.forms.ClearFilterChip
 import com.patrickzedler.grocy.core.forms.DisabledAlpha
 import com.patrickzedler.grocy.core.forms.DropdownFilterChip
@@ -418,8 +417,6 @@ private fun UserentityButtons(
                 )
             }
         },
-        // The item's padding plus the room single buttons keep for their touch targets
-        modifier = Modifier.padding(horizontal = touchTargetRoom(IconButtonWidthOption.Narrow)),
     ) {
         animatedItem(
             menuContent = { menuState ->

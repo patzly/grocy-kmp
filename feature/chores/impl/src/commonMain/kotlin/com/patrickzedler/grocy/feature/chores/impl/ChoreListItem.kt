@@ -24,6 +24,8 @@ import com.patrickzedler.grocy.core.design.component.SwipeAction
 import com.patrickzedler.grocy.core.design.component.SwipeActionBox
 import com.patrickzedler.grocy.core.design.component.rememberStatusColors
 import com.patrickzedler.grocy.core.forms.FieldChip
+import com.patrickzedler.grocy.core.forms.relativeDateTimeLabel
+import com.patrickzedler.grocy.core.forms.dateTimeWithRelative
 import com.patrickzedler.grocy.core.forms.FieldChipView
 import com.patrickzedler.grocy.core.forms.ItemButton
 import com.patrickzedler.grocy.core.forms.ItemButtons
@@ -222,11 +224,11 @@ private fun choreChips(row: ChoreRow, style: ChoreRowStyle): List<FieldChip> {
                     val rescheduled = stringResource(Res.string.chores_rescheduled)
                         .takeIf { chore.isRescheduled }
                     chips += FieldChip(
-                        text = choreRelativeLabel(next, dateOnly, today),
+                        text = relativeDateTimeLabel(next, today, dateOnly),
                         description = labelled(
                             stringResource(Res.string.chores_next_tracking),
                             listOfNotNull(
-                                choreDateTimeWithRelative(next, dateOnly, today),
+                                dateTimeWithRelative(next, today, dateOnly),
                                 rescheduled,
                             ).joinToString(", "),
                         ),
@@ -240,10 +242,10 @@ private fun choreChips(row: ChoreRow, style: ChoreRowStyle): List<FieldChip> {
                 }
             ChoresOverviewField.LAST_TRACKED -> chore.lastTrackedTime?.let { last ->
                 chips += FieldChip(
-                    text = choreRelativeLabel(last, dateOnly, today),
+                    text = relativeDateTimeLabel(last, today, dateOnly),
                     description = labelled(
                         stringResource(Res.string.chores_last_tracked),
-                        choreDateTimeWithRelative(last, dateOnly, today),
+                        dateTimeWithRelative(last, today, dateOnly),
                     ),
                     icon = Res.drawable.ic_rounded_history,
                 )

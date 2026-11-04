@@ -16,6 +16,7 @@ import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapp
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedGroup
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.forms.dateTimeWithRelative
 import com.patrickzedler.grocy.core.model.User
 import com.patrickzedler.grocy.core.model.chores.ChoreDetails
 import com.patrickzedler.grocy.core.model.chores.CurrentChore
@@ -141,7 +142,7 @@ internal fun ChoreFactsGroup(name: String, card: ChoreCardData?) {
 private fun choreFacts(card: ChoreCardData): List<ChoreFact> {
     val today = remember { todayEpochDay() }
     val unknown = stringResource(Res.string.chore_unknown)
-    val next = card.next?.let { choreDateTimeWithRelative(it, card.trackDateOnly, today) }
+    val next = card.next?.let { dateTimeWithRelative(it, today, card.trackDateOnly) }
         ?.let { text ->
             if (card.isRescheduled) {
                 "$text · ${stringResource(Res.string.chores_rescheduled)}"
@@ -189,7 +190,7 @@ private fun choreFacts(card: ChoreCardData): List<ChoreFact> {
         ChoreFact(
             label = stringResource(Res.string.chores_last_tracked),
             value = card.lastTracked
-                ?.let { choreDateTimeWithRelative(it, card.trackDateOnly, today) }
+                ?.let { dateTimeWithRelative(it, today, card.trackDateOnly) }
                 ?: stringResource(Res.string.chore_never),
             icon = Res.drawable.ic_rounded_history,
         ),

@@ -1233,4 +1233,61 @@
     <item quantity="one">Bugün için %1$d kayıt planlandı.</item>
     <item quantity="other">Bugün için %1$d kayıt planlandı.</item>
   </plurals>
+  <string name="batteries_overview_title">Pillere genel bakış</string>
+  <string name="battery_tracking_title">Pil takibi</string>
+  <string name="batteries_journal_title">Pil günlüğü</string>
+  <string name="battery_journal">Pil günlüğü</string>
+  <string name="battery_overview">Pillere genel bakış</string>
+  <string name="batteries_track">Şarj döngüsünü takip edin</string>
+  <string name="batteries_last_charged">Son şarj ediş</string>
+  <string name="batteries_next_charge">Sonraki planlanan şarj döngüsü</string>
+  <string name="batteries_status_overdue">Tamamlanma süresi geçmiş</string>
+  <string name="batteries_status_due_today">Bugün süresi doluyor</string>
+  <string name="batteries_status_due_soon">Tamamlanma süresi yakında</string>
+  <string name="batteries_tracked">Pil %1$s'in %2$s üzerindeki şarj döngüsü takip edildi</string>
+  <string name="batteries_undone">Şarj döngüsü başarıyla geri alındı</string>
+  <string name="battery_field">Pil</string>
+  <string name="battery_required">Pil seçmeniz lazım</string>
+  <string name="battery_charge_cycles_count">Şarj döngüsü sayısı</string>
+  <string name="battery_undo">Şart döngüsünü geri al</string>
+  <string name="grocycode_battery">Pil</string>
+  <string name="data_not_before_now">Bu sadece şu andan önce olabilir</string>
+  <string name="equipment_title">Ekipman</string>
+  <string name="equipment_create">Ekipman oluştur</string>
+  <string name="equipment_edit">Ekipmanı düzenle</string>
+  <string name="equipment_notes">Notlar</string>
+  <string name="equipment_manual">Kullanım kılavuzu</string>
+  <string name="equipment_no_manual">Seçili ekipmanın kullanım kılavuzu yok</string>
+  <string name="equipment_no_file">Hiçbir dosya seçilmedi</string>
+  <string name="equipment_download">Dosyayı indir</string>
+  <string name="equipment_fullscreen">Tam ekran yap</string>
+  <string name="equipment_manual_none">Hiçbir dosya seçilmedi</string>
+  <string name="equipment_manual_will_delete">Kayıt ettiğinizde mevcut dosya silinecek</string>
+  <string name="objects_delete_equipment">"%1$s" ekipmanını silmek istediğinizden emin misiniz?</string>
+  <string name="batteries_track_failed">Şarj döngüsü kaydedilemedi</string>
+  <string name="batteries_detail_hint">Burada görmek için bir şarj döngüsü kaydedin veya günlüğü açın</string>
+  <string name="battery_undo_failed">Şarj döngüsü geri alınamadı</string>
+  <string name="battery_code_unknown">Bu kod için pil bulunamadı</string>
+  <string name="equipment_no_notes">Seçilen ekipmanın notu yok</string>
+  <string name="equipment_no_preview">Bu dosya burada gösterilemiyor ancak indirebilirsiniz.</string>
+  <string name="equipment_save_failed">Dosya kaydedilemedi</string>
+  <string name="equipment_choose_file">PDF dosyası seç</string>
+  <string name="equipment_detail_hint">Burada görmek için listeden bir ekipman seçin</string>
+  <string name="pdf_page">Sayfa %1$d / %2$d</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="one">%1$d pilin şarj edilme zamanı geçti.</item>
+    <item quantity="other">%1$d pilin şarj edilme zamanı geçti.</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="one">%1$d pilin şarjının tamamlanması için bugün son gün.</item>
+    <item quantity="other">%1$d pilin şarjının tamamlanması için bugün son gün.</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="one">%1$d pilin şarj edilmesi gerekli %2$s.</item>
+    <item quantity="other">%1$d pilin şarj edilmesi gerekli %2$s.</item>
+  </plurals>
+  <plurals name="equipment_count">
+    <item quantity="one">%1$d ekipman</item>
+    <item quantity="other">%1$d ekipman</item>
+  </plurals>
 </resources>

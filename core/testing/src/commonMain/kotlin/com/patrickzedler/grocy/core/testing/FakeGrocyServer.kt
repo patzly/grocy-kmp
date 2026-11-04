@@ -123,6 +123,27 @@ class FakeGrocyServer(
             status = HttpStatusCode.NoContent,
             method = HttpMethod.Post,
         )
+        // Tracking charge cycles, undoing them and new equipment; POST has no default answer
+        respond(
+            path = "/api/batteries/1/charge",
+            body = MasterDataJson.TRACKED_CHARGE_CYCLE,
+            method = HttpMethod.Post,
+        )
+        respond(
+            path = "/api/batteries/charge-cycles/22/undo",
+            status = HttpStatusCode.NoContent,
+            method = HttpMethod.Post,
+        )
+        respond(
+            path = "/api/batteries/charge-cycles/23/undo",
+            status = HttpStatusCode.NoContent,
+            method = HttpMethod.Post,
+        )
+        respond(
+            path = "/api/objects/equipment",
+            body = """{"created_object_id":${MasterDataJson.CREATED_ID}}""",
+            method = HttpMethod.Post,
+        )
         // New tasks, completing them and undoing that; POST has no default answer
         respond(
             path = "/api/objects/tasks",

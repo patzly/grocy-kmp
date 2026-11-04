@@ -19,6 +19,11 @@ import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListField
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalGrouping
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
+import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalGrouping
+import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalOptions
+import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewGrouping
+import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewOptions
+import com.patrickzedler.grocy.core.model.equipment.EquipmentOptions
 import com.patrickzedler.grocy.core.model.tasks.TasksOverviewGrouping
 import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewGrouping
@@ -247,5 +252,24 @@ class WebSettingsStoreTest {
         assertEquals(settings, thisTab.readNotificationSettings())
         assertEquals(settings, thisTab.notificationSettings.first())
         assertEquals(deliveries, thisTab.readNotificationDeliveries())
+    }
+
+    @Test
+    fun batteriesAndEquipmentOptionsSurviveARestart() = runTest {
+        val storage = InMemoryStorage()
+        val overview = BatteriesOverviewOptions(grouping = BatteriesOverviewGrouping.USED_IN)
+        val journal = BatteriesJournalOptions(grouping = BatteriesJournalGrouping.BATTERY)
+        val equipment = EquipmentOptions(sortUserfield = "room")
+
+        WebSettingsStore(storage).run {
+            setBatteriesOverviewOptions(overview)
+            setBatteriesJournalOptions(journal)
+            setEquipmentOptions(equipment)
+        }
+
+        val restarted = WebSettingsStore(storage)
+        assertEquals(overview, restarted.batteriesOverviewOptions.first())
+        assertEquals(journal, restarted.batteriesJournalOptions.first())
+        assertEquals(equipment, restarted.equipmentOptions.first())
     }
 }

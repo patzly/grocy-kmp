@@ -20,6 +20,7 @@ data class ServerConfig(
     val choresAssignments: Boolean = true,
     val tasks: Boolean = true,
     val batteries: Boolean = true,
+    val equipment: Boolean = true,
     val labelPrinter: Boolean = false,
     /**
      * The server runs the label printer's webhook itself. Otherwise Grocy's web frontend calls

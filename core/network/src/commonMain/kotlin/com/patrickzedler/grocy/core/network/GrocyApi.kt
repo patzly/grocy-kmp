@@ -3,7 +3,11 @@ package com.patrickzedler.grocy.core.network
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.SystemInfo
 import com.patrickzedler.grocy.core.model.User
+import com.patrickzedler.grocy.core.model.equipment.Equipment
 import com.patrickzedler.grocy.core.model.masterdata.Battery
+import com.patrickzedler.grocy.core.model.batteries.BatteryChargeCycle
+import com.patrickzedler.grocy.core.model.batteries.BatteryDetails
+import com.patrickzedler.grocy.core.model.batteries.CurrentBattery
 import com.patrickzedler.grocy.core.model.chores.ChoreDetails
 import com.patrickzedler.grocy.core.model.chores.ChoreExecution
 import com.patrickzedler.grocy.core.model.chores.CurrentChore
@@ -47,7 +51,11 @@ import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockLogEntry
 import com.patrickzedler.grocy.core.model.stock.TransferBooking
 import com.patrickzedler.grocy.core.network.dto.AveragePriceDto
+import com.patrickzedler.grocy.core.network.dto.BatteryChargeCycleDto
+import com.patrickzedler.grocy.core.network.dto.BatteryDetailsDto
 import com.patrickzedler.grocy.core.network.dto.BatteryDto
+import com.patrickzedler.grocy.core.network.dto.CurrentBatteryDto
+import com.patrickzedler.grocy.core.network.dto.EquipmentDto
 import com.patrickzedler.grocy.core.network.dto.ChoreDetailsDto
 import com.patrickzedler.grocy.core.network.dto.ChoreDto
 import com.patrickzedler.grocy.core.network.dto.ChoreLogDto
@@ -313,6 +321,111 @@ class GrocyApi(
 
     suspend fun saveBattery(connection: ServerConnection, battery: Battery): Int =
         saveObject(connection, BATTERIES, battery.id, battery.toJson())
+
+    /** Grocy's batteries overview: the active batteries with when they are due. */
+    suspend fun currentBatteries(connection: ServerConnection): List<CurrentBattery> =
+        get<List<CurrentBatteryDto>>(connection, BATTERIES).map { it.toModel() }
+
+    /** What Grocy's "Battery overview" card shows of battery [id]. */
+    suspend fun batteryDetails(connection: ServerConnection, id: Int): BatteryDetails =
+        get<BatteryDetailsDto>(connection, BATTERIES, id.toString()).toModel(id)
+
+    /** The batteries journal: charge cycles since [since] ("YYYY-MM-DD", all without). */
+    suspend fun batteryChargeCycles(
+        connection: ServerConnection,
+        since: String?,
+    ): List<BatteryChargeCycle> = get<List<BatteryChargeCycleDto>>(
+        connection,
+        "objects",
+        BATTERY_CHARGE_CYCLES,
+        query = buildList {
+            since?.let { add("query[]" to "tracked_time>=$it") }
+            add("order" to "tracked_time:desc")
+        },
+    ).map { it.toModel() }
+
+    suspend fun batteryChargeCycle(connection: ServerConnection, id: Int): BatteryChargeCycle =
+        get<BatteryChargeCycleDto>(
+            connection,
+            "objects",
+            BATTERY_CHARGE_CYCLES,
+            id.toString(),
+        ).toModel()
+
+    /**
+     * Grocy's "Track charge cycle" of battery [id] at [trackedTime] ("YYYY-MM-DD HH:MM:SS");
+     * returns the charge cycle as the server stored it.
+     */
+    suspend fun trackChargeCycle(
+        connection: ServerConnection,
+        id: Int,
+        trackedTime: String,
+    ): BatteryChargeCycle = decode<BatteryChargeCycleDto>(
+        execute(
+            connection,
+            HttpMethod.Post,
+            listOf(BATTERIES, id.toString(), "charge"),
+            body = jsonBody(buildJsonObject { put("tracked_time", trackedTime) }),
+        ),
+    ).toModel()
+
+    /** Grocy's "Undo charge cycle". */
+    suspend fun undoChargeCycle(connection: ServerConnection, id: Int) {
+        execute(
+            connection,
+            HttpMethod.Post,
+            listOf(BATTERIES, "charge-cycles", id.toString(), "undo"),
+            body = jsonBody(JsonObject(emptyMap())),
+        )
+    }
+
+    /** Prints the battery's grocycode on the label printer, from the server. */
+    suspend fun printBatteryLabel(connection: ServerConnection, id: Int) {
+        execute(connection, HttpMethod.Get, listOf(BATTERIES, id.toString(), "printlabel"))
+    }
+
+    suspend fun equipment(connection: ServerConnection): List<Equipment> =
+        get<List<EquipmentDto>>(connection, "objects", EQUIPMENT).map { it.toModel() }
+
+    suspend fun equipment(connection: ServerConnection, id: Int): Equipment =
+        get<EquipmentDto>(connection, "objects", EQUIPMENT, id.toString()).toModel()
+
+    suspend fun saveEquipment(connection: ServerConnection, equipment: Equipment): Int =
+        saveObject(connection, EQUIPMENT, equipment.id, equipment.toJson())
+
+    /** The instruction manual [fileName] as it is stored on the server. */
+    suspend fun equipmentManual(connection: ServerConnection, fileName: String): ByteArray =
+        execute(
+            connection,
+            HttpMethod.Get,
+            listOf("files", EQUIPMENT_MANUALS, Base64.encode(fileName.encodeToByteArray())),
+        ).bodyAsBytes()
+
+    /** Uploads an instruction manual; Grocy never overwrites a file, so [fileName] must be new. */
+    suspend fun uploadEquipmentManual(
+        connection: ServerConnection,
+        fileName: String,
+        bytes: ByteArray,
+    ) {
+        execute(
+            connection,
+            HttpMethod.Put,
+            listOf("files", EQUIPMENT_MANUALS, Base64.encode(fileName.encodeToByteArray())),
+            body = ByteArrayContent(bytes, ContentType.Application.OctetStream),
+        )
+    }
+
+    suspend fun deleteEquipmentManual(connection: ServerConnection, fileName: String) {
+        execute(
+            connection,
+            HttpMethod.Delete,
+            listOf("files", EQUIPMENT_MANUALS, Base64.encode(fileName.encodeToByteArray())),
+        )
+    }
+
+    /** The file of a file userfield, [value] being the field's value as the server keeps it. */
+    suspend fun userfieldFile(connection: ServerConnection, value: String): ByteArray =
+        execute(connection, HttpMethod.Get, listOf("files", USER_FILES, value)).bodyAsBytes()
 
     suspend fun taskCategories(connection: ServerConnection): List<TaskCategory> =
         get<List<TaskCategoryDto>>(connection, "objects", TASK_CATEGORIES).map { it.toModel() }
@@ -1405,6 +1518,10 @@ class GrocyApi(
         private const val CHORES = "chores"
         private const val CHORES_LOG = "chores_log"
         private const val BATTERIES = "batteries"
+        private const val BATTERY_CHARGE_CYCLES = "battery_charge_cycles"
+        private const val EQUIPMENT = "equipment"
+        private const val EQUIPMENT_MANUALS = "equipmentmanuals"
+        private const val USER_FILES = "userfiles"
         private const val TASK_CATEGORIES = "task_categories"
         private const val TASKS = "tasks"
         private const val USERENTITIES = "userentities"

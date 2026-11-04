@@ -44,6 +44,7 @@ import com.patrickzedler.grocy.core.resources.chores_status_due_today
 import com.patrickzedler.grocy.core.resources.chores_status_overdue
 import com.patrickzedler.grocy.core.resources.ic_rounded_schedule
 import com.patrickzedler.grocy.core.resources.ic_rounded_warning
+import com.patrickzedler.grocy.core.resources.masterdata_batteries
 import com.patrickzedler.grocy.core.resources.masterdata_chores
 import com.patrickzedler.grocy.core.resources.meal_plan_title
 import com.patrickzedler.grocy.core.resources.notifications_battery
@@ -417,6 +418,7 @@ private val NotificationKind.title: StringResource
         NotificationKind.STOCK -> Res.string.product_group_stock
         NotificationKind.CHORES -> Res.string.masterdata_chores
         NotificationKind.TASKS -> Res.string.tasks_title
+        NotificationKind.BATTERIES -> Res.string.masterdata_batteries
         NotificationKind.MEAL_PLAN -> Res.string.meal_plan_title
     }
 
@@ -426,12 +428,18 @@ private val NotificationTopic.label: StringResource
         NotificationTopic.STOCK_OVERDUE -> Res.string.stock_entry_overdue
         NotificationTopic.STOCK_EXPIRED -> Res.string.stock_entry_expired
         NotificationTopic.STOCK_BELOW_MIN -> Res.string.stock_overview_below_min_stock
-        NotificationTopic.CHORES_OVERDUE, NotificationTopic.TASKS_OVERDUE ->
-            Res.string.chores_status_overdue
-        NotificationTopic.CHORES_DUE_TODAY, NotificationTopic.TASKS_DUE_TODAY ->
-            Res.string.chores_status_due_today
-        NotificationTopic.CHORES_DUE_SOON, NotificationTopic.TASKS_DUE_SOON ->
-            Res.string.chores_status_due_soon
+        NotificationTopic.CHORES_OVERDUE,
+        NotificationTopic.TASKS_OVERDUE,
+        NotificationTopic.BATTERIES_OVERDUE,
+        -> Res.string.chores_status_overdue
+        NotificationTopic.CHORES_DUE_TODAY,
+        NotificationTopic.TASKS_DUE_TODAY,
+        NotificationTopic.BATTERIES_DUE_TODAY,
+        -> Res.string.chores_status_due_today
+        NotificationTopic.CHORES_DUE_SOON,
+        NotificationTopic.TASKS_DUE_SOON,
+        NotificationTopic.BATTERIES_DUE_SOON,
+        -> Res.string.chores_status_due_soon
         NotificationTopic.MEAL_PLAN_TODAY -> Res.string.meal_plan_title
     }
 

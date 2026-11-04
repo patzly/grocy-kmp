@@ -110,7 +110,49 @@ object MasterDataJson {
 
     const val BATTERIES =
         """[{"id":1,"name":"Remote","used_in":"Living room","charge_interval_days":"30",""" +
-            """"active":1}]"""
+            """"active":1},""" +
+            """{"id":2,"name":"Spare","description":"For the garage","used_in":"",""" +
+            """"charge_interval_days":0,"active":1}]"""
+
+    /** `/batteries`: Remote is due, Spare has no interval; Grocy's date for that one. */
+    const val CURRENT_BATTERIES =
+        """[{"id":1,"battery_id":1,"last_tracked_time":"2026-10-01 08:00:00",""" +
+            """"next_estimated_charge_time":"2026-10-31 08:00:00"},""" +
+            """{"id":2,"battery_id":2,"last_tracked_time":null,""" +
+            """"next_estimated_charge_time":"2999-12-31 23:59:59"}]"""
+
+    /** `/batteries/1`. */
+    const val REMOTE_DETAILS =
+        """{"battery":{"id":1,"name":"Remote"},"last_charged":"2026-10-01 08:00:00",""" +
+            """"charge_cycles_count":"4","next_estimated_charge_time":"2026-10-31 08:00:00"}"""
+
+    /** The batteries journal: a charge cycle of Remote and an undone one. */
+    const val CHARGE_CYCLES =
+        """[{"id":22,"battery_id":1,"tracked_time":"2026-10-01 08:00:00","undone":0,""" +
+            """"userfields":{"voltage":"1.5"}},""" +
+            """{"id":21,"battery_id":1,"tracked_time":"2026-09-01 08:00:00","undone":1,""" +
+            """"undone_timestamp":"2026-09-02 10:00:00"}]"""
+
+    /** What tracking a charge cycle answers: the charge cycle as stored. */
+    const val TRACKED_CHARGE_CYCLE =
+        """{"id":23,"battery_id":1,"tracked_time":"2026-11-02 08:00:00","undone":0}"""
+
+    /** The drill with a manual, notes and a file userfield. */
+    private const val DRILL =
+        """{"id":1,"name":"Drill","description":"<p>Keep <b>dry</b></p>",""" +
+            """"instruction_manual_file_name":"abcdrill.pdf",""" +
+            """"userfields":{"room":"Garage","warranty":"eDEucGRm_V2FycmFudHkucGRm"}}"""
+
+    /** The ladder has neither manual nor notes. */
+    private const val LADDER =
+        """{"id":2,"name":"Ladder","description":"","instruction_manual_file_name":null}"""
+
+    const val EQUIPMENT = "[$DRILL,$LADDER]"
+
+    /** Equipment as the server stores a new one. */
+    const val CREATED_EQUIPMENT =
+        """{"id":$CREATED_ID,"name":"Created equipment","description":"",""" +
+            """"instruction_manual_file_name":null}"""
 
     const val TASK_CATEGORIES = """[{"id":1,"name":"Garden","active":"1"}]"""
 
@@ -388,6 +430,14 @@ object MasterDataJson {
         "/api/objects/chores_log" to CHORES_LOG,
         "/api/objects/chores_log/13" to TRACKED_CHORE,
         "/api/objects/batteries" to BATTERIES,
+        "/api/batteries" to CURRENT_BATTERIES,
+        "/api/batteries/1" to REMOTE_DETAILS,
+        "/api/objects/battery_charge_cycles" to CHARGE_CYCLES,
+        "/api/objects/battery_charge_cycles/23" to TRACKED_CHARGE_CYCLE,
+        "/api/objects/equipment" to EQUIPMENT,
+        "/api/objects/equipment/1" to DRILL,
+        "/api/objects/equipment/2" to LADDER,
+        "/api/objects/equipment/$CREATED_ID" to CREATED_EQUIPMENT,
         "/api/objects/task_categories" to TASK_CATEGORIES,
         "/api/objects/tasks" to TASKS,
         "/api/objects/tasks/1" to MOW_TASK,

@@ -1280,4 +1280,65 @@
     <item quantity="many">%1$d entradas planificadas para hoy.</item>
     <item quantity="other">%1$d entradas planificadas para hoy.</item>
   </plurals>
+  <string name="batteries_overview_title">Resumen de baterías</string>
+  <string name="battery_tracking_title">Registro de baterías</string>
+  <string name="batteries_journal_title">Diario de baterías</string>
+  <string name="battery_journal">DIario de baterías</string>
+  <string name="battery_overview">Resumen de batería</string>
+  <string name="batteries_track">Registrar ciclo de carga</string>
+  <string name="batteries_last_charged">Última carga</string>
+  <string name="batteries_next_charge">Siguiente ciclo de carga planificado</string>
+  <string name="batteries_status_overdue">Fecha límite superada</string>
+  <string name="batteries_status_due_today">Con fecha límite hoy</string>
+  <string name="batteries_status_due_soon">Fecha límite próxima</string>
+  <string name="batteries_tracked">Registrado ciclo de carga de la batería %1$s en %2$s</string>
+  <string name="batteries_undone">El ciclo de carga se deshizo con éxito</string>
+  <string name="battery_field">Batería</string>
+  <string name="battery_required">Debe seleccionar una batería</string>
+  <string name="battery_charge_cycles_count">Recuento de ciclos de carga</string>
+  <string name="battery_undo">Deshacer el ciclo de carga</string>
+  <string name="grocycode_battery">Batería</string>
+  <string name="data_not_before_now">Sólo puede ser antes que ahora</string>
+  <string name="equipment_title">Equipamiento</string>
+  <string name="equipment_create">Crear equipamiento</string>
+  <string name="equipment_edit">Modificar equipamiento</string>
+  <string name="equipment_notes">Notas</string>
+  <string name="equipment_manual">Manual de instrucciones</string>
+  <string name="equipment_no_manual">El equipamiento seleccionado no tiene manual de instrucciones</string>
+  <string name="equipment_no_file">No hay fichero seleccionado</string>
+  <string name="equipment_download">Descargar archivo</string>
+  <string name="equipment_fullscreen">Pantalla completa</string>
+  <string name="equipment_manual_none">No hay fichero seleccionado</string>
+  <string name="equipment_manual_will_delete">El fichero actual será eliminado al guardar</string>
+  <string name="objects_delete_equipment">¿Seguro que quieres eliminar el equipamiento "%1$s"?</string>
+  <string name="batteries_track_failed">No se pudo registrar el ciclo de carga</string>
+  <string name="batteries_detail_hint">Registra un ciclo de carga o abre el diario para verlo aquí</string>
+  <string name="battery_undo_failed">No se pudo deshacer el ciclo de carga</string>
+  <string name="battery_code_unknown">No se encontró ninguna batería para este código</string>
+  <string name="equipment_no_notes">El equipamiento seleccionado no tiene notas</string>
+  <string name="equipment_no_preview">Este archivo no se puede mostrar aquí, pero puedes descargarlo.</string>
+  <string name="equipment_save_failed">No se pudo guardar el archivo</string>
+  <string name="equipment_choose_file">Elegir un archivo PDF</string>
+  <string name="equipment_detail_hint">Elige un equipamiento de la lista para verlo aquí</string>
+  <string name="pdf_page">Página %1$d de %2$d</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="one">%1$d batería debería haberse cargado.</item>
+    <item quantity="many">%1$d baterías deberían haberse cargado.</item>
+    <item quantity="other">%1$d baterías deberían haberse cargado.</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="one">%1$d batería debe cargarse hoy.</item>
+    <item quantity="many">%1$d baterías deben cargarse hoy.</item>
+    <item quantity="other">%1$d baterías deben cargarse hoy.</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="one">%1$d batería debe cargarse %2$s.</item>
+    <item quantity="many">%1$d baterías deben cargarse %2$s.</item>
+    <item quantity="other">%1$d baterías deben cargarse %2$s.</item>
+  </plurals>
+  <plurals name="equipment_count">
+    <item quantity="one">%1$d equipamiento</item>
+    <item quantity="many">%1$d equipamientos</item>
+    <item quantity="other">%1$d equipamientos</item>
+  </plurals>
 </resources>

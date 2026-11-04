@@ -12,6 +12,12 @@ import com.patrickzedler.grocy.feature.chores.api.ChoresJournalRoute
 import com.patrickzedler.grocy.feature.chores.api.ChoresOverviewRoute
 import com.patrickzedler.grocy.feature.tasks.api.TaskRoute
 import com.patrickzedler.grocy.feature.tasks.api.TasksRoute
+import com.patrickzedler.grocy.feature.batteries.api.BatteriesJournalRoute
+import com.patrickzedler.grocy.feature.batteries.api.BatteriesOverviewRoute
+import com.patrickzedler.grocy.feature.batteries.api.BatteryTrackingRoute
+import com.patrickzedler.grocy.feature.equipment.api.EquipmentDetailRoute
+import com.patrickzedler.grocy.feature.equipment.api.EquipmentFormRoute
+import com.patrickzedler.grocy.feature.equipment.api.EquipmentRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ChoreRoute
 import com.patrickzedler.grocy.feature.masterdata.api.ChoresRoute
 import com.patrickzedler.grocy.feature.masterdata.api.LocationRoute
@@ -96,6 +102,12 @@ class RouteSerializersTest {
         ChoresOverviewRoute,
         ChoreTrackingRoute(choreId = 3, inList = false),
         ChoresJournalRoute(choreId = 3),
+        BatteriesOverviewRoute,
+        BatteryTrackingRoute(batteryId = 3, inList = false),
+        BatteriesJournalRoute(batteryId = 3),
+        EquipmentRoute,
+        EquipmentDetailRoute(id = 3, inList = false),
+        EquipmentFormRoute(id = 3),
         TasksRoute,
         TaskRoute(id = 3, inList = false),
         ChoresRoute,

@@ -12,6 +12,11 @@ import com.patrickzedler.grocy.core.data.server.GROCY_GITHUB_REPOSITORY
 import com.patrickzedler.grocy.core.data.server.ServerRepository
 import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
+import com.patrickzedler.grocy.core.data.batteries.BatteriesRepository
+import com.patrickzedler.grocy.core.data.equipment.EquipmentRepository
+import com.patrickzedler.grocy.core.data.settings.BatteriesJournalOptionsRepository
+import com.patrickzedler.grocy.core.data.settings.BatteriesOverviewOptionsRepository
+import com.patrickzedler.grocy.core.data.settings.EquipmentOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ChoresJournalOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ChoresOverviewOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.TasksOverviewOptionsRepository
@@ -35,7 +40,9 @@ import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.createGrocyHttpClient
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.feature.about.impl.AboutDependencies
+import com.patrickzedler.grocy.feature.batteries.impl.BatteriesDependencies
 import com.patrickzedler.grocy.feature.chores.impl.ChoresDependencies
+import com.patrickzedler.grocy.feature.equipment.impl.EquipmentDependencies
 import com.patrickzedler.grocy.feature.tasks.impl.TasksDependencies
 import com.patrickzedler.grocy.feature.login.impl.LoginDependencies
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataDependencies
@@ -122,6 +129,24 @@ class AppGraph(
         )
     }
 
+    /** Grocy's batteries, what the server computes for them and their journal. */
+    private val batteriesRepository by lazy {
+        BatteriesRepository(
+            api = grocyApi,
+            database = platform.database,
+            connection = { platform.credentialStore.connection.first() },
+        )
+    }
+
+    /** Grocy's equipment; its files are downloaded when shown. */
+    private val equipmentRepository by lazy {
+        EquipmentRepository(
+            api = grocyApi,
+            database = platform.database,
+            connection = { platform.credentialStore.connection.first() },
+        )
+    }
+
     /** Grocy's tasks, also the done ones. */
     private val tasksRepository by lazy {
         TasksRepository(
@@ -187,6 +212,15 @@ class AppGraph(
     private val recipesOptionsRepository =
         RecipesOptionsRepository(platform.settingsStore, appScope)
 
+    private val batteriesOverviewOptionsRepository =
+        BatteriesOverviewOptionsRepository(platform.settingsStore, appScope)
+
+    private val batteriesJournalOptionsRepository =
+        BatteriesJournalOptionsRepository(platform.settingsStore, appScope)
+
+    private val equipmentOptionsRepository =
+        EquipmentOptionsRepository(platform.settingsStore, appScope)
+
     private val tasksOverviewOptionsRepository =
         TasksOverviewOptionsRepository(platform.settingsStore, appScope)
 
@@ -207,6 +241,7 @@ class AppGraph(
                 stock = stockRepository,
                 chores = choresRepository,
                 tasks = tasksRepository,
+                batteries = batteriesRepository,
                 recipes = recipesRepository,
                 mealPlan = mealPlanRepository,
                 timeout = NOTIFICATION_REFRESH_TIMEOUT,
@@ -292,6 +327,10 @@ class AppGraph(
             get() = this@AppGraph.choresRepository
         override val tasksRepository: TasksRepository
             get() = this@AppGraph.tasksRepository
+        override val batteriesRepository: BatteriesRepository
+            get() = this@AppGraph.batteriesRepository
+        override val equipmentRepository: EquipmentRepository
+            get() = this@AppGraph.equipmentRepository
         override val stockRepository: StockRepository
             get() = this@AppGraph.stockRepository
         override val shoppingListRepository: ShoppingListRepository
@@ -357,6 +396,28 @@ class AppGraph(
             get() = recipesOptionsRepository
         override val mealPlanRepository: MealPlanRepository
             get() = this@AppGraph.mealPlanRepository
+    }
+
+    internal val batteriesDependencies: BatteriesDependencies = object : BatteriesDependencies {
+        override val masterDataRepository: MasterDataRepository
+            get() = this@AppGraph.masterDataRepository
+        override val batteriesRepository: BatteriesRepository
+            get() = this@AppGraph.batteriesRepository
+        override val batteriesOverviewOptions: BatteriesOverviewOptionsRepository
+            get() = batteriesOverviewOptionsRepository
+        override val batteriesJournalOptions: BatteriesJournalOptionsRepository
+            get() = batteriesJournalOptionsRepository
+        override val scannerForms: ScannerFormsRepository
+            get() = scannerFormsRepository
+    }
+
+    internal val equipmentDependencies: EquipmentDependencies = object : EquipmentDependencies {
+        override val masterDataRepository: MasterDataRepository
+            get() = this@AppGraph.masterDataRepository
+        override val equipmentRepository: EquipmentRepository
+            get() = this@AppGraph.equipmentRepository
+        override val equipmentOptions: EquipmentOptionsRepository
+            get() = equipmentOptionsRepository
     }
 
     internal val tasksDependencies: TasksDependencies = object : TasksDependencies {

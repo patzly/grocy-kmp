@@ -30,8 +30,10 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
   `TooltipBox` passes no minimum width on, so the button kept its size while only its slot
   grew), on their own they keep the 48.dp room; overflow indicators go in
   `ButtonGroupOverflowIndicator` (own width, hidden from screen readers until the group shows
-  it: the web announced the unplaced indicator as empty button). The groups' outer edges keep
-  the room of single buttons (`touchTargetRoom`), so they sit where single buttons would.
+  it: the web announced the unplaced indicator as empty button). The outer edges of the top app
+  bar's group keep the room of single buttons (`touchTargetRoom`), so they sit where single buttons
+  would; in list items single buttons take no such room, so `ItemButtons` keeps none either and its
+  menu button ends where `ListItemOverflowMenu` does.
   The top app bar's actions are such a group too (`SegmentedListScreen(actions:
   List<AppBarAction>)` plus "Reload" and the overflow menu); a menu button in a group wraps
   button and popup in one `Box`, the popup's anchor would be an item of its own.
@@ -47,6 +49,13 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
   out and move to their new place with the default spring, e.g. between groups.
 - Chips: `LocalChipSize` (`core:forms`) provides `ChipSize.LARGE` for field and filter chips
   readable at arm's length (title medium, 40.dp high, 20.dp icons), e.g. the shopping mode.
+- `PdfDocumentView` (`core:ui`): a PDF in a bounded height that scrolls on its own. Android renders
+  its pages with `PdfRenderer` (two fingers zoom, one scrolls; temp file gone once opened), browsers
+  use their viewer in an `iframe` on a blob that is always of the type PDF (it shares the app's
+  origin, so it must never run as a page) that lies above all of Compose: `isCovered` hides it while a
+  menu, dialog or snackbar is open (`SegmentedListScreen(onMenuExpandedChange)`,
+  `AppMenu.isDialogOpen`); without a viewer (`navigator.pdfViewerEnabled`) `onFailed`
+  lets the screen offer the download. `rememberFilePicker(mimeType)` chooses any file.
 - `KeepScreenOn(enabled)` (`core:ui`): the window's `keepScreenOn` on Android, a screen wake lock
   in browsers that offer one (requested again whenever the page becomes visible).
 - Font is Google Sans Flex from Compose Resources. On web fonts load async;

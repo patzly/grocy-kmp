@@ -12,4 +12,7 @@ sealed interface FieldError {
 
     /** Not a date as "YYYY-MM-DD". */
     data object InvalidDate : FieldError
+
+    /** A time after now, Grocy's "This can only be before now". */
+    data object NotBeforeNow : FieldError
 }

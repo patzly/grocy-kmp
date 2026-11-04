@@ -1,9 +1,13 @@
 package com.patrickzedler.grocy.core.database
 
 import com.patrickzedler.grocy.core.model.User
+import com.patrickzedler.grocy.core.model.batteries.BatteryChargeCycle
+import com.patrickzedler.grocy.core.model.batteries.BatteryDetails
+import com.patrickzedler.grocy.core.model.batteries.CurrentBattery
 import com.patrickzedler.grocy.core.model.chores.ChoreDetails
 import com.patrickzedler.grocy.core.model.chores.ChoreExecution
 import com.patrickzedler.grocy.core.model.chores.CurrentChore
+import com.patrickzedler.grocy.core.model.equipment.Equipment
 import com.patrickzedler.grocy.core.model.masterdata.Battery
 import com.patrickzedler.grocy.core.model.masterdata.Chore
 import com.patrickzedler.grocy.core.model.masterdata.ChoreAssignmentType
@@ -762,5 +766,63 @@ fun TaskEntity.toModel() = Task(
     doneTimestamp = doneTimestamp,
     categoryId = categoryId,
     assignedToUserId = assignedToUserId,
+    userfields = decodeUserfieldValues(userfields),
+)
+
+fun CurrentBattery.toEntity() = CurrentBatteryEntity(
+    batteryId = batteryId,
+    lastTrackedTime = lastTrackedTime,
+    nextEstimatedChargeTime = nextEstimatedChargeTime,
+)
+
+fun CurrentBatteryEntity.toModel() = CurrentBattery(
+    batteryId = batteryId,
+    lastTrackedTime = lastTrackedTime,
+    nextEstimatedChargeTime = nextEstimatedChargeTime,
+)
+
+fun BatteryChargeCycle.toEntity() = BatteryChargeCycleEntity(
+    id = id,
+    batteryId = batteryId,
+    trackedTime = trackedTime,
+    undone = undone,
+    undoneTimestamp = undoneTimestamp,
+    userfields = encodeUserfieldValues(userfields),
+)
+
+fun BatteryChargeCycleEntity.toModel() = BatteryChargeCycle(
+    id = id,
+    batteryId = batteryId,
+    trackedTime = trackedTime,
+    undone = undone,
+    undoneTimestamp = undoneTimestamp,
+    userfields = decodeUserfieldValues(userfields),
+)
+
+fun BatteryDetails.toEntity() = BatteryDetailsEntity(
+    batteryId = batteryId,
+    lastCharged = lastCharged,
+    chargeCyclesCount = chargeCyclesCount,
+)
+
+fun BatteryDetailsEntity.toModel() = BatteryDetails(
+    batteryId = batteryId,
+    lastCharged = lastCharged,
+    chargeCyclesCount = chargeCyclesCount,
+)
+
+fun Equipment.toEntity() = EquipmentEntity(
+    id = id,
+    name = name,
+    description = description,
+    instructionManualFileName = instructionManualFileName,
+    userfields = encodeUserfieldValues(userfields),
+)
+
+fun EquipmentEntity.toModel() = Equipment(
+    id = id,
+    name = name,
+    description = description,
+    instructionManualFileName = instructionManualFileName,
     userfields = decodeUserfieldValues(userfields),
 )

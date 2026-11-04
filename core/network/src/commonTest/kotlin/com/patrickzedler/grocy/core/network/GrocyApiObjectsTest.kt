@@ -214,6 +214,13 @@ class GrocyApiObjectsTest {
         assertFalse(api.serverConfig(CONNECTION).choresAssignments)
     }
 
+    @Test
+    fun equipmentFeatureIsRead() = runTest {
+        val api = api { json("""{"FEATURE_FLAG_EQUIPMENT":"0"}""") }
+
+        assertFalse(api.serverConfig(CONNECTION).equipment)
+    }
+
     private companion object {
         val CONNECTION = ServerConnection.ApiKey("https://grocy.test", "key")
     }

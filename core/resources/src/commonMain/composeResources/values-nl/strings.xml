@@ -1234,4 +1234,61 @@
     <item quantity="one">%1$d item is gepland voor vandaag.</item>
     <item quantity="other">%1$d items zijn gepland voor vandaag.</item>
   </plurals>
+  <string name="batteries_overview_title">Batterijen</string>
+  <string name="battery_tracking_title">Batterijen volgen</string>
+  <string name="batteries_journal_title">Batterijdagboek</string>
+  <string name="battery_journal">Batterijdagboek</string>
+  <string name="battery_overview">Batterijoverzicht</string>
+  <string name="batteries_track">Volg laadcyclus</string>
+  <string name="batteries_last_charged">Laatst opgeladen</string>
+  <string name="batteries_next_charge">Volgende geplande laadcyclus</string>
+  <string name="batteries_status_overdue">Achterstallig</string>
+  <string name="batteries_status_due_today">Tot vandaag</string>
+  <string name="batteries_status_due_soon">Moet binnenkort gedaan worden</string>
+  <string name="batteries_tracked">Bijgehouden laadcyclus van batterij %1$sop %2$s</string>
+  <string name="batteries_undone">Laadcyclus is ongedaan gemaakt</string>
+  <string name="battery_field">Batterij</string>
+  <string name="battery_required">Je moet een batterij selecteren</string>
+  <string name="battery_charge_cycles_count">Aantal laadcycli</string>
+  <string name="battery_undo">Laadcyclus ongedaan maken</string>
+  <string name="grocycode_battery">Batterij</string>
+  <string name="data_not_before_now">Dit kan een voor nu zijn</string>
+  <string name="equipment_title">Apparaten</string>
+  <string name="equipment_create">Maak apparaat</string>
+  <string name="equipment_edit">Bewerk apparaat</string>
+  <string name="equipment_notes">Notities</string>
+  <string name="equipment_manual">Gebruikershandleiding</string>
+  <string name="equipment_no_manual">Het geselecteerde apparaat heeft geen gebruikershandleiding</string>
+  <string name="equipment_no_file">Geen bestand geslecteerd</string>
+  <string name="equipment_download">Download bestand</string>
+  <string name="equipment_fullscreen">Fullscreen</string>
+  <string name="equipment_manual_none">Geen bestand geslecteerd</string>
+  <string name="equipment_manual_will_delete">Het huidige bestand wordt bij het opslaan verwijderd</string>
+  <string name="objects_delete_equipment">Weet je zeker dat je apparaat "%1$s" wilt verwijderen?</string>
+  <string name="batteries_track_failed">De laadcyclus kon niet worden geregistreerd</string>
+  <string name="batteries_detail_hint">Registreer een laadcyclus of open het logboek om het hier te zien</string>
+  <string name="battery_undo_failed">De laadcyclus kon niet ongedaan worden gemaakt</string>
+  <string name="battery_code_unknown">Geen batterij gevonden voor deze code</string>
+  <string name="equipment_no_notes">De geselecteerde apparatuur heeft geen notities</string>
+  <string name="equipment_no_preview">Dit bestand kan hier niet worden getoond, maar je kunt het downloaden.</string>
+  <string name="equipment_save_failed">Het bestand kon niet worden opgeslagen</string>
+  <string name="equipment_choose_file">Kies een PDF-bestand</string>
+  <string name="equipment_detail_hint">Kies apparatuur uit de lijst om het hier te zien</string>
+  <string name="pdf_page">Pagina %1$d van %2$d</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="one">%1$d batterij moet nog opgeladen worden.</item>
+    <item quantity="other">%1$d batterijen moeten nog opgeladen worden.</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="one">%1$dbatterijen moeten vandaag worden opgeladen.</item>
+    <item quantity="other">%1$d batterijen moeten vandaag worden opgeladen.</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="one">Er moet %1$d batterij opgeladen worden %2$s.</item>
+    <item quantity="other">Er moeten %1$d batterijen opgeladen worden %2$s.</item>
+  </plurals>
+  <plurals name="equipment_count">
+    <item quantity="one">%1$d apparaat</item>
+    <item quantity="other">%1$d apparaten</item>
+  </plurals>
 </resources>

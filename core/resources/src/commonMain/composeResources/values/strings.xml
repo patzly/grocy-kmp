@@ -1253,4 +1253,65 @@
     <item quantity="one">%1$d entry is planned for today.</item>
     <item quantity="other">%1$d entries are planned for today.</item>
   </plurals>
+
+  <!-- Batteries -->
+  <string name="batteries_overview_title">Batteries overview</string>
+  <string name="battery_tracking_title">Battery tracking</string>
+  <string name="batteries_journal_title">Batteries journal</string>
+  <string name="battery_journal">Battery journal</string>
+  <string name="battery_overview">Battery overview</string>
+  <string name="batteries_track">Track charge cycle</string>
+  <string name="batteries_last_charged">Last charged</string>
+  <string name="batteries_next_charge">Next planned charge cycle</string>
+  <string name="batteries_status_overdue">Overdue</string>
+  <string name="batteries_status_due_today">Due today</string>
+  <string name="batteries_status_due_soon">Due soon</string>
+  <string name="batteries_tracked">Tracked charge cycle of battery %1$s on %2$s</string>
+  <string name="batteries_undone">Charge cycle successfully undone</string>
+  <string name="batteries_track_failed">The charge cycle could not be tracked</string>
+  <string name="batteries_detail_hint">Track a charge cycle or open the journal to see it here</string>
+  <string name="battery_field">Battery</string>
+  <string name="battery_required">You have to select a battery</string>
+  <string name="battery_charge_cycles_count">Charge cycles count</string>
+  <string name="battery_undo">Undo charge cycle</string>
+  <string name="battery_undo_failed">The charge cycle could not be undone</string>
+  <string name="battery_code_unknown">No battery was found for this code</string>
+  <string name="grocycode_battery">Battery</string>
+  <string name="data_not_before_now">This can only be before now</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="one">%1$d battery is overdue to be charged.</item>
+    <item quantity="other">%1$d batteries are overdue to be charged.</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="one">%1$d battery is due to be charged today.</item>
+    <item quantity="other">%1$d batteries are due to be charged today.</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="one">%1$d battery is due to be charged %2$s.</item>
+    <item quantity="other">%1$d batteries are due to be charged %2$s.</item>
+  </plurals>
+
+  <!-- Equipment -->
+  <string name="equipment_title">Equipment</string>
+  <string name="equipment_create">Create equipment</string>
+  <string name="equipment_edit">Edit equipment</string>
+  <string name="equipment_notes">Notes</string>
+  <string name="equipment_manual">Instruction manual</string>
+  <string name="equipment_no_manual">The selected equipment has no instruction manual</string>
+  <string name="equipment_no_notes">The selected equipment has no notes</string>
+  <string name="equipment_no_file">No file selected</string>
+  <string name="equipment_no_preview">This file cannot be shown here, but you can download it.</string>
+  <string name="equipment_download">Download file</string>
+  <string name="equipment_save_failed">The file could not be saved</string>
+  <string name="equipment_fullscreen">Expand to fullscreen</string>
+  <string name="equipment_choose_file">Choose a PDF file</string>
+  <string name="equipment_manual_none">No file selected</string>
+  <string name="equipment_manual_will_delete">The current file will be deleted on save</string>
+  <string name="equipment_detail_hint">Choose a piece of equipment of the list to see it here</string>
+  <string name="objects_delete_equipment">Are you sure you want to delete equipment "%1$s"?</string>
+  <string name="pdf_page">Page %1$d of %2$d</string>
+  <plurals name="equipment_count">
+    <item quantity="one">%1$d piece of equipment</item>
+    <item quantity="other">%1$d pieces of equipment</item>
+  </plurals>
 </resources>

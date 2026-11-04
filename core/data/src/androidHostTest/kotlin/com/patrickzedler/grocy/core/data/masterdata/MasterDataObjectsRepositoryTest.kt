@@ -42,7 +42,7 @@ class MasterDataObjectsRepositoryTest {
         assertEquals(setOf(Weekday.MONDAY, Weekday.FRIDAY), chore.weekdays)
         assertEquals(listOf(1), chore.assignedUserIds)
         assertEquals("Living room", chore.userfields["room"])
-        assertEquals(30, repository.batteries.first().single().chargeIntervalDays)
+        assertEquals(30, repository.batteries.first().first { it.id == 1 }.chargeIntervalDays)
         assertEquals("Garden", repository.taskCategories.first().single().name)
         assertEquals("Books", repository.userentities.first().single().caption)
         assertEquals(listOf("Alice", "Bob"), repository.users.first().map { it.displayName })
@@ -121,14 +121,14 @@ class MasterDataObjectsRepositoryTest {
             """{"error_message":"Name exists"}""",
             method = HttpMethod.Put,
         )
-        val battery = repository.batteries.first().single()
+        val battery = repository.batteries.first().first { it.id == 1 }
 
         val error = assertFailsWith<GrocyApiException.HttpError> {
             repository.saveBattery(battery.copy(name = "Other"), emptyMap())
         }
 
         assertEquals("Name exists", error.serverMessage)
-        assertEquals("Remote", repository.batteries.first().single().name)
+        assertEquals("Remote", repository.batteries.first().first { it.id == 1 }.name)
     }
 
     @Test

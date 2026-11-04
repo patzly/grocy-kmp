@@ -32,6 +32,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.data_date_invalid
+import com.patrickzedler.grocy.core.resources.data_not_before_now
 import com.patrickzedler.grocy.core.resources.data_datetime_invalid
 import com.patrickzedler.grocy.core.resources.data_none
 import com.patrickzedler.grocy.core.resources.data_number_invalid
@@ -58,6 +59,7 @@ fun fieldErrorText(error: FieldError?, requiredMessage: StringResource? = null):
             stringResource(Res.string.data_number_invalid, error.min, error.decimals.toString())
         FieldError.InvalidDateTime -> stringResource(Res.string.data_datetime_invalid)
         FieldError.InvalidDate -> stringResource(Res.string.data_date_invalid)
+        FieldError.NotBeforeNow -> stringResource(Res.string.data_not_before_now)
     }
 
 /**

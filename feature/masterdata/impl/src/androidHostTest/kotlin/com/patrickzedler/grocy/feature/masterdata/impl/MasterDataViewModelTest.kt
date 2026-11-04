@@ -98,7 +98,7 @@ class MasterDataViewModelTest {
         val counts = viewModel().state.value?.counts
 
         assertEquals(2, counts?.get(MasterDataCategory.CHORES))
-        assertEquals(1, counts?.get(MasterDataCategory.BATTERIES))
+        assertEquals(2, counts?.get(MasterDataCategory.BATTERIES))
         assertEquals(1, counts?.get(MasterDataCategory.TASK_CATEGORIES))
         assertEquals(1, counts?.get(MasterDataCategory.USERENTITIES))
     }

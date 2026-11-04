@@ -4,13 +4,12 @@ The daily notifications per feature of the server. Grocy's web frontend has none
 page to match; texts and counts follow its messages above its tables (the start screen's
 sentences), each opens the feature's page.
 
-- Kinds (`NotificationKind`, `core:model`): stock, chores, tasks, meal plan, each with a channel
-  of its own on Android. A kind's settings are only shown and it only notifies while the server
-  has the feature (`isAvailable`). Batteries have no page in the app yet, shopping lists nothing
-  that gets due.
+- Kinds (`NotificationKind`, `core:model`): stock, chores, tasks, batteries, meal plan, each with
+  a channel of its own on Android. A kind's settings are only shown and it only notifies while the
+  server has the feature (`isAvailable`). Shopping lists have nothing that gets due.
 - Settings (`NotificationSettingsRoute`, category Notifications): on or off, the time, what it
   tells about (`NotificationTopic`: due soon, overdue, expired, below min. stock; overdue, due
-  today, due soon; due soon of chores and tasks off by default), "Show names", "Only what is
+  today, due soon; due soon of chores, tasks and batteries off by default), "Show names", "Only what is
   assigned to me" and "Show now". Kept on the device (`SettingsStore`, `stored()` strings, DataStore
   `notification_settings`, `grocy.notificationSettings` on the web).
 - `NotificationRepository` (`core:data`) decides. `check()` runs when the alarm fires, at boot,

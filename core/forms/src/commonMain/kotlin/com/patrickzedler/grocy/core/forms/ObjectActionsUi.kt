@@ -50,6 +50,7 @@ import com.patrickzedler.grocy.core.resources.merge_same
 import com.patrickzedler.grocy.core.resources.objects_action_offline
 import com.patrickzedler.grocy.core.resources.objects_delete_barcode
 import com.patrickzedler.grocy.core.resources.objects_delete_battery
+import com.patrickzedler.grocy.core.resources.objects_delete_equipment
 import com.patrickzedler.grocy.core.resources.objects_delete_chore
 import com.patrickzedler.grocy.core.resources.objects_delete_conversion
 import com.patrickzedler.grocy.core.resources.objects_delete_failed
@@ -161,6 +162,7 @@ private fun deleteQuestionOf(entity: String): StringResource = when (entity) {
     MasterDataRepository.PRODUCT_GROUPS -> Res.string.objects_delete_product_group
     MasterDataRepository.CHORES -> Res.string.objects_delete_chore
     MasterDataRepository.BATTERIES -> Res.string.objects_delete_battery
+    MasterDataRepository.EQUIPMENT -> Res.string.objects_delete_equipment
     MasterDataRepository.TASK_CATEGORIES -> Res.string.objects_delete_task_category
     MasterDataRepository.TASKS -> Res.string.objects_delete_task
     MasterDataRepository.USERENTITIES -> Res.string.objects_delete_userentity

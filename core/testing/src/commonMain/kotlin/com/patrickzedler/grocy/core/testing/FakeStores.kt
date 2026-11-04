@@ -3,6 +3,9 @@ package com.patrickzedler.grocy.core.testing
 import com.patrickzedler.grocy.core.data.credentials.CredentialStore
 import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
+import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewOptions
+import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalOptions
+import com.patrickzedler.grocy.core.model.equipment.EquipmentOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
 import com.patrickzedler.grocy.core.model.notifications.NotificationDeliveries
@@ -49,6 +52,9 @@ class FakeSettingsStore(
     choresOverviewOptions: ChoresOverviewOptions = ChoresOverviewOptions(),
     choresJournalOptions: ChoresJournalOptions = ChoresJournalOptions(),
     tasksOverviewOptions: TasksOverviewOptions = TasksOverviewOptions(),
+    batteriesOverviewOptions: BatteriesOverviewOptions = BatteriesOverviewOptions(),
+    batteriesJournalOptions: BatteriesJournalOptions = BatteriesJournalOptions(),
+    equipmentOptions: EquipmentOptions = EquipmentOptions(),
     notificationSettings: NotificationSettings = NotificationSettings(),
     notificationDeliveries: NotificationDeliveries = NotificationDeliveries(),
 ) : SettingsStore {
@@ -129,6 +135,24 @@ class FakeSettingsStore(
 
     override suspend fun setNotificationDeliveries(deliveries: NotificationDeliveries) {
         notificationDeliveries.value = deliveries
+    }
+
+    override val batteriesOverviewOptions = MutableStateFlow(batteriesOverviewOptions)
+
+    override suspend fun setBatteriesOverviewOptions(options: BatteriesOverviewOptions) {
+        batteriesOverviewOptions.value = options
+    }
+
+    override val batteriesJournalOptions = MutableStateFlow(batteriesJournalOptions)
+
+    override suspend fun setBatteriesJournalOptions(options: BatteriesJournalOptions) {
+        batteriesJournalOptions.value = options
+    }
+
+    override val equipmentOptions = MutableStateFlow(equipmentOptions)
+
+    override suspend fun setEquipmentOptions(options: EquipmentOptions) {
+        equipmentOptions.value = options
     }
 
     override val recipesOptions = MutableStateFlow(recipesOptions)

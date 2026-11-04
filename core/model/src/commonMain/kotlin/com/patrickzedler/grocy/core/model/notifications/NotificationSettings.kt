@@ -7,6 +7,7 @@ enum class NotificationKind(internal val defaultMinuteOfDay: Int) {
     STOCK(9 * MINUTES_PER_HOUR),
     CHORES(9 * MINUTES_PER_HOUR),
     TASKS(9 * MINUTES_PER_HOUR),
+    BATTERIES(9 * MINUTES_PER_HOUR),
     MEAL_PLAN(16 * MINUTES_PER_HOUR),
     ;
 
@@ -15,6 +16,7 @@ enum class NotificationKind(internal val defaultMinuteOfDay: Int) {
         STOCK -> config.stock
         CHORES -> config.chores
         TASKS -> config.tasks
+        BATTERIES -> config.batteries
         MEAL_PLAN -> config.recipes && config.recipesMealPlan
     }
 
@@ -35,6 +37,9 @@ enum class NotificationTopic(val kind: NotificationKind, internal val byDefault:
     TASKS_OVERDUE(NotificationKind.TASKS),
     TASKS_DUE_TODAY(NotificationKind.TASKS),
     TASKS_DUE_SOON(NotificationKind.TASKS, byDefault = false),
+    BATTERIES_OVERDUE(NotificationKind.BATTERIES),
+    BATTERIES_DUE_TODAY(NotificationKind.BATTERIES),
+    BATTERIES_DUE_SOON(NotificationKind.BATTERIES, byDefault = false),
     MEAL_PLAN_TODAY(NotificationKind.MEAL_PLAN),
     ;
 

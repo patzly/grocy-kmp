@@ -15,7 +15,10 @@ import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_home
 import com.patrickzedler.grocy.core.resources.start_select_hint
 import com.patrickzedler.grocy.feature.about.api.AboutRoute
+import com.patrickzedler.grocy.feature.batteries.api.BatteriesOverviewRoute
+import com.patrickzedler.grocy.feature.batteries.api.BatteryTrackingRoute
 import com.patrickzedler.grocy.feature.chores.api.ChoreTrackingRoute
+import com.patrickzedler.grocy.feature.equipment.api.EquipmentRoute
 import com.patrickzedler.grocy.feature.chores.api.ChoresOverviewRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
 import com.patrickzedler.grocy.feature.recipes.api.MealPlanRoute
@@ -61,6 +64,8 @@ fun EntryProviderScope<NavKey>.startEntry(
                     mealPlan = dependencies.mealPlanRepository,
                     chores = dependencies.choresRepository,
                     tasks = dependencies.tasksRepository,
+                    batteries = dependencies.batteriesRepository,
+                    equipment = dependencies.equipmentRepository,
                     serverConfig = dependencies.serverConfig,
                 )
             },
@@ -89,6 +94,10 @@ fun EntryProviderScope<NavKey>.startEntry(
             },
             // In wide windows beside the tasks, else a screen of its own
             onTaskCreateClick = { navigator.navigateAll(taskCreateRoutes(isBesideDetail)) },
+            // In wide windows beside the batteries overview, else a screen of its own
+            onBatteryTrackingClick = {
+                navigator.navigateAll(batteryTrackingRoutes(isBesideDetail))
+            },
             onDemoWarningClick = {
                 navigator.navigateAll(listOf(SettingsRoute, ServerSettingsRoute))
             },
@@ -106,6 +115,8 @@ internal val StartSection.route: Route
         StartSection.MEAL_PLAN -> MealPlanRoute()
         StartSection.CHORES -> ChoresOverviewRoute
         StartSection.TASKS -> TasksRoute
+        StartSection.BATTERIES -> BatteriesOverviewRoute
+        StartSection.EQUIPMENT -> EquipmentRoute
         StartSection.MASTER_DATA -> MasterDataRoute
     }
 
@@ -152,6 +163,18 @@ internal fun taskCreateRoutes(isBesideDetail: Boolean): List<Route> =
         listOf(TasksRoute, TaskRoute())
     } else {
         listOf(TaskRoute(inList = false))
+    }
+
+/**
+ * What the start screen's "Battery tracking" opens: where details show beside their list
+ * ([isBesideDetail]) the batteries overview with the tracking beside it, else the tracking alone,
+ * which stays a screen of its own when the window grows.
+ */
+internal fun batteryTrackingRoutes(isBesideDetail: Boolean): List<Route> =
+    if (isBesideDetail) {
+        listOf(BatteriesOverviewRoute, BatteryTrackingRoute())
+    } else {
+        listOf(BatteryTrackingRoute(inList = false))
     }
 
 /** The section whose page [route] is, null for other routes. */

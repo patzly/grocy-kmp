@@ -32,6 +32,7 @@ internal fun JsonObject.toServerConfig(): ServerConfig {
             flag("FEATURE_FLAG_CHORES_ASSIGNMENTS", defaults.choresAssignments),
         tasks = flag("FEATURE_FLAG_TASKS", defaults.tasks),
         batteries = flag("FEATURE_FLAG_BATTERIES", defaults.batteries),
+        equipment = flag("FEATURE_FLAG_EQUIPMENT", defaults.equipment),
         labelPrinter = flag("FEATURE_FLAG_LABEL_PRINTER", defaults.labelPrinter),
         labelPrinterRunsOnServer =
             flag("LABEL_PRINTER_RUN_SERVER", defaults.labelPrinterRunsOnServer),

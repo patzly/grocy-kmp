@@ -104,6 +104,22 @@ class StartSectionTest {
     }
 
     @Test
+    fun batteriesAndEquipmentFollowTheTasksInTheirGroup() {
+        val sections = availableSections(ServerConfig())
+            .filter { it.group == StartGroup.CHORES }
+
+        assertEquals(
+            listOf(
+                StartSection.CHORES,
+                StartSection.TASKS,
+                StartSection.BATTERIES,
+                StartSection.EQUIPMENT,
+            ),
+            sections,
+        )
+    }
+
+    @Test
     fun stockSectionsComeFirstAndOnlyWithTheirFeatures() {
         assertEquals(
             listOf(
@@ -113,6 +129,8 @@ class StartSectionTest {
                 StartSection.MEAL_PLAN,
                 StartSection.CHORES,
                 StartSection.TASKS,
+                StartSection.BATTERIES,
+                StartSection.EQUIPMENT,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig()),
@@ -124,6 +142,8 @@ class StartSectionTest {
                 StartSection.MEAL_PLAN,
                 StartSection.CHORES,
                 StartSection.TASKS,
+                StartSection.BATTERIES,
+                StartSection.EQUIPMENT,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig(shoppingList = false)),
@@ -134,6 +154,8 @@ class StartSectionTest {
                 StartSection.MEAL_PLAN,
                 StartSection.CHORES,
                 StartSection.TASKS,
+                StartSection.BATTERIES,
+                StartSection.EQUIPMENT,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig(stock = false)),
@@ -145,6 +167,8 @@ class StartSectionTest {
                 StartSection.RECIPES,
                 StartSection.CHORES,
                 StartSection.TASKS,
+                StartSection.BATTERIES,
+                StartSection.EQUIPMENT,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig(recipesMealPlan = false)),
@@ -155,6 +179,8 @@ class StartSectionTest {
                 StartSection.SHOPPING_LIST,
                 StartSection.CHORES,
                 StartSection.TASKS,
+                StartSection.BATTERIES,
+                StartSection.EQUIPMENT,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig(recipes = false)),

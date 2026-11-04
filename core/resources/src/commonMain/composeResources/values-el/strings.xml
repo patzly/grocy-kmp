@@ -1234,4 +1234,61 @@
     <item quantity="one">%1$d καταχώριση είναι προγραμματισμένη για σήμερα.</item>
     <item quantity="other">%1$d καταχωρίσεις είναι προγραμματισμένες για σήμερα.</item>
   </plurals>
+  <string name="batteries_overview_title">Επισκόπηση μπαταριών</string>
+  <string name="battery_tracking_title">Παρακολούθηση μπαταρίας</string>
+  <string name="batteries_journal_title">Περιοδικό μπαταριών</string>
+  <string name="battery_journal">Ημερολόγιο μπαταρίας</string>
+  <string name="battery_overview">Επισκόπηση μπαταρίας</string>
+  <string name="batteries_track">Καταγραφή κύκλου φόρτισης</string>
+  <string name="batteries_last_charged">Τελευταία χρέωση</string>
+  <string name="batteries_next_charge">Επόμενος προγραμματισμένος κύκλος φόρτισης</string>
+  <string name="batteries_status_overdue">Εκπρόθεσμος</string>
+  <string name="batteries_status_due_today">Λήγει σήμερα</string>
+  <string name="batteries_status_due_soon">Λήγει σύντομα</string>
+  <string name="batteries_tracked">Παρακολούθηση κύκλου φόρτισης μπαταρίας %1$s στο %2$s</string>
+  <string name="batteries_undone">Ο κύκλος φόρτισης αναιρέθηκε με επιτυχία</string>
+  <string name="battery_field">Μπαταρία</string>
+  <string name="battery_required">Πρέπει να επιλέξετε μια μπαταρία</string>
+  <string name="battery_charge_cycles_count">Πλήθος κύκλων φόρτισης</string>
+  <string name="battery_undo">Αναίρεση κύκλου φόρτισης</string>
+  <string name="grocycode_battery">Μπαταρία</string>
+  <string name="data_not_before_now">Αυτό μπορεί να είναι μόνο πριν από τώρα</string>
+  <string name="equipment_title">Εξοπλισμός</string>
+  <string name="equipment_create">Δημιουργήστε εξοπλισμό</string>
+  <string name="equipment_edit">Επεξεργασία εξοπλισμού</string>
+  <string name="equipment_notes">Σημειώσεις</string>
+  <string name="equipment_manual">Εγχειρίδιο οδηγιών</string>
+  <string name="equipment_no_manual">Ο επιλεγμένος εξοπλισμός δεν έχει εγχειρίδιο οδηγιών</string>
+  <string name="equipment_no_file">Κανένα επιλεγμένο αρχείο</string>
+  <string name="equipment_download">Λήψη αρχείου</string>
+  <string name="equipment_fullscreen">Ανάπτυξη σε πλήρη οθόνη</string>
+  <string name="equipment_manual_none">Κανένα επιλεγμένο αρχείο</string>
+  <string name="equipment_manual_will_delete">Το τρέχον αρχείο θα διαγραφεί κατά την αποθήκευση</string>
+  <string name="objects_delete_equipment">Θέλετε σίγουρα να διαγράψετε τον εξοπλισμό "%1$s";</string>
+  <string name="batteries_track_failed">Δεν ήταν δυνατή η καταγραφή του κύκλου φόρτισης</string>
+  <string name="batteries_detail_hint">Καταγράψτε έναν κύκλο φόρτισης ή ανοίξτε το ημερολόγιο για να το δείτε εδώ</string>
+  <string name="battery_undo_failed">Δεν ήταν δυνατή η αναίρεση του κύκλου φόρτισης</string>
+  <string name="battery_code_unknown">Δεν βρέθηκε μπαταρία για αυτόν τον κωδικό</string>
+  <string name="equipment_no_notes">Ο επιλεγμένος εξοπλισμός δεν έχει σημειώσεις</string>
+  <string name="equipment_no_preview">Αυτό το αρχείο δεν μπορεί να εμφανιστεί εδώ, αλλά μπορείτε να το κατεβάσετε.</string>
+  <string name="equipment_save_failed">Δεν ήταν δυνατή η αποθήκευση του αρχείου</string>
+  <string name="equipment_choose_file">Επιλέξτε αρχείο PDF</string>
+  <string name="equipment_detail_hint">Επιλέξτε έναν εξοπλισμό από τη λίστα για να τον δείτε εδώ</string>
+  <string name="pdf_page">Σελίδα %1$d από %2$d</string>
+  <plurals name="start_batteries_overdue">
+    <item quantity="one">%1$d μπαταρία έχει καθυστερήσει να φορτιστεί.</item>
+    <item quantity="other">%1$d μπαταρίες έχουν καθυστερήσει να φορτιστούν.</item>
+  </plurals>
+  <plurals name="start_batteries_due_today">
+    <item quantity="one">%1$d μπαταρία πρέπει να φορτιστεί σήμερα.</item>
+    <item quantity="other">%1$d μπαταρίες πρέπει να φορτιστούν σήμερα.</item>
+  </plurals>
+  <plurals name="start_batteries_due_soon">
+    <item quantity="one">%1$d μπαταρία πρέπει να φορτιστεί %2$s.</item>
+    <item quantity="other">%1$d μπαταρίες πρέπει να φορτιστούν %2$s.</item>
+  </plurals>
+  <plurals name="equipment_count">
+    <item quantity="one">%1$d εξοπλισμός</item>
+    <item quantity="other">%1$d εξοπλισμοί</item>
+  </plurals>
 </resources>

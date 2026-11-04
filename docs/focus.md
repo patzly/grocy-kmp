@@ -32,7 +32,7 @@ and waits for the window's focus, without which a dialog would not get its keybo
 ## Scanner or keyboard
 
 Forms whose first field can be scanned (Purchase, Consume, Transfer, Inventory, shopping list
-item, barcode dialog, chore tracking) remember per form (`ScannerForm`) what the user entered with last:
+item, barcode dialog, chore and battery tracking) remember per form (`ScannerForm`) what the user entered with last:
 
 - The form opens with the scanner and no keyboard if the scanner was used last, else with the
   focus in the field and the keyboard. It shows that in its first frame, the repository is an
@@ -41,7 +41,7 @@ item, barcode dialog, chore tracking) remember per form (`ScannerForm`) what the
   keyboard, which would cover the camera.
 - A scan means "the scanner": it closes the scanner and the amount takes the focus, but the next
   empty form opens with the scanner again. Scan mode leaves it open and books. Where everything
-  after the scan is prefilled (chore tracking) nothing takes the focus: the keyboard would only
+  after the scan is prefilled (chore and battery tracking) nothing takes the focus: the keyboard would only
   cover the FAB, one tap on which books.
 - Tapping into the field while scanning means "the keyboard": the scanner closes and that is
   remembered.

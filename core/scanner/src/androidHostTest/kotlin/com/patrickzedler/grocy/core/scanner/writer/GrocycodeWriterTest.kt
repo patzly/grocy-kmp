@@ -113,4 +113,12 @@ class GrocycodeWriterTest {
         assertEquals(null, Grocycode.choreIdOf("grcy:c:x"))
         assertEquals(null, Grocycode.choreIdOf("4006381333931"))
     }
+
+    @Test
+    fun batteryCodesNameTheirBattery() {
+        assertEquals("grcy:b:3", Grocycode.battery(3))
+        assertEquals(3, Grocycode.batteryIdOf(" grcy:b:3 "))
+        assertEquals(null, Grocycode.batteryIdOf("grcy:c:3"))
+        assertEquals(null, Grocycode.choreIdOf("grcy:b:3"))
+    }
 }
