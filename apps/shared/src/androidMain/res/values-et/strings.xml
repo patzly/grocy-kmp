@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_tasks_label">Ülesannete loend</string>
+  <string name="widget_tasks_description">Sinu tegemata ülesanded, ühe puudutusega tehtud</string>
+  <string name="widget_month_label">Kalendri kuuvaade</string>
+  <string name="widget_month_description">Kuu koos sellega, mis igal päeval tähtaega jõuab</string>
+  <string name="widget_schedule_label">Kalendri ajakava</string>
+  <string name="widget_schedule_description">Mis alates tänasest tähtaega jõuab</string>
+</resources>

@@ -1325,4 +1325,7 @@
   <plurals name="calendar_events_today">
     <item quantity="other">今天有 %1$d 个事件</item>
   </plurals>
+  <string name="widget_log_in">登录 Grocy</string>
+  <string name="widget_no_tasks">没有待办任务</string>
+  <string name="widget_not_available">此服务器不可用</string>
 </resources>

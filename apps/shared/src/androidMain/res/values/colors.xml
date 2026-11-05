@@ -174,4 +174,10 @@
   <color name="green_theme_surfaceContainerHigh_highContrast">#D3D5CB</color>
   <color name="green_theme_surfaceContainerHighest_highContrast">#C5C8BE</color>
 
+
+  <!-- The widgets' previews, from Android 12 on in the colors of the wallpaper (values-v31) -->
+  <color name="widget_preview_background">#f0f5e9</color>
+  <color name="widget_preview_content">#c1cbb5</color>
+  <color name="widget_preview_primary">#446732</color>
+  <color name="widget_preview_event">#386667</color>
 </resources>

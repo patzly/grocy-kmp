@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_tasks_label">任務清單</string>
+  <string name="widget_tasks_description">你的待辦任務,輕觸即可完成</string>
+  <string name="widget_month_label">日曆月檢視</string>
+  <string name="widget_month_description">顯示每天到期事項的月份</string>
+  <string name="widget_schedule_label">日曆行程</string>
+  <string name="widget_schedule_description">從今天起到期的事項</string>
+</resources>

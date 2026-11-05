@@ -2,4 +2,11 @@
 <resources>
   <string name="app_name">Grocy</string>
   <string name="app_name_nightly" translatable="false">Grocy Nightly</string>
+  <!-- The widgets in the launcher's picker -->
+  <string name="widget_tasks_label">Task list</string>
+  <string name="widget_tasks_description">Your tasks to do, checked off with a tap</string>
+  <string name="widget_month_label">Calendar month view</string>
+  <string name="widget_month_description">The month with what is due each day</string>
+  <string name="widget_schedule_label">Calendar schedule</string>
+  <string name="widget_schedule_description">What is due from today on</string>
 </resources>

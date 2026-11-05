@@ -22,3 +22,5 @@ back into the repository. Rules for writing one:
 - A new language: `values-<tag>/strings.xml`, its tag in `AppLanguages` and in
   `locales_config.xml`; `LocalesConfigTest` fails until all three match.
 - Long texts in `files/` (changelog, licenses) have no language qualifiers and stay English.
+- The few Android resources of `apps/shared` (the widgets' names in the picker) are translated the
+  same way, Hebrew only as `values-iw`, apostrophes escaped (`\'`) as Android needs.

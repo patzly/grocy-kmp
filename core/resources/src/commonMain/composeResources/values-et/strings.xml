@@ -1379,4 +1379,7 @@
     <item quantity="one">Täna %1$d sündmus</item>
     <item quantity="other">Täna %1$d sündmust</item>
   </plurals>
+  <string name="widget_log_in">Logi Grocysse sisse</string>
+  <string name="widget_no_tasks">Tegemata ülesandeid pole</string>
+  <string name="widget_not_available">Selles serveris pole saadaval</string>
 </resources>

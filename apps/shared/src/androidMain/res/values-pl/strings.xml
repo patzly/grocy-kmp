@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_tasks_label">Lista zadań</string>
+  <string name="widget_tasks_description">Twoje zadania do wykonania, odhaczane jednym dotknięciem</string>
+  <string name="widget_month_label">Widok miesiąca kalendarza</string>
+  <string name="widget_month_description">Miesiąc z tym, co przypada na każdy dzień</string>
+  <string name="widget_schedule_label">Harmonogram kalendarza</string>
+  <string name="widget_schedule_description">Co przypada od dziś</string>
+</resources>

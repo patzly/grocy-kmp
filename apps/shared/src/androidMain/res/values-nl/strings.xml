@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_tasks_label">Takenlijst</string>
+  <string name="widget_tasks_description">Je openstaande taken, met een tik voltooid</string>
+  <string name="widget_month_label">Kalender-maandweergave</string>
+  <string name="widget_month_description">De maand met wat er elke dag vervalt</string>
+  <string name="widget_schedule_label">Kalenderplanning</string>
+  <string name="widget_schedule_description">Wat er vanaf vandaag vervalt</string>
+</resources>

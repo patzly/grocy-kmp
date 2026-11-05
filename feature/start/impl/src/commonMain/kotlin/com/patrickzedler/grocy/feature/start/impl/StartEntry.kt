@@ -122,7 +122,7 @@ internal val StartSection.route: Route
         StartSection.TASKS -> TasksRoute
         StartSection.BATTERIES -> BatteriesOverviewRoute
         StartSection.EQUIPMENT -> EquipmentRoute
-        StartSection.CALENDAR -> CalendarRoute
+        StartSection.CALENDAR -> CalendarRoute()
         StartSection.MASTER_DATA -> MasterDataRoute
     }
 

@@ -1432,4 +1432,7 @@
     <item quantity="many">%1$d événements aujourd'hui</item>
     <item quantity="other">%1$d événements aujourd'hui</item>
   </plurals>
+  <string name="widget_log_in">Connectez-vous à Grocy</string>
+  <string name="widget_no_tasks">Aucune tâche à faire</string>
+  <string name="widget_not_available">Non disponible sur ce serveur</string>
 </resources>

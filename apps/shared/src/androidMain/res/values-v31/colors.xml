@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- The widgets' previews in the picker, in the colors of the wallpaper -->
+  <color name="widget_preview_background">@android:color/system_accent2_50</color>
+  <color name="widget_preview_content">@android:color/system_accent2_200</color>
+  <color name="widget_preview_primary">@android:color/system_accent1_600</color>
+  <color name="widget_preview_event">@android:color/system_accent3_600</color>
+</resources>

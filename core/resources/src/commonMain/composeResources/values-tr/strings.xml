@@ -1378,4 +1378,7 @@
     <item quantity="one">Bugün %1$d etkinlik</item>
     <item quantity="other">Bugün %1$d etkinlik</item>
   </plurals>
+  <string name="widget_log_in">Grocy'de oturum açın</string>
+  <string name="widget_no_tasks">Yapılacak görev yok</string>
+  <string name="widget_not_available">Bu sunucuda kullanılamıyor</string>
 </resources>

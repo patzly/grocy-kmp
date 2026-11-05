@@ -16,6 +16,11 @@ internal data class SystemInfoDto(
 }
 
 @Serializable
+internal data class DbChangedTimeDto(
+    @SerialName("changed_time") val changedTime: String,
+)
+
+@Serializable
 internal data class GrocyVersionDto(
     @SerialName("Version") val version: String,
     @SerialName("ReleaseDate") val releaseDate: String,

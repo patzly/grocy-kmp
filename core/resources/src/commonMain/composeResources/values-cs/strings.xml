@@ -1489,4 +1489,7 @@ Po zaškrtnutí nebude brán zřetel na množství produktu v nákupním seznamu
     <item quantity="many">Dnes %1$d události</item>
     <item quantity="other">Dnes %1$d událostí</item>
   </plurals>
+  <string name="widget_log_in">Přihlaste se do Grocy</string>
+  <string name="widget_no_tasks">Žádné úkoly k vyřízení</string>
+  <string name="widget_not_available">Na tomto serveru není k dispozici</string>
 </resources>

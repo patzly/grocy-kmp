@@ -96,6 +96,7 @@ class FakeGrocyServer(
 
     init {
         respond(SYSTEM_INFO_PATH, body = SYSTEM_INFO_JSON)
+        respond(DB_CHANGED_TIME_PATH, body = dbChangedTimeJson("2026-11-04 10:00:00"))
         respond(GROCY_RELEASE_PATH, body = grocyReleaseJson("4.7.1"))
         respond(USER_PATH, body = USER_JSON)
         MasterDataJson.defaults.forEach { (path, body) -> respond(path, body = body) }
@@ -245,10 +246,14 @@ class FakeGrocyServer(
 
     companion object {
         const val SYSTEM_INFO_PATH = "/api/system/info"
+        const val DB_CHANGED_TIME_PATH = "/api/system/db-changed-time"
         const val USER_PATH = "/api/user"
         const val PRODUCTS_PATH = "/api/objects/products"
         const val INGRESS_PATH = "/api/hassio_ingress/fake-token"
         const val GROCY_RELEASE_PATH = "/repos/$GROCY_GITHUB_REPOSITORY/releases/latest"
+
+        /** Grocy's answer when its database last changed at [time]. */
+        fun dbChangedTimeJson(time: String): String = """{"changed_time":"$time"}"""
 
         /** Grocy's newest release on GitHub as the REST API describes it. */
         fun grocyReleaseJson(version: String): String =

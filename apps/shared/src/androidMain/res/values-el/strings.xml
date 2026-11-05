@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_tasks_label">Λίστα καθηκόντων</string>
+  <string name="widget_tasks_description">Τα εκκρεμή καθήκοντα, ολοκληρωμένα με ένα πάτημα</string>
+  <string name="widget_month_label">Μηνιαία προβολή ημερολογίου</string>
+  <string name="widget_month_description">Ο μήνας με ό,τι λήγει κάθε μέρα</string>
+  <string name="widget_schedule_label">Πρόγραμμα ημερολογίου</string>
+  <string name="widget_schedule_description">Ό,τι λήγει από σήμερα και μετά</string>
+</resources>

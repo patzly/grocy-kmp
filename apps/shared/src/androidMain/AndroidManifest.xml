@@ -43,5 +43,55 @@
         <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
       </intent-filter>
     </receiver>
+
+    <!-- The home screen widgets; the system's broadcasts to them are protected -->
+    <receiver
+      android:name="com.patrickzedler.grocy.apps.shared.widget.TaskListWidgetReceiver"
+      android:exported="true"
+      android:label="@string/widget_tasks_label">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+      </intent-filter>
+      <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/widget_tasks_info" />
+    </receiver>
+
+    <receiver
+      android:name="com.patrickzedler.grocy.apps.shared.widget.MonthWidgetReceiver"
+      android:exported="true"
+      android:label="@string/widget_month_label">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+      </intent-filter>
+      <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/widget_month_info" />
+    </receiver>
+
+    <receiver
+      android:name="com.patrickzedler.grocy.apps.shared.widget.ScheduleWidgetReceiver"
+      android:exported="true"
+      android:label="@string/widget_schedule_label">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+      </intent-filter>
+      <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/widget_schedule_info" />
+    </receiver>
+
+    <!-- Moves the widgets to the new day and sets up their updates again -->
+    <receiver
+      android:name="com.patrickzedler.grocy.apps.shared.widget.WidgetDayReceiver"
+      android:exported="false">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+        <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+        <action android:name="android.intent.action.TIME_SET" />
+        <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+        <action android:name="android.intent.action.LOCALE_CHANGED" />
+      </intent-filter>
+    </receiver>
   </application>
 </manifest>

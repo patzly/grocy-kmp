@@ -164,6 +164,14 @@ private fun GrocyNavigation(
         graph.notificationOpened()
     }
 
+    val openedWidgetRoute by graph.openedWidgetRoute.collectAsStateWithLifecycle()
+    LaunchedEffect(openedWidgetRoute, isLoggedIn) {
+        val route = openedWidgetRoute ?: return@LaunchedEffect
+        // On top of what the user was doing, so back returns to it
+        if (isLoggedIn && navigator.currentRoute != route) navigator.navigate(route)
+        graph.widgetRouteOpened()
+    }
+
     // The app menu of the features' screens leads to the settings and About
     val appMenuLinks = remember(navigator) {
         AppMenuLinks(

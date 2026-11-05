@@ -1379,4 +1379,7 @@
     <item quantity="one">%1$d hendelse i dag</item>
     <item quantity="other">%1$d hendelser i dag</item>
   </plurals>
+  <string name="widget_log_in">Logg inn på Grocy</string>
+  <string name="widget_no_tasks">Ingen oppgaver å gjøre</string>
+  <string name="widget_not_available">Ikke tilgjengelig på denne serveren</string>
 </resources>

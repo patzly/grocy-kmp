@@ -1485,4 +1485,7 @@
     <item quantity="many">Dnes %1$d udalosti</item>
     <item quantity="other">Dnes %1$d udalostí</item>
   </plurals>
+  <string name="widget_log_in">Prihláste sa do Grocy</string>
+  <string name="widget_no_tasks">Žiadne úlohy na vybavenie</string>
+  <string name="widget_not_available">Na tomto serveri nie je k dispozícii</string>
 </resources>

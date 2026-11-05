@@ -93,6 +93,7 @@ import com.patrickzedler.grocy.core.network.dto.StockEntryDto
 import com.patrickzedler.grocy.core.network.dto.StockLocationDto
 import com.patrickzedler.grocy.core.network.dto.StockLogDto
 import com.patrickzedler.grocy.core.network.dto.StoreDto
+import com.patrickzedler.grocy.core.network.dto.DbChangedTimeDto
 import com.patrickzedler.grocy.core.network.dto.SystemInfoDto
 import com.patrickzedler.grocy.core.network.dto.TaskCategoryDto
 import com.patrickzedler.grocy.core.network.dto.TaskDto
@@ -151,6 +152,13 @@ class GrocyApi(
 
     suspend fun systemInfo(connection: ServerConnection): SystemInfo =
         get<SystemInfoDto>(connection, "system", "info").toModel()
+
+    /**
+     * When anything in the server's database last changed, Grocy's own check for news; using the
+     * API does not change it.
+     */
+    suspend fun dbChangedTime(connection: ServerConnection): String =
+        get<DbChangedTimeDto>(connection, "system", "db-changed-time").changedTime
 
     /** Grocy returns the current user as a list with exactly one entry. */
     suspend fun currentUser(connection: ServerConnection): User =

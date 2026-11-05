@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_tasks_label">רשימת משימות</string>
+  <string name="widget_tasks_description">המשימות לביצוע, מסומנות כהושלמו בנגיעה</string>
+  <string name="widget_month_label">תצוגה חודשית של היומן</string>
+  <string name="widget_month_description">החודש עם כל מה שמגיע למועדו בכל יום</string>
+  <string name="widget_schedule_label">לוח הזמנים של היומן</string>
+  <string name="widget_schedule_description">מה שמגיע למועדו מהיום והלאה</string>
+</resources>

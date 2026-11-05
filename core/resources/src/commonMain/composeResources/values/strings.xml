@@ -1404,4 +1404,7 @@
     <item quantity="one">%1$d event today</item>
     <item quantity="other">%1$d events today</item>
   </plurals>
+  <string name="widget_log_in">Log in to Grocy</string>
+  <string name="widget_no_tasks">No tasks to do</string>
+  <string name="widget_not_available">Not available on this server</string>
 </resources>

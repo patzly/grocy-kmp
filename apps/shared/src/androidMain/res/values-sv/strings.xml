@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_tasks_label">Uppgiftslista</string>
+  <string name="widget_tasks_description">Dina uppgifter att göra, avklarade med ett tryck</string>
+  <string name="widget_month_label">Kalender, månadsvy</string>
+  <string name="widget_month_description">Månaden med det som förfaller varje dag</string>
+  <string name="widget_schedule_label">Kalender, schema</string>
+  <string name="widget_schedule_description">Det som förfaller från och med i dag</string>
+</resources>

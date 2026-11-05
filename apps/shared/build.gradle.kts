@@ -52,6 +52,10 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.core)
             implementation(libs.androidx.core.splashscreen)
+            implementation(libs.androidx.glance.appwidget)
+            implementation(libs.androidx.work.runtime)
+            // The widgets' background tone of the theme
+            implementation(libs.materialkolor)
             // A popup closing during a predictive back gesture crashed older versions
             implementation(libs.androidx.navigationevent.compose)
         }

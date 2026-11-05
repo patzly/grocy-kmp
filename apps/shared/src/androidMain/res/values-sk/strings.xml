@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_tasks_label">Zoznam úloh</string>
+  <string name="widget_tasks_description">Úlohy na vybavenie, splnené jedným ťuknutím</string>
+  <string name="widget_month_label">Mesačný kalendár</string>
+  <string name="widget_month_description">Mesiac s tým, čo je kedy splatné</string>
+  <string name="widget_schedule_label">Plán kalendára</string>
+  <string name="widget_schedule_description">Čo je splatné od dnes</string>
+</resources>

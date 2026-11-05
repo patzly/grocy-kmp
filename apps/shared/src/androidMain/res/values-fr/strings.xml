@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_tasks_label">Liste des tâches</string>
+  <string name="widget_tasks_description">Vos tâches à faire, terminées d\'un geste</string>
+  <string name="widget_month_label">Vue mensuelle du calendrier</string>
+  <string name="widget_month_description">Le mois avec ce qui arrive à échéance chaque jour</string>
+  <string name="widget_schedule_label">Planning du calendrier</string>
+  <string name="widget_schedule_description">Ce qui arrive à échéance à partir d\'aujourd\'hui</string>
+</resources>

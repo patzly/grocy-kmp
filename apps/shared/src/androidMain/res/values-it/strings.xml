@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_tasks_label">Elenco dei compiti</string>
+  <string name="widget_tasks_description">I tuoi compiti da fare, completati con un tocco</string>
+  <string name="widget_month_label">Vista mensile del calendario</string>
+  <string name="widget_month_description">Il mese con ciò che scade ogni giorno</string>
+  <string name="widget_schedule_label">Programma del calendario</string>
+  <string name="widget_schedule_description">Ciò che scade da oggi in poi</string>
+</resources>

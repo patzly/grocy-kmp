@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_tasks_label">タスクリスト</string>
+  <string name="widget_tasks_description">未完了のタスクをタップで完了</string>
+  <string name="widget_month_label">カレンダー(月表示)</string>
+  <string name="widget_month_description">毎日の期限を表示した月</string>
+  <string name="widget_schedule_label">カレンダー(スケジュール)</string>
+  <string name="widget_schedule_description">今日以降の期限</string>
+</resources>

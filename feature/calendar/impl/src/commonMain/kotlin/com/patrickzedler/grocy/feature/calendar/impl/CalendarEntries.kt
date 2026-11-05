@@ -5,6 +5,7 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
 import com.patrickzedler.grocy.core.model.calendar.CalendarEventKind
+import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.model.text.isoDateOf
 import com.patrickzedler.grocy.core.navigation.Navigator
 import com.patrickzedler.grocy.core.navigation.Route
@@ -22,12 +23,14 @@ fun EntryProviderScope<NavKey>.calendarEntries(
     dependencies: CalendarDependencies,
     navigator: Navigator,
 ) {
-    entry<CalendarRoute> {
+    entry<CalendarRoute> { route ->
         CalendarScreen(
             viewModel = viewModel {
                 CalendarViewModel(
                     calendar = dependencies.calendarRepository,
                     masterData = dependencies.masterDataRepository,
+                    initialView = route.view,
+                    initialDay = route.day?.let(::epochDayOf),
                 )
             },
             onEventClick = { event -> navigator.navigate(routeOf(event)) },
@@ -37,8 +40,8 @@ fun EntryProviderScope<NavKey>.calendarEntries(
     }
 }
 
-/** Where Grocy's calendar leads for [event]. */
-internal fun routeOf(event: CalendarEvent): Route = when (event.kind) {
+/** Where Grocy's calendar leads for [event], also from the widgets. */
+fun routeOf(event: CalendarEvent): Route = when (event.kind) {
     CalendarEventKind.PRODUCT -> StockOverviewRoute
     CalendarEventKind.TASK -> TasksRoute
     CalendarEventKind.CHORE -> ChoresOverviewRoute

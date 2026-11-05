@@ -44,17 +44,32 @@ class CalendarViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun TestScope.viewModel(): CalendarViewModel {
+    private fun TestScope.viewModel(
+        initialView: CalendarView? = null,
+        initialDay: Long? = null,
+    ): CalendarViewModel {
         val viewModel = CalendarViewModel(
             calendar = environment.calendarRepository,
             masterData = environment.repository,
             today = { today },
             localeFirstDay = { 1 },
             computeDispatcher = dispatcher,
+            initialView = initialView,
+            initialDay = initialDay,
         )
         backgroundScope.launch { viewModel.state.collect {} }
         advanceUntilIdle()
         return viewModel
+    }
+
+    @Test
+    fun aWidgetOpensItOnItsDayInItsView() = runTest(dispatcher) {
+        val day = epochDayOf("2026-12-24")!!
+
+        val state = assertNotNull(viewModel(CalendarView.MONTH, day).state.value)
+
+        assertEquals(day, state.anchor)
+        assertEquals(CalendarView.MONTH, state.chosenView)
     }
 
     @Test

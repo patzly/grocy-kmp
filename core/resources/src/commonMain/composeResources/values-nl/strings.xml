@@ -1379,4 +1379,7 @@
     <item quantity="one">Vandaag %1$d gebeurtenis</item>
     <item quantity="other">Vandaag %1$d gebeurtenissen</item>
   </plurals>
+  <string name="widget_log_in">Log in bij Grocy</string>
+  <string name="widget_no_tasks">Geen taken te doen</string>
+  <string name="widget_not_available">Niet beschikbaar op deze server</string>
 </resources>

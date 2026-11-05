@@ -60,6 +60,12 @@ interface PlatformDependencies {
      */
     fun createNotificationAlarm(scope: CoroutineScope, onDue: suspend () -> Unit): NotificationAlarm
 
+    /**
+     * Keeps the home screen widgets up to date with [dependencies] while the app runs in [scope];
+     * only Android has widgets.
+     */
+    fun startWidgetUpdates(dependencies: WidgetDependencies, scope: CoroutineScope) = Unit
+
     /** Starts the app anew: a new process on Android, a reload of the page on the web. */
     fun restartApp()
 }

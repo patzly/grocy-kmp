@@ -69,12 +69,16 @@ fun GrocyTheme(
 
 /** The primary color [GrocyTheme] shows for [appearance] without colors of the wallpaper. */
 fun seededPrimaryColor(appearance: AppearanceSettings, isDark: Boolean): Color =
+    seededColorScheme(appearance, isDark).primary
+
+/** The colors [GrocyTheme] shows for [appearance] without colors of the wallpaper. */
+internal fun seededColorScheme(appearance: AppearanceSettings, isDark: Boolean): ColorScheme =
     dynamicColorScheme(
         seedColor = seedColorOf(appearance.hue),
         isDark = isDark,
         style = appearance.style.paletteStyle,
         contrastLevel = appearance.contrast.level,
-    ).primary
+    ).harmonizeError()
 
 private fun seedColorOf(hue: Float): Color =
     Hct.from(hue.toDouble(), SEED_CHROMA, SEED_TONE).toColor()

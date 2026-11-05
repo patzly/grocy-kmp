@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_tasks_label">Aufgabenliste</string>
+  <string name="widget_tasks_description">Deine offenen Aufgaben, mit einem Tippen erledigt</string>
+  <string name="widget_month_label">Kalender-Monatsansicht</string>
+  <string name="widget_month_description">Der Monat mit allem, was an jedem Tag fällig ist</string>
+  <string name="widget_schedule_label">Kalender-Terminübersicht</string>
+  <string name="widget_schedule_description">Was ab heute fällig ist</string>
+</resources>

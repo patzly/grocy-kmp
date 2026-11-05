@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_tasks_label">Llista de tasques</string>
+  <string name="widget_tasks_description">Les tasques pendents, completades amb un toc</string>
+  <string name="widget_month_label">Vista mensual del calendari</string>
+  <string name="widget_month_description">El mes amb el que venç cada dia</string>
+  <string name="widget_schedule_label">Agenda del calendari</string>
+  <string name="widget_schedule_description">El que venç a partir d\'avui</string>
+</resources>

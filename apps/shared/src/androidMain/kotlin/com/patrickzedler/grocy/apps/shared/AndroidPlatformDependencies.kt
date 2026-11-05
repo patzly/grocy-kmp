@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.Uri
+import com.patrickzedler.grocy.apps.shared.widget.WidgetUpdates
 import com.patrickzedler.grocy.core.data.credentials.AndroidCredentialStore
 import com.patrickzedler.grocy.core.data.credentials.CredentialStore
 import com.patrickzedler.grocy.core.data.language.AppLanguageStore
@@ -91,6 +92,10 @@ class AndroidPlatformDependencies(
         scope: CoroutineScope,
         onDue: suspend () -> Unit,
     ): NotificationAlarm = AndroidNotificationAlarm(appContext)
+
+    override fun startWidgetUpdates(dependencies: WidgetDependencies, scope: CoroutineScope) {
+        WidgetUpdates.start(appContext, dependencies, scope)
+    }
 
     override fun restartApp() {
         val launchIntent = appContext.packageManager

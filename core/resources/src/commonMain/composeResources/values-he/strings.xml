@@ -1432,4 +1432,7 @@
     <item quantity="two">%1$d אירועים היום</item>
     <item quantity="other">%1$d אירועים היום</item>
   </plurals>
+  <string name="widget_log_in">יש להתחבר ל־Grocy</string>
+  <string name="widget_no_tasks">אין משימות לביצוע</string>
+  <string name="widget_not_available">לא זמין בשרת הזה</string>
 </resources>

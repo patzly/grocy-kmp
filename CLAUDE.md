@@ -10,7 +10,7 @@ Behavior, Scanner), Grocy's stock overview, master data with all their forms, th
 the shopping list and its shopping mode, the recipes with their cards and forms, the meal plan, the
 chores with their tracking and journal, the tasks, the batteries with their tracking and journal,
 the equipment with its manuals, the calendar, the daily notifications, new products filled in from open product
-databases, the Wear OS app with the shopping list.
+databases, the home screen widgets (tasks, calendar month and schedule), the Wear OS app with the shopping list.
 
 ## Details
 
@@ -42,6 +42,8 @@ tasks need.
 - `docs/features/notifications.md`: the daily notifications per feature: settings, alarm, current
   state before notifying, what browsers allow.
 - `docs/features/calendar.md`: Grocy's calendar with its views, colors and iCal link.
+- `docs/features/widgets.md`: the Android home screen widgets, their colors and how they stay
+  current without costing battery.
 - `docs/features/stock-pages.md`: stock entries, stock journal and journal summary.
 - `docs/features/product-overview.md`: the product overview card (`core:productcard`), price
   chart, grocycodes, "Add to shopping list".
@@ -209,7 +211,8 @@ CI and releases: `docs/architecture/ci.md`.
 ```
 apps/
   shared/        KMP: GrocyApp (root composable), AppGraph (manual DI), PlatformDependencies,
-                 Android MainActivity, launcher icons, themes, splash, backup + network config
+                 Android MainActivity, home screen widgets, launcher icons, themes, splash,
+                 backup + network config
   android-foss/  Android app, FossApplication -> AppGraph(isPlayVariant = false)
   android-play/  Android app, PlayApplication -> AppGraph(isPlayVariant = true), <queries> for unlock app
   wear/          standalone Wear OS app (Android only, not KMP), its screens and WearGraph
@@ -344,8 +347,8 @@ object. Platform specifics come in through `PlatformDependencies` (`AndroidPlatf
   translation.
 - Long texts (changelog, licenses) are files in `composeResources/files/`, rendered by
   `FormattedText` with its own markup (`docs/ui.md`).
-- Android-only resources (launcher icon, splash, themes, `app_name_nightly`) are in
-  `apps/shared/src/androidMain/res`.
+- Android-only resources (launcher icon, splash, themes, `app_name_nightly`, the widgets' icons,
+  previews and picker texts, translated like the others) are in `apps/shared/src/androidMain/res`.
 
 ## Testing
 

@@ -1379,4 +1379,7 @@
     <item quantity="one">%1$d συμβάν σήμερα</item>
     <item quantity="other">%1$d συμβάντα σήμερα</item>
   </plurals>
+  <string name="widget_log_in">Συνδεθείτε στο Grocy</string>
+  <string name="widget_no_tasks">Δεν υπάρχουν καθήκοντα</string>
+  <string name="widget_not_available">Δεν είναι διαθέσιμο σε αυτόν τον διακομιστή</string>
 </resources>

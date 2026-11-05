@@ -1379,4 +1379,7 @@
     <item quantity="one">Ma %1$d esemény</item>
     <item quantity="other">Ma %1$d esemény</item>
   </plurals>
+  <string name="widget_log_in">Jelentkezz be a Grocyba</string>
+  <string name="widget_no_tasks">Nincs elvégzendő feladat</string>
+  <string name="widget_not_available">Ezen a szerveren nem érhető el</string>
 </resources>

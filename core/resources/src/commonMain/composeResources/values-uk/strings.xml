@@ -1484,4 +1484,7 @@
     <item quantity="many">Сьогодні %1$d подій</item>
     <item quantity="other">Сьогодні %1$d події</item>
   </plurals>
+  <string name="widget_log_in">Увійдіть у Grocy</string>
+  <string name="widget_no_tasks">Немає завдань</string>
+  <string name="widget_not_available">Недоступно на цьому сервері</string>
 </resources>

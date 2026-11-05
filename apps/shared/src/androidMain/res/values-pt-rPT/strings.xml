@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_tasks_label">Lista de tarefas</string>
+  <string name="widget_tasks_description">As suas tarefas por fazer, concluídas com um toque</string>
+  <string name="widget_month_label">Vista mensal do calendário</string>
+  <string name="widget_month_description">O mês com o que vence em cada dia</string>
+  <string name="widget_schedule_label">Agenda do calendário</string>
+  <string name="widget_schedule_description">O que vence a partir de hoje</string>
+</resources>

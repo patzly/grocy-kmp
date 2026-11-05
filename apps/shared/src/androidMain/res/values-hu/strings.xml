@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_tasks_label">Feladatlista</string>
+  <string name="widget_tasks_description">Az elvégzendő feladataid, egy koppintással kipipálva</string>
+  <string name="widget_month_label">Havi naptárnézet</string>
+  <string name="widget_month_description">A hónap azzal, ami az egyes napokon esedékes</string>
+  <string name="widget_schedule_label">Naptár ütemezése</string>
+  <string name="widget_schedule_description">Ami mától esedékes</string>
+</resources>

@@ -160,7 +160,8 @@ internal sealed interface CalendarEvents {
 
 /**
  * Grocy's calendar: its events at once from the database, downloaded in the background. The color
- * settings save like Grocy's: each change on its own, online only.
+ * settings save like Grocy's: each change on its own, online only. It opens on [initialDay] in
+ * [initialView] if given, else on today in the window's view.
  */
 internal class CalendarViewModel(
     private val calendar: CalendarRepository,
@@ -168,10 +169,12 @@ internal class CalendarViewModel(
     private val today: () -> Long = ::todayEpochDay,
     private val localeFirstDay: () -> Int = ::localeFirstDayOfWeek,
     computeDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    initialView: CalendarView? = null,
+    initialDay: Long? = null,
 ) : ViewModel() {
 
-    private val anchor = MutableStateFlow(today())
-    private val chosenView = MutableStateFlow<CalendarView?>(null)
+    private val anchor = MutableStateFlow(initialDay ?: today())
+    private val chosenView = MutableStateFlow(initialView)
 
     private val refreshController = RefreshController(viewModelScope) { calendar.refresh() }
     val refresh: StateFlow<RefreshState> = refreshController.state

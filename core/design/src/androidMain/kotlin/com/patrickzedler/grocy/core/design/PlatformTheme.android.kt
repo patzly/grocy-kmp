@@ -71,6 +71,22 @@ fun appPrimaryColor(context: Context, appearance: AppearanceSettings): ComposeCo
     }
 }
 
+/**
+ * The light and the dark colors [GrocyTheme] shows for [appearance], for what follows the system's
+ * dark theme outside of the app such as widgets.
+ */
+fun appColorSchemes(
+    context: Context,
+    appearance: AppearanceSettings,
+): Pair<ColorScheme, ColorScheme> =
+    if (appearance.color == AppColor.DYNAMIC && isDynamicColorAvailable) {
+        dynamicLightColorScheme(context).harmonizeError() to
+            dynamicDarkColorScheme(context).harmonizeError()
+    } else {
+        seededColorScheme(appearance, isDark = false) to
+            seededColorScheme(appearance, isDark = true)
+    }
+
 private fun Context.findActivity(): ComponentActivity? {
     var currentContext = this
     while (currentContext is ContextWrapper) {

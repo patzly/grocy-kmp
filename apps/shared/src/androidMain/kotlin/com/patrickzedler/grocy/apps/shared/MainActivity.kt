@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
+import com.patrickzedler.grocy.apps.shared.widget.WIDGET_LINK_EXTRA
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -29,7 +30,7 @@ class MainActivity : ComponentActivity() {
         splashScreen.setKeepOnScreenCondition { !isContentReady }
 
         val graph = (application as AppGraphOwner).graph
-        // Recreating the activity must not open the notification's feature again
+        // Recreating the activity must not open the notification's or widget's page again
         if (savedInstanceState == null) openNotificationOf(intent)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
             recreateOnLanguageChange(graph)
@@ -48,8 +49,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun openNotificationOf(intent: Intent) {
+        val graph = (application as AppGraphOwner).graph
+        intent.getStringExtra(WIDGET_LINK_EXTRA)?.let(graph::openWidgetLink)
         val kind = AndroidNotifier.openedKindOf(intent) ?: return
-        (application as AppGraphOwner).graph.openNotification(kind)
+        graph.openNotification(kind)
     }
 
     /** Before Android 13 a new language only applies to activities created afterwards. */

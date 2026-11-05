@@ -131,4 +131,9 @@
   <color name="green_theme_surfaceContainerHigh_highContrast">#393C35</color>
   <color name="green_theme_surfaceContainerHighest_highContrast">#444840</color>
 
+
+  <color name="widget_preview_background">#1c2616</color>
+  <color name="widget_preview_content">#43503a</color>
+  <color name="widget_preview_primary">#a9d290</color>
+  <color name="widget_preview_event">#a0cfd0</color>
 </resources>

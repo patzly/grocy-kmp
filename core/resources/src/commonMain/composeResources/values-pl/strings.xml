@@ -1485,4 +1485,7 @@
     <item quantity="many">Dziś %1$d wydarzeń</item>
     <item quantity="other">Dziś %1$d wydarzenia</item>
   </plurals>
+  <string name="widget_log_in">Zaloguj się do Grocy</string>
+  <string name="widget_no_tasks">Brak zadań do wykonania</string>
+  <string name="widget_not_available">Niedostępne na tym serwerze</string>
 </resources>

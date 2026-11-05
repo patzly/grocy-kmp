@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_tasks_label">Список завдань</string>
+  <string name="widget_tasks_description">Ваші невиконані завдання, виконані одним дотиком</string>
+  <string name="widget_month_label">Календар на місяць</string>
+  <string name="widget_month_description">Місяць з усім, що настає кожного дня</string>
+  <string name="widget_schedule_label">Розклад календаря</string>
+  <string name="widget_schedule_description">Що настає починаючи з сьогодні</string>
+</resources>

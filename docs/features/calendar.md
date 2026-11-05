@@ -3,8 +3,9 @@
 Grocy's calendar page (`/calendar`), `feature:calendar`. Grocy shows it with FullCalendar, this is
 its own Material 3 Expressive version that does the same.
 
-- Route: `CalendarRoute` (`feature:calendar:api`), a screen of its own that uses the whole window
-  like the meal plan. The start screen opens it from its section "Calendar" after the equipment (with
+- Route: `CalendarRoute(view, day)` (`feature:calendar:api`), a screen of its own that uses the
+  whole window like the meal plan; the widgets open it in a view on a day, otherwise it opens today
+  in the window's view. The start screen opens it from its section "Calendar" after the equipment (with
   `FEATURE_FLAG_CALENDAR`), which tells how many events today has.
 - Events (`calendarEventsOf`, `core:model`, Grocy's `CalendarService`): products in stock on their
   due date (with due date tracking), tasks to do, chores (with their time unless they track the date

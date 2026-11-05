@@ -1379,4 +1379,7 @@
     <item quantity="one">Heute %1$d Termin</item>
     <item quantity="other">Heute %1$d Termine</item>
   </plurals>
+  <string name="widget_log_in">Bei Grocy anmelden</string>
+  <string name="widget_no_tasks">Keine Aufgaben zu erledigen</string>
+  <string name="widget_not_available">Auf diesem Server nicht verfügbar</string>
 </resources>

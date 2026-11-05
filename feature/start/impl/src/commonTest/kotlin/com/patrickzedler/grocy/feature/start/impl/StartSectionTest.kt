@@ -36,7 +36,7 @@ class StartSectionTest {
         assertEquals(MealPlanRoute(), StartSection.MEAL_PLAN.route)
         assertEquals(ChoresOverviewRoute, StartSection.CHORES.route)
         assertEquals(TasksRoute, StartSection.TASKS.route)
-        assertEquals(CalendarRoute, StartSection.CALENDAR.route)
+        assertEquals(CalendarRoute(), StartSection.CALENDAR.route)
         // List-detail scenes of their own, never beside the start screen
         assertFalse(StartSection.SHOPPING_LIST.route is DetailRoute)
         assertFalse(StartSection.RECIPES.route is DetailRoute)

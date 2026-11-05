@@ -36,7 +36,9 @@ import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
 import com.patrickzedler.grocy.core.data.update.UpdateRepository
+import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.notifications.NotificationKind
+import com.patrickzedler.grocy.core.navigation.Route
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.network.GrocyApi
@@ -312,6 +314,20 @@ class AppGraph(
         mutableOpenedNotification.value = null
     }
 
+    private val mutableOpenedWidgetRoute = MutableStateFlow<Route?>(null)
+
+    /** The screen a widget opened, until the navigation showed it. */
+    internal val openedWidgetRoute = mutableOpenedWidgetRoute.asStateFlow()
+
+    /** The user tapped something of a widget that leads to [link] ([WidgetLinks]). */
+    internal fun openWidgetLink(link: String) {
+        WidgetLinks.routeOfLink(link)?.let { mutableOpenedWidgetRoute.value = it }
+    }
+
+    internal fun widgetRouteOpened() {
+        mutableOpenedWidgetRoute.value = null
+    }
+
     /** What the alarm of the system runs; [onFinished] once the app may go back to sleep. */
     internal fun checkNotifications(onFinished: () -> Unit) {
         appScope.launch {
@@ -508,12 +524,27 @@ class AppGraph(
             get() = scannerFormsRepository
     }
 
+    /** What the home screen widgets show and change. */
+    internal val widgetDependencies: WidgetDependencies = object : WidgetDependencies {
+        override val connection: Flow<ServerConnection?>
+            get() = platform.credentialStore.connection
+        override val appearance: Flow<AppearanceSettings>
+            get() = platform.settingsStore.appearance
+        override val masterDataRepository: MasterDataRepository
+            get() = this@AppGraph.masterDataRepository
+        override val tasksRepository: TasksRepository
+            get() = this@AppGraph.tasksRepository
+        override val calendarRepository: CalendarRepository
+            get() = this@AppGraph.calendarRepository
+    }
+
     init {
         // Items checked off and notes edited offline when the app was last used; creating the
         // repository also makes it send them whenever the device gets a network
         shoppingListRepository.sendPendingInBackground()
         // Catches up what was missed while the app could not run and keeps the alarm set
         notificationRepository.start()
+        platform.startWidgetUpdates(widgetDependencies, appScope)
     }
 
     internal val aboutDependencies: AboutDependencies = object : AboutDependencies {

@@ -627,6 +627,13 @@ class MasterDataRepository(
         api.productPicture(requireConnection(), fileName, maxWidth)
 
     /** Forgets the data of the server, e.g. on logout. */
+    /** A value the app keeps about the server, e.g. what it downloaded last; gone at logout. */
+    suspend fun storedServerValue(key: String): String? = dao.observeServerValue(key).first()?.json
+
+    suspend fun storeServerValue(key: String, value: String) {
+        dao.upsertServerValue(ServerValueEntity(key, value))
+    }
+
     suspend fun clear() {
         database.clearAllTables()
     }

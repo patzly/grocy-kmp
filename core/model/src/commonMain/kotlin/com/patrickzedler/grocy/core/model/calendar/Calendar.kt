@@ -21,6 +21,7 @@ import com.patrickzedler.grocy.core.model.text.lastDayOfMonth
 import com.patrickzedler.grocy.core.model.text.timeOfDayOf
 import com.patrickzedler.grocy.core.model.text.weekdayOf
 import com.patrickzedler.grocy.core.model.text.yearOfDay
+import kotlinx.serialization.Serializable
 
 /** Grocy's "Configure colors" of the calendar: a user setting per kind of events. */
 enum class CalendarColorSetting(
@@ -184,6 +185,7 @@ private fun timeOf(dateTime: String): String? =
 /**
  * Grocy's views of the calendar, its list as a schedule that goes on, in Google Calendar's order.
  */
+@Serializable
 enum class CalendarView { DAY, WEEK, MONTH, SCHEDULE }
 
 /** The first day of the week of [epochDay], [firstDayOfWeek] from 0 (Sunday) to 6. */
