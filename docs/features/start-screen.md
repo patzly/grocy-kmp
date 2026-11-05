@@ -21,9 +21,10 @@ Grocy's messages overdue, due today and due soon; as its only action "Create tas
 icon button with a plus, `TaskCreateButton`, opened like the chore tracking: `taskCreateRoutes`;
 see `tasks.md`), Grocy's batteries overview (with the batteries feature, a list-detail scene of its
 own: how many, then Grocy's messages overdue, due today and due soon; as its only action "Battery
-tracking", a wide filled icon button with a charging battery, `BatteryTrackingButton`, opened like
+tracking", a wide filled icon button with a good battery, `BatteryTrackingButton`, opened like
 the chore tracking: `batteryTrackingRoutes`; see `batteries.md`) and Grocy's equipment (with the
-equipment feature, a list-detail scene of its own: how many; see `equipment.md`), then
+equipment feature, a list-detail scene of its own: how many; see `equipment.md`) and Grocy's calendar
+(with the calendar feature, a screen of its own: how many events today; see `calendar.md`), then
 Master data, each telling about
 its data as supporting text (`SupportingBulletList` of `core:design`, numbers of 0 left out;
 `StartViewModel` downloads master data and stock overview when it opens): the products in stock

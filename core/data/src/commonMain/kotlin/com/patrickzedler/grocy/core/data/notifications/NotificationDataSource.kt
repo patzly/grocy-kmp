@@ -113,7 +113,6 @@ class RepositoryNotificationDataSource(
                     dueSoonDays = userSettings.stockDueSoonDays,
                     today = today,
                 ),
-                showNames = settings.showNames,
                 dueSoonDays = userSettings.stockDueSoonDays,
             )
             NotificationKind.CHORES -> NotificationSummary(
@@ -125,7 +124,6 @@ class RepositoryNotificationDataSource(
                     now = grocyDateTimeOf(now),
                     currentUserId = chores.currentUserId.first(),
                 ),
-                showNames = settings.showNames,
                 dueSoonDays = userSettings.choresDueSoonDays,
             )
             NotificationKind.TASKS -> NotificationSummary(
@@ -137,7 +135,6 @@ class RepositoryNotificationDataSource(
                     today = today,
                     currentUserId = tasks.currentUserId.first(),
                 ),
-                showNames = settings.showNames,
                 dueSoonDays = userSettings.tasksDueSoonDays,
             )
             NotificationKind.BATTERIES -> NotificationSummary(
@@ -149,7 +146,6 @@ class RepositoryNotificationDataSource(
                     dueSoonDays = userSettings.batteriesDueSoonDays,
                     now = grocyDateTimeOf(now),
                 ),
-                showNames = settings.showNames,
                 dueSoonDays = userSettings.batteriesDueSoonDays,
             )
             NotificationKind.MEAL_PLAN -> NotificationSummary(
@@ -162,7 +158,6 @@ class RepositoryNotificationDataSource(
                     settings = settings,
                     today = today,
                 ),
-                showNames = settings.showNames,
             )
         }
     }

@@ -48,6 +48,8 @@ import com.patrickzedler.grocy.feature.equipment.api.equipmentRouteSerializers
 import com.patrickzedler.grocy.feature.equipment.impl.equipmentEntries
 import com.patrickzedler.grocy.feature.chores.api.choresRouteSerializers
 import com.patrickzedler.grocy.feature.chores.impl.choresEntries
+import com.patrickzedler.grocy.feature.calendar.api.calendarRouteSerializers
+import com.patrickzedler.grocy.feature.calendar.impl.calendarEntries
 import com.patrickzedler.grocy.feature.tasks.api.TasksRoute
 import com.patrickzedler.grocy.feature.tasks.api.tasksRouteSerializers
 import com.patrickzedler.grocy.feature.tasks.impl.tasksEntries
@@ -76,7 +78,8 @@ internal val routeSerializers =
     startRouteSerializers + loginRouteSerializers + aboutRouteSerializers +
         settingsRouteSerializers + masterDataRouteSerializers + stockRouteSerializers +
         shoppingListRouteSerializers + recipesRouteSerializers + choresRouteSerializers +
-        tasksRouteSerializers + batteriesRouteSerializers + equipmentRouteSerializers
+        tasksRouteSerializers + batteriesRouteSerializers + equipmentRouteSerializers +
+        calendarRouteSerializers
 
 /**
  * Shared entry point of the Android and web apps.
@@ -182,6 +185,7 @@ private fun GrocyNavigation(
             tasksEntries(graph.tasksDependencies, navigator)
             batteriesEntries(graph.batteriesDependencies, navigator)
             equipmentEntries(graph.equipmentDependencies, navigator)
+            calendarEntries(graph.calendarDependencies, navigator)
         }
     }
 }

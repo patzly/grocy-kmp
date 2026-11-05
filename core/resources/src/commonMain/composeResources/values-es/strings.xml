@@ -1267,8 +1267,13 @@
   </plurals>
   <string name="notifications_daily">Notificación diaria</string>
   <string name="notifications_time">Hora</string>
-  <string name="notifications_show_names">Mostrar nombres</string>
-  <string name="notifications_show_names_hint">Los enumera en la notificación en lugar de decir solo cuántos hay</string>
+  <string name="notifications_names_and">%1$s y %2$s</string>
+  <plurals name="notifications_names_more">
+    <item quantity="one">%1$s y %2$d más</item>
+    <item quantity="many">%1$s y %2$d más</item>
+    <item quantity="other">%1$s y %2$d más</item>
+  </plurals>
+  <string name="notifications_sentence_names">%1$s: %2$s.</string>
   <string name="notifications_only_mine">Solo lo que tengo asignado</string>
   <string name="notifications_show_now">Mostrar ahora</string>
   <string name="notifications_show_now_hint">Muestra lo que dice la notificación en este momento</string>
@@ -1393,4 +1398,38 @@
   <string name="objects_delete_userobject">¿Seguro que quieres eliminar este objeto de usuario?</string>
   <string name="userobject_no_fields">Aún no tiene campos, añádelos con «Configurar campos».</string>
   <string name="userentity_show_objects">Mostrar objetos</string>
+  <string name="calendar_title">Calendario</string>
+  <string name="calendar_view_month">Mes</string>
+  <string name="calendar_view_week">Semana</string>
+  <string name="calendar_view_day">Día</string>
+  <string name="calendar_view_schedule">Agenda</string>
+  <string name="calendar_all_day">Todo el día</string>
+  <plurals name="calendar_more">
+    <item quantity="one">%1$d más</item>
+    <item quantity="many">%1$d más</item>
+    <item quantity="other">%1$d más</item>
+  </plurals>
+  <string name="calendar_product_due">Producto con fecha límite</string>
+  <string name="calendar_task_due">Tarea pendiente</string>
+  <string name="calendar_chore_due">Tarea del hogar pendiente</string>
+  <string name="calendar_battery_due">Ciclo de carga pendiente</string>
+  <string name="calendar_meal_plan_recipe">Receta del plan de comidas</string>
+  <string name="calendar_meal_plan_note">Nota del plan de comidas</string>
+  <string name="calendar_meal_plan_product">Producto del plan de comidas</string>
+  <string name="calendar_assigned_to">asignada a %1$s</string>
+  <string name="calendar_previous">Anterior</string>
+  <string name="calendar_next">Siguiente</string>
+  <string name="calendar_no_events">No hay eventos que mostrar</string>
+  <string name="calendar_share">Compartir/integrar calendario (iCal)</string>
+  <string name="calendar_share_hint">Usa la siguiente URL (pública) para compartir o integrar el calendario en formato iCal</string>
+  <string name="calendar_configure_colors">Configurar colores</string>
+  <string name="calendar_color_code">Código de color</string>
+  <string name="calendar_color_invalid">Introduce un color como #RRGGBB</string>
+  <string name="calendar_week_number">Semana %1$d</string>
+  <string name="calendar_nothing_today">Nada para hoy</string>
+  <plurals name="calendar_events_today">
+    <item quantity="one">%1$d evento hoy</item>
+    <item quantity="many">%1$d eventos hoy</item>
+    <item quantity="other">%1$d eventos hoy</item>
+  </plurals>
 </resources>

@@ -1222,8 +1222,12 @@
   </plurals>
   <string name="notifications_daily">Dagelijkse melding</string>
   <string name="notifications_time">Tijd</string>
-  <string name="notifications_show_names">Namen tonen</string>
-  <string name="notifications_show_names_hint">Somt ze op in de melding in plaats van alleen het aantal te noemen</string>
+  <string name="notifications_names_and">%1$s en %2$s</string>
+  <plurals name="notifications_names_more">
+    <item quantity="one">%1$s en nog %2$d</item>
+    <item quantity="other">%1$s en nog %2$d</item>
+  </plurals>
+  <string name="notifications_sentence_names">%1$s: %2$s.</string>
   <string name="notifications_only_mine">Alleen wat aan mij is toegewezen</string>
   <string name="notifications_show_now">Nu tonen</string>
   <string name="notifications_show_now_hint">Toont wat de melding op dit moment zegt</string>
@@ -1343,4 +1347,36 @@
   <string name="objects_delete_userobject">Weet je zeker dat je dit gebruikersobject wilt verwijderen?</string>
   <string name="userobject_no_fields">Dit heeft nog geen velden, voeg ze toe met 'Velden configureren'.</string>
   <string name="userentity_show_objects">Objecten tonen</string>
+  <string name="calendar_title">Kalender</string>
+  <string name="calendar_view_month">Maand</string>
+  <string name="calendar_view_week">Week</string>
+  <string name="calendar_view_day">Dag</string>
+  <string name="calendar_view_schedule">Planning</string>
+  <string name="calendar_all_day">Hele dag</string>
+  <plurals name="calendar_more">
+    <item quantity="one">nog %1$d</item>
+    <item quantity="other">nog %1$d</item>
+  </plurals>
+  <string name="calendar_product_due">Product vervalt</string>
+  <string name="calendar_task_due">Taak doen</string>
+  <string name="calendar_chore_due">Klusje</string>
+  <string name="calendar_battery_due">Batterij oplaadcyclus nabij</string>
+  <string name="calendar_meal_plan_recipe">Maaltijdplanrecept</string>
+  <string name="calendar_meal_plan_note">Maaltijdplannotitie</string>
+  <string name="calendar_meal_plan_product">Maaltijdplanproduct</string>
+  <string name="calendar_assigned_to">Toegewezen aan %1$s</string>
+  <string name="calendar_previous">Vorige</string>
+  <string name="calendar_next">Volgende</string>
+  <string name="calendar_no_events">Geen gebeurtenissen om weer te geven</string>
+  <string name="calendar_share">Deel/Integreer agenda (iCal)</string>
+  <string name="calendar_share_hint">Gebruik de volgende (openbare) URL om de kalender in iCal-formaat te delen of te integreren</string>
+  <string name="calendar_configure_colors">Kleuren configureren</string>
+  <string name="calendar_color_code">Kleurcode</string>
+  <string name="calendar_color_invalid">Voer een kleur in als #RRGGBB</string>
+  <string name="calendar_week_number">Week %1$d</string>
+  <string name="calendar_nothing_today">Niets voor vandaag</string>
+  <plurals name="calendar_events_today">
+    <item quantity="one">Vandaag %1$d gebeurtenis</item>
+    <item quantity="other">Vandaag %1$d gebeurtenissen</item>
+  </plurals>
 </resources>

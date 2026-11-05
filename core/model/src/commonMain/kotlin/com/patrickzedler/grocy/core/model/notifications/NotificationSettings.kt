@@ -51,14 +51,13 @@ enum class NotificationTopic(val kind: NotificationKind, internal val byDefault:
 }
 
 /**
- * How one [NotificationKind] notifies: every day at [minuteOfDay] about its [topics], with their
- * names ([showNames]) and, where Grocy assigns things, what the user has to do ([onlyMine]).
+ * How one [NotificationKind] notifies: every day at [minuteOfDay] about its [topics] and, where
+ * Grocy assigns things, what the user has to do ([onlyMine]).
  */
 data class NotificationKindSettings(
     val enabled: Boolean = false,
     val minuteOfDay: Int,
     val topics: Set<NotificationTopic>,
-    val showNames: Boolean = true,
     val onlyMine: Boolean = false,
 )
 
@@ -76,14 +75,15 @@ data class NotificationSettings(
     val enabledKinds: Set<NotificationKind>
         get() = NotificationKind.entries.filterTo(mutableSetOf()) { this[it].enabled }
 
-    /** What [of] reads back: "KIND=enabled;minute;TOPIC,TOPIC;names;mine", joined with "|". */
+    /** What [of] reads back: "KIND=enabled;minute;TOPIC,TOPIC;1;mine", joined with "|". */
     fun stored(): String = NotificationKind.entries.joinToString(KIND_SEPARATOR) { kind ->
         val settings = this[kind]
         listOf(
             settings.enabled.stored(),
             settings.minuteOfDay.toString(),
             settings.topics.joinToString(TOPIC_SEPARATOR) { it.name },
-            settings.showNames.stored(),
+            // The place of a former setting, so what is stored stays readable both ways
+            TRUE,
             settings.onlyMine.stored(),
         ).joinToString(PART_SEPARATOR, prefix = "${kind.name}=")
     }
@@ -112,7 +112,6 @@ data class NotificationSettings(
                 topics = names?.let { list ->
                     kind.topics.filterTo(mutableSetOf()) { it.name in list }
                 } ?: defaults.topics,
-                showNames = parts.getOrNull(NAMES_PART)?.let { it == TRUE } ?: defaults.showNames,
                 onlyMine = parts.getOrNull(MINE_PART) == TRUE,
             )
         }
@@ -136,5 +135,4 @@ private const val FALSE = "0"
 private const val ENABLED_PART = 0
 private const val MINUTE_PART = 1
 private const val TOPICS_PART = 2
-private const val NAMES_PART = 3
 private const val MINE_PART = 4

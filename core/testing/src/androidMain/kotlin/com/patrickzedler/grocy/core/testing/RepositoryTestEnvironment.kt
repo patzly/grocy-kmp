@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.core.testing
 
+import com.patrickzedler.grocy.core.data.calendar.CalendarRepository
 import com.patrickzedler.grocy.core.data.batteries.BatteriesRepository
 import com.patrickzedler.grocy.core.data.chores.ChoresRepository
 import com.patrickzedler.grocy.core.data.equipment.EquipmentRepository
@@ -78,6 +79,18 @@ class RepositoryTestEnvironment(dispatcher: TestDispatcher) {
         api = server.api,
         database = database,
         connection = connection,
+    )
+
+    val calendarRepository = CalendarRepository(
+        api = server.api,
+        connection = connection,
+        masterData = repository,
+        stock = stockRepository,
+        chores = choresRepository,
+        tasks = tasksRepository,
+        batteries = batteriesRepository,
+        recipes = recipesRepository,
+        mealPlan = mealPlanRepository,
     )
 
     fun close() = database.close()

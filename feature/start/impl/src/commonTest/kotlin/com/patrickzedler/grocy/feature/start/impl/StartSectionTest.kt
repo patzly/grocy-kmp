@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.feature.start.impl
 
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.navigation.DetailRoute
+import com.patrickzedler.grocy.feature.calendar.api.CalendarRoute
 import com.patrickzedler.grocy.feature.chores.api.ChoreTrackingRoute
 import com.patrickzedler.grocy.feature.chores.api.ChoresOverviewRoute
 import com.patrickzedler.grocy.feature.masterdata.api.MasterDataRoute
@@ -35,6 +36,7 @@ class StartSectionTest {
         assertEquals(MealPlanRoute(), StartSection.MEAL_PLAN.route)
         assertEquals(ChoresOverviewRoute, StartSection.CHORES.route)
         assertEquals(TasksRoute, StartSection.TASKS.route)
+        assertEquals(CalendarRoute, StartSection.CALENDAR.route)
         // List-detail scenes of their own, never beside the start screen
         assertFalse(StartSection.SHOPPING_LIST.route is DetailRoute)
         assertFalse(StartSection.RECIPES.route is DetailRoute)
@@ -42,6 +44,11 @@ class StartSectionTest {
         assertFalse(StartSection.TASKS.route is DetailRoute)
         // The meal plan needs the whole window
         assertFalse(StartSection.MEAL_PLAN.route is DetailRoute)
+    }
+
+    @Test
+    fun theCalendarFollowsItsFeature() {
+        assertFalse(StartSection.CALENDAR in availableSections(ServerConfig(calendar = false)))
     }
 
     @Test
@@ -114,6 +121,7 @@ class StartSectionTest {
                 StartSection.TASKS,
                 StartSection.BATTERIES,
                 StartSection.EQUIPMENT,
+                StartSection.CALENDAR,
             ),
             sections,
         )
@@ -131,6 +139,7 @@ class StartSectionTest {
                 StartSection.TASKS,
                 StartSection.BATTERIES,
                 StartSection.EQUIPMENT,
+                StartSection.CALENDAR,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig()),
@@ -144,6 +153,7 @@ class StartSectionTest {
                 StartSection.TASKS,
                 StartSection.BATTERIES,
                 StartSection.EQUIPMENT,
+                StartSection.CALENDAR,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig(shoppingList = false)),
@@ -156,6 +166,7 @@ class StartSectionTest {
                 StartSection.TASKS,
                 StartSection.BATTERIES,
                 StartSection.EQUIPMENT,
+                StartSection.CALENDAR,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig(stock = false)),
@@ -169,6 +180,7 @@ class StartSectionTest {
                 StartSection.TASKS,
                 StartSection.BATTERIES,
                 StartSection.EQUIPMENT,
+                StartSection.CALENDAR,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig(recipesMealPlan = false)),
@@ -181,6 +193,7 @@ class StartSectionTest {
                 StartSection.TASKS,
                 StartSection.BATTERIES,
                 StartSection.EQUIPMENT,
+                StartSection.CALENDAR,
                 StartSection.MASTER_DATA,
             ),
             availableSections(ServerConfig(recipes = false)),

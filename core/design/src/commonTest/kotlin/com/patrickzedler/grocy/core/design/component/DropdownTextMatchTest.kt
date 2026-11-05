@@ -32,6 +32,18 @@ class DropdownTextMatchTest {
     }
 
     @Test
+    fun textNamingNoOptionIsAnErrorOnceNoSuggestionIsLeft() {
+        assertTrue(showsUnmatchedError(isUnmatched = true, isMenuShown = false, asksAboutText = false))
+        assertFalse(showsUnmatchedError(isUnmatched = true, isMenuShown = true, asksAboutText = false))
+        assertFalse(showsUnmatchedError(isUnmatched = false, isMenuShown = false, asksAboutText = false))
+    }
+
+    @Test
+    fun aFieldThatAsksAboutItsTextShowsNoError() {
+        assertFalse(showsUnmatchedError(isUnmatched = true, isMenuShown = false, asksAboutText = true))
+    }
+
+    @Test
     fun theKeyboardsActionTakesTheBestSuggestionForTypedText() {
         assertEquals(1, typedChoice(isTyped = true, "Mi", options))
     }

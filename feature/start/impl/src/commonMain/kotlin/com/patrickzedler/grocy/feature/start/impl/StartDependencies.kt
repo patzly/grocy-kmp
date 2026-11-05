@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.feature.start.impl
 
 import com.patrickzedler.grocy.core.data.batteries.BatteriesRepository
+import com.patrickzedler.grocy.core.data.calendar.CalendarRepository
 import com.patrickzedler.grocy.core.data.chores.ChoresRepository
 import com.patrickzedler.grocy.core.data.equipment.EquipmentRepository
 import com.patrickzedler.grocy.core.data.tasks.TasksRepository
@@ -22,6 +23,7 @@ interface StartDependencies {
     val tasksRepository: TasksRepository
     val batteriesRepository: BatteriesRepository
     val equipmentRepository: EquipmentRepository
+    val calendarRepository: CalendarRepository
     val stockRepository: StockRepository
     val shoppingListRepository: ShoppingListRepository
 

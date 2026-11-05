@@ -66,8 +66,6 @@ import com.patrickzedler.grocy.core.resources.notifications_exact_hint
 import com.patrickzedler.grocy.core.resources.notifications_nothing
 import com.patrickzedler.grocy.core.resources.notifications_only_mine
 import com.patrickzedler.grocy.core.resources.notifications_show_failed
-import com.patrickzedler.grocy.core.resources.notifications_show_names
-import com.patrickzedler.grocy.core.resources.notifications_show_names_hint
 import com.patrickzedler.grocy.core.resources.notifications_show_now
 import com.patrickzedler.grocy.core.resources.notifications_show_now_hint
 import com.patrickzedler.grocy.core.resources.notifications_time
@@ -274,7 +272,7 @@ private fun LazyListScope.notificationGroup(
         val current = settings[kind]
         val topics = shownNotificationTopics(kind, config)
         val canOnlyMine = canNotifyOnlyMine(kind, config)
-        // Time, topics, names, assigned and showing now follow only while it is on
+        // Time, topics, assigned and showing now follow only while it is on
         val count = if (current.enabled) {
             topics.size + if (canOnlyMine) FIXED_ITEMS + 1 else FIXED_ITEMS
         } else {
@@ -301,14 +299,6 @@ private fun LazyListScope.notificationGroup(
                     count = count,
                 )
             }
-            SegmentedSwitchItem(
-                headline = stringResource(Res.string.notifications_show_names),
-                supporting = stringResource(Res.string.notifications_show_names_hint),
-                checked = current.showNames,
-                onCheckedChange = { viewModel.setShowNames(kind, it) },
-                index = index++,
-                count = count,
-            )
             if (canOnlyMine) {
                 SegmentedSwitchItem(
                     headline = stringResource(Res.string.notifications_only_mine),
@@ -465,6 +455,6 @@ private val NotificationTopic.label: StringResource
         NotificationTopic.MEAL_PLAN_TODAY -> Res.string.meal_plan_title
     }
 
-// The switch, the time, the names and showing now
-private const val FIXED_ITEMS = 4
+// The switch, the time and showing now
+private const val FIXED_ITEMS = 3
 private const val MINUTES_PER_HOUR = 60

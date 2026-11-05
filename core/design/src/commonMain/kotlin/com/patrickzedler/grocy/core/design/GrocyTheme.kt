@@ -6,7 +6,9 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
 import com.materialkolor.PaletteStyle
+import com.materialkolor.dynamicColorScheme
 import com.materialkolor.hct.Hct
 import com.materialkolor.ktx.toColor
 import com.materialkolor.rememberDynamicColorScheme
@@ -35,9 +37,7 @@ fun GrocyTheme(
         null
     }
     val colorScheme = dynamicColorScheme ?: run {
-        val seedColor = remember(appearance.hue) {
-            Hct.from(appearance.hue.toDouble(), SEED_CHROMA, SEED_TONE).toColor()
-        }
+        val seedColor = remember(appearance.hue) { seedColorOf(appearance.hue) }
         rememberDynamicColorScheme(
             seedColor = seedColor,
             isDark = isDark,
@@ -66,6 +66,18 @@ fun GrocyTheme(
         content = content,
     )
 }
+
+/** The primary color [GrocyTheme] shows for [appearance] without colors of the wallpaper. */
+fun seededPrimaryColor(appearance: AppearanceSettings, isDark: Boolean): Color =
+    dynamicColorScheme(
+        seedColor = seedColorOf(appearance.hue),
+        isDark = isDark,
+        style = appearance.style.paletteStyle,
+        contrastLevel = appearance.contrast.level,
+    ).primary
+
+private fun seedColorOf(hue: Float): Color =
+    Hct.from(hue.toDouble(), SEED_CHROMA, SEED_TONE).toColor()
 
 /** The parts of the appearance whose changes fade the screen into its new colors. */
 private data class ColorTransitionKey(

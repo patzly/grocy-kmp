@@ -33,6 +33,9 @@ internal fun JsonObject.toServerConfig(): ServerConfig {
         tasks = flag("FEATURE_FLAG_TASKS", defaults.tasks),
         batteries = flag("FEATURE_FLAG_BATTERIES", defaults.batteries),
         equipment = flag("FEATURE_FLAG_EQUIPMENT", defaults.equipment),
+        calendar = flag("FEATURE_FLAG_CALENDAR", defaults.calendar),
+        calendarShowWeekOfYear =
+            flag("CALENDAR_SHOW_WEEK_OF_YEAR", defaults.calendarShowWeekOfYear),
         labelPrinter = flag("FEATURE_FLAG_LABEL_PRINTER", defaults.labelPrinter),
         labelPrinterRunsOnServer =
             flag("LABEL_PRINTER_RUN_SERVER", defaults.labelPrinterRunsOnServer),
@@ -146,6 +149,16 @@ internal fun JsonObject.toUserSettings(): UserSettings {
         scanModePurchase = flag("scan_mode_purchase_enabled", defaults.scanModePurchase),
         scanModeConsume = flag("scan_mode_consume_enabled", defaults.scanModeConsume),
         locale = primitive("locale")?.content ?: defaults.locale,
+        calendarColorProducts =
+            primitive("calendar_color_products")?.content ?: defaults.calendarColorProducts,
+        calendarColorTasks =
+            primitive("calendar_color_tasks")?.content ?: defaults.calendarColorTasks,
+        calendarColorChores =
+            primitive("calendar_color_chores")?.content ?: defaults.calendarColorChores,
+        calendarColorBatteries =
+            primitive("calendar_color_batteries")?.content ?: defaults.calendarColorBatteries,
+        calendarColorMealPlan =
+            primitive("calendar_color_meal_plan")?.content ?: defaults.calendarColorMealPlan,
         productPresets = ProductPresets(
             locationId = id("product_presets_location_id"),
             productGroupId = id("product_presets_product_group_id"),

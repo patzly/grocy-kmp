@@ -8,12 +8,19 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.compose.ui.graphics.toArgb
 import com.patrickzedler.grocy.core.data.notifications.Notifier
+import com.patrickzedler.grocy.core.data.settings.SettingsStore
+import com.patrickzedler.grocy.core.design.appPrimaryColor
 import com.patrickzedler.grocy.core.model.notifications.NotificationKind
 import com.patrickzedler.grocy.core.model.notifications.NotificationSummary
+import kotlinx.coroutines.flow.first
 
 /** One channel per feature, so each can be set up or turned off in the system's settings too. */
-internal class AndroidNotifier(private val context: Context) : Notifier {
+internal class AndroidNotifier(
+    private val context: Context,
+    private val settingsStore: SettingsStore,
+) : Notifier {
 
     private val manager = NotificationManagerCompat.from(context)
 
@@ -24,6 +31,7 @@ internal class AndroidNotifier(private val context: Context) : Notifier {
         val text = notificationTextOf(summary)
         val notification = NotificationCompat.Builder(context, summary.kind.channelId)
             .setSmallIcon(R.drawable.ic_notification)
+            .setColor(appPrimaryColor(context, settingsStore.appearance.first()).toArgb())
             .setContentTitle(text.title)
             .setContentText(text.text)
             .setStyle(NotificationCompat.BigTextStyle().bigText(text.details))

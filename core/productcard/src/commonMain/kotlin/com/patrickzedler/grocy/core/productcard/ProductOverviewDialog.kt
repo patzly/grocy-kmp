@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -394,7 +396,10 @@ private fun DescriptionItem(text: String) {
     var isExpanded by rememberSaveable { mutableStateOf(false) }
     var isOverflowing by remember { mutableStateOf(false) }
 
-    SegmentedContainer(index = 0, count = 1) {
+    // The button keeps as much room below it as above it, not the item's padding on top of that
+    val padding =
+        if (isOverflowing) DescriptionPaddingWithButton else SegmentedListDefaults.ContainerPadding
+    SegmentedContainer(index = 0, count = 1, contentPadding = padding) {
         Text(
             text = text,
             style = MaterialTheme.typography.bodyMedium,
@@ -405,12 +410,12 @@ private fun DescriptionItem(text: String) {
             modifier = Modifier.fillMaxWidth().animateContentSize(),
         )
         if (isOverflowing) {
-            TextButton(
+            FilledTonalButton(
                 onClick = {
                     haptic.confirm()
                     isExpanded = !isExpanded
                 },
-                modifier = Modifier.padding(top = 4.dp).clickCursor(),
+                modifier = Modifier.padding(vertical = 4.dp).clickCursor(),
                 shapes = ButtonDefaults.shapes(),
             ) {
                 Text(
@@ -722,6 +727,8 @@ internal fun String.fill(vararg args: String): String =
 // Grocy shows the opened amount and the relative date next to the value
 private const val SEPARATOR = " · "
 private const val COLLAPSED_DESCRIPTION_LINES = 3
+
+private val DescriptionPaddingWithButton = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp)
 private val IndicatorSize = 40.dp
 private val MaxPictureHeight = 320.dp
 private val PlaceholderHeight = 160.dp

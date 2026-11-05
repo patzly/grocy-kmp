@@ -40,6 +40,47 @@ fun yearWeekOf(epochDay: Long): String {
     return "${year.toString().padStart(4, '0')}-${week.toString().padStart(2, '0')}"
 }
 
+/** The day of the month of [epochDay], from 1. */
+fun dayOfMonthOf(epochDay: Long): Int = civilFromDays(epochDay).third
+
+/** The year of [epochDay]. */
+fun yearOfDay(epochDay: Long): Int = civilFromDays(epochDay).first.toInt()
+
+/** The first day of the month of [epochDay]. */
+fun firstDayOfMonth(epochDay: Long): Long {
+    val (year, month, _) = civilFromDays(epochDay)
+    return daysFromCivil(year.toInt(), month, 1)
+}
+
+/** The last day of the month of [epochDay]. */
+fun lastDayOfMonth(epochDay: Long): Long {
+    val (year, month, _) = civilFromDays(epochDay)
+    return daysFromCivil(year.toInt(), month, daysInMonth(year.toInt(), month))
+}
+
+/** [epochDay] [months] later (or earlier), the last day of a month that has fewer days. */
+fun addMonths(epochDay: Long, months: Int): Long {
+    val (year, month, day) = civilFromDays(epochDay)
+    val total = year.toInt() * MONTHS_PER_YEAR + (month - 1) + months
+    val newYear = total.floorDiv(MONTHS_PER_YEAR)
+    val newMonth = total.mod(MONTHS_PER_YEAR) + 1
+    return daysFromCivil(newYear, newMonth, day.coerceAtMost(daysInMonth(newYear, newMonth)))
+}
+
+/**
+ * The week of the year of the week from [weekStart], counted like moment.js does for the first
+ * weekday: from Monday on the year's first week has at least four days of it (ISO 8601), else the
+ * week of January 1st is the first.
+ */
+fun weekOfYear(weekStart: Long, firstDayOfWeek: Int): Int {
+    val minDaysInFirstWeek = if (firstDayOfWeek == 1) 4 else 1
+    // This day of a week always lies in the year the week counts for
+    val deciding = weekStart + DAYS_PER_WEEK - minDaysInFirstWeek
+    val (year, _, _) = civilFromDays(deciding)
+    val dayOfYear = deciding - daysFromCivil(year.toInt(), 1, 1)
+    return (dayOfYear / DAYS_PER_WEEK).toInt() + 1
+}
+
 /** Hour and minute of Grocy's "YYYY-MM-DD HH:MM[:SS]"; null without a valid time. */
 fun timeOfDayOf(dateTime: String): Pair<Int, Int>? {
     val match = TIME_OF_DAY.find(dateTime.trim()) ?: return null
@@ -126,6 +167,15 @@ expect fun formatDate(epochDay: Long): String
 /** The weekday of [epochDay] in the app language, e.g. "Monday". */
 expect fun formatWeekday(epochDay: Long): String
 
+/** The short weekday of [epochDay] in the app language, e.g. "Mon". */
+expect fun formatWeekdayShort(epochDay: Long): String
+
+/** The month of [epochDay] with its year in the app language, e.g. "November 2026". */
+expect fun formatMonthYear(epochDay: Long): String
+
+/** The months of [start] to [end] in the app language, e.g. "Oct – Nov 2026". */
+expect fun formatMonthRange(start: Long, end: Long): String
+
 /** [epochDay] without year in the app language, e.g. "November 2". */
 expect fun formatDayAndMonth(epochDay: Long): String
 
@@ -184,6 +234,7 @@ private fun daysInMonth(year: Int, month: Int): Int = when (month) {
 private const val MILLIS_PER_DAY = 86_400_000L
 private const val MILLIS_PER_SECOND = 1_000L
 private const val DAYS_PER_WEEK = 7
+private const val MONTHS_PER_YEAR = 12
 
 // 1970-01-01 was a Thursday
 private const val EPOCH_WEEKDAY = 4

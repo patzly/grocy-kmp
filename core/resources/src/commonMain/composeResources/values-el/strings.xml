@@ -1222,8 +1222,12 @@
   </plurals>
   <string name="notifications_daily">Ημερήσια ειδοποίηση</string>
   <string name="notifications_time">Ώρα</string>
-  <string name="notifications_show_names">Εμφάνιση ονομάτων</string>
-  <string name="notifications_show_names_hint">Τα παραθέτει στην ειδοποίηση αντί να λέει μόνο πόσα είναι</string>
+  <string name="notifications_names_and">%1$s και %2$s</string>
+  <plurals name="notifications_names_more">
+    <item quantity="one">%1$s και %2$d ακόμα</item>
+    <item quantity="other">%1$s και %2$d ακόμα</item>
+  </plurals>
+  <string name="notifications_sentence_names">%1$s: %2$s.</string>
   <string name="notifications_only_mine">Μόνο όσα έχουν ανατεθεί σε εμένα</string>
   <string name="notifications_show_now">Εμφάνιση τώρα</string>
   <string name="notifications_show_now_hint">Δείχνει τι λέει η ειδοποίηση αυτή τη στιγμή</string>
@@ -1343,4 +1347,36 @@
   <string name="objects_delete_userobject">Θέλετε σίγουρα να διαγράψετε αυτό το αντικείμενο χρήστη;</string>
   <string name="userobject_no_fields">Δεν έχει ακόμη πεδία, προσθέστε τα με τη «Ρύθμιση πεδίων».</string>
   <string name="userentity_show_objects">Εμφάνιση αντικειμένων</string>
+  <string name="calendar_title">Ημερολόγιο</string>
+  <string name="calendar_view_month">Μήνας</string>
+  <string name="calendar_view_week">Εβδομάδα</string>
+  <string name="calendar_view_day">Ημέρα</string>
+  <string name="calendar_view_schedule">Πρόγραμμα</string>
+  <string name="calendar_all_day">Ολοήμερο</string>
+  <plurals name="calendar_more">
+    <item quantity="one">%1$d ακόμα</item>
+    <item quantity="other">%1$d ακόμα</item>
+  </plurals>
+  <string name="calendar_product_due">Λήξη προϊόντος</string>
+  <string name="calendar_task_due">Η εργασία οφείλεται</string>
+  <string name="calendar_chore_due">Η δουλειά οφείλεται</string>
+  <string name="calendar_battery_due">Ο κύκλος φόρτισης της μπαταρίας οφείλεται</string>
+  <string name="calendar_meal_plan_recipe">Συνταγή γεύματος</string>
+  <string name="calendar_meal_plan_note">Σημείωση για το γεύμα</string>
+  <string name="calendar_meal_plan_product">Προϊόν γεύματος</string>
+  <string name="calendar_assigned_to">εκχωρήθηκε στο %1$s</string>
+  <string name="calendar_previous">Προηγούμενο</string>
+  <string name="calendar_next">Επόμενο</string>
+  <string name="calendar_no_events">Δεν υπάρχουν συμβάντα για εμφάνιση</string>
+  <string name="calendar_share">Κοινή χρήση / ενοποίηση ημερολογίου (iCal)</string>
+  <string name="calendar_share_hint">Χρησιμοποιήστε την παρακάτω (δημόσια) διεύθυνση URL για να κοινοποιήσετε ή να ενσωματώσετε το ημερολόγιο σε μορφή iCal</string>
+  <string name="calendar_configure_colors">Ρύθμιση χρωμάτων</string>
+  <string name="calendar_color_code">Κωδικός χρώματος</string>
+  <string name="calendar_color_invalid">Εισαγάγετε ένα χρώμα ως #RRGGBB</string>
+  <string name="calendar_week_number">Εβδομάδα %1$d</string>
+  <string name="calendar_nothing_today">Τίποτα για σήμερα</string>
+  <plurals name="calendar_events_today">
+    <item quantity="one">%1$d συμβάν σήμερα</item>
+    <item quantity="other">%1$d συμβάντα σήμερα</item>
+  </plurals>
 </resources>

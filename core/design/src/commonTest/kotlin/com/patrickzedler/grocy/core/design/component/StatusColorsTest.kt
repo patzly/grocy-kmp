@@ -106,4 +106,42 @@ class StatusColorsTest {
 
         assertTrue(abs(chroma - 16.0) < 1.0, "$chroma")
     }
+
+    @Test
+    fun customColorsKeepTheirContentReadable() {
+        val colors = listOf(
+            Color(0xFF007BFF),
+            Color(0xFF28A745),
+            Color(0xFFFFC107),
+            Color(0xFF17A2B8),
+            Color(0xFF6C757D),
+            Color.Black,
+            Color.White,
+        )
+        colors.forEach { color ->
+            listOf(false, true).forEach { isDark ->
+                val roles = customStatusColorOf(color, primary, isDark)
+
+                assertTrue(contrast(roles.container, roles.content) >= 4.5f, "$color dark=$isDark")
+            }
+        }
+    }
+
+    @Test
+    fun customColorsTurnTowardsTheTheme() {
+        val red = Color(0xFFDC3545)
+
+        val roles = customStatusColorOf(red, primary, isDark = false)
+
+        assertTrue(hueDistance(hueOf(roles.color), hueOf(primary)) < hueDistance(hueOf(red), hueOf(primary)))
+    }
+
+    @Test
+    fun aHarmonizedColorStaysRecognizable() {
+        val blue = Color(0xFF007BFF)
+
+        val roles = customStatusColorOf(blue, primary, isDark = true)
+
+        assertTrue(hueDistance(hueOf(roles.color), hueOf(blue)) <= 20.0)
+    }
 }

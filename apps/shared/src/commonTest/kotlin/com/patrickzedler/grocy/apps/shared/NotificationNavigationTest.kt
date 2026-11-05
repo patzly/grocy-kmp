@@ -1,9 +1,6 @@
 package com.patrickzedler.grocy.apps.shared
 
 import com.patrickzedler.grocy.core.model.notifications.NotificationKind
-import com.patrickzedler.grocy.core.model.notifications.NotificationSection
-import com.patrickzedler.grocy.core.model.notifications.NotificationSummary
-import com.patrickzedler.grocy.core.model.notifications.NotificationTopic
 import com.patrickzedler.grocy.feature.chores.api.ChoresOverviewRoute
 import com.patrickzedler.grocy.feature.recipes.api.MealPlanRoute
 import com.patrickzedler.grocy.feature.stock.api.StockOverviewRoute
@@ -11,6 +8,7 @@ import com.patrickzedler.grocy.feature.batteries.api.BatteriesOverviewRoute
 import com.patrickzedler.grocy.feature.tasks.api.TasksRoute
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.coroutines.test.runTest
 
 class NotificationNavigationTest {
 
@@ -23,28 +21,25 @@ class NotificationNavigationTest {
         assertEquals(MealPlanRoute(), notificationRouteOf(NotificationKind.MEAL_PLAN))
     }
 
-    private fun summary(showNames: Boolean) = NotificationSummary(
-        kind = NotificationKind.STOCK,
-        sections = listOf(
-            NotificationSection(NotificationTopic.STOCK_OVERDUE, listOf("Milk", "Bread")),
-            NotificationSection(NotificationTopic.STOCK_EXPIRED, listOf("Fish")),
-        ),
-        showNames = showNames,
+    private suspend fun names(vararg names: String) = notificationNames(
+        names = names.toList(),
+        join = { first, second -> "$first, $second" },
+        and = { first, second -> "$first and $second" },
+        more = { shown, rest -> "$shown and $rest more" },
     )
 
     @Test
-    fun detailsListTheNamesBelowEachSentence() {
-        assertEquals(
-            "2 overdue\nMilk, Bread\n1 expired\nFish",
-            notificationDetails(summary(showNames = true), listOf("2 overdue", "1 expired")),
-        )
+    fun oneToThreeNamesAreListedCompletely() = runTest {
+        assertEquals("Eggs", names("Eggs"))
+        assertEquals("Eggs and Paprika", names("Eggs", "Paprika"))
+        assertEquals("Eggs, Paprika and Cucumber", names("Eggs", "Paprika", "Cucumber"))
     }
 
     @Test
-    fun withoutNamesOnlyTheSentencesRemain() {
+    fun moreThanThreeNamesTellHowManyAreLeft() = runTest {
         assertEquals(
-            "2 overdue\n1 expired",
-            notificationDetails(summary(showNames = false), listOf("2 overdue", "1 expired")),
+            "Eggs, Paprika, Cucumber and 3 more",
+            names("Eggs", "Paprika", "Cucumber", "Milk", "Bread", "Salt"),
         )
     }
 }

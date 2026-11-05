@@ -46,6 +46,28 @@ fun rememberStatusColors(): StatusColors {
     }
 }
 
+/** Whether the theme is a dark one, for colors the theme does not derive itself. */
+@Composable
+fun isDarkColorScheme(): Boolean = MaterialTheme.colorScheme.surface.luminance() < DARK_LUMINANCE
+
+/**
+ * The roles of a [color] the user chose, like Material derives a custom color's: turned towards
+ * [primary] (harmonized), so it fits the theme and stays recognizable, and its chroma at most that
+ * of the theme's colorful roles. [StatusColor.container] and [StatusColor.color] are its filled
+ * role, tone 40 in light themes and 80 in dark ones, with [StatusColor.content] 100 and 20 on it.
+ */
+fun customStatusColorOf(color: Color, primary: Color, isDark: Boolean): StatusColor {
+    val hct = color.harmonize(primary).toHct()
+    val chroma = hct.chroma.coerceAtMost(MAX_CUSTOM_CHROMA)
+    fun tone(tone: Double) = Hct.from(hct.hue, chroma, tone).toColor()
+    val filled = tone(if (isDark) DARK_COLOR_TONE else LIGHT_COLOR_TONE)
+    return StatusColor(
+        container = filled,
+        content = tone(if (isDark) DARK_ON_COLOR_TONE else LIGHT_ON_COLOR_TONE),
+        color = filled,
+    )
+}
+
 /**
  * [baseHue] with the chroma of [primary], so every status color is as colorful as the theme,
  * turned towards [primary] like Material's harmonization, then as tones the way Material
@@ -82,6 +104,9 @@ internal const val GREEN_HUE = 164.25
 internal const val BLUE_HUE = 237.53
 
 private const val LIGHT_CONTAINER_TONE = 90.0
+private const val LIGHT_ON_COLOR_TONE = 100.0
+private const val DARK_ON_COLOR_TONE = 20.0
+private const val MAX_CUSTOM_CHROMA = 48.0
 private const val LIGHT_CONTENT_TONE = 10.0
 private const val DARK_CONTAINER_TONE = 30.0
 private const val DARK_CONTENT_TONE = 90.0

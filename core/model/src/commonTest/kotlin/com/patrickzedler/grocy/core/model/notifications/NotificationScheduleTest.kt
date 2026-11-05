@@ -155,7 +155,7 @@ class NotificationScheduleTest {
         )
         val changed = stockAtNine.with(
             NotificationKind.STOCK,
-            stockAtNine[NotificationKind.STOCK].copy(showNames = false),
+            stockAtNine[NotificationKind.STOCK].copy(onlyMine = true),
         )
 
         assertEquals(delivered, deliveriesAfterChange(stockAtNine, changed, delivered, at(10)))

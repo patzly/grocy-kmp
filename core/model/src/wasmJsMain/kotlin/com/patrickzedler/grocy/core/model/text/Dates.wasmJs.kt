@@ -16,11 +16,20 @@ actual fun formatDate(epochDay: Long): String =
 actual fun formatWeekday(epochDay: Long): String =
     formatWeekdayInBrowser(epochDay.toDouble() * MILLIS_PER_DAY)
 
+actual fun formatWeekdayShort(epochDay: Long): String =
+    formatWeekdayShortInBrowser(epochDay.toDouble() * MILLIS_PER_DAY)
+
+actual fun formatMonthYear(epochDay: Long): String =
+    formatMonthYearInBrowser(epochDay.toDouble() * MILLIS_PER_DAY)
+
 actual fun formatDayAndMonth(epochDay: Long): String =
     formatDayAndMonthInBrowser(epochDay.toDouble() * MILLIS_PER_DAY)
 
 actual fun formatDateRange(start: Long, end: Long): String =
     formatDateRangeInBrowser(start.toDouble() * MILLIS_PER_DAY, end.toDouble() * MILLIS_PER_DAY)
+
+actual fun formatMonthRange(start: Long, end: Long): String =
+    formatMonthRangeInBrowser(start.toDouble() * MILLIS_PER_DAY, end.toDouble() * MILLIS_PER_DAY)
 
 actual fun localeFirstDayOfWeek(): Int = firstDayOfWeekInBrowser()
 
@@ -78,12 +87,36 @@ private external fun formatWeekdayInBrowser(millis: Double): String
 private external fun formatDayAndMonthInBrowser(millis: Double): String
 
 @JsFun(
+    """(millis) => new Date(millis).toLocaleDateString(
+        globalThis.navigator?.language,
+        { timeZone: 'UTC', weekday: 'short' }
+    )""",
+)
+private external fun formatWeekdayShortInBrowser(millis: Double): String
+
+@JsFun(
+    """(millis) => new Date(millis).toLocaleDateString(
+        globalThis.navigator?.language,
+        { timeZone: 'UTC', year: 'numeric', month: 'long' }
+    )""",
+)
+private external fun formatMonthYearInBrowser(millis: Double): String
+
+@JsFun(
     """(start, end) => new Intl.DateTimeFormat(
         globalThis.navigator?.language,
         { timeZone: 'UTC', dateStyle: 'medium' }
     ).formatRange(new Date(start), new Date(end))""",
 )
 private external fun formatDateRangeInBrowser(start: Double, end: Double): String
+
+@JsFun(
+    """(start, end) => new Intl.DateTimeFormat(
+        globalThis.navigator?.language,
+        { timeZone: 'UTC', year: 'numeric', month: 'short' }
+    ).formatRange(new Date(start), new Date(end))""",
+)
+private external fun formatMonthRangeInBrowser(start: Double, end: Double): String
 
 // Intl counts from Monday (1) to Sunday (7); browsers without week info start on Monday
 @JsFun(

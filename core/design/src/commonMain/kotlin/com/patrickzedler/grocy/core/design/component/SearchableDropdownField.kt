@@ -71,8 +71,8 @@ data class DropdownOption(
 /**
  * A combobox like Grocy's pickers: the text in the field is the value. Text that names an
  * option (ignoring case) chooses it, an empty field chooses nothing; other text chooses nothing
- * either, keeps standing and shows an error once no suggestion is open, and [onUnmatchedChange]
- * reports it, so a form can refuse to save. The menu only helps typing: it suggests the options
+ * either, keeps standing and shows an error once no suggestion is open (unless
+ * [submitsTextOnLeave]), and [onUnmatchedChange] reports it, so a form can refuse to save. The menu only helps typing: it suggests the options
  * that fit the text (forgiving small typos), the arrow shows all of them, and choosing one or
  * typing one completely closes it. Tapping the field itself only focuses it for typing; the
  * arrow opens the menu without focusing it, so choosing needs no keyboard. The keyboard's action
@@ -87,7 +87,7 @@ data class DropdownOption(
  * @param onSubmitText can use text submitted by the keyboard itself, e.g. as a code, with whether
  *   a suggestion containing that text would take it otherwise; true when it did.
  * @param submitsTextOnLeave text naming no option also goes to [onSubmitText] when the field loses
- *   the focus, like Grocy's product picker.
+ *   the focus, like Grocy's product picker; it is no error then, the form asks what it means.
  * @param textResetKey a new value replaces typed text with the current choice's label.
  * @param onKeyboardNext replaces going on to the next field, e.g. for a field whose next field
  *   only takes the focus after a choice.
@@ -236,8 +236,7 @@ fun SearchableDropdownField(
 
     val unmatchedText = stringResource(Res.string.msg_choose_from_list)
     val isMenuShown = expanded && enabled && (matches.isNotEmpty() || showNone)
-    // As soon as no suggestion is left: a tap beside the field does not take its focus away
-    val showUnmatched = isUnmatched && !isMenuShown
+    val showUnmatched = showsUnmatchedError(isUnmatched, isMenuShown, submitsTextOnLeave)
     // Material's ExposedDropdownMenuBox focuses the field whenever its menu opens, which opened
     // the keyboard for a tap on the arrow, and the menu jumped up once it was there
     var fieldWidth by remember { mutableIntStateOf(0) }
@@ -430,6 +429,17 @@ internal fun hasLiteralSuggestion(matches: List<DropdownOption>, text: String): 
     matches.any { option ->
         (listOf(option.label) + option.searchTexts).any { it.contains(text, ignoreCase = true) }
     }
+
+/**
+ * Whether text naming no option is an error: as soon as no suggestion is left, because a tap beside
+ * the field does not take its focus away. Not where [asksAboutText], there it is a valid input the
+ * form asks about.
+ */
+internal fun showsUnmatchedError(
+    isUnmatched: Boolean,
+    isMenuShown: Boolean,
+    asksAboutText: Boolean,
+): Boolean = isUnmatched && !isMenuShown && !asksAboutText
 
 /** Result of [dropdownTextMatch] for a text that names no option. */
 internal const val NoMatch = Int.MIN_VALUE

@@ -9,7 +9,7 @@ scanner, update checks, the start screen, About, the settings (General, Server, 
 Behavior, Scanner), Grocy's stock overview, master data with all their forms, the stock bookings,
 the shopping list and its shopping mode, the recipes with their cards and forms, the meal plan, the
 chores with their tracking and journal, the tasks, the batteries with their tracking and journal,
-the equipment with its manuals, the daily notifications, new products filled in from open product
+the equipment with its manuals, the calendar, the daily notifications, new products filled in from open product
 databases, the Wear OS app with the shopping list.
 
 ## Details
@@ -41,6 +41,7 @@ tasks need.
 - `docs/features/equipment.md`: the equipment with its manual, notes, files and form.
 - `docs/features/notifications.md`: the daily notifications per feature: settings, alarm, current
   state before notifying, what browsers allow.
+- `docs/features/calendar.md`: Grocy's calendar with its views, colors and iCal link.
 - `docs/features/stock-pages.md`: stock entries, stock journal and journal summary.
 - `docs/features/product-overview.md`: the product overview card (`core:productcard`), price
   chart, grocycodes, "Add to shopping list".

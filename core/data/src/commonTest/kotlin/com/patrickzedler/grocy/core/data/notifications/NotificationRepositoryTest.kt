@@ -85,7 +85,6 @@ class NotificationRepositoryTest {
                 kind = kind,
                 sections = listOf(NotificationSection(NotificationTopic.STOCK_OVERDUE, names))
                     .filter { names.isNotEmpty() },
-                showNames = settings.showNames,
             )
         }
     }

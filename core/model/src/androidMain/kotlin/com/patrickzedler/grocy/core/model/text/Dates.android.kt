@@ -34,6 +34,12 @@ actual fun formatDate(epochDay: Long): String =
 
 actual fun formatWeekday(epochDay: Long): String = skeletonFormat("EEEE").format(utcDate(epochDay))
 
+actual fun formatWeekdayShort(epochDay: Long): String =
+    skeletonFormat("EEE").format(utcDate(epochDay))
+
+actual fun formatMonthYear(epochDay: Long): String =
+    skeletonFormat("yMMMM").format(utcDate(epochDay))
+
 actual fun formatDayAndMonth(epochDay: Long): String =
     skeletonFormat("MMMMd").format(utcDate(epochDay))
 
@@ -41,6 +47,13 @@ actual fun formatDateRange(start: Long, end: Long): String {
     // The format follows the device's time zone, noon keeps every day itself
     val interval = DateInterval(localNoonMillis(start), localNoonMillis(end))
     return DateIntervalFormat.getInstance("yMMMd", ULocale.getDefault())
+        .format(interval, StringBuffer(), FieldPosition(0))
+        .toString()
+}
+
+actual fun formatMonthRange(start: Long, end: Long): String {
+    val interval = DateInterval(localNoonMillis(start), localNoonMillis(end))
+    return DateIntervalFormat.getInstance("yMMM", ULocale.getDefault())
         .format(interval, StringBuffer(), FieldPosition(0))
         .toString()
 }

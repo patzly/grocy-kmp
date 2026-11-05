@@ -27,7 +27,7 @@ import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.battery_tracking_title
 import com.patrickzedler.grocy.core.resources.chore_tracking_title
-import com.patrickzedler.grocy.core.resources.ic_rounded_battery_charging_full
+import com.patrickzedler.grocy.core.resources.ic_rounded_battery_status_good
 import com.patrickzedler.grocy.core.resources.task_create
 import com.patrickzedler.grocy.core.resources.ic_rounded_play_arrow
 import com.patrickzedler.grocy.core.resources.action_more_options
@@ -207,7 +207,7 @@ internal fun TaskCreateButton(onClick: () -> Unit, modifier: Modifier = Modifier
 internal fun BatteryTrackingButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     val button = QuickButton(
         Res.string.battery_tracking_title,
-        Res.drawable.ic_rounded_battery_charging_full,
+        Res.drawable.ic_rounded_battery_status_good,
         onClick,
     )
     // The group only makes the pressed button grow

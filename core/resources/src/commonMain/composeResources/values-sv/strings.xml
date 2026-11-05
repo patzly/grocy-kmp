@@ -1221,8 +1221,12 @@
   </plurals>
   <string name="notifications_daily">Daglig avisering</string>
   <string name="notifications_time">Tid</string>
-  <string name="notifications_show_names">Visa namn</string>
-  <string name="notifications_show_names_hint">Listar dem i aviseringen i stället för att bara säga hur många de är</string>
+  <string name="notifications_names_and">%1$s och %2$s</string>
+  <plurals name="notifications_names_more">
+    <item quantity="one">%1$s och %2$d till</item>
+    <item quantity="other">%1$s och %2$d till</item>
+  </plurals>
+  <string name="notifications_sentence_names">%1$s: %2$s.</string>
   <string name="notifications_only_mine">Bara det som är tilldelat mig</string>
   <string name="notifications_show_now">Visa nu</string>
   <string name="notifications_show_now_hint">Visar vad aviseringen säger just nu</string>
@@ -1342,4 +1346,36 @@
   <string name="objects_delete_userobject">Vill du verkligen ta bort det här användarobjektet?</string>
   <string name="userobject_no_fields">Det har inga fält ännu, lägg till dem med ”Konfigurera fält”.</string>
   <string name="userentity_show_objects">Visa objekt</string>
+  <string name="calendar_title">Kalender</string>
+  <string name="calendar_view_month">Månad</string>
+  <string name="calendar_view_week">Vecka</string>
+  <string name="calendar_view_day">Dag</string>
+  <string name="calendar_view_schedule">Schema</string>
+  <string name="calendar_all_day">Heldag</string>
+  <plurals name="calendar_more">
+    <item quantity="one">%1$d till</item>
+    <item quantity="other">%1$d till</item>
+  </plurals>
+  <string name="calendar_product_due">Produkt förfaller</string>
+  <string name="calendar_task_due">Uppgift ska utföras</string>
+  <string name="calendar_chore_due">Syssla ska utföras</string>
+  <string name="calendar_battery_due">Batteriladdningscykel förfaller</string>
+  <string name="calendar_meal_plan_recipe">Måltidsplansrecept</string>
+  <string name="calendar_meal_plan_note">Måltidsplansanteckning</string>
+  <string name="calendar_meal_plan_product">Måltidsplansprodukt</string>
+  <string name="calendar_assigned_to">tilldelad %1$s</string>
+  <string name="calendar_previous">Föregående</string>
+  <string name="calendar_next">Nästa</string>
+  <string name="calendar_no_events">Inga händelser att visa</string>
+  <string name="calendar_share">Dela/integrera kalender (iCal)</string>
+  <string name="calendar_share_hint">Använd följande (offentliga) URL för att dela eller integrera kalendern i iCal-format</string>
+  <string name="calendar_configure_colors">Konfigurera färger</string>
+  <string name="calendar_color_code">Färgkod</string>
+  <string name="calendar_color_invalid">Ange en färg som #RRGGBB</string>
+  <string name="calendar_week_number">Vecka %1$d</string>
+  <string name="calendar_nothing_today">Inget i dag</string>
+  <plurals name="calendar_events_today">
+    <item quantity="one">%1$d händelse i dag</item>
+    <item quantity="other">%1$d händelser i dag</item>
+  </plurals>
 </resources>

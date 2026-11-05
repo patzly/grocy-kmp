@@ -1176,8 +1176,11 @@
   </plurals>
   <string name="notifications_daily">每日通知</string>
   <string name="notifications_time">時間</string>
-  <string name="notifications_show_names">顯示名稱</string>
-  <string name="notifications_show_names_hint">在通知中列出它們,而不只是顯示數量</string>
+  <string name="notifications_names_and">%1$s和%2$s</string>
+  <plurals name="notifications_names_more">
+    <item quantity="other">%1$s及另外 %2$d 個</item>
+  </plurals>
+  <string name="notifications_sentence_names">%1$s：%2$s。</string>
   <string name="notifications_only_mine">僅指派給我的</string>
   <string name="notifications_show_now">立即顯示</string>
   <string name="notifications_show_now_hint">顯示通知目前的內容</string>
@@ -1292,4 +1295,34 @@
   <string name="objects_delete_userobject">確定要刪除此使用者物件嗎？</string>
   <string name="userobject_no_fields">還沒有欄位，請透過「設定欄位」新增。</string>
   <string name="userentity_show_objects">顯示物件</string>
+  <string name="calendar_title">日曆</string>
+  <string name="calendar_view_month">月</string>
+  <string name="calendar_view_week">週</string>
+  <string name="calendar_view_day">日</string>
+  <string name="calendar_view_schedule">行程</string>
+  <string name="calendar_all_day">全天</string>
+  <plurals name="calendar_more">
+    <item quantity="other">另外 %1$d 個</item>
+  </plurals>
+  <string name="calendar_product_due">物品到期</string>
+  <string name="calendar_task_due">任務到期</string>
+  <string name="calendar_chore_due">家務到期</string>
+  <string name="calendar_battery_due">電池充電到期</string>
+  <string name="calendar_meal_plan_recipe">菜單食譜</string>
+  <string name="calendar_meal_plan_note">菜單備註</string>
+  <string name="calendar_meal_plan_product">菜單物品</string>
+  <string name="calendar_assigned_to">分配給 %1$s</string>
+  <string name="calendar_previous">上一個</string>
+  <string name="calendar_next">下一個</string>
+  <string name="calendar_no_events">沒有可顯示的事件</string>
+  <string name="calendar_share">分享/整合日曆(iCal)</string>
+  <string name="calendar_share_hint">使用以下(公開)網址以 iCal 格式分享或整合日曆</string>
+  <string name="calendar_configure_colors">設定顏色</string>
+  <string name="calendar_color_code">顏色代碼</string>
+  <string name="calendar_color_invalid">請以 #RRGGBB 格式輸入顏色</string>
+  <string name="calendar_week_number">第 %1$d 週</string>
+  <string name="calendar_nothing_today">今天沒有事項</string>
+  <plurals name="calendar_events_today">
+    <item quantity="other">今天有 %1$d 個事件</item>
+  </plurals>
 </resources>

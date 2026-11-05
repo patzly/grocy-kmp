@@ -1222,8 +1222,12 @@
   </plurals>
   <string name="notifications_daily">Napi értesítés</string>
   <string name="notifications_time">Időpont</string>
-  <string name="notifications_show_names">Nevek megjelenítése</string>
-  <string name="notifications_show_names_hint">Felsorolja őket az értesítésben, ahelyett hogy csak a számukat írná ki</string>
+  <string name="notifications_names_and">%1$s és %2$s</string>
+  <plurals name="notifications_names_more">
+    <item quantity="one">%1$s és még %2$d</item>
+    <item quantity="other">%1$s és még %2$d</item>
+  </plurals>
+  <string name="notifications_sentence_names">%1$s: %2$s.</string>
   <string name="notifications_only_mine">Csak ami hozzám van rendelve</string>
   <string name="notifications_show_now">Megjelenítés most</string>
   <string name="notifications_show_now_hint">Megmutatja, mit mond az értesítés most</string>
@@ -1343,4 +1347,36 @@
   <string name="objects_delete_userobject">Biztosan törli ezt a felhasználói objektumot?</string>
   <string name="userobject_no_fields">Még nincsenek mezői, adja hozzá őket a „Mezők beállítása” használatával.</string>
   <string name="userentity_show_objects">Objektumok megjelenítése</string>
+  <string name="calendar_title">Naptár</string>
+  <string name="calendar_view_month">Hónap</string>
+  <string name="calendar_view_week">Hét</string>
+  <string name="calendar_view_day">Nap</string>
+  <string name="calendar_view_schedule">Ütemezés</string>
+  <string name="calendar_all_day">Egész nap</string>
+  <plurals name="calendar_more">
+    <item quantity="one">még %1$d</item>
+    <item quantity="other">még %1$d</item>
+  </plurals>
+  <string name="calendar_product_due">Termék esedékes</string>
+  <string name="calendar_task_due">Feladat esedékes</string>
+  <string name="calendar_chore_due">Házimunka esedékes</string>
+  <string name="calendar_battery_due">Töltési ciklus esedékes</string>
+  <string name="calendar_meal_plan_recipe">Menü terv recept</string>
+  <string name="calendar_meal_plan_note">Menü terv jegyzet</string>
+  <string name="calendar_meal_plan_product">Menü terv termék</string>
+  <string name="calendar_assigned_to">hozzárendelve ehhez: %1$s</string>
+  <string name="calendar_previous">Előző</string>
+  <string name="calendar_next">Következő</string>
+  <string name="calendar_no_events">Nincs megjeleníthető esemény</string>
+  <string name="calendar_share">Naptár megosztása/integrálása (iCal)</string>
+  <string name="calendar_share_hint">A naptár iCal formátumú megosztásához vagy beépítéséhez használd a következő (nyilvános) URL-t</string>
+  <string name="calendar_configure_colors">Színek beállítása</string>
+  <string name="calendar_color_code">Színkód</string>
+  <string name="calendar_color_invalid">Adj meg egy színt #RRGGBB formában</string>
+  <string name="calendar_week_number">%1$d. hét</string>
+  <string name="calendar_nothing_today">Mára nincs semmi</string>
+  <plurals name="calendar_events_today">
+    <item quantity="one">Ma %1$d esemény</item>
+    <item quantity="other">Ma %1$d esemény</item>
+  </plurals>
 </resources>

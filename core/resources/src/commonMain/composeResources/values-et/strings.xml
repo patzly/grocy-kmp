@@ -1222,8 +1222,12 @@
   </plurals>
   <string name="notifications_daily">Igapäevane teavitus</string>
   <string name="notifications_time">Kellaaeg</string>
-  <string name="notifications_show_names">Kuva nimed</string>
-  <string name="notifications_show_names_hint">Loetleb need teavituses, selle asemel et öelda ainult nende arvu</string>
+  <string name="notifications_names_and">%1$s ja %2$s</string>
+  <plurals name="notifications_names_more">
+    <item quantity="one">%1$s ja veel %2$d</item>
+    <item quantity="other">%1$s ja veel %2$d</item>
+  </plurals>
+  <string name="notifications_sentence_names">%1$s: %2$s.</string>
   <string name="notifications_only_mine">Ainult mulle määratud</string>
   <string name="notifications_show_now">Kuva kohe</string>
   <string name="notifications_show_now_hint">Näitab, mida teavitus praegu ütleks</string>
@@ -1343,4 +1347,36 @@
   <string name="objects_delete_userobject">Kas soovid selle kasutajaobjekti kindlasti kustutada?</string>
   <string name="userobject_no_fields">Sellel pole veel välju, lisa need valikuga „Seadista väljad“.</string>
   <string name="userentity_show_objects">Näita objekte</string>
+  <string name="calendar_title">Kalender</string>
+  <string name="calendar_view_month">Kuu</string>
+  <string name="calendar_view_week">Nädal</string>
+  <string name="calendar_view_day">Päev</string>
+  <string name="calendar_view_schedule">Ajakava</string>
+  <string name="calendar_all_day">Terve päev</string>
+  <plurals name="calendar_more">
+    <item quantity="one">veel %1$d</item>
+    <item quantity="other">veel %1$d</item>
+  </plurals>
+  <string name="calendar_product_due">Toote parim enne</string>
+  <string name="calendar_task_due">Ülesande tähtaeg</string>
+  <string name="calendar_chore_due">Majapidamistöö tähtaeg</string>
+  <string name="calendar_battery_due">Patarei laadimistsükli tähtaeg</string>
+  <string name="calendar_meal_plan_recipe">Eineplaani retsept</string>
+  <string name="calendar_meal_plan_note">Eineplaani märge</string>
+  <string name="calendar_meal_plan_product">Eineplaani toode</string>
+  <string name="calendar_assigned_to">määratud %1$s-le</string>
+  <string name="calendar_previous">Eelmine</string>
+  <string name="calendar_next">Järgmine</string>
+  <string name="calendar_no_events">Kuvatavaid sündmusi pole</string>
+  <string name="calendar_share">Jaga/Integreeri kalender (iCal)</string>
+  <string name="calendar_share_hint">Kasuta kalendri jagamiseks või lõimimiseks iCal-vormingus järgmist (avalikku) URL-i</string>
+  <string name="calendar_configure_colors">Seadista värvid</string>
+  <string name="calendar_color_code">Värvikood</string>
+  <string name="calendar_color_invalid">Sisesta värv kujul #RRGGBB</string>
+  <string name="calendar_week_number">Nädal %1$d</string>
+  <string name="calendar_nothing_today">Täna pole midagi</string>
+  <plurals name="calendar_events_today">
+    <item quantity="one">Täna %1$d sündmus</item>
+    <item quantity="other">Täna %1$d sündmust</item>
+  </plurals>
 </resources>

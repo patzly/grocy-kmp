@@ -1312,8 +1312,14 @@
   </plurals>
   <string name="notifications_daily">Ежедневное уведомление</string>
   <string name="notifications_time">Время</string>
-  <string name="notifications_show_names">Показывать названия</string>
-  <string name="notifications_show_names_hint">Перечисляет их в уведомлении, а не только указывает количество</string>
+  <string name="notifications_names_and">%1$s и %2$s</string>
+  <plurals name="notifications_names_more">
+    <item quantity="one">%1$s и ещё %2$d</item>
+    <item quantity="few">%1$s и ещё %2$d</item>
+    <item quantity="many">%1$s и ещё %2$d</item>
+    <item quantity="other">%1$s и ещё %2$d</item>
+  </plurals>
+  <string name="notifications_sentence_names">%1$s: %2$s.</string>
   <string name="notifications_only_mine">Только назначенное мне</string>
   <string name="notifications_show_now">Показать сейчас</string>
   <string name="notifications_show_now_hint">Показывает, что сообщает уведомление прямо сейчас</string>
@@ -1443,4 +1449,40 @@
   <string name="objects_delete_userobject">Удалить этот пользовательский объект?</string>
   <string name="userobject_no_fields">Полей пока нет, добавьте их через «Настроить поля».</string>
   <string name="userentity_show_objects">Показать объекты</string>
+  <string name="calendar_title">Календарь</string>
+  <string name="calendar_view_month">Месяц</string>
+  <string name="calendar_view_week">Неделя</string>
+  <string name="calendar_view_day">День</string>
+  <string name="calendar_view_schedule">Расписание</string>
+  <string name="calendar_all_day">Весь день</string>
+  <plurals name="calendar_more">
+    <item quantity="one">ещё %1$d</item>
+    <item quantity="few">ещё %1$d</item>
+    <item quantity="many">ещё %1$d</item>
+    <item quantity="other">ещё %1$d</item>
+  </plurals>
+  <string name="calendar_product_due">Продукт до</string>
+  <string name="calendar_task_due">Срок выполнения задачи</string>
+  <string name="calendar_chore_due">Срок выполнения работы по дому</string>
+  <string name="calendar_battery_due">Срок заряда батареи</string>
+  <string name="calendar_meal_plan_recipe">Рецепт плана питания</string>
+  <string name="calendar_meal_plan_note">Заметка плана питания</string>
+  <string name="calendar_meal_plan_product">Продукт плана питания</string>
+  <string name="calendar_assigned_to">назначено %1$s</string>
+  <string name="calendar_previous">Назад</string>
+  <string name="calendar_next">Вперёд</string>
+  <string name="calendar_no_events">Нет событий для отображения</string>
+  <string name="calendar_share">Поделиться/Интегрировать календать (iCal)</string>
+  <string name="calendar_share_hint">Используйте следующий (публичный) URL, чтобы поделиться календарём или интегрировать его в формате iCal</string>
+  <string name="calendar_configure_colors">Настроить цвета</string>
+  <string name="calendar_color_code">Код цвета</string>
+  <string name="calendar_color_invalid">Введите цвет в виде #RRGGBB</string>
+  <string name="calendar_week_number">Неделя %1$d</string>
+  <string name="calendar_nothing_today">На сегодня ничего нет</string>
+  <plurals name="calendar_events_today">
+    <item quantity="one">Сегодня %1$d событие</item>
+    <item quantity="few">Сегодня %1$d события</item>
+    <item quantity="many">Сегодня %1$d событий</item>
+    <item quantity="other">Сегодня %1$d события</item>
+  </plurals>
 </resources>

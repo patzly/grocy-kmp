@@ -43,7 +43,6 @@ class NotificationSettingsTest {
                 enabled = true,
                 minuteOfDay = 450,
                 topics = setOf(NotificationTopic.STOCK_OVERDUE, NotificationTopic.STOCK_EXPIRED),
-                showNames = false,
                 onlyMine = false,
             ),
             settings[NotificationKind.STOCK],
@@ -53,7 +52,6 @@ class NotificationSettingsTest {
                 enabled = false,
                 minuteOfDay = 540,
                 topics = setOf(NotificationTopic.CHORES_OVERDUE),
-                showNames = true,
                 onlyMine = true,
             ),
             settings[NotificationKind.CHORES],
@@ -84,7 +82,6 @@ class NotificationSettingsTest {
         assertTrue(stock.enabled)
         assertEquals(9 * 60, stock.minuteOfDay)
         assertTrue(stock.topics.isEmpty())
-        assertTrue(stock.showNames)
     }
 
     @Test

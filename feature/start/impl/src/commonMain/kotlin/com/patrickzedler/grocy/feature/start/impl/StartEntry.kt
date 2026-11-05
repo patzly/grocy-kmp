@@ -17,6 +17,7 @@ import com.patrickzedler.grocy.core.resources.start_select_hint
 import com.patrickzedler.grocy.feature.about.api.AboutRoute
 import com.patrickzedler.grocy.feature.batteries.api.BatteriesOverviewRoute
 import com.patrickzedler.grocy.feature.batteries.api.BatteryTrackingRoute
+import com.patrickzedler.grocy.feature.calendar.api.CalendarRoute
 import com.patrickzedler.grocy.feature.chores.api.ChoreTrackingRoute
 import com.patrickzedler.grocy.feature.chores.api.ChoresOverviewRoute
 import com.patrickzedler.grocy.feature.equipment.api.EquipmentRoute
@@ -68,6 +69,7 @@ fun EntryProviderScope<NavKey>.startEntry(
                     batteries = dependencies.batteriesRepository,
                     equipment = dependencies.equipmentRepository,
                     serverConfig = dependencies.serverConfig,
+                    calendarEvents = dependencies.calendarRepository.events,
                 )
             },
             isDemoServer = server?.isDemo == true,
@@ -120,6 +122,7 @@ internal val StartSection.route: Route
         StartSection.TASKS -> TasksRoute
         StartSection.BATTERIES -> BatteriesOverviewRoute
         StartSection.EQUIPMENT -> EquipmentRoute
+        StartSection.CALENDAR -> CalendarRoute
         StartSection.MASTER_DATA -> MasterDataRoute
     }
 

@@ -27,6 +27,7 @@ import com.patrickzedler.grocy.core.model.recipes.Recipe
 import com.patrickzedler.grocy.core.model.recipes.RecipeFulfillment
 import com.patrickzedler.grocy.core.model.recipes.RecipeStatus
 import com.patrickzedler.grocy.core.model.recipes.mealPlanNamesOf
+import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListSummary
@@ -57,6 +58,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -149,6 +151,8 @@ internal data class StartUiState(
     val batteriesDueSoonDays: Int = 0,
     /** Null without the equipment feature or before the first download stored any piece. */
     val equipmentCount: Int? = null,
+    /** Events of Grocy's calendar on today. */
+    val calendarEventsToday: Int = 0,
     /** The userentities Grocy shows in its sidebar. */
     val sidebarUserentities: List<Userentity> = emptyList(),
 )
@@ -169,6 +173,7 @@ internal class StartViewModel(
     private val batteries: BatteriesRepository,
     private val equipment: EquipmentRepository,
     val serverConfig: StateFlow<ServerConfig?>,
+    calendarEvents: Flow<List<CalendarEvent>> = flowOf(emptyList()),
     private val today: () -> Long = ::todayEpochDay,
     private val now: () -> String = { grocyDateTimeOf(localNowMillis()) },
 ) : ViewModel() {
@@ -257,6 +262,8 @@ internal class StartViewModel(
         )
     }.combine(repository.userentities) { state, userentities ->
         state.copy(sidebarUserentities = userentities.filter { it.showInSidebarMenu })
+    }.combine(calendarEvents) { state, events ->
+        state.copy(calendarEventsToday = events.count { it.epochDay == today() })
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), null)
 
     init {

@@ -1312,8 +1312,14 @@
   </plurals>
   <string name="notifications_daily">Denné oznámenie</string>
   <string name="notifications_time">Čas</string>
-  <string name="notifications_show_names">Zobraziť názvy</string>
-  <string name="notifications_show_names_hint">Vypíše ich v oznámení namiesto samotného počtu</string>
+  <string name="notifications_names_and">%1$s a %2$s</string>
+  <plurals name="notifications_names_more">
+    <item quantity="one">%1$s a ďalší %2$d</item>
+    <item quantity="few">%1$s a ďalšie %2$d</item>
+    <item quantity="many">%1$s a ďalších %2$d</item>
+    <item quantity="other">%1$s a ďalších %2$d</item>
+  </plurals>
+  <string name="notifications_sentence_names">%1$s: %2$s.</string>
   <string name="notifications_only_mine">Len to, čo je priradené mne</string>
   <string name="notifications_show_now">Zobraziť teraz</string>
   <string name="notifications_show_now_hint">Zobrazí, čo by oznámenie hovorilo práve teraz</string>
@@ -1443,4 +1449,40 @@
   <string name="objects_delete_userobject">Naozaj chcete odstrániť tento používateľský objekt?</string>
   <string name="userobject_no_fields">Zatiaľ nemá žiadne polia, pridajte ich cez „Nastaviť polia“.</string>
   <string name="userentity_show_objects">Zobraziť objekty</string>
+  <string name="calendar_title">Kalendár</string>
+  <string name="calendar_view_month">Mesiac</string>
+  <string name="calendar_view_week">Týždeň</string>
+  <string name="calendar_view_day">Deň</string>
+  <string name="calendar_view_schedule">Plán</string>
+  <string name="calendar_all_day">Celý deň</string>
+  <plurals name="calendar_more">
+    <item quantity="one">ďalší %1$d</item>
+    <item quantity="few">ďalšie %1$d</item>
+    <item quantity="many">ďalších %1$d</item>
+    <item quantity="other">ďalších %1$d</item>
+  </plurals>
+  <string name="calendar_product_due">Výrobok expiruje</string>
+  <string name="calendar_task_due">Úloha aktívna o</string>
+  <string name="calendar_chore_due">Povinnosť</string>
+  <string name="calendar_battery_due">Batéria má byť nabitá</string>
+  <string name="calendar_meal_plan_recipe">Recept pre jedálniček</string>
+  <string name="calendar_meal_plan_note">Poznámka pre jedálniček</string>
+  <string name="calendar_meal_plan_product">Výrobok pre jedálniček</string>
+  <string name="calendar_assigned_to">priradené používateľovi %1$s</string>
+  <string name="calendar_previous">Predchádzajúci</string>
+  <string name="calendar_next">Ďalší</string>
+  <string name="calendar_no_events">Žiadne udalosti na zobrazenie</string>
+  <string name="calendar_share">Zdieľať/integrovať kalendár (formát iCal)</string>
+  <string name="calendar_share_hint">Na zdieľanie alebo integráciu kalendára vo formáte iCal použite nasledujúcu (verejnú) adresu URL</string>
+  <string name="calendar_configure_colors">Nastaviť farby</string>
+  <string name="calendar_color_code">Kód farby</string>
+  <string name="calendar_color_invalid">Zadajte farbu v tvare #RRGGBB</string>
+  <string name="calendar_week_number">Týždeň %1$d</string>
+  <string name="calendar_nothing_today">Na dnes nič</string>
+  <plurals name="calendar_events_today">
+    <item quantity="one">Dnes %1$d udalosť</item>
+    <item quantity="few">Dnes %1$d udalosti</item>
+    <item quantity="many">Dnes %1$d udalosti</item>
+    <item quantity="other">Dnes %1$d udalostí</item>
+  </plurals>
 </resources>

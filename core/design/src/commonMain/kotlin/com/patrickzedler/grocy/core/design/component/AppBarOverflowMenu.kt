@@ -201,8 +201,9 @@ private fun NarrowOverflowMenu(
     }
 }
 
+/** The expressive menu of [AppBarOverflowMenu], for a button of another kind. */
 @Composable
-private fun OverflowMenuPopup(
+fun OverflowMenuPopup(
     expanded: Boolean,
     groups: List<List<AppBarMenuItem>>,
     onDismissRequest: () -> Unit,

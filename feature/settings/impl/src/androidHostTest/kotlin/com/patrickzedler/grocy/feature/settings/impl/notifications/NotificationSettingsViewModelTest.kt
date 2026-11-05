@@ -68,7 +68,7 @@ class NotificationSettingsViewModelTest {
                     kind: NotificationKind,
                     settings: NotificationKindSettings,
                     now: Long,
-                ) = NotificationSummary(kind, emptyList(), showNames = true)
+                ) = NotificationSummary(kind, emptyList())
             },
             notifier = notifier,
             alarm = alarm,
@@ -137,16 +137,13 @@ class NotificationSettingsViewModelTest {
     }
 
     @Test
-    fun namesAndAssignmentsAreStored() = runTest(dispatcher) {
+    fun assignmentsAreStored() = runTest(dispatcher) {
         val viewModel = viewModel(this)
 
-        viewModel.setShowNames(NotificationKind.TASKS, false)
         viewModel.setOnlyMine(NotificationKind.TASKS, true)
         advanceUntilIdle()
 
-        val tasks = store.notificationSettings.value[NotificationKind.TASKS]
-        assertFalse(tasks.showNames)
-        assertTrue(tasks.onlyMine)
+        assertTrue(store.notificationSettings.value[NotificationKind.TASKS].onlyMine)
     }
 
     @Test

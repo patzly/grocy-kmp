@@ -9,9 +9,12 @@ sentences), each opens the feature's page.
   server has the feature (`isAvailable`). Shopping lists have nothing that gets due.
 - Settings (`NotificationSettingsRoute`, category Notifications): on or off, the time, what it
   tells about (`NotificationTopic`: due soon, overdue, expired, below min. stock; overdue, due
-  today, due soon; due soon of chores, tasks and batteries off by default), "Show names", "Only what is
-  assigned to me" and "Show now". Kept on the device (`SettingsStore`, `stored()` strings, DataStore
+  today, due soon; due soon of chores, tasks and batteries off by default), "Only what is assigned to
+  me" and "Show now". Kept on the device (`SettingsStore`, `stored()` strings, DataStore
   `notification_settings`, `grocy.notificationSettings` on the web).
+- Text (`notificationTextOf`): a line per topic, the start screen's sentence continued with up to
+  three names, with a full stop like every other sentence: "6 products are due within the next 5
+  days: Eggs, Paprika, Cucumber and 3 more." (`notificationNames`).
 - `NotificationRepository` (`core:data`) decides. `check()` runs when the alarm fires, at boot,
   when the app starts and when settings, login or server features change; it notifies about what
   `dueNotificationKinds` finds and sets the alarm to `nextNotificationCheck`. All logic works on

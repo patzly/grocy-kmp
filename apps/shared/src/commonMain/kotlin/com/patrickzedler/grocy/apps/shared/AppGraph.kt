@@ -20,6 +20,7 @@ import com.patrickzedler.grocy.core.data.settings.BatteriesOverviewOptionsReposi
 import com.patrickzedler.grocy.core.data.settings.EquipmentOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ChoresJournalOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ChoresOverviewOptionsRepository
+import com.patrickzedler.grocy.core.data.calendar.CalendarRepository
 import com.patrickzedler.grocy.core.data.settings.TasksOverviewOptionsRepository
 import com.patrickzedler.grocy.core.data.tasks.TasksRepository
 import com.patrickzedler.grocy.core.data.settings.BehaviorSettingsRepository
@@ -47,6 +48,7 @@ import com.patrickzedler.grocy.feature.about.impl.AboutDependencies
 import com.patrickzedler.grocy.feature.batteries.impl.BatteriesDependencies
 import com.patrickzedler.grocy.feature.chores.impl.ChoresDependencies
 import com.patrickzedler.grocy.feature.equipment.impl.EquipmentDependencies
+import com.patrickzedler.grocy.feature.calendar.impl.CalendarDependencies
 import com.patrickzedler.grocy.feature.tasks.impl.TasksDependencies
 import com.patrickzedler.grocy.feature.login.impl.LoginDependencies
 import com.patrickzedler.grocy.feature.masterdata.impl.MasterDataDependencies
@@ -153,6 +155,21 @@ class AppGraph(
             api = grocyApi,
             database = platform.database,
             connection = { platform.credentialStore.connection.first() },
+        )
+    }
+
+    /** Grocy's calendar, made of what the other repositories stored. */
+    private val calendarRepository by lazy {
+        CalendarRepository(
+            api = grocyApi,
+            connection = { platform.credentialStore.connection.first() },
+            masterData = masterDataRepository,
+            stock = stockRepository,
+            chores = choresRepository,
+            tasks = tasksRepository,
+            batteries = batteriesRepository,
+            recipes = recipesRepository,
+            mealPlan = mealPlanRepository,
         )
     }
 
@@ -349,6 +366,8 @@ class AppGraph(
     }
 
     internal val startDependencies: StartDependencies = object : StartDependencies {
+        override val calendarRepository: CalendarRepository
+            get() = this@AppGraph.calendarRepository
         override val masterDataRepository: MasterDataRepository
             get() = this@AppGraph.masterDataRepository
         override val recipesRepository: RecipesRepository
@@ -458,6 +477,13 @@ class AppGraph(
             get() = this@AppGraph.equipmentRepository
         override val equipmentOptions: EquipmentOptionsRepository
             get() = equipmentOptionsRepository
+    }
+
+    internal val calendarDependencies: CalendarDependencies = object : CalendarDependencies {
+        override val masterDataRepository: MasterDataRepository
+            get() = this@AppGraph.masterDataRepository
+        override val calendarRepository: CalendarRepository
+            get() = this@AppGraph.calendarRepository
     }
 
     internal val tasksDependencies: TasksDependencies = object : TasksDependencies {

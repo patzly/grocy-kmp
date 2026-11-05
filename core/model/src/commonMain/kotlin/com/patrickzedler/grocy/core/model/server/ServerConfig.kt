@@ -21,6 +21,9 @@ data class ServerConfig(
     val tasks: Boolean = true,
     val batteries: Boolean = true,
     val equipment: Boolean = true,
+    val calendar: Boolean = true,
+    /** Grocy's `CALENDAR_SHOW_WEEK_OF_YEAR`: calendars show the weeks' numbers. */
+    val calendarShowWeekOfYear: Boolean = true,
     /** Grocy's `STOCK_BARCODE_LOOKUP_PLUGIN`, null when the server looks up nothing. */
     val barcodeLookupPlugin: String? = null,
     val labelPrinter: Boolean = false,
@@ -92,6 +95,12 @@ data class UserSettings(
     val choresOverviewSwapTrackingButtons: Boolean = false,
     val tasksDueSoonDays: Int = 5,
     val batteriesDueSoonDays: Int = 5,
+    /** The colors ("#rrggbb") of the calendar's events, see `CalendarColorSetting`. */
+    val calendarColorProducts: String = "#007bff",
+    val calendarColorTasks: String = "#28a745",
+    val calendarColorChores: String = "#ffc107",
+    val calendarColorBatteries: String = "#17a2b8",
+    val calendarColorMealPlan: String = "#6c757d",
     /** Purchases and consumptions book themselves once a scan filled every field. */
     val scanModePurchase: Boolean = false,
     val scanModeConsume: Boolean = false,

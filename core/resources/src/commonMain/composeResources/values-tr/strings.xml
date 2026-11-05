@@ -1221,8 +1221,12 @@
   </plurals>
   <string name="notifications_daily">Günlük bildirim</string>
   <string name="notifications_time">Saat</string>
-  <string name="notifications_show_names">Adları göster</string>
-  <string name="notifications_show_names_hint">Yalnızca kaç tane olduğunu söylemek yerine bildirimde listeler</string>
+  <string name="notifications_names_and">%1$s ve %2$s</string>
+  <plurals name="notifications_names_more">
+    <item quantity="one">%1$s ve %2$d tane daha</item>
+    <item quantity="other">%1$s ve %2$d tane daha</item>
+  </plurals>
+  <string name="notifications_sentence_names">%1$s: %2$s.</string>
   <string name="notifications_only_mine">Yalnızca bana atananlar</string>
   <string name="notifications_show_now">Şimdi göster</string>
   <string name="notifications_show_now_hint">Bildirimin şu anda ne söylediğini gösterir</string>
@@ -1342,4 +1346,36 @@
   <string name="objects_delete_userobject">Bu kullanıcı nesnesini silmek istediğinizden emin misiniz?</string>
   <string name="userobject_no_fields">Henüz alanı yok, "Alanları yapılandır" ile ekleyin.</string>
   <string name="userentity_show_objects">Nesneleri göster</string>
+  <string name="calendar_title">Takvim</string>
+  <string name="calendar_view_month">Ay</string>
+  <string name="calendar_view_week">Hafta</string>
+  <string name="calendar_view_day">Gün</string>
+  <string name="calendar_view_schedule">Program</string>
+  <string name="calendar_all_day">Tüm gün</string>
+  <plurals name="calendar_more">
+    <item quantity="one">%1$d daha</item>
+    <item quantity="other">%1$d daha</item>
+  </plurals>
+  <string name="calendar_product_due">Ürün son kullanma tarihi</string>
+  <string name="calendar_task_due">Görev süresi</string>
+  <string name="calendar_chore_due">Ev işi süresi</string>
+  <string name="calendar_battery_due">Pil şarj döngüsü süresi</string>
+  <string name="calendar_meal_plan_recipe">Yemek planı tarifi</string>
+  <string name="calendar_meal_plan_note">Yemek planı notu</string>
+  <string name="calendar_meal_plan_product">Yemek planı ürünü</string>
+  <string name="calendar_assigned_to">%1$s'e atanmış</string>
+  <string name="calendar_previous">Önceki</string>
+  <string name="calendar_next">Sonraki</string>
+  <string name="calendar_no_events">Gösterilecek etkinlik yok</string>
+  <string name="calendar_share">Takvime ekle/paylaş (iCal)</string>
+  <string name="calendar_share_hint">Takvimi iCal biçiminde paylaşmak veya entegre etmek için aşağıdaki (herkese açık) URL'yi kullanın</string>
+  <string name="calendar_configure_colors">Renkleri yapılandır</string>
+  <string name="calendar_color_code">Renk kodu</string>
+  <string name="calendar_color_invalid">Rengi #RRGGBB biçiminde girin</string>
+  <string name="calendar_week_number">%1$d. hafta</string>
+  <string name="calendar_nothing_today">Bugün için bir şey yok</string>
+  <plurals name="calendar_events_today">
+    <item quantity="one">Bugün %1$d etkinlik</item>
+    <item quantity="other">Bugün %1$d etkinlik</item>
+  </plurals>
 </resources>

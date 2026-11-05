@@ -1267,8 +1267,13 @@
   </plurals>
   <string name="notifications_daily">Notificació diària</string>
   <string name="notifications_time">Hora</string>
-  <string name="notifications_show_names">Mostra els noms</string>
-  <string name="notifications_show_names_hint">Els llista a la notificació en lloc de dir només quants n'hi ha</string>
+  <string name="notifications_names_and">%1$s i %2$s</string>
+  <plurals name="notifications_names_more">
+    <item quantity="one">%1$s i %2$d més</item>
+    <item quantity="many">%1$s i %2$d més</item>
+    <item quantity="other">%1$s i %2$d més</item>
+  </plurals>
+  <string name="notifications_sentence_names">%1$s: %2$s.</string>
   <string name="notifications_only_mine">Només el que tinc assignat</string>
   <string name="notifications_show_now">Mostra ara</string>
   <string name="notifications_show_now_hint">Mostra el que diu la notificació ara mateix</string>
@@ -1393,4 +1398,38 @@
   <string name="objects_delete_userobject">Segur que vols suprimir aquest objecte d'usuari?</string>
   <string name="userobject_no_fields">Encara no té camps, afegeix-los amb «Configura els camps».</string>
   <string name="userentity_show_objects">Mostra els objectes</string>
+  <string name="calendar_title">Calendari</string>
+  <string name="calendar_view_month">Mes</string>
+  <string name="calendar_view_week">Setmana</string>
+  <string name="calendar_view_day">Dia</string>
+  <string name="calendar_view_schedule">Agenda</string>
+  <string name="calendar_all_day">Tot el dia</string>
+  <plurals name="calendar_more">
+    <item quantity="one">%1$d més</item>
+    <item quantity="many">%1$d més</item>
+    <item quantity="other">%1$d més</item>
+  </plurals>
+  <string name="calendar_product_due">Venciment de producte</string>
+  <string name="calendar_task_due">Venciment de tasca</string>
+  <string name="calendar_chore_due">Venciment de feina</string>
+  <string name="calendar_battery_due">Venciment de cicle de càrrega de bateria</string>
+  <string name="calendar_meal_plan_recipe">Recepta del pla de menjars</string>
+  <string name="calendar_meal_plan_note">Nota del pla de menjars</string>
+  <string name="calendar_meal_plan_product">Producte del pla de menjars</string>
+  <string name="calendar_assigned_to">assignat a %1$s</string>
+  <string name="calendar_previous">Anterior</string>
+  <string name="calendar_next">Següent</string>
+  <string name="calendar_no_events">No hi ha esdeveniments per mostrar</string>
+  <string name="calendar_share">Compartir/integrar calendari (iCal)</string>
+  <string name="calendar_share_hint">Utilitzeu l'URL (públic) següent per compartir o integrar el calendari en format iCal</string>
+  <string name="calendar_configure_colors">Configura els colors</string>
+  <string name="calendar_color_code">Codi de color</string>
+  <string name="calendar_color_invalid">Introduïu un color com a #RRGGBB</string>
+  <string name="calendar_week_number">Setmana %1$d</string>
+  <string name="calendar_nothing_today">Res previst per avui</string>
+  <plurals name="calendar_events_today">
+    <item quantity="one">%1$d esdeveniment avui</item>
+    <item quantity="many">%1$d esdeveniments avui</item>
+    <item quantity="other">%1$d esdeveniments avui</item>
+  </plurals>
 </resources>

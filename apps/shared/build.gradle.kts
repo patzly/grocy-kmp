@@ -23,6 +23,8 @@ kotlin {
             api(projects.core.model)
             implementation(projects.feature.batteries.api)
             implementation(projects.feature.batteries.impl)
+            implementation(projects.feature.calendar.api)
+            implementation(projects.feature.calendar.impl)
             implementation(projects.feature.equipment.api)
             implementation(projects.feature.equipment.impl)
             implementation(projects.feature.chores.api)

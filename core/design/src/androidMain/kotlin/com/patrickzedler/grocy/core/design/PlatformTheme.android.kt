@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.design
 
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import androidx.activity.ComponentActivity
@@ -15,6 +16,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color as ComposeColor
 import androidx.compose.ui.platform.LocalContext
+import com.patrickzedler.grocy.core.model.AppColor
+import com.patrickzedler.grocy.core.model.AppTheme
+import com.patrickzedler.grocy.core.model.AppearanceSettings
 
 @Composable
 internal actual fun platformDynamicColorScheme(isDark: Boolean): ColorScheme? {
@@ -48,6 +52,24 @@ internal actual fun SystemBarAppearance(isDark: Boolean, backgroundColor: Compos
 @Composable
 actual fun rememberResourcesReady(): Boolean = true
 
+
+/**
+ * The primary color [GrocyTheme] shows for [appearance], for what is drawn outside of the app such
+ * as the color of notifications.
+ */
+fun appPrimaryColor(context: Context, appearance: AppearanceSettings): ComposeColor {
+    val isDark = when (appearance.theme) {
+        AppTheme.LIGHT -> false
+        AppTheme.DARK -> true
+        AppTheme.SYSTEM -> context.resources.configuration.uiMode and
+            Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+    }
+    return if (appearance.color == AppColor.DYNAMIC && isDynamicColorAvailable) {
+        (if (isDark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)).primary
+    } else {
+        seededPrimaryColor(appearance, isDark)
+    }
+}
 
 private fun Context.findActivity(): ComponentActivity? {
     var currentContext = this

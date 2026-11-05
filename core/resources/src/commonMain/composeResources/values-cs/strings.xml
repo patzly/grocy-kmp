@@ -1316,8 +1316,14 @@ Po zaškrtnutí nebude brán zřetel na množství produktu v nákupním seznamu
   </plurals>
   <string name="notifications_daily">Denní oznámení</string>
   <string name="notifications_time">Čas</string>
-  <string name="notifications_show_names">Zobrazit názvy</string>
-  <string name="notifications_show_names_hint">Vypíše je v oznámení místo pouhého počtu</string>
+  <string name="notifications_names_and">%1$s a %2$s</string>
+  <plurals name="notifications_names_more">
+    <item quantity="one">%1$s a %2$d další</item>
+    <item quantity="few">%1$s a %2$d další</item>
+    <item quantity="many">%1$s a %2$d dalšího</item>
+    <item quantity="other">%1$s a %2$d dalších</item>
+  </plurals>
+  <string name="notifications_sentence_names">%1$s: %2$s.</string>
   <string name="notifications_only_mine">Jen to, co je přiřazeno mně</string>
   <string name="notifications_show_now">Zobrazit nyní</string>
   <string name="notifications_show_now_hint">Zobrazí, co by oznámení říkalo právě teď</string>
@@ -1447,4 +1453,40 @@ Po zaškrtnutí nebude brán zřetel na množství produktu v nákupním seznamu
   <string name="objects_delete_userobject">Opravdu chcete smazat tento uživatelský objekt?</string>
   <string name="userobject_no_fields">Zatím nemá žádná pole, přidejte je pomocí „Nastavit pole“.</string>
   <string name="userentity_show_objects">Zobrazit objekty</string>
+  <string name="calendar_title">Kalendář</string>
+  <string name="calendar_view_month">Měsíc</string>
+  <string name="calendar_view_week">Týden</string>
+  <string name="calendar_view_day">Den</string>
+  <string name="calendar_view_schedule">Plán</string>
+  <string name="calendar_all_day">Celý den</string>
+  <plurals name="calendar_more">
+    <item quantity="one">%1$d další</item>
+    <item quantity="few">%1$d další</item>
+    <item quantity="many">%1$d dalšího</item>
+    <item quantity="other">%1$d dalších</item>
+  </plurals>
+  <string name="calendar_product_due">Datum spotřeby</string>
+  <string name="calendar_task_due">Úkol do</string>
+  <string name="calendar_chore_due">Povinnost do</string>
+  <string name="calendar_battery_due">Nabíjecí cyklus baterií do</string>
+  <string name="calendar_meal_plan_recipe">Recept jídelníčku</string>
+  <string name="calendar_meal_plan_note">Poznámka jídelníčku</string>
+  <string name="calendar_meal_plan_product">Produkt jídelníčku</string>
+  <string name="calendar_assigned_to">přiřazeno k %1$s</string>
+  <string name="calendar_previous">Předchozí</string>
+  <string name="calendar_next">Další</string>
+  <string name="calendar_no_events">Žádné události k zobrazení</string>
+  <string name="calendar_share">Sdílet kalendář (formát iCal)</string>
+  <string name="calendar_share_hint">Pro sdílení nebo začlenění kalendáře ve formátu iCal použijte následující (veřejnou) adresu URL</string>
+  <string name="calendar_configure_colors">Změnit barvy</string>
+  <string name="calendar_color_code">Kód barvy</string>
+  <string name="calendar_color_invalid">Zadejte barvu ve tvaru #RRGGBB</string>
+  <string name="calendar_week_number">Týden %1$d</string>
+  <string name="calendar_nothing_today">Na dnešek nic</string>
+  <plurals name="calendar_events_today">
+    <item quantity="one">Dnes %1$d událost</item>
+    <item quantity="few">Dnes %1$d události</item>
+    <item quantity="many">Dnes %1$d události</item>
+    <item quantity="other">Dnes %1$d událostí</item>
+  </plurals>
 </resources>

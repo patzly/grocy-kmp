@@ -9,6 +9,9 @@ import com.patrickzedler.grocy.core.resources.masterdata_batteries
 import com.patrickzedler.grocy.core.resources.masterdata_chores
 import com.patrickzedler.grocy.core.resources.meal_plan_title
 import com.patrickzedler.grocy.core.resources.notifications_meal_plan_today
+import com.patrickzedler.grocy.core.resources.notifications_names_and
+import com.patrickzedler.grocy.core.resources.notifications_names_more
+import com.patrickzedler.grocy.core.resources.notifications_sentence_names
 import com.patrickzedler.grocy.core.resources.notifications_stale
 import com.patrickzedler.grocy.core.resources.product_group_stock
 import com.patrickzedler.grocy.core.resources.start_batteries_due_soon
@@ -17,6 +20,7 @@ import com.patrickzedler.grocy.core.resources.start_batteries_overdue
 import com.patrickzedler.grocy.core.resources.start_chores_due_soon
 import com.patrickzedler.grocy.core.resources.start_chores_due_today
 import com.patrickzedler.grocy.core.resources.start_chores_overdue
+import com.patrickzedler.grocy.core.resources.start_list_join
 import com.patrickzedler.grocy.core.resources.start_stock_below_min
 import com.patrickzedler.grocy.core.resources.start_stock_due_soon
 import com.patrickzedler.grocy.core.resources.start_stock_expired
@@ -30,8 +34,8 @@ import org.jetbrains.compose.resources.getPluralString
 import org.jetbrains.compose.resources.getString
 
 /**
- * A notification in words: [text] the short form, [details] with the names when expanded and
- * [note] that it shows the last known state.
+ * A notification in words: [text] for one line, [details] each topic on a line of its own when
+ * expanded and [note] that it shows the last known state.
  */
 internal data class NotificationText(
     val title: String,
@@ -53,20 +57,51 @@ internal suspend fun notificationTitleOf(kind: NotificationKind): String = getSt
 
 /** Says [summary] with the sentences of the start screen, Grocy's messages above its tables. */
 internal suspend fun notificationTextOf(summary: NotificationSummary): NotificationText {
-    val sentences = summary.sections.map { sentenceOf(it, summary.dueSoonDays) }
+    val sentences = summary.sections.map { section ->
+        sentenceWithNames(sentenceOf(section, summary.dueSoonDays), namesOf(section.names))
+    }
     return NotificationText(
         title = notificationTitleOf(summary.kind),
         text = sentences.joinToString(" "),
-        details = notificationDetails(summary, sentences),
+        details = sentences.joinToString("\n"),
         note = if (summary.isStale) getString(Res.string.notifications_stale) else null,
     )
 }
 
-/** Every sentence on a line of its own, below it the names when the user wants them. */
-internal fun notificationDetails(summary: NotificationSummary, sentences: List<String>): String =
-    summary.sections.zip(sentences).joinToString("\n") { (section, sentence) ->
-        if (summary.showNames) "$sentence\n${section.names.joinToString(", ")}" else sentence
+/** A sentence of the start screen continued with [names], ended by the template's punctuation. */
+private suspend fun sentenceWithNames(sentence: String, names: String): String = getString(
+    Res.string.notifications_sentence_names,
+    sentence.trimEnd(*SENTENCE_ENDS),
+    names.trimEnd(*SENTENCE_ENDS),
+)
+
+private suspend fun namesOf(names: List<String>): String = notificationNames(
+    names = names,
+    join = { first, second -> getString(Res.string.start_list_join, first, second) },
+    and = { first, second -> getString(Res.string.notifications_names_and, first, second) },
+    more = { shown, rest ->
+        getPluralString(Res.plurals.notifications_names_more, rest, shown, rest)
+    },
+)
+
+/**
+ * [names] as a list in a sentence: up to [MAX_NOTIFICATION_NAMES], the last ones told apart by
+ * [and], or by [more] with how many are left. Notifications only have room for so many lines.
+ */
+internal suspend fun notificationNames(
+    names: List<String>,
+    join: suspend (String, String) -> String,
+    and: suspend (String, String) -> String,
+    more: suspend (String, Int) -> String,
+): String {
+    suspend fun joined(list: List<String>) = list.reduce { first, second -> join(first, second) }
+    val rest = names.size - MAX_NOTIFICATION_NAMES
+    return when {
+        rest > 0 -> more(joined(names.take(MAX_NOTIFICATION_NAMES)), rest)
+        names.size < 2 -> names.singleOrNull().orEmpty()
+        else -> and(joined(names.dropLast(1)), names.last())
     }
+}
 
 private suspend fun sentenceOf(section: NotificationSection, dueSoonDays: Int): String {
     val count = section.names.size
@@ -103,3 +138,8 @@ private suspend fun sentenceOf(section: NotificationSection, dueSoonDays: Int): 
             getPluralString(Res.plurals.notifications_meal_plan_today, count, count)
     }
 }
+
+internal const val MAX_NOTIFICATION_NAMES = 3
+
+// What the start screen's sentences end with, in every language
+private val SENTENCE_ENDS = charArrayOf('.', '。')

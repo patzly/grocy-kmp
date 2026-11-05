@@ -51,6 +51,7 @@ import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockLogEntry
 import com.patrickzedler.grocy.core.model.stock.TransferBooking
 import com.patrickzedler.grocy.core.model.tasks.Task
+import com.patrickzedler.grocy.core.network.dto.CalendarSharingLinkDto
 import com.patrickzedler.grocy.core.network.dto.AveragePriceDto
 import com.patrickzedler.grocy.core.network.dto.BatteryChargeCycleDto
 import com.patrickzedler.grocy.core.network.dto.BatteryDetailsDto
@@ -1194,6 +1195,13 @@ class GrocyApi(
             add("order" to "row_created_timestamp:desc")
         },
     ).map { it.toModel() }
+
+    /**
+     * Grocy's public link to the calendar in iCal format, which holds a key of its own; the server
+     * creates that key the first time. Never store or log it.
+     */
+    suspend fun calendarSharingLink(connection: ServerConnection): String =
+        get<CalendarSharingLinkDto>(connection, "calendar", "ical", "sharing-link").url
 
     /** Saves one user setting, e.g. a stock setting, as Grocy's settings pages do. */
     suspend fun saveUserSetting(

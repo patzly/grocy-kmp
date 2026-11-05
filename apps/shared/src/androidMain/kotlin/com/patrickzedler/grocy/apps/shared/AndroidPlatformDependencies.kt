@@ -84,7 +84,7 @@ class AndroidPlatformDependencies(
             ),
         )
 
-    override val notifier: Notifier by lazy { AndroidNotifier(appContext) }
+    override val notifier: Notifier by lazy { AndroidNotifier(appContext, settingsStore) }
 
     // The system's alarm starts NotificationAlarmReceiver, also when the app is not running
     override fun createNotificationAlarm(

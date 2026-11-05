@@ -1311,8 +1311,14 @@
   </plurals>
   <string name="notifications_daily">Щоденне сповіщення</string>
   <string name="notifications_time">Час</string>
-  <string name="notifications_show_names">Показувати назви</string>
-  <string name="notifications_show_names_hint">Перелічує їх у сповіщенні, а не лише вказує кількість</string>
+  <string name="notifications_names_and">%1$s і %2$s</string>
+  <plurals name="notifications_names_more">
+    <item quantity="one">%1$s і ще %2$d</item>
+    <item quantity="few">%1$s і ще %2$d</item>
+    <item quantity="many">%1$s і ще %2$d</item>
+    <item quantity="other">%1$s і ще %2$d</item>
+  </plurals>
+  <string name="notifications_sentence_names">%1$s: %2$s.</string>
   <string name="notifications_only_mine">Лише призначене мені</string>
   <string name="notifications_show_now">Показати зараз</string>
   <string name="notifications_show_now_hint">Показує, що повідомляє сповіщення саме зараз</string>
@@ -1442,4 +1448,40 @@
   <string name="objects_delete_userobject">Видалити цей об'єкт користувача?</string>
   <string name="userobject_no_fields">Полів поки немає, додайте їх через «Налаштувати поля».</string>
   <string name="userentity_show_objects">Показати об'єкти</string>
+  <string name="calendar_title">Календар</string>
+  <string name="calendar_view_month">Місяць</string>
+  <string name="calendar_view_week">Тиждень</string>
+  <string name="calendar_view_day">День</string>
+  <string name="calendar_view_schedule">Розклад</string>
+  <string name="calendar_all_day">Весь день</string>
+  <plurals name="calendar_more">
+    <item quantity="one">ще %1$d</item>
+    <item quantity="few">ще %1$d</item>
+    <item quantity="many">ще %1$d</item>
+    <item quantity="other">ще %1$d</item>
+  </plurals>
+  <string name="calendar_product_due">Термін придатності продукту</string>
+  <string name="calendar_task_due">Термін виконання завдання </string>
+  <string name="calendar_chore_due">Термін виконання роботи</string>
+  <string name="calendar_battery_due">Термін циклу зарядки</string>
+  <string name="calendar_meal_plan_recipe">Рецепт плану харчування</string>
+  <string name="calendar_meal_plan_note">Нотатка плану харчування</string>
+  <string name="calendar_meal_plan_product">Продукт плану харчування</string>
+  <string name="calendar_assigned_to">призначено %1$s</string>
+  <string name="calendar_previous">Назад</string>
+  <string name="calendar_next">Далі</string>
+  <string name="calendar_no_events">Немає подій для показу</string>
+  <string name="calendar_share">Поділитись/інтегрувати календар (iCal)</string>
+  <string name="calendar_share_hint">Використовуйте цю (публічну) URL-адресу, щоб поділитися календарем або інтегрувати його у форматі iCal</string>
+  <string name="calendar_configure_colors">Налаштувати кольори</string>
+  <string name="calendar_color_code">Код кольору</string>
+  <string name="calendar_color_invalid">Введіть колір у форматі #RRGGBB</string>
+  <string name="calendar_week_number">Тиждень %1$d</string>
+  <string name="calendar_nothing_today">На сьогодні нічого</string>
+  <plurals name="calendar_events_today">
+    <item quantity="one">Сьогодні %1$d подія</item>
+    <item quantity="few">Сьогодні %1$d події</item>
+    <item quantity="many">Сьогодні %1$d подій</item>
+    <item quantity="other">Сьогодні %1$d події</item>
+  </plurals>
 </resources>

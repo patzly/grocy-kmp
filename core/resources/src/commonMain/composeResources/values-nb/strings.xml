@@ -1222,8 +1222,12 @@
   </plurals>
   <string name="notifications_daily">Daglig varsel</string>
   <string name="notifications_time">Klokkeslett</string>
-  <string name="notifications_show_names">Vis navn</string>
-  <string name="notifications_show_names_hint">Lister dem opp i varselet i stedet for bare å si hvor mange det er</string>
+  <string name="notifications_names_and">%1$s og %2$s</string>
+  <plurals name="notifications_names_more">
+    <item quantity="one">%1$s og %2$d til</item>
+    <item quantity="other">%1$s og %2$d til</item>
+  </plurals>
+  <string name="notifications_sentence_names">%1$s: %2$s.</string>
   <string name="notifications_only_mine">Bare det som er tildelt meg</string>
   <string name="notifications_show_now">Vis nå</string>
   <string name="notifications_show_now_hint">Viser hva varselet sier akkurat nå</string>
@@ -1343,4 +1347,36 @@
   <string name="objects_delete_userobject">Er du sikker på at du vil slette dette brukerobjektet?</string>
   <string name="userobject_no_fields">Dette har ingen felt ennå, legg dem til med «Konfigurer felt».</string>
   <string name="userentity_show_objects">Vis objekter</string>
+  <string name="calendar_title">Kalender</string>
+  <string name="calendar_view_month">Måned</string>
+  <string name="calendar_view_week">Uke</string>
+  <string name="calendar_view_day">Dag</string>
+  <string name="calendar_view_schedule">Tidsplan</string>
+  <string name="calendar_all_day">Hele dagen</string>
+  <plurals name="calendar_more">
+    <item quantity="one">%1$d til</item>
+    <item quantity="other">%1$d til</item>
+  </plurals>
+  <string name="calendar_product_due">Produkt forfalt</string>
+  <string name="calendar_task_due">Tidsfrist for oppgave</string>
+  <string name="calendar_chore_due">Tidsfrist for husarbeid</string>
+  <string name="calendar_battery_due">Batteri må lades</string>
+  <string name="calendar_meal_plan_recipe">Middagsplan-oppskrift</string>
+  <string name="calendar_meal_plan_note">Middagsplan-notat</string>
+  <string name="calendar_meal_plan_product">Middagsplan-produkt</string>
+  <string name="calendar_assigned_to">tildelt %1$s</string>
+  <string name="calendar_previous">Forrige</string>
+  <string name="calendar_next">Neste</string>
+  <string name="calendar_no_events">Ingen hendelser å vise</string>
+  <string name="calendar_share">Del/ Integrer kalender (iCal)</string>
+  <string name="calendar_share_hint">Bruk følgende (offentlige) URL for å dele eller integrere kalenderen i iCal-format</string>
+  <string name="calendar_configure_colors">Konfigurer farger</string>
+  <string name="calendar_color_code">Fargekode</string>
+  <string name="calendar_color_invalid">Skriv inn en farge som #RRGGBB</string>
+  <string name="calendar_week_number">Uke %1$d</string>
+  <string name="calendar_nothing_today">Ingenting i dag</string>
+  <plurals name="calendar_events_today">
+    <item quantity="one">%1$d hendelse i dag</item>
+    <item quantity="other">%1$d hendelser i dag</item>
+  </plurals>
 </resources>

@@ -52,7 +52,11 @@ import com.patrickzedler.grocy.core.resources.equipment_count
 import com.patrickzedler.grocy.core.resources.equipment_title
 import com.patrickzedler.grocy.core.resources.ic_rounded_battery_charging_full
 import com.patrickzedler.grocy.core.resources.ic_rounded_build
+import com.patrickzedler.grocy.core.resources.calendar_events_today
+import com.patrickzedler.grocy.core.resources.calendar_nothing_today
+import com.patrickzedler.grocy.core.resources.calendar_title
 import com.patrickzedler.grocy.core.resources.ic_rounded_calendar_month
+import com.patrickzedler.grocy.core.resources.ic_rounded_date_range
 import com.patrickzedler.grocy.core.resources.ic_rounded_checklist
 import com.patrickzedler.grocy.core.resources.ic_rounded_cleaning_services
 import com.patrickzedler.grocy.core.resources.ic_rounded_database
@@ -168,6 +172,12 @@ internal enum class StartSection(
         Res.drawable.ic_rounded_build,
         StartGroup.CHORES,
         { it.equipment },
+    ),
+    CALENDAR(
+        Res.string.calendar_title,
+        Res.drawable.ic_rounded_date_range,
+        StartGroup.CHORES,
+        { it.calendar },
     ),
     MASTER_DATA(
         Res.string.masterdata_title,
@@ -335,6 +345,7 @@ private fun StartContent(
                             StartSection.RECIPES,
                             StartSection.MEAL_PLAN,
                             StartSection.EQUIPMENT,
+                            StartSection.CALENDAR,
                             StartSection.MASTER_DATA,
                             -> null
                         },
@@ -366,6 +377,18 @@ private fun sectionSummary(section: StartSection, state: StartUiState): SectionS
         StartSection.BATTERIES ->
             state.batteries?.let { batteriesSummary(it, state.batteriesDueSoonDays) }
         StartSection.EQUIPMENT -> state.equipmentCount?.let { equipmentSummary(it) }
+        StartSection.CALENDAR -> SectionSummary(
+            intro = if (state.calendarEventsToday == 0) {
+                stringResource(Res.string.calendar_nothing_today)
+            } else {
+                pluralStringResource(
+                    Res.plurals.calendar_events_today,
+                    state.calendarEventsToday,
+                    state.calendarEventsToday,
+                )
+            },
+            bullets = emptyList(),
+        )
         StartSection.MASTER_DATA -> state.masterDataCounts
             .map { (count, number) -> pluralStringResource(count.text, number, number) }
             .takeIf { it.isNotEmpty() }

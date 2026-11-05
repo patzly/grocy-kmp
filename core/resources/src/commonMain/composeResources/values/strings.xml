@@ -1243,8 +1243,12 @@
   <!-- Notifications -->
   <string name="notifications_daily">Daily notification</string>
   <string name="notifications_time">Time</string>
-  <string name="notifications_show_names">Show names</string>
-  <string name="notifications_show_names_hint">Lists them in the notification instead of only saying how many there are</string>
+  <string name="notifications_names_and">%1$s and %2$s</string>
+  <plurals name="notifications_names_more">
+    <item quantity="one">%1$s and %2$d more</item>
+    <item quantity="other">%1$s and %2$d more</item>
+  </plurals>
+  <string name="notifications_sentence_names">%1$s: %2$s.</string>
   <string name="notifications_only_mine">Only what is assigned to me</string>
   <string name="notifications_show_now">Show now</string>
   <string name="notifications_show_now_hint">Shows what the notification says right now</string>
@@ -1368,4 +1372,36 @@
   <string name="objects_delete_userobject">Are you sure you want to delete this userobject?</string>
   <string name="userobject_no_fields">This has no fields yet, add them with "Configure fields".</string>
   <string name="userentity_show_objects">Show objects</string>
+  <string name="calendar_title">Calendar</string>
+  <string name="calendar_view_month">Month</string>
+  <string name="calendar_view_week">Week</string>
+  <string name="calendar_view_day">Day</string>
+  <string name="calendar_view_schedule">Schedule</string>
+  <string name="calendar_all_day">All day</string>
+  <plurals name="calendar_more">
+    <item quantity="one">%1$d more</item>
+    <item quantity="other">%1$d more</item>
+  </plurals>
+  <string name="calendar_product_due">Product due</string>
+  <string name="calendar_task_due">Task due</string>
+  <string name="calendar_chore_due">Chore due</string>
+  <string name="calendar_battery_due">Battery charge cycle due</string>
+  <string name="calendar_meal_plan_recipe">Meal plan recipe</string>
+  <string name="calendar_meal_plan_note">Meal plan note</string>
+  <string name="calendar_meal_plan_product">Meal plan product</string>
+  <string name="calendar_assigned_to">assigned to %1$s</string>
+  <string name="calendar_previous">Previous</string>
+  <string name="calendar_next">Next</string>
+  <string name="calendar_no_events">No events to display</string>
+  <string name="calendar_share">Share/Integrate calendar (iCal)</string>
+  <string name="calendar_share_hint">Use the following (public) URL to share or integrate the calendar in iCal format</string>
+  <string name="calendar_configure_colors">Configure colors</string>
+  <string name="calendar_color_code">Color code</string>
+  <string name="calendar_color_invalid">Enter a color as #RRGGBB</string>
+  <string name="calendar_week_number">Week %1$d</string>
+  <string name="calendar_nothing_today">Nothing due today</string>
+  <plurals name="calendar_events_today">
+    <item quantity="one">%1$d event today</item>
+    <item quantity="other">%1$d events today</item>
+  </plurals>
 </resources>

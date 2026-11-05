@@ -1267,8 +1267,13 @@
   </plurals>
   <string name="notifications_daily">התראה יומית</string>
   <string name="notifications_time">שעה</string>
-  <string name="notifications_show_names">הצגת שמות</string>
-  <string name="notifications_show_names_hint">מפרט אותם בהתראה במקום לציין רק כמה יש</string>
+  <string name="notifications_names_and">%1$s ו%2$s</string>
+  <plurals name="notifications_names_more">
+    <item quantity="one">%1$s ועוד %2$d</item>
+    <item quantity="two">%1$s ועוד %2$d</item>
+    <item quantity="other">%1$s ועוד %2$d</item>
+  </plurals>
+  <string name="notifications_sentence_names">%1$s: %2$s.</string>
   <string name="notifications_only_mine">רק מה שהוקצה לי</string>
   <string name="notifications_show_now">הצגה כעת</string>
   <string name="notifications_show_now_hint">מציג מה ההתראה אומרת כרגע</string>
@@ -1393,4 +1398,38 @@
   <string name="objects_delete_userobject">למחוק את אובייקט המשתמש הזה?</string>
   <string name="userobject_no_fields">עדיין אין שדות, אפשר להוסיף אותם דרך „הגדרת שדות”.</string>
   <string name="userentity_show_objects">הצגת אובייקטים</string>
+  <string name="calendar_title">לוח שנה</string>
+  <string name="calendar_view_month">חודש</string>
+  <string name="calendar_view_week">שבוע</string>
+  <string name="calendar_view_day">יום</string>
+  <string name="calendar_view_schedule">לוח זמנים</string>
+  <string name="calendar_all_day">כל היום</string>
+  <plurals name="calendar_more">
+    <item quantity="one">עוד %1$d</item>
+    <item quantity="two">עוד %1$d</item>
+    <item quantity="other">עוד %1$d</item>
+  </plurals>
+  <string name="calendar_product_due">תפוגת המוצר</string>
+  <string name="calendar_task_due">מועד סיום המשימה</string>
+  <string name="calendar_chore_due">מועד סיום המטלה</string>
+  <string name="calendar_battery_due">מועד מחזור טעינת הסוללה</string>
+  <string name="calendar_meal_plan_recipe">מתכון בתכנית ארוחות</string>
+  <string name="calendar_meal_plan_note">הערה בתכנית ארוחות</string>
+  <string name="calendar_meal_plan_product">מוצר בתכנית ארוחות</string>
+  <string name="calendar_assigned_to">מוקצה אל %1$s</string>
+  <string name="calendar_previous">הקודם</string>
+  <string name="calendar_next">הבא</string>
+  <string name="calendar_no_events">אין אירועים להצגה</string>
+  <string name="calendar_share">שיתוף/שילוב לוח שנה (iCal)</string>
+  <string name="calendar_share_hint">יש להשתמש בכתובת ה־URL (הציבורית) הבאה כדי לשתף או לשלב את היומן בתבנית iCal</string>
+  <string name="calendar_configure_colors">הגדרת צבעים</string>
+  <string name="calendar_color_code">קוד צבע</string>
+  <string name="calendar_color_invalid">יש להזין צבע בתבנית #RRGGBB</string>
+  <string name="calendar_week_number">שבוע %1$d</string>
+  <string name="calendar_nothing_today">אין כלום להיום</string>
+  <plurals name="calendar_events_today">
+    <item quantity="one">אירוע אחד היום</item>
+    <item quantity="two">%1$d אירועים היום</item>
+    <item quantity="other">%1$d אירועים היום</item>
+  </plurals>
 </resources>

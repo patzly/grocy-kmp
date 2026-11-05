@@ -47,9 +47,6 @@ internal class NotificationSettingsViewModel(
         it.copy(topics = if (enabled) it.topics + topic else it.topics - topic)
     }
 
-    fun setShowNames(kind: NotificationKind, showNames: Boolean) =
-        update(kind) { it.copy(showNames = showNames) }
-
     fun setOnlyMine(kind: NotificationKind, onlyMine: Boolean) =
         update(kind) { it.copy(onlyMine = onlyMine) }
 

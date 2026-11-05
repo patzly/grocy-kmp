@@ -126,7 +126,8 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
   too high), `SupportingBulletList` for a text with a bulleted list in that slot (wrapping
   lines; `FormattedText`'s lists bring paragraph spacing a list item does not want), `SearchableDropdownField` for every choice of objects, a combobox like Grocy's pickers: the
   text is the value (a text naming an option chooses it, an empty one chooses nothing, other
-  text shows "Choose an entry from the list" once no suggestion is open and is reported through
+  text shows "Choose an entry from the list" once no suggestion is open, except in product pickers
+  (`submitsTextOnLeave`), which ask what it means, and is reported through
   `onUnmatchedChange`, so forms refuse to save); the menu only suggests (fuzzy, no check marks,
   optional fields offer "None"), opens through its arrow or while typing and closes on a choice
   or once the text names an option completely;

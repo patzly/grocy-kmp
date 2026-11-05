@@ -34,7 +34,6 @@ data class NotificationSection(
 data class NotificationSummary(
     val kind: NotificationKind,
     val sections: List<NotificationSection>,
-    val showNames: Boolean,
     val dueSoonDays: Int = 0,
     val isStale: Boolean = false,
 )
