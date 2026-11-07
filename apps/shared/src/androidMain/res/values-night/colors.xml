@@ -132,8 +132,18 @@
   <color name="green_theme_surfaceContainerHighest_highContrast">#444840</color>
 
 
+  <!-- The widgets' sketches in the picker, from Android 12 on in the wallpaper's colors (-v31) -->
   <color name="widget_preview_background">#1c2616</color>
-  <color name="widget_preview_content">#43503a</color>
+  <color name="widget_preview_text">#e2e3dc</color>
+  <color name="widget_preview_text_variant">#c4c8bb</color>
   <color name="widget_preview_primary">#a9d290</color>
-  <color name="widget_preview_event">#a0cfd0</color>
+  <color name="widget_preview_on_primary">#173807</color>
+  <color name="widget_preview_tile">#3d4a35</color>
+  <color name="widget_preview_line">#44483e</color>
+  <color name="widget_preview_event_1">#a9d290</color>
+  <color name="widget_preview_on_event_1">#173807</color>
+  <color name="widget_preview_event_2">#a0cfd0</color>
+  <color name="widget_preview_on_event_2">#003738</color>
+  <color name="widget_preview_event_3">#bccbaf</color>
+  <color name="widget_preview_on_event_3">#27341f</color>
 </resources>

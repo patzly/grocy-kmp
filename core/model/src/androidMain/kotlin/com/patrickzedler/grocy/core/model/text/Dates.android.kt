@@ -40,6 +40,16 @@ actual fun formatWeekdayShort(epochDay: Long): String =
 actual fun formatMonthYear(epochDay: Long): String =
     skeletonFormat("yMMMM").format(utcDate(epochDay))
 
+actual fun formatMonthYearShort(epochDay: Long): String =
+    skeletonFormat("yMMM").format(utcDate(epochDay))
+
+actual fun formatDayRange(start: Long, end: Long): String {
+    val interval = DateInterval(localNoonMillis(start), localNoonMillis(end))
+    return DateIntervalFormat.getInstance("MMMd", ULocale.getDefault())
+        .format(interval, StringBuffer(), FieldPosition(0))
+        .toString()
+}
+
 actual fun formatDayAndMonth(epochDay: Long): String =
     skeletonFormat("MMMMd").format(utcDate(epochDay))
 

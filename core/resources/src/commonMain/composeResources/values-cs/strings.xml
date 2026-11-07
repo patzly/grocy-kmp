@@ -1457,7 +1457,8 @@ Po zaškrtnutí nebude brán zřetel na množství produktu v nákupním seznamu
   <string name="calendar_view_month">Měsíc</string>
   <string name="calendar_view_week">Týden</string>
   <string name="calendar_view_day">Den</string>
-  <string name="calendar_view_schedule">Plán</string>
+  <string name="calendar_view_list">Seznam</string>
+  <string name="calendar_now">Teď</string>
   <string name="calendar_all_day">Celý den</string>
   <plurals name="calendar_more">
     <item quantity="one">%1$d další</item>

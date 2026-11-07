@@ -4,6 +4,18 @@
   <string name="widget_tasks_description">Oppgavene dine, fullført med et trykk</string>
   <string name="widget_month_label">Kalender, månedsvisning</string>
   <string name="widget_month_description">Måneden med det som forfaller hver dag</string>
-  <string name="widget_schedule_label">Kalender, tidsplan</string>
+  <string name="widget_schedule_label">Kalender, liste</string>
   <string name="widget_schedule_description">Det som forfaller fra i dag</string>
+  <string name="widget_sample_mow_lawn">Klippe plenen</string>
+  <string name="widget_sample_buy_seeds">Kjøpe frø</string>
+  <string name="widget_sample_water_plants">Vanne plantene</string>
+  <string name="widget_sample_descale">Avkalke kaffemaskinen</string>
+  <string name="widget_sample_milk">Melk</string>
+  <string name="widget_sample_vacuum">Støvsuge stua</string>
+  <string name="widget_sample_spaghetti">Spaghetti bolognese</string>
+  <string name="widget_sample_lunch">Lunsj</string>
+  <string name="widget_sample_smoke_detector">Røykvarsler</string>
+  <string name="widget_sample_month">November</string>
+  <string name="widget_preview_tasks">Oppgaver</string>
+  <string name="widget_preview_calendar">Kalender</string>
 </resources>

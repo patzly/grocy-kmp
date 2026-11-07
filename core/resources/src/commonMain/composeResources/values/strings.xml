@@ -1376,7 +1376,8 @@
   <string name="calendar_view_month">Month</string>
   <string name="calendar_view_week">Week</string>
   <string name="calendar_view_day">Day</string>
-  <string name="calendar_view_schedule">Schedule</string>
+  <string name="calendar_view_list">List</string>
+  <string name="calendar_now">Now</string>
   <string name="calendar_all_day">All day</string>
   <plurals name="calendar_more">
     <item quantity="one">%1$d more</item>

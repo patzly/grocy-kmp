@@ -7,6 +7,19 @@
   <string name="widget_tasks_description">Your tasks to do, checked off with a tap</string>
   <string name="widget_month_label">Calendar month view</string>
   <string name="widget_month_description">The month with what is due each day</string>
-  <string name="widget_schedule_label">Calendar schedule</string>
+  <string name="widget_schedule_label">Calendar list</string>
   <string name="widget_schedule_description">What is due from today on</string>
+  <!-- What the widgets show in the picker -->
+  <string name="widget_sample_mow_lawn">Mow the lawn</string>
+  <string name="widget_sample_buy_seeds">Buy seeds</string>
+  <string name="widget_sample_water_plants">Water the plants</string>
+  <string name="widget_sample_descale">Descale the coffee machine</string>
+  <string name="widget_sample_milk">Milk</string>
+  <string name="widget_sample_vacuum">Vacuum the living room</string>
+  <string name="widget_sample_spaghetti">Spaghetti bolognese</string>
+  <string name="widget_sample_lunch">Lunch</string>
+  <string name="widget_sample_smoke_detector">Smoke detector</string>
+  <string name="widget_sample_month">November</string>
+  <string name="widget_preview_tasks">Tasks</string>
+  <string name="widget_preview_calendar">Calendar</string>
 </resources>

@@ -4,6 +4,18 @@
   <string name="widget_tasks_description">Sinu tegemata ülesanded, ühe puudutusega tehtud</string>
   <string name="widget_month_label">Kalendri kuuvaade</string>
   <string name="widget_month_description">Kuu koos sellega, mis igal päeval tähtaega jõuab</string>
-  <string name="widget_schedule_label">Kalendri ajakava</string>
+  <string name="widget_schedule_label">Kalendri loend</string>
   <string name="widget_schedule_description">Mis alates tänasest tähtaega jõuab</string>
+  <string name="widget_sample_mow_lawn">Niida muru</string>
+  <string name="widget_sample_buy_seeds">Osta seemneid</string>
+  <string name="widget_sample_water_plants">Kasta taimi</string>
+  <string name="widget_sample_descale">Eemalda kohvimasinast katlakivi</string>
+  <string name="widget_sample_milk">Piim</string>
+  <string name="widget_sample_vacuum">Puhasta elutuba tolmuimejaga</string>
+  <string name="widget_sample_spaghetti">Spagetid bolognese</string>
+  <string name="widget_sample_lunch">Lõuna</string>
+  <string name="widget_sample_smoke_detector">Suitsuandur</string>
+  <string name="widget_sample_month">November</string>
+  <string name="widget_preview_tasks">Ülesanded</string>
+  <string name="widget_preview_calendar">Kalender</string>
 </resources>

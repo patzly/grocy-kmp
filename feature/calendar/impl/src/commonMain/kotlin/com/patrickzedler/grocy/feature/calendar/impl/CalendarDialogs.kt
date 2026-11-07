@@ -173,7 +173,7 @@ internal fun CalendarColorsDialog(
                     modifier = Modifier.clickCursor(),
                     shapes = ButtonDefaults.shapes(),
                 ) {
-                    Text(stringResource(Res.string.action_ok))
+                    Text(stringResource(Res.string.action_close))
                 }
             },
         ) {

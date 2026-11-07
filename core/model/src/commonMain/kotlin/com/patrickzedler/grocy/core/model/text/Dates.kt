@@ -46,6 +46,9 @@ fun dayOfMonthOf(epochDay: Long): Int = civilFromDays(epochDay).third
 /** The year of [epochDay]. */
 fun yearOfDay(epochDay: Long): Int = civilFromDays(epochDay).first.toInt()
 
+/** The month of [epochDay], from 1 for January. */
+fun monthOfDay(epochDay: Long): Int = civilFromDays(epochDay).second
+
 /** The first day of the month of [epochDay]. */
 fun firstDayOfMonth(epochDay: Long): Long {
     val (year, month, _) = civilFromDays(epochDay)
@@ -172,6 +175,12 @@ expect fun formatWeekdayShort(epochDay: Long): String
 
 /** The month of [epochDay] with its year in the app language, e.g. "November 2026". */
 expect fun formatMonthYear(epochDay: Long): String
+
+/** The month of [epochDay] short with its year in the app language, e.g. "Nov 2026". */
+expect fun formatMonthYearShort(epochDay: Long): String
+
+/** The days [start] to [end] without year in the app language, e.g. "Nov 9 – 15". */
+expect fun formatDayRange(start: Long, end: Long): String
 
 /** The months of [start] to [end] in the app language, e.g. "Oct – Nov 2026". */
 expect fun formatMonthRange(start: Long, end: Long): String

@@ -50,7 +50,7 @@ import com.patrickzedler.grocy.core.resources.batteries_overview_title
 import com.patrickzedler.grocy.core.resources.chores_overview_title
 import com.patrickzedler.grocy.core.resources.equipment_count
 import com.patrickzedler.grocy.core.resources.equipment_title
-import com.patrickzedler.grocy.core.resources.ic_rounded_battery_charging_full
+import com.patrickzedler.grocy.core.resources.ic_rounded_battery_full
 import com.patrickzedler.grocy.core.resources.ic_rounded_build
 import com.patrickzedler.grocy.core.resources.calendar_events_today
 import com.patrickzedler.grocy.core.resources.calendar_nothing_today
@@ -163,7 +163,7 @@ internal enum class StartSection(
     ),
     BATTERIES(
         Res.string.batteries_overview_title,
-        Res.drawable.ic_rounded_battery_charging_full,
+        Res.drawable.ic_rounded_battery_full,
         StartGroup.CHORES,
         { it.batteries },
     ),
@@ -361,6 +361,13 @@ private fun StartContent(
  * containers for touch targets, which counts towards the item's bottom padding.
  */
 private class SectionButtons(val room: Dp, val content: @Composable () -> Unit)
+
+/**
+ * Whether an item's content starts at its top like Material's three line items: with a list of
+ * [bullets] or buttons below; a single summary line is a centered two line item.
+ */
+internal fun startsAtTop(bullets: List<String>, hasButtons: Boolean): Boolean =
+    bullets.isNotEmpty() || hasButtons
 
 /** What a section tells about its data: an introduction and a list, both optional. */
 private class SectionSummary(val intro: String?, val bullets: List<String>)
@@ -738,8 +745,13 @@ private fun PageItem(
     } else {
         null
     }
-    // Several lines keep the icon at the top like Material's three line items
-    val alignment = if (supporting != null) Alignment.Top else Alignment.CenterVertically
+    // A list or buttons below keep the icon at the top like Material's three line items, a single
+    // line of summary is a two line item with everything centered
+    val alignment = if (startsAtTop(summary?.bullets.orEmpty(), below != null)) {
+        Alignment.Top
+    } else {
+        Alignment.CenterVertically
+    }
     val contentPadding = below?.let { buttonsContentPadding(it.room) }
         ?: ListItemDefaults.ContentPadding
 

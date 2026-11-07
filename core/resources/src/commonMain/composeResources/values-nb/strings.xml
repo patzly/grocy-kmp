@@ -1351,7 +1351,8 @@
   <string name="calendar_view_month">Måned</string>
   <string name="calendar_view_week">Uke</string>
   <string name="calendar_view_day">Dag</string>
-  <string name="calendar_view_schedule">Tidsplan</string>
+  <string name="calendar_view_list">Liste</string>
+  <string name="calendar_now">Nå</string>
   <string name="calendar_all_day">Hele dagen</string>
   <plurals name="calendar_more">
     <item quantity="one">%1$d til</item>

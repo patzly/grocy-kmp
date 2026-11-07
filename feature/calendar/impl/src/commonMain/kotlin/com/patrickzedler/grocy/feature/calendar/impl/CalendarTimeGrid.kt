@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.feature.calendar.impl
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -16,8 +18,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -37,133 +37,160 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.verticalScrollbar
 import com.patrickzedler.grocy.core.design.withTabularNumbers
 import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
-import com.patrickzedler.grocy.core.model.text.dayOfMonthOf
 import com.patrickzedler.grocy.core.model.text.formatDate
 import com.patrickzedler.grocy.core.model.text.formatWeekday
-import com.patrickzedler.grocy.core.model.text.formatWeekdayShort
 import com.patrickzedler.grocy.core.model.text.localNowMillis
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.calendar_more
+import com.patrickzedler.grocy.core.resources.calendar_view_day
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
- * Google Calendar's time grid: the days stay on top with what has no time, below them the hours as
- * segmented rows with their time beside them and each event as a chip at its time.
+ * A page of Google Calendar's day or week: the days with what has no time stay on top, below them
+ * only the hours scroll, as segmented rows with their time beside them and each event as a chip
+ * at its time. Every page of both views shares [scroll], so paging and changing between them keep
+ * the time in view. In the week a tap on a day's heading or column shows that day ([onDayClick]).
  */
-internal fun LazyListScope.timeGrid(
+@Composable
+internal fun TimeGridPage(
     days: List<CalendarDay>,
-    listState: LazyListState,
+    scroll: ScrollState,
+    bottomPadding: Dp,
     colors: EventColors,
-    onDayClick: (Long) -> Unit,
+    onDayClick: ((Long) -> Unit)?,
     onEventClick: (CalendarEvent) -> Unit,
 ) {
-    stickyHeader(key = DAYS_KEY, contentType = DAYS_KEY) {
-        TimeGridHeader(
-            days = days,
-            colors = colors,
-            onDayClick = onDayClick,
-            onEventClick = onEventClick,
-            modifier = Modifier.belowContentPadding(listState),
-        )
-    }
-    item(key = "hours", contentType = "hours") {
-        TimeGridBody(days, colors, onEventClick)
+    Column(Modifier.fillMaxSize()) {
+        if (days.size == 1) {
+            DayHeader(days.single(), colors, onEventClick)
+        } else {
+            WeekHeader(days, colors, onDayClick, onEventClick)
+        }
+        Box(
+            Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .verticalScrollbar(scroll),
+        ) {
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scroll)
+                    .calendarPadding()
+                    .padding(top = 4.dp, bottom = bottomPadding),
+            ) {
+                TimeGridBody(days, colors, onDayClick, onEventClick)
+            }
+        }
     }
 }
 
-/**
- * A sticky header sticks to the list's edge, which lies below the app bar: this moves it down by as
- * much of the list's padding as it has passed, without changing its height and so the list.
- */
-private fun Modifier.belowContentPadding(listState: LazyListState): Modifier =
-    layout { measurable, constraints ->
-        val placeable = measurable.measure(constraints)
-        layout(placeable.width, placeable.height) {
-            val info = listState.layoutInfo
-            val offset = info.visibleItemsInfo.firstOrNull { it.key == DAYS_KEY }?.offset ?: 0
-            // The list's own space above its first item is no part of what covers it
-            val padding = info.beforeContentPadding - SegmentedListDefaults.GroupSpacing.roundToPx()
-            placeable.placeRelative(0, stickyShift(offset, padding.coerceAtLeast(0)))
-        }
-    }
-
-/** The days' names and numbers, today's on a filled circle, and what has no time. */
+/** Google's day: its weekday and number at the start, what has no time beside them. */
 @Composable
-private fun TimeGridHeader(
+private fun DayHeader(
+    day: CalendarDay,
+    colors: EventColors,
+    onEventClick: (CalendarEvent) -> Unit,
+) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .calendarPadding()
+            .padding(top = 4.dp, bottom = 8.dp),
+    ) {
+        DayBadge(day, onClick = null, modifier = Modifier.width(HourLabelWidth))
+        AllDayChips(
+            day = day,
+            colors = colors,
+            onEventClick = onEventClick,
+            modifier = Modifier
+                .weight(1f)
+                .padding(top = 4.dp),
+        )
+    }
+}
+
+/** The week's days side by side, each with what has no time below it. */
+@Composable
+private fun WeekHeader(
     days: List<CalendarDay>,
     colors: EventColors,
-    onDayClick: (Long) -> Unit,
+    onDayClick: ((Long) -> Unit)?,
     onEventClick: (CalendarEvent) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
-    var isExpanded by rememberSaveable { mutableStateOf(false) }
-    val haptic = LocalHapticFeedback.current
-    val isSingle = days.size == 1
-    val scrollState = rememberScrollState()
     Column(
-        modifier
+        Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .calendarPadding()
             .padding(bottom = 4.dp),
     ) {
         Row(Modifier.fillMaxWidth()) {
             Spacer(Modifier.width(HourLabelWidth))
             days.forEach { day ->
-                DayHeading(
+                DayBadge(
                     day = day,
-                    alignment = if (isSingle) Alignment.Start else Alignment.CenterHorizontally,
-                    onClick = if (isSingle) {
-                        null
-                    } else {
-                        {
-                            haptic.confirm()
-                            onDayClick(day.epochDay)
-                        }
-                    },
+                    onClick = onDayClick?.let { open -> { open(day.epochDay) } },
                     modifier = Modifier.weight(1f),
                 )
             }
         }
-        // Expanded it may hold more than fits, the hours keep their place below it
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .heightIn(max = AllDayMaxHeight)
-                .verticalScroll(scrollState),
-        ) {
+        Row(Modifier.fillMaxWidth()) {
             Spacer(Modifier.width(HourLabelWidth))
             days.forEach { day ->
-                val wholeDay = day.events.filter { minuteOfTime(it.time) == null }
-                val limit = if (isExpanded) wholeDay.size else AllDayRows
-                val shown = shownChips(wholeDay.size, limit)
-                BoxWithConstraints(Modifier.weight(1f).padding(end = ColumnGap)) {
-                    val showsIcon = maxWidth >= ChipIconMinWidth
-                    Column(verticalArrangement = Arrangement.spacedBy(ChipGap)) {
-                        wholeDay.take(shown).forEach { event ->
-                            EventChip(event, event.name, colors, showsIcon, onEventClick)
-                        }
-                        if (shown < wholeDay.size) {
-                            MoreChip(wholeDay.size - shown) {
-                                haptic.confirm()
-                                isExpanded = true
-                            }
-                        }
-                    }
+                AllDayChips(
+                    day = day,
+                    colors = colors,
+                    onEventClick = onEventClick,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = ColumnGap),
+                )
+            }
+        }
+    }
+}
+
+/**
+ * What a day has without a time, three rows of it and "3 more" for the rest; expanded it scrolls
+ * on its own beyond [AllDayMaxHeight], so the hours keep their room.
+ */
+@Composable
+private fun AllDayChips(
+    day: CalendarDay,
+    colors: EventColors,
+    onEventClick: (CalendarEvent) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var isExpanded by rememberSaveable(day.epochDay) { mutableStateOf(false) }
+    val haptic = LocalHapticFeedback.current
+    val wholeDay = day.events.filter { minuteOfTime(it.time) == null }
+    val limit = if (isExpanded) wholeDay.size else AllDayRows
+    val shown = shownChips(wholeDay.size, limit)
+    BoxWithConstraints(modifier.heightIn(max = AllDayMaxHeight)) {
+        val showsIcon = maxWidth >= ChipIconMinWidth
+        Column(
+            verticalArrangement = Arrangement.spacedBy(ChipGap),
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+        ) {
+            wholeDay.take(shown).forEach { event ->
+                EventChip(event, event.name, colors, showsIcon, onEventClick)
+            }
+            if (shown < wholeDay.size) {
+                MoreChip(wholeDay.size - shown) {
+                    haptic.confirm()
+                    isExpanded = true
                 }
             }
         }
@@ -193,53 +220,12 @@ internal fun MoreChip(count: Int, onClick: () -> Unit) {
     }
 }
 
-@Composable
-private fun DayHeading(
-    day: CalendarDay,
-    alignment: Alignment.Horizontal,
-    onClick: (() -> Unit)?,
-    modifier: Modifier = Modifier,
-) {
-    val scheme = MaterialTheme.colorScheme
-    val description = "${formatWeekday(day.epochDay)}, ${formatDate(day.epochDay)}"
-    Column(
-        horizontalAlignment = alignment,
-        modifier = modifier
-            .then(
-                if (onClick != null) Modifier.clickable(onClick = onClick).clickCursor() else Modifier,
-            )
-            .padding(vertical = 4.dp)
-            .semantics(mergeDescendants = true) { heading() },
-    ) {
-        Text(
-            text = formatWeekdayShort(day.epochDay),
-            style = MaterialTheme.typography.labelMedium,
-            color = if (day.isToday) scheme.primary else scheme.onSurfaceVariant,
-            maxLines = 1,
-            modifier = Modifier.clearAndSetSemantics { },
-        )
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(DayNumberSize)
-                .clip(CircleShape)
-                .then(if (day.isToday) Modifier.background(scheme.primary) else Modifier),
-        ) {
-            Text(
-                text = dayOfMonthOf(day.epochDay).toString(),
-                style = MaterialTheme.typography.titleLarge.withTabularNumbers(),
-                color = if (day.isToday) scheme.onPrimary else scheme.onSurface,
-                modifier = Modifier.semantics { contentDescription = description },
-            )
-        }
-    }
-}
-
 /** The hours, the columns' lines and each day's chips at their times. */
 @Composable
 private fun TimeGridBody(
     days: List<CalendarDay>,
     colors: EventColors,
+    onDayClick: ((Long) -> Unit)?,
     onEventClick: (CalendarEvent) -> Unit,
 ) {
     val height = HourHeight * HOURS_PER_DAY
@@ -251,7 +237,18 @@ private fun TimeGridBody(
         }
         Row(Modifier.fillMaxWidth().height(height).padding(start = HourLabelWidth)) {
             days.forEach { day ->
-                BoxWithConstraints(Modifier.weight(1f).fillMaxHeight()) {
+                BoxWithConstraints(
+                    Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .then(
+                            if (onDayClick != null) {
+                                Modifier.dayColumnClick(day, onDayClick)
+                            } else {
+                                Modifier
+                            },
+                        ),
+                ) {
                     DayEvents(
                         day = day,
                         showsIcon = maxWidth >= ChipIconMinWidth,
@@ -262,6 +259,19 @@ private fun TimeGridBody(
             }
         }
     }
+}
+
+/** A tap on a day's column in the week shows that day at the same time. */
+@Composable
+private fun Modifier.dayColumnClick(day: CalendarDay, onDayClick: (Long) -> Unit): Modifier {
+    val haptic = LocalHapticFeedback.current
+    val label = stringResource(Res.string.calendar_view_day)
+    val description = "${formatWeekday(day.epochDay)}, ${formatDate(day.epochDay)}"
+    val open = {
+        haptic.confirm()
+        onDayClick(day.epochDay)
+    }
+    return clickable(onClickLabel = "$label: $description", onClick = open).clickCursor()
 }
 
 @Composable
@@ -294,7 +304,7 @@ private fun HourRow(hour: Int, columns: Int) {
     }
 }
 
-/** The lines between days, in a row of the grid or the month. */
+/** The lines between days, in a row of the grid. */
 @Composable
 internal fun ColumnLines(columns: Int) {
     Row(Modifier.fillMaxWidth().fillMaxHeight()) {
@@ -327,7 +337,7 @@ private fun DayEvents(
     timed.forEachIndexed { index, (_, event) ->
         EventChip(
             event = event,
-            text = "${event.name}, ${event.time}",
+            text = event.name,
             colors = colors,
             showsIcon = showsIcon,
             onClick = onEventClick,
@@ -336,12 +346,14 @@ private fun DayEvents(
                 .padding(end = ColumnGap),
         )
     }
-    if (day.isToday) NowLine()
+    if (day.isToday) {
+        NowLine(Modifier.offset(y = HourHeight * rememberCurrentMinute() / MINUTES_PER_HOUR))
+    }
 }
 
-/** Google's line at the current time, with its round start. */
+/** The minute of the day it is now, moving on while it is shown. */
 @Composable
-private fun NowLine() {
+internal fun rememberCurrentMinute(): Int {
     var minute by remember { mutableIntStateOf(currentMinuteOfDay()) }
     LaunchedEffect(Unit) {
         while (true) {
@@ -349,32 +361,52 @@ private fun NowLine() {
             minute = currentMinuteOfDay()
         }
     }
+    return minute
+}
+
+/** Google's line at the current time, with its round start; [modifier] places its middle. */
+@Composable
+internal fun NowLine(modifier: Modifier = Modifier) {
     val color = MaterialTheme.colorScheme.error
-    val top = HourHeight * minute / MINUTES_PER_HOUR
-    Box(Modifier.fillMaxWidth().offset(y = top - NowLineThickness / 2).height(NowLineThickness).background(color))
-    Box(
-        Modifier
-            .offset(x = -NowDotSize / 2, y = top - NowDotSize / 2)
-            .size(NowDotSize)
-            .clip(CircleShape)
-            .background(color),
-    )
+    Box(modifier.fillMaxWidth()) {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .offset(y = -NowLineThickness / 2)
+                .height(NowLineThickness)
+                .background(color),
+        )
+        Box(
+            Modifier
+                .offset(x = -NowDotSize / 2, y = -NowDotSize / 2)
+                .size(NowDotSize)
+                .clip(CircleShape)
+                .background(color),
+        )
+    }
 }
 
 /** The minute of the day it is now in the device's time zone. */
 internal fun currentMinuteOfDay(): Int =
     (localNowMillis().mod(MILLIS_PER_DAY) / MILLIS_PER_MINUTE).toInt()
 
-private const val DAYS_KEY = "days"
+/**
+ * Where the time grid scrolls to for [minute]: an hour above it, so what comes before stays in
+ * view, [hourHeight] being an hour's height in pixels.
+ */
+internal fun gridOffsetOf(minute: Int, hourHeight: Float): Int =
+    ((minute - MINUTES_PER_HOUR).coerceAtLeast(0) * hourHeight / MINUTES_PER_HOUR).toInt()
+
 private const val AllDayRows = 3
 private const val NOW_UPDATE_MILLIS = 30_000L
 private const val MILLIS_PER_MINUTE = 60_000L
 private const val MILLIS_PER_DAY = 86_400_000L
 
 internal val HourHeight = 56.dp
-private val HourLabelWidth = 52.dp
+
+/** The column of the hours, which the day's weekday and number share in the day. */
+internal val HourLabelWidth = 64.dp
 private val HourLabelLift: Dp = (-8).dp
-private val DayNumberSize = 40.dp
 private val ColumnGap = 2.dp
 private val ChipIconMinWidth = 88.dp
 private val AllDayMaxHeight = 220.dp

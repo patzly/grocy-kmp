@@ -1,11 +1,10 @@
 package com.patrickzedler.grocy.feature.calendar.impl
 
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.calendar.CalendarRepository
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.settings.CalendarOptionsRepository
 import com.patrickzedler.grocy.core.data.util.RefreshController
 import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.forms.ChangeError
@@ -13,7 +12,6 @@ import com.patrickzedler.grocy.core.forms.changeErrorOf
 import com.patrickzedler.grocy.core.model.calendar.CalendarColorSetting
 import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
 import com.patrickzedler.grocy.core.model.calendar.CalendarView
-import com.patrickzedler.grocy.core.model.calendar.calendarDayAfter
 import com.patrickzedler.grocy.core.model.calendar.calendarMonthWeeks
 import com.patrickzedler.grocy.core.model.calendar.calendarWeekStart
 import com.patrickzedler.grocy.core.model.recipes.DAYS_PER_WEEK
@@ -51,11 +49,11 @@ internal data class CalendarDay(
 internal data class CalendarWeek(val number: Int, val days: List<CalendarDay>)
 
 /**
- * What the calendar shows: around [anchor], the day it stands on, in [chosenView] unless the user
- * chose none yet, then in what fits the window ([defaultCalendarView]).
+ * What the calendar shows: [view] around [anchor], the day it stands on. Each page of a view shows
+ * the period of a day of its own ([monthWeeks], [gridDays]), the list every day with events.
  */
 internal data class CalendarUiState(
-    val chosenView: CalendarView?,
+    val view: CalendarView,
     val anchor: Long,
     val today: Long,
     val firstDayOfWeek: Int,
@@ -63,24 +61,22 @@ internal data class CalendarUiState(
     val settings: UserSettings,
     val eventsByDay: Map<Long, List<CalendarEvent>>,
 ) {
-    private fun dayOf(epochDay: Long, isOutside: Boolean = false) = CalendarDay(
+    fun dayOf(epochDay: Long, isOutside: Boolean = false) = CalendarDay(
         epochDay = epochDay,
         isToday = epochDay == today,
         isOutside = isOutside,
         events = eventsByDay[epochDay].orEmpty(),
     )
 
-    val weekStart: Long
-        get() = calendarWeekStart(anchor, firstDayOfWeek)
+    fun weekStartOf(epochDay: Long): Long = calendarWeekStart(epochDay, firstDayOfWeek)
 
-    val weekNumber: Int
-        get() = weekOfYear(weekStart, firstDayOfWeek)
+    fun weekNumberOf(epochDay: Long): Int = weekOfYear(weekStartOf(epochDay), firstDayOfWeek)
 
-    /** The rows of the month [anchor] lies in, with the days of other months that fill them. */
-    fun monthWeeks(): List<CalendarWeek> {
-        val first = firstDayOfMonth(anchor)
-        val last = lastDayOfMonth(anchor)
-        return calendarMonthWeeks(anchor, firstDayOfWeek).map { start ->
+    /** The rows of the month [epochDay] lies in, with the days of other months that fill them. */
+    fun monthWeeks(epochDay: Long = anchor): List<CalendarWeek> {
+        val first = firstDayOfMonth(epochDay)
+        val last = lastDayOfMonth(epochDay)
+        return calendarMonthWeeks(epochDay, firstDayOfWeek).map { start ->
             CalendarWeek(
                 number = weekOfYear(start, firstDayOfWeek),
                 days = (0 until DAYS_PER_WEEK).map { offset ->
@@ -91,28 +87,24 @@ internal data class CalendarUiState(
         }
     }
 
-    /** The columns of the time grid of [view]. */
-    fun gridDays(view: CalendarView): List<CalendarDay> = when (view) {
-        CalendarView.WEEK -> (0 until DAYS_PER_WEEK).map { dayOf(weekStart + it) }
-        else -> listOf(dayOf(anchor))
+    /** The columns of the time grid of [view] around [epochDay]. */
+    fun gridDays(view: CalendarView, epochDay: Long = anchor): List<CalendarDay> = when (view) {
+        CalendarView.WEEK -> (0 until DAYS_PER_WEEK).map { dayOf(weekStartOf(epochDay) + it) }
+        else -> listOf(dayOf(epochDay))
     }
-
-    /** The schedule: every day from [anchor] on that has events. */
-    val scheduleDays: List<CalendarDay>
-        get() = eventsByDay.keys.filter { it >= anchor }.sorted().map { dayOf(it) }
 
     /** The colors of the features the server has, in the order of Grocy's dialog. */
     val colorSettings: List<CalendarColorSetting>
         get() = CalendarColorSetting.entries.filter { it.isAvailable(config) }
 }
 
-/** Grocy's view for the window: the day on small screens (below 768 pixels), else the month. */
-internal fun defaultCalendarView(width: Dp): CalendarView =
-    if (width < SmallScreenLimit) CalendarView.DAY else CalendarView.MONTH
-
 /** Whether [view] shows its days as columns over the hours. */
 internal val CalendarView.isTimeGrid: Boolean
     get() = this == CalendarView.DAY || this == CalendarView.WEEK
+
+/** Whether [view] pages through its periods; the list goes on by scrolling. */
+internal val CalendarView.isPaged: Boolean
+    get() = this != CalendarView.LIST
 
 /**
  * Where events of the [minutes] of a day stand in a time grid, each [chipHeight] high with the
@@ -137,15 +129,13 @@ internal fun chipTops(
     return tops.toList()
 }
 
-/** How far a sticky header at [offset] has to move down for a list with [padding] above it. */
-internal fun stickyShift(offset: Int, padding: Int): Int = (-offset).coerceIn(0, padding)
-
 /** The minute of the day of a time "HH:MM" of an event, null for none or an invalid one. */
 internal fun minuteOfTime(time: String?): Int? {
     val parts = time?.split(':') ?: return null
     val hour = parts.getOrNull(0)?.toIntOrNull() ?: return null
     val minute = parts.getOrNull(1)?.toIntOrNull() ?: return null
-    return (hour * MINUTES_PER_HOUR + minute).takeIf { it in 0 until MINUTES_PER_HOUR * HOURS_PER_DAY }
+    return (hour * MINUTES_PER_HOUR + minute)
+        .takeIf { it in 0 until MINUTES_PER_HOUR * HOURS_PER_DAY }
 }
 
 /** How many of [count] events a place for [limit] shows, keeping one row for "more". */
@@ -159,13 +149,15 @@ internal sealed interface CalendarEvents {
 }
 
 /**
- * Grocy's calendar: its events at once from the database, downloaded in the background. The color
- * settings save like Grocy's: each change on its own, online only. It opens on [initialDay] in
- * [initialView] if given, else on today in the window's view.
+ * Grocy's calendar: its events at once from the database, downloaded in the background, in the
+ * view the user chose last (kept by [options], the list without one). It opens on [initialDay] in
+ * [initialView] if given, e.g. from a widget, else on today. The color settings save like Grocy's:
+ * each change on its own, online only.
  */
 internal class CalendarViewModel(
     private val calendar: CalendarRepository,
     private val masterData: MasterDataRepository,
+    private val options: CalendarOptionsRepository,
     private val today: () -> Long = ::todayEpochDay,
     private val localeFirstDay: () -> Int = ::localeFirstDayOfWeek,
     computeDispatcher: CoroutineDispatcher = Dispatchers.Default,
@@ -174,7 +166,9 @@ internal class CalendarViewModel(
 ) : ViewModel() {
 
     private val anchor = MutableStateFlow(initialDay ?: today())
-    private val chosenView = MutableStateFlow(initialView)
+
+    // A view of the route counts for this screen only, a chosen one is kept for the next time
+    private val shownView = MutableStateFlow(initialView)
 
     private val refreshController = RefreshController(viewModelScope) { calendar.refresh() }
     val refresh: StateFlow<RefreshState> = refreshController.state
@@ -189,13 +183,14 @@ internal class CalendarViewModel(
 
     val state: StateFlow<CalendarUiState?> = combine(
         calendar.events,
-        masterData.serverConfig,
-        masterData.userSettings,
-        chosenView,
+        combine(masterData.serverConfig, masterData.userSettings, ::Pair),
+        combine(shownView, options.view) { shown, stored ->
+            shown ?: stored ?: CalendarView.Default
+        },
         anchor,
-    ) { events, config, settings, view, day ->
+    ) { events, (config, settings), view, day ->
         CalendarUiState(
-            chosenView = view,
+            view = view,
             anchor = day,
             today = today(),
             firstDayOfWeek = config.calendarFirstDayOfWeek ?: localeFirstDay(),
@@ -215,13 +210,15 @@ internal class CalendarViewModel(
 
     fun onErrorShown() = refreshController.onErrorShown()
 
+    /** Shows [view] and keeps it for the next time the calendar opens. */
     fun chooseView(view: CalendarView) {
-        chosenView.value = view
+        shownView.value = view
+        viewModelScope.launch { options.setView(view) }
     }
 
-    /** Grocy's "prev" and "next" of [view]. */
-    fun step(view: CalendarView, steps: Int) {
-        anchor.value = calendarDayAfter(view, anchor.value, steps)
+    /** The calendar stands on [epochDay], e.g. after paging to another period. */
+    fun showDay(epochDay: Long) {
+        anchor.value = epochDay
     }
 
     /** Grocy's "Today". */
@@ -229,10 +226,10 @@ internal class CalendarViewModel(
         anchor.value = today()
     }
 
-    /** Shows the day [epochDay] on its own, what a tap on a day does in the month or the year. */
+    /** Shows the day [epochDay] on its own, what a tap on a day of another view does. */
     fun openDay(epochDay: Long) {
         anchor.value = epochDay
-        chosenView.value = CalendarView.DAY
+        chooseView(CalendarView.DAY)
     }
 
     /** Grocy's "Share/Integrate calendar (iCal)": asks the server for the link. */
@@ -266,6 +263,3 @@ internal class CalendarViewModel(
 private const val STOP_TIMEOUT_MILLIS = 5_000L
 internal const val MINUTES_PER_HOUR = 60
 internal const val HOURS_PER_DAY = 24
-
-// Grocy's limit between the day and the month as first view
-private val SmallScreenLimit = 768.dp

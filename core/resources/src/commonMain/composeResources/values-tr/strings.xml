@@ -1350,7 +1350,8 @@
   <string name="calendar_view_month">Ay</string>
   <string name="calendar_view_week">Hafta</string>
   <string name="calendar_view_day">Gün</string>
-  <string name="calendar_view_schedule">Program</string>
+  <string name="calendar_view_list">Liste</string>
+  <string name="calendar_now">Şimdi</string>
   <string name="calendar_all_day">Tüm gün</string>
   <plurals name="calendar_more">
     <item quantity="one">%1$d daha</item>

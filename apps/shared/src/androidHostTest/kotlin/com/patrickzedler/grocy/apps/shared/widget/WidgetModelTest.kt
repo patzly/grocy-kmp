@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.apps.shared.widget
 
+import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
 import com.patrickzedler.grocy.core.model.calendar.CalendarEventKind
 import com.patrickzedler.grocy.core.model.tasks.Task
@@ -29,19 +30,18 @@ class WidgetModelTest {
             Task(4, "Overdue", dueDate = "2026-11-01"),
         )
 
-        val shown = widgetTasksOf(tasks, today, completing = setOf(2))
+        val shown = widgetTasksOf(tasks, today)
 
         assertEquals(listOf("Overdue", "Next week", "Someday"), shown.map { it.name })
         assertTrue(shown[0].isOverdue)
         assertFalse(shown[1].isOverdue)
-        assertTrue(shown[1].isCompleting)
     }
 
     @Test
     fun theTaskListShowsAtMostItsLimit() {
         val tasks = (1..5).map { Task(it, "Task $it") }
 
-        assertEquals(3, widgetTasksOf(tasks, today, emptySet(), limit = 3).size)
+        assertEquals(3, widgetTasksOf(tasks, today, limit = 3).size)
     }
 
     @Test
@@ -99,7 +99,8 @@ class WidgetModelTest {
     @Test
     fun aSteppedMonthHoldsForTheDayAndReturnsToTodaysAfterwards() {
         assertEquals(epochDayOf("2027-01-01"), shownMonthOf(offset = 2, steppedOn = today, today))
-        assertEquals(epochDayOf("2026-11-01"), shownMonthOf(offset = 2, steppedOn = today, today + 1))
+        val tomorrow = today + 1
+        assertEquals(epochDayOf("2026-11-01"), shownMonthOf(offset = 2, steppedOn = today, tomorrow))
         assertEquals(epochDayOf("2026-11-01"), shownMonthOf(offset = 0, steppedOn = null, today))
     }
 
@@ -115,6 +116,27 @@ class WidgetModelTest {
         assertEquals(2, shownMonthChips(count = 2, places = 2))
         assertEquals(1, shownMonthChips(count = 3, places = 2))
         assertEquals(0, shownMonthChips(count = 3, places = 0))
+    }
+
+    @Test
+    fun thePickerShowsTasksAndEventsOfEveryKindAroundToday() {
+        val names = SampleNames(
+            "Mow", "Seeds", "Water", "Descale", "Milk", "Vacuum", "Pasta", "Lunch", "Smoke",
+        )
+
+        val data = sampleWidgetData(today, names, AppearanceSettings())
+
+        assertTrue(data.isLoggedIn)
+        assertEquals(4, widgetTasksOf(data.tasks, today).size)
+        assertTrue(widgetTasksOf(data.tasks, today).first().isOverdue)
+        assertEquals(
+            CalendarEventKind.entries.toSet() - setOf(
+                CalendarEventKind.MEAL_PLAN_NOTE,
+                CalendarEventKind.MEAL_PLAN_PRODUCT,
+            ),
+            data.events.map { it.kind }.toSet(),
+        )
+        assertTrue(scheduleRowsOf(data.events, today)[1] is ScheduleRow.Event)
     }
 
     @Test

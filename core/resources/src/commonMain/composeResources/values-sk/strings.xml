@@ -1453,7 +1453,8 @@
   <string name="calendar_view_month">Mesiac</string>
   <string name="calendar_view_week">Týždeň</string>
   <string name="calendar_view_day">Deň</string>
-  <string name="calendar_view_schedule">Plán</string>
+  <string name="calendar_view_list">Zoznam</string>
+  <string name="calendar_now">Teraz</string>
   <string name="calendar_all_day">Celý deň</string>
   <plurals name="calendar_more">
     <item quantity="one">ďalší %1$d</item>

@@ -19,6 +19,7 @@ import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MenuAnchorPosition
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.MenuItemShapes
+import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -44,13 +45,15 @@ import org.jetbrains.compose.resources.stringResource
 
 /**
  * An item of an overflow menu; a disabled one shows that its action is not possible now. A
- * [checked] one turns an option on and off (a check mark while on) and keeps the menu open.
+ * [checked] one turns an option on and off (a check mark while on) and keeps the menu open. A
+ * [selected] one is one of the menu's choices, the current one marked; choosing closes the menu.
  */
 @Immutable
 class AppBarMenuItem(
     val text: String,
     val enabled: Boolean = true,
     val checked: Boolean? = null,
+    val selected: Boolean? = null,
     val onClick: () -> Unit,
 )
 
@@ -201,12 +204,17 @@ private fun NarrowOverflowMenu(
     }
 }
 
-/** The expressive menu of [AppBarOverflowMenu], for a button of another kind. */
+/**
+ * The expressive menu of [AppBarOverflowMenu], for a button of another kind: below it, or
+ * [above] it for a button near the bottom edge, [offset] away from the button's bounds.
+ */
 @Composable
 fun OverflowMenuPopup(
     expanded: Boolean,
     groups: List<List<AppBarMenuItem>>,
     onDismissRequest: () -> Unit,
+    above: Boolean = false,
+    offset: DpOffset = DpOffset(x = (-8).dp, y = 0.dp),
 ) {
     val haptic = LocalHapticFeedback.current
 
@@ -214,8 +222,12 @@ fun OverflowMenuPopup(
         expanded = expanded,
         onDismissRequest = onDismissRequest,
         popupPositionProvider = MenuDefaults.rememberDropdownMenuPopupPositionProvider(
-            dropdownMenuAnchorPosition = MenuAnchorPosition.Below,
-            offset = DpOffset(x = (-8).dp, y = 0.dp),
+            dropdownMenuAnchorPosition = if (above) {
+                MenuAnchorPosition.Above
+            } else {
+                MenuAnchorPosition.Below
+            },
+            offset = offset,
         ),
     ) {
         // The popup inherits the touch target size of where it opens: the trailing slot of a list
@@ -246,7 +258,32 @@ private fun MenuGroups(
                     groupCount = groups.size,
                 )
                 val checked = item.checked
-                if (checked != null) {
+                val selected = item.selected
+                if (selected != null) {
+                    SelectableDropdownMenuItem(
+                        selected = selected,
+                        onClick = {
+                            haptic.confirm()
+                            onDismissRequest()
+                            item.onClick()
+                        },
+                        text = { Text(item.text) },
+                        shapes = MenuItemShapes(
+                            shape = shape,
+                            selectedShape = MenuDefaults.itemShape(index, items.size)
+                                .selectedShape,
+                        ),
+                        modifier = Modifier.clickCursor(item.enabled),
+                        enabled = item.enabled,
+                        selectedLeadingIcon = {
+                            Icon(
+                                painter = painterResource(Res.drawable.ic_rounded_check),
+                                contentDescription = null,
+                                modifier = Modifier.size(MenuDefaults.LeadingIconSize),
+                            )
+                        },
+                    )
+                } else if (checked != null) {
                     CheckableDropdownMenuItem(
                         checked = checked,
                         onCheckedChange = { isChecked ->

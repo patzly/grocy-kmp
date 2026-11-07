@@ -41,7 +41,7 @@ internal object WidgetLinks {
         "$CALENDAR/${view.name}/${isoDateOf(epochDay)}"
 
     fun event(event: CalendarEvent): String =
-        "$EVENT/${event.kind.name}/${isoDateOf(event.epochDay)}/${event.recipeId ?: ""}"
+        "$EVENT/${event.kind.name}/${isoDateOf(event.epochDay)}/${event.objectId ?: ""}"
 
     /** The screen [link] opens, null for anything a widget does not create. */
     fun routeOfLink(link: String): Route? {
@@ -71,8 +71,8 @@ internal object WidgetLinks {
         if (parts.size != 4) return null
         val kind = CalendarEventKind.entries.find { it.name == parts[1] } ?: return null
         val day = epochDayOf(parts[2]) ?: return null
-        val recipeId = parts[3].ifEmpty { null }?.let { it.toIntOrNull() ?: return null }
-        return routeOf(CalendarEvent(kind, name = "", epochDay = day, recipeId = recipeId))
+        val objectId = parts[3].ifEmpty { null }?.let { it.toIntOrNull() ?: return null }
+        return routeOf(CalendarEvent(kind, name = "", epochDay = day, objectId = objectId))
     }
 
     private const val TASKS = "tasks"

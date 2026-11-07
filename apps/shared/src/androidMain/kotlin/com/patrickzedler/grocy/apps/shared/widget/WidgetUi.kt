@@ -64,7 +64,6 @@ import com.patrickzedler.grocy.core.resources.calendar_previous
 import com.patrickzedler.grocy.core.resources.calendar_product_due
 import com.patrickzedler.grocy.core.resources.calendar_task_due
 import com.patrickzedler.grocy.core.resources.calendar_title
-import com.patrickzedler.grocy.core.resources.task_complete
 import com.patrickzedler.grocy.core.resources.task_create
 import com.patrickzedler.grocy.core.resources.tasks_title
 import com.patrickzedler.grocy.core.resources.widget_log_in
@@ -100,9 +99,42 @@ internal abstract class GrocyWidget : GlanceAppWidget() {
         }
     }
 
+    /**
+     * Android 15's picker shows the widget itself with [sampleWidgetData] (published by
+     * [WidgetUpdates]), so it looks exactly like it will in the app's colors and language.
+     */
+    override suspend fun providePreview(context: Context, widgetCategory: Int) {
+        val localized = AndroidAppLanguageStore.wrap(context)
+        val graph = (context.applicationContext as AppGraphOwner).graph
+        val appearance = graph.widgetDependencies.appearance.first()
+        val data = sampleWidgetData(todayEpochDay(), sampleNamesOf(localized), appearance)
+        val colors = widgetColorsOf(context, appearance)
+        val texts = widgetTexts()
+        provideContent { PreviewContent(data, colors, texts) }
+    }
+
     @Composable
     protected abstract fun Content(data: WidgetData, colors: WidgetColors, texts: WidgetTexts)
+
+    /** What the picker shows, the content without the state of a placed widget. */
+    @Composable
+    protected open fun PreviewContent(data: WidgetData, colors: WidgetColors, texts: WidgetTexts) {
+        Content(data, colors, texts)
+    }
 }
+
+/** The picker's names in the app's language, the same its sketches of older Androids show. */
+private fun sampleNamesOf(context: Context) = SampleNames(
+    mowLawn = context.getString(R.string.widget_sample_mow_lawn),
+    buySeeds = context.getString(R.string.widget_sample_buy_seeds),
+    waterPlants = context.getString(R.string.widget_sample_water_plants),
+    descale = context.getString(R.string.widget_sample_descale),
+    milk = context.getString(R.string.widget_sample_milk),
+    vacuum = context.getString(R.string.widget_sample_vacuum),
+    spaghetti = context.getString(R.string.widget_sample_spaghetti),
+    lunch = context.getString(R.string.widget_sample_lunch),
+    smokeDetector = context.getString(R.string.widget_sample_smoke_detector),
+)
 
 private fun widgetColorsOf(context: Context, appearance: AppearanceSettings): WidgetColors {
     val (light, dark) = appColorSchemes(context, appearance)
@@ -119,7 +151,6 @@ internal class WidgetTexts(
     val nothingToday: String,
     val previous: String,
     val next: String,
-    val complete: String,
     val createTask: String,
     private val kinds: Map<CalendarEventKind, String>,
     private val assignedTo: String,
@@ -143,7 +174,6 @@ private suspend fun widgetTexts() = WidgetTexts(
     nothingToday = getString(Res.string.calendar_nothing_today),
     previous = getString(Res.string.calendar_previous),
     next = getString(Res.string.calendar_next),
-    complete = getString(Res.string.task_complete),
     createTask = getString(Res.string.task_create),
     kinds = mapOf(
         CalendarEventKind.PRODUCT to getString(Res.string.calendar_product_due),
@@ -225,6 +255,7 @@ internal fun WidgetHeader(
     onTitleClick: Action,
     addLabel: String?,
     onAddClick: Action?,
+    start: Dp = WidgetInset,
     trailing: @Composable () -> Unit = {},
 ) {
     Row(
@@ -234,7 +265,7 @@ internal fun WidgetHeader(
         Box(
             contentAlignment = Alignment.CenterStart,
             modifier = GlanceModifier.defaultWeight().height(HeaderHeight)
-                .padding(start = 20.dp, end = 4.dp)
+                .padding(start = start, end = 4.dp)
                 .clickable(onTitleClick),
         ) {
             Text(
@@ -292,12 +323,12 @@ internal fun HeaderIconButton(
 /** A message in a tile, e.g. Google's "Nothing scheduled". */
 @Composable
 internal fun MessageTile(text: String, colors: WidgetColors, onClick: Action) {
-    Box(GlanceModifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp)) {
+    Box(GlanceModifier.fillMaxWidth().padding(horizontal = ChipMargin, vertical = 4.dp)) {
         Box(
             contentAlignment = Alignment.CenterStart,
             modifier = GlanceModifier.fillMaxWidth()
                 .rounded(colors.tile, WidgetShape.MEDIUM)
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .padding(horizontal = ChipPadding, vertical = 12.dp)
                 .clickable(onClick),
         ) {
             Text(
@@ -336,6 +367,14 @@ internal val TitleFont = FontFamily("google-sans")
 internal val BodyFont = FontFamily("google-sans-text")
 
 internal val HeaderHeight = 56.dp
+
+// A chip's distance from the widget's edge and its text's from the chip's, so the texts of chips
+// and headings start in one line like in Google's calendar widget
+internal val ChipMargin = 12.dp
+internal val ChipPadding = 10.dp
+
+/** Where texts start from the widget's edge: in line with the text of chips. */
+internal val WidgetInset = ChipMargin + ChipPadding
 
 internal val CalendarEventKind.icon: Int
     @DrawableRes get() = when (this) {

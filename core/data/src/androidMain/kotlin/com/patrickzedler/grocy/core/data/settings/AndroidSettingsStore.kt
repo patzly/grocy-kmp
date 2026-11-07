@@ -11,6 +11,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewOptions
 import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalOptions
+import com.patrickzedler.grocy.core.model.calendar.CalendarView
 import com.patrickzedler.grocy.core.model.equipment.EquipmentOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
@@ -219,6 +220,14 @@ class AndroidSettingsStore(
         dataStore.edit { it[EQUIPMENT_OPTIONS] = options.stored() }
     }
 
+    override val calendarView: Flow<CalendarView> = preferences
+        .map { CalendarView.of(it[CALENDAR_VIEW]) }
+        .distinctUntilChanged()
+
+    override suspend fun setCalendarView(view: CalendarView) {
+        dataStore.edit { it[CALENDAR_VIEW] = view.stored() }
+    }
+
     override val recipesOptions: Flow<RecipesOptions> = preferences
         .map {
             RecipesOptions.of(
@@ -276,6 +285,7 @@ class AndroidSettingsStore(
         val BATTERIES_OVERVIEW_OPTIONS = stringPreferencesKey("batteries_overview_options")
         val BATTERIES_JOURNAL_OPTIONS = stringPreferencesKey("batteries_journal_options")
         val EQUIPMENT_OPTIONS = stringPreferencesKey("equipment_options")
+        val CALENDAR_VIEW = stringPreferencesKey("calendar_view")
         val NOTIFICATION_SETTINGS = stringPreferencesKey("notification_settings")
         val NOTIFICATION_DELIVERIES = stringPreferencesKey("notification_deliveries")
     }

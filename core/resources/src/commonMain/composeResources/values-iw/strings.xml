@@ -1402,7 +1402,8 @@
   <string name="calendar_view_month">חודש</string>
   <string name="calendar_view_week">שבוע</string>
   <string name="calendar_view_day">יום</string>
-  <string name="calendar_view_schedule">לוח זמנים</string>
+  <string name="calendar_view_list">רשימה</string>
+  <string name="calendar_now">עכשיו</string>
   <string name="calendar_all_day">כל היום</string>
   <plurals name="calendar_more">
     <item quantity="one">עוד %1$d</item>

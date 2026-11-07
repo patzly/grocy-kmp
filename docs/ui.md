@@ -41,6 +41,12 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
   buttons: the group lines its items up at the top, so the smaller indicator sat higher.
 - Overflow menus: `AppBarMenuItem(checked = ...)` is a checkable item (check mark while on, the
   menu stays open, `ToggleOn`/`ToggleOff` haptics), e.g. the shopping mode's auto sync.
+  `AppBarMenuItem(selected = ...)` is one of several choices, the current one selected
+  (Material's `SelectableDropdownMenuItem`), choosing closes the menu, e.g. the calendar's views.
+  `OverflowMenuPopup(above = true)` opens a menu above its button, e.g. in a floating toolbar.
+- `SegmentedListScreen(body = ...)` replaces the list for screens that lay out and scroll
+  themselves (parts that stay, pages sideways, e.g. the calendar); `ScreenBodyPadding` gives the
+  bar's height and the padding a list would have.
   `ListItemMenuButton` is a narrow standard icon button of its own with such a menu, the choices of
   one action, e.g. the meal plan day's "Add" (recipe, product, note, copy the day).
 - Time fields like Grocy's time inputs ("HH:MM") get `TimePickerButton` (`core:forms`,

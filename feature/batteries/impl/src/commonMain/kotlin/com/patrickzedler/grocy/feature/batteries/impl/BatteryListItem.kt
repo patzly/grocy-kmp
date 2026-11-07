@@ -45,7 +45,7 @@ import com.patrickzedler.grocy.core.resources.battery_used_in
 import com.patrickzedler.grocy.core.resources.grocycode_battery
 import com.patrickzedler.grocy.core.resources.grocycode_download_of
 import com.patrickzedler.grocy.core.resources.grocycode_print_of
-import com.patrickzedler.grocy.core.resources.ic_rounded_battery_charging_full
+import com.patrickzedler.grocy.core.resources.ic_rounded_battery_charging_90
 import com.patrickzedler.grocy.core.resources.ic_rounded_build
 import com.patrickzedler.grocy.core.resources.ic_rounded_dataset
 import com.patrickzedler.grocy.core.resources.ic_rounded_event
@@ -90,7 +90,7 @@ internal fun BatteryListItem(
 ) {
     val battery = row.battery
     val trackText = stringResource(Res.string.batteries_track)
-    val trackIcon = painterResource(Res.drawable.ic_rounded_battery_charging_full)
+    val trackIcon = painterResource(Res.drawable.ic_rounded_battery_charging_90)
 
     SwipeActionBox(
         startAction = SwipeAction(icon = trackIcon) { actions.onTrack(battery) },

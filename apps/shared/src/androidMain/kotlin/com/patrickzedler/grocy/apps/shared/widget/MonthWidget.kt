@@ -2,11 +2,13 @@ package com.patrickzedler.grocy.apps.shared.widget
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
 import androidx.glance.GlanceModifier
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.SizeMode
 import androidx.glance.LocalSize
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.clickable
@@ -35,6 +37,7 @@ import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
 import com.patrickzedler.grocy.core.model.calendar.CalendarView
 import com.patrickzedler.grocy.core.model.recipes.DAYS_PER_WEEK
 import com.patrickzedler.grocy.core.model.text.dayOfMonthOf
+import com.patrickzedler.grocy.core.model.text.firstDayOfMonth
 import com.patrickzedler.grocy.core.model.text.localeFirstDayOfWeek
 
 /**
@@ -44,21 +47,34 @@ import com.patrickzedler.grocy.core.model.text.localeFirstDayOfWeek
  */
 internal class MonthWidget : GrocyWidget() {
 
+    override val previewSizeMode = SizeMode.Responsive(setOf(DpSize(330.dp, 330.dp)))
+
     @Composable
     override fun Content(data: WidgetData, colors: WidgetColors, texts: WidgetTexts) {
-        WidgetSurface(colors) {
-            val message = unavailableText(data, texts, isAvailable = data.config.calendar)
-            if (message != null) {
-                WidgetMessage(texts.calendar, message, colors)
-            } else {
-                val state = currentState<Preferences>()
-                val month = shownMonthOf(
-                    offset = state[MonthOffsetKey] ?: 0,
-                    steppedOn = state[SteppedOnKey],
-                    today = data.today,
-                )
-                Month(month, data, colors, texts)
-            }
+        val state = currentState<Preferences>()
+        val month = shownMonthOf(
+            offset = state[MonthOffsetKey] ?: 0,
+            steppedOn = state[SteppedOnKey],
+            today = data.today,
+        )
+        MonthContent(month, data, colors, texts)
+    }
+
+    // The picker's widget has no state of a placed one, it shows today's month
+    @Composable
+    override fun PreviewContent(data: WidgetData, colors: WidgetColors, texts: WidgetTexts) {
+        MonthContent(firstDayOfMonth(data.today), data, colors, texts)
+    }
+}
+
+@Composable
+private fun MonthContent(month: Long, data: WidgetData, colors: WidgetColors, texts: WidgetTexts) {
+    WidgetSurface(colors) {
+        val message = unavailableText(data, texts, isAvailable = data.config.calendar)
+        if (message != null) {
+            WidgetMessage(texts.calendar, message, colors)
+        } else {
+            Month(month, data, colors, texts)
         }
     }
 }

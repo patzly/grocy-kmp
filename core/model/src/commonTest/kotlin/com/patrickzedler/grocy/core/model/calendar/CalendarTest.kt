@@ -40,7 +40,7 @@ class CalendarTest {
         )
 
         assertEquals(
-            listOf(CalendarEvent(CalendarEventKind.PRODUCT, "Milk", epochDay)),
+            listOf(CalendarEvent(CalendarEventKind.PRODUCT, "Milk", epochDay, objectId = 1)),
             calendarEventsOf(data),
         )
     }
@@ -94,13 +94,14 @@ class CalendarTest {
 
         assertEquals(
             listOf(
-                CalendarEvent(CalendarEventKind.CHORE, "Mop", epochDay),
+                CalendarEvent(CalendarEventKind.CHORE, "Mop", epochDay, objectId = 2),
                 CalendarEvent(
                     CalendarEventKind.CHORE,
                     "Vacuum",
                     epochDay,
                     time = "18:30",
                     assignedTo = "Ann",
+                    objectId = 1,
                 ),
             ),
             calendarEventsOf(data),
@@ -145,7 +146,15 @@ class CalendarTest {
         )
 
         assertEquals(
-            listOf(CalendarEvent(CalendarEventKind.BATTERY, "Remote", epochDay, time = "08:00")),
+            listOf(
+                CalendarEvent(
+                    CalendarEventKind.BATTERY,
+                    "Remote",
+                    epochDay,
+                    time = "08:00",
+                    objectId = 1,
+                ),
+            ),
             calendarEventsOf(data),
         )
     }
@@ -172,14 +181,20 @@ class CalendarTest {
         assertEquals(
             listOf(
                 CalendarEvent(CalendarEventKind.MEAL_PLAN_NOTE, "Eat out", epochDay),
-                CalendarEvent(CalendarEventKind.MEAL_PLAN_PRODUCT, "Apple", epochDay, section = "Snack"),
+                CalendarEvent(
+                    CalendarEventKind.MEAL_PLAN_PRODUCT,
+                    "Apple",
+                    epochDay,
+                    section = "Snack",
+                    objectId = 1,
+                ),
                 CalendarEvent(
                     CalendarEventKind.MEAL_PLAN_RECIPE,
                     "Soup",
                     epochDay,
                     time = "18:00",
                     section = "Dinner",
-                    recipeId = 5,
+                    objectId = 5,
                 ),
             ),
             calendarEventsOf(data),
@@ -239,8 +254,26 @@ class CalendarTest {
         assertEquals("2026-12-04", after(CalendarView.MONTH, 1))
         assertEquals("2026-10-04", after(CalendarView.MONTH, -1))
         assertEquals("2026-11-11", after(CalendarView.WEEK, 1))
-        assertEquals("2026-10-28", after(CalendarView.SCHEDULE, -1))
+        assertEquals("2026-10-28", after(CalendarView.LIST, -1))
         assertEquals("2026-11-05", after(CalendarView.DAY, 1))
+    }
+
+    @Test
+    fun pagesCountThePeriodsBetweenTwoDays() {
+        val target = epochDayOf("2027-01-02")!!
+
+        assertEquals(59, calendarStepsBetween(CalendarView.DAY, epochDay, target, 1))
+        assertEquals(8, calendarStepsBetween(CalendarView.WEEK, epochDay, target, 1))
+        assertEquals(2, calendarStepsBetween(CalendarView.MONTH, epochDay, target, 1))
+        assertEquals(-2, calendarStepsBetween(CalendarView.MONTH, target, epochDay, 1))
+    }
+
+    @Test
+    fun theStoredViewIsReadBackAndTheListIsTheDefault() {
+        assertEquals(CalendarView.WEEK, CalendarView.of("WEEK"))
+        assertEquals(CalendarView.LIST, CalendarView.of(null))
+        assertEquals(CalendarView.LIST, CalendarView.of("YEAR"))
+        assertEquals("MONTH", CalendarView.MONTH.stored())
     }
 
     @Test

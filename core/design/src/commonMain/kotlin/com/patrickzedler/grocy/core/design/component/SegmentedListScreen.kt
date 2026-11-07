@@ -109,6 +109,9 @@ import org.jetbrains.compose.resources.stringResource
  * [secondContent] is a second list beside [content] that scrolls on its own
  * ([secondListState]) where the screen is as wide as Material's expanded width class; on
  * narrower screens it follows [content] in the same list.
+ * [body] replaces the list for screens that lay out and scroll themselves, e.g. parts that stay
+ * while others scroll or page sideways; it gets the bar's height and the padding a list would
+ * have ([ScreenBodyPadding]).
  */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -131,7 +134,8 @@ fun SegmentedListScreen(
     onRefresh: (() -> Unit)? = null,
     secondListState: LazyListState = rememberLazyListState(),
     secondContent: (LazyListScope.() -> Unit)? = null,
-    content: LazyListScope.() -> Unit,
+    body: (@Composable (ScreenBodyPadding) -> Unit)? = null,
+    content: LazyListScope.() -> Unit = {},
 ) {
     val shownPane = shownPane(pane, LocalShowsPanes.current)
     val isRefreshable = onRefresh != null
@@ -447,6 +451,13 @@ fun SegmentedListScreen(
                 }
                 val horizontal = WindowInsetsSides.Horizontal
                 when {
+                    body != null -> Box(
+                        Modifier
+                            .fillMaxSize()
+                            .consumeWindowInsets(padding),
+                    ) {
+                        body(ScreenBodyPadding(barPadding, contentPadding))
+                    }
                     secondContent == null ->
                         ScreenList(listState, horizontal, Modifier.fillMaxSize(), content)
                     showsSecondColumn(maxWidth) -> Row(Modifier.fillMaxSize()) {
@@ -465,6 +476,14 @@ fun SegmentedListScreen(
         }
     }
 }
+
+/**
+ * Where the [SegmentedListScreen.body] of a screen lies: [top] is the app bar's height above it,
+ * [content] the padding a list of the screen would have (below the bar, above the navigation bar
+ * and floating toolbar), for the parts that scroll.
+ */
+@Immutable
+class ScreenBodyPadding(val top: Dp, val content: PaddingValues)
 
 /**
  * A button of a top app bar beside the overflow menu: [content] puts the modifier on its

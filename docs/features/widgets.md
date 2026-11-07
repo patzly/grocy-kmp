@@ -5,19 +5,30 @@ Home screen widgets of the Android phone apps, built with Glance (`apps/shared`,
 widgets, whose look the project owner chose, with Grocy's data and the app's colors.
 
 - Task list (`TaskListWidget`): Grocy's tasks to do by due date, those without one last
-  (`widgetTasksOf`), the date with a clock, in the error color when overdue. The circle is Grocy's
-  "Mark task as completed" (`CompleteTaskAction`, online only like in the app: it shows checked
-  while the server completes it, a failure shows a toast); a tap on the task opens its form, on the
-  title the tasks page, "+" a new task. Google's list dropdown has no counterpart and is left out.
+  (`widgetTasksOf`), the date with a clock, in the error color when overdue; no circles, in line
+  with the title (the project owner's choice: a list of tasks needs no marks). A tap on the task
+  opens its form, on the title the tasks page, "+" a new task. Google's list dropdown has no
+  counterpart and is left out.
 - Calendar month view (`MonthWidget`): the month like the app's (`monthCellsOf`, the weeks start at
   `CALENDAR_FIRST_DAY_OF_WEEK`), as many one line chips per day as fit (`monthChipPlaces`), dots for
   the rest; an icon where a day is wide enough. Previous and next step through the months
   (`MonthStepAction`, Glance's state of the widget), for the rest of the day (`shownMonthOf`). A tap
   on a day opens the calendar's day, on the title its month.
-- Calendar schedule (`ScheduleWidget`): today, also without events ("Nothing due today"), then
-  every day with events (`scheduleRowsOf`), each event like a task of Google's widget with time
-  and section below. A tap on an event goes where Grocy links it (`routeOf` of the calendar), on a
-  day to the calendar's schedule. Narrow it writes the date short like Google ("5 Thu").
+- Calendar list (`ScheduleWidget`, the class keeps its first name because the system knows placed
+  widgets by it): today, also without events ("Nothing due today"), then every day with events
+  (`scheduleRowsOf`), each event like a task of Google's widget with time and section below. Like
+  Google's widget the dates start exactly where the chips' texts do (`ChipMargin` + `ChipPadding`
+  = `WidgetInset`), so do the titles and tasks of all widgets. A tap on an event opens what it is
+  about (`routeOf` of the calendar), on a day the calendar's list. Narrow it writes the date short
+  like Google ("5 Thu").
+- Previews: from Android 15 on the picker shows the widgets themselves (`providePreview`, Glance's
+  generated previews) with `sampleWidgetData`: tasks and events of every kind around today with
+  Grocy's colors, the names translated Android resources (`widget_sample_*`), in the app's colors
+  and language. `WidgetUpdates` publishes them at start when the app's version, language or
+  appearance changed since (the system limits how often). Android 12 to 14 show the layouts
+  `widget_preview_*` instead: the same with those names in the wallpaper's colors.
+- Scrollbars stay the launcher's: a widget's list is the system's view, whose scrollbar no app can
+  shape.
 - Without a login or the server's feature (`FEATURE_FLAG_TASKS`, `_CALENDAR`) they say so and open
   the app. All texts come from `core:resources` (`WidgetTexts`, read before drawing); the picker's
   names and descriptions are Android resources of `apps/shared` in every language.
@@ -57,6 +68,6 @@ restart):
 
 ## Testing
 
-`WidgetModelTest` (tasks, schedule, month, stepping, places, midnight, manifest),
+`WidgetModelTest` (tasks, list, month, stepping, places, samples, midnight, manifest),
 `WidgetColorsTest`, `WidgetLinksTest`, `CalendarRepositoryTest` (refresh only on changes). How they
 look and behave on a launcher needs a device.

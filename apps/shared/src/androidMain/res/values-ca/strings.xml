@@ -4,6 +4,18 @@
   <string name="widget_tasks_description">Les tasques pendents, completades amb un toc</string>
   <string name="widget_month_label">Vista mensual del calendari</string>
   <string name="widget_month_description">El mes amb el que venç cada dia</string>
-  <string name="widget_schedule_label">Agenda del calendari</string>
+  <string name="widget_schedule_label">Llista del calendari</string>
   <string name="widget_schedule_description">El que venç a partir d\'avui</string>
+  <string name="widget_sample_mow_lawn">Tallar la gespa</string>
+  <string name="widget_sample_buy_seeds">Comprar llavors</string>
+  <string name="widget_sample_water_plants">Regar les plantes</string>
+  <string name="widget_sample_descale">Descalcificar la cafetera</string>
+  <string name="widget_sample_milk">Llet</string>
+  <string name="widget_sample_vacuum">Aspirar la sala d\'estar</string>
+  <string name="widget_sample_spaghetti">Espaguetis a la bolonyesa</string>
+  <string name="widget_sample_lunch">Dinar</string>
+  <string name="widget_sample_smoke_detector">Detector de fum</string>
+  <string name="widget_sample_month">Novembre</string>
+  <string name="widget_preview_tasks">Tasques</string>
+  <string name="widget_preview_calendar">Calendari</string>
 </resources>

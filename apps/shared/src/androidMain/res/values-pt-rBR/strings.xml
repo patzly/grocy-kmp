@@ -4,6 +4,18 @@
   <string name="widget_tasks_description">Suas atividades a fazer, concluídas com um toque</string>
   <string name="widget_month_label">Agenda em visão mensal</string>
   <string name="widget_month_description">O mês com o que vence em cada dia</string>
-  <string name="widget_schedule_label">Programação da agenda</string>
+  <string name="widget_schedule_label">Lista da agenda</string>
   <string name="widget_schedule_description">O que vence a partir de hoje</string>
+  <string name="widget_sample_mow_lawn">Cortar a grama</string>
+  <string name="widget_sample_buy_seeds">Comprar sementes</string>
+  <string name="widget_sample_water_plants">Regar as plantas</string>
+  <string name="widget_sample_descale">Descalcificar a cafeteira</string>
+  <string name="widget_sample_milk">Leite</string>
+  <string name="widget_sample_vacuum">Aspirar a sala</string>
+  <string name="widget_sample_spaghetti">Espaguete à bolonhesa</string>
+  <string name="widget_sample_lunch">Almoço</string>
+  <string name="widget_sample_smoke_detector">Detector de fumaça</string>
+  <string name="widget_sample_month">Novembro</string>
+  <string name="widget_preview_tasks">Atividades</string>
+  <string name="widget_preview_calendar">Agenda</string>
 </resources>

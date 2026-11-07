@@ -1402,7 +1402,8 @@
   <string name="calendar_view_month">Mês</string>
   <string name="calendar_view_week">Semana</string>
   <string name="calendar_view_day">Dia</string>
-  <string name="calendar_view_schedule">Programação</string>
+  <string name="calendar_view_list">Lista</string>
+  <string name="calendar_now">Agora</string>
   <string name="calendar_all_day">Dia inteiro</string>
   <plurals name="calendar_more">
     <item quantity="one">mais %1$d</item>

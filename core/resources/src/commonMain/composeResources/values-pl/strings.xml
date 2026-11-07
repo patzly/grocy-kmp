@@ -1453,7 +1453,8 @@
   <string name="calendar_view_month">Miesiąc</string>
   <string name="calendar_view_week">Tydzień</string>
   <string name="calendar_view_day">Dzień</string>
-  <string name="calendar_view_schedule">Harmonogram</string>
+  <string name="calendar_view_list">Lista</string>
+  <string name="calendar_now">Teraz</string>
   <string name="calendar_all_day">Cały dzień</string>
   <plurals name="calendar_more">
     <item quantity="one">%1$d więcej</item>

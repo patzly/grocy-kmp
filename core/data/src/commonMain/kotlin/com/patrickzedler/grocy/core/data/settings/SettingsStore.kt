@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.data.settings
 
 import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewOptions
 import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalOptions
+import com.patrickzedler.grocy.core.model.calendar.CalendarView
 import com.patrickzedler.grocy.core.model.equipment.EquipmentOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
@@ -108,4 +109,9 @@ interface SettingsStore {
     val equipmentOptions: Flow<EquipmentOptions>
 
     suspend fun setEquipmentOptions(options: EquipmentOptions)
+
+    /** The calendar's view the user chose last. */
+    val calendarView: Flow<CalendarView>
+
+    suspend fun setCalendarView(view: CalendarView)
 }

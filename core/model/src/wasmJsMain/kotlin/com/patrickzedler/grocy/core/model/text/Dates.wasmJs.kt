@@ -22,6 +22,12 @@ actual fun formatWeekdayShort(epochDay: Long): String =
 actual fun formatMonthYear(epochDay: Long): String =
     formatMonthYearInBrowser(epochDay.toDouble() * MILLIS_PER_DAY)
 
+actual fun formatMonthYearShort(epochDay: Long): String =
+    formatMonthYearShortInBrowser(epochDay.toDouble() * MILLIS_PER_DAY)
+
+actual fun formatDayRange(start: Long, end: Long): String =
+    formatDayRangeInBrowser(start.toDouble() * MILLIS_PER_DAY, end.toDouble() * MILLIS_PER_DAY)
+
 actual fun formatDayAndMonth(epochDay: Long): String =
     formatDayAndMonthInBrowser(epochDay.toDouble() * MILLIS_PER_DAY)
 
@@ -101,6 +107,22 @@ private external fun formatWeekdayShortInBrowser(millis: Double): String
     )""",
 )
 private external fun formatMonthYearInBrowser(millis: Double): String
+
+@JsFun(
+    """(millis) => new Date(millis).toLocaleDateString(
+        globalThis.navigator?.language,
+        { timeZone: 'UTC', year: 'numeric', month: 'short' }
+    )""",
+)
+private external fun formatMonthYearShortInBrowser(millis: Double): String
+
+@JsFun(
+    """(start, end) => new Intl.DateTimeFormat(
+        globalThis.navigator?.language,
+        { timeZone: 'UTC', month: 'short', day: 'numeric' }
+    ).formatRange(new Date(start), new Date(end))""",
+)
+private external fun formatDayRangeInBrowser(start: Double, end: Double): String
 
 @JsFun(
     """(start, end) => new Intl.DateTimeFormat(

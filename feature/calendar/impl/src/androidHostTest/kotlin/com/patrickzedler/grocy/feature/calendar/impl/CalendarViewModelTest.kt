@@ -7,6 +7,8 @@ import com.patrickzedler.grocy.core.model.calendar.CalendarEventKind
 import com.patrickzedler.grocy.core.model.calendar.CalendarView
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.model.text.isoDateOf
+import com.patrickzedler.grocy.core.data.settings.CalendarOptionsRepository
+import com.patrickzedler.grocy.core.testing.FakeSettingsStore
 import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
 import io.ktor.http.HttpMethod
 import kotlin.test.AfterTest
@@ -20,7 +22,9 @@ import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -32,6 +36,7 @@ class CalendarViewModelTest {
     private val dispatcher = StandardTestDispatcher()
     private val environment = RepositoryTestEnvironment(dispatcher)
     private val today = epochDayOf("2026-11-04")!!
+    private val settingsStore = FakeSettingsStore()
 
     @BeforeTest
     fun setUp() {
@@ -51,6 +56,10 @@ class CalendarViewModelTest {
         val viewModel = CalendarViewModel(
             calendar = environment.calendarRepository,
             masterData = environment.repository,
+            options = CalendarOptionsRepository(
+                settingsStore,
+                backgroundScope + UnconfinedTestDispatcher(testScheduler),
+            ),
             today = { today },
             localeFirstDay = { 1 },
             computeDispatcher = dispatcher,
@@ -63,45 +72,40 @@ class CalendarViewModelTest {
     }
 
     @Test
-    fun aWidgetOpensItOnItsDayInItsView() = runTest(dispatcher) {
+    fun aWidgetOpensItOnItsDayInItsViewWithoutKeepingIt() = runTest(dispatcher) {
         val day = epochDayOf("2026-12-24")!!
 
         val state = assertNotNull(viewModel(CalendarView.MONTH, day).state.value)
 
         assertEquals(day, state.anchor)
-        assertEquals(CalendarView.MONTH, state.chosenView)
+        assertEquals(CalendarView.MONTH, state.view)
+        assertEquals(CalendarView.LIST, settingsStore.calendarView.value)
     }
 
     @Test
-    fun itOpensOnTodayWithoutAChosenViewAndDownloads() = runTest(dispatcher) {
+    fun itOpensOnTodayInTheListAndDownloads() = runTest(dispatcher) {
         val viewModel = viewModel()
 
         val state = assertNotNull(viewModel.state.value)
 
         assertEquals(today, state.anchor)
-        assertNull(state.chosenView)
+        assertEquals(CalendarView.LIST, state.view)
         assertTrue(environment.server.requestedPaths.contains("/api/chores"))
     }
 
     @Test
-    fun goingOnFollowsTheChosenViewsPeriod() = runTest(dispatcher) {
-        val viewModel = viewModel()
-
-        viewModel.chooseView(CalendarView.MONTH)
-        viewModel.step(CalendarView.MONTH, 1)
+    fun theChosenViewIsKeptForTheNextTime() = runTest(dispatcher) {
+        viewModel().chooseView(CalendarView.WEEK)
         advanceUntilIdle()
-        assertEquals("2026-12-04", isoDateOf(viewModel.state.value!!.anchor))
 
-        viewModel.step(CalendarView.DAY, -1)
-        advanceUntilIdle()
-        assertEquals("2026-12-03", isoDateOf(viewModel.state.value!!.anchor))
-        assertEquals(CalendarView.MONTH, viewModel.state.value!!.chosenView)
+        assertEquals(CalendarView.WEEK, settingsStore.calendarView.value)
+        assertEquals(CalendarView.WEEK, viewModel().state.value!!.view)
     }
 
     @Test
     fun todayComesBackFromAnywhere() = runTest(dispatcher) {
         val viewModel = viewModel()
-        viewModel.step(CalendarView.MONTH, 5)
+        viewModel.showDay(today + 40)
         advanceUntilIdle()
 
         viewModel.showToday()
@@ -128,7 +132,7 @@ class CalendarViewModelTest {
 
         val state = viewModel.state.value!!.copy(firstDayOfWeek = 0)
 
-        assertEquals("2026-11-01", isoDateOf(state.weekStart))
+        assertEquals("2026-11-01", isoDateOf(state.weekStartOf(state.anchor)))
     }
 
     @Test
@@ -140,7 +144,7 @@ class CalendarViewModelTest {
         advanceUntilIdle()
 
         assertEquals(today + 3, viewModel.state.value!!.anchor)
-        assertEquals(CalendarView.DAY, viewModel.state.value!!.chosenView)
+        assertEquals(CalendarView.DAY, viewModel.state.value!!.view)
     }
 
     @Test
@@ -148,19 +152,9 @@ class CalendarViewModelTest {
         val state = viewModel().state.value!!
 
         assertEquals(1, state.gridDays(CalendarView.DAY).size)
-        assertEquals(state.weekStart, state.gridDays(CalendarView.WEEK).first().epochDay)
-        assertEquals(7, state.gridDays(CalendarView.WEEK).size)
-    }
-
-    @Test
-    fun theScheduleOnlyHasDaysWithEventsFromTheShownDayOn() = runTest(dispatcher) {
-        val state = viewModel().state.value!!
-        val event = CalendarEvent(CalendarEventKind.TASK, "Task", today)
-        val withEvents = state.copy(
-            eventsByDay = mapOf(today - 1 to listOf(event), today + 5 to listOf(event), today to listOf(event)),
-        )
-
-        assertEquals(listOf(today, today + 5), withEvents.scheduleDays.map { it.epochDay })
+        val week = state.gridDays(CalendarView.WEEK, today + 7)
+        assertEquals(state.weekStartOf(today + 7), week.first().epochDay)
+        assertEquals(7, week.size)
     }
 
     @Test

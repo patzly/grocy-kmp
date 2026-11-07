@@ -5,12 +5,12 @@ import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
 import com.patrickzedler.grocy.core.model.calendar.CalendarEventKind
 import com.patrickzedler.grocy.core.model.calendar.CalendarView
 import com.patrickzedler.grocy.core.model.text.epochDayOf
-import com.patrickzedler.grocy.feature.batteries.api.BatteriesOverviewRoute
-import com.patrickzedler.grocy.feature.chores.api.ChoresOverviewRoute
+import com.patrickzedler.grocy.feature.batteries.api.BatteryTrackingRoute
+import com.patrickzedler.grocy.feature.calendar.api.CalendarRoute
+import com.patrickzedler.grocy.feature.chores.api.ChoreTrackingRoute
 import com.patrickzedler.grocy.feature.recipes.api.MealPlanRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipeRoute
-import com.patrickzedler.grocy.feature.stock.api.StockOverviewRoute
-import com.patrickzedler.grocy.feature.tasks.api.TasksRoute
+import com.patrickzedler.grocy.feature.tasks.api.TaskRoute
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -20,24 +20,29 @@ class CalendarEntriesTest {
     private val day = "2026-11-04"
     private val epochDay = epochDayOf(day)!!
 
-    private fun event(kind: CalendarEventKind, recipeId: Int? = null) =
-        CalendarEvent(kind, "Name", epochDay, recipeId = recipeId)
+    private fun event(kind: CalendarEventKind, objectId: Int? = 5) =
+        CalendarEvent(kind, "Name", epochDay, objectId = objectId)
 
     @Test
-    fun eventsLeadWhereGrocyLinksThem() {
-        assertEquals(StockOverviewRoute, routeOf(event(CalendarEventKind.PRODUCT)))
-        assertEquals(TasksRoute, routeOf(event(CalendarEventKind.TASK)))
-        assertEquals(ChoresOverviewRoute, routeOf(event(CalendarEventKind.CHORE)))
-        assertEquals(BatteriesOverviewRoute, routeOf(event(CalendarEventKind.BATTERY)))
-        assertEquals(RecipeRoute(5), routeOf(event(CalendarEventKind.MEAL_PLAN_RECIPE, 5)))
-        assertEquals(MealPlanRoute(day), routeOf(event(CalendarEventKind.MEAL_PLAN_NOTE)))
-        assertEquals(MealPlanRoute(day), routeOf(event(CalendarEventKind.MEAL_PLAN_PRODUCT)))
+    fun eventsOpenWhatTheyAreAbout() {
+        assertEquals(TaskRoute(5, inList = false), routeOf(event(CalendarEventKind.TASK)))
+        assertEquals(ChoreTrackingRoute(5, inList = false), routeOf(event(CalendarEventKind.CHORE)))
+        assertEquals(
+            BatteryTrackingRoute(5, inList = false),
+            routeOf(event(CalendarEventKind.BATTERY)),
+        )
+        assertEquals(RecipeRoute(5), routeOf(event(CalendarEventKind.MEAL_PLAN_RECIPE)))
+        assertEquals(MealPlanRoute(day), routeOf(event(CalendarEventKind.MEAL_PLAN_NOTE, null)))
     }
 
     @Test
-    fun smallScreensStartWithTheDayLikeGrocy() {
-        assertEquals(CalendarView.DAY, defaultCalendarView(767.dp))
-        assertEquals(CalendarView.MONTH, defaultCalendarView(768.dp))
+    fun productsOpenTheirOverviewOverTheirDay() {
+        val expected = CalendarRoute(CalendarView.DAY, day, productId = 5)
+
+        assertEquals(expected, routeOf(event(CalendarEventKind.PRODUCT)))
+        assertEquals(expected, routeOf(event(CalendarEventKind.MEAL_PLAN_PRODUCT)))
+        assertEquals(5, event(CalendarEventKind.PRODUCT).productId)
+        assertNull(event(CalendarEventKind.TASK).productId)
     }
 
     @Test
@@ -87,16 +92,14 @@ class CalendarEntriesTest {
     }
 
     @Test
-    fun monthRowsShareTheWindowButKeepRoomForAChip() {
-        assertEquals(162.dp, monthRowHeight(1000.dp, weeks = 5))
-        assertEquals(72.dp, monthRowHeight(500.dp, weeks = 6))
+    fun monthRowsShareTheHeightButKeepRoomForAChip() {
+        assertEquals(100.dp, monthRowHeight(508.dp, weeks = 5))
+        assertEquals(72.dp, monthRowHeight(300.dp, weeks = 6))
     }
 
     @Test
-    fun theDaysStayBelowTheAppBarOnceTheyStick() {
-        assertEquals(0, stickyShift(offset = 40, padding = 200))
-        assertEquals(0, stickyShift(offset = 0, padding = 200))
-        assertEquals(50, stickyShift(offset = -50, padding = 200))
-        assertEquals(200, stickyShift(offset = -500, padding = 200))
+    fun theGridScrollsToAnHourBeforeTheTime() {
+        assertEquals(560, gridOffsetOf(minute = 11 * 60, hourHeight = 56f))
+        assertEquals(0, gridOffsetOf(minute = 20, hourHeight = 56f))
     }
 }

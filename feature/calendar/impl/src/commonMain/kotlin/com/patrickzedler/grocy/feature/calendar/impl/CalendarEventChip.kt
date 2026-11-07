@@ -1,5 +1,9 @@
 package com.patrickzedler.grocy.feature.calendar.impl
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.BoundsTransform
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -10,12 +14,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -104,6 +109,7 @@ internal fun EventChip(
     Box(
         contentAlignment = Alignment.CenterStart,
         modifier = modifier
+            .sharedCalendarBounds(event.key)
             .fillMaxWidth()
             .height(ChipHeight)
             .clip(MaterialTheme.shapes.small)
@@ -149,11 +155,39 @@ internal fun EventChip(
     }
 }
 
-/** A round mark in the color of an event's kind. */
+/** The scopes of the change between two views, so what they share moves from one to the other. */
+@OptIn(ExperimentalSharedTransitionApi::class)
+internal class CalendarTransition(
+    val shared: SharedTransitionScope,
+    val visibility: AnimatedVisibilityScope,
+)
+
+internal val LocalCalendarTransition = staticCompositionLocalOf<CalendarTransition?> { null }
+
+/**
+ * Marks what means the same in every view under [key] (an event, a day's number), so when the
+ * view changes it moves and grows from its place in one view into its place in the other on the
+ * theme's spatial spring, like Google Calendar's views turn into each other.
+ */
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-internal fun EventDot(color: Color, modifier: Modifier = Modifier) {
-    Box(modifier.clip(CircleShape).background(color))
+internal fun Modifier.sharedCalendarBounds(key: String): Modifier {
+    val transition = LocalCalendarTransition.current ?: return this
+    val spec = MaterialTheme.motionScheme.defaultSpatialSpec<Rect>()
+    return with(transition.shared) {
+        this@sharedCalendarBounds.sharedBounds(
+            sharedContentState = rememberSharedContentState(key),
+            animatedVisibilityScope = transition.visibility,
+            boundsTransform = BoundsTransform { _, _ -> spec },
+        )
+    }
 }
+
+/** The key under which views share the number of the day [epochDay]. */
+internal fun dayKey(epochDay: Long): String = "day-$epochDay"
+
+/** The key under which views share the name of the weekday of [epochDay]. */
+internal fun weekdayKey(epochDay: Long): String = "weekday-$epochDay"
 
 /** What Grocy's title says of [event]: its kind, section and name, and to whom it is assigned. */
 @Composable
@@ -176,7 +210,7 @@ internal val CalendarEventKind.label: StringResource
         CalendarEventKind.MEAL_PLAN_PRODUCT -> Res.string.calendar_meal_plan_product
     }
 
-private val CalendarEventKind.icon: DrawableResource
+internal val CalendarEventKind.icon: DrawableResource
     get() = when (this) {
         CalendarEventKind.PRODUCT -> Res.drawable.ic_rounded_kitchen
         CalendarEventKind.TASK -> Res.drawable.ic_rounded_checklist

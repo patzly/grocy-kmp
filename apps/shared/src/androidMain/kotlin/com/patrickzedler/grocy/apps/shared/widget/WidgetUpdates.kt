@@ -7,12 +7,13 @@ import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.glance.GlanceId
 import androidx.glance.action.ActionParameters
+import android.os.Build
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.state.updateAppWidgetState
@@ -28,12 +29,9 @@ import com.patrickzedler.grocy.apps.shared.AndroidAppLanguageStore
 import com.patrickzedler.grocy.apps.shared.AppGraphOwner
 import com.patrickzedler.grocy.apps.shared.WidgetDependencies
 import com.patrickzedler.grocy.apps.shared.utcMillisOfLocal
-import com.patrickzedler.grocy.core.model.text.grocyDateTimeOf
-import com.patrickzedler.grocy.core.model.text.localNowMillis
+import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.text.todayEpochDay
 import com.patrickzedler.grocy.core.network.GrocyApiException
-import com.patrickzedler.grocy.core.resources.Res
-import com.patrickzedler.grocy.core.resources.task_change_failed
 import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
@@ -53,18 +51,12 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.jetbrains.compose.resources.getString
 
 /** State of the widgets the whole process shares. */
 internal object WidgetState {
     /** The day the widgets show as today, moved on by [WidgetDayReceiver] at midnight. */
     val today = MutableStateFlow(todayEpochDay())
-
-    /** Tasks whose "Mark task as completed" of a widget is under way. */
-    val completing = MutableStateFlow(emptySet<Int>())
 
     /** Whether any widget is on a home screen; nothing runs for them without one. */
     val hasWidgets = MutableStateFlow(false)
@@ -83,9 +75,9 @@ internal fun widgetDataOf(dependencies: WidgetDependencies): Flow<WidgetData> = 
         dependencies.calendarRepository.events,
         ::Pair,
     ),
-    combine(dependencies.appearance, WidgetState.today, WidgetState.completing, ::Triple),
-) { (isLoggedIn, config, settings), (tasks, events), (appearance, today, completing) ->
-    WidgetData(isLoggedIn, config, settings, tasks, events, appearance, today, completing)
+    combine(dependencies.appearance, WidgetState.today, ::Pair),
+) { (isLoggedIn, config, settings), (tasks, events), (appearance, today) ->
+    WidgetData(isLoggedIn, config, settings, tasks, events, appearance, today)
 }
     .distinctUntilChanged()
     .flowOn(Dispatchers.Default)
@@ -110,6 +102,11 @@ internal object WidgetUpdates {
     /** Starts redrawing the widgets on changes while the app runs in [scope]. */
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     fun start(context: Context, dependencies: WidgetDependencies, scope: CoroutineScope) {
+        scope.launch {
+            dependencies.appearance.distinctUntilChanged().collect { appearance ->
+                publishPreviews(context, appearance)
+            }
+        }
         scope.launch {
             sync(context)
             redrawAfterLanguageChange(context)
@@ -164,6 +161,26 @@ internal object WidgetUpdates {
         if (WidgetState.hasWidgets.value) updateAll(context)
     }
 
+    /**
+     * Android 15's picker shows the widgets themselves with sample data in the app's colors and
+     * language. The system limits how often previews may change, so only a new version of the
+     * app, language or appearance publishes them again.
+     */
+    private suspend fun publishPreviews(context: Context, appearance: AppearanceSettings) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) return
+        val preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+        val version = context.packageManager.getPackageInfo(context.packageName, 0).versionName
+        val key = listOf(version, Locale.getDefault().toLanguageTag(), appearance).joinToString()
+        if (preferences.getString(PREVIEWS, null) == key) return
+        val manager = GlanceAppWidgetManager(context)
+        val isPublished = receivers.all { receiver ->
+            manager.setWidgetPreviews(receiver.kotlin) ==
+                GlanceAppWidgetManager.SET_WIDGET_PREVIEWS_RESULT_SUCCESS
+        }
+        // Limited, the next start tries again
+        if (isPublished) preferences.edit().putString(PREVIEWS, key).apply()
+    }
+
     // Does not wake the device: the new day only matters once someone looks at the screen
     private fun setMidnightAlarm(context: Context) {
         context.getSystemService(AlarmManager::class.java).set(
@@ -185,6 +202,7 @@ internal object WidgetUpdates {
     private const val REDRAW_DELAY_MILLIS = 500L
     private const val PREFERENCES = "widgets"
     private const val LANGUAGE = "language"
+    private const val PREVIEWS = "previews"
 }
 
 /** The instant the day after [today] starts in [zone]. */
@@ -253,38 +271,6 @@ abstract class GrocyWidgetReceiver : GlanceAppWidgetReceiver() {
     }
 }
 
-/** Grocy's "Mark task as completed" of the task list widget, online only like in the app. */
-class CompleteTaskAction : ActionCallback {
-
-    override suspend fun onAction(
-        context: Context,
-        glanceId: GlanceId,
-        parameters: ActionParameters,
-    ) {
-        val taskId = parameters[TaskIdKey] ?: return
-        val graph = (context.applicationContext as? AppGraphOwner)?.graph ?: return
-        // A second tap while it is under way does nothing
-        if (taskId in WidgetState.completing.value) return
-        WidgetState.completing.update { it + taskId }
-        try {
-            graph.widgetDependencies.tasksRepository.complete(
-                taskId,
-                grocyDateTimeOf(localNowMillis()),
-            )
-        } catch (e: CancellationException) {
-            throw e
-        } catch (_: GrocyApiException) {
-            AndroidAppLanguageStore.wrap(context)
-            val message = getString(Res.string.task_change_failed)
-            withContext(Dispatchers.Main) {
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-            }
-        } finally {
-            WidgetState.completing.update { it - taskId }
-        }
-    }
-}
-
 /** Grocy's "prev" and "next" of the month widget, kept for the rest of the day. */
 class MonthStepAction : ActionCallback {
 
@@ -304,7 +290,6 @@ class MonthStepAction : ActionCallback {
     }
 }
 
-internal val TaskIdKey = ActionParameters.Key<Int>("task_id")
 internal val StepsKey = ActionParameters.Key<Int>("steps")
 internal val MonthOffsetKey = intPreferencesKey("month_offset")
 internal val SteppedOnKey = longPreferencesKey("stepped_on")

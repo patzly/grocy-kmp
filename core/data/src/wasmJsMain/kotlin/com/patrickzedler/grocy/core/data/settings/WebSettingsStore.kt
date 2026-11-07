@@ -4,6 +4,7 @@ import com.patrickzedler.grocy.core.data.BrowserLocalStorage
 import com.patrickzedler.grocy.core.data.KeyValueStorage
 import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewOptions
 import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalOptions
+import com.patrickzedler.grocy.core.model.calendar.CalendarView
 import com.patrickzedler.grocy.core.model.equipment.EquipmentOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
@@ -247,6 +248,15 @@ class WebSettingsStore internal constructor(
         equipmentOptionsState.value = options
     }
 
+    private val calendarViewState = MutableStateFlow(CalendarView.of(storage.get(CALENDAR_VIEW)))
+
+    override val calendarView: Flow<CalendarView> = calendarViewState.asStateFlow()
+
+    override suspend fun setCalendarView(view: CalendarView) {
+        storage.set(CALENDAR_VIEW, view.stored())
+        calendarViewState.value = view
+    }
+
     private val recipesOptionsState = MutableStateFlow(
         RecipesOptions.of(
             fields = storage.get(RECIPES_FIELDS),
@@ -302,6 +312,7 @@ class WebSettingsStore internal constructor(
         const val BATTERIES_OVERVIEW_OPTIONS = "grocy.batteriesOverviewOptions"
         const val BATTERIES_JOURNAL_OPTIONS = "grocy.batteriesJournalOptions"
         const val EQUIPMENT_OPTIONS = "grocy.equipmentOptions"
+        const val CALENDAR_VIEW = "grocy.calendarView"
         const val NOTIFICATION_SETTINGS = "grocy.notificationSettings"
         const val NOTIFICATION_DELIVERIES = "grocy.notificationDeliveries"
     }

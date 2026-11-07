@@ -4,6 +4,18 @@
   <string name="widget_tasks_description">未完了のタスクをタップで完了</string>
   <string name="widget_month_label">カレンダー(月表示)</string>
   <string name="widget_month_description">毎日の期限を表示した月</string>
-  <string name="widget_schedule_label">カレンダー(スケジュール)</string>
+  <string name="widget_schedule_label">カレンダー(リスト)</string>
   <string name="widget_schedule_description">今日以降の期限</string>
+  <string name="widget_sample_mow_lawn">芝刈り</string>
+  <string name="widget_sample_buy_seeds">種を買う</string>
+  <string name="widget_sample_water_plants">植物に水やり</string>
+  <string name="widget_sample_descale">コーヒーメーカーの湯垢取り</string>
+  <string name="widget_sample_milk">牛乳</string>
+  <string name="widget_sample_vacuum">リビングの掃除機がけ</string>
+  <string name="widget_sample_spaghetti">スパゲッティ・ボロネーゼ</string>
+  <string name="widget_sample_lunch">昼食</string>
+  <string name="widget_sample_smoke_detector">煙感知器</string>
+  <string name="widget_sample_month">11月</string>
+  <string name="widget_preview_tasks">タスク一覧</string>
+  <string name="widget_preview_calendar">カレンダー</string>
 </resources>

@@ -1351,7 +1351,8 @@
   <string name="calendar_view_month">Kuu</string>
   <string name="calendar_view_week">Nädal</string>
   <string name="calendar_view_day">Päev</string>
-  <string name="calendar_view_schedule">Ajakava</string>
+  <string name="calendar_view_list">Loend</string>
+  <string name="calendar_now">Praegu</string>
   <string name="calendar_all_day">Terve päev</string>
   <plurals name="calendar_more">
     <item quantity="one">veel %1$d</item>

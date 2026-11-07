@@ -4,6 +4,18 @@
   <string name="widget_tasks_description">你的待辦任務,輕觸即可完成</string>
   <string name="widget_month_label">日曆月檢視</string>
   <string name="widget_month_description">顯示每天到期事項的月份</string>
-  <string name="widget_schedule_label">日曆行程</string>
+  <string name="widget_schedule_label">日曆清單</string>
   <string name="widget_schedule_description">從今天起到期的事項</string>
+  <string name="widget_sample_mow_lawn">修剪草坪</string>
+  <string name="widget_sample_buy_seeds">買種子</string>
+  <string name="widget_sample_water_plants">幫植物澆水</string>
+  <string name="widget_sample_descale">幫咖啡機除垢</string>
+  <string name="widget_sample_milk">牛奶</string>
+  <string name="widget_sample_vacuum">幫客廳吸塵</string>
+  <string name="widget_sample_spaghetti">義大利肉醬麵</string>
+  <string name="widget_sample_lunch">午餐</string>
+  <string name="widget_sample_smoke_detector">煙霧偵測器</string>
+  <string name="widget_sample_month">十一月</string>
+  <string name="widget_preview_tasks">任務</string>
+  <string name="widget_preview_calendar">日曆</string>
 </resources>

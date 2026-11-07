@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.apps.shared.widget
 
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
+import com.patrickzedler.grocy.core.model.calendar.CalendarEventKind
 import com.patrickzedler.grocy.core.model.calendar.calendarMonthWeeks
 import com.patrickzedler.grocy.core.model.recipes.DAYS_PER_WEEK
 import com.patrickzedler.grocy.core.model.server.ServerConfig
@@ -10,12 +11,10 @@ import com.patrickzedler.grocy.core.model.tasks.Task
 import com.patrickzedler.grocy.core.model.text.addMonths
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.model.text.firstDayOfMonth
+import com.patrickzedler.grocy.core.model.text.isoDateOf
 import com.patrickzedler.grocy.core.model.text.lastDayOfMonth
 
-/**
- * Everything the widgets show, as stored: [today] is the day they show as today, [completing]
- * the tasks whose "Mark task as completed" is under way.
- */
+/** Everything the widgets show, as stored: [today] is the day they show as today. */
 internal data class WidgetData(
     val isLoggedIn: Boolean,
     val config: ServerConfig,
@@ -24,7 +23,6 @@ internal data class WidgetData(
     val events: List<CalendarEvent>,
     val appearance: AppearanceSettings,
     val today: Long,
-    val completing: Set<Int>,
 )
 
 /** A task still to do, [dueDay] its due date. */
@@ -33,7 +31,6 @@ internal data class WidgetTask(
     val name: String,
     val dueDay: Long?,
     val isOverdue: Boolean,
-    val isCompleting: Boolean,
 )
 
 /**
@@ -43,7 +40,6 @@ internal data class WidgetTask(
 internal fun widgetTasksOf(
     tasks: List<Task>,
     today: Long,
-    completing: Set<Int>,
     limit: Int = MAX_ROWS,
 ): List<WidgetTask> = tasks
     .filter { !it.done }
@@ -54,7 +50,6 @@ internal fun widgetTasksOf(
             name = task.name,
             dueDay = day,
             isOverdue = day != null && day < today,
-            isCompleting = task.id in completing,
         )
     }
     .sortedWith(
@@ -160,3 +155,61 @@ internal const val MONTH_CHIP_HEIGHT = 16f
 internal const val MONTH_CHIP_GAP = 2f
 private const val MAX_MONTH_CHIPS = 4
 private const val MAX_ROWS = 100
+
+/** The names of what the widgets show in the picker, in the app's language. */
+internal class SampleNames(
+    val mowLawn: String,
+    val buySeeds: String,
+    val waterPlants: String,
+    val descale: String,
+    val milk: String,
+    val vacuum: String,
+    val spaghetti: String,
+    val lunch: String,
+    val smokeDetector: String,
+)
+
+/**
+ * What the widgets show in the picker around [today]: a few tasks, one of them overdue, and
+ * events of every kind with Grocy's colors, so it looks like a household's calendar.
+ */
+internal fun sampleWidgetData(
+    today: Long,
+    names: SampleNames,
+    appearance: AppearanceSettings,
+): WidgetData {
+    fun task(id: Int, name: String, day: Long?) =
+        Task(id, name, dueDate = day?.let(::isoDateOf))
+    val tasks = listOf(
+        task(1, names.mowLawn, today + 1),
+        task(2, names.buySeeds, today + 6),
+        task(3, names.waterPlants, today - 2),
+        task(4, names.descale, null),
+    )
+    val events = listOf(
+        CalendarEvent(CalendarEventKind.CHORE, names.vacuum, today, time = "10:00"),
+        CalendarEvent(
+            CalendarEventKind.MEAL_PLAN_RECIPE,
+            names.spaghetti,
+            today,
+            time = "12:00",
+            section = names.lunch,
+        ),
+        CalendarEvent(CalendarEventKind.TASK, names.mowLawn, today + 1),
+        CalendarEvent(CalendarEventKind.PRODUCT, names.milk, today + 2),
+        CalendarEvent(CalendarEventKind.BATTERY, names.smokeDetector, today + 4, time = "09:00"),
+        CalendarEvent(CalendarEventKind.TASK, names.buySeeds, today + 6),
+        CalendarEvent(CalendarEventKind.CHORE, names.vacuum, today + 7, time = "10:00"),
+        CalendarEvent(CalendarEventKind.PRODUCT, names.milk, today + 10),
+        CalendarEvent(CalendarEventKind.TASK, names.waterPlants, today - 2),
+    ).sortedWith(compareBy<CalendarEvent> { it.epochDay }.thenBy { it.time })
+    return WidgetData(
+        isLoggedIn = true,
+        config = ServerConfig(),
+        settings = UserSettings(),
+        tasks = tasks,
+        events = events,
+        appearance = appearance,
+        today = today,
+    )
+}

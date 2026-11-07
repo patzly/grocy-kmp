@@ -21,6 +21,7 @@ import com.patrickzedler.grocy.core.data.settings.EquipmentOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ChoresJournalOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ChoresOverviewOptionsRepository
 import com.patrickzedler.grocy.core.data.calendar.CalendarRepository
+import com.patrickzedler.grocy.core.data.settings.CalendarOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.TasksOverviewOptionsRepository
 import com.patrickzedler.grocy.core.data.tasks.TasksRepository
 import com.patrickzedler.grocy.core.data.settings.BehaviorSettingsRepository
@@ -264,6 +265,9 @@ class AppGraph(
     private val batteriesJournalOptionsRepository =
         BatteriesJournalOptionsRepository(platform.settingsStore, appScope)
 
+    private val calendarOptionsRepository =
+        CalendarOptionsRepository(platform.settingsStore, appScope)
+
     private val equipmentOptionsRepository =
         EquipmentOptionsRepository(platform.settingsStore, appScope)
 
@@ -500,6 +504,12 @@ class AppGraph(
             get() = this@AppGraph.masterDataRepository
         override val calendarRepository: CalendarRepository
             get() = this@AppGraph.calendarRepository
+        override val calendarOptions: CalendarOptionsRepository
+            get() = calendarOptionsRepository
+        override val stockRepository: StockRepository
+            get() = this@AppGraph.stockRepository
+        override val shoppingListRepository: ShoppingListRepository
+            get() = this@AppGraph.shoppingListRepository
     }
 
     internal val tasksDependencies: TasksDependencies = object : TasksDependencies {

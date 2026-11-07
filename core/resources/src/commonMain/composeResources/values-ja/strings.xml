@@ -1300,7 +1300,8 @@
   <string name="calendar_view_month">月</string>
   <string name="calendar_view_week">週</string>
   <string name="calendar_view_day">日</string>
-  <string name="calendar_view_schedule">スケジュール</string>
+  <string name="calendar_view_list">リスト</string>
+  <string name="calendar_now">現在</string>
   <string name="calendar_all_day">終日</string>
   <plurals name="calendar_more">
     <item quantity="other">他 %1$d 件</item>

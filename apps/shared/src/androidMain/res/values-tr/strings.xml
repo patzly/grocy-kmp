@@ -4,6 +4,18 @@
   <string name="widget_tasks_description">Yapılacak görevleriniz, tek dokunuşla tamamlanır</string>
   <string name="widget_month_label">Takvim ay görünümü</string>
   <string name="widget_month_description">Her gün vadesi gelenlerle birlikte ay</string>
-  <string name="widget_schedule_label">Takvim programı</string>
+  <string name="widget_schedule_label">Takvim listesi</string>
   <string name="widget_schedule_description">Bugünden itibaren vadesi gelenler</string>
+  <string name="widget_sample_mow_lawn">Çimleri biçmek</string>
+  <string name="widget_sample_buy_seeds">Tohum almak</string>
+  <string name="widget_sample_water_plants">Bitkileri sulamak</string>
+  <string name="widget_sample_descale">Kahve makinesinin kirecini almak</string>
+  <string name="widget_sample_milk">Süt</string>
+  <string name="widget_sample_vacuum">Oturma odasını süpürmek</string>
+  <string name="widget_sample_spaghetti">Bolonez soslu spagetti</string>
+  <string name="widget_sample_lunch">Öğle yemeği</string>
+  <string name="widget_sample_smoke_detector">Duman dedektörü</string>
+  <string name="widget_sample_month">Kasım</string>
+  <string name="widget_preview_tasks">Görevler</string>
+  <string name="widget_preview_calendar">Takvim</string>
 </resources>

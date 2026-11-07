@@ -1350,7 +1350,8 @@
   <string name="calendar_view_month">Månad</string>
   <string name="calendar_view_week">Vecka</string>
   <string name="calendar_view_day">Dag</string>
-  <string name="calendar_view_schedule">Schema</string>
+  <string name="calendar_view_list">Lista</string>
+  <string name="calendar_now">Nu</string>
   <string name="calendar_all_day">Heldag</string>
   <plurals name="calendar_more">
     <item quantity="one">%1$d till</item>

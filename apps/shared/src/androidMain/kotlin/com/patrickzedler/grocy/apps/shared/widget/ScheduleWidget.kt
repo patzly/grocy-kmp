@@ -2,10 +2,12 @@ package com.patrickzedler.grocy.apps.shared.widget
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceModifier
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.SizeMode
 import androidx.glance.LocalSize
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.lazy.LazyColumn
@@ -30,11 +32,14 @@ import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
 import com.patrickzedler.grocy.core.model.calendar.CalendarView
 
 /**
- * Google's schedule widget with Grocy's calendar from today on: each day with its events like
- * tasks, which have no duration either. A tap on an event goes where Grocy links it, on a day to
- * the calendar's schedule, "+" a new task.
+ * "Calendar list": Google's schedule widget with Grocy's calendar from today on, each day with its
+ * events like tasks, which have no duration either. A tap on an event opens what it is about, on a
+ * day the calendar's list, "+" a new task. Its classes keep their first name, the system knows
+ * placed widgets by it.
  */
 internal class ScheduleWidget : GrocyWidget() {
+
+    override val previewSizeMode = SizeMode.Responsive(setOf(DpSize(200.dp, 280.dp)))
 
     @Composable
     override fun Content(data: WidgetData, colors: WidgetColors, texts: WidgetTexts) {
@@ -57,7 +62,7 @@ class ScheduleWidgetReceiver : GrocyWidgetReceiver() {
 private fun Schedule(data: WidgetData, colors: WidgetColors, texts: WidgetTexts) {
     val rows = remember(data.events, data.today) { scheduleRowsOf(data.events, data.today) }
     val isNarrow = LocalSize.current.width < NarrowWidth
-    val openSchedule = openApp(WidgetLinks.calendar(CalendarView.SCHEDULE, data.today))
+    val openSchedule = openApp(WidgetLinks.calendar(CalendarView.LIST, data.today))
     val createTask = if (data.config.tasks) openApp(WidgetLinks.newTask()) else null
     LazyColumn(GlanceModifier.fillMaxSize()) {
         itemsIndexed(rows, itemId = { index, _ -> index.toLong() }) { _, row ->
@@ -89,8 +94,8 @@ private fun Schedule(data: WidgetData, colors: WidgetColors, texts: WidgetTexts)
 private fun DayHeading(epochDay: Long, colors: WidgetColors) {
     Box(
         modifier = GlanceModifier.fillMaxWidth()
-            .padding(start = 20.dp, end = 16.dp, top = 12.dp, bottom = 8.dp)
-            .clickable(openApp(WidgetLinks.calendar(CalendarView.SCHEDULE, epochDay))),
+            .padding(start = WidgetInset, end = 16.dp, top = 12.dp, bottom = 8.dp)
+            .clickable(openApp(WidgetLinks.calendar(CalendarView.LIST, epochDay))),
     ) {
         Text(
             text = formatWeekdayDate(epochDay),
@@ -115,11 +120,11 @@ private fun EventChip(
 ) {
     val roles = colors.event(event.kind, data.settings)
     val details = listOfNotNull(event.time, event.section).joinToString(" · ").ifEmpty { null }
-    Box(GlanceModifier.fillMaxWidth().padding(start = 12.dp, end = 12.dp, bottom = 4.dp)) {
+    Box(GlanceModifier.fillMaxWidth().padding(horizontal = ChipMargin).padding(bottom = 4.dp)) {
         Column(
             GlanceModifier.fillMaxWidth()
                 .rounded(roles.container, WidgetShape.MEDIUM)
-                .padding(horizontal = 12.dp, vertical = 6.dp)
+                .padding(horizontal = ChipPadding, vertical = 6.dp)
                 .clickable(openApp(WidgetLinks.event(event)))
                 .semantics { contentDescription = texts.description(event) },
         ) {

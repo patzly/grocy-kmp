@@ -1351,7 +1351,8 @@
   <string name="calendar_view_month">Μήνας</string>
   <string name="calendar_view_week">Εβδομάδα</string>
   <string name="calendar_view_day">Ημέρα</string>
-  <string name="calendar_view_schedule">Πρόγραμμα</string>
+  <string name="calendar_view_list">Λίστα</string>
+  <string name="calendar_now">Τώρα</string>
   <string name="calendar_all_day">Ολοήμερο</string>
   <plurals name="calendar_more">
     <item quantity="one">%1$d ακόμα</item>

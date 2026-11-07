@@ -10,7 +10,7 @@ Behavior, Scanner), Grocy's stock overview, master data with all their forms, th
 the shopping list and its shopping mode, the recipes with their cards and forms, the meal plan, the
 chores with their tracking and journal, the tasks, the batteries with their tracking and journal,
 the equipment with its manuals, the calendar, the daily notifications, new products filled in from open product
-databases, the home screen widgets (tasks, calendar month and schedule), the Wear OS app with the shopping list.
+databases, the home screen widgets (task list, calendar month and list), the Wear OS app with the shopping list.
 
 ## Details
 

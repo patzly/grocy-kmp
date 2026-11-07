@@ -240,4 +240,11 @@ class StartSectionTest {
     fun tasksSectionNeedsItsFeature() {
         assertFalse(StartSection.TASKS in availableSections(ServerConfig(tasks = false)))
     }
+
+    @Test
+    fun aSingleSummaryLineIsCenteredAndAListOrButtonsStartAtTheTop() {
+        assertFalse(startsAtTop(bullets = emptyList(), hasButtons = false))
+        assertTrue(startsAtTop(bullets = listOf("3 overdue"), hasButtons = false))
+        assertTrue(startsAtTop(bullets = emptyList(), hasButtons = true))
+    }
 }

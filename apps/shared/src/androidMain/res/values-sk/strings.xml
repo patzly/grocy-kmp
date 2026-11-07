@@ -4,6 +4,18 @@
   <string name="widget_tasks_description">Úlohy na vybavenie, splnené jedným ťuknutím</string>
   <string name="widget_month_label">Mesačný kalendár</string>
   <string name="widget_month_description">Mesiac s tým, čo je kedy splatné</string>
-  <string name="widget_schedule_label">Plán kalendára</string>
+  <string name="widget_schedule_label">Zoznam kalendára</string>
   <string name="widget_schedule_description">Čo je splatné od dnes</string>
+  <string name="widget_sample_mow_lawn">Pokosiť trávnik</string>
+  <string name="widget_sample_buy_seeds">Kúpiť semienka</string>
+  <string name="widget_sample_water_plants">Poliať rastliny</string>
+  <string name="widget_sample_descale">Odvápniť kávovar</string>
+  <string name="widget_sample_milk">Mlieko</string>
+  <string name="widget_sample_vacuum">Povysávať obývačku</string>
+  <string name="widget_sample_spaghetti">Špagety bolognese</string>
+  <string name="widget_sample_lunch">Obed</string>
+  <string name="widget_sample_smoke_detector">Detektor dymu</string>
+  <string name="widget_sample_month">November</string>
+  <string name="widget_preview_tasks">Úlohy</string>
+  <string name="widget_preview_calendar">Kalendár</string>
 </resources>

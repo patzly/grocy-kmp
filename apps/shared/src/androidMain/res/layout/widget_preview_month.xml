@@ -1,573 +1,865 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The widget in the picker (Android 12 and newer), a sketch without texts in any language -->
+<!-- The calendar month in the picker of Android 12 to 14, from 15 on the widget itself shows -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="@drawable/widget_preview_surface"
+  android:clipToOutline="true"
   android:orientation="vertical">
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="56dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingStart="20dp"
+    android:paddingStart="22dp"
     android:paddingEnd="8dp">
-    <FrameLayout
-      android:layout_width="88dp"
-      android:layout_height="14dp"
-      android:background="@drawable/widget_preview_bar" />
-    <FrameLayout
+    <TextView
       android:layout_width="0dp"
-      android:layout_height="1dp"
-      android:layout_weight="1" />
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:fontFamily="google-sans-medium"
+      android:maxLines="1"
+      android:text="@string/widget_sample_month"
+      android:textColor="@color/widget_preview_text"
+      android:textSize="18sp" />
+    <ImageView
+      android:layout_width="40dp"
+      android:layout_height="24dp"
+      android:importantForAccessibility="no"
+      android:src="@drawable/widget_ic_chevron_left"
+      android:tint="@color/widget_preview_text_variant" />
+    <ImageView
+      android:layout_width="40dp"
+      android:layout_height="24dp"
+      android:importantForAccessibility="no"
+      android:src="@drawable/widget_ic_chevron_right"
+      android:tint="@color/widget_preview_text_variant" />
     <FrameLayout
       android:layout_width="56dp"
       android:layout_height="36dp"
-      android:background="@drawable/widget_preview_pill" />
+      android:background="@drawable/widget_preview_pill">
+      <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center"
+        android:importantForAccessibility="no"
+        android:src="@drawable/widget_ic_add"
+        android:tint="@color/widget_preview_on_primary" />
+    </FrameLayout>
   </LinearLayout>
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/widget_preview_line" />
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
     android:orientation="horizontal">
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-        <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="12dp"
-          android:layout_marginTop="4dp"
-          android:background="@drawable/widget_preview_small_chip" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-        <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="12dp"
-          android:layout_marginTop="4dp"
-          android:background="@drawable/widget_preview_small_chip" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="27"
+        android:textColor="@color/widget_preview_text_variant"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="28"
+        android:textColor="@color/widget_preview_text_variant"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="29"
+        android:textColor="@color/widget_preview_text_variant"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="30"
+        android:textColor="@color/widget_preview_text_variant"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="31"
+        android:textColor="@color/widget_preview_text_variant"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="1"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="2"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
   </LinearLayout>
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/widget_preview_line" />
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
     android:orientation="horizontal">
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-        <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="12dp"
-          android:layout_marginTop="4dp"
-          android:background="@drawable/widget_preview_small_chip" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-        <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="12dp"
-          android:layout_marginTop="4dp"
-          android:background="@drawable/widget_preview_small_chip" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-        <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="12dp"
-          android:layout_marginTop="4dp"
-          android:background="@drawable/widget_preview_small_chip" />
-      </LinearLayout>
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="3"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+      <TextView
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/widget_preview_small_chip_1"
+        android:ellipsize="none"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingHorizontal="3dp"
+        android:text="@string/widget_sample_milk"
+        android:textColor="@color/widget_preview_on_event_1"
+        android:textSize="11sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="4"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="5"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="6"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:background="@drawable/widget_preview_today"
+        android:gravity="center"
+        android:text="7"
+        android:textColor="@color/widget_preview_on_primary"
+        android:textSize="12sp" />
+      <TextView
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/widget_preview_small_chip_3"
+        android:ellipsize="none"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingHorizontal="3dp"
+        android:text="@string/widget_sample_vacuum"
+        android:textColor="@color/widget_preview_on_event_3"
+        android:textSize="11sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="8"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+      <TextView
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/widget_preview_small_chip_2"
+        android:ellipsize="none"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingHorizontal="3dp"
+        android:text="@string/widget_sample_mow_lawn"
+        android:textColor="@color/widget_preview_on_event_2"
+        android:textSize="11sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="9"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
   </LinearLayout>
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/widget_preview_line" />
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
     android:orientation="horizontal">
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-        <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="12dp"
-          android:layout_marginTop="4dp"
-          android:background="@drawable/widget_preview_small_chip" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-        <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="12dp"
-          android:layout_marginTop="4dp"
-          android:background="@drawable/widget_preview_small_chip" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="10"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="11"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="12"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+      <TextView
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/widget_preview_small_chip_1"
+        android:ellipsize="none"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingHorizontal="3dp"
+        android:text="@string/widget_sample_spaghetti"
+        android:textColor="@color/widget_preview_on_event_1"
+        android:textSize="11sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="13"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="14"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="15"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+      <TextView
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/widget_preview_small_chip_2"
+        android:ellipsize="none"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingHorizontal="3dp"
+        android:text="@string/widget_sample_buy_seeds"
+        android:textColor="@color/widget_preview_on_event_2"
+        android:textSize="11sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="16"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
   </LinearLayout>
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/widget_preview_line" />
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
     android:orientation="horizontal">
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-        <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="12dp"
-          android:layout_marginTop="4dp"
-          android:background="@drawable/widget_preview_small_chip" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-        <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="12dp"
-          android:layout_marginTop="4dp"
-          android:background="@drawable/widget_preview_small_chip" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="17"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="18"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="19"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="20"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="21"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+      <TextView
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/widget_preview_small_chip_3"
+        android:ellipsize="none"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingHorizontal="3dp"
+        android:text="@string/widget_sample_smoke_detector"
+        android:textColor="@color/widget_preview_on_event_3"
+        android:textSize="11sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="22"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="23"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
   </LinearLayout>
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/widget_preview_line" />
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
     android:orientation="horizontal">
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-        <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="12dp"
-          android:layout_marginTop="4dp"
-          android:background="@drawable/widget_preview_small_chip" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-        <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="12dp"
-          android:layout_marginTop="4dp"
-          android:background="@drawable/widget_preview_small_chip" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-      </LinearLayout>
-      <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingTop="6dp">
-        <FrameLayout
-          android:layout_width="10dp"
-          android:layout_height="8dp"
-          android:background="@drawable/widget_preview_bar" />
-        <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="12dp"
-          android:layout_marginTop="4dp"
-          android:background="@drawable/widget_preview_small_chip" />
-      </LinearLayout>
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="24"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="25"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="26"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+      <TextView
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/widget_preview_small_chip_1"
+        android:ellipsize="none"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingHorizontal="3dp"
+        android:text="@string/widget_sample_milk"
+        android:textColor="@color/widget_preview_on_event_1"
+        android:textSize="11sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="27"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="28"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="29"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
+    <FrameLayout
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@color/widget_preview_line" />
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingHorizontal="2dp">
+      <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="30"
+        android:textColor="@color/widget_preview_text"
+        android:textSize="12sp" />
+    </LinearLayout>
   </LinearLayout>
 </LinearLayout>

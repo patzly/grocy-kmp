@@ -4,6 +4,18 @@
   <string name="widget_tasks_description">Az elvégzendő feladataid, egy koppintással kipipálva</string>
   <string name="widget_month_label">Havi naptárnézet</string>
   <string name="widget_month_description">A hónap azzal, ami az egyes napokon esedékes</string>
-  <string name="widget_schedule_label">Naptár ütemezése</string>
+  <string name="widget_schedule_label">Naptárlista</string>
   <string name="widget_schedule_description">Ami mától esedékes</string>
+  <string name="widget_sample_mow_lawn">Füvet nyírni</string>
+  <string name="widget_sample_buy_seeds">Magokat venni</string>
+  <string name="widget_sample_water_plants">Növényeket locsolni</string>
+  <string name="widget_sample_descale">Kávéfőzőt vízkőteleníteni</string>
+  <string name="widget_sample_milk">Tej</string>
+  <string name="widget_sample_vacuum">Nappalit porszívózni</string>
+  <string name="widget_sample_spaghetti">Bolognai spagetti</string>
+  <string name="widget_sample_lunch">Ebéd</string>
+  <string name="widget_sample_smoke_detector">Füstérzékelő</string>
+  <string name="widget_sample_month">November</string>
+  <string name="widget_preview_tasks">Feladatok</string>
+  <string name="widget_preview_calendar">Naptár</string>
 </resources>

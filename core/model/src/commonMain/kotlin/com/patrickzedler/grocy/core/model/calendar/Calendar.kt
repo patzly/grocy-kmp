@@ -18,6 +18,7 @@ import com.patrickzedler.grocy.core.model.text.addMonths
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.model.text.firstDayOfMonth
 import com.patrickzedler.grocy.core.model.text.lastDayOfMonth
+import com.patrickzedler.grocy.core.model.text.monthOfDay
 import com.patrickzedler.grocy.core.model.text.timeOfDayOf
 import com.patrickzedler.grocy.core.model.text.weekdayOf
 import com.patrickzedler.grocy.core.model.text.yearOfDay
@@ -57,7 +58,8 @@ enum class CalendarEventKind(val color: CalendarColorSetting) {
 
 /**
  * An event of Grocy's calendar. [time] is "HH:MM", null for what takes the whole day; [section]
- * the meal plan's, [assignedTo] the display name of the user a chore is assigned to.
+ * the meal plan's, [assignedTo] the display name of the user a chore is assigned to. [objectId]
+ * is what it is about: the product, task, chore, battery or recipe (none for a meal plan note).
  */
 data class CalendarEvent(
     val kind: CalendarEventKind,
@@ -66,8 +68,12 @@ data class CalendarEvent(
     val time: String? = null,
     val section: String? = null,
     val assignedTo: String? = null,
-    val recipeId: Int? = null,
-)
+    val objectId: Int? = null,
+) {
+    /** Tells it apart from every other event of the calendar, e.g. to move it between views. */
+    val key: String
+        get() = "${kind.name}-${objectId ?: name}-$epochDay-${time.orEmpty()}"
+}
 
 /** What the calendar is built from, all of it as last downloaded. */
 class CalendarData(
@@ -113,14 +119,14 @@ private fun productEvents(data: CalendarData): List<CalendarEvent> {
     return data.stock.filter { it.amount > 0 }.mapNotNull { amount ->
         val name = products[amount.productId]?.name ?: return@mapNotNull null
         val day = amount.bestBeforeDate?.let(::dayOf) ?: return@mapNotNull null
-        CalendarEvent(CalendarEventKind.PRODUCT, name, day)
+        CalendarEvent(CalendarEventKind.PRODUCT, name, day, objectId = amount.productId)
     }
 }
 
 private fun taskEvents(data: CalendarData): List<CalendarEvent> =
     data.tasks.filter { !it.done }.mapNotNull { task ->
         val day = task.dueDate?.let(::dayOf) ?: return@mapNotNull null
-        CalendarEvent(CalendarEventKind.TASK, task.name, day)
+        CalendarEvent(CalendarEventKind.TASK, task.name, day, objectId = task.id)
     }
 
 private fun choreEvents(data: CalendarData): List<CalendarEvent> {
@@ -134,6 +140,7 @@ private fun choreEvents(data: CalendarData): List<CalendarEvent> {
             epochDay = day,
             time = if (chore.trackDateOnly) null else timeOf(next),
             assignedTo = chore.assignedUserId?.let { users[it]?.displayName },
+            objectId = chore.choreId,
         )
     }
 }
@@ -144,7 +151,13 @@ private fun batteryEvents(data: CalendarData): List<CalendarEvent> {
         val name = batteries[current.batteryId]?.name ?: return@mapNotNull null
         val next = current.nextEstimatedChargeTime ?: return@mapNotNull null
         val day = dayOf(next) ?: return@mapNotNull null
-        CalendarEvent(CalendarEventKind.BATTERY, name, day, time = timeOf(next))
+        CalendarEvent(
+            kind = CalendarEventKind.BATTERY,
+            name = name,
+            epochDay = day,
+            time = timeOf(next),
+            objectId = current.batteryId,
+        )
     }
 }
 
@@ -168,7 +181,11 @@ private fun mealPlanEvents(data: CalendarData): List<CalendarEvent> {
             epochDay = day,
             time = section?.timeInfo?.trim()?.ifEmpty { null },
             section = section?.name?.trim()?.ifEmpty { null },
-            recipeId = entry.recipeId.takeIf { kind == CalendarEventKind.MEAL_PLAN_RECIPE },
+            objectId = when (kind) {
+                CalendarEventKind.MEAL_PLAN_RECIPE -> entry.recipeId
+                CalendarEventKind.MEAL_PLAN_PRODUCT -> entry.productId
+                else -> null
+            },
         )
     }
 }
@@ -182,11 +199,26 @@ private fun timeOf(dateTime: String): String? =
             "${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}"
         }
 
-/**
- * Grocy's views of the calendar, its list as a schedule that goes on, in Google Calendar's order.
- */
+/** Grocy's views of the calendar; its list goes on like Google Calendar's schedule. */
 @Serializable
-enum class CalendarView { DAY, WEEK, MONTH, SCHEDULE }
+enum class CalendarView {
+    DAY,
+    WEEK,
+    MONTH,
+    LIST,
+    ;
+
+    /** How it is stored (`SettingsStore.calendarView`): its name. */
+    fun stored(): String = name
+
+    companion object {
+        /** The list, like Grocy's, unless the user chose another view. */
+        val Default = LIST
+
+        /** The view [stored] names, [Default] for none or an unknown one. */
+        fun of(stored: String?): CalendarView = entries.find { it.name == stored } ?: Default
+    }
+}
 
 /** The first day of the week of [epochDay], [firstDayOfWeek] from 0 (Sunday) to 6. */
 fun calendarWeekStart(epochDay: Long, firstDayOfWeek: Int): Long =
@@ -203,9 +235,30 @@ fun calendarMonthWeeks(epochDay: Long, firstDayOfWeek: Int): List<Long> {
 /** The day to show when going [steps] periods of [view] on from [epochDay]. */
 fun calendarDayAfter(view: CalendarView, epochDay: Long, steps: Int): Long = when (view) {
     CalendarView.DAY -> epochDay + steps
-    CalendarView.WEEK, CalendarView.SCHEDULE -> epochDay + steps * DAYS_PER_WEEK
+    CalendarView.WEEK, CalendarView.LIST -> epochDay + steps * DAYS_PER_WEEK
     CalendarView.MONTH -> addMonths(epochDay, steps)
 }
+
+/**
+ * How many periods of [view] [target] lies after [from] (before for a negative number), what a
+ * calendar paging through them turns.
+ */
+fun calendarStepsBetween(view: CalendarView, from: Long, target: Long, firstDayOfWeek: Int): Int =
+    when (view) {
+        CalendarView.DAY -> (target - from).toInt()
+        CalendarView.WEEK, CalendarView.LIST -> ((calendarWeekStart(target, firstDayOfWeek) -
+            calendarWeekStart(from, firstDayOfWeek)) / DAYS_PER_WEEK).toInt()
+        CalendarView.MONTH -> monthsBetween(from, target)
+    }
+
+private fun monthsBetween(from: Long, target: Long): Int {
+    val (fromYear, fromMonth) = civilYearMonth(from)
+    val (targetYear, targetMonth) = civilYearMonth(target)
+    return (targetYear - fromYear) * MONTHS_PER_YEAR + targetMonth - fromMonth
+}
+
+private fun civilYearMonth(epochDay: Long): Pair<Int, Int> =
+    yearOfDay(epochDay) to monthOfDay(epochDay)
 
 /** [text] as "#rrggbb" if it is a color like Grocy's color inputs give, with or without "#". */
 fun normalizedHexColor(text: String): String? {
@@ -223,4 +276,5 @@ private const val ISO_DATE_LENGTH = 10
 private const val WHOLE_DAY_TIME = "23:59:59"
 private const val NEVER_YEAR = 2999
 private const val HEX_COLOR_DIGITS = 6
+private const val MONTHS_PER_YEAR = 12
 private const val OPAQUE = 0xFF000000L

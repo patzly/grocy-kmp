@@ -4,6 +4,18 @@
   <string name="widget_tasks_description">Twoje zadania do wykonania, odhaczane jednym dotknięciem</string>
   <string name="widget_month_label">Widok miesiąca kalendarza</string>
   <string name="widget_month_description">Miesiąc z tym, co przypada na każdy dzień</string>
-  <string name="widget_schedule_label">Harmonogram kalendarza</string>
+  <string name="widget_schedule_label">Lista kalendarza</string>
   <string name="widget_schedule_description">Co przypada od dziś</string>
+  <string name="widget_sample_mow_lawn">Skosić trawnik</string>
+  <string name="widget_sample_buy_seeds">Kupić nasiona</string>
+  <string name="widget_sample_water_plants">Podlać rośliny</string>
+  <string name="widget_sample_descale">Odkamienić ekspres do kawy</string>
+  <string name="widget_sample_milk">Mleko</string>
+  <string name="widget_sample_vacuum">Odkurzyć salon</string>
+  <string name="widget_sample_spaghetti">Spaghetti bolognese</string>
+  <string name="widget_sample_lunch">Obiad</string>
+  <string name="widget_sample_smoke_detector">Czujnik dymu</string>
+  <string name="widget_sample_month">Listopad</string>
+  <string name="widget_preview_tasks">Zadania</string>
+  <string name="widget_preview_calendar">Kalendarz</string>
 </resources>

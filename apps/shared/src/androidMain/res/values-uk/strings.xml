@@ -4,6 +4,18 @@
   <string name="widget_tasks_description">Ваші невиконані завдання, виконані одним дотиком</string>
   <string name="widget_month_label">Календар на місяць</string>
   <string name="widget_month_description">Місяць з усім, що настає кожного дня</string>
-  <string name="widget_schedule_label">Розклад календаря</string>
+  <string name="widget_schedule_label">Список календаря</string>
   <string name="widget_schedule_description">Що настає починаючи з сьогодні</string>
+  <string name="widget_sample_mow_lawn">Покосити газон</string>
+  <string name="widget_sample_buy_seeds">Купити насіння</string>
+  <string name="widget_sample_water_plants">Полити рослини</string>
+  <string name="widget_sample_descale">Очистити кавоварку від накипу</string>
+  <string name="widget_sample_milk">Молоко</string>
+  <string name="widget_sample_vacuum">Пропилососити вітальню</string>
+  <string name="widget_sample_spaghetti">Спагеті болоньєзе</string>
+  <string name="widget_sample_lunch">Обід</string>
+  <string name="widget_sample_smoke_detector">Датчик диму</string>
+  <string name="widget_sample_month">Листопад</string>
+  <string name="widget_preview_tasks">Завдання</string>
+  <string name="widget_preview_calendar">Календар</string>
 </resources>

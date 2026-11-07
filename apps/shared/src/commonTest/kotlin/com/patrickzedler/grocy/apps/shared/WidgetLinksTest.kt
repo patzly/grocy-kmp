@@ -7,7 +7,6 @@ import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.feature.calendar.api.CalendarRoute
 import com.patrickzedler.grocy.feature.recipes.api.MealPlanRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipeRoute
-import com.patrickzedler.grocy.feature.stock.api.StockOverviewRoute
 import com.patrickzedler.grocy.feature.tasks.api.TaskRoute
 import com.patrickzedler.grocy.feature.tasks.api.TasksRoute
 import kotlin.test.Test
@@ -34,12 +33,17 @@ class WidgetLinksTest {
     }
 
     @Test
-    fun eventLinksGoWhereGrocysCalendarLinksThem() {
-        val product = CalendarEvent(CalendarEventKind.PRODUCT, "Milk", day)
-        val recipe = CalendarEvent(CalendarEventKind.MEAL_PLAN_RECIPE, "Soup", day, recipeId = 3)
+    fun eventLinksOpenWhatTheEventIsAbout() {
+        val product = CalendarEvent(CalendarEventKind.PRODUCT, "Milk", day, objectId = 2)
+        val task = CalendarEvent(CalendarEventKind.TASK, "Mow", day, objectId = 4)
+        val recipe = CalendarEvent(CalendarEventKind.MEAL_PLAN_RECIPE, "Soup", day, objectId = 3)
         val note = CalendarEvent(CalendarEventKind.MEAL_PLAN_NOTE, "Guests", day)
 
-        assertEquals(StockOverviewRoute, WidgetLinks.routeOfLink(WidgetLinks.event(product)))
+        assertEquals(
+            CalendarRoute(CalendarView.DAY, "2026-11-07", productId = 2),
+            WidgetLinks.routeOfLink(WidgetLinks.event(product)),
+        )
+        assertEquals(TaskRoute(4, inList = false), WidgetLinks.routeOfLink(WidgetLinks.event(task)))
         assertEquals(RecipeRoute(3), WidgetLinks.routeOfLink(WidgetLinks.event(recipe)))
         assertEquals(MealPlanRoute("2026-11-07"), WidgetLinks.routeOfLink(WidgetLinks.event(note)))
     }
