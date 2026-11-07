@@ -713,6 +713,7 @@ private fun dueDateItem(viewModel: BookingViewModel, options: BookingOptions): G
             enabled = !neverOverdue,
             index = index,
             count = count,
+            scanDueDate = true,
         )
     }
 }

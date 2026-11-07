@@ -524,6 +524,15 @@
   <string name="product_due_days">ימים בתוקף עד כבררת מחדל</string>
   <string name="product_due_days_hint">לרכישות תתווסף כמות הימים הזאת ליום הנוכחי להצעת תאריך תפוגת התוקף המיטבי (‎-1 משמעו שתוקף המוצר הזה לא יפוג לעולם)</string>
   <string name="product_due_days_pick">ספירת הימים עד תאריך</string>
+  <string name="scanner_due_dates">תאריכי סיום תוקף</string>
+  <string name="scanner_scan_due_dates">סריקת תאריכי סיום תוקף</string>
+  <string name="scanner_scan_due_dates_description">קורא בעזרת ML Kit את התאריך המודפס על האריזות</string>
+  <string name="action_scan_due_date">סריקת תאריך סיום התוקף</string>
+  <string name="due_date_scan_hint">יש לכוון את המצלמה אל התאריך המודפס</string>
+  <string name="due_date_scan_choose">לאיזה תאריך הכוונה?</string>
+  <string name="product_due_days_scan">ספירת הימים עד לתאריך שנסרק</string>
+  <string name="product_due_days_scan_invalid_title">אין תאריך בעתיד</string>
+  <string name="product_due_days_scan_invalid">התאריך שנסרק %1$s אינו אחרי היום, לכן אי אפשר לספור ימים עד אליו.</string>
   <string name="product_due_days_after_open">ימים לתום התוקף לאחר הפתיחה כבררת מחדל</string>
   <string name="product_due_days_after_open_hint">כאשר המוצר הזה מסומן כפתוח, תאריך התפוגה יוחלף ביום הנוכחי + כמות כזאת של ימים, אך רק אם התאריך שמתקבל אינו מאוחר מתאריך התפוגה המקורי (0 ישבית את זה)</string>
   <string name="product_due_days_after_freezing">ימים לתום התוקף לאחר ההקפאה כבררת מחדל</string>

@@ -5,7 +5,7 @@ management server. It is a full rewrite of the old Grocy Android app in Kotlin M
 Compose Multiplatform. Targets: Android (phone, Wear OS) and Web (Kotlin/Wasm). No iOS or desktop.
 
 Current state: login (demo, QR code, manual, Home Assistant ingress on Android), the barcode
-scanner, update checks, the start screen, About, the settings (General, Server, Grocy settings,
+scanner, scanning printed due dates (Play app), update checks, the start screen, About, the settings (General, Server, Grocy settings,
 Network with Tor, HTTP proxy and the local network permission on Android, Behavior, Scanner),
 Grocy's stock overview with its reports (location content sheet, spendings) and scan page,
 master data with all their forms, the stock bookings,
@@ -64,7 +64,8 @@ tasks need.
 - `docs/architecture/database.md`: repositories, refresh, schema history, the web worker database.
 - `docs/architecture/storage-and-variants.md`: credential and settings stores, FOSS vs Play.
 - `docs/architecture/updates.md`: update checks per platform, the web service worker.
-- `docs/architecture/scanner.md`: barcode scanner engines, camera and permissions.
+- `docs/architecture/scanner.md`: barcode scanner engines, camera and permissions, scanning
+  printed due dates.
 - `docs/architecture/ci.md`: workflows, signing, reproducible builds.
 
 ## Product requirements (binding)
@@ -312,7 +313,8 @@ object. Platform specifics come in through `PlatformDependencies` (`AndroidPlatf
   through nullability (`unlockChecker`), never build flags; closed-source code only enters
   through `android-play`. Details: `docs/architecture/storage-and-variants.md`.
 - Dates are entered with `DateTextItem` (`core:forms`), never a plain text field.
-- Always use `BarcodeScanner` as an item of a group; details in `docs/architecture/scanner.md`.
+- Always use `BarcodeScanner` as an item of a group; details in `docs/architecture/scanner.md`,
+  which also covers `TextScanner` and the due date scanner (`DateTextItem(scanDueDate)`).
 
 ### Theming and UI
 

@@ -64,6 +64,7 @@ import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.forms.ChoiceItem
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.DueDaysPickerButton
+import com.patrickzedler.grocy.core.forms.DueDaysScanButton
 import com.patrickzedler.grocy.core.forms.FieldError
 import com.patrickzedler.grocy.core.forms.FormFrame
 import com.patrickzedler.grocy.core.forms.GroupItems
@@ -79,6 +80,7 @@ import com.patrickzedler.grocy.core.forms.UnsavedChangesDialog
 import com.patrickzedler.grocy.core.forms.UserfieldItem
 import com.patrickzedler.grocy.core.forms.fieldErrorText
 import com.patrickzedler.grocy.core.forms.objectActionItems
+import com.patrickzedler.grocy.core.forms.rememberDueDaysScan
 import com.patrickzedler.grocy.core.model.masterdata.DueType
 import com.patrickzedler.grocy.core.model.masterdata.Location
 import com.patrickzedler.grocy.core.model.masterdata.Product
@@ -1010,6 +1012,8 @@ private fun DueDateItems(
                     min = -1.0,
                     index = index,
                     count = count,
+                    // The date printed on a package is its due date, not one after opening
+                    scannable = true,
                 )
             }
         } else {
@@ -1086,7 +1090,9 @@ private fun DaysItem(
     min: Double,
     index: Int,
     count: Int,
+    scannable: Boolean = false,
 ) {
+    val scan = if (scannable) rememberDueDaysScan(state) else null
     TextItem(
         state = state,
         label = stringResource(label),
@@ -1095,7 +1101,13 @@ private fun DaysItem(
         keyboardType = KeyboardType.Number,
         index = index,
         count = count,
-        trailingAction = { DueDaysPickerButton(state) },
+        trailingAction = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                DueDaysPickerButton(state)
+                scan?.let { DueDaysScanButton(it) }
+            }
+        },
+        below = scan?.below,
         stepper = NumberStepper(min = min),
     )
 }

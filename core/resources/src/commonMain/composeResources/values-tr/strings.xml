@@ -504,6 +504,15 @@
   <string name="product_due_days">Varsayılan vade günleri</string>
   <string name="product_due_days_hint">Satın alma işlemlerinde son tarih önerisi için bu gün sayısı bugüne eklenecektir (-1, bu ürünün hiçbir zaman vadesinin geçmeyeceği anlamına gelir)</string>
   <string name="product_due_days_pick">Bir tarihe kadar olan günleri say</string>
+  <string name="scanner_due_dates">Bitiş tarihleri</string>
+  <string name="scanner_scan_due_dates">Bitiş tarihlerini tara</string>
+  <string name="scanner_scan_due_dates_description">Ambalajlara basılı tarihi ML Kit ile okur</string>
+  <string name="action_scan_due_date">Bitiş tarihini tara</string>
+  <string name="due_date_scan_hint">Kamerayı basılı tarihe tutun</string>
+  <string name="due_date_scan_choose">Hangi tarih kastediliyor?</string>
+  <string name="product_due_days_scan">Taranan bir tarihe kadar günleri say</string>
+  <string name="product_due_days_scan_invalid_title">Gelecekte tarih yok</string>
+  <string name="product_due_days_scan_invalid">Taranan %1$s tarihi bugünden sonra değil, bu nedenle ona kadar gün sayılamaz.</string>
   <string name="product_due_days_after_open">Açıldıktan sonra varsayılan bekleme günü</string>
   <string name="product_due_days_after_open_hint">Bu ürün açılmış olarak işaretlendiğinde, son tarih; bugün + buradaki gün miktarıyla değiştirilecektir, ancak yalnızca sonuç tarihin orijinal son tarihten sonra olmaması durumunda (0 değeri bunu devre dışı bırakır)</string>
   <string name="product_due_days_after_freezing">Döndürdüktan sonra varsayılan bekleme günü</string>

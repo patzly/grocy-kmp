@@ -11,7 +11,8 @@ import kotlinx.coroutines.launch
 
 /**
  * The scanner engine the user chooses from what the app ships: both in the Play app, ML Kit there
- * only once unlocked, ZXing alone in the FOSS and web apps.
+ * only once unlocked, ZXing alone in the FOSS and web apps. Where the app can read text, also
+ * whether due dates are scanned.
  */
 internal class ScannerSettingsViewModel(
     private val scannerRepository: ScannerRepository,
@@ -39,6 +40,16 @@ internal class ScannerSettingsViewModel(
 
     fun selectEngine(engine: ScannerEngine) {
         viewModelScope.launch { scannerRepository.selectEngine(engine) }
+    }
+
+    /** Only where the app can read text: the Play app with ML Kit. */
+    val showsDueDates: Boolean = scannerRepository.canReadText
+
+    /** Read at app start like [activeEngine]. */
+    val scanDueDates: StateFlow<Boolean?> = scannerRepository.scanDueDates
+
+    fun setScanDueDates(scanDueDates: Boolean) {
+        viewModelScope.launch { scannerRepository.setScanDueDates(scanDueDates) }
     }
 
     /** Checks the installed apps again, e.g. after returning from Google Play. */

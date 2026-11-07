@@ -484,6 +484,15 @@
   <string name="product_due_days">既定の期限日数</string>
   <string name="product_due_days_hint">購入日にこの日数を足した日が期限として提案されます (-1を入力すると、期限がない物品として登録されます)</string>
   <string name="product_due_days_pick">日付までの日数を数える</string>
+  <string name="scanner_due_dates">期限</string>
+  <string name="scanner_scan_due_dates">期限をスキャン</string>
+  <string name="scanner_scan_due_dates_description">パッケージに印字された期限を ML Kit で読み取ります</string>
+  <string name="action_scan_due_date">期限をスキャン</string>
+  <string name="due_date_scan_hint">印字された日付にカメラを向けてください</string>
+  <string name="due_date_scan_choose">どちらの日付ですか？</string>
+  <string name="product_due_days_scan">スキャンした日付までの日数を数える</string>
+  <string name="product_due_days_scan_invalid_title">未来の日付ではありません</string>
+  <string name="product_due_days_scan_invalid">スキャンした日付 %1$s は今日より後ではないため、日数を数えられません。</string>
   <string name="product_due_days_after_open">既定の開封後期限日数</string>
   <string name="product_due_days_after_open_hint">この物品が開封済みになると、開封日にこの日数を足した日が期限になります。元の期限より長くなる場合は期限は変更されません(値が0の場合は無効化されます)</string>
   <string name="product_due_days_after_freezing">既定の冷凍後期限日数</string>

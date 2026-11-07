@@ -3,7 +3,6 @@
 package com.patrickzedler.grocy.core.scanner
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -23,7 +22,7 @@ import kotlinx.coroutines.delay
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLVideoElement
 
-/** Pause between two decoded frames; decoding in Wasm is slower than on Android. */
+/** Pause between two analyzed frames; decoding in Wasm is slower than on Android. */
 private const val FRAME_INTERVAL_MILLIS = 120L
 
 private external interface CameraStartResult : JsAny {
@@ -33,29 +32,22 @@ private external interface CameraStartResult : JsAny {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-internal actual fun CameraPreview(
-    decoderFactory: BarcodeDecoderFactory,
-    formats: Set<BarcodeFormat>,
-    isDecoding: Boolean,
+internal actual fun <T> CameraPreview(
+    analyzer: FrameAnalyzer<T>,
+    isAnalyzing: Boolean,
     torchEnabled: Boolean,
     shape: Shape,
-    onBarcodes: (List<Barcode>) -> Unit,
+    onResult: (T) -> Unit,
     onStateChange: (CameraState) -> Unit,
     modifier: Modifier,
 ) {
     val density = LocalDensity.current
     val layoutDirection = LocalLayoutDirection.current
-    val currentFormats by rememberUpdatedState(formats)
-    val currentIsDecoding by rememberUpdatedState(isDecoding)
-    val currentOnBarcodes by rememberUpdatedState(onBarcodes)
+    val currentIsAnalyzing by rememberUpdatedState(isAnalyzing)
+    val currentOnResult by rememberUpdatedState(onResult)
     val currentOnStateChange by rememberUpdatedState(onStateChange)
     val video = remember { createVideoElement() }
     val canvas = remember { createCanvasElement() }
-
-    val decoder = remember(decoderFactory) { decoderFactory.create() }
-    DisposableEffect(decoder) {
-        onDispose { decoder.close() }
-    }
 
     // The video lies above the Compose canvas, so it is rounded with CSS instead of a clip
     HtmlElementView(
@@ -66,7 +58,7 @@ internal actual fun CameraPreview(
         },
     )
 
-    LaunchedEffect(decoder) {
+    LaunchedEffect(analyzer) {
         val result = startCamera(video).await<CameraStartResult>()
         val stream = result.stream
         if (stream == null) {
@@ -78,9 +70,9 @@ internal actual fun CameraPreview(
             currentOnStateChange(CameraState.Running(hasTorch = false))
             while (true) {
                 delay(FRAME_INTERVAL_MILLIS)
-                if (!currentIsDecoding) continue
+                if (!currentIsAnalyzing) continue
                 val imageData = grabFrame(video, canvas) ?: continue
-                currentOnBarcodes(decoder.decode(CameraFrame(imageData), currentFormats))
+                currentOnResult(analyzer.analyze(CameraFrame(imageData)))
             }
         } catch (e: CancellationException) {
             throw e

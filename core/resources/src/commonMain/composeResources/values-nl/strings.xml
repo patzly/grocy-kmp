@@ -504,6 +504,15 @@
   <string name="product_due_days">Standaard houdbaarheidsdatum</string>
   <string name="product_due_days_hint">De volgende uitvoeringsdatum zal worden aangeraden op zoveel dagen na vandaag (-1 betekent dat dit product nooit achterstallig zal zijn)</string>
   <string name="product_due_days_pick">Dagen tot een datum tellen</string>
+  <string name="scanner_due_dates">Vervaldata</string>
+  <string name="scanner_scan_due_dates">Vervaldata scannen</string>
+  <string name="scanner_scan_due_dates_description">Leest met ML Kit de datum die op verpakkingen is gedrukt</string>
+  <string name="action_scan_due_date">Vervaldatum scannen</string>
+  <string name="due_date_scan_hint">Richt de camera op de gedrukte datum</string>
+  <string name="due_date_scan_choose">Welke datum wordt bedoeld?</string>
+  <string name="product_due_days_scan">Dagen tot een gescande datum tellen</string>
+  <string name="product_due_days_scan_invalid_title">Geen datum in de toekomst</string>
+  <string name="product_due_days_scan_invalid">De gescande datum %1$s ligt niet na vandaag, dus er kunnen geen dagen tot die datum worden geteld.</string>
   <string name="product_due_days_after_open">Standaard houdbaarheidsdatum na openen</string>
   <string name="product_due_days_after_open_hint">Toen dit product als geopend werd gemarkeerd, wordt de vervaldatum vervangen door vandaag + dit aantal dagen, maar alleen als de resulterende datum niet na de originele vervaldatum valt (een waarde van 0 schakelt dit uit)</string>
   <string name="product_due_days_after_freezing">Standaard houdbaarheidsdatum na invriezen</string>

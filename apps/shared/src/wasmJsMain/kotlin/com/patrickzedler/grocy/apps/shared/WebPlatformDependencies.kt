@@ -18,6 +18,7 @@ import com.patrickzedler.grocy.core.data.update.ServiceWorkerAppUpdater
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
+import com.patrickzedler.grocy.core.scanner.TextRecognizerFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -44,6 +45,8 @@ class WebPlatformDependencies(
 
     override val barcodeDecoders: Map<ScannerEngine, BarcodeDecoderFactory> =
         mapOf(ScannerEngine.ZXING to BarcodeDecoderFactory.Zxing)
+
+    override val textRecognizer: TextRecognizerFactory? = null
 
     // The browser's online event; it only tells a network exists, not that the server answers
     @OptIn(ExperimentalWasmJsInterop::class)

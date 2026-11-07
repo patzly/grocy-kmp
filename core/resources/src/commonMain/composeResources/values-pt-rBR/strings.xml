@@ -524,6 +524,15 @@
   <string name="product_due_days">Dias de validade (padrão)</string>
   <string name="product_due_days_hint">Para compras, essa quantidade de dias será adicionada à data atual para a sugestão de data de validade (-1 significa que este produto possui validade indeterminada)</string>
   <string name="product_due_days_pick">Contar os dias até uma data</string>
+  <string name="scanner_due_dates">Validades</string>
+  <string name="scanner_scan_due_dates">Escanear validades</string>
+  <string name="scanner_scan_due_dates_description">Lê com o ML Kit a data impressa nas embalagens</string>
+  <string name="action_scan_due_date">Escanear validade</string>
+  <string name="due_date_scan_hint">Aponte a câmera para a data impressa</string>
+  <string name="due_date_scan_choose">Qual data é?</string>
+  <string name="product_due_days_scan">Contar os dias até uma data escaneada</string>
+  <string name="product_due_days_scan_invalid_title">Nenhuma data no futuro</string>
+  <string name="product_due_days_scan_invalid">A data escaneada %1$s não é posterior a hoje, então não é possível contar dias até ela.</string>
   <string name="product_due_days_after_open">Dias de validade depois de aberto (padrão)</string>
   <string name="product_due_days_after_open_hint">Quando o produto for marcado como aberto, a validade será substituída por hoje + esta quantidade de dias, mas apenas se a data resultante não for posterior à validade original (o valor 0 desativa isto)</string>
   <string name="product_due_days_after_freezing">Dias de validade após colocar no congelador (padrão)</string>

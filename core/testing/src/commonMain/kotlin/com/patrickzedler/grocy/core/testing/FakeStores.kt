@@ -46,6 +46,7 @@ class FakeCredentialStore(
 class FakeSettingsStore(
     checkUnlockKey: Boolean = true,
     scannerEngine: ScannerEngine = ScannerEngine.ZXING,
+    scanDueDates: Boolean = true,
     appearance: AppearanceSettings = AppearanceSettings(),
     stockOverviewOptions: StockOverviewOptions = StockOverviewOptions(),
     shoppingListOptions: ShoppingListOptions = ShoppingListOptions(),
@@ -75,6 +76,12 @@ class FakeSettingsStore(
 
     override suspend fun setScannerEngine(scannerEngine: ScannerEngine) {
         this.scannerEngine.value = scannerEngine
+    }
+
+    override val scanDueDates = MutableStateFlow(scanDueDates)
+
+    override suspend fun setScanDueDates(scanDueDates: Boolean) {
+        this.scanDueDates.value = scanDueDates
     }
 
     override val appearance = MutableStateFlow(appearance)

@@ -504,6 +504,15 @@
   <string name="product_due_days">Standard forfallsdager</string>
   <string name="product_due_days_hint">For kjøp blir dette antall dager lagt til i dag for forslaget på forfallsdato (-1 betyr at dette produktet aldri forfaller)</string>
   <string name="product_due_days_pick">Tell dagene frem til en dato</string>
+  <string name="scanner_due_dates">Forfallsdatoer</string>
+  <string name="scanner_scan_due_dates">Skann forfallsdatoer</string>
+  <string name="scanner_scan_due_dates_description">Leser datoen som er trykt på emballasjen med ML Kit</string>
+  <string name="action_scan_due_date">Skann forfallsdato</string>
+  <string name="due_date_scan_hint">Hold kameraet mot den trykte datoen</string>
+  <string name="due_date_scan_choose">Hvilken dato menes?</string>
+  <string name="product_due_days_scan">Tell dagene til en skannet dato</string>
+  <string name="product_due_days_scan_invalid_title">Ingen dato i fremtiden</string>
+  <string name="product_due_days_scan_invalid">Den skannede datoen %1$s er ikke etter i dag, så ingen dager kan telles til den.</string>
   <string name="product_due_days_after_open">Standard forfallsdager etter åpning</string>
   <string name="product_due_days_after_open_hint">Når dette produktet blir merket som åpnet, vil utløpsdato bli erstattet med dagens dato + dette antall dager, men bare dersom datoen ikke ender etter original utløpsdato (sett verdien til 0 for å deaktivere dette)</string>
   <string name="product_due_days_after_freezing">Standard forfallsdager etter frysing</string>

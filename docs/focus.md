@@ -107,6 +107,10 @@ A new form with a scanner adds a `ScannerForm` entry, gets its state from
   (`typedDateSeparators`), and the form's state keeps Grocy's format as soon as the digits name a
   date (`grocyDateOfTyped`). The order follows the language (`languageDateOrder`) unless the user
   chose one, both through `LocalDateInput`.
+- Due dates (`DateTextItem(scanDueDate = true)`: bookings, stock entries) also have a scan
+  button after the calendar (`TextItem(trailingButton)`, which keeps its click above the
+  field's button). It closes the keyboard and opens the camera below the field; a read date fills
+  the field and closes it, a date whose day and month could be swapped first asks which one.
 - `autoCorrect = false` for what is no language (codes). Pickers and the search turn it off
   themselves.
 - Secrets use `RoundedSecureTextField` with `ContentType.Password` for password managers.

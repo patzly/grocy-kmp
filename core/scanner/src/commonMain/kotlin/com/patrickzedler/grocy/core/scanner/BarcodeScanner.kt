@@ -17,6 +17,7 @@ import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
@@ -106,7 +107,6 @@ internal fun scannerHeight(width: Dp, windowHeight: Dp): Dp {
  * @param containerColor behind the permission and error states; a scanner inside an item with
  *   other content takes the color of text fields, so its rectangle stands out.
  */
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun BarcodeScanner(
     onBarcodeScanned: (Barcode) -> Unit,
@@ -117,10 +117,58 @@ fun BarcodeScanner(
     containerColor: Color = SegmentedListDefaults.containerColor,
 ) {
     val decoderFactory = LocalBarcodeDecoderFactory.current
-    val access = rememberCameraAccess()
     val haptic = LocalHapticFeedback.current
     val currentOnBarcodeScanned by rememberUpdatedState(onBarcodeScanned)
+    val currentFormats by rememberUpdatedState(formats)
     val filter = remember { ScanResultFilter() }
+
+    CameraScannerBox(
+        modifier = modifier,
+        shape = shape,
+        containerColor = containerColor,
+    ) { torchEnabled, onStateChange, previewModifier ->
+        val decoder = remember(decoderFactory) { decoderFactory.create() }
+        DisposableEffect(decoder) {
+            onDispose { decoder.close() }
+        }
+        val analyzer = remember(decoder) {
+            FrameAnalyzer { frame -> decoder.decode(frame, currentFormats) }
+        }
+        CameraPreview(
+            analyzer = analyzer,
+            isAnalyzing = !paused,
+            torchEnabled = torchEnabled,
+            shape = shape,
+            onResult = { barcodes ->
+                filter.accept(barcodes)?.let {
+                    haptic.confirm()
+                    currentOnBarcodeScanned(it)
+                }
+            },
+            onStateChange = onStateChange,
+            modifier = previewModifier,
+        )
+    }
+}
+
+/**
+ * The frame of every camera scanner: sized by [scannerHeight] and clipped to [shape], with the
+ * permission request, errors, a loading indicator and the torch button. [preview] shows the
+ * camera once it may run; it is created again when the user retries after an error.
+ */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+internal fun CameraScannerBox(
+    modifier: Modifier,
+    shape: Shape,
+    containerColor: Color,
+    preview: @Composable (
+        torchEnabled: Boolean,
+        onStateChange: (CameraState) -> Unit,
+        modifier: Modifier,
+    ) -> Unit,
+) {
+    val access = rememberCameraAccess()
     var cameraState by remember { mutableStateOf<CameraState>(CameraState.Starting) }
     var torchEnabled by rememberSaveable { mutableStateOf(false) }
     // Changing it restarts the camera after a failure
@@ -172,20 +220,10 @@ fun BarcodeScanner(
                 } else {
                     val description = stringResource(Res.string.scanner_viewfinder)
                     key(attempt) {
-                        CameraPreview(
-                            decoderFactory = decoderFactory,
-                            formats = formats,
-                            isDecoding = !paused,
-                            torchEnabled = torchEnabled,
-                            shape = shape,
-                            onBarcodes = { barcodes ->
-                                filter.accept(barcodes)?.let {
-                                    haptic.confirm()
-                                    currentOnBarcodeScanned(it)
-                                }
-                            },
-                            onStateChange = { cameraState = it },
-                            modifier = Modifier
+                        preview(
+                            torchEnabled,
+                            { cameraState = it },
+                            Modifier
                                 .fillMaxSize()
                                 .semantics { contentDescription = description },
                         )

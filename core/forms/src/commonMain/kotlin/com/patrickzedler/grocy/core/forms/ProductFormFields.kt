@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.forms
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,11 +15,19 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.Role
@@ -49,6 +58,7 @@ import com.patrickzedler.grocy.core.resources.data_none
 import com.patrickzedler.grocy.core.resources.data_number_invalid
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.math.roundToInt
 
 /** One item of a group; it gets its position for the segmented shape. */
 typealias GroupItem = @Composable (index: Int, count: Int) -> Unit
@@ -85,6 +95,8 @@ fun fieldErrorText(error: FieldError?, requiredMessage: StringResource? = null):
  * @param autoCorrect off for what is no language, like codes.
  * @param onFieldClick makes the field a button instead of an input, e.g. for a date picker: it
  *   shows its value, tapping it calls this, and the keyboard's way through the form passes it.
+ * @param trailingButton a button after [trailingAction] that keeps its own click when
+ *   [onFieldClick] makes the rest of the field a button, e.g. a date field's scanner.
  */
 @Composable
 fun TextItem(
@@ -110,9 +122,24 @@ fun TextItem(
     outputTransformation: OutputTransformation? = null,
     onFieldClick: (() -> Unit)? = null,
     onFocusChange: (Boolean) -> Unit = {},
+    trailingButton: (@Composable () -> Unit)? = null,
 ) {
     val form = LocalFormFocus.current
     val isDone = isLastField && !multiLine
+    // Where the trailing button starts, so the field's button leaves its click to it
+    val buttonArea = remember { TrailingButtonArea() }
+    val trailing: (@Composable () -> Unit)? = if (trailingButton == null) {
+        trailingAction
+    } else {
+        {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                trailingAction?.invoke()
+                Box(Modifier.onGloballyPositioned(buttonArea::onButtonPlaced)) {
+                    trailingButton()
+                }
+            }
+        }
+    }
     SegmentedContainer(index = index, count = count, modifier = modifier) {
         val field: @Composable (Modifier) -> Unit = { fieldModifier ->
             RoundedTextField(
@@ -135,7 +162,7 @@ fun TextItem(
                 inputTransformation = inputTransformation,
                 outputTransformation = outputTransformation,
                 label = { Text(label) },
-                trailingIcon = trailingAction,
+                trailingIcon = trailing,
                 suffix = suffix?.let { { Text(it) } },
                 // The stepper shows it below its buttons too, so they stay centered on the field
                 supportingText = error?.takeIf { stepper == null }?.let { text ->
@@ -180,11 +207,13 @@ fun TextItem(
             val description = listOfNotNull(label, state.text.toString().ifEmpty { null }, error)
                 .joinToString(", ")
             val haptic = LocalHapticFeedback.current
-            Box(Modifier.fillMaxWidth()) {
+            Box(Modifier.fillMaxWidth().onGloballyPositioned(buttonArea::onFieldPlaced)) {
                 field(Modifier.fillMaxWidth())
+                val excludedEnd = with(LocalDensity.current) { buttonArea.endWidth.toDp() }
                 Box(
                     Modifier
                         .matchParentSize()
+                        .padding(end = excludedEnd)
                         .clickCursor(enabled)
                         .semantics { contentDescription = description }
                         .clickable(
@@ -216,6 +245,32 @@ fun TextItem(
             Spacer(Modifier.height(16.dp))
             below()
         }
+    }
+}
+
+/** The width at the end of a field that its trailing button takes, up to the field's end. */
+private class TrailingButtonArea {
+    private var field: LayoutCoordinates? = null
+    private var button: LayoutCoordinates? = null
+
+    var endWidth by mutableIntStateOf(0)
+        private set
+
+    fun onFieldPlaced(coordinates: LayoutCoordinates) {
+        field = coordinates
+        update()
+    }
+
+    fun onButtonPlaced(coordinates: LayoutCoordinates) {
+        button = coordinates
+        update()
+    }
+
+    private fun update() {
+        val field = field?.takeIf { it.isAttached } ?: return
+        val button = button?.takeIf { it.isAttached } ?: return
+        val start = field.localBoundingBoxOf(button, clipBounds = false).left
+        endWidth = (field.size.width - start).roundToInt().coerceAtLeast(0)
     }
 }
 

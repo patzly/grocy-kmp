@@ -24,6 +24,7 @@ import com.patrickzedler.grocy.core.data.update.GitHubAppUpdater
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
+import com.patrickzedler.grocy.core.scanner.TextRecognizerFactory
 import com.patrickzedler.grocy.core.ui.hasLocalNetworkPermission
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
@@ -31,14 +32,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
 /**
- * [additionalBarcodeDecoders] are engines an app module adds, e.g. ML Kit in the Play app,
- * which apps:shared must not depend on. [appUpdater] likewise replaces the GitHub updater it
+ * [additionalBarcodeDecoders] and [textRecognizer] are engines an app module adds, e.g. ML Kit in
+ * the Play app, which apps:shared must not depend on. [appUpdater] likewise replaces the GitHub updater it
  * gets, e.g. with Google Play's in-app updates.
  */
 class AndroidPlatformDependencies(
     context: Context,
     isPlayVariant: Boolean,
     additionalBarcodeDecoders: Map<ScannerEngine, BarcodeDecoderFactory> = emptyMap(),
+    override val textRecognizer: TextRecognizerFactory? = null,
     private val appUpdater: (gitHubUpdater: AppUpdater) -> AppUpdater = { it },
 ) : PlatformDependencies {
 

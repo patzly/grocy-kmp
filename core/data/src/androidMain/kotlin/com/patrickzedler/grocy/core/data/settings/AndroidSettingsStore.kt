@@ -61,6 +61,14 @@ class AndroidSettingsStore(
         dataStore.edit { it[SCANNER_ENGINE] = scannerEngine.name }
     }
 
+    override val scanDueDates: Flow<Boolean> = preferences
+        .map { it[SCAN_DUE_DATES] ?: true }
+        .distinctUntilChanged()
+
+    override suspend fun setScanDueDates(scanDueDates: Boolean) {
+        dataStore.edit { it[SCAN_DUE_DATES] = scanDueDates }
+    }
+
     override val appearance: Flow<AppearanceSettings> = preferences
         .map { appearanceOf(it[THEME], it[COLOR], it[HUE], it[CONTRAST], it[STYLE]) }
         .distinctUntilChanged()
@@ -275,6 +283,7 @@ class AndroidSettingsStore(
         const val FILE_NAME = "settings"
         val CHECK_UNLOCK_KEY = booleanPreferencesKey("check_unlock_key")
         val SCANNER_ENGINE = stringPreferencesKey("scanner_engine")
+        val SCAN_DUE_DATES = booleanPreferencesKey("scan_due_dates")
         val THEME = stringPreferencesKey("theme")
         val COLOR = stringPreferencesKey("color")
         val HUE = floatPreferencesKey("hue")

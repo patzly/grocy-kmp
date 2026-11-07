@@ -6,6 +6,7 @@ import com.patrickzedler.grocy.apps.shared.AppGraph
 import com.patrickzedler.grocy.apps.shared.AppGraphOwner
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.scanner.mlkit.MlKitBarcodeDecoderFactory
+import com.patrickzedler.grocy.core.scanner.mlkit.MlKitTextRecognizerFactory
 import com.patrickzedler.grocy.core.update.play.PlayAppUpdater
 import com.patrickzedler.grocy.core.update.play.ResumedActivityTracker
 import com.patrickzedler.grocy.core.wear.PhoneConnectionPublisher
@@ -28,6 +29,7 @@ class PlayApplication : Application(), AppGraphOwner {
                 additionalBarcodeDecoders = mapOf(
                     ScannerEngine.ML_KIT to MlKitBarcodeDecoderFactory,
                 ),
+                textRecognizer = MlKitTextRecognizerFactory,
                 appUpdater = { gitHubUpdater ->
                     PlayAppUpdater(
                         context = this,

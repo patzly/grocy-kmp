@@ -32,6 +32,7 @@ import com.patrickzedler.grocy.core.forms.DateInputSettings
 import com.patrickzedler.grocy.core.forms.LocalDateInput
 import com.patrickzedler.grocy.core.model.text.languageDateOrder
 import com.patrickzedler.grocy.core.scanner.LocalBarcodeDecoderFactory
+import com.patrickzedler.grocy.core.scanner.LocalTextRecognizerFactory
 import com.patrickzedler.grocy.core.ui.AppMenuLinks
 import com.patrickzedler.grocy.core.ui.LocalAppMenuLinks
 import com.patrickzedler.grocy.core.ui.LocalUnlockState
@@ -102,6 +103,7 @@ fun GrocyApp(
         val resourcesReady = rememberResourcesReady()
         val barcodeDecoderFactory by graph.barcodeDecoderFactory
             .collectAsStateWithLifecycle(initialValue = BarcodeDecoderFactory.Zxing)
+        val scansDueDates by graph.scansDueDates.collectAsStateWithLifecycle()
 
         val pointerKind = rememberPointerKindState()
         val unlockState by graph.unlockRepository.unlockState.collectAsStateWithLifecycle()
@@ -110,6 +112,7 @@ fun GrocyApp(
 
         CompositionLocalProvider(
             LocalBarcodeDecoderFactory provides barcodeDecoderFactory,
+            LocalTextRecognizerFactory provides graph.textRecognizer.takeIf { scansDueDates },
             LocalPointerKind provides pointerKind,
             LocalUnlockState provides unlockState,
             LocalDateInput provides DateInputSettings(

@@ -31,6 +31,11 @@ interface SettingsStore {
 
     suspend fun setScannerEngine(scannerEngine: ScannerEngine)
 
+    /** Whether due date fields offer to read the date printed on a package, on by default. */
+    val scanDueDates: Flow<Boolean>
+
+    suspend fun setScanDueDates(scanDueDates: Boolean)
+
     val appearance: Flow<AppearanceSettings>
 
     suspend fun setAppearance(appearance: AppearanceSettings)

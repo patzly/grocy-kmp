@@ -524,6 +524,15 @@
   <string name="product_due_days">Giorni di scadenza predefiniti</string>
   <string name="product_due_days_hint">Per gli acquisti, questo numero di giorni verrà aggiunto a oggi per il suggerimento della data di scadenza (-1 significa che questo prodotto non sarà mai scaduto)</string>
   <string name="product_due_days_pick">Conta i giorni fino a una data</string>
+  <string name="scanner_due_dates">Date di scadenza</string>
+  <string name="scanner_scan_due_dates">Scansiona date di scadenza</string>
+  <string name="scanner_scan_due_dates_description">Legge con ML Kit la data stampata sulle confezioni</string>
+  <string name="action_scan_due_date">Scansiona data di scadenza</string>
+  <string name="due_date_scan_hint">Inquadra con la fotocamera la data stampata</string>
+  <string name="due_date_scan_choose">Quale data si intende?</string>
+  <string name="product_due_days_scan">Conta i giorni fino a una data scansionata</string>
+  <string name="product_due_days_scan_invalid_title">Nessuna data nel futuro</string>
+  <string name="product_due_days_scan_invalid">La data scansionata %1$s non è successiva a oggi, quindi non si possono contare giorni fino ad essa.</string>
   <string name="product_due_days_after_open">Giorni di scadenza predefiniti dopo l’apertura</string>
   <string name="product_due_days_after_open_hint">Quando questo prodotto è stato contrassegnato come aperto, la data di scadenza verrà sostituita da oggi + questo numero di giorni, ma solo se la data risultante non è successiva alla data di scadenza originale (un valore di 0 lo disabilita)</string>
   <string name="product_due_days_after_freezing">Giorni di scadenza predefiniti dopo il congelamento</string>

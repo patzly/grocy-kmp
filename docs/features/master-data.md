@@ -65,6 +65,11 @@ Master data (`feature:masterdata`), built after Grocy's web frontend:
   layout, e.g. desktop browsers), so it is capped at the specified 384.dp. The product's due
   days fields have one too (`DueDaysPickerButton`): a date from today
   on becomes the days until it (`dueDaysUntil`), e.g. the date printed on the first purchase.
+  The default due days field also scans that date (`DueDaysScanButton`, `rememberDueDaysScan`,
+  where `canScanDueDates`): the camera opens below the field and the scanned date becomes the
+  days until it (`dueDaysOfScanned`); a date not after today keeps the field and explains in a
+  dialog why it gives no days. The fields after opening, freezing and thawing have no scanner,
+  the printed date is none of theirs.
 - Number fields are Grocy's number pickers: minus and plus after the field in the same item
   (`NumberStepperField` of `core:design`, narrow filled `secondaryContainer` icon buttons in a
   standard `ButtonGroup`, `TextItem(stepper)`; 12.dp between the buttons, to the field and, the

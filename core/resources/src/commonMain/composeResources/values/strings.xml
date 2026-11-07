@@ -541,6 +541,15 @@
   <string name="product_due_days">Default due days</string>
   <string name="product_due_days_hint">For purchases this amount of days will be added to today for the due date suggestion (-1 means that this product will be never overdue)</string>
   <string name="product_due_days_pick">Count the days until a date</string>
+  <string name="scanner_due_dates">Due dates</string>
+  <string name="scanner_scan_due_dates">Scan due dates</string>
+  <string name="scanner_scan_due_dates_description">Reads the due date printed on packages with ML Kit</string>
+  <string name="action_scan_due_date">Scan due date</string>
+  <string name="due_date_scan_hint">Hold the camera on the printed date</string>
+  <string name="due_date_scan_choose">Which date is meant?</string>
+  <string name="product_due_days_scan">Count the days until a scanned date</string>
+  <string name="product_due_days_scan_invalid_title">No date in the future</string>
+  <string name="product_due_days_scan_invalid">The scanned date %1$s is not after today, so no days can be counted until it.</string>
   <string name="product_due_days_after_open">Default due days after opened</string>
   <string name="product_due_days_after_open_hint">When this product was marked as opened, the due date will be replaced by today + this amount of days, but only if the resulting date is not after the original due date (a value of 0 disables this)</string>
   <string name="product_due_days_after_freezing">Default due days after freezing</string>

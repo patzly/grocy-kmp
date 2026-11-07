@@ -434,6 +434,9 @@ private val LandscapeTimeDialogMaxHeight = 384.dp
  * is complete. By default the field opens Material's date picker (for [withTime] followed by its
  * time picker) with a way to clear it; with the setting "Enter dates with keyboard" digits are
  * typed in the order of [LocalDateInput].
+ *
+ * @param scanDueDate offers the camera below the field that reads the due date printed on a
+ *   package, where the app can read text ([canScanDueDates]).
  */
 @Composable
 fun DateTextItem(
@@ -450,8 +453,39 @@ fun DateTextItem(
     autoFocus: Boolean = false,
     isLastField: Boolean = false,
     onFocusChange: (Boolean) -> Unit = {},
+    scanDueDate: Boolean = false,
 ) {
     val input = LocalDateInput.current
+    val scans = scanDueDate && enabled && canScanDueDates()
+    var isScannerOpen by rememberSaveable { mutableStateOf(false) }
+    // A field turned off, e.g. never overdue, closes its camera
+    LaunchedEffect(scans) {
+        if (!scans) isScannerOpen = false
+    }
+    val scanButton: (@Composable () -> Unit)? = if (scans) {
+        {
+            DueDateScanButton(
+                isScannerOpen = isScannerOpen,
+                onClick = { isScannerOpen = !isScannerOpen },
+                enabled = enabled,
+            )
+        }
+    } else {
+        null
+    }
+    val scanner: (@Composable () -> Unit)? = if (scans && isScannerOpen) {
+        {
+            DueDateScanner(
+                onDate = { epochDay ->
+                    isScannerOpen = false
+                    val text = state.text.toString()
+                    state.setTextAndPlaceCursorAtEnd(withPickedDate(text, epochDay, withTime))
+                },
+            )
+        }
+    } else {
+        null
+    }
     if (input.keyboard) {
         TypedDateItem(
             state = state,
@@ -468,6 +502,8 @@ fun DateTextItem(
             autoFocus = autoFocus,
             isLastField = isLastField,
             onFocusChange = onFocusChange,
+            scanButton = scanButton,
+            scanner = scanner,
         )
     } else {
         PickedDateItem(
@@ -480,6 +516,8 @@ fun DateTextItem(
             hint = hint,
             error = error,
             enabled = enabled,
+            scanButton = scanButton,
+            scanner = scanner,
         )
     }
 }
@@ -495,6 +533,8 @@ private fun PickedDateItem(
     hint: String?,
     error: String?,
     enabled: Boolean,
+    scanButton: (@Composable () -> Unit)?,
+    scanner: (@Composable () -> Unit)?,
 ) {
     var showPicker by rememberSaveable { mutableStateOf(false) }
     // A refused submit asks for this date, before the field's own effect looks for the focus
@@ -520,6 +560,8 @@ private fun PickedDateItem(
             )
         },
         onFieldClick = { showPicker = true },
+        trailingButton = scanButton,
+        below = scanner,
     )
     DatePickerDialogs(
         state = state,
@@ -545,6 +587,8 @@ private fun TypedDateItem(
     autoFocus: Boolean,
     isLastField: Boolean,
     onFocusChange: (Boolean) -> Unit,
+    scanButton: (@Composable () -> Unit)?,
+    scanner: (@Composable () -> Unit)?,
 ) {
     val digits = rememberSaveable(saver = TextFieldState.Saver) {
         TextFieldState(typedDateOf(state.text.toString(), order, withTime))
@@ -589,6 +633,8 @@ private fun TypedDateItem(
         inputTransformation = remember(withTime) { TypedDateInput(withTime) },
         outputTransformation = remember(order, withTime) { TypedDateOutput(order, withTime) },
         onFocusChange = onFocusChange,
+        trailingAction = scanButton,
+        below = scanner,
     )
 }
 

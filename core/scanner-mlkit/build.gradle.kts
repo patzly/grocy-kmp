@@ -6,11 +6,12 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            // MlKitBarcodeDecoder implements BarcodeDecoder and is handed to the scanner as such
+            // The ML Kit engines implement BarcodeDecoder and TextRecognizer of the scanner
             api(projects.core.scanner)
         }
         androidMain.dependencies {
             implementation(libs.mlkit.barcode.scanning)
+            implementation(libs.mlkit.text.recognition)
         }
     }
 }

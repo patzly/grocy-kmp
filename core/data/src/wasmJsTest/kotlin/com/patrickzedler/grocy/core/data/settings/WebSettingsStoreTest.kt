@@ -82,6 +82,18 @@ class WebSettingsStoreTest {
     }
 
     @Test
+    fun scanDueDatesIsOnUntilTurnedOff() = runTest {
+        val storage = InMemoryStorage()
+        val store = WebSettingsStore(storage)
+        assertEquals(true, store.scanDueDates.first())
+
+        store.setScanDueDates(false)
+
+        assertEquals(false, store.scanDueDates.first())
+        assertEquals(false, WebSettingsStore(storage).scanDueDates.first())
+    }
+
+    @Test
     fun appearanceIsStoredAndRestored() = runTest {
         val storage = InMemoryStorage()
         val appearance = AppearanceSettings(

@@ -504,6 +504,15 @@
   <string name="product_due_days">Standardantal dagar till förfallodatum</string>
   <string name="product_due_days_hint">Vid inköp läggs detta antal dagar till dagens datum för att föreslå ett förfallodatum (-1 betyder att denna produkt aldrig löper ut)</string>
   <string name="product_due_days_pick">Räkna dagarna fram till ett datum</string>
+  <string name="scanner_due_dates">Förfallodatum</string>
+  <string name="scanner_scan_due_dates">Skanna förfallodatum</string>
+  <string name="scanner_scan_due_dates_description">Läser datumet som är tryckt på förpackningar med ML Kit</string>
+  <string name="action_scan_due_date">Skanna förfallodatum</string>
+  <string name="due_date_scan_hint">Håll kameran mot det tryckta datumet</string>
+  <string name="due_date_scan_choose">Vilket datum menas?</string>
+  <string name="product_due_days_scan">Räkna dagarna till ett skannat datum</string>
+  <string name="product_due_days_scan_invalid_title">Inget datum i framtiden</string>
+  <string name="product_due_days_scan_invalid">Det skannade datumet %1$s ligger inte efter i dag, så inga dagar kan räknas fram till det.</string>
   <string name="product_due_days_after_open">Standardantal dagar till förfallodatum efter öppning</string>
   <string name="product_due_days_after_open_hint">När produkten markeras som öppnad ersätts förfallodatumet med dagens datum + detta antal dagar, men endast om det nya datumet inte infaller efter det ursprungliga förfallodatumet (värdet 0 inaktiverar detta)</string>
   <string name="product_due_days_after_freezing">Standardantal dagar till förfallodatum efter infrysning</string>

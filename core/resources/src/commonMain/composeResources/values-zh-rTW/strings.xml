@@ -484,6 +484,15 @@
   <string name="product_due_days">預設到期天數</string>
   <string name="product_due_days_hint">所購買物品的建議到期日期為今天的日期加上此天數 (-1表示此物品永不逾期)</string>
   <string name="product_due_days_pick">計算到某個日期的天數</string>
+  <string name="scanner_due_dates">到期日</string>
+  <string name="scanner_scan_due_dates">掃描到期日</string>
+  <string name="scanner_scan_due_dates_description">使用 ML Kit 讀取包裝上印製的到期日</string>
+  <string name="action_scan_due_date">掃描到期日</string>
+  <string name="due_date_scan_hint">將相機對準印製的日期</string>
+  <string name="due_date_scan_choose">指的是哪個日期？</string>
+  <string name="product_due_days_scan">計算到掃描日期的天數</string>
+  <string name="product_due_days_scan_invalid_title">不是未來的日期</string>
+  <string name="product_due_days_scan_invalid">掃描的日期 %1$s 不晚於今天，因此無法計算到該日期的天數。</string>
   <string name="product_due_days_after_open">預設開封後到期天數</string>
   <string name="product_due_days_after_open_hint">當此物品被標記為已開封時，到期日期將由今天加上此天數代替(0表示停用此功能)，新到期日期和舊到期日期以先到者為準</string>
   <string name="product_due_days_after_freezing">預設冷凍後到期天數</string>

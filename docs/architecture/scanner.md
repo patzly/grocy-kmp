@@ -1,6 +1,7 @@
 # Barcode scanner
 
-`core:scanner`: engines, permissions and platform details. Moved from CLAUDE.md.
+`core:scanner`: engines, permissions and platform details, and the date scanner. Moved from
+CLAUDE.md.
 
 - One component for the whole app: `BarcodeScanner(onBarcodeScanned, formats, shape, paused)`.
   Pass the segmented item shape (`SegmentedListDefaults.shape(index, count)`) and place it as an
@@ -8,6 +9,9 @@
   240.dp high, so wide windows such as desktop browsers get a strip) and
   draws its own `surface` background and permission/error states inside. The torch button sits
   in the bottom end corner with 12.dp margin.
+- `CameraScannerBox` is the frame of every camera scanner (size, permission, errors, torch);
+  `CameraPreview` runs a `FrameAnalyzer<T>` on every frame, the barcode decoder or the text
+  recognizer, and reports its result on the main thread.
 - Engines implement `BarcodeDecoder` (`decode(CameraFrame, formats): List<Barcode>`):
   ZXing via `BarcodeDecoderFactory.Zxing` (zxing-core on Android, zxing-wasm in browsers) and
   ML Kit via `MlKitBarcodeDecoderFactory` (`core:scanner-mlkit`). `CameraFrame` is an
@@ -36,3 +40,31 @@
   (`toCssBorderRadius`) and Compose overlays cannot cover it. Frames are decoded every 120 ms.
   `zxing_reader.wasm` is copied from node_modules into the web app (`copyZxingWasm` in
   `apps/web`) and loaded from there instead of zxing-wasm's default CDN.
+
+## Due dates
+
+`TextScanner` reads text instead of codes, for the due date printed on packages, often in dot
+matrix print that is hard to read.
+
+- Engines implement `TextRecognizer` (`recognize(CameraFrame): List<String>`, the lines top to
+  bottom). For now only ML Kit's bundled Latin model (`MlKitTextRecognizerFactory` of
+  `core:scanner-mlkit`, Play app, not locked); FOSS and web have none yet, an open engine is the
+  next step and will then lock ML Kit like the barcode engine. `PlatformDependencies.textRecognizer`
+  passes it, `GrocyApp` provides it as `LocalTextRecognizerFactory` while
+  `ScannerRepository.scansDueDates` (the setting "Scan due dates" and an engine), else null,
+  which hides every date scanner (`canScanDueDates`).
+- Dot matrix: ML Kit reads every other frame with the dots joined into strokes
+  (`CameraFrame.dotsJoined`: grayscale, `boxBlurred` with radius 2, as NV21), the frames between
+  as they are; voting combines both.
+- `printedDueDateOf` (`core:model`) finds the due date among the lines: numeric dates with dots,
+  slashes, dashes or spaces, year first dates, month names of six languages, month and year
+  (the month's last day), digits without separators only right after a keyword. It fixes what
+  text recognition confuses in numbers (O for 0, a small l for 1, commas for dots) and skips lot
+  numbers, times and phone numbers. Keywords like MHD, best before or EXP in the line or the two
+  before win, production or packing dates lose, then the later date. Dots are always day
+  first; other separators follow `LocalDateInput.order` with the swapped date as alternative.
+  Only dates from three years ago to 25 years ahead count.
+- `PrintedDueDateVotes` accepts a date read in two of the last five frames, so a misread digit
+  never fills a field. A date with an alternative pauses the camera and asks with two buttons.
+- `DateTextItem(scanDueDate = true)` (bookings, stock entries) and the product's default due
+  days (`rememberDueDaysScan`) open the camera below the field (`DueDateScanner`).

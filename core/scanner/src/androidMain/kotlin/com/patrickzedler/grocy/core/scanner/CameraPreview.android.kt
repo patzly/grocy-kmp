@@ -14,7 +14,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.lifecycle.awaitInstance
 import androidx.camera.viewfinder.core.ImplementationMode
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,35 +30,28 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withContext
 
-/** Enough detail for small barcodes, small enough to decode several frames per second. */
+/** Enough detail for small barcodes and printed dates, small enough for several frames a second. */
 private val ANALYSIS_SIZE = Size(1280, 720)
 
 @Composable
-internal actual fun CameraPreview(
-    decoderFactory: BarcodeDecoderFactory,
-    formats: Set<BarcodeFormat>,
-    isDecoding: Boolean,
+internal actual fun <T> CameraPreview(
+    analyzer: FrameAnalyzer<T>,
+    isAnalyzing: Boolean,
     torchEnabled: Boolean,
     shape: Shape,
-    onBarcodes: (List<Barcode>) -> Unit,
+    onResult: (T) -> Unit,
     onStateChange: (CameraState) -> Unit,
     modifier: Modifier,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val currentFormats by rememberUpdatedState(formats)
-    val currentIsDecoding by rememberUpdatedState(isDecoding)
-    val currentOnBarcodes by rememberUpdatedState(onBarcodes)
+    val currentIsAnalyzing by rememberUpdatedState(isAnalyzing)
+    val currentOnResult by rememberUpdatedState(onResult)
     val currentOnStateChange by rememberUpdatedState(onStateChange)
     var surfaceRequest by remember { mutableStateOf<SurfaceRequest?>(null) }
     var camera by remember { mutableStateOf<Camera?>(null) }
 
-    val decoder = remember(decoderFactory) { decoderFactory.create() }
-    DisposableEffect(decoder) {
-        onDispose { decoder.close() }
-    }
-
-    LaunchedEffect(lifecycleOwner, decoder) {
+    LaunchedEffect(lifecycleOwner, analyzer) {
         val provider = try {
             ProcessCameraProvider.awaitInstance(context)
         } catch (e: CancellationException) {
@@ -111,9 +103,9 @@ internal actual fun CameraPreview(
             withContext(Dispatchers.Default) {
                 for (image in frames) {
                     try {
-                        if (currentIsDecoding) {
-                            val barcodes = decoder.decode(CameraFrame(image), currentFormats)
-                            withContext(Dispatchers.Main) { currentOnBarcodes(barcodes) }
+                        if (currentIsAnalyzing) {
+                            val result = analyzer.analyze(CameraFrame(image))
+                            withContext(Dispatchers.Main) { currentOnResult(result) }
                         }
                     } finally {
                         image.close()

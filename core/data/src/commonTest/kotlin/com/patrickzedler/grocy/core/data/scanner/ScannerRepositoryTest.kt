@@ -23,6 +23,7 @@ class ScannerRepositoryTest {
     private fun TestScope.repository(
         availableEngines: Set<ScannerEngine> = ScannerEngine.entries.toSet(),
         hasUnlockApp: Boolean = true,
+        canReadText: Boolean = true,
     ) = ScannerRepository(
         settingsStore = settingsStore,
         unlockRepository = UnlockRepository(
@@ -33,6 +34,7 @@ class ScannerRepositoryTest {
         ),
         availableEngines = availableEngines,
         scope = backgroundScope + UnconfinedTestDispatcher(testScheduler),
+        canReadText = canReadText,
     )
 
     @Test
@@ -126,5 +128,29 @@ class ScannerRepositoryTest {
             assertEquals(ScannerEngine.ZXING, awaitItem())
             assertEquals(ScannerEngine.ZXING, settingsStore.scannerEngine.value)
         }
+    }
+
+    @Test
+    fun dueDatesAreScannedByDefaultWhereTextCanBeRead() = runTest {
+        val repository = repository()
+
+        assertEquals(true, repository.scanDueDates.value)
+        assertTrue(repository.scansDueDates.value)
+    }
+
+    @Test
+    fun turnedOffDueDateScanningIsStoredAndHidesTheScanners() = runTest {
+        val repository = repository()
+
+        repository.setScanDueDates(false)
+
+        assertEquals(false, settingsStore.scanDueDates.value)
+        assertEquals(false, repository.scanDueDates.value)
+        assertFalse(repository.scansDueDates.value)
+    }
+
+    @Test
+    fun platformWithoutTextRecognitionScansNoDueDates() = runTest {
+        assertFalse(repository(canReadText = false).scansDueDates.value)
     }
 }

@@ -524,6 +524,15 @@
   <string name="product_due_days">Date de péremption par défaut</string>
   <string name="product_due_days_hint">A l’achat, ce nombre de jours sera ajouté à la date de péremption suggérée (-1 signifie que le produit ne sera jamais périmé)</string>
   <string name="product_due_days_pick">Compter les jours jusqu'à une date</string>
+  <string name="scanner_due_dates">Dates de péremption</string>
+  <string name="scanner_scan_due_dates">Scanner les dates de péremption</string>
+  <string name="scanner_scan_due_dates_description">Lit avec ML Kit la date imprimée sur les emballages</string>
+  <string name="action_scan_due_date">Scanner la date de péremption</string>
+  <string name="due_date_scan_hint">Pointez la caméra sur la date imprimée</string>
+  <string name="due_date_scan_choose">De quelle date s'agit-il ?</string>
+  <string name="product_due_days_scan">Compter les jours jusqu'à une date scannée</string>
+  <string name="product_due_days_scan_invalid_title">Aucune date dans le futur</string>
+  <string name="product_due_days_scan_invalid">La date scannée %1$s n'est pas après aujourd'hui, aucun jour ne peut donc être compté jusqu'à elle.</string>
   <string name="product_due_days_after_open">Date de péremption après ouverture par défaut</string>
   <string name="product_due_days_after_open_hint">Quand ce produit est marqué comme ouvert, la date d’échéance sera remplacée par la date d’aujourd’hui plus ce nombre de jour, mais seulement si la nouvelle date ne se trouve pas après la date d’échéance originale (une valeur de 0 désactive ce comportement)</string>
   <string name="product_due_days_after_freezing">Date de péremption par défaut après congélation</string>

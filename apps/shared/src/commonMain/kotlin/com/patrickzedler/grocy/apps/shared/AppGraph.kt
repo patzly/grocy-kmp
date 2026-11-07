@@ -50,6 +50,7 @@ import com.patrickzedler.grocy.core.network.createGrocyHttpClient
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.network.ProductFactsApi
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
+import com.patrickzedler.grocy.core.scanner.TextRecognizerFactory
 import com.patrickzedler.grocy.feature.about.impl.AboutDependencies
 import com.patrickzedler.grocy.feature.batteries.impl.BatteriesDependencies
 import com.patrickzedler.grocy.feature.chores.impl.ChoresDependencies
@@ -225,6 +226,7 @@ class AppGraph(
             unlockRepository = unlockRepository,
             availableEngines = platform.barcodeDecoders.keys,
             scope = appScope,
+            canReadText = platform.textRecognizer != null,
         )
     }
 
@@ -367,6 +369,12 @@ class AppGraph(
             platform.barcodeDecoders[it] ?: BarcodeDecoderFactory.Zxing
         }
     }
+
+    /** Whether due date fields offer their scanner, read at app start. */
+    internal val scansDueDates: StateFlow<Boolean> by lazy { scannerRepository.scansDueDates }
+
+    /** Reads due dates where [scansDueDates], provided to every date scanner by GrocyApp. */
+    internal val textRecognizer: TextRecognizerFactory? = platform.textRecognizer
 
     internal val loginDependencies: LoginDependencies = object : LoginDependencies {
         override val authRepository: AuthRepository

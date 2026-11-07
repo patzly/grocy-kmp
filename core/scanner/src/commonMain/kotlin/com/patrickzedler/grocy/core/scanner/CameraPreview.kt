@@ -21,20 +21,27 @@ internal enum class CameraFailure {
     Error,
 }
 
+/** Work on one camera frame off the main thread, e.g. decoding its barcodes. */
+internal fun interface FrameAnalyzer<T> {
+
+    /** The result of [frame], which stays owned by the camera. */
+    suspend fun analyze(frame: CameraFrame): T
+}
+
 /**
- * Shows the camera image and passes the decoded barcodes of every frame to [onBarcodes].
+ * Shows the camera image and passes the result of [analyzer] for every frame to [onResult] on
+ * the main thread.
  *
- * Starts the camera when it enters the composition and stops it when it leaves. Decodes only
- * while [isDecoding]. [shape] rounds the image where the platform cannot clip it otherwise.
+ * Starts the camera when it enters the composition and stops it when it leaves. Analyzes only
+ * while [isAnalyzing]. [shape] rounds the image where the platform cannot clip it otherwise.
  */
 @Composable
-internal expect fun CameraPreview(
-    decoderFactory: BarcodeDecoderFactory,
-    formats: Set<BarcodeFormat>,
-    isDecoding: Boolean,
+internal expect fun <T> CameraPreview(
+    analyzer: FrameAnalyzer<T>,
+    isAnalyzing: Boolean,
     torchEnabled: Boolean,
     shape: Shape,
-    onBarcodes: (List<Barcode>) -> Unit,
+    onResult: (T) -> Unit,
     onStateChange: (CameraState) -> Unit,
     modifier: Modifier = Modifier,
 )

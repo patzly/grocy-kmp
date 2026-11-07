@@ -25,6 +25,7 @@ import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
@@ -40,6 +41,9 @@ import com.patrickzedler.grocy.core.resources.scanner_engine_ml_kit_description
 import com.patrickzedler.grocy.core.resources.scanner_engine_ml_kit_locked
 import com.patrickzedler.grocy.core.resources.scanner_engine_zxing
 import com.patrickzedler.grocy.core.resources.scanner_engine_zxing_description
+import com.patrickzedler.grocy.core.resources.scanner_due_dates
+import com.patrickzedler.grocy.core.resources.scanner_scan_due_dates
+import com.patrickzedler.grocy.core.resources.scanner_scan_due_dates_description
 import com.patrickzedler.grocy.core.resources.scanner_unlock_ml_kit
 import com.patrickzedler.grocy.core.resources.settings_scanner
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuActions
@@ -51,7 +55,8 @@ import org.jetbrains.compose.resources.stringResource
 
 /**
  * The scanner's engine as a single choice, saved at once. A locked ML Kit stays visible and
- * disabled, with the way to unlock it below.
+ * disabled, with the way to unlock it below. Where the app can read text, a switch for scanning
+ * due dates follows.
  */
 @Composable
 internal fun ScannerSettingsScreen(
@@ -64,6 +69,7 @@ internal fun ScannerSettingsScreen(
 ) {
     val activeEngine by viewModel.activeEngine.collectAsStateWithLifecycle()
     val unlockState by viewModel.unlockState.collectAsStateWithLifecycle()
+    val scanDueDates by viewModel.scanDueDates.collectAsStateWithLifecycle()
     val uriHandler = LocalUriHandler.current
     val appVendingKey = stringResource(Res.string.app_vending_key)
 
@@ -90,6 +96,8 @@ internal fun ScannerSettingsScreen(
                 showsUnlockHint = viewModel.showsUnlockHint(unlockState),
                 onEngineClick = viewModel::selectEngine,
                 onUnlockClick = { uriHandler.tryOpenUri(appVendingKey) },
+                scanDueDates = scanDueDates.takeIf { viewModel.showsDueDates },
+                onScanDueDatesChange = viewModel::setScanDueDates,
             )
         }
     }
@@ -102,6 +110,8 @@ private fun LazyListScope.scannerSettings(
     showsUnlockHint: Boolean,
     onEngineClick: (ScannerEngine) -> Unit,
     onUnlockClick: () -> Unit,
+    scanDueDates: Boolean?,
+    onScanDueDatesChange: (Boolean) -> Unit,
 ) {
     segmentedGroup(key = "engine", title = Res.string.scanner_engine) {
         ScannerEngineChoices(
@@ -114,6 +124,19 @@ private fun LazyListScope.scannerSettings(
     if (showsUnlockHint) {
         segmentedGroup(key = "unlock") {
             UnlockItem(onClick = onUnlockClick)
+        }
+    }
+    // Null where the app cannot read text, and for the moment until the choice is read
+    if (scanDueDates != null) {
+        segmentedGroup(key = "dueDates", title = Res.string.scanner_due_dates) {
+            SegmentedSwitchItem(
+                headline = stringResource(Res.string.scanner_scan_due_dates),
+                supporting = stringResource(Res.string.scanner_scan_due_dates_description),
+                checked = scanDueDates,
+                onCheckedChange = onScanDueDatesChange,
+                index = 0,
+                count = 1,
+            )
         }
     }
 }
@@ -253,6 +276,8 @@ private fun ScannerSettingsPreview(isMlKitUnlocked: Boolean) {
                 showsUnlockHint = !isMlKitUnlocked,
                 onEngineClick = {},
                 onUnlockClick = {},
+                scanDueDates = true,
+                onScanDueDatesChange = {},
             )
         }
     }

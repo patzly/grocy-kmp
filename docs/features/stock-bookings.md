@@ -23,6 +23,8 @@ of them, from the start screen's buttons and the product overview's menu):
   the location or the chosen entry as maximum, parents without maximum, gross weight above
   container and stock, inventory not the current stock), `inventoryChange`,
   `consumeLocation`/`transferSource`.
+- The due date can be scanned from the package (`DateTextItem(scanDueDate = true)`, see
+  `docs/architecture/scanner.md`), like the due date of a stock entry's dialog.
 - Prefills like Grocy's pages when a product is chosen: units of `productAmountUnits` (purchase
   unit, consume unit, stock unit for transfer, inventory and tare weight), default amounts of
   the user settings, store, location, due date, price from the last price, label type and

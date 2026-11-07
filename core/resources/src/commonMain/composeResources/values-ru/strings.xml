@@ -544,6 +544,15 @@
   <string name="product_due_days">Срок годности по умолчанию</string>
   <string name="product_due_days_hint">Данное количество дней будет добавлено к предлагаемому сроку годности при покупке (-1 означает, что у данного продукта бесконечный срок годности)</string>
   <string name="product_due_days_pick">Посчитать дни до даты</string>
+  <string name="scanner_due_dates">Сроки годности</string>
+  <string name="scanner_scan_due_dates">Сканировать сроки годности</string>
+  <string name="scanner_scan_due_dates_description">Считывает с помощью ML Kit дату, напечатанную на упаковке</string>
+  <string name="action_scan_due_date">Сканировать срок годности</string>
+  <string name="due_date_scan_hint">Наведите камеру на напечатанную дату</string>
+  <string name="due_date_scan_choose">Какая дата имеется в виду?</string>
+  <string name="product_due_days_scan">Посчитать дни до отсканированной даты</string>
+  <string name="product_due_days_scan_invalid_title">Нет даты в будущем</string>
+  <string name="product_due_days_scan_invalid">Отсканированная дата %1$s не позже сегодняшнего дня, поэтому дни до неё посчитать нельзя.</string>
   <string name="product_due_days_after_open">Срок годности в днях по умолчанию после открытия</string>
   <string name="product_due_days_after_open_hint">Когда продукт помечается как открытый, срок годности будет изменён на это количество дней, начиная с сегодняшнего, но только если срок годности на упаковке наступает не раньше (значение 0 отключает этот функционал)</string>
   <string name="product_due_days_after_freezing">Срок годности по умолчанию после заморозки</string>

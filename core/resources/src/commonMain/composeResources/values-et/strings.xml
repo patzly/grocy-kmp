@@ -504,6 +504,15 @@
   <string name="product_due_days">Vaikimisi tähtaja päevi</string>
   <string name="product_due_days_hint">Ostude puhul lisatakse tähtpäeva soovituse jaoks see päevade arv tänasele päevale (-1 tähendab, et see toode ei rikne)</string>
   <string name="product_due_days_pick">Loe päevad kuupäevani</string>
+  <string name="scanner_due_dates">Tähtajad</string>
+  <string name="scanner_scan_due_dates">Skanni tähtaegu</string>
+  <string name="scanner_scan_due_dates_description">Loeb ML Kitiga pakenditele trükitud tähtaja</string>
+  <string name="action_scan_due_date">Skanni tähtaeg</string>
+  <string name="due_date_scan_hint">Hoia kaamerat trükitud kuupäeva kohal</string>
+  <string name="due_date_scan_choose">Millist kuupäeva mõeldakse?</string>
+  <string name="product_due_days_scan">Loe päevad skannitud kuupäevani</string>
+  <string name="product_due_days_scan_invalid_title">Kuupäev pole tulevikus</string>
+  <string name="product_due_days_scan_invalid">Skannitud kuupäev %1$s ei ole pärast tänast, seega ei saa päevi selleni lugeda.</string>
   <string name="product_due_days_after_open">Vaikimisi tähtaeg pärast avamist</string>
   <string name="product_due_days_after_open_hint">Kui see toode märgitakse avatuks, asendatakse tähtaeg tänasega + selle päevade arvuga, kuid ainult siis, kui tulemuseks olev kuupäev ei ole hilisem kui algne tähtaeg (väärtus 0 keelab selle)</string>
   <string name="product_due_days_after_freezing">Vaikimisi maksetähtaeg päeva pärast külmutamist</string>

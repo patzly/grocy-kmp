@@ -21,7 +21,10 @@ once. The Play app offers ZXing and ML Kit; locked, ML Kit stays visible and dis
 below it that explains the unlock app and opens it on Google Play, shown only where Google Play
 is installed like the key item in About. Returning to the page checks the installed apps again,
 so a bought key enables ML Kit at once without selecting it. FOSS and web offer ZXing alone and
-mention nothing of the unlock app), Notifications
+mention nothing of the unlock app. Where the app can read text (`ScannerRepository.canReadText`,
+for now the Play app with ML Kit, not locked), a group "Due dates" follows with the switch "Scan
+due dates", on by default (`scan_due_dates`, `grocy.scanDueDates`), which hides the date
+scanners of due date fields when off, see `docs/architecture/scanner.md`), Notifications
 (`docs/features/notifications.md`), Shopping mode
 (`ShoppingModeSettingsRoute`, also opened by the shopping mode's menu as a screen of its own
 with `inSettings = false`, which is then titled "Shopping mode settings": auto sync with its

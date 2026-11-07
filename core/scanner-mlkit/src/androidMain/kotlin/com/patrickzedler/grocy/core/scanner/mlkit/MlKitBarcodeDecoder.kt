@@ -2,7 +2,6 @@ package com.patrickzedler.grocy.core.scanner.mlkit
 
 import androidx.annotation.OptIn
 import androidx.camera.core.ExperimentalGetImage
-import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
@@ -12,9 +11,6 @@ import com.patrickzedler.grocy.core.scanner.BarcodeDecoder
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.core.scanner.BarcodeFormat
 import com.patrickzedler.grocy.core.scanner.CameraFrame
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlinx.coroutines.suspendCancellableCoroutine
 import com.google.mlkit.vision.barcode.common.Barcode as MlKitBarcode
 
 /** ML Kit with its bundled model, so it needs no download from Play services. */
@@ -56,12 +52,6 @@ private fun MlKitBarcode.toBarcode(): Barcode? {
     val value = rawValue ?: return null
     val format = barcodeFormatOf(format) ?: return null
     return Barcode(value, format)
-}
-
-private suspend fun <T> Task<T>.await(): T = suspendCancellableCoroutine { continuation ->
-    addOnSuccessListener { continuation.resume(it) }
-    addOnFailureListener { continuation.resumeWithException(it) }
-    addOnCanceledListener { continuation.cancel() }
 }
 
 internal fun BarcodeFormat.toMlKit(): Int = when (this) {

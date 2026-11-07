@@ -504,6 +504,15 @@
   <string name="product_due_days">Προεπιλεγμένες ημέρες λήξης</string>
   <string name="product_due_days_hint">Κατά τις αγορές, αυτός ο αριθμός ημερών θα προστίθεται στη σημερινή ημερομηνία για την προτεινόμενη ημερομηνία λήξης (-1 σημαίνει ότι αυτό το προϊόν δεν θα λήξει ποτέ)</string>
   <string name="product_due_days_pick">Μέτρηση ημερών έως μια ημερομηνία</string>
+  <string name="scanner_due_dates">Ημερομηνίες λήξης</string>
+  <string name="scanner_scan_due_dates">Σάρωση ημερομηνιών λήξης</string>
+  <string name="scanner_scan_due_dates_description">Διαβάζει με το ML Kit την ημερομηνία που είναι τυπωμένη στις συσκευασίες</string>
+  <string name="action_scan_due_date">Σάρωση ημερομηνίας λήξης</string>
+  <string name="due_date_scan_hint">Στρέψτε την κάμερα στην τυπωμένη ημερομηνία</string>
+  <string name="due_date_scan_choose">Ποια ημερομηνία εννοείται;</string>
+  <string name="product_due_days_scan">Μέτρηση ημερών μέχρι μια σαρωμένη ημερομηνία</string>
+  <string name="product_due_days_scan_invalid_title">Καμία ημερομηνία στο μέλλον</string>
+  <string name="product_due_days_scan_invalid">Η σαρωμένη ημερομηνία %1$s δεν είναι μετά από σήμερα, οπότε δεν μετρώνται ημέρες μέχρι αυτήν.</string>
   <string name="product_due_days_after_open">Προεπιλεγμένες ημέρες λήξης μετά το άνοιγμα</string>
   <string name="product_due_days_after_open_hint">Όταν αυτό το προϊόν επισημανθεί ως ανοιγμένο, η ημερομηνία λήξης θα αντικατασταθεί από τη σημερινή + αυτόν τον αριθμό ημερών, αλλά μόνο αν η νέα ημερομηνία δεν είναι μετά την αρχική ημερομηνία λήξης (η τιμή 0 το απενεργοποιεί)</string>
   <string name="product_due_days_after_freezing">Προεπιλεγμένες ημέρες λήξης μετά την κατάψυξη</string>

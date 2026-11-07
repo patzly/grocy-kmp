@@ -12,6 +12,7 @@ import com.patrickzedler.grocy.core.database.GrocyDatabase
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
+import com.patrickzedler.grocy.core.scanner.TextRecognizerFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
@@ -43,6 +44,9 @@ interface PlatformDependencies {
 
     /** Barcode engines of this platform; ZXing exists everywhere, ML Kit only in the Play app. */
     val barcodeDecoders: Map<ScannerEngine, BarcodeDecoderFactory>
+
+    /** Reads printed due dates, null where the platform has no engine (only ML Kit for now). */
+    val textRecognizer: TextRecognizerFactory?
 
     /**
      * How this build updates: Google Play in the Play app, GitHub releases ([gitHubReleases])

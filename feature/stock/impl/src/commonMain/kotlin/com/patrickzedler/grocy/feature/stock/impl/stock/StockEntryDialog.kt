@@ -243,5 +243,6 @@ private fun DateItem(
         enabled = enabled,
         index = index,
         count = count,
+        scanDueDate = isDue,
     )
 }

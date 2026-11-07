@@ -504,6 +504,15 @@
   <string name="product_due_days">Alapértelmezett lejárati idő</string>
   <string name="product_due_days_hint">Vásárlás esetén mától számítva ennyi nap adódik hozzá a felkínált lejárati idő javaslathoz (-1 esetén a termék soha nem jár le)</string>
   <string name="product_due_days_pick">Napok számolása egy dátumig</string>
+  <string name="scanner_due_dates">Lejárati idők</string>
+  <string name="scanner_scan_due_dates">Lejárati idők beolvasása</string>
+  <string name="scanner_scan_due_dates_description">ML Kittel olvassa be a csomagolásra nyomtatott lejárati időt</string>
+  <string name="action_scan_due_date">Lejárati idő beolvasása</string>
+  <string name="due_date_scan_hint">Tartsd a kamerát a nyomtatott dátumra</string>
+  <string name="due_date_scan_choose">Melyik dátum a helyes?</string>
+  <string name="product_due_days_scan">Napok számolása egy beolvasott dátumig</string>
+  <string name="product_due_days_scan_invalid_title">Nincs jövőbeli dátum</string>
+  <string name="product_due_days_scan_invalid">A beolvasott dátum (%1$s) nem a mai nap utáni, ezért nem számolhatók napok addig.</string>
   <string name="product_due_days_after_open">Alapértelmezett fogyaszthatósági idő felbontás után</string>
   <string name="product_due_days_after_open_hint">Felbontáskor a lejárati időt kicseréli a mai nap + a megadott napok összegére, azonban csak akkor, ha a számolt dátum az eredetinél nincs később (a 0 érték kikapcsolja a funkciót)</string>
   <string name="product_due_days_after_freezing">Alapértelmezett lejárati idő fagyasztás után</string>

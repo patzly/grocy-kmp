@@ -57,6 +57,7 @@ class ScannerSettingsViewModelTest {
                     setOf(ScannerEngine.ZXING)
                 },
                 scope = scope,
+                canReadText = isPlayApp,
             ),
             unlockRepository = unlockRepository,
         )
@@ -156,5 +157,31 @@ class ScannerSettingsViewModelTest {
         advanceUntilIdle()
 
         assertEquals(ScannerEngine.ML_KIT, viewModel.activeEngine.value)
+    }
+
+    @Test
+    fun playAppScansDueDatesWithoutUnlocking() = runTest(dispatcher) {
+        val viewModel = viewModel()
+
+        assertTrue(viewModel.showsDueDates)
+        assertEquals(true, viewModel.scanDueDates.value)
+    }
+
+    @Test
+    fun fossAndWebShowNoDueDateScanning() = runTest(dispatcher) {
+        val viewModel = viewModel(isPlayApp = false)
+
+        assertFalse(viewModel.showsDueDates)
+    }
+
+    @Test
+    fun turnedOffDueDateScanningIsStoredAndShown() = runTest(dispatcher) {
+        val viewModel = viewModel()
+
+        viewModel.setScanDueDates(false)
+        advanceUntilIdle()
+
+        assertEquals(false, settingsStore.scanDueDates.value)
+        assertEquals(false, viewModel.scanDueDates.value)
     }
 }

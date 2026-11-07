@@ -53,6 +53,17 @@ class WebSettingsStore internal constructor(
         scannerEngineState.value = scannerEngine
     }
 
+    private val scanDueDatesState = MutableStateFlow(
+        storage.get(SCAN_DUE_DATES)?.toBooleanStrictOrNull() ?: true,
+    )
+
+    override val scanDueDates: Flow<Boolean> = scanDueDatesState.asStateFlow()
+
+    override suspend fun setScanDueDates(scanDueDates: Boolean) {
+        storage.set(SCAN_DUE_DATES, scanDueDates.toString())
+        scanDueDatesState.value = scanDueDates
+    }
+
     private val appearanceState = MutableStateFlow(
         appearanceOf(
             theme = storage.get(THEME),
@@ -288,6 +299,7 @@ class WebSettingsStore internal constructor(
     internal companion object {
         const val CHECK_UNLOCK_KEY = "grocy.checkUnlockKey"
         const val SCANNER_ENGINE = "grocy.scannerEngine"
+        const val SCAN_DUE_DATES = "grocy.scanDueDates"
         const val THEME = "grocy.theme"
         const val COLOR = "grocy.color"
         const val HUE = "grocy.hue"

@@ -524,6 +524,15 @@
   <string name="product_due_days">Número predeterminado de días hasta la fecha límite</string>
   <string name="product_due_days_hint">Este número de días será añadido a la fecha de hoy para la sugerencia de fecha límite de la compra (-1 significa que este producto no tiene fecha límite)</string>
   <string name="product_due_days_pick">Contar los días hasta una fecha</string>
+  <string name="scanner_due_dates">Fechas límite</string>
+  <string name="scanner_scan_due_dates">Escanear fechas límite</string>
+  <string name="scanner_scan_due_dates_description">Lee con ML Kit la fecha impresa en los envases</string>
+  <string name="action_scan_due_date">Escanear fecha límite</string>
+  <string name="due_date_scan_hint">Apunta la cámara a la fecha impresa</string>
+  <string name="due_date_scan_choose">¿Qué fecha es?</string>
+  <string name="product_due_days_scan">Contar los días hasta una fecha escaneada</string>
+  <string name="product_due_days_scan_invalid_title">Ninguna fecha en el futuro</string>
+  <string name="product_due_days_scan_invalid">La fecha escaneada %1$s no es posterior a hoy, así que no se pueden contar días hasta ella.</string>
   <string name="product_due_days_after_open">Número predeterminado de días hasta la fecha límite después de abierto</string>
   <string name="product_due_days_after_open_hint">Cuando este producto se marque como abierto, la fecha límite será reemplazada por la fecha de hoy más este número de días, pero solo si la fecha resultante no está después de la fecha límite original (un valor de 0 desactiva esto)</string>
   <string name="product_due_days_after_freezing">Número predeterminado de días hasta la fecha límite después de congelado</string>

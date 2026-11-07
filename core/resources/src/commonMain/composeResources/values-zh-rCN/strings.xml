@@ -484,6 +484,15 @@
   <string name="product_due_days">默认到期天数</string>
   <string name="product_due_days_hint">建议的到期日期，是从采购之日起加上此天数。 (-1表示此产品永不到期)</string>
   <string name="product_due_days_pick">计算到某个日期的天数</string>
+  <string name="scanner_due_dates">到期日期</string>
+  <string name="scanner_scan_due_dates">扫描到期日期</string>
+  <string name="scanner_scan_due_dates_description">使用 ML Kit 读取包装上印刷的到期日期</string>
+  <string name="action_scan_due_date">扫描到期日期</string>
+  <string name="due_date_scan_hint">将相机对准印刷的日期</string>
+  <string name="due_date_scan_choose">指的是哪个日期？</string>
+  <string name="product_due_days_scan">计算到扫描日期的天数</string>
+  <string name="product_due_days_scan_invalid_title">不是将来的日期</string>
+  <string name="product_due_days_scan_invalid">扫描的日期 %1$s 不晚于今天，因此无法计算到该日期的天数。</string>
   <string name="product_due_days_after_open">开封后默认到期天数</string>
   <string name="product_due_days_after_open_hint">本产品开封后，到期日期替换为开封日期加上此天数，但前提是新生成的日期不在原到期日期之后（值0将禁用此功能）</string>
   <string name="product_due_days_after_freezing">冷冻后默认到期天数</string>

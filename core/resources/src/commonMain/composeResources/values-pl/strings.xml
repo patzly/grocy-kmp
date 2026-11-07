@@ -544,6 +544,15 @@
   <string name="product_due_days">Domyślna liczba dni ważności</string>
   <string name="product_due_days_hint">Dla zakupów ta liczba dni zostanie dodana do dzisiejszej daty jako sugestia terminu ważności (-1 oznacza, że ten produkt nigdy się nie przeterminuje)</string>
   <string name="product_due_days_pick">Policz dni do daty</string>
+  <string name="scanner_due_dates">Terminy ważności</string>
+  <string name="scanner_scan_due_dates">Skanuj terminy ważności</string>
+  <string name="scanner_scan_due_dates_description">Odczytuje za pomocą ML Kit datę wydrukowaną na opakowaniach</string>
+  <string name="action_scan_due_date">Skanuj termin ważności</string>
+  <string name="due_date_scan_hint">Skieruj aparat na wydrukowaną datę</string>
+  <string name="due_date_scan_choose">O którą datę chodzi?</string>
+  <string name="product_due_days_scan">Policz dni do zeskanowanej daty</string>
+  <string name="product_due_days_scan_invalid_title">Brak daty w przyszłości</string>
+  <string name="product_due_days_scan_invalid">Zeskanowana data %1$s nie jest późniejsza niż dziś, więc nie można policzyć dni do niej.</string>
   <string name="product_due_days_after_open">Domyślny termin ważności po otwarciu</string>
   <string name="product_due_days_after_open_hint">Gdy ten produkt zostanie oznaczony jako otwarty, data ważności zostanie zastąpiona dzisiejszą datą + ilością dni, o ile wynikowa data nie przekracza oryginalnego terminu przydatności (0 - opcja nieaktywna)</string>
   <string name="product_due_days_after_freezing">Domyślna ilość dni ważności po zamrożeniu</string>
