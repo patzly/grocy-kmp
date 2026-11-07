@@ -9,6 +9,7 @@ import io.ktor.client.plugins.api.createClientPlugin
 import io.ktor.client.plugins.timeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.websocket.WebSockets
+import io.ktor.http.Url
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -19,19 +20,29 @@ internal val GrocyJson = Json {
 
 /**
  * One client per process, shared by all requests. Every request waits for [proxy] and goes
- * where it says, on Android; browsers use their own proxy settings.
+ * where it says, on Android; browsers use their own proxy settings. Requests into the local
+ * network wait at [localNetwork] while the user is asked to allow them (Android only).
  */
 fun createGrocyHttpClient(
+    localNetwork: LocalNetworkGate? = null,
     proxy: suspend () -> NetworkProxy = { NetworkProxy.System },
-): HttpClient = platformHttpClient(proxy) { configureGrocyClient(proxy) }
+): HttpClient = platformHttpClient(proxy, localNetwork) { configureGrocyClient(proxy) }
 
-/** Same configuration as [createGrocyHttpClient] on a given engine, e.g. a mock in tests. */
+/**
+ * Same configuration as [createGrocyHttpClient] on a given engine, e.g. a mock in tests;
+ * [isLocal] stands in for the platform's check of a request's destination.
+ */
 fun createGrocyHttpClient(
     engine: HttpClientEngine,
+    localNetwork: LocalNetworkGate? = null,
+    isLocal: suspend (Url) -> Boolean = { false },
     proxy: suspend () -> NetworkProxy = { NetworkProxy.System },
-): HttpClient = HttpClient(engine) { configureGrocyClient(proxy) }
+): HttpClient = HttpClient(engine) {
+    configureGrocyClient(proxy)
+    localNetwork?.let { install(localNetworkPlugin(it, isLocal)) }
+}
 
-private fun HttpClientConfig<*>.configureGrocyClient(proxy: suspend () -> NetworkProxy) {
+internal fun HttpClientConfig<*>.configureGrocyClient(proxy: suspend () -> NetworkProxy) {
     install(ContentNegotiation) {
         json(GrocyJson)
     }

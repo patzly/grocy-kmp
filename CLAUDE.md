@@ -6,11 +6,14 @@ Compose Multiplatform. Targets: Android (phone, Wear OS) and Web (Kotlin/Wasm). 
 
 Current state: login (demo, QR code, manual, Home Assistant ingress on Android), the barcode
 scanner, update checks, the start screen, About, the settings (General, Server, Grocy settings,
-Network with Tor and HTTP proxy on Android, Behavior, Scanner), Grocy's stock overview, master data with all their forms, the stock bookings,
+Network with Tor, HTTP proxy and the local network permission on Android, Behavior, Scanner),
+Grocy's stock overview with its reports (location content sheet, spendings) and scan page,
+master data with all their forms, the stock bookings,
 the shopping list and its shopping mode, the recipes with their cards and forms, the meal plan, the
 chores with their tracking and journal, the tasks, the batteries with their tracking and journal,
 the equipment with its manuals, the calendar, the daily notifications, new products filled in from open product
-databases, the home screen widgets (task list, calendar month and list), the Wear OS app with the shopping list.
+databases, the home screen widgets (task list, calendar month and list), `grocy://` deep links
+and NFC tags, the Wear OS app with the shopping list.
 
 ## Details
 
@@ -30,7 +33,8 @@ tasks need.
 - `docs/features/stock-bookings.md`: Purchase, Consume, Transfer, Inventory (`booking/`).
 - `docs/features/shopping-list.md`: the shopping list, its offline check offs and notes, the
   shopping mode.
-- `docs/features/stock-overview.md`: Grocy's stock overview page.
+- `docs/features/stock-overview.md`: Grocy's stock overview page, its reports (location content
+  sheet, spendings) and the scan page.
 - `docs/features/recipes.md`: the recipes list and gallery, the recipe card, its form and
   dialogs, the meal plan dialog.
 - `docs/features/meal-plan.md`: the meal plan's week (agenda and grid), its entries, actions,
@@ -52,10 +56,11 @@ tasks need.
 - `docs/features/product-facts.md`: Open Food Facts and its sister databases, what they fill in.
 - `docs/features/wear.md`: the Wear OS app, its login from the phone and offline check offs.
 - `docs/features/settings.md`: settings categories, Grocy settings, server, appearance, language.
+- `docs/features/deep-links.md`: `grocy://` links and NFC tags, their pages and parameters.
 - `docs/architecture/build.md`: build logic, yarn.lock, convention plugins, adding a feature.
 - `docs/architecture/web-navigation.md`: browser history, entry decorators, navigationevent.
 - `docs/architecture/network.md`: HTTP client, error mapping, API key placement, Home Assistant
-  ingress.
+  ingress, proxy and Tor, the local network permission.
 - `docs/architecture/database.md`: repositories, refresh, schema history, the web worker database.
 - `docs/architecture/storage-and-variants.md`: credential and settings stores, FOSS vs Play.
 - `docs/architecture/updates.md`: update checks per platform, the web service worker.

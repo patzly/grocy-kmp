@@ -4,51 +4,80 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.graphics.toArgb
+import com.materialkolor.contrast.Contrast
 import com.materialkolor.hct.Hct
-import com.materialkolor.ktx.harmonize
+import com.materialkolor.ktx.toColor
+import com.materialkolor.ktx.toHct
+import com.patrickzedler.grocy.core.design.ColorRoleSpec
+import com.patrickzedler.grocy.core.design.LocalColorRoleSpec
+import com.patrickzedler.grocy.core.design.harmonizedHue
+import com.patrickzedler.grocy.core.design.surfaceTone
 import kotlin.math.abs
+import kotlin.math.max
 
 /**
  * Colors of chart series in a fixed order, never cycled: more series must be drawn together.
- * A validated categorical palette harmonized with the theme's primary color like the status
- * colors and Material's custom colors; the first series takes the palette's color closest to
- * primary. Harmonized hues can come close for color blind users, so charts mark their series
- * with [ChartMarker]s too.
+ * Only their hues are fixed, in the order of a validated categorical palette that puts warm and
+ * cool hues next to each other; the first series takes the hue closest to primary. Everything
+ * else follows the theme ([chartColorsOf]).
  */
 @Composable
 fun rememberChartColors(): List<Color> {
     val primary = MaterialTheme.colorScheme.primary
-    val isDark = MaterialTheme.colorScheme.surface.luminance() < DARK_LUMINANCE
-    return remember(primary, isDark) {
-        harmonizedChartColors(if (isDark) DarkChartColors else LightChartColors, primary)
-    }
+    val spec = LocalColorRoleSpec.current
+    return remember(primary, spec) { chartColorsOf(primary, spec) }
 }
 
 /** Number of distinct series colors. */
 const val CHART_COLOR_COUNT = 8
 
-// Blue, orange, aqua, yellow, magenta, green, violet, red
-internal val LightChartColors = listOf(
-    Color(0xFF2A78D6), Color(0xFFEB6834), Color(0xFF1BAF7A), Color(0xFFEDA100),
-    Color(0xFFE87BA4), Color(0xFF008300), Color(0xFF6250D6), Color(0xFFE34948),
-)
-
-internal val DarkChartColors = listOf(
-    Color(0xFF3987E5), Color(0xFFD95926), Color(0xFF199E70), Color(0xFFC98500),
-    Color(0xFFD55181), Color(0xFF008300), Color(0xFF9085E9), Color(0xFFE66767),
-)
+// Blue, orange, aqua, yellow, magenta, green, violet, red (HCT hues)
+internal val ChartHues = listOf(261.4, 38.3, 164.5, 75.9, 358.2, 142.2, 291.3, 22.1)
 
 /**
- * [palette] from its color closest to [primary] on (the order stays, the last color neighbours
- * the first one), every color harmonized with [primary] by Material's rule.
+ * The series colors for [primary] in a scheme of [spec], a graphic role of each hue: harmonized
+ * with primary and as colorful as primary, but at least [minChroma], since series are told apart
+ * by their color. Their tones come from the contrast to the surface, like Material's roles: 3:1
+ * like graphics need, more with the theme's contrast level, so every color stands out from the
+ * surface in light and dark schemes; [toneOffsets] move each position further from the surface,
+ * so neighbours also differ in lightness, which color blind users see.
  */
-internal fun harmonizedChartColors(palette: List<Color>, primary: Color): List<Color> {
-    val primaryHue = hueOf(primary)
-    val closest = palette.indices.minBy { hueDistance(hueOf(palette[it]), primaryHue) }
-    return (palette.drop(closest) + palette.take(closest)).map { it.harmonize(primary) }
+internal fun chartColorsOf(
+    primary: Color,
+    spec: ColorRoleSpec,
+    toneOffsets: List<Double> = ChartToneOffsets,
+    minChroma: Double = CHART_MIN_CHROMA,
+): List<Color> {
+    val primaryHct = primary.toHct()
+    val chroma = max(primaryHct.chroma, minChroma)
+    val surface = surfaceTone(spec)
+    val ratio = GRAPHIC_CONTRAST +
+        (HIGH_GRAPHIC_CONTRAST - GRAPHIC_CONTRAST) * spec.contrastLevel.coerceAtLeast(0.0)
+    // The tone closest to the surface that still keeps the ratio
+    val edge = if (spec.isDark) {
+        Contrast.lighterUnsafe(surface, ratio)
+    } else {
+        Contrast.darkerUnsafe(surface, ratio)
+    }
+    val closest = ChartHues.indices.minBy { hueDistance(ChartHues[it], primaryHct.hue) }
+    val hues = ChartHues.drop(closest) + ChartHues.take(closest)
+    return hues.mapIndexed { position, hue ->
+        val offset = toneOffsets[position % toneOffsets.size]
+        val tone = if (spec.isDark) edge + offset else edge - offset
+        Hct.from(harmonizedHue(hue, primary), chroma, tone.coerceIn(0.0, 100.0)).toColor()
+    }
 }
+
+// Every other series lies further from the surface; found by ChartColorsTest's check of every
+// theme hue, style, contrast level, light and dark scheme, neighbours and first with last
+internal val ChartToneOffsets = listOf(0.0, 24.0, 0.0, 24.0, 0.0, 24.0, 6.0, 24.0)
+
+// The chroma of the default theme's primary: calmer styles keep colorful series
+internal const val CHART_MIN_CHROMA = 36.0
+
+// WCAG's ratio for graphics, and what Material's high contrast asks of its colors
+private const val GRAPHIC_CONTRAST = 3.0
+private const val HIGH_GRAPHIC_CONTRAST = 4.5
 
 /** The shape of a series' points, so series differ without telling their colors apart. */
 enum class ChartMarker { Circle, Square, Diamond, Triangle }
@@ -57,9 +86,4 @@ enum class ChartMarker { Circle, Square, Diamond, Triangle }
 fun chartMarkerOf(colorIndex: Int): ChartMarker =
     ChartMarker.entries[colorIndex % ChartMarker.entries.size]
 
-private fun hueOf(color: Color): Double = Hct.fromInt(color.toArgb()).hue
-
-private fun hueDistance(a: Double, b: Double): Double = abs((b - a + 540) % 360 - 180)
-
-// Surfaces darker than this belong to a dark theme
-internal const val DARK_LUMINANCE = 0.5f
+internal fun hueDistance(a: Double, b: Double): Double = abs((b - a + 540) % 360 - 180)

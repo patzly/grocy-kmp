@@ -72,6 +72,8 @@ internal data class BookingPreset(
     /** "Add all list items to stock" books item [shoppingListPosition] of [shoppingListCount]. */
     val shoppingListPosition: Int? = null,
     val shoppingListCount: Int? = null,
+    /** A code scanned before the page opened, used like one scanned in its product field. */
+    val code: String? = null,
 )
 
 /**
@@ -220,6 +222,7 @@ internal class BookingViewModel(
                     if (!submitWhenReady) scanner.requestFocus(FormFocusTarget.NEXT_FIELD)
                 }
             }
+            preset.code?.let { onCode(it, scanMode = false) }
         }
     }
 

@@ -7,6 +7,7 @@ import androidx.glance.unit.ColorProvider
 import com.materialkolor.hct.Hct
 import com.materialkolor.ktx.toColor
 import com.materialkolor.ktx.toHct
+import com.patrickzedler.grocy.core.design.ColorRoleSpec
 import com.patrickzedler.grocy.core.design.component.StatusColor
 import com.patrickzedler.grocy.core.design.component.customStatusColorOf
 import com.patrickzedler.grocy.core.model.calendar.CalendarEventKind
@@ -19,7 +20,12 @@ import com.patrickzedler.grocy.core.model.server.UserSettings
  * redraw does). The background is the theme's secondary color at tone 95 and 20 like Google's
  * widgets.
  */
-internal class WidgetColors(private val light: ColorScheme, private val dark: ColorScheme) {
+internal class WidgetColors(
+    private val light: ColorScheme,
+    private val dark: ColorScheme,
+    private val lightSpec: ColorRoleSpec,
+    private val darkSpec: ColorRoleSpec,
+) {
 
     private fun of(role: (ColorScheme) -> Color): ColorProvider =
         ColorProvider(day = role(light), night = role(dark))
@@ -40,8 +46,8 @@ internal class WidgetColors(private val light: ColorScheme, private val dark: Co
     /** The filled colors of events of [kind], harmonized like in the app's calendar. */
     fun event(kind: CalendarEventKind, settings: UserSettings): EventColors {
         val hex = kind.color.valueOf(settings)
-        val day = eventColorOf(hex, light, isDark = false)
-        val night = eventColorOf(hex, dark, isDark = true)
+        val day = eventColorOf(hex, light, lightSpec)
+        val night = eventColorOf(hex, dark, darkSpec)
         return EventColors(
             container = ColorProvider(day.container, night.container),
             content = ColorProvider(day.content, night.content),
@@ -55,8 +61,8 @@ internal class EventColors(val container: ColorProvider, val content: ColorProvi
  * The color of an event as the app's calendar shows it: the user's color of its kind harmonized
  * with [scheme]'s primary, the theme's secondary without a valid one.
  */
-internal fun eventColorOf(hex: String, scheme: ColorScheme, isDark: Boolean): StatusColor =
-    argbOfHexColor(hex)?.let { customStatusColorOf(Color(it), scheme.primary, isDark) }
+internal fun eventColorOf(hex: String, scheme: ColorScheme, spec: ColorRoleSpec): StatusColor =
+    argbOfHexColor(hex)?.let { customStatusColorOf(Color(it), scheme.primary, spec) }
         ?: StatusColor(scheme.secondary, scheme.onSecondary, scheme.secondary)
 
 private fun toneOf(color: Color, tone: Double): Color {

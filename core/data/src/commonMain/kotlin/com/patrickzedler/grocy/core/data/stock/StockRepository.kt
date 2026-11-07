@@ -11,6 +11,7 @@ import com.patrickzedler.grocy.core.model.stock.BookingResult
 import com.patrickzedler.grocy.core.model.stock.ConsumeBooking
 import com.patrickzedler.grocy.core.model.stock.InventoryBooking
 import com.patrickzedler.grocy.core.model.stock.OpenBooking
+import com.patrickzedler.grocy.core.model.stock.PricedPurchase
 import com.patrickzedler.grocy.core.model.stock.ProductLocationAmount
 import com.patrickzedler.grocy.core.model.stock.ProductPurchase
 import com.patrickzedler.grocy.core.model.stock.ProductStockDetails
@@ -19,14 +20,19 @@ import com.patrickzedler.grocy.core.model.stock.PurchaseBooking
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
 import com.patrickzedler.grocy.core.model.stock.StockLogEntry
+import com.patrickzedler.grocy.core.model.stock.StockTransactionType
 import com.patrickzedler.grocy.core.model.stock.TransferBooking
+import com.patrickzedler.grocy.core.model.stock.pricedPurchasesOf
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 
 /**
  * What only the server knows about stock, offline first: its entries and the stock journal as
@@ -131,6 +137,43 @@ class StockRepository(
         database.withWriteTransaction {
             stockDao.deleteStockLog(since.orEmpty())
             stockDao.insertStockLog(bookings.map { it.toEntity() })
+        }
+    }
+
+    /**
+     * The purchases with a price from [from] to [to] ("YYYY-MM-DD"), Grocy's price history of
+     * its spendings report, online only. An edited entry counts with its newest edit, whose
+     * amount depends on what was consumed before, so those entries are read completely.
+     *
+     * @throws GrocyApiException e.g. [GrocyApiException.Unreachable] when offline.
+     */
+    suspend fun pricedPurchases(from: String, to: String): List<PricedPurchase> {
+        val connection = requireConnection()
+        return coroutineScope {
+            val dated = async {
+                api.priceLog(connection, listOf("purchased_date>=$from", "purchased_date<=$to"))
+            }
+            val edits = async {
+                api.priceLog(connection, listOf("transaction_type=$STOCK_EDIT_NEW"))
+            }
+            val editRows = edits.await()
+            val editedInRange = editRows.groupBy { it.stockId }
+                .mapNotNull { (stockId, list) ->
+                    stockId?.takeIf {
+                        val newest = list.maxBy { row -> row.id }
+                        !newest.undone && newest.purchasedDate.orEmpty() in from..to
+                    }
+                }
+            val parallel = Semaphore(MAX_PARALLEL_REQUESTS)
+            val entries = editedInRange.map { stockId ->
+                async {
+                    parallel.withPermit {
+                        api.priceLog(connection, listOf("stock_id=$stockId"))
+                    }
+                }
+            }
+            val rows = dated.await() + editRows + entries.awaitAll().flatten()
+            pricedPurchasesOf(rows.distinctBy { it.id })
         }
     }
 
@@ -308,6 +351,13 @@ class StockRepository(
         } catch (_: GrocyApiException) {
             // The next refresh downloads it
         }
+    }
+
+    private companion object {
+        val STOCK_EDIT_NEW = StockTransactionType.STOCK_EDIT_NEW.value
+
+        // Several edited entries are read at once, but not all of them
+        const val MAX_PARALLEL_REQUESTS = 4
     }
 
     private suspend fun requireConnection(): ServerConnection =

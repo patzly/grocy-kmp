@@ -23,6 +23,10 @@ import org.jetbrains.compose.resources.preloadImageVector
 @Composable
 internal actual fun platformDynamicColorScheme(isDark: Boolean): ColorScheme? = null
 
+// Browsers have no colors of a wallpaper
+@Composable
+internal actual fun platformContrastLevel(): Double = 0.0
+
 @Composable
 internal actual fun SystemBarAppearance(isDark: Boolean, backgroundColor: Color) {
     val cssColor = backgroundColor.toCssHex()

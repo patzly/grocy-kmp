@@ -75,6 +75,7 @@ fun WearApp(graph: WearGraph) {
         viewModel.onStart()
         onPauseOrDispose {}
     }
+    graph.localNetworkGate?.let { WearLocalNetworkPrompt(it) }
 
     MaterialTheme(colorScheme = dynamicColorScheme(context) ?: ColorScheme()) {
         AppScaffold {

@@ -45,6 +45,7 @@ import com.patrickzedler.grocy.core.navigation.Route
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.network.GrocyApi
+import com.patrickzedler.grocy.core.network.LocalNetworkGate
 import com.patrickzedler.grocy.core.network.createGrocyHttpClient
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.network.ProductFactsApi
@@ -91,8 +92,12 @@ class AppGraph(
     private val networkSettingsRepository =
         NetworkSettingsRepository(platform.settingsStore, appScope)
 
+    /** Holds requests into the local network while the user is asked to allow them. */
+    internal val localNetworkGate: LocalNetworkGate? =
+        platform.localNetworkPermission?.let(::LocalNetworkGate)
+
     private val httpClient by lazy {
-        createGrocyHttpClient { networkSettingsRepository.proxy() }
+        createGrocyHttpClient(localNetworkGate) { networkSettingsRepository.proxy() }
     }
 
     private val grocyApi by lazy { GrocyApi(httpClient) }
@@ -326,18 +331,23 @@ class AppGraph(
         mutableOpenedNotification.value = null
     }
 
-    private val mutableOpenedWidgetRoute = MutableStateFlow<Route?>(null)
+    private val mutableOpenedRoute = MutableStateFlow<Route?>(null)
 
-    /** The screen a widget opened, until the navigation showed it. */
-    internal val openedWidgetRoute = mutableOpenedWidgetRoute.asStateFlow()
+    /** The screen a widget or link opened, until the navigation showed it. */
+    internal val openedRoute = mutableOpenedRoute.asStateFlow()
 
     /** The user tapped something of a widget that leads to [link] ([WidgetLinks]). */
     internal fun openWidgetLink(link: String) {
-        WidgetLinks.routeOfLink(link)?.let { mutableOpenedWidgetRoute.value = it }
+        WidgetLinks.routeOfLink(link)?.let { mutableOpenedRoute.value = it }
     }
 
-    internal fun widgetRouteOpened() {
-        mutableOpenedWidgetRoute.value = null
+    /** An NFC tag, QR code or another app opened [link] ([DeepLinks]); others are ignored. */
+    internal fun openDeepLink(link: String) {
+        DeepLinks.routeOf(link)?.let { mutableOpenedRoute.value = it }
+    }
+
+    internal fun routeOpened() {
+        mutableOpenedRoute.value = null
     }
 
     /** What the alarm of the system runs; [onFinished] once the app may go back to sleep. */

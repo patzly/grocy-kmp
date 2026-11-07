@@ -96,7 +96,10 @@ scene, and the page's back button) returns to the products in one step). The oth
   credentials) and port (1 to 65535) once typing pauses and only when valid. The app keeps the
   way it started with for the whole process (`docs/architecture/network.md`), so switching Tor
   asks to restart at once (not when switched back to how the app runs), and any other change
-  that sends requests elsewhere leaves a "Restart app" item below the group.
+  that sends requests elsewhere leaves a "Restart app" item below the group. On Android 17 and
+  newer a group "Local network" follows with the state of `ACCESS_LOCAL_NETWORK`
+  (`rememberLocalNetworkAccess`, core:ui): a tap asks for it, or opens the app's settings once
+  Android no longer asks or to take it back.
 - Every settings screen uses `SettingsScaffold` (`feature:settings:impl`): `SegmentedListScreen`
   with back button and the same overflow menu (About, Help, Send feedback, Show logcat / Show
   log) plus its dialogs. The menu item shapes (`itemShape(i, 4)` in the first group,

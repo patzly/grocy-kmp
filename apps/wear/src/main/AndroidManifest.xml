@@ -5,6 +5,8 @@
   <uses-feature android:name="android.hardware.type.watch" />
 
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <!-- Servers in the home network, which Android 17 blocks without it; asked for when needed -->
+  <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
 
   <application
     android:name=".WearApplication"

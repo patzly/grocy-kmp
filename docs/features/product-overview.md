@@ -28,13 +28,18 @@ pages and the shopping list show it through `ProductOverviewHost`, whose ViewMod
 - `PriceHistoryChart`: Canvas line chart after the dataviz rules: one 2.dp line per store with
   surface-ringed points, Grocy's dotted least squares trend, y axis from zero in round steps
   (`priceAxis`), first and last date below, legend from two series or with a trend. Colors come
-  from `rememberChartColors` (`core:design`): a validated categorical palette in fixed order
-  with light and dark steps (the tests check it with the dataviz validator, `PaletteValidator`),
-  starting at its color closest to primary (the order stays), every color harmonized with
-  MaterialKolor's `harmonize` like the status colors and Material's custom colors. A search for
-  the strongest harmonization that kept the validator's color blind checks ended without any
-  for most themes, so the colors stayed unharmonized; harmonized hues can come close for color
-  blind users instead, so every series also has its own point shape (`ChartMarker`: circle,
+  from `rememberChartColors` (`core:design`): only the hues are fixed (`ChartHues`, the order of
+  a validated categorical palette, warm and cool alternating), starting at the hue closest to
+  primary (the order stays); each harmonized with primary, at primary's chroma but at least the
+  default theme's 36 (series are told apart by color, also in calm styles). Their tones are a
+  graphic role, not the text roles: the tone closest to the theme's surface that keeps 3:1
+  (WCAG for graphics, rising to 4.5:1 with the contrast level), every other series 24 further
+  away (`ChartToneOffsets`), so neighbours also differ in lightness. Text roles would not do:
+  at one tone only a third of the neighbours stay apart for color blind users, and with more
+  contrast primary's tone reaches 17 or 94, where no color is left. `ChartColorsTest` checks
+  with the dataviz validator (`PaletteValidator`) every style, contrast level, light and dark
+  scheme and a range of theme hues, the last series next to the first too. Every series also has
+  its own point shape (`ChartMarker`: circle,
   square, diamond, triangle; neighbours never share one), in the legend too. Every other color
   outside the color scheme must be
   harmonized with primary as well (codes such as the grocycode stay black on white); stores

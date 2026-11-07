@@ -89,6 +89,24 @@ data class InventoryRoute(
 ) : BookingRoute
 
 /**
+ * Scanning first: a scanned product, then the booking the user chooses for it (purchase,
+ * consume, transfer or inventory) with that booking's fields. The stock overview's main action.
+ */
+@Serializable
+@SerialName("scan")
+data object StockScanRoute : Route
+
+/** Grocy's "Location Content Sheet": every location with the products in stock there. */
+@Serializable
+@SerialName("locationcontentsheet")
+data object LocationContentSheetRoute : Route
+
+/** Grocy's stock report "Spendings": what purchases cost in a date range, as a pie chart. */
+@Serializable
+@SerialName("stockreports/spendings")
+data object StockSpendingsRoute : Route
+
+/**
  * One of Grocy's stock pages Purchase, Consume, Transfer and Inventory: opened from the start
  * screen's buttons ([besideStart]) the page shows beside the start screen where the window is
  * wide enough, replacing the section shown there; from elsewhere a screen of its own.
@@ -115,5 +133,8 @@ val stockRouteSerializers = SerializersModule {
         subclass(ConsumeRoute::class, ConsumeRoute.serializer())
         subclass(TransferRoute::class, TransferRoute.serializer())
         subclass(InventoryRoute::class, InventoryRoute.serializer())
+        subclass(StockScanRoute::class, StockScanRoute.serializer())
+        subclass(LocationContentSheetRoute::class, LocationContentSheetRoute.serializer())
+        subclass(StockSpendingsRoute::class, StockSpendingsRoute.serializer())
     }
 }

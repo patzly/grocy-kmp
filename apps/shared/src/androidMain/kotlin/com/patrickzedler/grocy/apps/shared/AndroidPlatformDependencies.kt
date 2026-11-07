@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.Uri
+import android.os.Build
 import com.patrickzedler.grocy.apps.shared.widget.WidgetUpdates
 import com.patrickzedler.grocy.core.data.credentials.AndroidCredentialStore
 import com.patrickzedler.grocy.core.data.credentials.CredentialStore
@@ -23,6 +24,7 @@ import com.patrickzedler.grocy.core.data.update.GitHubAppUpdater
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
+import com.patrickzedler.grocy.core.ui.hasLocalNetworkPermission
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -105,6 +107,13 @@ class AndroidPlatformDependencies(
         // A new process, so nothing read before the restart survives in memory
         Runtime.getRuntime().exit(0)
     }
+
+    override val localNetworkPermission: (() -> Boolean)? =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN) {
+            { hasLocalNetworkPermission(appContext) }
+        } else {
+            null
+        }
 
     // Orbot's documented way for other apps: it starts Tor if the user allows background starts
     override fun requestTorStart() {

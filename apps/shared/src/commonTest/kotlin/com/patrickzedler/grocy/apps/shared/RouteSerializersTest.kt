@@ -60,6 +60,9 @@ import com.patrickzedler.grocy.feature.stock.api.PurchaseRoute
 import com.patrickzedler.grocy.feature.stock.api.StockEntriesRoute
 import com.patrickzedler.grocy.feature.stock.api.StockJournalRoute
 import com.patrickzedler.grocy.feature.stock.api.StockJournalSummaryRoute
+import com.patrickzedler.grocy.feature.stock.api.StockScanRoute
+import com.patrickzedler.grocy.feature.stock.api.StockSpendingsRoute
+import com.patrickzedler.grocy.feature.stock.api.LocationContentSheetRoute
 import com.patrickzedler.grocy.feature.stock.api.StockOverviewRoute
 import com.patrickzedler.grocy.feature.stock.api.TransferRoute
 import kotlin.test.Test
@@ -161,6 +164,9 @@ class RouteSerializersTest {
         StockJournalRoute(),
         StockJournalRoute(productId = 7),
         StockJournalSummaryRoute(productId = 7),
+        StockScanRoute,
+        LocationContentSheetRoute,
+        StockSpendingsRoute,
     )
 
     private val json = Json { serializersModule = routeSerializers }

@@ -5,6 +5,12 @@
   <!-- Sends what was checked off offline as soon as the device gets a network again -->
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+  <!--
+      Self-hosted servers often run in the home network, which Android 17 blocks without it;
+      asked for when a request goes there
+  -->
+  <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
+
   <!-- The daily notifications, asked for when the user turns one on -->
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
   <!-- They come at the chosen time; the user allows it in the notification settings -->
@@ -29,11 +35,28 @@
     <activity
       android:name="com.patrickzedler.grocy.apps.shared.MainActivity"
       android:exported="true"
+      android:launchMode="singleTask"
       android:theme="@style/Theme.Grocy.Splash"
       android:windowSoftInputMode="adjustResize">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+      <!--
+          grocy:// links open a page of the app (DeepLinks), also from a browser or QR code;
+          one task, so a link from another app brings the app forward instead of a copy
+      -->
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="grocy" />
+      </intent-filter>
+      <!-- The same links on NFC tags, opened without asking which app should handle them -->
+      <intent-filter>
+        <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <data android:scheme="grocy" />
       </intent-filter>
     </activity>
 

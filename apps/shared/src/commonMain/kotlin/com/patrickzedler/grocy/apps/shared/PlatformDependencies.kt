@@ -69,6 +69,13 @@ interface PlatformDependencies {
     /** Starts the app anew: a new process on Android, a reload of the page on the web. */
     fun restartApp()
 
+    /**
+     * Whether the app may reach the local network now; null where no permission guards it
+     * (browsers ask themselves, Android before 17 allows it).
+     */
+    val localNetworkPermission: (() -> Boolean)?
+        get() = null
+
     /** Asks Orbot to start Tor for this process's requests; only Android can use Tor. */
     fun requestTorStart() = Unit
 }

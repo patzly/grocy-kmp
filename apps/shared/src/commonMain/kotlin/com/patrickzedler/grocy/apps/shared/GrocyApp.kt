@@ -132,6 +132,8 @@ fun GrocyApp(
                     }
                     UpdateOffer(graph.updateRepository)
                 }
+                // Also before the login, whose first request may go into the local network
+                graph.localNetworkGate?.let { LocalNetworkPrompt(it) }
             }
         }
     }
@@ -164,12 +166,12 @@ private fun GrocyNavigation(
         graph.notificationOpened()
     }
 
-    val openedWidgetRoute by graph.openedWidgetRoute.collectAsStateWithLifecycle()
-    LaunchedEffect(openedWidgetRoute, isLoggedIn) {
-        val route = openedWidgetRoute ?: return@LaunchedEffect
-        // On top of what the user was doing, so back returns to it
+    // A widget's or a link's page, on top of what the user was doing, so back returns to it
+    val openedRoute by graph.openedRoute.collectAsStateWithLifecycle()
+    LaunchedEffect(openedRoute, isLoggedIn) {
+        val route = openedRoute ?: return@LaunchedEffect
         if (isLoggedIn && navigator.currentRoute != route) navigator.navigate(route)
-        graph.widgetRouteOpened()
+        graph.routeOpened()
     }
 
     // The app menu of the features' screens leads to the settings and About

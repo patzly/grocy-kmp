@@ -43,6 +43,7 @@ import com.patrickzedler.grocy.core.model.stock.BookingResult
 import com.patrickzedler.grocy.core.model.stock.ConsumeBooking
 import com.patrickzedler.grocy.core.model.stock.InventoryBooking
 import com.patrickzedler.grocy.core.model.stock.OpenBooking
+import com.patrickzedler.grocy.core.model.stock.PriceLogRow
 import com.patrickzedler.grocy.core.model.stock.ProductLocationAmount
 import com.patrickzedler.grocy.core.model.stock.ProductPurchase
 import com.patrickzedler.grocy.core.model.stock.PurchaseBooking
@@ -91,6 +92,7 @@ import com.patrickzedler.grocy.core.network.dto.ShoppingListItemDto
 import com.patrickzedler.grocy.core.network.dto.StockDto
 import com.patrickzedler.grocy.core.network.dto.StockEntryDto
 import com.patrickzedler.grocy.core.network.dto.StockLocationDto
+import com.patrickzedler.grocy.core.network.dto.PriceLogDto
 import com.patrickzedler.grocy.core.network.dto.StockLogDto
 import com.patrickzedler.grocy.core.network.dto.StoreDto
 import com.patrickzedler.grocy.core.network.dto.DbChangedTimeDto
@@ -1202,6 +1204,21 @@ class GrocyApi(
             productId?.let { add("query[]" to "product_id=$it") }
             add("order" to "row_created_timestamp:desc")
         },
+    ).map { it.toModel() }
+
+    /**
+     * Bookings of the stock journal with their prices, for the price history of the spendings:
+     * those matching every one of [conditions], Grocy's `query[]` filters like
+     * "purchased_date>=2026-11-01".
+     */
+    suspend fun priceLog(
+        connection: ServerConnection,
+        conditions: List<String>,
+    ): List<PriceLogRow> = get<List<PriceLogDto>>(
+        connection,
+        "objects",
+        "stock_log",
+        query = conditions.map { "query[]" to it },
     ).map { it.toModel() }
 
     /**

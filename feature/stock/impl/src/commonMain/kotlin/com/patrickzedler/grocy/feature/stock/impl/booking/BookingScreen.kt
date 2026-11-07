@@ -19,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalLocale
@@ -36,8 +37,8 @@ import com.patrickzedler.grocy.core.design.component.FocusRequestEffect
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.LocalFormFocus
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
-import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.NumberStepper
+import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
 import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
@@ -50,12 +51,12 @@ import com.patrickzedler.grocy.core.forms.DateTextItem
 import com.patrickzedler.grocy.core.forms.DropdownItem
 import com.patrickzedler.grocy.core.forms.ExternalLookupResult
 import com.patrickzedler.grocy.core.forms.FormFocusTarget
-import com.patrickzedler.grocy.core.forms.ProductFormRequest
-import com.patrickzedler.grocy.core.forms.UnknownProductDialog
 import com.patrickzedler.grocy.core.forms.GroupItem
 import com.patrickzedler.grocy.core.forms.GroupItems
+import com.patrickzedler.grocy.core.forms.ProductFormRequest
 import com.patrickzedler.grocy.core.forms.ScannerToggleButton
 import com.patrickzedler.grocy.core.forms.TextItem
+import com.patrickzedler.grocy.core.forms.UnknownProductDialog
 import com.patrickzedler.grocy.core.forms.UserfieldItem
 import com.patrickzedler.grocy.core.forms.actionMessage
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
@@ -77,8 +78,6 @@ import com.patrickzedler.grocy.core.resources.action_cancel
 import com.patrickzedler.grocy.core.resources.action_scroll_to_top
 import com.patrickzedler.grocy.core.resources.action_undo
 import com.patrickzedler.grocy.core.resources.booking_add_barcode_hint
-import com.patrickzedler.grocy.core.resources.booking_external_lookup_nothing_found
-import com.patrickzedler.grocy.core.resources.product_picker_workflow_hint
 import com.patrickzedler.grocy.core.resources.booking_amount_not_equal
 import com.patrickzedler.grocy.core.resources.booking_applies_to_added
 import com.patrickzedler.grocy.core.resources.booking_consumed
@@ -88,6 +87,7 @@ import com.patrickzedler.grocy.core.resources.booking_due_earlier
 import com.patrickzedler.grocy.core.resources.booking_entry
 import com.patrickzedler.grocy.core.resources.booking_entry_required
 import com.patrickzedler.grocy.core.resources.booking_exact_amount
+import com.patrickzedler.grocy.core.resources.booking_external_lookup_nothing_found
 import com.patrickzedler.grocy.core.resources.booking_from_location
 import com.patrickzedler.grocy.core.resources.booking_frozen
 import com.patrickzedler.grocy.core.resources.booking_inventoried
@@ -146,6 +146,7 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_info
 import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_cart
 import com.patrickzedler.grocy.core.resources.ic_rounded_vertical_align_top
 import com.patrickzedler.grocy.core.resources.product_overview
+import com.patrickzedler.grocy.core.resources.product_picker_workflow_hint
 import com.patrickzedler.grocy.core.resources.product_stock_label_none
 import com.patrickzedler.grocy.core.resources.product_stock_label_per_unit
 import com.patrickzedler.grocy.core.resources.product_stock_label_single
@@ -198,16 +199,7 @@ internal fun BookingScreen(
 
     BookingEvents(viewModel, snackbarHostState, onOpenProduct, onDone)
     LabelPrintEffect(actions.labels, snackbarHostState)
-    UnknownProductDialog(
-        flow = viewModel.unknownProduct,
-        products = currentOptions?.products.orEmpty(),
-        lookupPlugin = currentOptions?.config?.barcodeLookupPlugin,
-        onOpenProduct = onOpenProduct,
-        onBarcodeAssigned = viewModel::onBarcodeAssigned,
-        onScanAgain = viewModel::scanAgain,
-        onLookUp = viewModel::lookUpExternally,
-        onDismissRequest = viewModel::dismissUnknownProduct,
-    )
+    BookingUnknownProductDialog(viewModel, currentOptions, onOpenProduct)
 
     CompositionLocalProvider(LocalFormFocus provides formFocus) {
         SegmentedListScreen(
@@ -269,16 +261,42 @@ internal fun BookingScreen(
     )
 }
 
-private fun LazyListScope.bookingForm(
+/** Grocy's "Create or assign product" of the page's product field. */
+@Composable
+internal fun BookingUnknownProductDialog(
+    viewModel: BookingViewModel,
+    options: BookingOptions?,
+    onOpenProduct: (ProductFormRequest) -> Unit,
+) {
+    UnknownProductDialog(
+        flow = viewModel.unknownProduct,
+        products = options?.products.orEmpty(),
+        lookupPlugin = options?.config?.barcodeLookupPlugin,
+        onOpenProduct = onOpenProduct,
+        onBarcodeAssigned = viewModel::onBarcodeAssigned,
+        onScanAgain = viewModel::scanAgain,
+        onLookUp = viewModel::lookUpExternally,
+        onDismissRequest = viewModel::dismissUnknownProduct,
+    )
+}
+
+/**
+ * The page's form in Grocy's field order. [showsScanMode] and [showsProductPicker] leave out
+ * Grocy's scan mode and the product field where a page chose the product already (the scan
+ * page, which shows it above).
+ */
+internal fun LazyListScope.bookingForm(
     viewModel: BookingViewModel,
     options: BookingOptions,
+    showsScanMode: Boolean = true,
+    showsProductPicker: Boolean = true,
 ) {
     val kind = viewModel.kind
     val form = viewModel.form
     viewModel.shoppingListItem?.let { item ->
         segmentedGroup(key = "shopping-list-item") { ShoppingListItemHint(item) }
     }
-    if (kind == BookingKind.PURCHASE || kind == BookingKind.CONSUME) {
+    if (showsScanMode && (kind == BookingKind.PURCHASE || kind == BookingKind.CONSUME)) {
         segmentedGroup(key = "scan-mode") {
             SegmentedSwitchItem(
                 headline = stringResource(Res.string.booking_scan_mode),
@@ -292,7 +310,7 @@ private fun LazyListScope.bookingForm(
     }
     segmentedGroup(key = "product") {
         GroupItems(
-            productItem(viewModel, options),
+            productItem(viewModel, options).takeIf { showsProductPicker },
             exactAmountItem(viewModel),
             amountItem(viewModel, options),
             unitItem(viewModel),
@@ -912,14 +930,19 @@ private suspend fun noteText(note: BookingNote): String = when (note) {
     BookingNote.Thawed -> getString(Res.string.booking_thawed)
 }
 
-/** Shows the page's messages: bookings with "Undo" and Grocy's warnings, errors. */
+/**
+ * Shows the page's messages: bookings with "Undo" and Grocy's warnings, errors. [onBooked]
+ * learns of every booking, before its message.
+ */
 @Composable
-private fun BookingEvents(
+internal fun BookingEvents(
     viewModel: BookingViewModel,
     snackbarHostState: SnackbarHostState,
     onOpenProduct: (ProductFormRequest) -> Unit,
     onDone: () -> Unit,
+    onBooked: () -> Unit = {},
 ) {
+    val currentOnBooked by rememberUpdatedState(onBooked)
     val language = LocalLocale.current.toLanguageTag()
     LaunchedEffect(viewModel) {
         var shown: Job? = null
@@ -931,6 +954,7 @@ private fun BookingEvents(
                 return@collect
             }
             shown?.cancel()
+            if (event is BookingEvent.Booked || event is BookingEvent.Opened) currentOnBooked()
             val decimals = viewModel.options.value?.settings?.stockDecimalPlacesAmounts ?: 4
             fun amount(value: Double, unit: QuantityUnit?) =
                 amountText(value, unit, decimals, language)

@@ -5,11 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
-import com.materialkolor.hct.Hct
-import com.materialkolor.ktx.harmonize
-import com.materialkolor.ktx.toColor
 import com.materialkolor.ktx.toHct
+import com.patrickzedler.grocy.core.design.ColorRoleSpec
+import com.patrickzedler.grocy.core.design.LocalColorRoleSpec
+import com.patrickzedler.grocy.core.design.customColorRoles
+import com.patrickzedler.grocy.core.design.harmonizedHue
+import kotlin.math.min
 
 /**
  * A container color with the color of content on it, like a color role pair of the theme, and
@@ -19,10 +20,10 @@ import com.materialkolor.ktx.toHct
 data class StatusColor(val container: Color, val content: Color, val color: Color)
 
 /**
- * Colors that mark a state like Grocy's highlighted rows, as colorful as the theme's primary
- * color and harmonized with it: [positive] (green, e.g. enough in stock), [info] (blue, e.g.
- * below the min. stock amount), [warning] (yellow, due soon) and [critical] (red, overdue or
- * expired). Always together with a text, never color alone.
+ * Colors that mark a state like Grocy's highlighted rows, custom colors of the theme
+ * ([customColorRoles]): [positive] (green, e.g. enough in stock), [info] (blue, e.g. below the
+ * min. stock amount), [warning] (yellow, due soon) and [critical] (red, overdue or expired).
+ * Always together with a text, never color alone.
  */
 @Immutable
 data class StatusColors(
@@ -35,65 +36,57 @@ data class StatusColors(
 @Composable
 fun rememberStatusColors(): StatusColors {
     val primary = MaterialTheme.colorScheme.primary
-    val isDark = MaterialTheme.colorScheme.surface.luminance() < DARK_LUMINANCE
-    return remember(primary, isDark) {
+    val spec = LocalColorRoleSpec.current
+    return remember(primary, spec) {
         StatusColors(
-            positive = statusColorOf(GREEN_HUE, primary, isDark),
-            info = statusColorOf(BLUE_HUE, primary, isDark),
-            warning = statusColorOf(YELLOW_HUE, primary, isDark),
-            critical = statusColorOf(RED_HUE, primary, isDark),
+            positive = statusColorOf(GREEN_HUE, primary, spec),
+            info = statusColorOf(BLUE_HUE, primary, spec),
+            warning = statusColorOf(YELLOW_HUE, primary, spec),
+            critical = statusColorOf(RED_HUE, primary, spec),
         )
     }
 }
 
 /** Whether the theme is a dark one, for colors the theme does not derive itself. */
 @Composable
-fun isDarkColorScheme(): Boolean = MaterialTheme.colorScheme.surface.luminance() < DARK_LUMINANCE
+fun isDarkColorScheme(): Boolean = LocalColorRoleSpec.current.isDark
 
-/**
- * The roles of a [color] the user chose, like Material derives a custom color's: turned towards
- * [primary] (harmonized), so it fits the theme and stays recognizable, and its chroma at most that
- * of the theme's colorful roles. [StatusColor.container] and [StatusColor.color] are its filled
- * role, tone 40 in light themes and 80 in dark ones, with [StatusColor.content] 100 and 20 on it.
- */
-fun customStatusColorOf(color: Color, primary: Color, isDark: Boolean): StatusColor {
-    val hct = color.harmonize(primary).toHct()
-    val chroma = hct.chroma.coerceAtMost(MAX_CUSTOM_CHROMA)
-    fun tone(tone: Double) = Hct.from(hct.hue, chroma, tone).toColor()
-    val filled = tone(if (isDark) DARK_COLOR_TONE else LIGHT_COLOR_TONE)
-    return StatusColor(
-        container = filled,
-        content = tone(if (isDark) DARK_ON_COLOR_TONE else LIGHT_ON_COLOR_TONE),
-        color = filled,
-    )
+/** The current theme's [customStatusColorOf] of [color]. */
+@Composable
+fun rememberCustomStatusColor(color: Color): StatusColor {
+    val primary = MaterialTheme.colorScheme.primary
+    val spec = LocalColorRoleSpec.current
+    return remember(color, primary, spec) { customStatusColorOf(color, primary, spec) }
 }
 
 /**
- * [baseHue] with the chroma of [primary], so every status color is as colorful as the theme,
- * turned towards [primary] like Material's harmonization, then as tones the way Material
- * derives a custom color's roles: container 90, content 10 and color 40 in light themes,
- * 30, 90 and 80 in dark ones.
+ * The filled roles of a [color] the user chose, like the theme's primary and on primary: its
+ * hue turned towards [primary] (harmonized), so it fits the theme and stays recognizable, never
+ * more colorful than primary, so a calm choice stays calm. [StatusColor.container] and
+ * [StatusColor.color] are the color role, [StatusColor.content] the role on it.
  */
-internal fun statusColorOf(baseHue: Double, primary: Color, isDark: Boolean): StatusColor {
-    val chroma = primary.toHct().chroma
-    val hue = Hct.from(baseHue, chroma, LIGHT_COLOR_TONE).toColor()
-        .harmonize(primary)
-        .toHct()
-        .hue
-    fun tone(tone: Double) = Hct.from(hue, chroma, tone).toColor()
-    return if (isDark) {
-        StatusColor(
-            container = tone(DARK_CONTAINER_TONE),
-            content = tone(DARK_CONTENT_TONE),
-            color = tone(DARK_COLOR_TONE),
-        )
-    } else {
-        StatusColor(
-            container = tone(LIGHT_CONTAINER_TONE),
-            content = tone(LIGHT_CONTENT_TONE),
-            color = tone(LIGHT_COLOR_TONE),
-        )
-    }
+fun customStatusColorOf(color: Color, primary: Color, spec: ColorRoleSpec): StatusColor {
+    val hct = color.toHct()
+    val roles = customColorRoles(
+        hue = harmonizedHue(hct.hue, primary),
+        primary = primary,
+        spec = spec,
+        chroma = min(hct.chroma, primary.toHct().chroma),
+    )
+    return StatusColor(container = roles.color, content = roles.onColor, color = roles.color)
+}
+
+/**
+ * The custom color of [baseHue] harmonized with [primary]: its container and on container roles
+ * for the highlighted areas, its color role for small marks.
+ */
+internal fun statusColorOf(baseHue: Double, primary: Color, spec: ColorRoleSpec): StatusColor {
+    val roles = customColorRoles(harmonizedHue(baseHue, primary), primary, spec)
+    return StatusColor(
+        container = roles.container,
+        content = roles.onContainer,
+        color = roles.color,
+    )
 }
 
 // CAM16's unique hues (HCT's hue), which look neither of their neighbours: a yellow that is no
@@ -102,13 +95,3 @@ internal const val RED_HUE = 20.14
 internal const val YELLOW_HUE = 90.0
 internal const val GREEN_HUE = 164.25
 internal const val BLUE_HUE = 237.53
-
-private const val LIGHT_CONTAINER_TONE = 90.0
-private const val LIGHT_ON_COLOR_TONE = 100.0
-private const val DARK_ON_COLOR_TONE = 20.0
-private const val MAX_CUSTOM_CHROMA = 48.0
-private const val LIGHT_CONTENT_TONE = 10.0
-private const val DARK_CONTAINER_TONE = 30.0
-private const val DARK_CONTENT_TONE = 90.0
-private const val LIGHT_COLOR_TONE = 40.0
-private const val DARK_COLOR_TONE = 80.0

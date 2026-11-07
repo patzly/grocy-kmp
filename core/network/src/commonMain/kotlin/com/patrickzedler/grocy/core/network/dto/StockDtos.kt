@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.network.dto
 
 import com.patrickzedler.grocy.core.model.masterdata.QuantityUnitConversion
 import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
+import com.patrickzedler.grocy.core.model.stock.PriceLogRow
 import com.patrickzedler.grocy.core.model.stock.ProductPurchase
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.stock.StockLocationAmount
@@ -120,6 +121,34 @@ internal data class StockLogDto(
         note = note?.takeIf { it.isNotBlank() },
     )
 }
+
+/** A booking of Grocy's `stock_log` with what its price history needs. */
+@Serializable
+internal data class PriceLogDto(
+    val id: Int,
+    @SerialName("product_id") val productId: Int,
+    @SerialName("stock_id") val stockId: FlexString = null,
+    @SerialName("transaction_type") val transactionType: FlexString = null,
+    val amount: FlexDouble = null,
+    val price: FlexDouble = null,
+    @SerialName("purchased_date") val purchasedDate: FlexString = null,
+    @SerialName("shopping_location_id") val storeId: FlexInt = null,
+    val undone: FlexBoolean = null,
+) {
+    fun toModel() = PriceLogRow(
+        id = id,
+        productId = productId,
+        stockId = stockId?.takeIf { it.isNotBlank() },
+        transactionType = transactionType.orEmpty(),
+        amount = amount ?: 0.0,
+        price = price,
+        purchasedDate = purchasedDate?.takeIf { it.isNotBlank() }?.take(ISO_DATE_LENGTH),
+        storeId = storeId,
+        undone = undone ?: false,
+    )
+}
+
+private const val ISO_DATE_LENGTH = 10
 
 /** The part of Grocy's `/stock/volatile` its stock overview takes from there. */
 @Serializable

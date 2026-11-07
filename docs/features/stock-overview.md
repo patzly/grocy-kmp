@@ -37,8 +37,7 @@ Stock overview (`stockoverview/` of `feature:stock`, it opens the product overvi
   date relative and capitalized as a label of its own (`formatRelativeTimeLabel`: "Tomorrow",
   "Morgen"; ICU and Intl write the middle of a sentence), yellow when due soon and red when
   overdue or expired: `rememberStatusColors` of
-  `core:design`, Material's custom color roles of fixed hues with primary's chroma, harmonized
-  with primary), the
+  `core:design`, custom color roles of fixed hues, `docs/ui.md`), the
   description as text, the picture as thumbnail before the menu (both centered to each other,
   at the top of rows higher than one line, like the recipes' rows). A tap opens the product overview. Grocy's
   buttons in front of a row are swipe actions (`SwipeActionBox` of `core:design`, like Gmail's: a
@@ -58,5 +57,60 @@ Stock overview (`stockoverview/` of `feature:stock`, it opens the product overvi
   overview is downloaded again afterwards. A failed download after a booking never reports the
   booking as failed (it would invite booking twice), the next refresh gets it.
 - The floating toolbar: Journal, Stock entries, Reports (with location or price tracking) and
-  Search, scanning as its FAB. Reports and scanning do nothing yet, their pages do not exist;
+  Search, scanning as its FAB. Reports opens a menu right above the toolbar (`ReportsMenu`,
+  like the calendar's views): "Location Content Sheet" with location tracking, "Spendings" with
+  price tracking (see below). The FAB opens the scan page (`StockScanRoute`, below);
   "Search for recipes" opens the recipes searched for the product's name (`RecipesRoute`).
+
+## Stock reports
+
+- "Location Content Sheet" (`LocationContentSheetRoute`, `reports/LocationContentSheet*`):
+  Grocy's `/locationcontentsheet` without its printing. A group per location (by name, NOCASE),
+  its active products by name (binary order like Grocy's `ORDER BY p.name`) with amount and
+  stock unit and "x opened" below; "Show only in stock products" as toggle chip, on by default,
+  off adds the products without stock at their default location (`locationContentOf`,
+  core:model). Computed from the stored stock entries, which it downloads again on open (the
+  amounts per location and the opened part are sums of the entries, like Grocy's
+  `stock_current_location_content`). A tap opens the product overview.
+- "Spendings" (`StockSpendingsRoute`, `reports/Spendings*`): Grocy's
+  `/stockreports/spendings`. Chips: "Grouped by" product, product group or store; the date
+  range with Grocy's presets (today ... last year, default this month, `SpendingsRange`) and
+  "Custom range" with Material's date range picker; the product group (All, the groups,
+  Ungrouped) only while grouped by product; "Clear filter". Below a doughnut of the totals with
+  the total in the middle, then Grocy's table as list (name, product group, total, share).
+- Grocy's API does not expose its `products_price_history` view, so the app rebuilds it from
+  the stock journal (`pricedPurchasesOf`, core:model, after migrations 0224/0230/0239): purchases,
+  inventory corrections and self-production with a price and amount above 0, not undone; an
+  edited entry counts once, with its newest `stock-edit-new` (price, date) and the amount it then
+  had at the start (that edit's amount plus what was consumed or corrected away before). Self
+  production costs nothing in the spendings, like Grocy's `transaction_type != 'self-production'`.
+  `StockRepository.pricedPurchases(from, to)` reads the bookings of the range
+  (`purchased_date` filters), all `stock-edit-new` bookings and, for entries whose newest edit
+  lies in the range, all bookings of those entries (at most 4 requests at once). Online only:
+  every range is read anew, grouping and filters need no request; a failure shows the list's
+  error with "Try again", pull to refresh reads again.
+- Chart colors: the theme's chart colors (`rememberChartColors`,
+  `docs/features/product-overview.md`), assigned by size; past 8 rows the smallest share one gray slice "Other" (`spendingsChartOf`),
+  so no color repeats. 2dp of the container's color
+  between slices. Tapping a slice or a row shows that slice's total and name in the middle and
+  dims the others; the list is the chart's table view, the doughnut one image to screen readers
+  with its total.
+
+## Scan page
+
+- The stock overview's FAB (`StockScanRoute`, `scan/StockScan*`, also `grocy://scan`): scanning
+  first, the booking afterwards. While waiting for a code the camera is on, with a field below
+  for typed codes or a barcode reader's Enter ("Barcode, grocycode or product name").
+- A code (`scannedCodeOf`): a barcode or grocycode like on Grocy's stock pages, else an active
+  product's exact name; otherwise "Unknown code". The item shows the product and its stock
+  amount, with "Scan again". Below "What do you want to book?" as button group of the bookings
+  it allows (`offeredKinds`): consume and transfer only what is in stock, transfer only with
+  location tracking, an unknown code all of them (consume and transfer can only assign it, like
+  Grocy). A single possible booking is chosen right away.
+- The chosen booking is the page of that kind (`BookingViewModel` with `BookingPreset.code`, the
+  code used like one scanned in its product field, barcode amount and unit included) below,
+  without Grocy's scan mode switch and without the product field once a product is chosen; the
+  FAB books it. Unknown codes get Grocy's "Create or assign product" of that page.
+- Each booking page lives in a `ViewModelStore` of `StockScanViewModel`, so it survives rotation;
+  choosing another kind replaces an unbooked one. After a booking the camera returns for the next
+  code; the booked page stays until the next is chosen, so its message's "Undo" still works.

@@ -468,7 +468,8 @@ private fun GridStartEffect(
     var isPlaced by rememberSaveable { mutableStateOf(false) }
     val isGrid = state != null && view.isTimeGrid
     LaunchedEffect(isGrid) {
-        if (!isGrid || isPlaced || state == null) return@LaunchedEffect
+        // isGrid tells the compiler that state is there
+        if (!isGrid || isPlaced) return@LaunchedEffect
         val minute = if (state.anchor == state.today) currentMinuteOfDay() else DefaultGridMinute
         // Its height is known once laid out
         snapshotFlow { scroll.maxValue }.first { it > 0 && it != Int.MAX_VALUE }
@@ -487,7 +488,7 @@ private fun ListStartEffect(
 ) {
     val isReady = view == CalendarView.LIST && state != null && rows.isNotEmpty()
     LaunchedEffect(isReady) {
-        if (isReady && state != null) listState.scrollToItem(listIndexOf(rows, state.anchor))
+        if (isReady) listState.scrollToItem(listIndexOf(rows, state.anchor))
     }
 }
 

@@ -1,14 +1,18 @@
 package com.patrickzedler.grocy.apps.wear
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.Network
+import android.os.Build
 import com.patrickzedler.grocy.core.data.auth.AuthRepository
 import com.patrickzedler.grocy.core.data.credentials.AndroidCredentialStore
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.database.createGrocyDatabase
 import com.patrickzedler.grocy.core.network.GrocyApi
+import com.patrickzedler.grocy.core.network.LocalNetworkGate
 import com.patrickzedler.grocy.core.network.createGrocyHttpClient
 import com.patrickzedler.grocy.core.wear.DataLayerPhoneLink
 import com.patrickzedler.grocy.core.wear.PhoneLoginMarker
@@ -27,7 +31,18 @@ class WearGraph(context: Context) {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
-    private val api = GrocyApi(createGrocyHttpClient())
+    /** Holds requests into the local network while Android asks the user (Android 17). */
+    val localNetworkGate: LocalNetworkGate? =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN) {
+            LocalNetworkGate {
+                appContext.checkSelfPermission(Manifest.permission.ACCESS_LOCAL_NETWORK) ==
+                    PackageManager.PERMISSION_GRANTED
+            }
+        } else {
+            null
+        }
+
+    private val api = GrocyApi(createGrocyHttpClient(localNetworkGate))
 
     private val credentialStore = AndroidCredentialStore(appContext)
 

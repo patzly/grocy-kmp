@@ -82,6 +82,30 @@ internal fun EntryProviderScope<NavKey>.bookingEntries(
     }
 }
 
+/**
+ * The page of [kind] opened with [preset]; [removeShoppingListItem] removes the item a purchase
+ * puts into stock.
+ */
+internal fun bookingViewModel(
+    kind: BookingKind,
+    preset: BookingPreset,
+    dependencies: StockDependencies,
+    removeShoppingListItem: (suspend (Int) -> Unit)? = null,
+) = BookingViewModel(
+    kind = kind,
+    masterData = dependencies.masterDataRepository,
+    stock = dependencies.stockRepository,
+    preset = preset,
+    removeShoppingListItem = removeShoppingListItem,
+    barcodeUsesAmount = {
+        dependencies.behaviorSettings.settings.value?.barcodeUsesAmount != false
+    },
+    scanner = dependencies.scannerForms.fieldState(
+        kind.scannerForm,
+        hasValue = preset.productId != null || preset.code != null,
+    ),
+)
+
 private fun bookingMetadata(route: BookingRoute): Map<String, Any> =
     if (route.besideStart) detailPaneMetadata(StartRoute) else emptyMap()
 
@@ -96,20 +120,7 @@ private fun BookingEntry(
     val shoppingLists = dependencies.shoppingListRepository
     BookingScreen(
         viewModel = viewModel {
-            BookingViewModel(
-                kind = kind,
-                masterData = dependencies.masterDataRepository,
-                stock = dependencies.stockRepository,
-                preset = preset,
-                removeShoppingListItem = { shoppingLists.deleteItem(it) },
-                barcodeUsesAmount = {
-                    dependencies.behaviorSettings.settings.value?.barcodeUsesAmount != false
-                },
-                scanner = dependencies.scannerForms.fieldState(
-                    kind.scannerForm,
-                    hasValue = preset.productId != null,
-                ),
-            )
+            bookingViewModel(kind, preset, dependencies) { shoppingLists.deleteItem(it) }
         },
         actions = stockPageActions(dependencies, navigator),
         menuItems = appMenuItems(),

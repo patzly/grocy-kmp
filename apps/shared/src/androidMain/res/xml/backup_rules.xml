@@ -5,4 +5,6 @@
   <exclude domain="database" path="grocy.db" />
   <exclude domain="database" path="grocy.db-wal" />
   <exclude domain="database" path="grocy.db-shm" />
+  <!-- Whether Android asked for the local network; a new device has not asked yet -->
+  <exclude domain="sharedpref" path="local_network.xml" />
 </full-backup-content>

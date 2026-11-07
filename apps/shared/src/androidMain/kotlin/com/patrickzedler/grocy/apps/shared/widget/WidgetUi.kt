@@ -46,6 +46,7 @@ import com.patrickzedler.grocy.apps.shared.AndroidAppLanguageStore
 import com.patrickzedler.grocy.apps.shared.AppGraphOwner
 import com.patrickzedler.grocy.apps.shared.MainActivity
 import com.patrickzedler.grocy.apps.shared.R
+import com.patrickzedler.grocy.core.design.appColorRoleSpecs
 import com.patrickzedler.grocy.core.design.appColorSchemes
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
@@ -138,7 +139,8 @@ private fun sampleNamesOf(context: Context) = SampleNames(
 
 private fun widgetColorsOf(context: Context, appearance: AppearanceSettings): WidgetColors {
     val (light, dark) = appColorSchemes(context, appearance)
-    return WidgetColors(light, dark)
+    val (lightSpec, darkSpec) = appColorRoleSpecs(context, appearance)
+    return WidgetColors(light, dark, lightSpec, darkSpec)
 }
 
 /** The widgets' texts, read before they are drawn because Glance cannot read Compose resources. */

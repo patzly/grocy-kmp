@@ -25,5 +25,12 @@ expect fun rememberResourcesReady(): Boolean
 /** True where the system offers colors from the wallpaper (Android 12 and newer). */
 expect val isDynamicColorAvailable: Boolean
 
+/**
+ * The system's contrast level (-1 to 1) the colors of the wallpaper follow, 0 where they do not
+ * follow one; the roles [GrocyTheme] adds to those colors take it too.
+ */
+@Composable
+internal expect fun platformContrastLevel(): Double
+
 /** True where dynamic colors follow the system's contrast setting (Android 14 and newer). */
 expect val dynamicColorFollowsSystemContrast: Boolean

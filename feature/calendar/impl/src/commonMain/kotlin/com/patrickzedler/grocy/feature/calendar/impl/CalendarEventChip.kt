@@ -36,8 +36,8 @@ import androidx.compose.ui.unit.dp
 import com.patrickzedler.grocy.core.design.component.StatusColor
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.LocalColorRoleSpec
 import com.patrickzedler.grocy.core.design.component.customStatusColorOf
-import com.patrickzedler.grocy.core.design.component.isDarkColorScheme
 import com.patrickzedler.grocy.core.model.calendar.CalendarColorSetting
 import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
 import com.patrickzedler.grocy.core.model.calendar.CalendarEventKind
@@ -78,9 +78,9 @@ internal class EventColors(state: CalendarUiState) {
 @Composable
 internal fun colorRolesOf(hex: String): StatusColor {
     val scheme = MaterialTheme.colorScheme
-    val isDark = isDarkColorScheme()
-    return remember(hex, scheme.primary, scheme.secondary, isDark) {
-        argbOfHexColor(hex)?.let { customStatusColorOf(Color(it), scheme.primary, isDark) }
+    val spec = LocalColorRoleSpec.current
+    return remember(hex, scheme.primary, scheme.secondary, spec) {
+        argbOfHexColor(hex)?.let { customStatusColorOf(Color(it), scheme.primary, spec) }
             ?: StatusColor(scheme.secondary, scheme.onSecondary, scheme.secondary)
     }
 }

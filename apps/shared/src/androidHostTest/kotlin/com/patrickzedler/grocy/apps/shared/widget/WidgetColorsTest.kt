@@ -3,6 +3,7 @@ package com.patrickzedler.grocy.apps.shared.widget
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
+import com.patrickzedler.grocy.core.design.ColorRoleSpec
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -14,8 +15,8 @@ class WidgetColorsTest {
 
     @Test
     fun anEventHasItsColorHarmonizedForLightAndDark() {
-        val day = eventColorOf("#e57373", light, isDark = false)
-        val night = eventColorOf("#e57373", dark, isDark = true)
+        val day = eventColorOf("#e57373", light, ColorRoleSpec(isDark = false))
+        val night = eventColorOf("#e57373", dark, ColorRoleSpec(isDark = true))
 
         assertNotEquals(Color(0xFFE57373), day.container)
         assertNotEquals(day.container, night.container)
@@ -23,7 +24,7 @@ class WidgetColorsTest {
 
     @Test
     fun anEventWithoutAValidColorUsesTheSecondaryColor() {
-        val roles = eventColorOf("", light, isDark = false)
+        val roles = eventColorOf("", light, ColorRoleSpec(isDark = false))
 
         assertEquals(light.secondary, roles.container)
         assertEquals(light.onSecondary, roles.content)

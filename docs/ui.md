@@ -104,13 +104,22 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
 
 ## Components of `core:design`
 
+- Custom colors (`CustomColors.kt`, `core:design`): only a hue is fixed, nothing else is
+  stored. `customColorRoles(hue, primary, spec)` gives its roles `color`, `onColor`,
+  `container`, `onContainer` exactly like Material gives primary's: a `DynamicScheme` whose
+  palettes are the hue at primary's HCT chroma, in the theme's variant, light or dark scheme and
+  contrast level (`ColorRoleSpec`, provided by `GrocyTheme` as `LocalColorRoleSpec`; with the
+  wallpaper's colors tonal spot at the system's contrast, `platformContrastLevel`; widgets get
+  it from `appColorRoleSpecs`). Hues are harmonized with primary first (`harmonizedHue`).
+  `CustomColorsTest` checks that a custom color of primary's hue has primary's very roles in
+  every contrast level. Every color outside the scheme is built on it, never on stored tones.
 - Colors of states outside the color scheme (Grocy's highlighted rows) come from
   `rememberStatusColors` (`core:design`): positive (green), info (blue), warning (yellow),
-  critical (red): CAM16's unique hues (red 20.14, yellow 90, green 164.25, blue 237.53, the
-  purest of each, no amber or pink) with exactly the HCT chroma of the theme's primary color,
-  harmonized with primary and turned into container, content and color tones like
-  Material's custom colors (90/10/40 light, 30/90/80 dark; `color` for small marks such as
-  dots), always together with a text. Gestures on list items
+  critical (red): custom colors of CAM16's unique hues (red 20.14, yellow 90, green 164.25,
+  blue 237.53, the purest of each, no amber or pink), container and on container for areas,
+  `color` for small marks such as dots, always together with a text. A color the user chose
+  (calendar, `customStatusColorOf`) keeps its harmonized hue and at most primary's chroma, so a
+  calm choice stays calm, and takes the filled `color` and `onColor` roles. Gestures on list items
   use `SwipeActionBox` (Gmail's look, the action runs on letting go beyond the threshold, the
   item springs back); every swipe action must also be in the item's menu and its accessibility
   actions.

@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.apps.shared
 
 import android.content.Context
 import android.content.Intent
+import android.nfc.NfcAdapter
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -30,8 +31,8 @@ class MainActivity : ComponentActivity() {
         splashScreen.setKeepOnScreenCondition { !isContentReady }
 
         val graph = (application as AppGraphOwner).graph
-        // Recreating the activity must not open the notification's or widget's page again
-        if (savedInstanceState == null) openNotificationOf(intent)
+        // Recreating the activity must not open the notification's, widget's or link's page again
+        if (savedInstanceState == null) openPageOf(intent)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
             recreateOnLanguageChange(graph)
         }
@@ -45,12 +46,18 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        openNotificationOf(intent)
+        openPageOf(intent)
     }
 
-    private fun openNotificationOf(intent: Intent) {
+    private fun openPageOf(intent: Intent) {
         val graph = (application as AppGraphOwner).graph
         intent.getStringExtra(WIDGET_LINK_EXTRA)?.let(graph::openWidgetLink)
+        // grocy:// links of NFC tags, QR codes and other apps; they only open a page
+        if (intent.action == Intent.ACTION_VIEW ||
+            intent.action == NfcAdapter.ACTION_NDEF_DISCOVERED
+        ) {
+            intent.dataString?.let(graph::openDeepLink)
+        }
         val kind = AndroidNotifier.openedKindOf(intent) ?: return
         graph.openNotification(kind)
     }

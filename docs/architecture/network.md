@@ -27,6 +27,29 @@ API key placement and Home Assistant ingress. Moved from CLAUDE.md.
   only what Google Play Services download themselves (Play updates, ML Kit) and links opened in
   another app do not.
 
+## Local network (Android 17)
+
+- Apps targeting Android 17 (SDK 37) reach the local network only with the runtime permission
+  `ACCESS_LOCAL_NETWORK` (group "Nearby devices"); without it TCP connections there time out.
+  Self-hosted servers often live there, so the phone and watch apps declare it and ask for it
+  when a request goes there, not at first start.
+- `LocalNetworkGate` (core:network) holds such a request until the user answered; a Ktor plugin
+  (`localNetworkPlugin`) waits in `onRequest`, before the timeouts start. Whether a request goes
+  into the local network (`LocalDestination`, Android): its first hop, the server without a
+  proxy, else the proxy the `ProxyRouting` selector chooses; behind a proxy the server's name is
+  never resolved, so Tor still gets every name. A name is resolved through the system (DNS to the
+  network's own server needs no permission); local are private IPv4 ranges, link-local,
+  multicast, IPv6 unique local addresses and `.local` names (`isLocalNetworkAddress`), not
+  loopback and not the carrier-grade NAT range of VPNs like Tailscale.
+- The gate never blocks: the system decides. A wrong guess costs a question, never a working
+  connection. It asks once per process and only while a screen is started (`setCanAsk`, stop,
+  not pause, since Android's question pauses the activity); requests without one (notifications
+  at night) go on at once. `LocalNetworkPrompt` (apps:shared) explains first why, then asks
+  Android, or leads to the app's settings once Android no longer asks (`LocalNetworkPermission`,
+  whether it asked is kept in the shared preferences `local_network`, excluded from backups).
+  The watch asks Android directly (`WearLocalNetworkPrompt`). Browsers ask themselves; the web
+  app has no gate.
+
 ## Proxy and Tor (Android)
 
 - `NetworkSettingsRepository.proxy()` gives the `NetworkProxy` of the process: the settings it

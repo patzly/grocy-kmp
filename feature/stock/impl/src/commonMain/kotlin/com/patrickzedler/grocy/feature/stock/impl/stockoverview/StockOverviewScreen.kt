@@ -2,6 +2,7 @@
 
 package com.patrickzedler.grocy.feature.stock.impl.stockoverview
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -13,9 +14,13 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
@@ -26,6 +31,7 @@ import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
 import com.patrickzedler.grocy.core.design.component.GroupTitle
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
+import com.patrickzedler.grocy.core.design.component.OverflowMenuPopup
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
@@ -67,6 +73,8 @@ import com.patrickzedler.grocy.core.resources.stock_overview_reports
 import com.patrickzedler.grocy.core.resources.stock_overview_scan
 import com.patrickzedler.grocy.core.resources.stock_overview_title
 import com.patrickzedler.grocy.core.resources.stock_overview_total_value
+import com.patrickzedler.grocy.core.resources.stock_report_location_content_sheet
+import com.patrickzedler.grocy.core.resources.stock_report_spendings
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.getString
@@ -78,7 +86,8 @@ import org.jetbrains.compose.resources.stringResource
 internal class StockOverviewLinks(
     val onJournalClick: () -> Unit,
     val onStockEntriesClick: () -> Unit,
-    val onReportsClick: () -> Unit,
+    val onLocationContentSheetClick: () -> Unit,
+    val onSpendingsClick: () -> Unit,
     val onScanClick: () -> Unit,
 )
 
@@ -160,10 +169,10 @@ internal fun StockOverviewScreen(
                 if (config != null &&
                     (config.stockLocationTracking || config.stockPriceTracking)
                 ) {
-                    FloatingToolbarIconButton(
-                        painter = painterResource(Res.drawable.ic_rounded_analytics),
-                        contentDescription = stringResource(Res.string.stock_overview_reports),
-                        onClick = links.onReportsClick,
+                    ReportsMenu(
+                        locationContentSheet = config.stockLocationTracking,
+                        spendings = config.stockPriceTracking,
+                        links = links,
                     )
                 }
                 FloatingToolbarIconButton(
@@ -218,6 +227,45 @@ internal fun StockOverviewScreen(
         },
     )
 }
+
+/**
+ * Grocy's stock reports, offered in a menu right above the toolbar like the calendar's views:
+ * the "Location Content Sheet" with location tracking, "Spendings" with price tracking.
+ */
+@Composable
+private fun ReportsMenu(
+    locationContentSheet: Boolean,
+    spendings: Boolean,
+    links: StockOverviewLinks,
+) {
+    var isOpen by remember { mutableStateOf(false) }
+    val items = listOfNotNull(
+        AppBarMenuItem(stringResource(Res.string.stock_report_location_content_sheet)) {
+            links.onLocationContentSheetClick()
+        }.takeIf { locationContentSheet },
+        AppBarMenuItem(stringResource(Res.string.stock_report_spendings)) {
+            links.onSpendingsClick()
+        }.takeIf { spendings },
+    )
+    Box {
+        FloatingToolbarIconButton(
+            painter = painterResource(Res.drawable.ic_rounded_analytics),
+            contentDescription = stringResource(Res.string.stock_overview_reports),
+            onClick = { isOpen = true },
+        )
+        // Right above the toolbar, whose bar reaches 8.dp above this button's touch target
+        OverflowMenuPopup(
+            expanded = isOpen,
+            groups = listOf(items),
+            onDismissRequest = { isOpen = false },
+            above = true,
+            offset = DpOffset(x = 0.dp, y = -MenuToolbarGap),
+        )
+    }
+}
+
+// The toolbar's 64.dp bar around this 48.dp touch target, then Material's 8.dp to the menu
+private val MenuToolbarGap = 16.dp
 
 /** Grocy's messages of the bookings with "Undo". */
 @Composable

@@ -160,7 +160,10 @@ class ProxyRoutingTest {
 private fun Socket.requestLine(): String {
     val reader = getInputStream().bufferedReader()
     val line = reader.readLine()
-    while (reader.readLine()?.isNotEmpty() == true) Unit
+    // The headers up to the empty line
+    do {
+        val header = reader.readLine()
+    } while (!header.isNullOrEmpty())
     return line
 }
 

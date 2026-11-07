@@ -5,6 +5,7 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import com.materialkolor.PaletteStyle
@@ -59,12 +60,25 @@ fun GrocyTheme(
 
     SystemBarAppearance(isDark = isDark, backgroundColor = shownColorScheme.surfaceContainer)
 
-    MaterialExpressiveTheme(
-        colorScheme = shownColorScheme,
-        typography = grocyTypography(),
-        shapes = GrocyShapes,
-        content = content,
-    )
+    // Custom color roles take their tones like the theme's own roles; the wallpaper's colors
+    // are tonal spot ones in the system's contrast
+    val systemContrast = platformContrastLevel()
+    val isWallpaper = dynamicColorScheme != null
+    val roleSpec = remember(appearance, isDark, isWallpaper, systemContrast) {
+        if (isWallpaper) {
+            ColorRoleSpec(isDark = isDark, contrastLevel = systemContrast)
+        } else {
+            colorRoleSpecOf(appearance, isDark)
+        }
+    }
+    CompositionLocalProvider(LocalColorRoleSpec provides roleSpec) {
+        MaterialExpressiveTheme(
+            colorScheme = shownColorScheme,
+            typography = grocyTypography(),
+            shapes = GrocyShapes,
+            content = content,
+        )
+    }
 }
 
 /** The primary color [GrocyTheme] shows for [appearance] without colors of the wallpaper. */
@@ -104,9 +118,3 @@ private val AppPaletteStyle.paletteStyle: PaletteStyle
         AppPaletteStyle.MONOCHROME -> PaletteStyle.Monochrome
     }
 
-private val AppContrast.level: Double
-    get() = when (this) {
-        AppContrast.STANDARD -> 0.0
-        AppContrast.MEDIUM -> 0.5
-        AppContrast.HIGH -> 1.0
-    }

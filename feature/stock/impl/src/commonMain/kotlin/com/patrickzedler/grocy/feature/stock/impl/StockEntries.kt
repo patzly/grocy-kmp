@@ -16,14 +16,25 @@ import com.patrickzedler.grocy.core.ui.appMenuItems
 import com.patrickzedler.grocy.feature.masterdata.api.ProductRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipesRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
+import com.patrickzedler.grocy.feature.stock.api.LocationContentSheetRoute
 import com.patrickzedler.grocy.feature.stock.api.StockEntriesRoute
 import com.patrickzedler.grocy.feature.stock.api.StockJournalRoute
 import com.patrickzedler.grocy.feature.stock.api.StockJournalSummaryRoute
 import com.patrickzedler.grocy.feature.stock.api.StockOverviewRoute
+import com.patrickzedler.grocy.feature.stock.api.StockScanRoute
+import com.patrickzedler.grocy.feature.stock.api.StockSpendingsRoute
 import com.patrickzedler.grocy.feature.stock.api.bookingRoute
+import com.patrickzedler.grocy.feature.stock.impl.booking.BookingPreset
 import com.patrickzedler.grocy.feature.stock.impl.booking.bookingEntries
+import com.patrickzedler.grocy.feature.stock.impl.booking.bookingViewModel
 import com.patrickzedler.grocy.feature.stock.impl.journal.StockJournalScreen
 import com.patrickzedler.grocy.feature.stock.impl.journal.StockJournalViewModel
+import com.patrickzedler.grocy.feature.stock.impl.reports.LocationContentSheetScreen
+import com.patrickzedler.grocy.feature.stock.impl.reports.LocationContentSheetViewModel
+import com.patrickzedler.grocy.feature.stock.impl.reports.SpendingsScreen
+import com.patrickzedler.grocy.feature.stock.impl.reports.SpendingsViewModel
+import com.patrickzedler.grocy.feature.stock.impl.scan.StockScanScreen
+import com.patrickzedler.grocy.feature.stock.impl.scan.StockScanViewModel
 import com.patrickzedler.grocy.feature.stock.impl.stock.StockEntriesScreen
 import com.patrickzedler.grocy.feature.stock.impl.stock.StockEntriesViewModel
 import com.patrickzedler.grocy.feature.stock.impl.stockoverview.StockOverviewItemActions
@@ -57,12 +68,12 @@ fun EntryProviderScope<NavKey>.stockEntries(
         StockOverviewScreen(
             viewModel = stockOverview,
             actions = actions,
-            // Grocy's reports and scanning do not exist in the app yet
             links = StockOverviewLinks(
                 onJournalClick = { navigator.navigate(StockJournalRoute()) },
                 onStockEntriesClick = { navigator.navigate(StockEntriesRoute()) },
-                onReportsClick = {},
-                onScanClick = {},
+                onLocationContentSheetClick = { navigator.navigate(LocationContentSheetRoute) },
+                onSpendingsClick = { navigator.navigate(StockSpendingsRoute) },
+                onScanClick = { navigator.navigate(StockScanRoute) },
             ),
             itemActions = StockOverviewItemActions(
                 onClick = { actions.overview.show(it.productId) },
@@ -94,6 +105,43 @@ fun EntryProviderScope<NavKey>.stockEntries(
                 )
             },
             actions = stockPageActions(dependencies, navigator),
+            menuItems = appMenuItems(),
+            onBackClick = navigator::goBack,
+        )
+    }
+    entry<StockScanRoute> {
+        val actions = stockPageActions(dependencies, navigator)
+        StockScanScreen(
+            viewModel = viewModel {
+                StockScanViewModel(repository) { kind, code ->
+                    bookingViewModel(kind, BookingPreset(code = code), dependencies)
+                }
+            },
+            actions = actions,
+            menuItems = appMenuItems(),
+            onBackClick = navigator::goBack,
+            // Grocy's "Add as new product": the booking chooses the product when it comes back
+            onOpenProduct = { request ->
+                navigator.navigate(
+                    ProductRoute(request.productId, request.barcode, request.name, true),
+                )
+            },
+        )
+    }
+    entry<LocationContentSheetRoute> {
+        val language = appLanguage()
+        LocationContentSheetScreen(
+            viewModel = viewModel {
+                LocationContentSheetViewModel(repository, dependencies.stockRepository, language)
+            },
+            actions = stockPageActions(dependencies, navigator),
+            menuItems = appMenuItems(),
+            onBackClick = navigator::goBack,
+        )
+    }
+    entry<StockSpendingsRoute> {
+        SpendingsScreen(
+            viewModel = viewModel { SpendingsViewModel(repository, dependencies.stockRepository) },
             menuItems = appMenuItems(),
             onBackClick = navigator::goBack,
         )

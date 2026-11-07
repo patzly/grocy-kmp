@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -42,10 +43,16 @@ import com.patrickzedler.grocy.core.model.network.isValidProxyHost
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_later
 import com.patrickzedler.grocy.core.resources.action_restart
+import com.patrickzedler.grocy.core.resources.ic_rounded_lan
 import com.patrickzedler.grocy.core.resources.ic_rounded_restart_alt
 import com.patrickzedler.grocy.core.resources.settings_network
 import com.patrickzedler.grocy.core.resources.settings_network_http_proxy
 import com.patrickzedler.grocy.core.resources.settings_network_http_proxy_hint
+import com.patrickzedler.grocy.core.resources.settings_network_local
+import com.patrickzedler.grocy.core.resources.settings_network_local_access
+import com.patrickzedler.grocy.core.resources.settings_network_local_denied
+import com.patrickzedler.grocy.core.resources.settings_network_local_granted
+import com.patrickzedler.grocy.core.resources.settings_network_local_hint
 import com.patrickzedler.grocy.core.resources.settings_network_proxy
 import com.patrickzedler.grocy.core.resources.settings_network_proxy_host
 import com.patrickzedler.grocy.core.resources.settings_network_proxy_host_invalid
@@ -58,6 +65,9 @@ import com.patrickzedler.grocy.core.resources.settings_network_tor_hint
 import com.patrickzedler.grocy.core.resources.settings_network_tor_off_message
 import com.patrickzedler.grocy.core.resources.settings_network_tor_on_message
 import com.patrickzedler.grocy.core.resources.settings_server_restart_title
+import com.patrickzedler.grocy.core.ui.LocalNetworkAccess
+import com.patrickzedler.grocy.core.ui.LocalNetworkPermission
+import com.patrickzedler.grocy.core.ui.rememberLocalNetworkAccess
 import com.patrickzedler.grocy.feature.settings.impl.QuestionDialog
 import com.patrickzedler.grocy.feature.settings.impl.SettingError
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuActions
@@ -71,7 +81,8 @@ import org.jetbrains.compose.resources.stringResource
 /**
  * The way of the app's requests under "Proxy": Tor through Orbot, else an HTTP proxy whose host
  * and port show below its switch while it is on. Changing Tor asks to restart, other changes
- * leave an item that does, since the app keeps the way it started with.
+ * leave an item that does, since the app keeps the way it started with. Below, the permission
+ * for the local network where Android asks for it.
  */
 @Composable
 internal fun NetworkSettingsScreen(
@@ -84,6 +95,7 @@ internal fun NetworkSettingsScreen(
     pane: ScreenPane? = null,
 ) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
+    val localNetwork = rememberLocalNetworkAccess()
 
     SettingsScaffold(
         title = stringResource(Res.string.settings_network),
@@ -105,6 +117,7 @@ internal fun NetworkSettingsScreen(
                     focusesHost = viewModel.focusesHost,
                 ),
                 restartRequired = viewModel.restartRequired(current),
+                localNetwork = localNetwork,
                 onUseTorChange = viewModel::setUseTor,
                 onHttpProxyChange = viewModel::setHttpProxyEnabled,
                 onRestartClick = onRestart,
@@ -147,6 +160,7 @@ private fun LazyListScope.networkSettings(
     settings: NetworkSettings,
     fields: ProxyFields,
     restartRequired: Boolean,
+    localNetwork: LocalNetworkAccess?,
     onUseTorChange: (Boolean) -> Unit,
     onHttpProxyChange: (Boolean) -> Unit,
     onRestartClick: () -> Unit,
@@ -196,6 +210,12 @@ private fun LazyListScope.networkSettings(
     if (restartRequired) {
         segmentedGroup(key = "restart") {
             RestartItem(onClick = onRestartClick)
+        }
+    }
+    // Only where a permission guards it, Android 17 and newer
+    localNetwork?.let { access ->
+        segmentedGroup(key = "local-network", title = Res.string.settings_network_local) {
+            LocalNetworkItem(access)
         }
     }
 }
@@ -272,6 +292,53 @@ private fun RestartItem(onClick: () -> Unit) {
     )
 }
 
+/** The permission's state; a tap asks for it, or leads to the settings where it changes. */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun LocalNetworkItem(access: LocalNetworkAccess) {
+    val haptic = LocalHapticFeedback.current
+    val permission = access.permission
+    SegmentedListItem(
+        onClick = {
+            haptic.confirm()
+            if (permission == LocalNetworkPermission.Requestable) {
+                access.request()
+            } else {
+                access.openSettings()
+            }
+        },
+        shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
+        colors = SegmentedListDefaults.colors(),
+        modifier = Modifier.fillMaxWidth().clickCursor(),
+        verticalAlignment = Alignment.CenterVertically,
+        leadingContent = {
+            LeadingTrailingContentWrapper {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_rounded_lan),
+                    contentDescription = null,
+                )
+            }
+        },
+        supportingContent = {
+            Text(
+                stringResource(
+                    when (permission) {
+                        LocalNetworkPermission.Granted -> Res.string.settings_network_local_granted
+                        LocalNetworkPermission.Requestable -> Res.string.settings_network_local_hint
+                        LocalNetworkPermission.Denied -> Res.string.settings_network_local_denied
+                    },
+                ),
+                color = if (permission == LocalNetworkPermission.Denied) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    Color.Unspecified
+                },
+            )
+        },
+        content = { Text(stringResource(Res.string.settings_network_local_access)) },
+    )
+}
+
 @Preview
 @Composable
 private fun NetworkSettingsPreview() {
@@ -297,6 +364,7 @@ private fun NetworkSettingsPreview() {
                     focusesHost = false,
                 ),
                 restartRequired = true,
+                localNetwork = null,
                 onUseTorChange = {},
                 onHttpProxyChange = {},
                 onRestartClick = {},

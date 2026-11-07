@@ -40,8 +40,9 @@ its own Material 3 Expressive version that does the same.
   time in the time grid, those at nearly the same time below each other (`chipTops`), and on top without
   a time, Grocy's 23:59:59 counting as none. The icon says what it is about where it fits, screen readers
   get what Grocy's title says. Colors: `customStatusColorOf` harmonizes the user's color with the theme's
-  primary and derives the filled role (tone 40 and 100 in light, 80 and 20 in dark), so all follow
-  the theme; the color dialogs show them like that too.
+  primary and derives its filled roles (`color`, `onColor`) like Material's primary ones, in the
+  theme's contrast level (`docs/ui.md`), so all follow the theme; the color dialogs show them like
+  that too.
 - Day (`TimeGridPage`): Google's day, its weekday and number (`DayBadge`) at the start of the hours'
   column, what has no time beside them (three rows, "3 more" expands); below the hours as segmented
   rows, 56.dp per hour, the line at the current time on today. Week: the days' badges side by side,

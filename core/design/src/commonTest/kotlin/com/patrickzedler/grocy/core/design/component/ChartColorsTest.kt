@@ -1,9 +1,16 @@
 package com.patrickzedler.grocy.core.design.component
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
-import com.materialkolor.hct.Hct
-import com.materialkolor.ktx.harmonize
+import com.materialkolor.contrast.Contrast
+import com.materialkolor.ktx.toHct
+import com.patrickzedler.grocy.core.design.ColorRoleSpec
+import com.patrickzedler.grocy.core.design.colorRoleSpecOf
+import com.patrickzedler.grocy.core.design.harmonizedHue
+import com.patrickzedler.grocy.core.design.seededPrimaryColor
+import com.patrickzedler.grocy.core.design.surfaceTone
+import com.patrickzedler.grocy.core.model.AppContrast
+import com.patrickzedler.grocy.core.model.AppPaletteStyle
+import com.patrickzedler.grocy.core.model.AppearanceSettings
 import kotlin.math.abs
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -12,65 +19,96 @@ import kotlin.test.assertTrue
 
 class ChartColorsTest {
 
-    // Material's primary tones: 40 in light schemes, 80 in dark ones
-    private fun primary(hue: Int, isDark: Boolean = false) =
-        Color(Hct.from(hue.toDouble(), 48.0, if (isDark) 80.0 else 40.0).toInt())
+    private fun primary(hue: Float, isDark: Boolean = false) =
+        seededPrimaryColor(AppearanceSettings(hue = hue), isDark)
 
-    private fun hueOf(color: Color) = Hct.fromInt(color.toArgb()).hue
-
-    private fun hueDistance(a: Double, b: Double) = abs((b - a + 540) % 360 - 180)
-
-    private fun palette(isDark: Boolean) = if (isDark) DarkChartColors else LightChartColors
+    private fun hueOf(color: Color) = color.toHct().hue
 
     @Test
-    fun bothModesHaveEveryColorOnce() {
-        for (colors in listOf(LightChartColors, DarkChartColors)) {
+    fun everySeriesGetsItsOwnColor() {
+        for (isDark in listOf(false, true)) {
+            val colors = chartColorsOf(primary(154f, isDark), ColorRoleSpec(isDark))
+
             assertEquals(CHART_COLOR_COUNT, colors.size)
             assertEquals(CHART_COLOR_COUNT, colors.distinct().size)
         }
     }
 
     @Test
-    fun palettesAreValidThemselves() {
-        assertTrue(isValidPalette(LightChartColors, isDark = false))
-        assertTrue(isValidPalette(DarkChartColors, isDark = true))
-    }
+    fun neighboursStayApartForColorBlindUsersInEveryTheme() {
+        for (style in AppPaletteStyle.entries) {
+            for (contrast in AppContrast.entries) {
+                for (hue in listOf(0f, 30f, 60f, 90f, 120f, 154f, 180f, 210f, 250f, 280f, 320f)) {
+                    for (isDark in listOf(false, true)) {
+                        val appearance =
+                            AppearanceSettings(hue = hue, contrast = contrast, style = style)
+                        val colors = chartColorsOf(
+                            seededPrimaryColor(appearance, isDark),
+                            colorRoleSpecOf(appearance, isDark),
+                        )
 
-    @Test
-    fun theFirstSeriesTakesTheColorClosestToPrimary() {
-        for (hue in listOf(0, 60, 154, 250, 300)) {
-            for (isDark in listOf(false, true)) {
-                val source = primary(hue, isDark)
-                val closest = palette(isDark).minBy { hueDistance(hueOf(it), hue.toDouble()) }
-
-                val first = harmonizedChartColors(palette(isDark), source).first()
-
-                assertEquals(closest.harmonize(source), first, "hue $hue, dark $isDark")
+                        // The last series neighbours the first once the order starts elsewhere
+                        assertTrue(
+                            isDistinguishable(colors + colors.first()),
+                            "$style $contrast hue $hue dark $isDark",
+                        )
+                    }
+                }
             }
         }
     }
 
     @Test
-    fun everyColorIsHarmonizedLikeTheStatusColors() {
-        val source = primary(154)
+    fun everySeriesStandsOutFromTheSurface() {
+        for (contrast in AppContrast.entries) {
+            for (isDark in listOf(false, true)) {
+                val appearance = AppearanceSettings(contrast = contrast)
+                val spec = colorRoleSpecOf(appearance, isDark)
+                val surface = surfaceTone(spec)
+                val minimum = if (contrast == AppContrast.HIGH) 4.4 else 2.9
 
-        val harmonized = harmonizedChartColors(LightChartColors, source)
-
-        // The default green theme starts with the aqua, the order stays
-        val order = LightChartColors.drop(2) + LightChartColors.take(2)
-        assertEquals(order.map { it.harmonize(source) }, harmonized)
-        assertEquals(CHART_COLOR_COUNT, harmonized.distinct().size)
+                chartColorsOf(seededPrimaryColor(appearance, isDark), spec).forEach {
+                    val ratio = Contrast.ratioOfTones(surface, it.toHct().tone)
+                    assertTrue(ratio >= minimum, "$contrast dark $isDark: $ratio")
+                }
+            }
+        }
     }
 
     @Test
-    fun harmonizingTurnsTheBlueTowardsAGreenPrimary() {
-        val blue = LightChartColors.first()
+    fun theFirstSeriesTakesTheHueClosestToPrimary() {
+        for (hue in listOf(0f, 60f, 154f, 250f, 300f)) {
+            val source = primary(hue)
+            val closest = ChartHues.minBy { hueDistance(it, hueOf(source)) }
 
-        // The default green theme starts with the aqua, so the blue comes 6th
-        val harmonized = harmonizedChartColors(LightChartColors, primary(154))[6]
+            val first = chartColorsOf(source, ColorRoleSpec(isDark = false)).first()
 
-        assertNotEquals(blue, harmonized)
-        assertTrue(hueDistance(hueOf(harmonized), 154.0) < hueDistance(hueOf(blue), 154.0))
+            assertTrue(hueDistance(hueOf(first), harmonizedHue(closest, source)) < 2.0, "$hue")
+        }
+    }
+
+    @Test
+    fun moreContrastMovesTheColorsFurtherFromTheSurface() {
+        val source = primary(154f)
+
+        val standard = chartColorsOf(source, ColorRoleSpec(isDark = false))
+        val high = chartColorsOf(source, ColorRoleSpec(isDark = false, contrastLevel = 1.0))
+
+        standard.zip(high).forEach { (normal, contrast) ->
+            assertTrue(contrast.toHct().tone < normal.toHct().tone)
+        }
+    }
+
+    @Test
+    fun calmThemesStillGetColorfulSeries() {
+        val appearance = AppearanceSettings(style = AppPaletteStyle.MONOCHROME)
+        val colors = chartColorsOf(
+            seededPrimaryColor(appearance, isDark = false),
+            colorRoleSpecOf(appearance, isDark = false),
+        )
+
+        // Unless sRGB has no color that colorful at the hue and tone
+        colors.forEach { assertTrue(it.toHct().chroma > CHART_MIN_CHROMA - 12, "${it.toHct()}") }
     }
 
     @Test
@@ -78,5 +116,10 @@ class ChartColorsTest {
         for (index in 0 until CHART_COLOR_COUNT - 1) {
             assertNotEquals(chartMarkerOf(index), chartMarkerOf(index + 1))
         }
+    }
+
+    @Test
+    fun hueDistanceGoesTheShortWayRound() {
+        assertTrue(abs(hueDistance(350.0, 10.0) - 20.0) < 0.001)
     }
 }

@@ -6,9 +6,11 @@ import io.ktor.client.HttpClientConfig
 
 /**
  * Creates an HttpClient with the engine of the current platform, its requests through [proxy]
- * where the platform lets the app choose.
+ * where the platform lets the app choose, those into the local network held at [localNetwork]
+ * where the platform asks for them.
  */
 internal expect fun platformHttpClient(
     proxy: suspend () -> NetworkProxy,
+    localNetwork: LocalNetworkGate?,
     config: HttpClientConfig<*>.() -> Unit,
 ): HttpClient
