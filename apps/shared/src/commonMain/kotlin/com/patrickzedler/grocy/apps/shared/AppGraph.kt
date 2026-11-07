@@ -25,6 +25,7 @@ import com.patrickzedler.grocy.core.data.settings.CalendarOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.TasksOverviewOptionsRepository
 import com.patrickzedler.grocy.core.data.tasks.TasksRepository
 import com.patrickzedler.grocy.core.data.settings.BehaviorSettingsRepository
+import com.patrickzedler.grocy.core.data.settings.NetworkSettingsRepository
 import com.patrickzedler.grocy.core.data.settings.ScannerFormsRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
@@ -38,6 +39,7 @@ import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
 import com.patrickzedler.grocy.core.data.update.UpdateRepository
 import com.patrickzedler.grocy.core.model.AppearanceSettings
+import com.patrickzedler.grocy.core.model.network.NetworkProxy
 import com.patrickzedler.grocy.core.model.notifications.NotificationKind
 import com.patrickzedler.grocy.core.navigation.Route
 import com.patrickzedler.grocy.core.model.server.ServerConfig
@@ -85,7 +87,13 @@ class AppGraph(
     // Lives as long as the process, for state the whole app shares
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
-    private val httpClient by lazy { createGrocyHttpClient() }
+    /** Tor and the HTTP proxy, read right at app start; every request waits for them. */
+    private val networkSettingsRepository =
+        NetworkSettingsRepository(platform.settingsStore, appScope)
+
+    private val httpClient by lazy {
+        createGrocyHttpClient { networkSettingsRepository.proxy() }
+    }
 
     private val grocyApi by lazy { GrocyApi(httpClient) }
 
@@ -383,6 +391,9 @@ class AppGraph(
             get() = this@AppGraph.notificationRepository
 
         override fun restartApp() = platform.restartApp()
+
+        override val networkSettings: NetworkSettingsRepository
+            get() = this@AppGraph.networkSettingsRepository
     }
 
     internal val startDependencies: StartDependencies = object : StartDependencies {
@@ -555,6 +566,10 @@ class AppGraph(
         // Catches up what was missed while the app could not run and keeps the alarm set
         notificationRepository.start()
         platform.startWidgetUpdates(widgetDependencies, appScope)
+        // Orbot starts Tor by itself if the user allows it there, else requests fail until then
+        appScope.launch {
+            if (networkSettingsRepository.proxy() == NetworkProxy.Tor) platform.requestTorStart()
+        }
     }
 
     internal val aboutDependencies: AboutDependencies = object : AboutDependencies {

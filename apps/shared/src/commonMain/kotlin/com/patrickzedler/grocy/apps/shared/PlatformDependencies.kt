@@ -68,4 +68,7 @@ interface PlatformDependencies {
 
     /** Starts the app anew: a new process on Android, a reload of the page on the web. */
     fun restartApp()
+
+    /** Asks Orbot to start Tor for this process's requests; only Android can use Tor. */
+    fun requestTorStart() = Unit
 }

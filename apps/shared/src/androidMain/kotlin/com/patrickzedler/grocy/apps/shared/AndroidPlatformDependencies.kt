@@ -106,6 +106,14 @@ class AndroidPlatformDependencies(
         Runtime.getRuntime().exit(0)
     }
 
+    // Orbot's documented way for other apps: it starts Tor if the user allows background starts
+    override fun requestTorStart() {
+        val intent = Intent(ORBOT_ACTION_START)
+            .setPackage(ORBOT_PACKAGE)
+            .putExtra(ORBOT_EXTRA_PACKAGE_NAME, appContext.packageName)
+        appContext.sendBroadcast(intent)
+    }
+
     private fun openInBrowser(url: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -115,3 +123,7 @@ class AndroidPlatformDependencies(
         }
     }
 }
+
+private const val ORBOT_PACKAGE = "org.torproject.android"
+private const val ORBOT_ACTION_START = "org.torproject.android.intent.action.START"
+private const val ORBOT_EXTRA_PACKAGE_NAME = "org.torproject.android.intent.extra.PACKAGE_NAME"

@@ -4,3 +4,5 @@ package com.patrickzedler.grocy.core.network
 internal actual val sendApiKeyAsQueryParameter: Boolean = false
 
 actual val isHomeAssistantIngressSupported: Boolean = true
+
+actual val isProxySupported: Boolean = true

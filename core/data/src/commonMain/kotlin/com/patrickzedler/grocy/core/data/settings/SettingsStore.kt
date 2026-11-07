@@ -10,6 +10,7 @@ import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.BehaviorSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.network.NetworkSettings
 import com.patrickzedler.grocy.core.model.notifications.NotificationDeliveries
 import com.patrickzedler.grocy.core.model.notifications.NotificationSettings
 import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
@@ -114,4 +115,9 @@ interface SettingsStore {
     val calendarView: Flow<CalendarView>
 
     suspend fun setCalendarView(view: CalendarView)
+
+    /** Tor and the HTTP proxy, off until changed; browsers keep the defaults. */
+    val networkSettings: Flow<NetworkSettings>
+
+    suspend fun setNetworkSettings(settings: NetworkSettings)
 }

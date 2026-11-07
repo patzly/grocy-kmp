@@ -6,6 +6,7 @@ import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewOptions
 import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalOptions
 import com.patrickzedler.grocy.core.model.calendar.CalendarView
+import com.patrickzedler.grocy.core.model.network.NetworkSettings
 import com.patrickzedler.grocy.core.model.equipment.EquipmentOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
@@ -59,6 +60,7 @@ class FakeSettingsStore(
     batteriesJournalOptions: BatteriesJournalOptions = BatteriesJournalOptions(),
     equipmentOptions: EquipmentOptions = EquipmentOptions(),
     calendarView: CalendarView = CalendarView.Default,
+    networkSettings: NetworkSettings = NetworkSettings(),
     notificationSettings: NotificationSettings = NotificationSettings(),
     notificationDeliveries: NotificationDeliveries = NotificationDeliveries(),
 ) : SettingsStore {
@@ -169,6 +171,12 @@ class FakeSettingsStore(
 
     override suspend fun setCalendarView(view: CalendarView) {
         calendarView.value = view
+    }
+
+    override val networkSettings = MutableStateFlow(networkSettings)
+
+    override suspend fun setNetworkSettings(settings: NetworkSettings) {
+        networkSettings.value = settings
     }
 
     override val recipesOptions = MutableStateFlow(recipesOptions)

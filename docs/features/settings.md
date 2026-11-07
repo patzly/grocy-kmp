@@ -8,7 +8,8 @@ server, Grocy's "Settings" menu), Network (loading timeout, Tor with Orbot, HTTP
 (navigation, date and keyboard settings, Open Food Facts / Open Beauty Facts), Scanner (engine,
 front camera, 2D formats, barcode formats, external scanners), Notifications (per feature)
 and Shopping mode (`storefront`) as one group (`SettingsCategory`), then "Backup and restore" and "Reset all" as a second group.
-Built so far: the overview, General (language, theme, contrast), Server, Behavior
+Built so far: the overview, General (language, theme, contrast), Server, Network (Android only,
+see below; the loading timeout of the plan is not built), Behavior
 (`BehaviorSettingsRoute`: `BehaviorSettings`, kept on the device in `SettingsStore`, DataStore
 keys `behavior_*`, `grocy.behavior*` on the web, read at app start by
 `BehaviorSettingsRepository`; first the product databases, each off by default, see
@@ -85,6 +86,17 @@ scene, and the page's back button) returns to the products in one step). The oth
   address and API key) and goes through `AuthRepository.logout`; the screen keeps showing the
   server while it slides out.
 
+- Network (`NetworkSettingsRoute`, `NetworkSettingsScreen`; only where `isProxySupported`, the
+  category is hidden on the web, whose `fetch()` always uses the browser's proxy): under "Proxy"
+  "Use Tor" ("Requires Orbot") and "Enable HTTP proxy", whose host and port spring open below it
+  while on (the host takes the focus when it is empty) and are disabled while Tor is on, which
+  takes every request. `NetworkSettings` in `SettingsStore` (DataStore keys `network_*`; the web
+  store keeps the defaults), read at app start by `NetworkSettingsRepository`. Switches are saved
+  at once, host (`isValidProxyHost`: a name, IPv4 or IPv6 address, never a scheme, path, port or
+  credentials) and port (1 to 65535) once typing pauses and only when valid. The app keeps the
+  way it started with for the whole process (`docs/architecture/network.md`), so switching Tor
+  asks to restart at once (not when switched back to how the app runs), and any other change
+  that sends requests elsewhere leaves a "Restart app" item below the group.
 - Every settings screen uses `SettingsScaffold` (`feature:settings:impl`): `SegmentedListScreen`
   with back button and the same overflow menu (About, Help, Send feedback, Show logcat / Show
   log) plus its dialogs. The menu item shapes (`itemShape(i, 4)` in the first group,

@@ -19,6 +19,7 @@ import com.patrickzedler.grocy.feature.settings.api.GeneralSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsPageRoute
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.LogRoute
+import com.patrickzedler.grocy.feature.settings.api.NetworkSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.NotificationSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.BehaviorSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.ScannerSettingsRoute
@@ -36,6 +37,8 @@ import com.patrickzedler.grocy.feature.settings.impl.grocy.GrocySettingsScreen
 import com.patrickzedler.grocy.feature.settings.impl.grocy.GrocySettingsViewModel
 import com.patrickzedler.grocy.feature.settings.impl.log.LogScreen
 import com.patrickzedler.grocy.feature.settings.impl.log.LogViewModel
+import com.patrickzedler.grocy.feature.settings.impl.network.NetworkSettingsScreen
+import com.patrickzedler.grocy.feature.settings.impl.network.NetworkSettingsViewModel
 import com.patrickzedler.grocy.feature.settings.impl.notifications.NotificationSettingsScreen
 import com.patrickzedler.grocy.feature.settings.impl.notifications.NotificationSettingsViewModel
 import com.patrickzedler.grocy.feature.settings.impl.behavior.BehaviorSettingsScreen
@@ -77,8 +80,7 @@ fun EntryProviderScope<NavKey>.settingsEntries(
             isBesideDetail = showsDetailBesideList(),
             shownCategory = settingsCategoryOf(navigator.currentRoute),
             onBackClick = { navigator.goBack(from = route) },
-            // The other pages follow one by one
-            onCategoryClick = { category -> category.route?.let(navigator::openDetail) },
+            onCategoryClick = { category -> navigator.openDetail(category.route) },
             onBackupClick = {},
             onResetClick = {},
         )
@@ -191,6 +193,17 @@ fun EntryProviderScope<NavKey>.settingsEntries(
         )
     }
 
+    entry<NetworkSettingsRoute>(metadata = detailPaneMetadata(SettingsRoute)) {
+        NetworkSettingsScreen(
+            viewModel = viewModel { NetworkSettingsViewModel(dependencies.networkSettings) },
+            menuViewModel = settingsMenuViewModel(dependencies),
+            menuActions = menuActions,
+            onBackClick = navigator::goBack,
+            onRestart = dependencies::restartApp,
+            pane = ScreenPane.Detail.takeIf { showsDetailBesideList() },
+        )
+    }
+
     entry<BehaviorSettingsRoute>(metadata = detailPaneMetadata(SettingsRoute)) {
         BehaviorSettingsScreen(
             viewModel = viewModel { BehaviorSettingsViewModel(dependencies.behaviorSettings) },
@@ -258,24 +271,24 @@ fun EntryProviderScope<NavKey>.settingsEntries(
     }
 }
 
-/** The page a category opens, null while it has none. */
-internal val SettingsCategory.route: DetailRoute?
+/** The page a category opens. */
+internal val SettingsCategory.route: DetailRoute
     get() = when (this) {
         SettingsCategory.GENERAL -> GeneralSettingsRoute
         SettingsCategory.SERVER -> ServerSettingsRoute
         SettingsCategory.GROCY -> GrocySettingsRoute
+        SettingsCategory.NETWORK -> NetworkSettingsRoute
         SettingsCategory.BEHAVIOR -> BehaviorSettingsRoute
         SettingsCategory.SCANNER -> ScannerSettingsRoute
         SettingsCategory.NOTIFICATIONS -> NotificationSettingsRoute
         SettingsCategory.SHOPPING_MODE -> ShoppingModeSettingsRoute()
-        else -> null
     }
 
 /** The category whose page [route] is or was opened from, null for other routes. */
 internal fun settingsCategoryOf(route: NavKey): SettingsCategory? = when {
     route is StockSettingsRoute && route.inSettings -> SettingsCategory.GROCY
     route is GrocySettingsPageRoute || route == UserSettingsRoute -> SettingsCategory.GROCY
-    else -> SettingsCategory.entries.firstOrNull { it.route != null && it.route == route }
+    else -> SettingsCategory.entries.firstOrNull { it.route == route }
 }
 
 @Composable

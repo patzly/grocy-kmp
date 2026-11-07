@@ -12,6 +12,11 @@
   <!-- Alarms do not survive a restart of the device -->
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+  <!-- Asks Orbot to start Tor when the user routes requests through it -->
+  <queries>
+    <package android:name="org.torproject.android" />
+  </queries>
+
   <application
     android:allowBackup="true"
     android:dataExtractionRules="@xml/data_extraction_rules"

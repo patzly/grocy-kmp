@@ -21,8 +21,34 @@ API key placement and Home Assistant ingress. Moved from CLAUDE.md.
 
 ## Client and errors
 
-- One `HttpClient` per process (`createGrocyHttpClient()`), OkHttp on Android, Js engine on Wasm,
-  JSON with `ignoreUnknownKeys = true`.
+- One `HttpClient` per process (`createGrocyHttpClient(proxy)`), OkHttp on Android, Js engine on
+  Wasm, JSON with `ignoreUnknownKeys = true`. Every request of the app goes through it (Grocy,
+  Home Assistant's WebSocket, product databases, GitHub), so the proxy below covers them all;
+  only what Google Play Services download themselves (Play updates, ML Kit) and links opened in
+  another app do not.
+
+## Proxy and Tor (Android)
+
+- `NetworkSettingsRepository.proxy()` gives the `NetworkProxy` of the process: the settings it
+  started with, read once (`ProxyRouting`, OkHttp's `ProxySelector` and an interceptor). A
+  change needs a restart on purpose: OkHttp keeps connections in its pool, also those in use
+  during a change, and one opened before it would carry later requests past the new proxy.
+  Requests at app start wait for the stored settings, so none leaves before they are known.
+- Tor: Orbot's SOCKS port `127.0.0.1:9050`. OkHttp hands SOCKS proxies the unresolved name, so
+  Tor resolves it (also `.onion`) and no DNS query leaves the device; its HTTP tunnel port would
+  not do, it only knows CONNECT, which plain `http://` onion services do not use. Connect and
+  request timeouts are longer under Tor (`TOR_*_TIMEOUT_MILLIS`). The app asks Orbot to start
+  (`requestTorStart`, Orbot's `START` broadcast, `<queries>` for its package) at every start;
+  Orbot does if the user allows background starts there.
+- HTTP proxy: `Proxy.Type.HTTP` with the unresolved host; HTTPS goes through CONNECT, so the
+  proxy sees only the server's name, plain HTTP servers it sees completely.
+- Fail closed: OkHttp only tries the proxies the selector returns, never a direct connection,
+  so Tor without a running Orbot fails as unreachable. An HTTP proxy that is on without a valid
+  host blocks every request (`NetworkProxy.Blocked`, `ProxyBlockedException`) before anything
+  connects. Without either, the system's proxy applies as before.
+- `ProxyRoutingTest` runs real sockets on the loopback device: a fake HTTP proxy, a fake SOCKS5
+  server that checks it gets the name, a closed Tor port and a blocked proxy that must not reach
+  a direct server.
 - `GrocyApi` methods take the `ServerConnection` per call. `ServerConnection.serverUrl` is the
   base URL without `/api` and without trailing slash; build it with `ServerUrl.normalize`, which
   only accepts http(s) URLs with a real host and no whitespace.

@@ -8,6 +8,7 @@ import com.patrickzedler.grocy.feature.settings.api.GrocySettingsPage
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsPageRoute
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.LogRoute
+import com.patrickzedler.grocy.feature.settings.api.NetworkSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.NotificationSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.ScannerSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.ServerSettingsRoute
@@ -27,6 +28,7 @@ class SettingsCategoryTest {
         assertEquals(GeneralSettingsRoute, SettingsCategory.GENERAL.route)
         assertEquals(ServerSettingsRoute, SettingsCategory.SERVER.route)
         assertEquals(GrocySettingsRoute, SettingsCategory.GROCY.route)
+        assertEquals(NetworkSettingsRoute, SettingsCategory.NETWORK.route)
         assertEquals(ScannerSettingsRoute, SettingsCategory.SCANNER.route)
         assertEquals(NotificationSettingsRoute, SettingsCategory.NOTIFICATIONS.route)
         assertEquals(ShoppingModeSettingsRoute(), SettingsCategory.SHOPPING_MODE.route)
@@ -47,6 +49,7 @@ class SettingsCategoryTest {
         assertEquals(SettingsCategory.GENERAL, settingsCategoryOf(GeneralSettingsRoute))
         assertEquals(SettingsCategory.SERVER, settingsCategoryOf(ServerSettingsRoute))
         assertEquals(SettingsCategory.GROCY, settingsCategoryOf(GrocySettingsRoute))
+        assertEquals(SettingsCategory.NETWORK, settingsCategoryOf(NetworkSettingsRoute))
         assertEquals(SettingsCategory.SCANNER, settingsCategoryOf(ScannerSettingsRoute))
         assertEquals(
             SettingsCategory.SHOPPING_MODE,
@@ -85,10 +88,5 @@ class SettingsCategoryTest {
             categories.indexOf(SettingsCategory.NOTIFICATIONS) + 1,
             categories.indexOf(SettingsCategory.SHOPPING_MODE),
         )
-    }
-
-    @Test
-    fun categoriesWithoutPageOpenNothing() {
-        assertNull(SettingsCategory.NETWORK.route)
     }
 }

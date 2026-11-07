@@ -59,7 +59,7 @@ internal fun SettingNumberItem(
 }
 
 @Composable
-private fun settingErrorText(error: SettingError): String = when (error) {
+internal fun settingErrorText(error: SettingError): String = when (error) {
     is SettingError.InvalidNumber -> if (error.max == null) {
         stringResource(Res.string.data_number_invalid, error.min, error.decimals.toString())
     } else {

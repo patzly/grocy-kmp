@@ -9,6 +9,7 @@ import com.patrickzedler.grocy.core.data.scanner.ScannerRepository
 import com.patrickzedler.grocy.core.data.server.ServerRepository
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.BehaviorSettingsRepository
+import com.patrickzedler.grocy.core.data.settings.NetworkSettingsRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.settings.ShoppingModeSettingsRepository
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
@@ -40,6 +41,9 @@ interface SettingsDependencies {
     /** The daily notifications per feature and when they come. */
     val notificationRepository: NotificationRepository
 
-    /** After the configuration was reloaded, so every screen reads it anew. */
+    /** Tor and the HTTP proxy, read at app start; a process keeps those it started with. */
+    val networkSettings: NetworkSettingsRepository
+
+    /** After the configuration or the network settings changed, so everything uses them. */
     fun restartApp()
 }

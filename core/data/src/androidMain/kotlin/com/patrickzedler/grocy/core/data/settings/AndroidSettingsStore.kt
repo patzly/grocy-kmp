@@ -12,6 +12,7 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewOptions
 import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalOptions
 import com.patrickzedler.grocy.core.model.calendar.CalendarView
+import com.patrickzedler.grocy.core.model.network.NetworkSettings
 import com.patrickzedler.grocy.core.model.equipment.EquipmentOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
@@ -228,6 +229,26 @@ class AndroidSettingsStore(
         dataStore.edit { it[CALENDAR_VIEW] = view.stored() }
     }
 
+    override val networkSettings: Flow<NetworkSettings> = preferences
+        .map {
+            NetworkSettings.of(
+                useTor = it[NETWORK_TOR],
+                httpProxyEnabled = it[NETWORK_HTTP_PROXY],
+                httpProxyHost = it[NETWORK_HTTP_PROXY_HOST],
+                httpProxyPort = it[NETWORK_HTTP_PROXY_PORT],
+            )
+        }
+        .distinctUntilChanged()
+
+    override suspend fun setNetworkSettings(settings: NetworkSettings) {
+        dataStore.edit {
+            it[NETWORK_TOR] = settings.useTor
+            it[NETWORK_HTTP_PROXY] = settings.httpProxyEnabled
+            it[NETWORK_HTTP_PROXY_HOST] = settings.httpProxyHost
+            it[NETWORK_HTTP_PROXY_PORT] = settings.httpProxyPort
+        }
+    }
+
     override val recipesOptions: Flow<RecipesOptions> = preferences
         .map {
             RecipesOptions.of(
@@ -286,6 +307,10 @@ class AndroidSettingsStore(
         val BATTERIES_JOURNAL_OPTIONS = stringPreferencesKey("batteries_journal_options")
         val EQUIPMENT_OPTIONS = stringPreferencesKey("equipment_options")
         val CALENDAR_VIEW = stringPreferencesKey("calendar_view")
+        val NETWORK_TOR = booleanPreferencesKey("network_tor")
+        val NETWORK_HTTP_PROXY = booleanPreferencesKey("network_http_proxy")
+        val NETWORK_HTTP_PROXY_HOST = stringPreferencesKey("network_http_proxy_host")
+        val NETWORK_HTTP_PROXY_PORT = intPreferencesKey("network_http_proxy_port")
         val NOTIFICATION_SETTINGS = stringPreferencesKey("notification_settings")
         val NOTIFICATION_DELIVERIES = stringPreferencesKey("notification_deliveries")
     }

@@ -66,6 +66,11 @@ data object UserSettingsRoute : DetailRoute
 @SerialName("settings/shopping-mode")
 data class ShoppingModeSettingsRoute(val inSettings: Boolean = true) : DetailRoute
 
+/** Tor and the HTTP proxy of the app's requests, kept on the device; Android only. */
+@Serializable
+@SerialName("settings/network")
+data object NetworkSettingsRoute : DetailRoute
+
 /** Product databases, date input and barcodes of new products, kept on the device. */
 @Serializable
 @SerialName("settings/behavior")
@@ -96,6 +101,7 @@ val settingsRouteSerializers = SerializersModule {
         subclass(UserSettingsRoute::class, UserSettingsRoute.serializer())
         subclass(StockSettingsRoute::class, StockSettingsRoute.serializer())
         subclass(ShoppingModeSettingsRoute::class, ShoppingModeSettingsRoute.serializer())
+        subclass(NetworkSettingsRoute::class, NetworkSettingsRoute.serializer())
         subclass(BehaviorSettingsRoute::class, BehaviorSettingsRoute.serializer())
         subclass(ScannerSettingsRoute::class, ScannerSettingsRoute.serializer())
         subclass(NotificationSettingsRoute::class, NotificationSettingsRoute.serializer())

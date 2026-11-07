@@ -21,6 +21,7 @@ import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.network.isProxySupported
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_barcode_scanner
 import com.patrickzedler.grocy.core.resources.ic_rounded_build
@@ -54,6 +55,8 @@ import org.jetbrains.compose.resources.stringResource
 internal enum class SettingsCategory(
     val title: StringResource,
     val icon: DrawableResource,
+    /** Whether this platform has the page; only Android chooses the way of its requests. */
+    val isAvailable: Boolean = true,
 ) {
     GENERAL(
         title = Res.string.settings_general,
@@ -70,6 +73,7 @@ internal enum class SettingsCategory(
     NETWORK(
         title = Res.string.settings_network,
         icon = Res.drawable.ic_rounded_network_manage,
+        isAvailable = isProxySupported,
     ),
     BEHAVIOR(
         title = Res.string.settings_behavior,
@@ -132,7 +136,7 @@ private fun LazyListScope.settingsOverview(
 ) {
     segmentedGroup(key = "categories") {
         val colors = SegmentedListDefaults.colors()
-        val categories = SettingsCategory.entries
+        val categories = SettingsCategory.entries.filter { it.isAvailable }
         categories.forEachIndexed { index, category ->
             SettingsItem(
                 title = stringResource(category.title),

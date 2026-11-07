@@ -14,3 +14,9 @@ internal expect val sendApiKeyAsQueryParameter: Boolean
  * which a page from another origin can neither set nor send, and ingress allows no CORS.
  */
 expect val isHomeAssistantIngressSupported: Boolean
+
+/**
+ * Whether the app can choose a proxy or Tor for its requests. Browsers cannot: fetch() always uses
+ * the browser's proxy settings.
+ */
+expect val isProxySupported: Boolean

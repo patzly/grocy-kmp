@@ -5,6 +5,7 @@ import com.patrickzedler.grocy.core.data.KeyValueStorage
 import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewOptions
 import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalOptions
 import com.patrickzedler.grocy.core.model.calendar.CalendarView
+import com.patrickzedler.grocy.core.model.network.NetworkSettings
 import com.patrickzedler.grocy.core.model.equipment.EquipmentOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
@@ -22,6 +23,7 @@ import com.patrickzedler.grocy.core.model.stock.StockOverviewOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flowOf
 
 class WebSettingsStore internal constructor(
     private val storage: KeyValueStorage,
@@ -256,6 +258,11 @@ class WebSettingsStore internal constructor(
         storage.set(CALENDAR_VIEW, view.stored())
         calendarViewState.value = view
     }
+
+    // Browsers route requests through their own proxy settings, the app has none
+    override val networkSettings: Flow<NetworkSettings> = flowOf(NetworkSettings())
+
+    override suspend fun setNetworkSettings(settings: NetworkSettings) = Unit
 
     private val recipesOptionsState = MutableStateFlow(
         RecipesOptions.of(
