@@ -73,7 +73,7 @@ Stock overview (`stockoverview/` of `feature:stock`, it opens the product overvi
   amounts per location and the opened part are sums of the entries, like Grocy's
   `stock_current_location_content`). A tap opens the product overview.
 - "Spendings" (`StockSpendingsRoute`, `reports/Spendings*`): Grocy's
-  `/stockreports/spendings`. Chips: "Grouped by" product, product group or store; the date
+  `/stockreports/spendings`. Chips: "Group by" product, product group or store; the date
   range with Grocy's presets (today ... last year, default this month, `SpendingsRange`) and
   "Custom range" with Material's date range picker; the product group (All, the groups,
   Ungrouped) only while grouped by product; "Clear filter". Below a doughnut of the totals with

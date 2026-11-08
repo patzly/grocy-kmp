@@ -393,7 +393,7 @@
   <string name="stock_overview_status_in_stock">%1$d σε απόθεμα</string>
   <string name="stock_overview_status_opened">%1$d ανοιγμένα</string>
   <string name="stock_overview_group_by">Ομαδοποίηση κατά</string>
-  <string name="stock_overview_grouped_by">Ομάδα: %1$s</string>
+  <string name="stock_overview_grouped_by">Ομαδοποίηση κατά: %1$s</string>
   <string name="stock_overview_group_not_set">Δεν έχει οριστεί</string>
   <string name="stock_overview_fields">Πεδία</string>
   <string name="stock_overview_next_due_date">Επόμενη ημερομηνία λήξης</string>

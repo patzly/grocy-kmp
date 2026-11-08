@@ -393,7 +393,7 @@
   <string name="stock_overview_status_in_stock">%1$d laos</string>
   <string name="stock_overview_status_opened">%1$d avatud</string>
   <string name="stock_overview_group_by">Rühmita</string>
-  <string name="stock_overview_grouped_by">Rühm: %1$s</string>
+  <string name="stock_overview_grouped_by">Rühmita: %1$s</string>
   <string name="stock_overview_group_not_set">Määramata</string>
   <string name="stock_overview_fields">Väljad</string>
   <string name="stock_overview_next_due_date">Järgmine tähtaeg</string>

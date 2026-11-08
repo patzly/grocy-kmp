@@ -10,6 +10,7 @@ import androidx.compose.material3.CheckableDropdownMenuItem
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
+import androidx.compose.material3.DropdownMenuPopupPositionProvider
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -205,30 +206,41 @@ private fun NarrowOverflowMenu(
 }
 
 /**
- * The expressive menu of [AppBarOverflowMenu], for a button of another kind: below it, or
- * [above] it for a button near the bottom edge, [offset] away from the button's bounds.
+ * The expressive menu of [AppBarOverflowMenu], for a button of another kind: below it, [offset]
+ * away from the button's bounds.
  */
 @Composable
 fun OverflowMenuPopup(
     expanded: Boolean,
     groups: List<List<AppBarMenuItem>>,
     onDismissRequest: () -> Unit,
-    above: Boolean = false,
     offset: DpOffset = DpOffset(x = (-8).dp, y = 0.dp),
+) {
+    MenuPopup(
+        expanded = expanded,
+        groups = groups,
+        onDismissRequest = onDismissRequest,
+        positionProvider = MenuDefaults.rememberDropdownMenuPopupPositionProvider(
+            dropdownMenuAnchorPosition = MenuAnchorPosition.Below,
+            offset = offset,
+        ),
+    )
+}
+
+/** The expressive menu at the place [positionProvider] chooses. */
+@Composable
+internal fun MenuPopup(
+    expanded: Boolean,
+    groups: List<List<AppBarMenuItem>>,
+    onDismissRequest: () -> Unit,
+    positionProvider: DropdownMenuPopupPositionProvider,
 ) {
     val haptic = LocalHapticFeedback.current
 
     DropdownMenuPopup(
         expanded = expanded,
         onDismissRequest = onDismissRequest,
-        popupPositionProvider = MenuDefaults.rememberDropdownMenuPopupPositionProvider(
-            dropdownMenuAnchorPosition = if (above) {
-                MenuAnchorPosition.Above
-            } else {
-                MenuAnchorPosition.Below
-            },
-            offset = offset,
-        ),
+        popupPositionProvider = positionProvider,
     ) {
         // The popup inherits the touch target size of where it opens: the trailing slot of a list
         // item lowers it by its padding, which shrank the items below the 48dp of other menus

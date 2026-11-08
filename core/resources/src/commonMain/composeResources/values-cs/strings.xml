@@ -433,7 +433,7 @@
   <string name="stock_overview_status_in_stock">Na skladě: %1$d</string>
   <string name="stock_overview_status_opened">Otevřené: %1$d</string>
   <string name="stock_overview_group_by">Seskupovat podle</string>
-  <string name="stock_overview_grouped_by">Skupina: %1$s</string>
+  <string name="stock_overview_grouped_by">Seskupovat podle: %1$s</string>
   <string name="stock_overview_group_not_set">Nenastaveno</string>
   <string name="stock_overview_fields">Pole</string>
   <string name="stock_overview_next_due_date">Datum min. trvanlivosti</string>

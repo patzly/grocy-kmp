@@ -433,7 +433,7 @@
   <string name="stock_overview_status_in_stock">Na stanie: %1$d</string>
   <string name="stock_overview_status_opened">Otwarte: %1$d</string>
   <string name="stock_overview_group_by">Grupuj po</string>
-  <string name="stock_overview_grouped_by">Grupa: %1$s</string>
+  <string name="stock_overview_grouped_by">Grupuj po: %1$s</string>
   <string name="stock_overview_group_not_set">Nie ustawiono</string>
   <string name="stock_overview_fields">Pola</string>
   <string name="stock_overview_next_due_date">Następny termin ważności</string>

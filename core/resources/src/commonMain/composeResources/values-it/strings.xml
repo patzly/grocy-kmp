@@ -413,7 +413,7 @@
   <string name="stock_overview_status_in_stock">%1$d in dispensa</string>
   <string name="stock_overview_status_opened">%1$d aperti</string>
   <string name="stock_overview_group_by">Raggruppa per</string>
-  <string name="stock_overview_grouped_by">Gruppo: %1$s</string>
+  <string name="stock_overview_grouped_by">Raggruppa per: %1$s</string>
   <string name="stock_overview_group_not_set">Non impostato</string>
   <string name="stock_overview_fields">Campi</string>
   <string name="stock_overview_next_due_date">Prossima data di scadenza</string>

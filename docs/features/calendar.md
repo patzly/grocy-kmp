@@ -29,7 +29,7 @@ its own Material 3 Expressive version that does the same.
   day (`dayOfPage`, `pageOfDay`); swiping or the floating toolbar's arrows turn them with the pager's
   animation, a settled page moves the calendar to its day, a day chosen elsewhere turns the pages
   there. The list has no periods, its arrows hide. The toolbar's view button opens its menu right
-  above the toolbar, the current view selected.
+  above the toolbar (`FloatingToolbarMenu`, 8.dp apart), the current view selected.
 - Today: the FAB ("Today", in the day "Now") turns to today and scrolls to the current time (time
   grid) or today's row (list), animated.
 - Changing views: a `SharedTransitionLayout` around an `AnimatedContent` of the views; events
@@ -46,15 +46,16 @@ its own Material 3 Expressive version that does the same.
 - Day (`TimeGridPage`): Google's day, its weekday and number (`DayBadge`) at the start of the hours'
   column, what has no time beside them (three rows, "3 more" expands); below the hours as segmented
   rows, 56.dp per hour, the line at the current time on today. Week: the days' badges side by side,
-  a tap on one or on a day's column shows that day. Every page of both views shares one scroll
+  a tap on a number shows that day, the columns themselves do not react. Every page of both views shares one scroll
   state, so paging and switching keep the time; it opens around now on today, else at 7:00.
 - Month (`MonthPage`): the weekdays stay, a segmented row per week shares the height that is left
-  (`monthRowHeight`), four places per day with the names only ("3 more", a tap on the day or its
-  number show the day).
+  (`monthRowHeight`), four places per day with the names only (a tap on "3 more" or the
+  number shows the day, the cell itself does not react).
 - List (`CalendarList`, `listRowsOf`): every day with events and today, below the headings of their
   weeks ("Nov 9 – 15"), within the width of the screen's lists. Each day's badge at the start (a tap
   shows the day, the number moves to the day's heading), its events as Google's schedule chips with
-  icon, time, section and assignee; today has the line of the current time after what took place
+  icon, time, section and assignee. The badge stays at the top of the list while the day's events
+  scroll past, until the next day's badge pushes it away (`stuckBadgeShift`); today has the line of the current time after what took place
   (`nowIndexOf`). It opens at the shown day (`listIndexOf`).
 - A tap on an event opens what it is about, unlike Grocy, whose links lead to whole lists
   (`routeOf`): the task's form, the chore's or battery's tracking, the recipe, a product's overview

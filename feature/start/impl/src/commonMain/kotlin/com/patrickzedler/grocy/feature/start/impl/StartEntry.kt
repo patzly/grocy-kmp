@@ -41,6 +41,7 @@ import com.patrickzedler.grocy.feature.tasks.api.TaskRoute
 import com.patrickzedler.grocy.feature.tasks.api.TasksRoute
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import kotlinx.coroutines.flow.map
 
 fun EntryProviderScope<NavKey>.startEntry(
     dependencies: StartDependencies,
@@ -70,6 +71,7 @@ fun EntryProviderScope<NavKey>.startEntry(
                     equipment = dependencies.equipmentRepository,
                     serverConfig = dependencies.serverConfig,
                     calendarEvents = dependencies.calendarRepository.events,
+                    connection = dependencies.server.map { it?.connection },
                 )
             },
             isDemoServer = server?.isDemo == true,

@@ -4,8 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.wear.compose.foundation.CurvedTextStyle
 import androidx.wear.compose.material3.ColorScheme
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Typography
@@ -29,8 +31,41 @@ internal fun GrocyWearTheme(content: @Composable () -> Unit) {
     )
     MaterialTheme(
         colorScheme = dynamicColorScheme(LocalContext.current) ?: GrocyColorScheme,
-        typography = remember(googleSansFlex) { Typography(googleSansFlex) },
+        typography = remember(googleSansFlex) { Typography().withFontFamily(googleSansFlex) },
         content = content,
+    )
+}
+
+/**
+ * Every style in [fontFamily]. Material's `Typography(fontFamily)` is not enough: it only fills
+ * styles without a font, and those of Wear OS all name the system's Roboto Flex.
+ */
+internal fun Typography.withFontFamily(fontFamily: FontFamily): Typography {
+    fun TextStyle.inFamily() = copy(fontFamily = fontFamily)
+    fun CurvedTextStyle.inFamily() = copy(fontFamily = fontFamily)
+
+    return Typography(
+        arcLarge = arcLarge.inFamily(),
+        arcMedium = arcMedium.inFamily(),
+        arcSmall = arcSmall.inFamily(),
+        displayLarge = displayLarge.inFamily(),
+        displayMedium = displayMedium.inFamily(),
+        displaySmall = displaySmall.inFamily(),
+        titleLarge = titleLarge.inFamily(),
+        titleMedium = titleMedium.inFamily(),
+        titleSmall = titleSmall.inFamily(),
+        labelLarge = labelLarge.inFamily(),
+        labelMedium = labelMedium.inFamily(),
+        labelSmall = labelSmall.inFamily(),
+        bodyLarge = bodyLarge.inFamily(),
+        bodyMedium = bodyMedium.inFamily(),
+        bodySmall = bodySmall.inFamily(),
+        bodyExtraSmall = bodyExtraSmall.inFamily(),
+        numeralExtraLarge = numeralExtraLarge.inFamily(),
+        numeralLarge = numeralLarge.inFamily(),
+        numeralMedium = numeralMedium.inFamily(),
+        numeralSmall = numeralSmall.inFamily(),
+        numeralExtraSmall = numeralExtraSmall.inFamily(),
     )
 }
 

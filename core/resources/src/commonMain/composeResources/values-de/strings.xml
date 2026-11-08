@@ -393,7 +393,7 @@
   <string name="stock_overview_status_in_stock">%1$d vorrätig</string>
   <string name="stock_overview_status_opened">%1$d geöffnet</string>
   <string name="stock_overview_group_by">Gruppieren nach</string>
-  <string name="stock_overview_grouped_by">Gruppe: %1$s</string>
+  <string name="stock_overview_grouped_by">Gruppieren nach: %1$s</string>
   <string name="stock_overview_group_not_set">Nicht festgelegt</string>
   <string name="stock_overview_fields">Felder</string>
   <string name="stock_overview_next_due_date">Nächstes Fälligkeitsdatum</string>

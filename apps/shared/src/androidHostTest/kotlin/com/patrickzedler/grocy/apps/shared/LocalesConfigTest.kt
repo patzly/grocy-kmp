@@ -4,6 +4,7 @@ import com.patrickzedler.grocy.core.model.AppLanguages
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /** The language lists of the app, Android's system settings and the translations must match. */
@@ -44,6 +45,20 @@ class LocalesConfigTest {
         val expected = AppLanguages.drop(1).map(::qualifierOf) + legacyCopies.values
 
         assertEquals(expected.sorted(), translationDirectories().sorted())
+    }
+
+    @Test
+    fun groupByChipsSayWhatGrocySaysInEveryLanguage() {
+        fun String.value(name: String) =
+            Regex("""name="$name">([^<]*)<""").find(this)?.groupValues?.get(1)
+
+        resources.listFiles { file -> file.name.startsWith("values") }!!.forEach { directory ->
+            val strings = File(directory, "strings.xml").readText()
+            val groupBy = assertNotNull(strings.value("stock_overview_group_by"), directory.name)
+            val chip = assertNotNull(strings.value("stock_overview_grouped_by"), directory.name)
+
+            assertTrue(chip.startsWith(groupBy), "${directory.name}: $chip")
+        }
     }
 
     @Test

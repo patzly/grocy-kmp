@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -52,7 +53,8 @@ import org.jetbrains.compose.resources.stringResource
  * Grocy's list going on like Google Calendar's schedule: the days with events and today below the
  * headings of their weeks, each day's weekday and number at the start, its events as chips with
  * time and section, today's with the line of the current time. As wide as the screen's lists.
- * A tap on a day's number shows the day, where the number moves to as its heading.
+ * A tap on a day's number shows the day, where the number moves to as its heading. The badge of
+ * the day at the top stays in view while its events scroll past.
  */
 @Composable
 internal fun CalendarList(
@@ -73,7 +75,7 @@ internal fun CalendarList(
                 insetItem(key = row.key, contentType = row::class.simpleName) {
                     when (row) {
                         is ListRow.Week -> WeekHeading(row)
-                        is ListRow.Day -> ListDay(row, colors, onDayClick, onEventClick)
+                        is ListRow.Day -> ListDay(row, listState, colors, onDayClick, onEventClick)
                     }
                 }
             }
@@ -102,6 +104,7 @@ private fun WeekHeading(row: ListRow.Week) {
 @Composable
 private fun ListDay(
     row: ListRow.Day,
+    listState: LazyListState,
     colors: EventColors,
     onDayClick: (Long) -> Unit,
     onEventClick: (CalendarEvent) -> Unit,
@@ -110,7 +113,9 @@ private fun ListDay(
         DayBadge(
             day = row.day,
             onClick = { onDayClick(row.day.epochDay) },
-            modifier = Modifier.width(HourLabelWidth),
+            modifier = Modifier
+                .width(HourLabelWidth)
+                .stuckToListTop(listState, row.key),
         )
         Column(
             verticalArrangement = Arrangement.spacedBy(ListChipGap),
@@ -126,6 +131,28 @@ private fun ListDay(
         }
     }
 }
+
+/**
+ * Keeps the badge of the day [key] at the top of the list while the day's events scroll past,
+ * until the next day's badge pushes it away, like Google's schedule. Only moves the placement, so
+ * scrolling recomposes nothing.
+ */
+private fun Modifier.stuckToListTop(listState: LazyListState, key: Any): Modifier =
+    layout { measurable, constraints ->
+        val placeable = measurable.measure(constraints)
+        layout(placeable.width, placeable.height) {
+            val item = listState.layoutInfo.visibleItemsInfo.firstOrNull { it.key == key }
+            val shift = item?.let { stuckBadgeShift(it.offset, it.size, placeable.height) } ?: 0
+            placeable.placeRelative(0, shift)
+        }
+    }
+
+/**
+ * How far a day's badge moves down in its row: as far as the row left the top of the list
+ * ([itemOffset] below 0), at most until the badge's end meets the next row's badge.
+ */
+internal fun stuckBadgeShift(itemOffset: Int, itemSize: Int, badgeHeight: Int): Int =
+    (-itemOffset).coerceAtMost(itemSize - badgeHeight).coerceAtLeast(0)
 
 /** The line of the current time between today's events, as in Google's schedule. */
 @Composable

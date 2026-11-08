@@ -49,6 +49,10 @@ class StartViewModelTest {
 
     private val recipes = RecipesRepository(server.api, database, connection)
 
+    private val loggedIn = MutableStateFlow<ServerConnection?>(
+        ServerConnection.Demo("https://demo.grocy.test"),
+    )
+
     private fun TestScope.viewModel(today: String = "2026-10-25") = StartViewModel(
         repository = repository,
         stock = stock,
@@ -63,6 +67,7 @@ class StartViewModelTest {
         serverConfig = config,
         today = { epochDayOf(today)!! },
         now = { "$today 12:00:00" },
+        connection = loggedIn,
     ).also { backgroundScope.launch { it.state.collect {} } }
 
     @BeforeTest
@@ -85,6 +90,34 @@ class StartViewModelTest {
         assertTrue(repository.products.first().isNotEmpty())
         assertTrue(stock.productStockInfo.first().isNotEmpty())
         assertTrue(viewModel.refresh.value.loadedOnce)
+    }
+
+    @Test
+    fun anotherServerDownloadsEverythingAgain() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+        // The new login forgets the former server's data before the connection changes
+        database.clearAllTables()
+        assertTrue(repository.products.first().isEmpty())
+
+        loggedIn.value = ServerConnection.Demo("https://de.demo.grocy.test")
+        advanceUntilIdle()
+
+        assertTrue(repository.products.first().isNotEmpty())
+        assertTrue(stock.productStockInfo.first().isNotEmpty())
+        assertTrue(viewModel.refresh.value.loadedOnce)
+    }
+
+    @Test
+    fun theSameServerDownloadsNothingExtra() = runTest(dispatcher) {
+        viewModel()
+        advanceUntilIdle()
+        database.clearAllTables()
+
+        loggedIn.value = ServerConnection.Demo("https://demo.grocy.test")
+        advanceUntilIdle()
+
+        assertTrue(repository.products.first().isEmpty())
     }
 
     @Test

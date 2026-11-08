@@ -54,7 +54,7 @@ import org.jetbrains.compose.resources.stringResource
 /**
  * A page of Google Calendar's month: the weekdays stay on top, below them a segmented row per
  * week sharing the height that is left, its days with their number on top and their events as
- * chips; a tap on a day or its number shows it. Rows keep room for a chip, so small windows
+ * chips; a tap on a day's number shows it. Rows keep room for a chip, so small windows
  * scroll.
  */
 @Composable
@@ -196,10 +196,7 @@ private fun MonthDay(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(ChipGap),
-        modifier = modifier
-            .clickable(onClick = open)
-            .clickCursor()
-            .padding(start = 2.dp, end = 2.dp, top = 4.dp, bottom = 8.dp),
+        modifier = modifier.padding(start = 2.dp, end = 2.dp, top = 4.dp, bottom = 8.dp),
     ) {
         DayNumber(day, onClick = open)
         day.events.take(shown).forEach { event ->

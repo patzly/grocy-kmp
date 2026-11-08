@@ -373,7 +373,7 @@
   <string name="stock_overview_status_in_stock">有库存 %1$d</string>
   <string name="stock_overview_status_opened">已开封 %1$d</string>
   <string name="stock_overview_group_by">分组依据</string>
-  <string name="stock_overview_grouped_by">分组：%1$s</string>
+  <string name="stock_overview_grouped_by">分组依据：%1$s</string>
   <string name="stock_overview_group_not_set">未设置</string>
   <string name="stock_overview_fields">字段</string>
   <string name="stock_overview_next_due_date">下次到期</string>

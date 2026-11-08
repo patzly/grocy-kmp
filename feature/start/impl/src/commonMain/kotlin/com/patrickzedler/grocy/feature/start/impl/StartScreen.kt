@@ -50,7 +50,7 @@ import com.patrickzedler.grocy.core.resources.batteries_overview_title
 import com.patrickzedler.grocy.core.resources.chores_overview_title
 import com.patrickzedler.grocy.core.resources.equipment_count
 import com.patrickzedler.grocy.core.resources.equipment_title
-import com.patrickzedler.grocy.core.resources.ic_rounded_battery_full
+import com.patrickzedler.grocy.core.resources.ic_rounded_battery_0_bar
 import com.patrickzedler.grocy.core.resources.ic_rounded_build
 import com.patrickzedler.grocy.core.resources.calendar_events_today
 import com.patrickzedler.grocy.core.resources.calendar_nothing_today
@@ -163,7 +163,7 @@ internal enum class StartSection(
     ),
     BATTERIES(
         Res.string.batteries_overview_title,
-        Res.drawable.ic_rounded_battery_full,
+        Res.drawable.ic_rounded_battery_0_bar,
         StartGroup.CHORES,
         { it.batteries },
     ),

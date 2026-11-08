@@ -413,7 +413,7 @@
   <string name="stock_overview_status_in_stock">%1$d en estoc</string>
   <string name="stock_overview_status_opened">%1$d oberts</string>
   <string name="stock_overview_group_by">Agrupar per</string>
-  <string name="stock_overview_grouped_by">Grup: %1$s</string>
+  <string name="stock_overview_grouped_by">Agrupar per: %1$s</string>
   <string name="stock_overview_group_not_set">Sense definir</string>
   <string name="stock_overview_fields">Camps</string>
   <string name="stock_overview_next_due_date">Propera data límit de consum</string>

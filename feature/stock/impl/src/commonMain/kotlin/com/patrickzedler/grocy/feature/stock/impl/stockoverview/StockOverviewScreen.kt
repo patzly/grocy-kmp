@@ -19,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
@@ -28,10 +27,10 @@ import androidx.navigationevent.compose.rememberNavigationEventState
 import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
+import com.patrickzedler.grocy.core.design.component.FloatingToolbarMenu
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
 import com.patrickzedler.grocy.core.design.component.GroupTitle
 import com.patrickzedler.grocy.core.design.component.NavigateBackButton
-import com.patrickzedler.grocy.core.design.component.OverflowMenuPopup
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SegmentedListScreen
@@ -253,19 +252,13 @@ private fun ReportsMenu(
             contentDescription = stringResource(Res.string.stock_overview_reports),
             onClick = { isOpen = true },
         )
-        // Right above the toolbar, whose bar reaches 8.dp above this button's touch target
-        OverflowMenuPopup(
+        FloatingToolbarMenu(
             expanded = isOpen,
             groups = listOf(items),
             onDismissRequest = { isOpen = false },
-            above = true,
-            offset = DpOffset(x = 0.dp, y = -MenuToolbarGap),
         )
     }
 }
-
-// The toolbar's 64.dp bar around this 48.dp touch target, then Material's 8.dp to the menu
-private val MenuToolbarGap = 16.dp
 
 /** Grocy's messages of the bookings with "Undo". */
 @Composable

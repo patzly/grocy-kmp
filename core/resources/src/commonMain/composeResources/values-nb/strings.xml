@@ -393,7 +393,7 @@
   <string name="stock_overview_status_in_stock">%1$d på lager</string>
   <string name="stock_overview_status_opened">%1$d åpnet</string>
   <string name="stock_overview_group_by">Grupper etter</string>
-  <string name="stock_overview_grouped_by">Gruppe: %1$s</string>
+  <string name="stock_overview_grouped_by">Grupper etter: %1$s</string>
   <string name="stock_overview_group_not_set">Ikke angitt</string>
   <string name="stock_overview_fields">Felter</string>
   <string name="stock_overview_next_due_date">Neste forfallsdato</string>

@@ -413,7 +413,7 @@
   <string name="stock_overview_status_in_stock">%1$d במלאי</string>
   <string name="stock_overview_status_opened">%1$d נפתחו</string>
   <string name="stock_overview_group_by">קיבוץ לפי</string>
-  <string name="stock_overview_grouped_by">קבוצה: %1$s</string>
+  <string name="stock_overview_grouped_by">קיבוץ לפי: %1$s</string>
   <string name="stock_overview_group_not_set">לא מוגדר</string>
   <string name="stock_overview_fields">שדות</string>
   <string name="stock_overview_next_due_date">תאריך סיום התוקף הבא</string>

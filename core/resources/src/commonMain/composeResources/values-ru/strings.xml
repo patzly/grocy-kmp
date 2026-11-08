@@ -433,7 +433,7 @@
   <string name="stock_overview_status_in_stock">В запасе: %1$d</string>
   <string name="stock_overview_status_opened">Открыто: %1$d</string>
   <string name="stock_overview_group_by">Группировать по</string>
-  <string name="stock_overview_grouped_by">Группа: %1$s</string>
+  <string name="stock_overview_grouped_by">Группировать по: %1$s</string>
   <string name="stock_overview_group_not_set">Не задано</string>
   <string name="stock_overview_fields">Поля</string>
   <string name="stock_overview_next_due_date">Следующий срок годности</string>

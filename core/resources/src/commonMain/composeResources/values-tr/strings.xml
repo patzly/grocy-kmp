@@ -393,7 +393,7 @@
   <string name="stock_overview_status_in_stock">%1$d stokta</string>
   <string name="stock_overview_status_opened">%1$d açıldı</string>
   <string name="stock_overview_group_by">Şununla grupla</string>
-  <string name="stock_overview_grouped_by">Grup: %1$s</string>
+  <string name="stock_overview_grouped_by">Şununla grupla: %1$s</string>
   <string name="stock_overview_group_not_set">Ayarlanmadı</string>
   <string name="stock_overview_fields">Alanlar</string>
   <string name="stock_overview_next_due_date">Sonraki vade tarihi</string>

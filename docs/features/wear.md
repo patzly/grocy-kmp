@@ -26,11 +26,14 @@
   chosen one (kept across processes in `WearGraph`), like the phone's shopping mode with group
   titles (`ListSubHeader`), done items in a last group and amounts in the item's unit. Several
   lists make the title a button to choose (`ListChoiceScreen`).
-- Options: the edge button at the end of the list opens `WearOptionsScreen`, one scrolling list
-  because Wear OS has no menus: reload, auto sync, done items last, group by, status, sync
-  interval. Stored on the watch with the phone's `ShoppingListOptions` and `ShoppingModeSettings`
-  and their defaults. Left out: the shown fields (one line of details fits), keeping the screen
-  on (battery), the status below min. stock amount (would need the whole stock).
+- Options: the edge button at the end of the list opens `WearOptionsScreen`, a scrolling list
+  because Wear OS has no menus: reload and what is on or off (auto sync, done items last) right
+  there, settings with several values (sync interval, group by, status) as buttons showing their
+  value, each with a screen of its own under the same title. A choice takes effect at once and
+  stays on its screen, the user swipes back. Stored on the watch with the phone's
+  `ShoppingListOptions` and `ShoppingModeSettings` and their defaults. Left out: the shown fields
+  (one line of details fits), keeping the screen on (battery), the status below min. stock amount
+  (would need the whole stock).
 - Offline first with the phone's `ShoppingListRepository`: a check off is stored and queued, replayed
   per item; a row shows the `sync` or `sync_problem` icon until the server has it.
 - Coming to the front downloads the list, auto sync (on by default, every 10 s) the items while
@@ -41,7 +44,8 @@
   `EdgeButton`, `TransformingLazyColumn`, `CheckboxButton`; rotary input comes with the list.
 - `GrocyWearTheme`: the watch face's colors where the system offers them (`dynamicColorScheme`,
   API 35 and newer with the setting on), otherwise `WearPalette`, the phone's green in Wear's tones
-  on black. Google Sans Flex from `core:resources`.
+  on black. Google Sans Flex from `core:resources` in every style (`withFontFamily`): Material's
+  `Typography(fontFamily)` skips the styles that name the system's Roboto Flex, which is all of them.
 
 ## Tile
 

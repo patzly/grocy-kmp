@@ -433,7 +433,7 @@
   <string name="stock_overview_status_in_stock">Na sklade: %1$d</string>
   <string name="stock_overview_status_opened">Otvorené: %1$d</string>
   <string name="stock_overview_group_by">Zoskupiť podľa</string>
-  <string name="stock_overview_grouped_by">Skupina: %1$s</string>
+  <string name="stock_overview_grouped_by">Zoskupiť podľa: %1$s</string>
   <string name="stock_overview_group_not_set">Nenastavené</string>
   <string name="stock_overview_fields">Polia</string>
   <string name="stock_overview_next_due_date">Nasledujúci dátum spotreby</string>

@@ -61,7 +61,7 @@ import com.patrickzedler.grocy.core.resources.battery_tracking_title
 import com.patrickzedler.grocy.core.resources.battery_used_in
 import com.patrickzedler.grocy.core.resources.data_all
 import com.patrickzedler.grocy.core.resources.data_none
-import com.patrickzedler.grocy.core.resources.ic_rounded_battery_charging_90
+import com.patrickzedler.grocy.core.resources.ic_rounded_battery_charging_full
 import com.patrickzedler.grocy.core.resources.ic_rounded_receipt_long
 import com.patrickzedler.grocy.core.resources.ic_rounded_search
 import com.patrickzedler.grocy.core.resources.masterdata_batteries
@@ -172,7 +172,7 @@ internal fun BatteriesOverviewScreen(
             FloatingToolbarWithFab(
                 scrollBehavior = scrollBehavior,
                 modifier = toolbarModifier,
-                fabPainter = painterResource(Res.drawable.ic_rounded_battery_charging_90),
+                fabPainter = painterResource(Res.drawable.ic_rounded_battery_charging_full),
                 fabDescription = stringResource(Res.string.battery_tracking_title),
                 onFabClick = links.onTrackingClick,
             ) {

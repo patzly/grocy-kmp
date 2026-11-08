@@ -247,6 +247,12 @@ class WearShoppingStateTest {
     }
 
     @Test
+    fun theIntervalsKeepOneSetElsewhereInOrder() {
+        assertEquals(listOf(5, 7, 10, 15, 30, 60), wearSyncIntervals(7))
+        assertEquals(listOf(5, 10, 15, 30, 60), wearSyncIntervals(10))
+    }
+
+    @Test
     fun theTileSaysWhatIsLeftAndWhatComesNext() {
         val summary = wearTileSummary(state())
 

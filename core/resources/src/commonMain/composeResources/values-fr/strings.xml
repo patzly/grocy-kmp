@@ -413,7 +413,7 @@
   <string name="stock_overview_status_in_stock">%1$d en stock</string>
   <string name="stock_overview_status_opened">%1$d ouvert(s)</string>
   <string name="stock_overview_group_by">Grouper par</string>
-  <string name="stock_overview_grouped_by">Groupe : %1$s</string>
+  <string name="stock_overview_grouped_by">Grouper par : %1$s</string>
   <string name="stock_overview_group_not_set">Non défini</string>
   <string name="stock_overview_fields">Champs</string>
   <string name="stock_overview_next_due_date">Prochaine date de péremption</string>

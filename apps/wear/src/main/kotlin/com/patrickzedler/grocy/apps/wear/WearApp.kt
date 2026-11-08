@@ -87,6 +87,7 @@ fun WearApp(graph: WearGraph) {
     GrocyWearTheme {
         AppScaffold {
             val navController = rememberSwipeDismissableNavController()
+            val shopping = (state as? WearState.LoggedIn)?.shopping ?: WearShoppingState()
             SwipeDismissableNavHost(navController, startDestination = ROUTE_HOME) {
                 composable(ROUTE_HOME) {
                     when (val current = state) {
@@ -105,7 +106,7 @@ fun WearApp(graph: WearGraph) {
                 }
                 composable(ROUTE_LISTS) {
                     ListChoiceScreen(
-                        state = (state as? WearState.LoggedIn)?.shopping ?: WearShoppingState(),
+                        state = shopping,
                         onListClick = { id ->
                             viewModel.selectList(id)
                             navController.popBackStack()
@@ -114,15 +115,22 @@ fun WearApp(graph: WearGraph) {
                 }
                 composable(ROUTE_OPTIONS) {
                     WearOptionsScreen(
-                        state = (state as? WearState.LoggedIn)?.shopping ?: WearShoppingState(),
+                        state = shopping,
                         isRefreshing = isRefreshing,
                         onReloadClick = viewModel::refreshNow,
                         onAutoSyncChange = viewModel::setAutoSync,
                         onDoneItemsLastChange = viewModel::setDoneItemsLast,
-                        onGroupingChange = viewModel::setGrouping,
-                        onStatusChange = viewModel::setStatus,
-                        onSyncIntervalChange = viewModel::setSyncInterval,
+                        onOptionClick = { navController.navigate(it.route) },
                     )
+                }
+                composable(WearOption.GROUPING.route) {
+                    WearGroupingScreen(shopping, viewModel::setGrouping)
+                }
+                composable(WearOption.STATUS.route) {
+                    WearStatusScreen(shopping, viewModel::setStatus)
+                }
+                composable(WearOption.SYNC_INTERVAL.route) {
+                    WearSyncIntervalScreen(shopping, viewModel::setSyncInterval)
                 }
                 composable(ROUTE_MANUAL_LOGIN) {
                     ManualLoginScreen(

@@ -47,21 +47,17 @@ import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.verticalScrollbar
 import com.patrickzedler.grocy.core.design.withTabularNumbers
 import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
-import com.patrickzedler.grocy.core.model.text.formatDate
-import com.patrickzedler.grocy.core.model.text.formatWeekday
 import com.patrickzedler.grocy.core.model.text.localNowMillis
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.calendar_more
-import com.patrickzedler.grocy.core.resources.calendar_view_day
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.pluralStringResource
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * A page of Google Calendar's day or week: the days with what has no time stay on top, below them
  * only the hours scroll, as segmented rows with their time beside them and each event as a chip
  * at its time. Every page of both views shares [scroll], so paging and changing between them keep
- * the time in view. In the week a tap on a day's heading or column shows that day ([onDayClick]).
+ * the time in view. In the week a tap on a day's number shows that day ([onDayClick]).
  */
 @Composable
 internal fun TimeGridPage(
@@ -91,7 +87,7 @@ internal fun TimeGridPage(
                     .calendarPadding()
                     .padding(top = 4.dp, bottom = bottomPadding),
             ) {
-                TimeGridBody(days, colors, onDayClick, onEventClick)
+                TimeGridBody(days, colors, onEventClick)
             }
         }
     }
@@ -225,7 +221,6 @@ internal fun MoreChip(count: Int, onClick: () -> Unit) {
 private fun TimeGridBody(
     days: List<CalendarDay>,
     colors: EventColors,
-    onDayClick: ((Long) -> Unit)?,
     onEventClick: (CalendarEvent) -> Unit,
 ) {
     val height = HourHeight * HOURS_PER_DAY
@@ -237,18 +232,7 @@ private fun TimeGridBody(
         }
         Row(Modifier.fillMaxWidth().height(height).padding(start = HourLabelWidth)) {
             days.forEach { day ->
-                BoxWithConstraints(
-                    Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .then(
-                            if (onDayClick != null) {
-                                Modifier.dayColumnClick(day, onDayClick)
-                            } else {
-                                Modifier
-                            },
-                        ),
-                ) {
+                BoxWithConstraints(Modifier.weight(1f).fillMaxHeight()) {
                     DayEvents(
                         day = day,
                         showsIcon = maxWidth >= ChipIconMinWidth,
@@ -259,19 +243,6 @@ private fun TimeGridBody(
             }
         }
     }
-}
-
-/** A tap on a day's column in the week shows that day at the same time. */
-@Composable
-private fun Modifier.dayColumnClick(day: CalendarDay, onDayClick: (Long) -> Unit): Modifier {
-    val haptic = LocalHapticFeedback.current
-    val label = stringResource(Res.string.calendar_view_day)
-    val description = "${formatWeekday(day.epochDay)}, ${formatDate(day.epochDay)}"
-    val open = {
-        haptic.confirm()
-        onDayClick(day.epochDay)
-    }
-    return clickable(onClickLabel = "$label: $description", onClick = open).clickCursor()
 }
 
 @Composable

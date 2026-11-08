@@ -50,6 +50,7 @@ import com.patrickzedler.grocy.core.forms.ClearFilterChip
 import com.patrickzedler.grocy.core.forms.DropdownFilterChip
 import com.patrickzedler.grocy.core.forms.FilterChipRow
 import com.patrickzedler.grocy.core.forms.emptyListItem
+import com.patrickzedler.grocy.core.forms.filterGapItem
 import com.patrickzedler.grocy.core.model.stock.ProductGroupFilter
 import com.patrickzedler.grocy.core.model.stock.SpendingsGrouping
 import com.patrickzedler.grocy.core.model.stock.SpendingsRangePreset
@@ -112,6 +113,8 @@ internal fun SpendingsScreen(
         menuItems = menuItems,
         isRefreshing = isRefreshing,
         onRefresh = viewModel::refresh,
+        // The rows are one group below the chart, which adds the rest of a group's distance
+        itemSpacing = ListItemDefaults.SegmentedGap,
     ) {
         val current = state ?: return@SegmentedListScreen
         edgeToEdgeItem(key = "filters") { contentPadding ->
@@ -140,6 +143,7 @@ internal fun SpendingsScreen(
                 },
             )
         }
+        filterGapItem()
         spendingsItems(
             state = current,
             selectedSlice = selectedSlice?.takeIf { it < current.chart.slices.size },
@@ -270,7 +274,11 @@ private fun LazyListScope.spendingsItems(
             val name = slice.row?.let { rowName(it, state.filter.grouping) } ?: other
             formatCurrency(slice.total, state.currency, state.priceDecimals) to name
         }
-        SegmentedContainer(index = 0, count = 1) {
+        SegmentedContainer(
+            index = 0,
+            count = 1,
+            modifier = Modifier.padding(bottom = ChartBottomPadding),
+        ) {
             Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 SpendingsDonut(
                     chart = chart,
@@ -454,6 +462,9 @@ private fun RangePickerDialog(
 }
 
 private const val MILLIS_PER_DAY = 86_400_000L
+
+private val ChartBottomPadding =
+    SegmentedListDefaults.GroupSpacing - ListItemDefaults.SegmentedGap
 
 private val SpendingsGrouping.label: StringResource
     get() = when (this) {

@@ -393,7 +393,7 @@
   <string name="stock_overview_status_in_stock">%1$d op voorraad</string>
   <string name="stock_overview_status_opened">%1$d geopend</string>
   <string name="stock_overview_group_by">Groepeer op</string>
-  <string name="stock_overview_grouped_by">Groep: %1$s</string>
+  <string name="stock_overview_grouped_by">Groepeer op: %1$s</string>
   <string name="stock_overview_group_not_set">Niet ingesteld</string>
   <string name="stock_overview_fields">Velden</string>
   <string name="stock_overview_next_due_date">Volgende houdbaarheidsdatum</string>

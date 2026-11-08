@@ -314,6 +314,12 @@ internal fun wearShoppingState(
     )
 }
 
+/** What the sync interval can be set to; an interval set otherwise stays selectable. */
+fun wearSyncIntervals(current: Int): List<Int> =
+    (SYNC_INTERVALS + current).distinct().sorted()
+
+private val SYNC_INTERVALS = listOf(5, 10, 15, 30, 60)
+
 /** The tile's numbers of a list shown with all its items. */
 internal fun wearTileSummary(state: WearShoppingState): WearTileSummary = WearTileSummary(
     listName = state.lists.firstOrNull { it.id == state.listId }?.name.orEmpty(),

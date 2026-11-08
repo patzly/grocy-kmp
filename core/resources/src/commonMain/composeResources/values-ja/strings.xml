@@ -373,7 +373,7 @@
   <string name="stock_overview_status_in_stock">ストックあり %1$d</string>
   <string name="stock_overview_status_opened">開封済み %1$d</string>
   <string name="stock_overview_group_by">グループ化</string>
-  <string name="stock_overview_grouped_by">グループ: %1$s</string>
+  <string name="stock_overview_grouped_by">グループ化: %1$s</string>
   <string name="stock_overview_group_not_set">未設定</string>
   <string name="stock_overview_fields">項目</string>
   <string name="stock_overview_next_due_date">次の期限</string>

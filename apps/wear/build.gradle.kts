@@ -13,7 +13,13 @@ android {
     }
 }
 
+// The watch app is no multiplatform module, the tests run with everyone else's
+tasks.register("allTests") {
+    dependsOn("testDebugUnitTest")
+}
+
 dependencies {
+    testImplementation(libs.kotlin.test.junit)
     implementation(projects.core.data)
     implementation(projects.core.database)
     implementation(projects.core.network)

@@ -430,7 +430,7 @@
   <string name="stock_overview_status_in_stock">%1$d in stock</string>
   <string name="stock_overview_status_opened">%1$d opened</string>
   <string name="stock_overview_group_by">Group by</string>
-  <string name="stock_overview_grouped_by">Group: %1$s</string>
+  <string name="stock_overview_grouped_by">Group by: %1$s</string>
   <string name="stock_overview_group_not_set">Not set</string>
   <string name="stock_overview_fields">Fields</string>
   <string name="stock_overview_next_due_date">Next due date</string>

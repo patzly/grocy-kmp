@@ -13,6 +13,7 @@ import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.data.tasks.TasksRepository
 import com.patrickzedler.grocy.core.data.util.RefreshController
 import com.patrickzedler.grocy.core.data.util.RefreshState
+import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.batteries.BatteriesSummary
 import com.patrickzedler.grocy.core.model.batteries.batteriesSummaryOf
 import com.patrickzedler.grocy.core.model.chores.ChoresSummary
@@ -56,6 +57,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -176,6 +180,8 @@ internal class StartViewModel(
     calendarEvents: Flow<List<CalendarEvent>> = flowOf(emptyList()),
     private val today: () -> Long = ::todayEpochDay,
     private val now: () -> String = { grocyDateTimeOf(localNowMillis()) },
+    /** The logged in server, whose change makes everything shown the former server's. */
+    connection: Flow<ServerConnection?> = emptyFlow(),
 ) : ViewModel() {
 
     private val refreshController = RefreshController(viewModelScope) {
@@ -268,6 +274,10 @@ internal class StartViewModel(
 
     init {
         refresh()
+        // This screen stays below settings, where another server replaces all the data
+        viewModelScope.launch {
+            connection.filterNotNull().distinctUntilChanged().drop(1).collect { refresh() }
+        }
     }
 
     fun refresh() = refreshController.refresh()

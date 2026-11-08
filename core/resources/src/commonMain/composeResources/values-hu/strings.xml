@@ -393,7 +393,7 @@
   <string name="stock_overview_status_in_stock">%1$d készleten</string>
   <string name="stock_overview_status_opened">%1$d felbontva</string>
   <string name="stock_overview_group_by">Csoportosítás</string>
-  <string name="stock_overview_grouped_by">Csoport: %1$s</string>
+  <string name="stock_overview_grouped_by">Csoportosítás: %1$s</string>
   <string name="stock_overview_group_not_set">Nincs megadva</string>
   <string name="stock_overview_fields">Mezők</string>
   <string name="stock_overview_next_due_date">Következő lejárati dátum</string>

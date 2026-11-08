@@ -393,7 +393,7 @@
   <string name="stock_overview_status_in_stock">%1$d i lager</string>
   <string name="stock_overview_status_opened">%1$d öppnade</string>
   <string name="stock_overview_group_by">Gruppera efter</string>
-  <string name="stock_overview_grouped_by">Grupp: %1$s</string>
+  <string name="stock_overview_grouped_by">Gruppera efter: %1$s</string>
   <string name="stock_overview_group_not_set">Inte angiven</string>
   <string name="stock_overview_fields">Fält</string>
   <string name="stock_overview_next_due_date">Nästa förfallodatum</string>
