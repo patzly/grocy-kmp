@@ -13,7 +13,7 @@ the shopping list and its shopping mode, the recipes with their cards and forms,
 chores with their tracking and journal, the tasks, the batteries with their tracking and journal,
 the equipment with its manuals, the calendar, the daily notifications, new products filled in from open product
 databases, the home screen widgets (task list, calendar month and list), `grocy://` deep links
-and NFC tags, the Wear OS app with the shopping list.
+and NFC tags, the Wear OS app with the shopping list and its tile.
 
 ## Details
 

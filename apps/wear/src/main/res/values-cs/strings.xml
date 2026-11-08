@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="tile_shopping_list">Nákupní seznam</string>
+  <string name="tile_shopping_list_description">Co ještě zbývá na nákupním seznamu</string>
+</resources>

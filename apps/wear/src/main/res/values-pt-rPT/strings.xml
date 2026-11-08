@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="tile_shopping_list">Lista de compras</string>
+  <string name="tile_shopping_list_description">O que falta na sua lista de compras</string>
+</resources>

@@ -238,24 +238,46 @@ class MasterDataRepository(
     }
 
     /**
-     * Downloads only what names the items of a shopping list, for the watch, which never needs
-     * the rest of the master data.
+     * Downloads only what names, groups and counts the items of a shopping list, for the watch,
+     * which never needs the rest of the master data.
      *
      * @throws GrocyApiException e.g. [GrocyApiException.Unreachable] when offline; the local
      *   data stays as it was.
      */
-    suspend fun refreshProductsAndUnits() {
+    suspend fun refreshShoppingListNames() {
         val connection = requireConnection()
-        val (products, units) = coroutineScope {
+        val download = coroutineScope {
             val products = async { api.products(connection) }
             val units = async { api.quantityUnits(connection) }
-            products.await() to units.await()
+            val groups = async { api.productGroups(connection) }
+            val stores = async { api.stores(connection) }
+            val resolved = async { api.resolvedQuantityUnitConversions(connection) }
+            val config = async { api.serverConfig(connection) }
+            val settings = async { api.userSettings(connection) }
+            ShoppingListNames(
+                products = products.await(),
+                units = units.await(),
+                groups = groups.await(),
+                stores = stores.await(),
+                resolved = resolved.await(),
+                config = config.await(),
+                settings = settings.await(),
+            )
         }
         database.withWriteTransaction {
             dao.deleteProducts()
-            dao.insertProducts(products.map { it.toEntity() })
+            dao.insertProducts(download.products.map { it.toEntity() })
             dao.deleteQuantityUnits()
-            dao.insertQuantityUnits(units.map { it.toEntity() })
+            dao.insertQuantityUnits(download.units.map { it.toEntity() })
+            dao.deleteProductGroups()
+            dao.insertProductGroups(download.groups.map { it.toEntity() })
+            dao.deleteStores()
+            dao.insertStores(download.stores.map { it.toEntity() })
+            storeResolvedConversions(download.resolved)
+            dao.upsertServerValue(value(SERVER_CONFIG, ServerConfig.serializer(), download.config))
+            dao.upsertServerValue(
+                value(USER_SETTINGS, UserSettings.serializer(), download.settings),
+            )
         }
     }
 
@@ -662,6 +684,16 @@ class MasterDataRepository(
     } catch (_: IllegalArgumentException) {
         null
     }
+
+    private class ShoppingListNames(
+        val products: List<Product>,
+        val units: List<QuantityUnit>,
+        val groups: List<ProductGroup>,
+        val stores: List<Store>,
+        val resolved: List<ResolvedQuantityUnitConversion>,
+        val config: ServerConfig,
+        val settings: UserSettings,
+    )
 
     private class Download(
         val products: List<Product>,

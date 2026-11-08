@@ -45,5 +45,20 @@
           android:scheme="wear" />
       </intent-filter>
     </service>
+
+    <service
+      android:name=".ShoppingListTileService"
+      android:description="@string/tile_shopping_list_description"
+      android:exported="true"
+      android:icon="@drawable/ic_launcher_monochrome"
+      android:label="@string/tile_shopping_list"
+      android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+      <intent-filter>
+        <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+      </intent-filter>
+      <meta-data
+        android:name="androidx.wear.tiles.PREVIEW"
+        android:resource="@drawable/tile_shopping_list_preview" />
+    </service>
   </application>
 </manifest>

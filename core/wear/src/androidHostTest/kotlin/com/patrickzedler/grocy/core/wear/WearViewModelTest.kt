@@ -2,12 +2,15 @@ package com.patrickzedler.grocy.core.wear
 
 import com.patrickzedler.grocy.core.data.auth.AuthRepository
 import com.patrickzedler.grocy.core.data.credentials.ServerConnectionCodec
+import com.patrickzedler.grocy.core.data.settings.ShoppingListOptionsRepository
+import com.patrickzedler.grocy.core.data.settings.ShoppingModeSettingsRepository
 import com.patrickzedler.grocy.core.model.ServerConnection
-import com.patrickzedler.grocy.core.model.masterdata.Product
-import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
-import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItemSync
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListStatus
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.testing.FakeCredentialStore
+import com.patrickzedler.grocy.core.testing.FakeSettingsStore
 import com.patrickzedler.grocy.core.testing.RepositoryTestEnvironment
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
@@ -18,12 +21,20 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.TestTimeSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 
@@ -32,6 +43,8 @@ class WearViewModelTest {
     private val dispatcher = StandardTestDispatcher()
     private val environment = RepositoryTestEnvironment(dispatcher)
     private val store = FakeCredentialStore()
+    private val settings = FakeSettingsStore()
+    private val timeSource = TestTimeSource()
     private val auth = AuthRepository(store, environment.server.api)
     private val phone = object : PhoneLink {
         var published: String? = null
@@ -72,10 +85,22 @@ class WearViewModelTest {
         Dispatchers.resetMain()
     }
 
+    private fun TestScope.shoppingList(): WearShoppingList {
+        val scope = backgroundScope + UnconfinedTestDispatcher(testScheduler)
+        return WearShoppingList(
+            shopping = environment.shoppingListRepository,
+            masterData = environment.repository,
+            options = ShoppingListOptionsRepository(settings, scope),
+            modeSettings = ShoppingModeSettingsRepository(settings, scope),
+            language = "en",
+            decimalSeparator = '.',
+            timeSource = timeSource,
+        )
+    }
+
     private fun TestScope.viewModel(): WearViewModel = WearViewModel(
         auth = auth,
-        shopping = environment.shoppingListRepository,
-        masterData = environment.repository,
+        shopping = shoppingList(),
         sync = WearConnectionSync(store, auth, marker),
         phone = phone,
     ).also { advanceUntilIdle() }
@@ -106,10 +131,12 @@ class WearViewModelTest {
         val viewModel = viewModel()
 
         val shopping = assertIs<WearState.LoggedIn>(viewModel.state.value).shopping
-        assertTrue(shopping.items.isNotEmpty())
-        assertTrue(shopping.items.all { it.title.isNotEmpty() })
+        val items = shopping.groups.flatMap { it.items }
+        assertTrue(items.isNotEmpty())
+        assertTrue(items.all { it.title.isNotEmpty() })
         val paths = environment.server.requestedPaths
         assertTrue("/api/objects/products" in paths)
+        assertTrue("/api/objects/product_groups" in paths)
         assertTrue("/api/stock" !in paths)
         assertTrue("/api/objects/chores" !in paths)
     }
@@ -118,7 +145,9 @@ class WearViewModelTest {
     fun aCheckOffWorksOfflineAndShowsItIsNotSent() = runTest(dispatcher) {
         store.save(ServerConnection.ApiKey("https://grocy.test", "key"))
         val viewModel = viewModel()
-        val item = assertIs<WearState.LoggedIn>(viewModel.state.value).shopping.items.first()
+        val item = assertIs<WearState.LoggedIn>(viewModel.state.value).shopping.groups
+            .flatMap { it.items }
+            .first()
         environment.server.respond(
             "/api/objects/shopping_list/${item.id}",
             status = HttpStatusCode.ServiceUnavailable,
@@ -128,7 +157,8 @@ class WearViewModelTest {
         viewModel.setDone(item.id, !item.done)
         advanceUntilIdle()
 
-        val updated = assertIs<WearState.LoggedIn>(viewModel.state.value).shopping.items
+        val updated = assertIs<WearState.LoggedIn>(viewModel.state.value).shopping.groups
+            .flatMap { it.items }
             .first { it.id == item.id }
         assertEquals(!item.done, updated.done)
         assertEquals(ShoppingListItemSync.FAILED, updated.sync)
@@ -177,31 +207,149 @@ class WearViewModelTest {
     }
 
     @Test
-    fun rowsNameTheProductWithAmountUnitAndNoteAndKeepWhatIsLeftOnTop() {
-        val items = listOf(
-            ShoppingListItem(1, 1, 1, "ripe", amount = 2.0, quId = 1, done = true),
-            ShoppingListItem(2, 1, null, "Stamps", amount = 0.0, quId = null, done = false),
-            ShoppingListItem(3, 1, 2, null, amount = 1.0, quId = 1, done = false),
-            ShoppingListItem(4, 2, 2, null, amount = 1.0, quId = 1, done = false),
-        )
-        val products = listOf(
-            Product(id = 1, name = "Bananas"),
-            Product(id = 2, name = "Apple"),
-        )
-        val units = listOf(QuantityUnit(id = 1, name = "Piece", namePlural = "Pieces"))
-
-        val rows = wearShoppingItems(
-            items = items,
-            listId = 1,
-            products = products,
-            units = units,
-            syncStates = mapOf(3 to ShoppingListItemSync.SENDING),
+    fun autoSyncIsOnByDefaultAndDownloadsWhatOthersChanged() = runTest(dispatcher) {
+        store.save(ServerConnection.ApiKey("https://grocy.test", "key"))
+        val viewModel = viewModel()
+        val sync = backgroundScope.launch { viewModel.syncWhileShown() }
+        environment.server.respond(
+            "/api/objects/shopping_list",
+            body = """[{"id":5,"shopping_list_id":1,"product_id":1,"amount":"2","done":1}]""",
         )
 
-        assertEquals(listOf("Apple", "Stamps", "Bananas"), rows.map { it.title })
-        assertEquals("1 Piece", rows[0].details)
-        assertEquals(ShoppingListItemSync.SENDING, rows[0].sync)
-        assertNull(rows[1].details)
-        assertEquals("2 Pieces · ripe", rows[2].details)
+        advanceTimeBy(DEFAULT_SYNC_INTERVAL + 1.seconds)
+        advanceUntilIdleExceptSync()
+
+        val items = assertIs<WearState.LoggedIn>(viewModel.state.value).shopping.groups
+            .flatMap { it.items }
+        assertTrue(items.single { it.id == 5 }.done)
+        sync.cancel()
+    }
+
+    @Test
+    fun withoutAutoSyncNothingIsDownloadedByItself() = runTest(dispatcher) {
+        store.save(ServerConnection.ApiKey("https://grocy.test", "key"))
+        val viewModel = viewModel()
+        viewModel.setAutoSync(false)
+        advanceUntilIdle()
+        val requests = itemRequests()
+        val sync = backgroundScope.launch { viewModel.syncWhileShown() }
+
+        advanceTimeBy(5.minutes)
+        advanceUntilIdleExceptSync()
+
+        assertEquals(requests, itemRequests())
+        sync.cancel()
+    }
+
+    @Test
+    fun loggedOutTheSyncSendsNothing() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        val requests = itemRequests()
+        val sync = backgroundScope.launch { viewModel.syncWhileShown() }
+
+        advanceTimeBy(DEFAULT_SYNC_INTERVAL + 1.seconds)
+        advanceUntilIdleExceptSync()
+
+        assertEquals(requests, itemRequests())
+        sync.cancel()
+    }
+
+    @Test
+    fun theSyncDownloadsNamesOnlyForItemsThatNeedThem() = runTest(dispatcher) {
+        store.save(ServerConnection.ApiKey("https://grocy.test", "key"))
+        val viewModel = viewModel()
+        val productDownloads = productRequests()
+        val sync = backgroundScope.launch { viewModel.syncWhileShown() }
+
+        advanceTimeBy(DEFAULT_SYNC_INTERVAL + 1.seconds)
+        advanceUntilIdleExceptSync()
+        assertEquals(productDownloads, productRequests())
+
+        environment.server.respond(
+            "/api/objects/shopping_list",
+            body = """[{"id":6,"shopping_list_id":1,"product_id":999,"amount":"1","done":0}]""",
+        )
+        advanceTimeBy(DEFAULT_SYNC_INTERVAL + 1.seconds)
+        advanceUntilIdleExceptSync()
+
+        assertEquals(productDownloads + 1, productRequests())
+        sync.cancel()
+    }
+
+    @Test
+    fun theTileDownloadsAtMostOnceAMinute() = runTest(dispatcher) {
+        store.save(ServerConnection.ApiKey("https://grocy.test", "key"))
+        val list = shoppingList()
+        list.refreshForTile()
+        advanceUntilIdle()
+        val requests = itemRequests()
+
+        timeSource += 30.seconds
+        list.refreshForTile()
+        advanceUntilIdle()
+        assertEquals(requests, itemRequests())
+
+        timeSource += 31.seconds
+        list.refreshForTile()
+        advanceUntilIdle()
+        assertEquals(requests + 1, itemRequests())
+    }
+
+    @Test
+    fun theTileGoesOnWithTheStoredListOffline() = runTest(dispatcher) {
+        store.save(ServerConnection.ApiKey("https://grocy.test", "key"))
+        environment.server.respond(
+            "/api/objects/shopping_list",
+            status = HttpStatusCode.ServiceUnavailable,
+        )
+
+        shoppingList().refreshForTile()
+        advanceUntilIdle()
+    }
+
+    @Test
+    fun optionsAreKeptInTheStore() = runTest(dispatcher) {
+        store.save(ServerConnection.ApiKey("https://grocy.test", "key"))
+        val viewModel = viewModel()
+
+        viewModel.setGrouping(ShoppingListGrouping.NONE)
+        viewModel.setDoneItemsLast(false)
+        viewModel.setSyncInterval(30)
+        advanceUntilIdle()
+
+        assertEquals(ShoppingListGrouping.NONE, settings.shoppingListOptions.first().grouping)
+        val mode = settings.shoppingModeSettings.first()
+        assertEquals(false, mode.doneItemsLast)
+        assertEquals(30, mode.syncIntervalSeconds)
+        val state = assertIs<WearState.LoggedIn>(viewModel.state.value).shopping
+        assertEquals(ShoppingListGrouping.NONE, state.grouping)
+        assertEquals(30, state.settings.syncIntervalSeconds)
+    }
+
+    @Test
+    fun theStatusFilterIsForTheAppNotTheTile() = runTest(dispatcher) {
+        store.save(ServerConnection.ApiKey("https://grocy.test", "key"))
+        val list = shoppingList()
+        list.refresh()
+        advanceUntilIdle()
+
+        list.setStatus(ShoppingListStatus.DONE)
+        advanceUntilIdle()
+
+        assertTrue(list.state.first().groups.isEmpty())
+        assertEquals(1, list.tileSummary.first().left)
+    }
+
+    private fun itemRequests() =
+        environment.server.requestedPaths.count { it == "/api/objects/shopping_list" }
+
+    private fun productRequests() =
+        environment.server.requestedPaths.count { it == "/api/objects/products" }
+
+    /** The sync never ends, so only what is due right now runs. */
+    private fun TestScope.advanceUntilIdleExceptSync() = runCurrent()
+
+    private companion object {
+        val DEFAULT_SYNC_INTERVAL = ShoppingModeSettings.DEFAULT_SYNC_INTERVAL_SECONDS.seconds
     }
 }

@@ -3,21 +3,22 @@ package com.patrickzedler.grocy.apps.wear
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
@@ -27,15 +28,13 @@ import androidx.wear.compose.material3.Button
 import androidx.wear.compose.material3.ButtonDefaults
 import androidx.wear.compose.material3.CheckboxButton
 import androidx.wear.compose.material3.CircularProgressIndicator
-import androidx.wear.compose.material3.ColorScheme
 import androidx.wear.compose.material3.EdgeButton
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.ListHeader
-import androidx.wear.compose.material3.MaterialTheme
+import androidx.wear.compose.material3.ListSubHeader
 import androidx.wear.compose.material3.ScreenScaffold
 import androidx.wear.compose.material3.SurfaceTransformation
 import androidx.wear.compose.material3.Text
-import androidx.wear.compose.material3.dynamicColorScheme
 import androidx.wear.compose.material3.lazy.rememberTransformationSpec
 import androidx.wear.compose.material3.lazy.transformedHeight
 import androidx.wear.compose.navigation.SwipeDismissableNavHost
@@ -43,13 +42,17 @@ import androidx.wear.compose.navigation.composable
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItemSync
 import com.patrickzedler.grocy.core.resources.Res
-import com.patrickzedler.grocy.core.resources.action_reload
-import com.patrickzedler.grocy.core.resources.ic_rounded_refresh
 import com.patrickzedler.grocy.core.resources.ic_rounded_sync
 import com.patrickzedler.grocy.core.resources.ic_rounded_sync_problem
+import com.patrickzedler.grocy.core.resources.ic_rounded_tune
+import com.patrickzedler.grocy.core.resources.shopping_list_group_done
 import com.patrickzedler.grocy.core.resources.shopping_list_item_not_sent
 import com.patrickzedler.grocy.core.resources.shopping_list_item_sending
+import com.patrickzedler.grocy.core.resources.shopping_list_ungrouped
+import com.patrickzedler.grocy.core.resources.shopping_mode_settings
+import com.patrickzedler.grocy.core.resources.stock_overview_group_not_set
 import com.patrickzedler.grocy.core.resources.wear_list_empty
+import com.patrickzedler.grocy.core.wear.WearShoppingGroupTitle
 import com.patrickzedler.grocy.core.wear.WearShoppingItem
 import com.patrickzedler.grocy.core.wear.WearShoppingState
 import com.patrickzedler.grocy.core.wear.WearState
@@ -59,14 +62,14 @@ import org.jetbrains.compose.resources.stringResource
 
 private const val ROUTE_HOME = "home"
 private const val ROUTE_LISTS = "lists"
+private const val ROUTE_OPTIONS = "options"
 private const val ROUTE_MANUAL_LOGIN = "login"
 
-/** The watch app: the login until there is one, then one shopping list to check off. */
+/** The watch app: the login until there is one, then the shopping list to check off. */
 @Composable
 fun WearApp(graph: WearGraph) {
-    val context = LocalContext.current
     val viewModel = viewModel {
-        WearViewModel(graph.auth, graph.shopping, graph.masterData, graph.sync, graph.phone)
+        WearViewModel(graph.auth, graph.shoppingList, graph.sync, graph.phone)
     }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
@@ -75,9 +78,13 @@ fun WearApp(graph: WearGraph) {
         viewModel.onStart()
         onPauseOrDispose {}
     }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(viewModel, lifecycleOwner) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) { viewModel.syncWhileShown() }
+    }
     graph.localNetworkGate?.let { WearLocalNetworkPrompt(it) }
 
-    MaterialTheme(colorScheme = dynamicColorScheme(context) ?: ColorScheme()) {
+    GrocyWearTheme {
         AppScaffold {
             val navController = rememberSwipeDismissableNavController()
             SwipeDismissableNavHost(navController, startDestination = ROUTE_HOME) {
@@ -90,10 +97,9 @@ fun WearApp(graph: WearGraph) {
                         )
                         is WearState.LoggedIn -> ShoppingListScreen(
                             state = current.shopping,
-                            isRefreshing = isRefreshing,
                             onListClick = { navController.navigate(ROUTE_LISTS) },
                             onDoneChange = viewModel::setDone,
-                            onRefreshClick = viewModel::refreshNow,
+                            onOptionsClick = { navController.navigate(ROUTE_OPTIONS) },
                         )
                     }
                 }
@@ -104,6 +110,18 @@ fun WearApp(graph: WearGraph) {
                             viewModel.selectList(id)
                             navController.popBackStack()
                         },
+                    )
+                }
+                composable(ROUTE_OPTIONS) {
+                    WearOptionsScreen(
+                        state = (state as? WearState.LoggedIn)?.shopping ?: WearShoppingState(),
+                        isRefreshing = isRefreshing,
+                        onReloadClick = viewModel::refreshNow,
+                        onAutoSyncChange = viewModel::setAutoSync,
+                        onDoneItemsLastChange = viewModel::setDoneItemsLast,
+                        onGroupingChange = viewModel::setGrouping,
+                        onStatusChange = viewModel::setStatus,
+                        onSyncIntervalChange = viewModel::setSyncInterval,
                     )
                 }
                 composable(ROUTE_MANUAL_LOGIN) {
@@ -128,10 +146,9 @@ private fun Loading() {
 @Composable
 private fun ShoppingListScreen(
     state: WearShoppingState,
-    isRefreshing: Boolean,
     onListClick: () -> Unit,
     onDoneChange: (Int, Boolean) -> Unit,
-    onRefreshClick: () -> Unit,
+    onOptionsClick: () -> Unit,
 ) {
     val listState = rememberTransformingLazyColumnState()
     val spec = rememberTransformationSpec()
@@ -141,21 +158,17 @@ private fun ShoppingListScreen(
     ScreenScaffold(
         scrollState = listState,
         edgeButton = {
+            // The list syncs by itself, so the end of it belongs to its options, as on the phone
             EdgeButton(
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.Confirm)
-                    onRefreshClick()
+                    onOptionsClick()
                 },
-                enabled = !isRefreshing,
             ) {
-                if (isRefreshing) {
-                    CircularProgressIndicator(Modifier.size(24.dp))
-                } else {
-                    Icon(
-                        painter = painterResource(Res.drawable.ic_rounded_refresh),
-                        contentDescription = stringResource(Res.string.action_reload),
-                    )
-                }
+                Icon(
+                    painter = painterResource(Res.drawable.ic_rounded_tune),
+                    contentDescription = stringResource(Res.string.shopping_mode_settings),
+                )
             }
         },
     ) { contentPadding ->
@@ -179,17 +192,31 @@ private fun ShoppingListScreen(
                     ListHeader(Modifier.transformedHeight(this, spec)) { Text(listName) }
                 }
             }
-            items(state.items, key = { it.id }) { item ->
-                ShoppingItem(
-                    item = item,
-                    onDoneChange = { onDoneChange(item.id, it) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .transformedHeight(this, spec),
-                    transformation = SurfaceTransformation(spec),
-                )
+            state.groups.forEach { group ->
+                group.title?.let { title ->
+                    item(key = "group-$title") {
+                        ListSubHeader(
+                            modifier = Modifier
+                                .animateItem()
+                                .transformedHeight(this, spec),
+                        ) {
+                            Text(groupTitle(title))
+                        }
+                    }
+                }
+                items(group.items, key = { it.id }) { item ->
+                    ShoppingItem(
+                        item = item,
+                        onDoneChange = { onDoneChange(item.id, it) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .animateItem()
+                            .transformedHeight(this, spec),
+                        transformation = SurfaceTransformation(spec),
+                    )
+                }
             }
-            if (state.items.isEmpty()) {
+            if (state.groups.isEmpty()) {
                 item(key = "empty") {
                     Text(
                         text = stringResource(Res.string.wear_list_empty),
@@ -202,6 +229,14 @@ private fun ShoppingListScreen(
             }
         }
     }
+}
+
+@Composable
+private fun groupTitle(title: WearShoppingGroupTitle): String = when (title) {
+    is WearShoppingGroupTitle.Text -> title.text
+    WearShoppingGroupTitle.Ungrouped -> stringResource(Res.string.shopping_list_ungrouped)
+    WearShoppingGroupTitle.NotSet -> stringResource(Res.string.stock_overview_group_not_set)
+    WearShoppingGroupTitle.Done -> stringResource(Res.string.shopping_list_group_done)
 }
 
 @Composable

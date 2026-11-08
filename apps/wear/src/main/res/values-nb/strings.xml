@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="tile_shopping_list">Handleliste</string>
+  <string name="tile_shopping_list_description">Det som gjenstår på handlelisten din</string>
+</resources>

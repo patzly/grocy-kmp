@@ -4,46 +4,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.auth.AuthRepository
 import com.patrickzedler.grocy.core.data.auth.AuthState
-import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
-import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.model.ServerConnection
-import com.patrickzedler.grocy.core.model.masterdata.Product
-import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
-import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
-import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
-import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItemSync
-import com.patrickzedler.grocy.core.model.text.formatDecimal
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListStatus
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import com.patrickzedler.grocy.core.network.ServerUrl
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-
-/** One row of the watch's list. */
-data class WearShoppingItem(
-    val id: Int,
-    val title: String,
-    /** Amount, unit and note, null if there is nothing to add to the title. */
-    val details: String?,
-    val done: Boolean,
-    val sync: ShoppingListItemSync?,
-)
-
-/** The list the watch shows. */
-data class WearShoppingState(
-    val lists: List<ShoppingList> = emptyList(),
-    val listId: Int? = null,
-    /** Not done first, each by name, so what is left stays at the top while shopping. */
-    val items: List<WearShoppingItem> = emptyList(),
-)
 
 /** What the watch shows. */
 sealed interface WearState {
@@ -69,19 +48,16 @@ enum class WearLoginError {
 }
 
 /**
- * The watch's only screen state: the login and one shopping list to show and check off. Offline
- * first like the phone: check offs are stored and queued by [ShoppingListRepository], which
- * replays them per item against the server's current state.
+ * The watch's screen state: the login and one shopping list to show and check off. Offline first
+ * like the phone: check offs are stored and queued, then replayed per item against the server's
+ * current state ([WearShoppingList]).
  */
 class WearViewModel(
     private val auth: AuthRepository,
-    private val shopping: ShoppingListRepository,
-    private val masterData: MasterDataRepository,
+    private val shopping: WearShoppingList,
     private val sync: WearConnectionSync,
     private val phone: PhoneLink,
 ) : ViewModel() {
-
-    private val selectedListId = MutableStateFlow<Int?>(null)
 
     private val mutableIsRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = mutableIsRefreshing.asStateFlow()
@@ -89,22 +65,7 @@ class WearViewModel(
     private val mutableLogin = MutableStateFlow(WearLoginForm())
     val login: StateFlow<WearLoginForm> = mutableLogin.asStateFlow()
 
-    private val shoppingState = combine(
-        shopping.lists,
-        shopping.items,
-        shopping.syncStates,
-        combine(masterData.products, masterData.quantityUnits, ::Pair),
-        selectedListId,
-    ) { lists, items, syncStates, (products, units), selected ->
-        val listId = lists.firstOrNull { it.id == selected }?.id ?: lists.firstOrNull()?.id
-        WearShoppingState(
-            lists = lists,
-            listId = listId,
-            items = wearShoppingItems(items, listId, products, units, syncStates),
-        )
-    }
-
-    val state: StateFlow<WearState> = combine(auth.authState, shoppingState) { auth, shopping ->
+    val state: StateFlow<WearState> = combine(auth.authState, shopping.state) { auth, shopping ->
         when (auth) {
             AuthState.LoggedOut -> WearState.LoggedOut
             is AuthState.LoggedIn -> WearState.LoggedIn(shopping)
@@ -142,14 +103,6 @@ class WearViewModel(
         mutableIsRefreshing.value = true
         try {
             shopping.refresh()
-            val products = masterData.products.first().map { it.id }.toSet()
-            val units = masterData.quantityUnits.first().map { it.id }.toSet()
-            // The products are the biggest download, only when something is missing
-            val isMissing = shopping.items.first().any { item ->
-                (item.productId != null && item.productId !in products) ||
-                    (item.quId != null && item.quId !in units)
-            }
-            if (isMissing) masterData.refreshProductsAndUnits()
         } catch (e: CancellationException) {
             throw e
         } catch (_: GrocyApiException) {
@@ -159,12 +112,54 @@ class WearViewModel(
         }
     }
 
-    fun selectList(listId: Int) {
-        selectedListId.value = listId
+    /**
+     * Downloads the items every interval while auto sync is on, until cancelled: the screen runs
+     * it while it is visible, so what others check off shows up by itself. Failures stay quiet,
+     * the next interval tries again.
+     */
+    suspend fun syncWhileShown() {
+        shopping.syncIntervalSeconds.collectLatest { interval ->
+            if (interval == null) return@collectLatest
+            while (true) {
+                delay(interval.seconds)
+                syncOnce()
+            }
+        }
     }
+
+    private suspend fun syncOnce() {
+        if (auth.authState.first() !is AuthState.LoggedIn) return
+        try {
+            shopping.syncItems()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: GrocyApiException) {
+            // Offline or the server is down, the rows show what is not sent yet
+        }
+    }
+
+    fun selectList(listId: Int) = shopping.selectList(listId)
 
     fun setDone(itemId: Int, done: Boolean) {
         viewModelScope.launch { shopping.setDone(itemId, done) }
+    }
+
+    fun setStatus(status: ShoppingListStatus?) = shopping.setStatus(status)
+
+    fun setGrouping(grouping: ShoppingListGrouping) {
+        viewModelScope.launch { shopping.setGrouping(grouping) }
+    }
+
+    fun setAutoSync(autoSync: Boolean) {
+        viewModelScope.launch { shopping.setAutoSync(autoSync) }
+    }
+
+    fun setDoneItemsLast(doneItemsLast: Boolean) {
+        viewModelScope.launch { shopping.setDoneItemsLast(doneItemsLast) }
+    }
+
+    fun setSyncInterval(seconds: Int) {
+        viewModelScope.launch { shopping.setSyncInterval(seconds) }
     }
 
     fun setServerUrl(serverUrl: String) {
@@ -204,36 +199,3 @@ class WearViewModel(
         }
     }
 }
-
-/** The rows of [listId]. */
-internal fun wearShoppingItems(
-    items: List<ShoppingListItem>,
-    listId: Int?,
-    products: List<Product>,
-    units: List<QuantityUnit>,
-    syncStates: Map<Int, ShoppingListItemSync>,
-): List<WearShoppingItem> = items
-    .filter { it.listId == listId }
-    .map { item ->
-        val productName = products.firstOrNull { it.id == item.productId }?.name
-        val note = item.note?.trim()?.ifEmpty { null }
-        val amount = amountText(item, units).takeIf { item.productId != null }
-        WearShoppingItem(
-            id = item.id,
-            title = productName ?: note.orEmpty(),
-            details = listOfNotNull(amount, note.takeIf { productName != null })
-                .joinToString(" · ")
-                .ifEmpty { null },
-            done = item.done,
-            sync = syncStates[item.id],
-        )
-    }
-    .sortedWith(compareBy({ it.done }, { it.title.lowercase() }))
-
-private fun amountText(item: ShoppingListItem, units: List<QuantityUnit>): String {
-    val unit = units.firstOrNull { it.id == item.quId }
-    val name = if (item.amount == 1.0) unit?.name else unit?.namePlural ?: unit?.name
-    return listOfNotNull(formatDecimal(item.amount, AMOUNT_DECIMALS), name).joinToString(" ")
-}
-
-private const val AMOUNT_DECIMALS = 2
