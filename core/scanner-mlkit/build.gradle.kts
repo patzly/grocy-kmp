@@ -4,6 +4,12 @@ plugins {
 
 // Closed source (Google Play services), so only the Play app may depend on this module
 kotlin {
+    android {
+        optimization {
+            // The app's R8 needs them to keep what ML Kit creates by reflection
+            consumerKeepRules.file("consumer-rules.pro")
+        }
+    }
     sourceSets {
         commonMain.dependencies {
             // The ML Kit engines implement BarcodeDecoder and TextRecognizer of the scanner

@@ -1,6 +1,6 @@
 [versions]
 # Core build tooling
-agp = "9.4.1"
+agp = "9.5.1"
 kotlin = "2.4.21"
 
 # Android SDK levels
@@ -14,39 +14,39 @@ android-wear-minSdk = "30"
 # Multiplatform Compose and navigation
 kotlinx-browser = "0.5.0"
 # Pre-release on purpose: newest Compose and Material 3 Expressive design state
-compose-multiplatform = "1.13.0-beta01"
+compose-multiplatform = "1.13.0-beta02"
 kotlinx-coroutines = "1.11.0"
-# Pre-release on purpose: Material 3 Expressive, matching Compose Multiplatform 1.13.0-beta01
-compose-material3 = "1.13.0-beta01"
+# Pre-release on purpose: Material 3 Expressive, matching Compose Multiplatform 1.13.0-beta02
+compose-material3 = "1.13.0-beta02"
 # Alpha on purpose like Material 3: list-detail scenes for Navigation 3
 compose-material3-adaptive = "1.4.0-alpha01"
 jetbrains-navigation3 = "1.2.0"
 jetbrains-lifecycle = "2.11.0"
 # Same version Navigation 3 brings along
 jetbrains-navigationevent = "1.1.0"
-kotlinx-serialization = "1.11.0"
+kotlinx-serialization = "1.12.0"
 
 # Theming
 materialkolor = "5.0.1"
 
 # Networking
-ktor = "3.6.0"
+ktor = "3.6.1"
 
 # Storage (Android only, credentials)
-androidx-datastore = "1.2.1"
+androidx-datastore = "1.3.0"
 # Local database of the Grocy data, Android and web (3.0.x stable, not the 3.1 alphas)
 androidx-room3 = "3.0.3"
 androidx-sqlite = "2.7.1"
 # Not tied to the Kotlin version since KSP 2.3
-ksp = "2.3.12"
+ksp = "2.3.13"
 # npm package of the web database worker, used via npm() in Gradle
-npm-sqlite-wasm = "3.53.4-build2"
+npm-sqlite-wasm = "3.54.1-build1"
 
 # Android runner entry point
 androidx-activity = "1.13.0"
 # Newer than JetBrains' navigationevent on Android: 1.2.0 ignores events sent to removed inputs
 androidx-navigationevent = "1.2.0"
-androidx-core = "1.18.0"
+androidx-core = "1.19.1"
 androidx-core-splashscreen = "1.2.0"
 
 # Home screen widgets and their download in the background
@@ -63,13 +63,13 @@ mlkit-text-recognition = "16.0.1"
 # In-app updates of the Play app
 play-app-update = "2.1.0"
 # npm package for the web scanner, used via npm() in Gradle, not a Maven artifact
-npm-zxing-wasm = "3.1.5"
+npm-zxing-wasm = "3.1.6"
 
 # Wear OS
 androidx-wear-compose = "1.7.1"
 androidx-wear-input = "1.2.0"
 # The Wearable Data Layer that hands the login from the phone to the watch
-play-services-wearable = "19.0.0"
+play-services-wearable = "20.0.1"
 
 # Testing
 turbine = "1.2.1"

@@ -14,8 +14,7 @@ Build logic, convention plugins and adding a feature. Moved from CLAUDE.md.
   lock). On a failed check `checks.yml` prints the lock diff to commit.
 - Node.js, Yarn and Binaryen downloads come only from the repositories in `settings.gradle.kts`
   (`downloadBaseUrl = null` in the root build and `useDeclaredWasmToolingRepositories()` in the
-  convention plugins), so Kotlin adds no project repositories. The remaining Gradle deprecation
-  warning (`Configuration.setVisible`, removal in Gradle 11) comes from AGP itself.
+  convention plugins), so Kotlin adds no project repositories.
 - App version lives only in root `gradle.properties` (`grocy.versionName`, `grocy.versionCode`),
   shared by all apps. The web app gets it through a generated `BuildInfo.kt`
   (`apps/web/build.gradle.kts`). Wear adds `1_000_000` to the version code.

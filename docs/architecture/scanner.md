@@ -19,6 +19,10 @@ CLAUDE.md.
   two identical reads in a row, a code in view is reported once) and the `BarcodeFormat` set, so
   they behave the same. ZXing on Android decodes the upright image and a 90 degree turn for
   linear codes, like ML Kit's orientation-independent detection.
+- ML Kit creates its component registrars by reflection; `core:scanner-mlkit` ships the keep
+  rule for their constructors (`consumer-rules.pro`), which R8's full mode removes otherwise,
+  so every ML Kit client crashed with a `NullPointerException`. The Play app's minified builds
+  fail when R8 removes one anyway (check after `minify<Variant>WithR8` on `usage.txt`).
 - Engine selection: `ScannerRepository.activeEngine` = setting if the platform has it and (for
   ML Kit) `isUnlocked`, else ZXing. ZXing is always the default; unlocking (key installed, or the
   key check turned off by 10 long presses on the key item in About) never switches the engine,
