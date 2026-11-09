@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.feature.start.impl
 
+import com.patrickzedler.grocy.core.data.auth.AuthRepository
 import com.patrickzedler.grocy.core.data.batteries.BatteriesRepository
 import com.patrickzedler.grocy.core.data.calendar.CalendarRepository
 import com.patrickzedler.grocy.core.data.chores.ChoresRepository
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 /** What the start screen needs from the app. */
 interface StartDependencies {
+    val authRepository: AuthRepository
     val masterDataRepository: MasterDataRepository
     val recipesRepository: RecipesRepository
     val mealPlanRepository: MealPlanRepository

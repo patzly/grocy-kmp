@@ -10,7 +10,9 @@ kotlin {
             implementation(projects.core.design)
             implementation(projects.core.resources)
             implementation(projects.core.scanner)
+            implementation(projects.core.ui)
             implementation(projects.feature.login.api)
+            implementation(projects.feature.settings.api)
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(libs.jetbrains.lifecycle.viewmodel.compose)
         }

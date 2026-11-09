@@ -318,6 +318,7 @@ private fun LazyListScope.objectItems(
     if (state.rows.isEmpty()) {
         emptyListItem(
             hasData = state.hasObjects,
+            storedByStart = true,
             refresh = refresh,
             emptyText = { stringResource(Res.string.objects_empty) },
             filteredEmptyText = { stringResource(Res.string.objects_empty_filtered) },

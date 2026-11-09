@@ -127,9 +127,19 @@ internal fun mealPlanTodayOf(
     today: Long,
 ): List<String> = mealPlanNamesOf(entries, sections, recipes, products, today)
 
+private val emptyStockSummary = StockSummary(
+    productCount = 0,
+    totalValue = null,
+    dueSoonCount = 0,
+    overdueCount = 0,
+    expiredCount = 0,
+    belowMinStockCount = 0,
+    belowMinStockOnShoppingListCount = 0,
+)
+
 /** What the start screen's sections tell about the stored data. */
 internal data class StartUiState(
-    /** Null without the stock feature or before the first download. */
+    /** Null without the stock feature or before the first download finished. */
     val stock: StockSummary?,
     val currency: String,
     val priceDecimals: Int,
@@ -197,6 +207,7 @@ internal class StartViewModel(
             if (config.batteries) launch { batteries.refresh() }
             if (config.equipment) launch { equipment.refresh() }
         }
+        repository.markEverythingDownloaded()
     }
     val refresh: StateFlow<RefreshState> = refreshController.state
 
@@ -270,6 +281,9 @@ internal class StartViewModel(
         state.copy(sidebarUserentities = userentities.filter { it.showInSidebarMenu })
     }.combine(calendarEvents) { state, events ->
         state.copy(calendarEventsToday = events.count { it.epochDay == today() })
+    }.combine(repository.isEverythingDownloaded) { state, isDownloaded ->
+        // Until something is known a section tells nothing, afterwards that nothing exists
+        if (isDownloaded) state.withEmptySummaries(serverConfig.value) else state
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), null)
 
     init {
@@ -294,6 +308,15 @@ internal class StartViewModel(
         return selected?.takeIf { id -> lists.lists.any { it.listId == id } }
             ?: lists.defaultList?.listId
     }
+
+    private fun StartUiState.withEmptySummaries(config: ServerConfig?) = copy(
+        stock = stock ?: emptyStockSummary.takeIf { config?.stock == true },
+        recipes = recipes ?: RecipesSummary(0, 0, 0, 0).takeIf { config?.recipes == true },
+        chores = chores ?: ChoresSummary().takeIf { config?.chores == true },
+        tasks = tasks ?: TasksSummary().takeIf { config?.tasks == true },
+        batteries = batteries ?: BatteriesSummary().takeIf { config?.batteries == true },
+        equipmentCount = equipmentCount ?: 0.takeIf { config?.equipment == true },
+    )
 
     private fun stateOf(
         config: ServerConfig,

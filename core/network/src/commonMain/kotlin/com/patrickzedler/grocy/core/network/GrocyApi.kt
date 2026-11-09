@@ -1586,7 +1586,7 @@ class GrocyApi(
             throw e
         } catch (e: Throwable) {
             // Throwable, not Exception: on Wasm a failed fetch arrives as a Kotlin Error
-            throw GrocyApiException.Unreachable(e)
+            throw connectionFailure(e)
         }
 
     companion object {

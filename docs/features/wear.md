@@ -19,6 +19,13 @@
   paired phone. Verified with `AuthRepository.verify` before it is stored. Home Assistant only
   arrives from the phone. "Demo server" needs no typing.
 - Stored with the same `AndroidCredentialStore` as the phone; the app has no backups.
+- Certificates: with the login the phone publishes the self-signed certificates the user trusted
+  for that server (`WEAR_CERTIFICATES_KEY`, `trustedFor`), so nothing is asked on the watch and a
+  renewed one follows by itself; the watch keeps only those of its login's server and forgets them
+  with the phone's logout. A login entered on the watch asks like the phone's
+  (`WearCertificatePrompt`, the fingerprint is what counts). Client certificates are not possible:
+  Android never hands out the private key of the phone's `KeyChain`, and a watch has no way to
+  install or pick one, so such a server cannot be reached from the watch.
 
 ## List
 

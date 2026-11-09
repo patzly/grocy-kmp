@@ -304,6 +304,7 @@ private fun LazyListScope.batteryItems(
         emptyListItem(
             // Without a filter an empty list means the server has no batteries
             hasData = state.hasBatteries && (state.status != null || isSearching),
+            storedByStart = true,
             refresh = refresh,
             emptyText = { stringResource(Res.string.objects_empty) },
             filteredEmptyText = { stringResource(Res.string.objects_empty_filtered) },

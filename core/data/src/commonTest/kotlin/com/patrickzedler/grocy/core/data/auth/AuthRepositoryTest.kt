@@ -10,6 +10,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 
 class AuthRepositoryTest {
@@ -81,5 +82,101 @@ class AuthRepositoryTest {
         server.unreachable = true
 
         assertFailsWith<GrocyApiException.Unreachable> { repository.verify(connection) }
+    }
+
+    @Test
+    fun aLogoutKeepsTheSessionWithItsCredentials() = runTest {
+        repository.saveLogin(connection)
+
+        repository.logout()
+
+        assertEquals(listOf(connection), repository.sessions.first().map { it.connection })
+    }
+
+    @Test
+    fun aLogoutKeepsALoginOlderThanTheSessions() = runTest {
+        credentialStore.save(connection)
+
+        repository.logout()
+
+        assertEquals(listOf(connection), credentialStore.sessions.value.map { it.connection })
+    }
+
+    @Test
+    fun theFormerSessionComesRightAfterTheCurrentOne() = runTest {
+        val other = ServerConnection.Demo()
+        repository.saveLogin(connection)
+
+        repository.saveLogin(other)
+
+        assertEquals(listOf(other, connection), repository.sessions.first().map { it.connection })
+    }
+
+    @Test
+    fun switchingOpensTheSessionAndChecksItFirst() = runTest {
+        repository.saveLogin(connection)
+        val session = repository.sessions.first().single()
+        repository.saveLogin(ServerConnection.Demo())
+
+        repository.switchTo(session)
+
+        assertEquals(connection, credentialStore.connection.value)
+        assertEquals(FakeGrocyServer.USER_PATH, server.requestedPaths.last())
+    }
+
+    @Test
+    fun aSessionThatFailsLeavesTheCurrentOne() = runTest {
+        repository.saveLogin(connection)
+        val session = repository.sessions.first().single()
+        val demo = ServerConnection.Demo()
+        repository.saveLogin(demo)
+        server.respond(FakeGrocyServer.USER_PATH, HttpStatusCode.Unauthorized)
+
+        assertFailsWith<GrocyApiException.Unauthorized> { repository.switchTo(session) }
+
+        assertEquals(demo, credentialStore.connection.value)
+    }
+
+    @Test
+    fun removingAnotherSessionForgetsOnlyThatOne() = runTest {
+        val demo = ServerConnection.Demo()
+        repository.saveLogin(connection)
+        repository.saveLogin(demo)
+        val other = repository.sessions.first().last()
+
+        repository.removeSession(other)
+
+        assertEquals(listOf(demo), repository.sessions.first().map { it.connection })
+        assertEquals(demo, credentialStore.connection.value)
+    }
+
+    @Test
+    fun removingTheCurrentSessionLogsOutAndForgetsIt() = runTest {
+        repository.saveLogin(connection)
+        val current = repository.sessions.first().single()
+
+        repository.removeSession(current)
+
+        assertNull(credentialStore.connection.value)
+        assertEquals(emptyList(), repository.sessions.first())
+    }
+
+    @Test
+    fun aRepositoryWithoutSessionsKeepsNoCredentialsAfterALogout() = runTest {
+        val watch = AuthRepository(credentialStore, server.api, keepsSessions = false)
+        watch.saveLogin(connection)
+
+        watch.logout()
+
+        assertEquals(emptyList(), credentialStore.sessions.value)
+    }
+
+    @Test
+    fun refreshingTheUserFillsInTheSession() = runTest {
+        credentialStore.save(connection)
+
+        repository.refreshCurrentUser()
+
+        assertEquals("admin", repository.sessions.first().single().username)
     }
 }

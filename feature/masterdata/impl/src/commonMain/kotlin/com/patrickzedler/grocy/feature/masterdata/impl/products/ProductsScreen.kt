@@ -303,6 +303,7 @@ private fun LazyListScope.productItems(
 
         else -> emptyListItem(
             hasData = state.hasProducts,
+            storedByStart = true,
             refresh = refresh,
             emptyText = { stringResource(Res.string.products_empty) },
             filteredEmptyText = { stringResource(Res.string.products_empty_filtered) },

@@ -1,5 +1,7 @@
 package com.patrickzedler.grocy.core.network
 
+import com.patrickzedler.grocy.core.model.network.ServerCertificate
+
 /**
  * Whether the API key goes into the URL instead of the GROCY-API-KEY header.
  *
@@ -20,3 +22,12 @@ expect val isHomeAssistantIngressSupported: Boolean
  * the browser's proxy settings.
  */
 expect val isProxySupported: Boolean
+
+/**
+ * Whether the app can present client certificates and trust certificates itself. Browsers cannot:
+ * they ask for client certificates and decide about server certificates on their own.
+ */
+expect val areCertificatesSupported: Boolean
+
+/** The certificate a TLS failure was about, if the user could decide to trust it. */
+internal expect fun Throwable.untrustedCertificate(): ServerCertificate?

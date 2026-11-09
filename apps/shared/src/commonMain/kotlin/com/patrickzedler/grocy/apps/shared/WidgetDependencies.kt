@@ -2,7 +2,9 @@ package com.patrickzedler.grocy.apps.shared
 
 import com.patrickzedler.grocy.core.data.calendar.CalendarRepository
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
+import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.tasks.TasksRepository
+import com.patrickzedler.grocy.core.data.widget.WidgetDataRefresher
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
@@ -13,6 +15,8 @@ import com.patrickzedler.grocy.core.model.text.isoDateOf
 import com.patrickzedler.grocy.core.navigation.Route
 import com.patrickzedler.grocy.feature.calendar.api.CalendarRoute
 import com.patrickzedler.grocy.feature.calendar.impl.routeOf
+import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListItemRoute
+import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingModeRoute
 import com.patrickzedler.grocy.feature.tasks.api.TaskRoute
 import com.patrickzedler.grocy.feature.tasks.api.TasksRoute
 import kotlinx.coroutines.flow.Flow
@@ -24,6 +28,8 @@ interface WidgetDependencies {
     val masterDataRepository: MasterDataRepository
     val tasksRepository: TasksRepository
     val calendarRepository: CalendarRepository
+    val shoppingListRepository: ShoppingListRepository
+    val widgetDataRefresher: WidgetDataRefresher
 }
 
 /**
@@ -42,6 +48,12 @@ internal object WidgetLinks {
 
     fun event(event: CalendarEvent): String =
         "$EVENT/${event.kind.name}/${isoDateOf(event.epochDay)}/${event.objectId ?: ""}"
+
+    fun shoppingMode(listId: Int): String = "$SHOPPING_MODE/$listId"
+
+    fun newShoppingItem(listId: Int): String = "$SHOPPING_NEW/$listId"
+
+    fun shoppingItem(id: Int): String = "$SHOPPING_ITEM/$id"
 
     /** The screen [link] opens, null for anything a widget does not create. */
     fun routeOfLink(link: String): Route? {
@@ -63,9 +75,15 @@ internal object WidgetLinks {
                 }
             }
             EVENT -> eventRouteOf(parts)
+            SHOPPING_MODE -> idOf(parts)?.let { ShoppingModeRoute(listId = it) }
+            SHOPPING_NEW -> idOf(parts)?.let { ShoppingListItemRoute(listId = it, inList = false) }
+            SHOPPING_ITEM -> idOf(parts)?.let { ShoppingListItemRoute(id = it, inList = false) }
             else -> null
         }
     }
+
+    private fun idOf(parts: List<String>): Int? =
+        parts.takeIf { it.size == 2 }?.get(1)?.toIntOrNull()
 
     private fun eventRouteOf(parts: List<String>): Route? {
         if (parts.size != 4) return null
@@ -79,4 +97,7 @@ internal object WidgetLinks {
     private const val TASK = "task"
     private const val CALENDAR = "calendar"
     private const val EVENT = "event"
+    private const val SHOPPING_MODE = "shopping_mode"
+    private const val SHOPPING_NEW = "shopping_new"
+    private const val SHOPPING_ITEM = "shopping_item"
 }

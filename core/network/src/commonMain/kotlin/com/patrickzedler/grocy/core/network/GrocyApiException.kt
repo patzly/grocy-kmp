@@ -1,5 +1,7 @@
 package com.patrickzedler.grocy.core.network
 
+import com.patrickzedler.grocy.core.model.network.ServerCertificate
+
 /** Errors the UI can tell apart and explain to the user. */
 sealed class GrocyApiException(
     message: String,
@@ -8,6 +10,10 @@ sealed class GrocyApiException(
 
     /** No connection, DNS failure, timeout, or blocked by the browser (mixed content, CORS). */
     class Unreachable(cause: Throwable) : GrocyApiException("Server is not reachable", cause)
+
+    /** The server's [certificate] is not trusted, the user can decide to trust it. */
+    class UntrustedCertificate(val certificate: ServerCertificate, cause: Throwable) :
+        GrocyApiException("The server's certificate is not trusted", cause)
 
     /** HTTP 401: the API key is missing or invalid. */
     class Unauthorized : GrocyApiException("API key was rejected")
@@ -36,3 +42,8 @@ sealed class GrocyApiException(
     class NotHomeAssistant(cause: Throwable? = null) :
         GrocyApiException("Response is not from Home Assistant", cause)
 }
+
+/** What a request that never got an answer failed with. */
+internal fun connectionFailure(cause: Throwable): GrocyApiException =
+    cause.untrustedCertificate()?.let { GrocyApiException.UntrustedCertificate(it, cause) }
+        ?: GrocyApiException.Unreachable(cause)

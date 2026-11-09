@@ -6,6 +6,7 @@ import com.patrickzedler.grocy.core.data.auth.AuthRepository
 import com.patrickzedler.grocy.core.data.util.MINIMUM_LOADING_DURATION
 import com.patrickzedler.grocy.core.data.util.withMinimumDuration
 import com.patrickzedler.grocy.core.model.ServerConnection
+import com.patrickzedler.grocy.core.model.User
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import com.patrickzedler.grocy.core.scanner.Barcode
 import com.patrickzedler.grocy.feature.login.impl.LoginError
@@ -42,11 +43,11 @@ internal class LoginScanViewModel(
         _uiState.update { it.copy(isLoggingIn = true, error = null) }
         viewModelScope.launch {
             try {
-                val connection = withMinimumDuration(MINIMUM_LOADING_DURATION) {
+                val (connection, user) = withMinimumDuration(MINIMUM_LOADING_DURATION) {
                     verifyFirstWorking(candidatesOf(scanned))
                 }
                 // Saving switches the app to the start screen, see GrocyApp
-                authRepository.saveLogin(connection)
+                authRepository.saveLogin(connection, user)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -68,11 +69,10 @@ internal class LoginScanViewModel(
 
     private suspend fun verifyFirstWorking(
         candidates: List<ServerConnection.ApiKey>,
-    ): ServerConnection.ApiKey {
+    ): Pair<ServerConnection.ApiKey, User> {
         candidates.dropLast(1).forEach { candidate ->
             try {
-                authRepository.verify(candidate)
-                return candidate
+                return candidate to authRepository.verify(candidate)
             } catch (e: GrocyApiException.Unauthorized) {
                 // The server was found, a wrong key stays wrong with another scheme
                 throw e
@@ -80,6 +80,6 @@ internal class LoginScanViewModel(
                 // Not reachable this way, try the next candidate
             }
         }
-        return candidates.last().also { authRepository.verify(it) }
+        return candidates.last().let { it to authRepository.verify(it) }
     }
 }

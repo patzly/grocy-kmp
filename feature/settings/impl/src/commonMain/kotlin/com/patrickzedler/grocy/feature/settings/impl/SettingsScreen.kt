@@ -21,12 +21,14 @@ import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.network.areCertificatesSupported
 import com.patrickzedler.grocy.core.network.isProxySupported
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_barcode_scanner
 import com.patrickzedler.grocy.core.resources.ic_rounded_build
 import com.patrickzedler.grocy.core.resources.ic_rounded_design_services
 import com.patrickzedler.grocy.core.resources.ic_rounded_host
+import com.patrickzedler.grocy.core.resources.ic_rounded_key
 import com.patrickzedler.grocy.core.resources.ic_rounded_network_manage
 import com.patrickzedler.grocy.core.resources.ic_rounded_notifications
 import com.patrickzedler.grocy.core.resources.ic_rounded_reset_settings
@@ -36,6 +38,7 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_tune
 import com.patrickzedler.grocy.core.resources.settings_backup
 import com.patrickzedler.grocy.core.resources.settings_backup_description
 import com.patrickzedler.grocy.core.resources.settings_behavior
+import com.patrickzedler.grocy.core.resources.settings_certificates
 import com.patrickzedler.grocy.core.resources.settings_general
 import com.patrickzedler.grocy.core.resources.settings_grocy
 import com.patrickzedler.grocy.core.resources.settings_network
@@ -74,6 +77,11 @@ internal enum class SettingsCategory(
         title = Res.string.settings_network,
         icon = Res.drawable.ic_rounded_network_manage,
         isAvailable = isProxySupported,
+    ),
+    CERTIFICATES(
+        title = Res.string.settings_certificates,
+        icon = Res.drawable.ic_rounded_key,
+        isAvailable = areCertificatesSupported,
     ),
     BEHAVIOR(
         title = Res.string.settings_behavior,

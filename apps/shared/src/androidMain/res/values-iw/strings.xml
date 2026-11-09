@@ -18,4 +18,10 @@
   <string name="widget_sample_month">נובמבר</string>
   <string name="widget_preview_tasks">משימות</string>
   <string name="widget_preview_calendar">לוח שנה</string>
+  <string name="widget_shopping_label">רשימת קניות</string>
+  <string name="widget_shopping_description">מה שנותר לקנות ברשימת קניות</string>
+  <string name="widget_sample_groceries">מצרכים</string>
+  <string name="widget_sample_bread">לחם</string>
+  <string name="widget_sample_eggs">ביצים</string>
+  <string name="widget_sample_apples">תפוחים</string>
 </resources>

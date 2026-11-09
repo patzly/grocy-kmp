@@ -76,7 +76,7 @@ fun EntryProviderScope<NavKey>.shoppingListEntries(
                 onItemClick = { navigator.openDetail(ShoppingListItemRoute(id = it)) },
                 onNewListClick = { navigator.openDetail(ShoppingListFormRoute()) },
                 onEditListClick = { navigator.openDetail(ShoppingListFormRoute(it)) },
-                onShoppingModeClick = { navigator.navigate(ShoppingModeRoute) },
+                onShoppingModeClick = { navigator.navigate(ShoppingModeRoute()) },
                 onPurchase = { purchase, progress ->
                     navigator.navigate(
                         PurchaseRoute(
@@ -102,11 +102,12 @@ fun EntryProviderScope<NavKey>.shoppingListEntries(
     }
 
     // A screen of its own, the store needs the whole window
-    entry<ShoppingModeRoute> {
+    entry<ShoppingModeRoute> { route ->
         val language = appLanguage()
         ShoppingModeScreen(
             viewModel = viewModel {
                 ShoppingModeViewModel(
+                    listId = route.listId,
                     masterData = repository,
                     stock = dependencies.stockRepository,
                     shoppingLists = shoppingLists,

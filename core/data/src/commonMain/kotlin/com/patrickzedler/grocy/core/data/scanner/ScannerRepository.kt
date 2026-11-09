@@ -8,7 +8,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 /**
@@ -17,7 +16,8 @@ import kotlinx.coroutines.flow.stateIn
  *
  * [availableEngines] are the engines the platform ships (ML Kit only in the Play app). ZXing is
  * the default; unlocking never switches the engine, the user has to select ML Kit.
- * [canReadText] tells whether the platform ships a text recognition engine for due dates.
+ * [canReadText] tells whether the platform ships a text recognition engine for due dates, which
+ * like ML Kit's barcodes needs the unlock key, whichever barcode engine is selected.
  */
 class ScannerRepository(
     private val settingsStore: SettingsStore,
@@ -52,12 +52,17 @@ class ScannerRepository(
         .stateIn(scope, SharingStarted.Eagerly, null)
 
     /**
-     * Whether due date fields offer their scanner: chosen and possible on this platform, false
-     * for the moment until the choice is read.
+     * Whether due date fields offer their scanner: chosen, possible on this platform and
+     * unlocked, false for the moment until that is read.
      */
-    val scansDueDates: StateFlow<Boolean> = scanDueDates
-        .map { it == true && canReadText }
-        .stateIn(scope, SharingStarted.Eagerly, false)
+    val scansDueDates: StateFlow<Boolean> =
+        combine(scanDueDates, unlockRepository.unlockState) { chosen, unlockState ->
+            chosen == true && canScanDueDates(unlockState)
+        }.stateIn(scope, SharingStarted.Eagerly, false)
+
+    /** Whether [unlockState] and the platform allow reading due dates at all. */
+    fun canScanDueDates(unlockState: UnlockState?): Boolean =
+        canReadText && unlockState?.isUnlocked == true
 
     suspend fun setScanDueDates(scanDueDates: Boolean) {
         settingsStore.setScanDueDates(scanDueDates)

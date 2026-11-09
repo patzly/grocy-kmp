@@ -19,6 +19,7 @@ import com.patrickzedler.grocy.feature.settings.api.GeneralSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsPageRoute
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.LogRoute
+import com.patrickzedler.grocy.feature.settings.api.CertificateSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.NetworkSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.NotificationSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.BehaviorSettingsRoute
@@ -37,6 +38,8 @@ import com.patrickzedler.grocy.feature.settings.impl.grocy.GrocySettingsScreen
 import com.patrickzedler.grocy.feature.settings.impl.grocy.GrocySettingsViewModel
 import com.patrickzedler.grocy.feature.settings.impl.log.LogScreen
 import com.patrickzedler.grocy.feature.settings.impl.log.LogViewModel
+import com.patrickzedler.grocy.feature.settings.impl.certificates.CertificatesScreen
+import com.patrickzedler.grocy.feature.settings.impl.certificates.CertificatesViewModel
 import com.patrickzedler.grocy.feature.settings.impl.network.NetworkSettingsScreen
 import com.patrickzedler.grocy.feature.settings.impl.network.NetworkSettingsViewModel
 import com.patrickzedler.grocy.feature.settings.impl.notifications.NotificationSettingsScreen
@@ -204,6 +207,22 @@ fun EntryProviderScope<NavKey>.settingsEntries(
         )
     }
 
+    entry<CertificateSettingsRoute>(metadata = detailPaneMetadata(SettingsRoute)) {
+        CertificatesScreen(
+            viewModel = viewModel {
+                CertificatesViewModel(
+                    repository = dependencies.certificateRepository,
+                    server = dependencies.serverRepository.server,
+                    authRepository = dependencies.authRepository,
+                )
+            },
+            menuViewModel = settingsMenuViewModel(dependencies),
+            menuActions = menuActions,
+            onBackClick = navigator::goBack,
+            pane = ScreenPane.Detail.takeIf { showsDetailBesideList() },
+        )
+    }
+
     entry<BehaviorSettingsRoute>(metadata = detailPaneMetadata(SettingsRoute)) {
         BehaviorSettingsScreen(
             viewModel = viewModel { BehaviorSettingsViewModel(dependencies.behaviorSettings) },
@@ -278,6 +297,7 @@ internal val SettingsCategory.route: DetailRoute
         SettingsCategory.SERVER -> ServerSettingsRoute
         SettingsCategory.GROCY -> GrocySettingsRoute
         SettingsCategory.NETWORK -> NetworkSettingsRoute
+        SettingsCategory.CERTIFICATES -> CertificateSettingsRoute
         SettingsCategory.BEHAVIOR -> BehaviorSettingsRoute
         SettingsCategory.SCANNER -> ScannerSettingsRoute
         SettingsCategory.NOTIFICATIONS -> NotificationSettingsRoute

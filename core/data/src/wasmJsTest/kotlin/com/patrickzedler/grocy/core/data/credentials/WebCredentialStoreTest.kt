@@ -1,6 +1,7 @@
 package com.patrickzedler.grocy.core.data.credentials
 
 import com.patrickzedler.grocy.core.data.InMemoryStorage
+import com.patrickzedler.grocy.core.model.SavedSession
 import com.patrickzedler.grocy.core.model.ServerConnection
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -55,5 +56,22 @@ class WebCredentialStoreTest {
 
         assertNull(store.connection.first())
         assertFalse(WebCredentialStore.STORAGE_KEY in storage.values)
+    }
+
+    @Test
+    fun savedSessionsSurviveARestart() = runTest {
+        val storage = InMemoryStorage()
+        val sessions = listOf(SavedSession(connection, 1, "anna", "Anna"))
+
+        WebCredentialStore(storage).saveSessions(sessions)
+
+        assertEquals(sessions, WebCredentialStore(storage).sessions.first())
+    }
+
+    @Test
+    fun unreadableSessionsMeanNone() = runTest {
+        val storage = InMemoryStorage(WebCredentialStore.SESSIONS_STORAGE_KEY to "{broken")
+
+        assertEquals(emptyList(), WebCredentialStore(storage).sessions.first())
     }
 }

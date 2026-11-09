@@ -2,7 +2,10 @@ package com.patrickzedler.grocy.core.wear
 
 import com.patrickzedler.grocy.core.data.auth.AuthRepository
 import com.patrickzedler.grocy.core.data.credentials.ServerConnectionCodec
+import com.patrickzedler.grocy.core.data.credentials.TrustedCertificatesCodec
 import com.patrickzedler.grocy.core.model.ServerConnection
+import com.patrickzedler.grocy.core.model.network.ServerCertificate
+import com.patrickzedler.grocy.core.model.network.TrustedCertificate
 import com.patrickzedler.grocy.core.testing.FakeCredentialStore
 import com.patrickzedler.grocy.core.testing.FakeGrocyServer
 import kotlin.test.Test
@@ -27,7 +30,8 @@ class WearConnectionSyncTest {
             this.fromPhone = fromPhone
         }
     }
-    private val sync = WearConnectionSync(store, auth, marker)
+    private var trusted = emptyList<TrustedCertificate>()
+    private val sync = WearConnectionSync(store, auth, marker) { trusted = it }
     private val phoneLogin = ServerConnection.ApiKey("https://grocy.example", "secret")
 
     @Test
@@ -102,5 +106,65 @@ class WearConnectionSyncTest {
         )
 
         assertEquals(phoneLogin, store.connection.first())
+    }
+
+    private val certificate = ServerCertificate("aa", "CN=grocy", "CN=grocy", 20000)
+    private val ofThisServer = TrustedCertificate("grocy.example", certificate)
+    private val ofAnotherServer = TrustedCertificate("other.example", certificate)
+
+    @Test
+    fun theCertificatesThePhoneTrustsForItsServerComeAlong() = runTest {
+        val encoded = TrustedCertificatesCodec.encode(listOf(ofThisServer))
+
+        sync.onPhoneConnection(ServerConnectionCodec.encode(phoneLogin), encoded)
+
+        assertEquals(listOf(ofThisServer), trusted)
+    }
+
+    @Test
+    fun theWatchTrustsNothingForOtherServersWhateverItIsSent() = runTest {
+        val encoded = TrustedCertificatesCodec.encode(listOf(ofThisServer, ofAnotherServer))
+
+        sync.onPhoneConnection(ServerConnectionCodec.encode(phoneLogin), encoded)
+
+        assertEquals(listOf(ofThisServer), trusted)
+    }
+
+    @Test
+    fun aRenewedCertificateFollowsWithTheSameLogin() = runTest {
+        val login = ServerConnectionCodec.encode(phoneLogin)
+        sync.onPhoneConnection(login, TrustedCertificatesCodec.encode(listOf(ofThisServer)))
+        val clearedBefore = cleared
+        val renewed = TrustedCertificate(
+            "grocy.example",
+            ServerCertificate("bb", "CN=grocy", "CN=grocy", 30000),
+        )
+
+        sync.onPhoneConnection(login, TrustedCertificatesCodec.encode(listOf(renewed)))
+
+        assertEquals(listOf(renewed), trusted)
+        assertEquals(clearedBefore, cleared)
+    }
+
+    @Test
+    fun loggingOutOnThePhoneForgetsItsCertificates() = runTest {
+        sync.onPhoneConnection(
+            ServerConnectionCodec.encode(phoneLogin),
+            TrustedCertificatesCodec.encode(listOf(ofThisServer)),
+        )
+
+        sync.onPhoneConnection(null)
+
+        assertTrue(trusted.isEmpty())
+    }
+
+    @Test
+    fun aLoginEnteredOnTheWatchKeepsItsCertificatesWhenThePhoneLogsOut() = runTest {
+        sync.onManualLogin(phoneLogin)
+        trusted = listOf(ofThisServer)
+
+        sync.onPhoneConnection(null)
+
+        assertEquals(listOf(ofThisServer), trusted)
     }
 }

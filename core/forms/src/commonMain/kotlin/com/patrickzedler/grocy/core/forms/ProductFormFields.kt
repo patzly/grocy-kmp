@@ -2,7 +2,6 @@ package com.patrickzedler.grocy.core.forms
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,7 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
@@ -47,6 +45,7 @@ import com.patrickzedler.grocy.core.design.component.NumberStepperField
 import com.patrickzedler.grocy.core.design.component.RoundedTextField
 import com.patrickzedler.grocy.core.design.component.SearchableDropdownField
 import com.patrickzedler.grocy.core.design.component.SegmentedContainer
+import com.patrickzedler.grocy.core.design.component.TextFieldActions
 import com.patrickzedler.grocy.core.design.component.SegmentedTexts
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
@@ -132,11 +131,18 @@ fun TextItem(
         trailingAction
     } else {
         {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                trailingAction?.invoke()
+            val button = @Composable {
                 Box(Modifier.onGloballyPositioned(buttonArea::onButtonPlaced)) {
                     trailingButton()
                 }
+            }
+            if (trailingAction != null) {
+                TextFieldActions {
+                    trailingAction()
+                    button()
+                }
+            } else {
+                button()
             }
         }
     }

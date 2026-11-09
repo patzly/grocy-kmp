@@ -4,6 +4,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.patrickzedler.grocy.core.navigation.Navigator
+import com.patrickzedler.grocy.core.ui.sessions.SessionsViewModel
+import com.patrickzedler.grocy.feature.settings.api.CertificateSettingsRoute
 import com.patrickzedler.grocy.feature.login.api.LoginChoiceRoute
 import com.patrickzedler.grocy.feature.login.api.LoginManualRoute
 import com.patrickzedler.grocy.feature.login.api.LoginScanRoute
@@ -21,6 +23,7 @@ fun EntryProviderScope<NavKey>.loginEntries(
     entry<LoginChoiceRoute> {
         LoginChoiceScreen(
             viewModel = viewModel { LoginChoiceViewModel(dependencies.authRepository) },
+            sessionsViewModel = viewModel { SessionsViewModel(dependencies.authRepository) },
             onOwnServerClick = { navigator.navigate(LoginScanRoute) },
         )
     }
@@ -35,6 +38,7 @@ fun EntryProviderScope<NavKey>.loginEntries(
         LoginManualScreen(
             viewModel = viewModel { LoginManualViewModel(dependencies.authRepository) },
             onBackClick = navigator::goBack,
+            onCertificatesClick = { navigator.navigate(CertificateSettingsRoute) },
         )
     }
 }

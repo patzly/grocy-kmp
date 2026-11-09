@@ -76,8 +76,16 @@ internal fun widgetDataOf(dependencies: WidgetDependencies): Flow<WidgetData> = 
         ::Pair,
     ),
     combine(dependencies.appearance, WidgetState.today, ::Pair),
-) { (isLoggedIn, config, settings), (tasks, events), (appearance, today) ->
-    WidgetData(isLoggedIn, config, settings, tasks, events, appearance, today)
+    combine(
+        dependencies.shoppingListRepository.lists,
+        dependencies.shoppingListRepository.items,
+        dependencies.masterDataRepository.products,
+        dependencies.masterDataRepository.quantityUnits,
+        dependencies.masterDataRepository.resolvedQuantityUnitConversions,
+        ::WidgetShopping,
+    ),
+) { (isLoggedIn, config, settings), (tasks, events), (appearance, today), shopping ->
+    WidgetData(isLoggedIn, config, settings, tasks, events, appearance, today, shopping)
 }
     .distinctUntilChanged()
     .flowOn(Dispatchers.Default)
@@ -90,14 +98,16 @@ internal fun widgetDataOf(dependencies: WidgetDependencies): Flow<WidgetData> = 
  */
 internal object WidgetUpdates {
 
-    private val receivers = listOf(
+    private val calendarReceivers = listOf(
         TaskListWidgetReceiver::class.java,
         MonthWidgetReceiver::class.java,
         ScheduleWidgetReceiver::class.java,
     )
 
+    private val receivers = calendarReceivers + ShoppingListWidgetReceiver::class.java
+
     private val widgets: List<GlanceAppWidget>
-        get() = listOf(TaskListWidget(), MonthWidget(), ScheduleWidget())
+        get() = listOf(TaskListWidget(), MonthWidget(), ScheduleWidget(), ShoppingListWidget())
 
     /** Starts redrawing the widgets on changes while the app runs in [scope]. */
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
@@ -123,10 +133,7 @@ internal object WidgetUpdates {
 
     /** Sets up or cancels what keeps them current, by whether any widget is on a home screen. */
     fun sync(context: Context) {
-        val manager = AppWidgetManager.getInstance(context)
-        val has = receivers.any {
-            manager.getAppWidgetIds(ComponentName(context, it)).isNotEmpty()
-        }
+        val has = receivers.any { isPlaced(context, it) }
         WidgetState.hasWidgets.value = has
         val workManager = WorkManager.getInstance(context)
         if (has) {
@@ -147,6 +154,18 @@ internal object WidgetUpdates {
             context.getSystemService(AlarmManager::class.java).cancel(midnightIntent(context))
         }
     }
+
+    /** Whether a widget that shows tasks or the calendar is on a home screen. */
+    fun hasCalendarWidgets(context: Context): Boolean = calendarReceivers.any { isPlaced(context, it) }
+
+    /** Whether a shopping list widget is on a home screen. */
+    fun hasShoppingListWidgets(context: Context): Boolean =
+        isPlaced(context, ShoppingListWidgetReceiver::class.java)
+
+    private fun isPlaced(context: Context, receiver: Class<out GrocyWidgetReceiver>): Boolean =
+        AppWidgetManager.getInstance(context)
+            .getAppWidgetIds(ComponentName(context, receiver))
+            .isNotEmpty()
 
     suspend fun updateAll(context: Context) {
         widgets.forEach { it.updateAll(context) }
@@ -223,8 +242,11 @@ class WidgetRefreshWorker(
     override suspend fun doWork(): Result {
         val graph = (applicationContext as? AppGraphOwner)?.graph ?: return Result.success()
         try {
-            val downloaded = graph.widgetDependencies.calendarRepository
-                .refreshIfChanged(todayEpochDay())
+            val downloaded = graph.widgetDependencies.widgetDataRefresher.refreshIfChanged(
+                today = todayEpochDay(),
+                calendarWidgets = WidgetUpdates.hasCalendarWidgets(applicationContext),
+                shoppingListWidgets = WidgetUpdates.hasShoppingListWidgets(applicationContext),
+            )
             // The app's own redraw may have started after the download stored it
             if (downloaded) WidgetUpdates.updateAll(applicationContext)
         } catch (e: CancellationException) {

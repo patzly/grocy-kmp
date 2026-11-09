@@ -354,4 +354,44 @@ class StartViewModelTest {
             viewModel.state.value?.sidebarUserentities?.map { it.caption },
         )
     }
+
+    @Test
+    fun anEmptyServerTellsThatNothingExistsOnceDownloaded() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+        database.clearAllTables()
+        repository.markEverythingDownloaded()
+        advanceUntilIdle()
+
+        val state = viewModel.state.value!!
+
+        assertEquals(0, state.stock?.productCount)
+        assertEquals(0, state.recipes?.count)
+        assertEquals(0, state.chores?.count)
+        assertEquals(0, state.tasks?.count)
+        assertEquals(0, state.batteries?.count)
+        assertEquals(0, state.equipmentCount)
+    }
+
+    @Test
+    fun beforeTheFirstDownloadASectionTellsNothing() = runTest(dispatcher) {
+        server.unreachable = true
+        val viewModel = viewModel()
+        advanceUntilIdle()
+
+        assertNull(viewModel.state.value!!.chores)
+        assertFalse(repository.isEverythingDownloaded.first())
+    }
+
+    @Test
+    fun anEmptyServerStillHidesWhatItTurnedOff() = runTest(dispatcher) {
+        config.value = ServerConfig(chores = false)
+        val viewModel = viewModel()
+        advanceUntilIdle()
+        database.clearAllTables()
+        repository.markEverythingDownloaded()
+        advanceUntilIdle()
+
+        assertNull(viewModel.state.value!!.chores)
+    }
 }

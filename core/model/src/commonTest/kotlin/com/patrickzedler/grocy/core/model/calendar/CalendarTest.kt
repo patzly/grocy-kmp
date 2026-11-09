@@ -290,4 +290,9 @@ class CalendarTest {
         assertEquals(0xFF007BFFL, argbOfHexColor("#007bff"))
         assertNull(argbOfHexColor("blue"))
     }
+
+    @Test
+    fun anEventsTitleSaysWhatItsDateMeansLikeGrocys() {
+        assertEquals("Product due: Milk", calendarEventTitle("Product due", "Milk"))
+    }
 }

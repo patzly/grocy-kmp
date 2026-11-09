@@ -9,6 +9,7 @@ import com.patrickzedler.grocy.core.data.scanner.ScannerRepository
 import com.patrickzedler.grocy.core.data.server.ServerRepository
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
 import com.patrickzedler.grocy.core.data.settings.BehaviorSettingsRepository
+import com.patrickzedler.grocy.core.data.settings.CertificateRepository
 import com.patrickzedler.grocy.core.data.settings.NetworkSettingsRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.settings.ShoppingModeSettingsRepository
@@ -43,6 +44,9 @@ interface SettingsDependencies {
 
     /** Tor and the HTTP proxy, read at app start; a process keeps those it started with. */
     val networkSettings: NetworkSettingsRepository
+
+    /** The client certificate and the trusted servers' certificates. */
+    val certificateRepository: CertificateRepository
 
     /** After the configuration or the network settings changed, so everything uses them. */
     fun restartApp()

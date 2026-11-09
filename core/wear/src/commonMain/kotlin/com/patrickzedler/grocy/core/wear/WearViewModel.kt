@@ -90,7 +90,11 @@ class WearViewModel(
 
     private suspend fun askPhone() {
         val published = phone.publishedConnection()
-        if (published != null) sync.onPhoneConnection(published) else phone.requestConnection()
+        if (published != null) {
+            sync.onPhoneConnection(published, phone.publishedCertificates())
+        } else {
+            phone.requestConnection()
+        }
     }
 
     /** Sends what is queued and downloads the lists; offline the stored ones stay. */

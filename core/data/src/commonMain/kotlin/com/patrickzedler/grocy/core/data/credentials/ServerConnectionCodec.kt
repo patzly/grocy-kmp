@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.core.data.credentials
 
+import com.patrickzedler.grocy.core.model.SavedSession
 import com.patrickzedler.grocy.core.model.ServerConnection
 import kotlinx.serialization.json.Json
 
@@ -19,5 +20,15 @@ object ServerConnectionCodec {
             json.decodeFromString<ServerConnection>(value)
         } catch (e: IllegalArgumentException) {
             null
+        }
+
+    fun encodeSessions(sessions: List<SavedSession>): String = json.encodeToString(sessions)
+
+    /** Empty for unreadable data, e.g. written by a future app version. */
+    fun decodeSessions(value: String): List<SavedSession> =
+        try {
+            json.decodeFromString<List<SavedSession>>(value)
+        } catch (e: IllegalArgumentException) {
+            emptyList()
         }
 }

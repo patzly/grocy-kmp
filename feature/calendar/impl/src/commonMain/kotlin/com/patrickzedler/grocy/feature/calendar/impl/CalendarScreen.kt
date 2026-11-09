@@ -3,13 +3,10 @@
 package com.patrickzedler.grocy.feature.calendar.impl
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
@@ -216,30 +213,21 @@ internal fun CalendarScreen(
                 ),
                 onFabClick = showNow,
             ) {
-                // The list goes on by scrolling, it has no periods to step through
-                AnimatedVisibility(
-                    visible = view.isPaged,
-                    enter = fadeIn() + expandHorizontally(),
-                    exit = fadeOut() + shrinkHorizontally(),
-                ) {
-                    FloatingToolbarIconButton(
-                        painter = painterResource(Res.drawable.ic_rounded_chevron_left),
-                        contentDescription = stringResource(Res.string.calendar_previous),
-                        onClick = { step(-1) },
-                    )
-                }
+                // The list goes on by scrolling, it has no periods to step through; the arrows
+                // stay disabled so the toolbar and its FAB keep their place between the views
+                FloatingToolbarIconButton(
+                    painter = painterResource(Res.drawable.ic_rounded_chevron_left),
+                    contentDescription = stringResource(Res.string.calendar_previous),
+                    onClick = { step(-1) },
+                    enabled = view.isPaged,
+                )
                 ViewMenu(view, onViewChange = viewModel::chooseView)
-                AnimatedVisibility(
-                    visible = view.isPaged,
-                    enter = fadeIn() + expandHorizontally(expandFrom = Alignment.Start),
-                    exit = fadeOut() + shrinkHorizontally(shrinkTowards = Alignment.Start),
-                ) {
-                    FloatingToolbarIconButton(
-                        painter = painterResource(Res.drawable.ic_rounded_chevron_right),
-                        contentDescription = stringResource(Res.string.calendar_next),
-                        onClick = { step(1) },
-                    )
-                }
+                FloatingToolbarIconButton(
+                    painter = painterResource(Res.drawable.ic_rounded_chevron_right),
+                    contentDescription = stringResource(Res.string.calendar_next),
+                    onClick = { step(1) },
+                    enabled = view.isPaged,
+                )
             }
         },
         body = { padding ->
@@ -274,6 +262,7 @@ internal fun CalendarScreen(
                                     gridScroll = gridScroll,
                                     bottomPadding = bottom,
                                     showsIcons = windowWidth >= ChipIconMinWindowWidth,
+                                    showsKinds = windowWidth >= ChipKindMinWindowWidth,
                                     colors = colors,
                                     onShowDay = viewModel::showDay,
                                     onDayClick = viewModel::openDay,
@@ -320,6 +309,7 @@ private fun PagedView(
     gridScroll: ScrollState,
     bottomPadding: Dp,
     showsIcons: Boolean,
+    showsKinds: Boolean,
     colors: EventColors,
     onShowDay: (Long) -> Unit,
     onDayClick: (Long) -> Unit,
@@ -361,6 +351,7 @@ private fun PagedView(
                 weeks = state.monthWeeks(day),
                 showsNumbers = state.config.calendarShowWeekOfYear,
                 showsIcons = showsIcons,
+                showsKinds = showsKinds,
                 bottomPadding = bottomPadding,
                 colors = colors,
                 onDayClick = onDayClick,
@@ -522,4 +513,7 @@ private fun CalendarEventEffect(
 private const val DefaultGridMinute = 8 * MINUTES_PER_HOUR
 
 private val ChipIconMinWindowWidth = 840.dp
+
+// Seven days as wide as ChipKindMinWidth
+private val ChipKindMinWindowWidth = 1500.dp
 

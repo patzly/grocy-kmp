@@ -25,6 +25,7 @@ import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -134,9 +135,22 @@ fun LazyListScope.filterGapItem() {
     }
 }
 
+/** True once the start screen's download finished: empty tables are then really empty. */
+val LocalEverythingDownloaded = compositionLocalOf { false }
+
+/** Whether an empty list can say so at once, no download has to tell first. */
+internal fun isEmptyListKnown(
+    hasData: Boolean,
+    storedByStart: Boolean,
+    isEverythingDownloaded: Boolean,
+): Boolean = hasData || (storedByStart && isEverythingDownloaded)
+
 /**
  * What an empty list shows instead of its items: the first download, its failure, or that
  * nothing (or nothing matching the filters) exists.
+ *
+ * @param storedByStart the start screen downloads this list too, so an empty list shows at once
+ *   that nothing exists, while its own download runs in the background.
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun LazyListScope.emptyListItem(
@@ -145,16 +159,19 @@ fun LazyListScope.emptyListItem(
     emptyText: @Composable () -> String,
     filteredEmptyText: @Composable () -> String,
     onRetryClick: () -> Unit,
+    storedByStart: Boolean = false,
 ) {
-    when {
-        !hasData && refresh.isRefreshing -> insetItem(key = "loading") {
-            Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
+    insetItem(key = "empty state") {
+        val isKnown = isEmptyListKnown(hasData, storedByStart, LocalEverythingDownloaded.current)
+        when {
+            !isKnown && refresh.isRefreshing -> Box(
+                Modifier.fillMaxWidth().padding(32.dp),
+                contentAlignment = Alignment.Center,
+            ) {
                 LoadingIndicator()
             }
-        }
 
-        !hasData && refresh.error != null -> insetItem(key = "error") {
-            MessageItem(
+            !isKnown && refresh.error != null -> MessageItem(
                 text = stringResource(
                     if (refresh.error == RefreshError.OFFLINE) {
                         Res.string.data_offline
@@ -165,10 +182,8 @@ fun LazyListScope.emptyListItem(
                 actionText = stringResource(Res.string.action_retry),
                 onActionClick = onRetryClick,
             )
-        }
 
-        else -> insetItem(key = "empty") {
-            MessageItem(text = if (hasData) filteredEmptyText() else emptyText())
+            else -> MessageItem(text = if (hasData) filteredEmptyText() else emptyText())
         }
     }
 }

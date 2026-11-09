@@ -11,13 +11,15 @@ import kotlinx.coroutines.tasks.await
 class DataLayerPhoneLink(context: Context) : PhoneLink {
     private val appContext = context.applicationContext
 
-    override suspend fun publishedConnection(): String? = try {
+    override suspend fun publishedConnection(): String? = published(WEAR_CONNECTION_KEY)
+
+    override suspend fun publishedCertificates(): String? = published(WEAR_CERTIFICATES_KEY)
+
+    private suspend fun published(key: String): String? = try {
         val anyNode = Uri.Builder().scheme("wear").path(WEAR_CONNECTION_PATH).build()
         val items = Wearable.getDataClient(appContext).getDataItems(anyNode).await()
         try {
-            items.firstOrNull()?.let {
-                DataMapItem.fromDataItem(it).dataMap.getString(WEAR_CONNECTION_KEY)
-            }
+            items.firstOrNull()?.let { DataMapItem.fromDataItem(it).dataMap.getString(key) }
         } finally {
             items.release()
         }

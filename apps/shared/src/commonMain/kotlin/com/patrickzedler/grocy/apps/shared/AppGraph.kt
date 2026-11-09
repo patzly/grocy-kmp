@@ -1,5 +1,7 @@
 package com.patrickzedler.grocy.apps.shared
 
+import com.patrickzedler.grocy.core.data.settings.CertificateRepository
+import com.patrickzedler.grocy.core.data.settings.CertificateTrustGate
 import com.patrickzedler.grocy.core.data.auth.AuthRepository
 import com.patrickzedler.grocy.core.data.chores.ChoresRepository
 import com.patrickzedler.grocy.core.data.language.AppLanguageStore
@@ -35,6 +37,7 @@ import com.patrickzedler.grocy.core.data.settings.ShoppingListOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ShoppingModeSettingsRepository
 import com.patrickzedler.grocy.core.data.settings.StockOverviewOptionsRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
+import com.patrickzedler.grocy.core.data.widget.WidgetDataRefresher
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
 import com.patrickzedler.grocy.core.data.update.UpdateRepository
@@ -47,6 +50,10 @@ import com.patrickzedler.grocy.core.network.GitHubReleases
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.LocalNetworkGate
 import com.patrickzedler.grocy.core.network.createGrocyHttpClient
+import com.patrickzedler.grocy.core.network.TlsOptions
+import com.patrickzedler.grocy.core.network.areCertificatesSupported
+import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.network.TrustedCertificate
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.network.ProductFactsApi
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
@@ -70,11 +77,14 @@ import kotlinx.coroutines.SupervisorJob
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
@@ -97,8 +107,33 @@ class AppGraph(
     internal val localNetworkGate: LocalNetworkGate? =
         platform.localNetworkPermission?.let(::LocalNetworkGate)
 
+    /** The client certificate and the trusted servers, only where the app may decide them. */
+    private val certificateRepository = CertificateRepository(platform.settingsStore, appScope)
+
+    /** The servers' certificates the user trusts, for the Play app, which hands them to a watch. */
+    val trustedCertificates: Flow<List<TrustedCertificate>>
+        get() = certificateRepository.settings.filterNotNull().map { it.trusted }
+
+    /** Asks about a server's certificate during a login, see [CertificatePrompt]. */
+    internal val certificateGate: CertificateTrustGate? =
+        CertificateTrustGate(certificateRepository).takeIf { areCertificatesSupported }
+
+    private val tlsOptions = TlsOptions(
+        clientKeys = platform.clientKeys,
+        settings = { certificateRepository.settings.value },
+        awaitSettings = { certificateRepository.awaitSettings() },
+    )
+
     private val httpClient by lazy {
-        createGrocyHttpClient(localNetworkGate) { networkSettingsRepository.proxy() }
+        val client = createGrocyHttpClient(localNetworkGate, tlsOptions) {
+            networkSettingsRepository.proxy()
+        }
+        appScope.launch {
+            certificateRepository.settings.filterNotNull().drop(1).collect {
+                tlsOptions.notifyChanged()
+            }
+        }
+        client
     }
 
     private val grocyApi by lazy { GrocyApi(httpClient) }
@@ -108,7 +143,11 @@ class AppGraph(
         get() = platform.credentialStore.connection
 
     internal val authRepository by lazy {
-        AuthRepository(platform.credentialStore, grocyApi) { masterDataRepository.clear() }
+        AuthRepository(
+            credentialStore = platform.credentialStore,
+            grocyApi = grocyApi,
+            certificateGate = certificateGate,
+        ) { masterDataRepository.clear() }
     }
 
     private val masterDataRepository by lazy {
@@ -209,7 +248,7 @@ class AppGraph(
     }
 
     /** The logged in server and its version, read right at app start. */
-    private val serverRepository = ServerRepository(
+    internal val serverRepository = ServerRepository(
         connection = platform.credentialStore.connection,
         masterDataRepository = masterDataRepository,
         grocyReleases = GitHubReleases(httpClient, GROCY_GITHUB_REPOSITORY),
@@ -348,6 +387,11 @@ class AppGraph(
         DeepLinks.routeOf(link)?.let { mutableOpenedRoute.value = it }
     }
 
+    /** Android's settings of the app opened one of its pages, see [systemSettingsRouteOf]. */
+    internal fun openRoute(route: Route) {
+        mutableOpenedRoute.value = route
+    }
+
     internal fun routeOpened() {
         mutableOpenedRoute.value = null
     }
@@ -396,6 +440,8 @@ class AppGraph(
             get() = platform.logReader
         override val serverRepository: ServerRepository
             get() = this@AppGraph.serverRepository
+        override val certificateRepository: CertificateRepository
+            get() = this@AppGraph.certificateRepository
         override val authRepository: AuthRepository
             get() = this@AppGraph.authRepository
         override val masterDataRepository: MasterDataRepository
@@ -415,6 +461,8 @@ class AppGraph(
     }
 
     internal val startDependencies: StartDependencies = object : StartDependencies {
+        override val authRepository: AuthRepository
+            get() = this@AppGraph.authRepository
         override val calendarRepository: CalendarRepository
             get() = this@AppGraph.calendarRepository
         override val masterDataRepository: MasterDataRepository
@@ -565,6 +613,17 @@ class AppGraph(
 
     /** What the home screen widgets show and change. */
     internal val widgetDependencies: WidgetDependencies = object : WidgetDependencies {
+        override val shoppingListRepository: ShoppingListRepository
+            get() = this@AppGraph.shoppingListRepository
+        override val widgetDataRefresher: WidgetDataRefresher by lazy {
+            WidgetDataRefresher(
+                api = grocyApi,
+                connection = { platform.credentialStore.connection.first() },
+                masterData = masterDataRepository,
+                calendar = calendarRepository,
+                shoppingLists = this@AppGraph.shoppingListRepository,
+            )
+        }
         override val connection: Flow<ServerConnection?>
             get() = platform.credentialStore.connection
         override val appearance: Flow<AppearanceSettings>

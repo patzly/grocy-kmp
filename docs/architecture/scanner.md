@@ -52,11 +52,12 @@ matrix print that is hard to read.
 
 - Engines implement `TextRecognizer` (`recognize(CameraFrame): List<String>`, the lines top to
   bottom). For now only ML Kit's bundled Latin model (`MlKitTextRecognizerFactory` of
-  `core:scanner-mlkit`, Play app, not locked); FOSS and web have none yet, an open engine is the
-  next step and will then lock ML Kit like the barcode engine. `PlatformDependencies.textRecognizer`
+  `core:scanner-mlkit`, Play app); FOSS and web have none: a bundled open engine (PP-OCRv5 on
+  ONNX Runtime) read well but made the APK about 50 MB larger. Like ML Kit's barcodes it needs the
+  unlock key, whichever barcode engine is selected. `PlatformDependencies.textRecognizer`
   passes it, `GrocyApp` provides it as `LocalTextRecognizerFactory` while
-  `ScannerRepository.scansDueDates` (the setting "Scan due dates" and an engine), else null,
-  which hides every date scanner (`canScanDueDates`).
+  `ScannerRepository.scansDueDates` (the setting "Scan due dates", an engine and the unlock key),
+  else null, which hides every date scanner (`canScanDueDates`).
 - Dot matrix: ML Kit reads every other frame with the dots joined into strokes
   (`CameraFrame.dotsJoined`: grayscale, `boxBlurred` with radius 2, as NV21), the frames between
   as they are; voting combines both.

@@ -3,12 +3,12 @@ package com.patrickzedler.grocy.core.forms
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.fieldActionSize
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_close_scanner
 import com.patrickzedler.grocy.core.resources.action_scan_barcode
@@ -37,7 +37,7 @@ fun ScannerToggleButton(
                 if (!isScannerOpen) focusManager.clearFocus()
                 onClick()
             },
-            modifier = Modifier.clickCursor(enabled = enabled),
+            modifier = fieldActionSize().clickCursor(enabled = enabled),
             enabled = enabled,
         ) {
             Icon(

@@ -42,6 +42,7 @@ import com.patrickzedler.grocy.core.model.calendar.CalendarColorSetting
 import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
 import com.patrickzedler.grocy.core.model.calendar.CalendarEventKind
 import com.patrickzedler.grocy.core.model.calendar.argbOfHexColor
+import com.patrickzedler.grocy.core.model.calendar.calendarEventTitle
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.calendar_assigned_to
 import com.patrickzedler.grocy.core.resources.calendar_battery_due
@@ -87,13 +88,14 @@ internal fun colorRolesOf(hex: String): StatusColor {
 
 /**
  * An event like a task in Google Calendar, which has no duration either: one line in its filled
- * color, with what it is about as icon (like a birthday's) where the chip is wide enough. Screen
- * readers get what Grocy's title says.
+ * color, with what it is about as icon (like a birthday's) where the chip is wide enough. Grocy's
+ * title with the kind in front ([showsKind]) only where it leaves the name whole. Screen readers
+ * always get what Grocy's title says.
  */
 @Composable
 internal fun EventChip(
     event: CalendarEvent,
-    text: String,
+    showsKind: Boolean,
     colors: EventColors,
     showsIcon: Boolean,
     onClick: (CalendarEvent) -> Unit,
@@ -139,7 +141,7 @@ internal fun EventChip(
                 Spacer(Modifier.width(4.dp))
             }
             Text(
-                text = text,
+                text = if (showsKind) eventTitle(event) else event.name,
                 // Beside an icon there is room for what is easier to read
                 style = if (showsIcon) {
                     MaterialTheme.typography.labelLarge
@@ -189,6 +191,11 @@ internal fun dayKey(epochDay: Long): String = "day-$epochDay"
 /** The key under which views share the name of the weekday of [epochDay]. */
 internal fun weekdayKey(epochDay: Long): String = "weekday-$epochDay"
 
+/** Grocy's title of [event]: what kind of date it is, then its name. */
+@Composable
+internal fun eventTitle(event: CalendarEvent): String =
+    calendarEventTitle(stringResource(event.kind.label), event.name)
+
 /** What Grocy's title says of [event]: its kind, section and name, and to whom it is assigned. */
 @Composable
 internal fun eventDescription(event: CalendarEvent): String = listOfNotNull(
@@ -220,6 +227,9 @@ internal val CalendarEventKind.icon: DrawableResource
         CalendarEventKind.MEAL_PLAN_NOTE -> Res.drawable.ic_rounded_edit_note
         CalendarEventKind.MEAL_PLAN_PRODUCT -> Res.drawable.ic_rounded_restaurant
     }
+
+/** How wide a chip must be so the kind in front of its name still leaves the name whole. */
+internal val ChipKindMinWidth = 200.dp
 
 // As high as Material's chips, and still dense enough for many events
 internal val ChipHeight = 32.dp

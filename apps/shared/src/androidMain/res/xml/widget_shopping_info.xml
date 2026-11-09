@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Drawn by Glance; updatePeriodMillis is 0 because WidgetUpdates keeps it current -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+  android:configure="com.patrickzedler.grocy.apps.shared.widget.ShoppingListWidgetConfigureActivity"
+  android:description="@string/widget_shopping_description"
+  android:initialLayout="@layout/glance_default_loading_layout"
+  android:minWidth="180dp"
+  android:minHeight="180dp"
+  android:minResizeWidth="110dp"
+  android:minResizeHeight="110dp"
+  android:previewLayout="@layout/widget_preview_shopping"
+  android:resizeMode="horizontal|vertical"
+  android:targetCellWidth="3"
+  android:targetCellHeight="3"
+  android:updatePeriodMillis="0"
+  android:widgetCategory="home_screen"
+  android:widgetFeatures="reconfigurable" />

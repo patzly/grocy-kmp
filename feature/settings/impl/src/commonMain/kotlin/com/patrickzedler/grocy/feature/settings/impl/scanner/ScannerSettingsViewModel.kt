@@ -42,8 +42,9 @@ internal class ScannerSettingsViewModel(
         viewModelScope.launch { scannerRepository.selectEngine(engine) }
     }
 
-    /** Only where the app can read text: the Play app with ML Kit. */
-    val showsDueDates: Boolean = scannerRepository.canReadText
+    /** Only where the app can read text: the Play app with ML Kit, once unlocked. */
+    fun showsDueDates(unlockState: UnlockState?): Boolean =
+        scannerRepository.canScanDueDates(unlockState)
 
     /** Read at app start like [activeEngine]. */
     val scanDueDates: StateFlow<Boolean?> = scannerRepository.scanDueDates

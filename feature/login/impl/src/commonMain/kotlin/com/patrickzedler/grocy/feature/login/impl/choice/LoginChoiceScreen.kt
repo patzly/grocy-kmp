@@ -20,6 +20,9 @@ import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -41,6 +44,7 @@ import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.design.component.verticalScrollbar
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_dns
+import com.patrickzedler.grocy.core.resources.ic_rounded_history
 import com.patrickzedler.grocy.core.resources.ic_rounded_science
 import com.patrickzedler.grocy.core.resources.login_choice_demo_server
 import com.patrickzedler.grocy.core.resources.login_choice_demo_server_description
@@ -48,6 +52,10 @@ import com.patrickzedler.grocy.core.resources.login_choice_own_server
 import com.patrickzedler.grocy.core.resources.login_choice_own_server_description
 import com.patrickzedler.grocy.core.resources.login_choice_subtitle
 import com.patrickzedler.grocy.core.resources.login_choice_title
+import com.patrickzedler.grocy.core.resources.sessions_saved
+import com.patrickzedler.grocy.core.resources.sessions_saved_description
+import com.patrickzedler.grocy.core.ui.sessions.SessionsDialog
+import com.patrickzedler.grocy.core.ui.sessions.SessionsViewModel
 import com.patrickzedler.grocy.feature.login.impl.LoginError
 import com.patrickzedler.grocy.feature.login.impl.LoginErrorItem
 import org.jetbrains.compose.resources.DrawableResource
@@ -57,14 +65,36 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun LoginChoiceScreen(
     viewModel: LoginChoiceViewModel,
+    sessionsViewModel: SessionsViewModel,
     onOwnServerClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val sessions by sessionsViewModel.sessions.collectAsStateWithLifecycle()
+    var isSessionsDialogOpen by rememberSaveable { mutableStateOf(false) }
+
+    if (isSessionsDialogOpen) {
+        SessionsDialog(
+            sessions = sessions,
+            current = null,
+            switching = sessionsViewModel.switching,
+            error = sessionsViewModel.error,
+            // Saving switches the app to the start screen, see GrocyApp
+            onSessionClick = sessionsViewModel::switchTo,
+            onRemoveSession = sessionsViewModel::remove,
+            onDismissRequest = {
+                isSessionsDialogOpen = false
+                sessionsViewModel.onErrorShown()
+            },
+        )
+    }
+
     LoginChoiceContent(
         uiState = uiState,
+        hasSessions = sessions.isNotEmpty(),
         onOwnServerClick = onOwnServerClick,
         onDemoServerClick = viewModel::loginWithDemoServer,
+        onSessionsClick = { isSessionsDialogOpen = true },
         modifier = modifier,
     )
 }
@@ -72,12 +102,15 @@ internal fun LoginChoiceScreen(
 @Composable
 private fun LoginChoiceContent(
     uiState: LoginChoiceUiState,
+    hasSessions: Boolean,
     onOwnServerClick: () -> Unit,
     onDemoServerClick: () -> Unit,
+    onSessionsClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val error = uiState.error
-    val count = if (error != null) 3 else 2
+    val sessionsCount = if (hasSessions) 1 else 0
+    val count = 2 + sessionsCount + if (error != null) 1 else 0
 
     Scaffold(
         modifier = modifier,
@@ -103,11 +136,22 @@ private fun LoginChoiceContent(
                 LoginChoiceHeader()
             }
             segmentedGroup(key = "choices") {
+                if (hasSessions) {
+                    ChoiceItem(
+                        title = stringResource(Res.string.sessions_saved),
+                        description = stringResource(Res.string.sessions_saved_description),
+                        icon = Res.drawable.ic_rounded_history,
+                        index = 0,
+                        count = count,
+                        enabled = !uiState.isLoggingIn,
+                        onClick = onSessionsClick,
+                    )
+                }
                 ChoiceItem(
                     title = stringResource(Res.string.login_choice_own_server),
                     description = stringResource(Res.string.login_choice_own_server_description),
                     icon = Res.drawable.ic_rounded_dns,
-                    index = 0,
+                    index = sessionsCount,
                     count = count,
                     enabled = !uiState.isLoggingIn,
                     onClick = onOwnServerClick,
@@ -116,14 +160,14 @@ private fun LoginChoiceContent(
                     title = stringResource(Res.string.login_choice_demo_server),
                     description = stringResource(Res.string.login_choice_demo_server_description),
                     icon = Res.drawable.ic_rounded_science,
-                    index = 1,
+                    index = sessionsCount + 1,
                     count = count,
                     enabled = !uiState.isLoggingIn,
                     isLoading = uiState.isLoggingIn,
                     onClick = onDemoServerClick,
                 )
                 if (error != null) {
-                    LoginErrorItem(error = error, index = 2, count = count)
+                    LoginErrorItem(error = error, index = sessionsCount + 2, count = count)
                 }
             }
         }
@@ -217,8 +261,10 @@ private fun LoginChoicePreview() {
     GrocyTheme {
         LoginChoiceContent(
             uiState = LoginChoiceUiState(),
+            hasSessions = true,
             onOwnServerClick = {},
             onDemoServerClick = {},
+            onSessionsClick = {},
         )
     }
 }
@@ -229,8 +275,10 @@ private fun LoginChoiceErrorPreview() {
     GrocyTheme {
         LoginChoiceContent(
             uiState = LoginChoiceUiState(error = LoginError.Unreachable),
+            hasSessions = false,
             onOwnServerClick = {},
             onDemoServerClick = {},
+            onSessionsClick = {},
         )
     }
 }

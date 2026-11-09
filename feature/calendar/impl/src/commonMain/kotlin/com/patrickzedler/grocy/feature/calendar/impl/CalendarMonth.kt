@@ -62,6 +62,7 @@ internal fun MonthPage(
     weeks: List<CalendarWeek>,
     showsNumbers: Boolean,
     showsIcons: Boolean,
+    showsKinds: Boolean,
     bottomPadding: Dp,
     colors: EventColors,
     onDayClick: (Long) -> Unit,
@@ -93,6 +94,7 @@ internal fun MonthPage(
                         rowHeight = rowHeight,
                         showsNumbers = showsNumbers,
                         showsIcons = showsIcons,
+                        showsKinds = showsKinds,
                         colors = colors,
                         onDayClick = onDayClick,
                         onEventClick = onEventClick,
@@ -111,6 +113,7 @@ private fun WeekRow(
     rowHeight: Dp,
     showsNumbers: Boolean,
     showsIcons: Boolean,
+    showsKinds: Boolean,
     colors: EventColors,
     onDayClick: (Long) -> Unit,
     onEventClick: (CalendarEvent) -> Unit,
@@ -130,6 +133,7 @@ private fun WeekRow(
                     MonthDay(
                         day = day,
                         showsIcons = showsIcons,
+                        showsKinds = showsKinds,
                         colors = colors,
                         onDayClick = onDayClick,
                         onEventClick = onEventClick,
@@ -147,7 +151,7 @@ private fun WeekdaysRow(days: List<CalendarDay>, showsNumbers: Boolean) {
         Modifier
             .fillMaxWidth()
             .calendarPadding()
-            .padding(top = 4.dp, bottom = 8.dp),
+            .padding(top = HeaderTopPadding, bottom = 8.dp),
     ) {
         if (showsNumbers) Spacer(Modifier.width(WeekNumberWidth))
         days.forEach { day ->
@@ -182,6 +186,7 @@ private fun WeekNumber(number: Int) {
 private fun MonthDay(
     day: CalendarDay,
     showsIcons: Boolean,
+    showsKinds: Boolean,
     colors: EventColors,
     onDayClick: (Long) -> Unit,
     onEventClick: (CalendarEvent) -> Unit,
@@ -202,8 +207,8 @@ private fun MonthDay(
         day.events.take(shown).forEach { event ->
             EventChip(
                 event = event,
-                // Like Google's month only the name, screen readers get the time too
-                text = event.name,
+                // A narrow day keeps the name whole like Google's month, its icon tells the kind
+                showsKind = showsKinds,
                 colors = colors,
                 showsIcon = showsIcons,
                 onClick = onEventClick,

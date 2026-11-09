@@ -75,22 +75,6 @@ class CalendarRepository(
     }
 
     /**
-     * [refresh], but only when the server's database changed since the last time or [today] is
-     * another day than then (what the server computes depends on the day too), so checking often
-     * costs one small request. Without a login nothing happens. Returns whether it downloaded.
-     *
-     * @throws GrocyApiException if the server cannot be reached or refuses.
-     */
-    suspend fun refreshIfChanged(today: Long): Boolean {
-        val server = connection() ?: return false
-        val state = "${api.dbChangedTime(server)} $today"
-        if (masterData.storedServerValue(DOWNLOADED_STATE) == state) return false
-        refresh()
-        masterData.storeServerValue(DOWNLOADED_STATE, state)
-        return true
-    }
-
-    /**
      * Grocy's public link of the calendar in iCal format. Online only.
      *
      * @throws GrocyApiException if the server cannot be reached or refuses.
@@ -100,6 +84,3 @@ class CalendarRepository(
         return api.calendarSharingLink(server)
     }
 }
-
-// The server's change time and the day of the last complete download
-private const val DOWNLOADED_STATE = "calendar_downloaded_state"

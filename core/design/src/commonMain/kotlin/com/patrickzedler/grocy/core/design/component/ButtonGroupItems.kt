@@ -1,8 +1,12 @@
 package com.patrickzedler.grocy.core.design.component
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonGroupMenuState
 import androidx.compose.material3.ButtonGroupScope
@@ -14,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.node.LayoutAwareModifierNode
 import androidx.compose.ui.node.ModifierNodeElement
@@ -25,9 +30,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 
-// Where icon buttons are: on their own, an item of a button group (it sets their width) or its
-// overflow indicator
-private enum class GroupPlace { None, Item, OverflowIndicator }
+// Where icon buttons are: on their own, an item of a button group (it sets their width), its
+// overflow indicator or one of several actions of a text field
+private enum class GroupPlace { None, Item, OverflowIndicator, FieldAction }
 
 private val LocalGroupPlace = staticCompositionLocalOf { GroupPlace.None }
 
@@ -110,8 +115,38 @@ fun smallIconButtonSize(width: IconButtonWidthOption = IconButtonWidthOption.Uni
         GroupPlace.Item -> Modifier.fillMaxWidth().size(size)
         // The group measures it with the space left, which it must not fill
         GroupPlace.OverflowIndicator -> Modifier.size(size)
+        GroupPlace.FieldAction -> Modifier.size(size)
     }
 }
+
+/**
+ * Several actions at the end of a text field, spaced by the rules of a button group of narrow
+ * icon buttons: [ButtonGroupSpacing] between their containers. Material's text fields expect a
+ * single trailing icon and no button group, so this is a plain row. Its actions apply
+ * [fieldActionSize]; the outer edges keep the room of a single button.
+ */
+@Composable
+fun TextFieldActions(content: @Composable RowScope.() -> Unit) {
+    CompositionLocalProvider(LocalGroupPlace provides GroupPlace.FieldAction) {
+        Row(
+            modifier = Modifier.padding(
+                horizontal = touchTargetRoom(IconButtonWidthOption.Narrow),
+            ),
+            horizontalArrangement = Arrangement.spacedBy(ButtonGroupSpacing),
+            verticalAlignment = Alignment.CenterVertically,
+            content = content,
+        )
+    }
+}
+
+/** A narrow button's size in [TextFieldActions], nothing for the only action of a field. */
+@Composable
+fun fieldActionSize(): Modifier =
+    if (LocalGroupPlace.current == GroupPlace.FieldAction) {
+        Modifier.size(IconButtonDefaults.smallContainerSize(IconButtonWidthOption.Narrow))
+    } else {
+        Modifier
+    }
 
 /**
  * The room a small icon button of [width] keeps for its touch target on each side when it is on
@@ -123,3 +158,6 @@ fun touchTargetRoom(width: IconButtonWidthOption = IconButtonWidthOption.Uniform
         .coerceAtLeast(0.dp)
 
 private val MinimumTouchTarget = 48.dp
+
+// What Material keeps between the containers of a standard button group
+private val ButtonGroupSpacing = 12.dp

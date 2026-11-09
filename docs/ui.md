@@ -39,6 +39,9 @@ Logo, scrollbars, button groups, pointer, web page, status bar and keyboard. Mov
   button and popup in one `Box`, the popup's anchor would be an item of its own.
   `ConnectedButtonGroup` centers its overflow indicator in the touch target height of its toggle
   buttons: the group lines its items up at the top, so the smaller indicator sat higher.
+- Several actions at the end of a text field: `TextFieldActions` with `fieldActionSize()` on each,
+  the narrow size and 12.dp between containers of a button group. Material's text fields expect one
+  trailing icon and no button group, so it is a plain row; a single action keeps its 48.dp.
 - Overflow menus: `AppBarMenuItem(checked = ...)` is a checkable item (check mark while on, the
   menu stays open, `ToggleOn`/`ToggleOff` haptics), e.g. the shopping mode's auto sync.
   `AppBarMenuItem(selected = ...)` is one of several choices, the current one selected

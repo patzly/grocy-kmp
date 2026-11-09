@@ -72,6 +72,10 @@ class ServerRepository(
     val serverConfig: StateFlow<ServerConfig?> =
         masterDataRepository.serverConfig.stateIn(scope, SharingStarted.Eagerly, null)
 
+    /** True once the start screen downloaded everything; false until that is read. */
+    val isEverythingDownloaded: StateFlow<Boolean> =
+        masterDataRepository.isEverythingDownloaded.stateIn(scope, SharingStarted.Eagerly, false)
+
     /** @throws GrocyApiException e.g. [GrocyApiException.Unreachable] when offline. */
     suspend fun reloadConfiguration() {
         masterDataRepository.reloadConfiguration()

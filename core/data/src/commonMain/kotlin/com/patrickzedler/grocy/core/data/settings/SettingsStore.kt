@@ -10,6 +10,7 @@ import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.BehaviorSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.network.CertificateSettings
 import com.patrickzedler.grocy.core.model.network.NetworkSettings
 import com.patrickzedler.grocy.core.model.notifications.NotificationDeliveries
 import com.patrickzedler.grocy.core.model.notifications.NotificationSettings
@@ -125,4 +126,9 @@ interface SettingsStore {
     val networkSettings: Flow<NetworkSettings>
 
     suspend fun setNetworkSettings(settings: NetworkSettings)
+
+    /** Certificates of the app's connections; browsers decide themselves, so they stay empty. */
+    val certificateSettings: Flow<CertificateSettings>
+
+    suspend fun setCertificateSettings(settings: CertificateSettings)
 }

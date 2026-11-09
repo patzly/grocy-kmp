@@ -1,5 +1,7 @@
 package com.patrickzedler.grocy.feature.settings.impl.server
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
@@ -37,6 +39,7 @@ import com.patrickzedler.grocy.core.design.component.DemoServerWarning
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
+import com.patrickzedler.grocy.core.design.component.SupportingBulletList
 import com.patrickzedler.grocy.core.design.component.TextDialog
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
@@ -44,20 +47,27 @@ import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.design.withTabularNumbers
 import com.patrickzedler.grocy.core.model.ServerConnection
+import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.resources.Res
-import com.patrickzedler.grocy.core.resources.action_cancel
 import com.patrickzedler.grocy.core.resources.action_later
 import com.patrickzedler.grocy.core.resources.action_restart
 import com.patrickzedler.grocy.core.resources.ic_rounded_dns
 import com.patrickzedler.grocy.core.resources.ic_rounded_info
 import com.patrickzedler.grocy.core.resources.ic_rounded_logout
 import com.patrickzedler.grocy.core.resources.ic_rounded_refresh
+import com.patrickzedler.grocy.core.resources.ic_rounded_tune
 import com.patrickzedler.grocy.core.resources.settings_server
+import com.patrickzedler.grocy.core.resources.settings_server_config
+import com.patrickzedler.grocy.core.resources.settings_server_config_barcode_plugin
+import com.patrickzedler.grocy.core.resources.settings_server_config_currency
+import com.patrickzedler.grocy.core.resources.settings_server_config_disabled
+import com.patrickzedler.grocy.core.resources.settings_server_config_enabled
+import com.patrickzedler.grocy.core.resources.settings_server_config_energy_unit
+import com.patrickzedler.grocy.core.resources.settings_server_config_grocycode
+import com.patrickzedler.grocy.core.resources.settings_server_config_values
 import com.patrickzedler.grocy.core.resources.settings_server_demo_switch_failed
 import com.patrickzedler.grocy.core.resources.settings_server_logout
 import com.patrickzedler.grocy.core.resources.settings_server_logout_description
-import com.patrickzedler.grocy.core.resources.settings_server_logout_message
-import com.patrickzedler.grocy.core.resources.settings_server_logout_title
 import com.patrickzedler.grocy.core.resources.settings_server_reload
 import com.patrickzedler.grocy.core.resources.settings_server_reload_description
 import com.patrickzedler.grocy.core.resources.settings_server_reload_failed
@@ -95,8 +105,8 @@ internal fun ServerSettingsScreen(
 ) {
     val server by viewModel.server.collectAsStateWithLifecycle()
     val reloadState by viewModel.reloadState.collectAsStateWithLifecycle()
+    val config by viewModel.config.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    var showLogoutDialog by rememberSaveable { mutableStateOf(false) }
     var showDemoServerDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(viewModel.error) {
@@ -147,16 +157,6 @@ internal fun ServerSettingsScreen(
         VersionCheckDialog(check = check, onDismissRequest = viewModel::onVersionCheckShown)
     }
 
-    if (showLogoutDialog) {
-        LogoutDialog(
-            onLogout = {
-                showLogoutDialog = false
-                viewModel.logout()
-            },
-            onCancel = { showLogoutDialog = false },
-        )
-    }
-
     SettingsScaffold(
         title = stringResource(Res.string.settings_server),
         menuViewModel = menuViewModel,
@@ -170,6 +170,7 @@ internal fun ServerSettingsScreen(
         server?.let {
             serverSettings(
                 server = it,
+                config = config,
                 isLoadingVersion = viewModel.isLoadingVersion,
                 isSwitchingDemoServer = viewModel.isSwitchingDemoServer,
                 isCheckingVersion = viewModel.isCheckingVersion,
@@ -177,7 +178,7 @@ internal fun ServerSettingsScreen(
                 onUrlClick = { showDemoServerDialog = true },
                 onVersionClick = viewModel::checkGrocyVersion,
                 onReloadClick = viewModel::reloadConfiguration,
-                onLogoutClick = { showLogoutDialog = true },
+                onLogoutClick = viewModel::logout,
             )
         }
     }
@@ -186,6 +187,7 @@ internal fun ServerSettingsScreen(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 private fun LazyListScope.serverSettings(
     server: ServerState,
+    config: ServerConfig?,
     isLoadingVersion: Boolean,
     isSwitchingDemoServer: Boolean,
     isCheckingVersion: Boolean,
@@ -257,7 +259,60 @@ private fun LazyListScope.serverSettings(
             onClick = onLogoutClick,
         )
     }
+    // Long, so it comes after everything the user can do here
+    config?.let {
+        segmentedGroup(key = "config") {
+            ConfigItem(it)
+        }
+    }
 }
+
+/** What the loaded configuration turned on and off and its values; a reload updates it. */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun ConfigItem(config: ServerConfig) {
+    val features = serverFeaturesOf(config)
+    val enabled = features.filter { it.isEnabled }.map { stringResource(it.name) }
+    val disabled = features.filterNot { it.isEnabled }.map { stringResource(it.name) }
+    val values = listOfNotNull(
+        stringResource(Res.string.settings_server_config_currency, config.currency),
+        stringResource(Res.string.settings_server_config_energy_unit, config.energyUnit),
+        stringResource(Res.string.settings_server_config_grocycode, grocycodeTypeOf(config)),
+        config.barcodeLookupPlugin?.let {
+            stringResource(Res.string.settings_server_config_barcode_plugin, it)
+        },
+    )
+    ListItem(
+        modifier = Modifier.fillMaxWidth(),
+        shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
+        colors = SegmentedListDefaults.colors(),
+        verticalAlignment = Alignment.Top,
+        leadingContent = { SettingIcon(Res.drawable.ic_rounded_tune) },
+        supportingContent = {
+            Column(verticalArrangement = Arrangement.spacedBy(ConfigListSpacing)) {
+                if (enabled.isNotEmpty()) {
+                    SupportingBulletList(
+                        intro = stringResource(Res.string.settings_server_config_enabled),
+                        bullets = enabled,
+                    )
+                }
+                if (disabled.isNotEmpty()) {
+                    SupportingBulletList(
+                        intro = stringResource(Res.string.settings_server_config_disabled),
+                        bullets = disabled,
+                    )
+                }
+                SupportingBulletList(
+                    intro = stringResource(Res.string.settings_server_config_values),
+                    bullets = values,
+                )
+            }
+        },
+        content = { Text(stringResource(Res.string.settings_server_config)) },
+    )
+}
+
+private val ConfigListSpacing = 8.dp
 
 /** A value of the server, clickable if [onClick] is given, with a loading indicator at its end. */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -373,22 +428,6 @@ private fun RestartDialog(
     )
 }
 
-/** Logging in again needs the address and the API key, so a stray tap must not log out. */
-@Composable
-private fun LogoutDialog(
-    onLogout: () -> Unit,
-    onCancel: () -> Unit,
-) {
-    QuestionDialog(
-        title = stringResource(Res.string.settings_server_logout_title),
-        message = stringResource(Res.string.settings_server_logout_message),
-        confirmText = stringResource(Res.string.settings_server_logout),
-        dismissText = stringResource(Res.string.action_cancel),
-        onConfirm = onLogout,
-        onDismiss = onCancel,
-    )
-}
-
 /** The answer of a version check; a newer Grocy links to its release. */
 @Composable
 private fun VersionCheckDialog(
@@ -436,6 +475,7 @@ private fun ServerSettingsDemoPreview() {
         ) {
             serverSettings(
                 server = ServerState(ServerConnection.Demo(), grocyVersion = "4.7.1"),
+                config = ServerConfig(equipment = false),
                 isLoadingVersion = false,
                 isSwitchingDemoServer = false,
                 isCheckingVersion = true,

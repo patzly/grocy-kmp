@@ -12,6 +12,7 @@ import com.patrickzedler.grocy.core.network.GrocyApiException
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.login_error_addon_not_found
 import com.patrickzedler.grocy.core.resources.login_error_calendar_code
+import com.patrickzedler.grocy.core.resources.login_error_certificate
 import com.patrickzedler.grocy.core.resources.login_error_ha_token_rejected
 import com.patrickzedler.grocy.core.resources.login_error_not_grocy
 import com.patrickzedler.grocy.core.resources.login_error_not_home_assistant
@@ -34,6 +35,9 @@ internal enum class LoginError {
 
     /** The QR code of a calendar link from the API key page, not of an API key. */
     CalendarCode,
+
+    /** The user did not trust the server's certificate. */
+    UntrustedCertificate,
     Unknown,
 }
 
@@ -47,6 +51,7 @@ internal fun Throwable.toLoginError(): LoginError =
         is GrocyApiException.HomeAssistantTokenRejected -> LoginError.HomeAssistantTokenRejected
         is GrocyApiException.AddonNotFound -> LoginError.AddonNotFound
         is GrocyApiException.NotHomeAssistant -> LoginError.NotHomeAssistant
+        is GrocyApiException.UntrustedCertificate -> LoginError.UntrustedCertificate
         else -> LoginError.Unknown
     }
 
@@ -55,6 +60,7 @@ internal fun LoginError.message(): String =
     stringResource(
         when (this) {
             LoginError.Unreachable -> Res.string.login_error_unreachable
+            LoginError.UntrustedCertificate -> Res.string.login_error_certificate
             LoginError.Unauthorized -> Res.string.login_error_unauthorized
             LoginError.NotGrocyServer -> Res.string.login_error_not_grocy
             LoginError.HomeAssistantTokenRejected -> Res.string.login_error_ha_token_rejected

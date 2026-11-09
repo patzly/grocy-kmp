@@ -6,7 +6,13 @@ import com.patrickzedler.grocy.core.model.calendar.CalendarEventKind
 import com.patrickzedler.grocy.core.model.calendar.calendarMonthWeeks
 import com.patrickzedler.grocy.core.model.recipes.DAYS_PER_WEEK
 import com.patrickzedler.grocy.core.model.server.ServerConfig
+import com.patrickzedler.grocy.core.model.masterdata.Product
+import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
+import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
 import com.patrickzedler.grocy.core.model.server.UserSettings
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingItemAmounts
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
 import com.patrickzedler.grocy.core.model.tasks.Task
 import com.patrickzedler.grocy.core.model.text.addMonths
 import com.patrickzedler.grocy.core.model.text.epochDayOf
@@ -23,7 +29,65 @@ internal data class WidgetData(
     val events: List<CalendarEvent>,
     val appearance: AppearanceSettings,
     val today: Long,
+    val shopping: WidgetShopping = WidgetShopping(),
 )
+
+/** The shopping lists as stored, with the master data that names their items. */
+internal data class WidgetShopping(
+    val lists: List<ShoppingList> = emptyList(),
+    val items: List<ShoppingListItem> = emptyList(),
+    val products: List<Product> = emptyList(),
+    val quantityUnits: List<QuantityUnit> = emptyList(),
+    val conversions: List<ResolvedQuantityUnitConversion> = emptyList(),
+)
+
+/** An item still to buy; [details] its amount and note, null if there is nothing to add. */
+internal data class WidgetShoppingItem(
+    val id: Int,
+    val name: String,
+    val details: String?,
+)
+
+/**
+ * What is left to buy on list [listId] by name; an item whose product is not known yet waits for
+ * the next download.
+ */
+internal fun widgetShoppingItemsOf(
+    shopping: WidgetShopping,
+    listId: Int,
+    settings: UserSettings,
+    language: String,
+    decimalSeparator: Char,
+    limit: Int = MAX_ROWS,
+): List<WidgetShoppingItem> {
+    val products = shopping.products.associateBy { it.id }
+    val amounts = ShoppingItemAmounts(
+        products = shopping.products,
+        quantityUnits = shopping.quantityUnits,
+        conversions = shopping.conversions,
+        settings = settings,
+        language = language,
+        decimalSeparator = decimalSeparator,
+    )
+    return shopping.items
+        .filter { it.listId == listId && !it.done }
+        .mapNotNull { item ->
+            val product = item.productId?.let(products::get)
+            val note = item.note?.trim()?.ifEmpty { null }
+            val name = product?.name ?: note?.takeIf { item.productId == null }
+            name?.let {
+                WidgetShoppingItem(
+                    id = item.id,
+                    name = it,
+                    details = listOfNotNull(amounts.of(item), note.takeIf { product != null })
+                        .joinToString(" · ")
+                        .ifEmpty { null },
+                )
+            }
+        }
+        .sortedBy { it.name.lowercase() }
+        .take(limit)
+}
 
 /** A task still to do, [dueDay] its due date. */
 internal data class WidgetTask(
@@ -167,6 +231,10 @@ internal class SampleNames(
     val spaghetti: String,
     val lunch: String,
     val smokeDetector: String,
+    val groceries: String,
+    val bread: String,
+    val eggs: String,
+    val apples: String,
 )
 
 /**
@@ -203,6 +271,18 @@ internal fun sampleWidgetData(
         CalendarEvent(CalendarEventKind.PRODUCT, names.milk, today + 10),
         CalendarEvent(CalendarEventKind.TASK, names.waterPlants, today - 2),
     ).sortedWith(compareBy<CalendarEvent> { it.epochDay }.thenBy { it.time })
+    val shoppingItems = listOf(names.milk, names.bread, names.eggs, names.apples)
+        .mapIndexed { index, name ->
+            ShoppingListItem(
+                id = index + 1,
+                listId = SAMPLE_SHOPPING_LIST_ID,
+                productId = null,
+                note = name,
+                amount = 1.0,
+                quId = null,
+                done = false,
+            )
+        }
     return WidgetData(
         isLoggedIn = true,
         config = ServerConfig(),
@@ -211,5 +291,12 @@ internal fun sampleWidgetData(
         events = events,
         appearance = appearance,
         today = today,
+        shopping = WidgetShopping(
+            lists = listOf(ShoppingList(SAMPLE_SHOPPING_LIST_ID, names.groceries)),
+            items = shoppingItems,
+        ),
     )
 }
+
+/** The list the sample data of the picker has. */
+internal const val SAMPLE_SHOPPING_LIST_ID = 1

@@ -264,6 +264,7 @@ private fun LazyListScope.equipmentItems(
     if (state.groups.isEmpty()) {
         emptyListItem(
             hasData = state.hasEquipment && isSearching,
+            storedByStart = true,
             refresh = refresh,
             emptyText = { stringResource(Res.string.objects_empty) },
             filteredEmptyText = { stringResource(Res.string.objects_empty_filtered) },

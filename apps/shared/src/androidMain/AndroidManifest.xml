@@ -58,6 +58,27 @@
         <category android:name="android.intent.category.DEFAULT" />
         <data android:scheme="grocy" />
       </intent-filter>
+      <!-- The items of Android's app info that lead to the settings and notification settings -->
+      <intent-filter>
+        <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+        <category android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+      </intent-filter>
+    </activity>
+
+    <!-- Floats over the home screen when a shopping list widget is placed or reconfigured -->
+    <activity
+      android:name="com.patrickzedler.grocy.apps.shared.widget.ShoppingListWidgetConfigureActivity"
+      android:excludeFromRecents="true"
+      android:exported="true"
+      android:taskAffinity=""
+      android:theme="@style/Theme.Grocy.Translucent">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+      </intent-filter>
     </activity>
 
     <receiver
@@ -107,6 +128,18 @@
       <meta-data
         android:name="android.appwidget.provider"
         android:resource="@xml/widget_schedule_info" />
+    </receiver>
+
+    <receiver
+      android:name="com.patrickzedler.grocy.apps.shared.widget.ShoppingListWidgetReceiver"
+      android:exported="true"
+      android:label="@string/widget_shopping_label">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+      </intent-filter>
+      <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/widget_shopping_info" />
     </receiver>
 
     <!-- Moves the widgets to the new day and sets up their updates again -->

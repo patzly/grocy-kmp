@@ -18,4 +18,10 @@
   <string name="widget_sample_month">November</string>
   <string name="widget_preview_tasks">Oppgaver</string>
   <string name="widget_preview_calendar">Kalender</string>
+  <string name="widget_shopping_label">Handleliste</string>
+  <string name="widget_shopping_description">Det som gjenstår å kjøpe på en handleliste</string>
+  <string name="widget_sample_groceries">Dagligvarer</string>
+  <string name="widget_sample_bread">Brød</string>
+  <string name="widget_sample_eggs">Egg</string>
+  <string name="widget_sample_apples">Epler</string>
 </resources>

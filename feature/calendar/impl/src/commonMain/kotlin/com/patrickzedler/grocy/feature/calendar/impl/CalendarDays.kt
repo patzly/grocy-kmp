@@ -105,3 +105,6 @@ internal fun DayBadge(
 }
 
 private val DayBadgeSize = 44.dp
+
+// Between the app bar and the weekdays of the day, week and month
+internal val HeaderTopPadding = 16.dp

@@ -12,6 +12,7 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewOptions
 import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalOptions
 import com.patrickzedler.grocy.core.model.calendar.CalendarView
+import com.patrickzedler.grocy.core.model.network.CertificateSettings
 import com.patrickzedler.grocy.core.model.network.NetworkSettings
 import com.patrickzedler.grocy.core.model.equipment.EquipmentOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
@@ -33,6 +34,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.IOException
+import kotlinx.serialization.json.Json
 
 class AndroidSettingsStore(
     context: Context,
@@ -248,6 +250,21 @@ class AndroidSettingsStore(
         }
         .distinctUntilChanged()
 
+    override val certificateSettings: Flow<CertificateSettings> = preferences
+        .map { stored -> stored[CERTIFICATE_SETTINGS]?.let(::certificateSettingsOf) ?: CertificateSettings() }
+        .distinctUntilChanged()
+
+    override suspend fun setCertificateSettings(settings: CertificateSettings) {
+        dataStore.edit { it[CERTIFICATE_SETTINGS] = Json.encodeToString(settings) }
+    }
+
+    // Unreadable data of a future version counts as none, connections then work like by default
+    private fun certificateSettingsOf(stored: String): CertificateSettings? = try {
+        Json.decodeFromString<CertificateSettings>(stored)
+    } catch (_: IllegalArgumentException) {
+        null
+    }
+
     override suspend fun setNetworkSettings(settings: NetworkSettings) {
         dataStore.edit {
             it[NETWORK_TOR] = settings.useTor
@@ -316,6 +333,7 @@ class AndroidSettingsStore(
         val BATTERIES_JOURNAL_OPTIONS = stringPreferencesKey("batteries_journal_options")
         val EQUIPMENT_OPTIONS = stringPreferencesKey("equipment_options")
         val CALENDAR_VIEW = stringPreferencesKey("calendar_view")
+        val CERTIFICATE_SETTINGS = stringPreferencesKey("certificate_settings")
         val NETWORK_TOR = booleanPreferencesKey("network_tor")
         val NETWORK_HTTP_PROXY = booleanPreferencesKey("network_http_proxy")
         val NETWORK_HTTP_PROXY_HOST = stringPreferencesKey("network_http_proxy_host")

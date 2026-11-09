@@ -6,6 +6,7 @@ import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewOptions
 import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalOptions
 import com.patrickzedler.grocy.core.model.calendar.CalendarView
+import com.patrickzedler.grocy.core.model.network.CertificateSettings
 import com.patrickzedler.grocy.core.model.network.NetworkSettings
 import com.patrickzedler.grocy.core.model.equipment.EquipmentOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
@@ -17,6 +18,7 @@ import com.patrickzedler.grocy.core.model.scanner.ScannerForm
 import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
+import com.patrickzedler.grocy.core.model.SavedSession
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
@@ -39,6 +41,12 @@ class FakeCredentialStore(
 
     override suspend fun clear() {
         connection.value = null
+    }
+
+    override val sessions = MutableStateFlow(emptyList<SavedSession>())
+
+    override suspend fun saveSessions(sessions: List<SavedSession>) {
+        this.sessions.value = sessions
     }
 }
 
@@ -184,6 +192,12 @@ class FakeSettingsStore(
 
     override suspend fun setNetworkSettings(settings: NetworkSettings) {
         networkSettings.value = settings
+    }
+
+    override val certificateSettings = MutableStateFlow(CertificateSettings())
+
+    override suspend fun setCertificateSettings(settings: CertificateSettings) {
+        certificateSettings.value = settings
     }
 
     override val recipesOptions = MutableStateFlow(recipesOptions)

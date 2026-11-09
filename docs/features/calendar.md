@@ -28,7 +28,7 @@ its own Material 3 Expressive version that does the same.
 - Paging: day, week and month are a `HorizontalPager` each (`PagedView`), pages counted from a fixed
   day (`dayOfPage`, `pageOfDay`); swiping or the floating toolbar's arrows turn them with the pager's
   animation, a settled page moves the calendar to its day, a day chosen elsewhere turns the pages
-  there. The list has no periods, its arrows hide. The toolbar's view button opens its menu right
+  there. The list has no periods, its arrows stay disabled, so toolbar and FAB keep their place. The toolbar's view button opens its menu right
   above the toolbar (`FloatingToolbarMenu`, 8.dp apart), the current view selected.
 - Today: the FAB ("Today", in the day "Now") turns to today and scrolls to the current time (time
   grid) or today's row (list), animated.
@@ -36,6 +36,9 @@ its own Material 3 Expressive version that does the same.
   (`CalendarEvent.key`) and days' numbers and weekdays (`dayKey`, `weekdayKey`) share their bounds,
   so they move and grow on the theme's spatial spring into their place in the new view
   (`sharedCalendarBounds`), the rest fades with its effects spring.
+- Grocy's title (`calendarEventTitle`: "Product due: Milk") shows where it leaves the name whole: in
+  the list, which wraps it to two lines, and on chips at least `ChipKindMinWidth` wide; narrower
+  chips show the name and their icon. Screen readers always get the whole title.
 - Events are one line chips (`EventChip`) like Google's tasks, because they have no duration: at their
   time in the time grid, those at nearly the same time below each other (`chipTops`), and on top without
   a time, Grocy's 23:59:59 counting as none. The icon says what it is about where it fits, screen readers

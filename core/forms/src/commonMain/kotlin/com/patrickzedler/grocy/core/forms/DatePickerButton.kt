@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.core.forms
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.text.input.InputTransformation
@@ -40,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -49,6 +51,7 @@ import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.LocalFormFocus
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.fieldActionSize
 import com.patrickzedler.grocy.core.model.text.DateFieldOrder
 import com.patrickzedler.grocy.core.model.text.MAX_TYPED_DATE_DIGITS
 import com.patrickzedler.grocy.core.model.text.MAX_TYPED_DATE_TIME_DIGITS
@@ -235,7 +238,7 @@ fun DueDaysPickerButton(state: TextFieldState) {
                 haptic.confirm()
                 showDate = true
             },
-            modifier = Modifier.clickCursor(),
+            modifier = fieldActionSize().clickCursor(),
             shapes = IconButtonDefaults.shapes(),
         ) {
             Icon(
@@ -554,10 +557,12 @@ private fun PickedDateItem(
         error = error,
         enabled = enabled,
         trailingAction = {
-            Icon(
-                painter = painterResource(Res.drawable.ic_rounded_calendar_month),
-                contentDescription = null,
-            )
+            Box(fieldActionSize(), contentAlignment = Alignment.Center) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_rounded_calendar_month),
+                    contentDescription = null,
+                )
+            }
         },
         onFieldClick = { showPicker = true },
         trailingButton = scanButton,

@@ -124,6 +124,7 @@ internal fun MealPlanSectionsScreen(
         if (current.isEmpty()) {
             emptyListItem(
                 hasData = false,
+                storedByStart = true,
                 refresh = refresh,
                 emptyText = { stringResource(Res.string.meal_plan_sections_empty) },
                 filteredEmptyText = { stringResource(Res.string.meal_plan_sections_empty) },

@@ -11,6 +11,7 @@ import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
 import com.patrickzedler.grocy.core.database.GrocyDatabase
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.network.GitHubReleases
+import com.patrickzedler.grocy.core.network.ClientKeySource
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.core.scanner.TextRecognizerFactory
 import kotlinx.coroutines.CoroutineScope
@@ -44,6 +45,9 @@ interface PlatformDependencies {
 
     /** Barcode engines of this platform; ZXing exists everywhere, ML Kit only in the Play app. */
     val barcodeDecoders: Map<ScannerEngine, BarcodeDecoderFactory>
+
+    /** The keys of client certificates, null where the browser handles those itself. */
+    val clientKeys: ClientKeySource?
 
     /** Reads printed due dates, null where the platform has no engine (only ML Kit for now). */
     val textRecognizer: TextRecognizerFactory?

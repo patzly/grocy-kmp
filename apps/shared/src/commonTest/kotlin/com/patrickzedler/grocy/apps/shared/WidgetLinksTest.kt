@@ -4,9 +4,14 @@ import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
 import com.patrickzedler.grocy.core.model.calendar.CalendarEventKind
 import com.patrickzedler.grocy.core.model.calendar.CalendarView
 import com.patrickzedler.grocy.core.model.text.epochDayOf
+import com.patrickzedler.grocy.core.navigation.Route
 import com.patrickzedler.grocy.feature.calendar.api.CalendarRoute
 import com.patrickzedler.grocy.feature.recipes.api.MealPlanRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipeRoute
+import com.patrickzedler.grocy.feature.settings.api.NotificationSettingsRoute
+import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
+import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListItemRoute
+import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingModeRoute
 import com.patrickzedler.grocy.feature.tasks.api.TaskRoute
 import com.patrickzedler.grocy.feature.tasks.api.TasksRoute
 import kotlin.test.Test
@@ -49,6 +54,31 @@ class WidgetLinksTest {
     }
 
     @Test
+    fun theShoppingListWidgetsLinksOpenTheirPages() {
+        assertEquals(
+            ShoppingModeRoute(listId = 2),
+            WidgetLinks.routeOfLink(WidgetLinks.shoppingMode(2)),
+        )
+        assertEquals(
+            ShoppingListItemRoute(listId = 2, inList = false),
+            WidgetLinks.routeOfLink(WidgetLinks.newShoppingItem(2)),
+        )
+        assertEquals(
+            ShoppingListItemRoute(id = 7, inList = false),
+            WidgetLinks.routeOfLink(WidgetLinks.shoppingItem(7)),
+        )
+    }
+
+    @Test
+    fun aSettingsPageOpensWithItsListSoBackLeadsThere() {
+        assertEquals(
+            listOf(SettingsRoute, NotificationSettingsRoute),
+            openedRoutesOf(NotificationSettingsRoute),
+        )
+        assertEquals(listOf<Route>(TasksRoute), openedRoutesOf(TasksRoute))
+    }
+
+    @Test
     fun anythingElseOpensNothing() {
         listOf(
             "",
@@ -60,6 +90,10 @@ class WidgetLinksTest {
             "calendar/DAY/someday",
             "event/PRODUCT/2026-11-07",
             "event/MEAL_PLAN_RECIPE/2026-11-07/x",
+            "shopping_mode",
+            "shopping_mode/x",
+            "shopping_new/1/2",
+            "shopping_item/",
         ).forEach { assertNull(WidgetLinks.routeOfLink(it), it) }
     }
 }

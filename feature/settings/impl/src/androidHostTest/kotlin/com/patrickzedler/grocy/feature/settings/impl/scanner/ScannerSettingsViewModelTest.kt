@@ -160,18 +160,28 @@ class ScannerSettingsViewModelTest {
     }
 
     @Test
-    fun playAppScansDueDatesWithoutUnlocking() = runTest(dispatcher) {
+    fun playAppOffersDueDateScanningOnceUnlocked() = runTest(dispatcher) {
+        checker.keyInstalled = true
         val viewModel = viewModel()
+        advanceUntilIdle()
 
-        assertTrue(viewModel.showsDueDates)
+        assertTrue(viewModel.showsDueDates(viewModel.unlockState.value))
         assertEquals(true, viewModel.scanDueDates.value)
+    }
+
+    @Test
+    fun playAppOffersNoDueDateScanningBeforeUnlocking() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+
+        assertFalse(viewModel.showsDueDates(viewModel.unlockState.value))
     }
 
     @Test
     fun fossAndWebShowNoDueDateScanning() = runTest(dispatcher) {
         val viewModel = viewModel(isPlayApp = false)
 
-        assertFalse(viewModel.showsDueDates)
+        assertFalse(viewModel.showsDueDates(viewModel.unlockState.value))
     }
 
     @Test

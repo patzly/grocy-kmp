@@ -16,6 +16,13 @@ Credential and settings stores, and the FOSS vs Play variant. Moved from CLAUDE.
   (`shopping_list_fields`/`shopping_list_grouping`, on the web `grocy.shoppingListFields`/
   `grocy.shoppingListGrouping`), the notification settings and what was delivered
   (`NotificationSettings`, `NotificationDeliveries`).
+- Sessions (`CredentialStore.sessions`, `SavedSession`, most recently used first; Android key
+  `saved_sessions`, encrypted like the connection; web `grocy.savedSessions`): a logout keeps the
+  login so it can be opened again without typing, only the bin of the sessions dialog
+  (`AuthRepository.removeSession`) deletes the credentials. An account is unique per server and
+  user, every demo counts as one (`SavedSession.isSameAs`). The watch keeps none
+  (`keepsSessions = false`), its logout really forgets. Switching logs in anew: the database holds
+  one server's data at a time, so it is cleared and downloaded again.
 - Web stores access the browser only through `KeyValueStorage` (`BrowserLocalStorage` in
   production, an in-memory one in tests). Blocked or full browser storage must not crash the app:
   values are then kept for the session only.

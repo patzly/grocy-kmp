@@ -338,6 +338,7 @@ private fun LazyListScope.stockItems(
         emptyListItem(
             // Without a filter an empty list means nothing is in stock
             hasData = state.hasProducts && (state.filter.isActive || isSearching),
+            storedByStart = true,
             refresh = refresh,
             emptyText = { stringResource(Res.string.stock_overview_empty) },
             filteredEmptyText = { stringResource(Res.string.products_empty_filtered) },

@@ -22,4 +22,10 @@
   <string name="widget_sample_month">November</string>
   <string name="widget_preview_tasks">Tasks</string>
   <string name="widget_preview_calendar">Calendar</string>
+  <string name="widget_shopping_label">Shopping list</string>
+  <string name="widget_shopping_description">What is left to buy on a shopping list</string>
+  <string name="widget_sample_groceries">Groceries</string>
+  <string name="widget_sample_bread">Bread</string>
+  <string name="widget_sample_eggs">Eggs</string>
+  <string name="widget_sample_apples">Apples</string>
 </resources>

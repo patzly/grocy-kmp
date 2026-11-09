@@ -278,3 +278,6 @@ private const val NEVER_YEAR = 2999
 private const val HEX_COLOR_DIGITS = 6
 private const val MONTHS_PER_YEAR = 12
 private const val OPAQUE = 0xFF000000L
+
+/** Grocy's title of an event: [kind], what its date means, in front of [name]. */
+fun calendarEventTitle(kind: String, name: String): String = "$kind: $name"

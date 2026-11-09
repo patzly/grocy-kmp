@@ -52,11 +52,12 @@ class ShoppingModeViewModelTest {
 
     private lateinit var options: ShoppingListOptionsRepository
 
-    private fun TestScope.viewModel(): ShoppingModeViewModel {
+    private fun TestScope.viewModel(listId: Int? = null): ShoppingModeViewModel {
         // Unconfined, so options and settings are read right away like at app start
         val appScope = backgroundScope + UnconfinedTestDispatcher(testScheduler)
         options = ShoppingListOptionsRepository(settingsStore, appScope)
         return ShoppingModeViewModel(
+            listId = listId,
             masterData = environment.repository,
             stock = environment.stockRepository,
             shoppingLists = environment.shoppingListRepository,
@@ -168,6 +169,13 @@ class ShoppingModeViewModelTest {
 
         viewModel.selectList(2)
         advanceUntilIdle()
+
+        assertEquals("Hardware store", viewModel.state.value?.list?.name)
+    }
+
+    @Test
+    fun aListNamedByTheRouteIsShownRightAway() = runTest(dispatcher) {
+        val viewModel = viewModel(listId = 2)
 
         assertEquals("Hardware store", viewModel.state.value?.list?.name)
     }

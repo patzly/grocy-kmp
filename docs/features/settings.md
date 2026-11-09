@@ -22,7 +22,7 @@ below it that explains the unlock app and opens it on Google Play, shown only wh
 is installed like the key item in About. Returning to the page checks the installed apps again,
 so a bought key enables ML Kit at once without selecting it. FOSS and web offer ZXing alone and
 mention nothing of the unlock app. Where the app can read text (`ScannerRepository.canReadText`,
-for now the Play app with ML Kit, not locked), a group "Due dates" follows with the switch "Scan
+the Play app with ML Kit, once unlocked), a group "Due dates" follows with the switch "Scan
 due dates", on by default (`scan_due_dates`, `grocy.scanDueDates`), which hides the date
 scanners of due date fields when off, see `docs/architecture/scanner.md`), Notifications
 (`docs/features/notifications.md`), Shopping mode
@@ -85,10 +85,19 @@ scene, and the page's back button) returns to the products in one step). The oth
   (an update of the server changes it). Reloading downloads version, `/system/config` and user
   settings (`MasterDataRepository.reloadConfiguration`) and then asks whether to restart now
   (`PlatformDependencies.restartApp`: a new process on Android, a page reload on the web, which
-  keeps the back stack); failures show as snackbar. Logout asks first (logging in again needs
-  address and API key) and goes through `AuthRepository.logout`; the screen keeps showing the
+  keeps the back stack); failures show as snackbar. Logout goes through `AuthRepository.logout`; the screen keeps showing the
   server while it slides out.
 
+- Certificates (`CertificateSettingsRoute`, `CertificatesScreen`, also from the manual login,
+  since a server demanding a client certificate cannot be reached without): the client certificate
+  and the trusted servers' certificates, see `docs/architecture/network.md`.
+- The last group is one item "Current server configuration" (`serverFeaturesOf`), long, so it comes
+  after everything the user can do here: enabled and disabled features and values as bullet lists,
+  following `ServerRepository.serverConfig`, so a reload shows at once. Logging out no longer asks:
+  the session stays and opens again with a tap.
+- Android's app info links here: `MainActivity`'s `APPLICATION_PREFERENCES` filter adds an item for
+  the settings, the `NOTIFICATION_PREFERENCES` category one on its notification page for the
+  notification settings (`systemSettingsRouteOf`); where they appear is up to the system.
 - Network (`NetworkSettingsRoute`, `NetworkSettingsScreen`; only where `isProxySupported`, the
   category is hidden on the web, whose `fetch()` always uses the browser's proxy): under "Proxy"
   "Use Tor" ("Requires Orbot") and "Enable HTTP proxy", whose host and port spring open below it

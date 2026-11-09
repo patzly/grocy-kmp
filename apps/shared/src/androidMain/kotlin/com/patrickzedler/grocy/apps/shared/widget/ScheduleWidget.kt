@@ -82,7 +82,7 @@ private fun Schedule(data: WidgetData, colors: WidgetColors, texts: WidgetTexts)
                 } else {
                     DayHeading(row.epochDay, colors)
                 }
-                is ScheduleRow.Event -> EventChip(row.event, data, colors, texts)
+                is ScheduleRow.Event -> EventChip(row.event, isNarrow, data, colors, texts)
                 ScheduleRow.NothingToday -> MessageTile(texts.nothingToday, colors, openSchedule)
             }
         }
@@ -110,10 +110,14 @@ private fun DayHeading(epochDay: Long, colors: WidgetColors) {
     }
 }
 
-/** An event like a task of Google's widget: its icon and name, below them time and section. */
+/**
+ * An event like a task of Google's widget: its icon and Grocy's title, narrow only the name, so
+ * the kind never takes its place; below them time and section. A long title wraps.
+ */
 @Composable
 private fun EventChip(
     event: CalendarEvent,
+    isNarrow: Boolean,
     data: WidgetData,
     colors: WidgetColors,
     texts: WidgetTexts,
@@ -128,12 +132,13 @@ private fun EventChip(
                 .clickable(openApp(WidgetLinks.event(event)))
                 .semantics { contentDescription = texts.description(event) },
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(verticalAlignment = Alignment.Top) {
                 WidgetIcon(event.kind.icon, roles.content, 18.dp)
                 Spacer(GlanceModifier.width(8.dp))
                 Text(
-                    text = unbroken(event.name),
-                    maxLines = 1,
+                    text = if (isNarrow) event.name else texts.title(event),
+                    maxLines = 3,
+                    modifier = GlanceModifier.defaultWeight(),
                     style = TextStyle(
                         color = roles.content,
                         fontSize = 14.sp,
@@ -157,5 +162,6 @@ private fun EventChip(
     }
 }
 
-// Below it the date is as short as in Google's narrow widget
+// Three columns of a launcher are at least this wide. Below it the date is as short as in
+// Google's narrow widget and events show only their names
 private val NarrowWidth = 200.dp

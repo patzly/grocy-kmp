@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.patrickzedler.grocy.core.model.SavedSession
 import com.patrickzedler.grocy.core.model.ServerConnection
 import java.io.IOException
 import kotlinx.coroutines.Dispatchers
@@ -49,9 +50,28 @@ class AndroidCredentialStore(
         dataStore.edit { it.remove(CONNECTION_KEY) }
     }
 
+    override val sessions: Flow<List<SavedSession>> = dataStore.data
+        .catch { e -> if (e is IOException) emit(emptyPreferences()) else throw e }
+        .map { preferences ->
+            preferences[SESSIONS_KEY]
+                ?.let(cipher::decrypt)
+                ?.let(ServerConnectionCodec::decodeSessions)
+                .orEmpty()
+        }
+        .flowOn(Dispatchers.IO)
+        .distinctUntilChanged()
+
+    override suspend fun saveSessions(sessions: List<SavedSession>) {
+        val encrypted = withContext(Dispatchers.IO) {
+            cipher.encrypt(ServerConnectionCodec.encodeSessions(sessions))
+        }
+        dataStore.edit { it[SESSIONS_KEY] = encrypted }
+    }
+
     private companion object {
         const val FILE_NAME = "credentials"
         const val KEY_ALIAS = "grocy_credentials"
         val CONNECTION_KEY = stringPreferencesKey("server_connection")
+        val SESSIONS_KEY = stringPreferencesKey("saved_sessions")
     }
 }

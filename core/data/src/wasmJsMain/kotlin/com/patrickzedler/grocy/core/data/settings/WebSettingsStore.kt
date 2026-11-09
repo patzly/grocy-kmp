@@ -5,6 +5,7 @@ import com.patrickzedler.grocy.core.data.KeyValueStorage
 import com.patrickzedler.grocy.core.model.batteries.BatteriesOverviewOptions
 import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalOptions
 import com.patrickzedler.grocy.core.model.calendar.CalendarView
+import com.patrickzedler.grocy.core.model.network.CertificateSettings
 import com.patrickzedler.grocy.core.model.network.NetworkSettings
 import com.patrickzedler.grocy.core.model.equipment.EquipmentOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
@@ -274,6 +275,10 @@ class WebSettingsStore internal constructor(
     override val networkSettings: Flow<NetworkSettings> = flowOf(NetworkSettings())
 
     override suspend fun setNetworkSettings(settings: NetworkSettings) = Unit
+
+    override val certificateSettings: Flow<CertificateSettings> = flowOf(CertificateSettings())
+
+    override suspend fun setCertificateSettings(settings: CertificateSettings) = Unit
 
     private val recipesOptionsState = MutableStateFlow(
         RecipesOptions.of(

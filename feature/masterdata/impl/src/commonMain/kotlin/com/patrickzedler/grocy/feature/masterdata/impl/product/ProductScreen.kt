@@ -44,6 +44,7 @@ import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import com.patrickzedler.grocy.core.data.masterdata.PictureChange
+import com.patrickzedler.grocy.core.design.component.TextFieldActions
 import com.patrickzedler.grocy.core.design.component.DropdownOption
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarIconButton
 import com.patrickzedler.grocy.core.design.component.FloatingToolbarWithFab
@@ -1102,9 +1103,13 @@ private fun DaysItem(
         index = index,
         count = count,
         trailingAction = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            if (scan != null) {
+                TextFieldActions {
+                    DueDaysPickerButton(state)
+                    DueDaysScanButton(scan)
+                }
+            } else {
                 DueDaysPickerButton(state)
-                scan?.let { DueDaysScanButton(it) }
             }
         },
         below = scan?.below,

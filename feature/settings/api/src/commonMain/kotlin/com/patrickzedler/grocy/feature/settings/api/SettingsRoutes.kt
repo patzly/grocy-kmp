@@ -71,6 +71,11 @@ data class ShoppingModeSettingsRoute(val inSettings: Boolean = true) : DetailRou
 @SerialName("settings/network")
 data object NetworkSettingsRoute : DetailRoute
 
+/** The client certificate and the trusted servers, reachable before a login too. */
+@Serializable
+@SerialName("certificatesettings")
+data object CertificateSettingsRoute : DetailRoute
+
 /** Product databases, date input and barcodes of new products, kept on the device. */
 @Serializable
 @SerialName("settings/behavior")
@@ -102,6 +107,7 @@ val settingsRouteSerializers = SerializersModule {
         subclass(StockSettingsRoute::class, StockSettingsRoute.serializer())
         subclass(ShoppingModeSettingsRoute::class, ShoppingModeSettingsRoute.serializer())
         subclass(NetworkSettingsRoute::class, NetworkSettingsRoute.serializer())
+        subclass(CertificateSettingsRoute::class, CertificateSettingsRoute.serializer())
         subclass(BehaviorSettingsRoute::class, BehaviorSettingsRoute.serializer())
         subclass(ScannerSettingsRoute::class, ScannerSettingsRoute.serializer())
         subclass(NotificationSettingsRoute::class, NotificationSettingsRoute.serializer())

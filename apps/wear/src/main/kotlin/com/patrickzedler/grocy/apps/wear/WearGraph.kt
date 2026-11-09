@@ -12,12 +12,15 @@ import com.patrickzedler.grocy.core.data.auth.AuthState
 import com.patrickzedler.grocy.core.data.credentials.AndroidCredentialStore
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.settings.AndroidSettingsStore
+import com.patrickzedler.grocy.core.data.settings.CertificateRepository
+import com.patrickzedler.grocy.core.data.settings.CertificateTrustGate
 import com.patrickzedler.grocy.core.data.settings.ShoppingListOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ShoppingModeSettingsRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.database.createGrocyDatabase
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.LocalNetworkGate
+import com.patrickzedler.grocy.core.network.TlsOptions
 import com.patrickzedler.grocy.core.network.createGrocyHttpClient
 import com.patrickzedler.grocy.core.wear.DataLayerPhoneLink
 import com.patrickzedler.grocy.core.wear.PhoneLoginMarker
@@ -55,7 +58,21 @@ class WearGraph(context: Context) {
             null
         }
 
-    private val api = GrocyApi(createGrocyHttpClient(localNetworkGate))
+    private val settingsStore = AndroidSettingsStore(appContext)
+
+    /** Only trusted servers: a watch cannot pick client certificates, see docs/features/wear.md. */
+    private val certificates = CertificateRepository(settingsStore, scope)
+
+    private val tlsOptions = TlsOptions(
+        clientKeys = null,
+        settings = { certificates.settings.value },
+        awaitSettings = { certificates.awaitSettings() },
+    )
+
+    private val api = GrocyApi(createGrocyHttpClient(localNetworkGate, tlsOptions))
+
+    /** Asks about a server's certificate when a login was entered on the watch itself. */
+    val certificateGate = CertificateTrustGate(certificates)
 
     private val credentialStore = AndroidCredentialStore(appContext)
 
@@ -75,9 +92,12 @@ class WearGraph(context: Context) {
         networkAvailable = networkAvailable(),
     )
 
-    val auth = AuthRepository(credentialStore, api) { masterData.clear() }
-
-    private val settingsStore = AndroidSettingsStore(appContext)
+    val auth = AuthRepository(
+        credentialStore = credentialStore,
+        grocyApi = api,
+        keepsSessions = false,
+        certificateGate = certificateGate,
+    ) { masterData.clear() }
 
     val shoppingList = WearShoppingList(
         shopping = shopping,
@@ -93,7 +113,12 @@ class WearGraph(context: Context) {
             summary.takeIf { auth is AuthState.LoggedIn }
         }.distinctUntilChanged()
 
-    val sync = WearConnectionSync(credentialStore, auth, SharedPreferencesMarker(appContext))
+    val sync = WearConnectionSync(
+        credentialStore = credentialStore,
+        auth = auth,
+        marker = SharedPreferencesMarker(appContext),
+        setTrusted = certificates::setTrusted,
+    )
 
     val phone = DataLayerPhoneLink(appContext)
 
@@ -114,6 +139,10 @@ class WearGraph(context: Context) {
     }
 
     init {
+        // Connections that exist were made with the former certificates
+        scope.launch {
+            certificates.settings.filterNotNull().drop(1).collect { tlsOptions.notifyChanged() }
+        }
         val listPreferences = appContext.getSharedPreferences("wear_list", Context.MODE_PRIVATE)
         // Kept across processes, so the tile and a new start show the list chosen last
         if (listPreferences.contains(KEY_LIST)) {

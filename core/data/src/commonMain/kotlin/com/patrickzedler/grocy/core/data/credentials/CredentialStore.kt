@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.core.data.credentials
 
+import com.patrickzedler.grocy.core.model.SavedSession
 import com.patrickzedler.grocy.core.model.ServerConnection
 import kotlinx.coroutines.flow.Flow
 
@@ -16,4 +17,9 @@ interface CredentialStore {
     suspend fun save(connection: ServerConnection)
 
     suspend fun clear()
+
+    /** The logins kept for later, including their secrets, most recently used first. */
+    val sessions: Flow<List<SavedSession>>
+
+    suspend fun saveSessions(sessions: List<SavedSession>)
 }

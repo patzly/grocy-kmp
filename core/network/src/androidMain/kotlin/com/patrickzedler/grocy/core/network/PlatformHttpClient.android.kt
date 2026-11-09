@@ -8,6 +8,7 @@ import io.ktor.client.engine.okhttp.OkHttp
 internal actual fun platformHttpClient(
     proxy: suspend () -> NetworkProxy,
     localNetwork: LocalNetworkGate?,
+    tls: TlsOptions?,
     config: HttpClientConfig<*>.() -> Unit,
 ): HttpClient {
     val routing = ProxyRouting(proxy)
@@ -17,6 +18,7 @@ internal actual fun platformHttpClient(
                 proxySelector(routing)
                 // Also WebSockets pass it, Home Assistant's included
                 addInterceptor(routing)
+                tls?.let { GrocyTls(it).applyTo(this) }
             }
         }
         config()

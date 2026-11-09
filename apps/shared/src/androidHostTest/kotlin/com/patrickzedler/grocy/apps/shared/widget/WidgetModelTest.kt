@@ -3,6 +3,12 @@ package com.patrickzedler.grocy.apps.shared.widget
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
 import com.patrickzedler.grocy.core.model.calendar.CalendarEventKind
+import com.patrickzedler.grocy.core.model.masterdata.Product
+import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
+import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
+import com.patrickzedler.grocy.core.model.server.UserSettings
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
 import com.patrickzedler.grocy.core.model.tasks.Task
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import java.io.File
@@ -122,6 +128,7 @@ class WidgetModelTest {
     fun thePickerShowsTasksAndEventsOfEveryKindAroundToday() {
         val names = SampleNames(
             "Mow", "Seeds", "Water", "Descale", "Milk", "Vacuum", "Pasta", "Lunch", "Smoke",
+            "Groceries", "Bread", "Eggs", "Apples",
         )
 
         val data = sampleWidgetData(today, names, AppearanceSettings())
@@ -137,6 +144,28 @@ class WidgetModelTest {
             data.events.map { it.kind }.toSet(),
         )
         assertTrue(scheduleRowsOf(data.events, today)[1] is ScheduleRow.Event)
+    }
+
+    @Test
+    fun thePickerShowsAShoppingListWithItsItems() {
+        val names = SampleNames(
+            "Mow", "Seeds", "Water", "Descale", "Milk", "Vacuum", "Pasta", "Lunch", "Smoke",
+            "Groceries", "Bread", "Eggs", "Apples",
+        )
+
+        val data = sampleWidgetData(today, names, AppearanceSettings())
+
+        assertEquals("Groceries", data.shopping.lists.single().name)
+        assertEquals(
+            listOf("Apples", "Bread", "Eggs", "Milk"),
+            widgetShoppingItemsOf(
+                data.shopping,
+                SAMPLE_SHOPPING_LIST_ID,
+                data.settings,
+                "en",
+                '.',
+            ).map { it.name },
+        )
     }
 
     @Test
@@ -161,6 +190,10 @@ class WidgetModelTest {
             "widget.TaskListWidgetReceiver",
             "widget.MonthWidgetReceiver",
             "widget.ScheduleWidgetReceiver",
+            "widget.ShoppingListWidgetReceiver",
+            "@xml/widget_shopping_info",
+            "widget.ShoppingListWidgetConfigureActivity",
+            "android.appwidget.action.APPWIDGET_CONFIGURE",
             "widget.WidgetDayReceiver",
             "@xml/widget_tasks_info",
             "@xml/widget_month_info",
@@ -172,10 +205,91 @@ class WidgetModelTest {
 
     @Test
     fun widgetsAreKeptCurrentByTheAppNotByTheSystemsTimer() {
-        listOf("tasks", "month", "schedule").forEach { name ->
+        listOf("tasks", "month", "schedule", "shopping").forEach { name ->
             val info = File("src/androidMain/res/xml/widget_${name}_info.xml").readText()
 
             assertTrue("""android:updatePeriodMillis="0"""" in info, name)
         }
+    }
+
+    private fun shoppingItem(
+        id: Int,
+        productId: Int? = null,
+        note: String? = null,
+        amount: Double = 1.0,
+        quId: Int? = null,
+        listId: Int = 1,
+        done: Boolean = false,
+    ) = ShoppingListItem(id, listId, productId, note, amount, quId, done)
+
+    private val milk = Product(id = 1, name = "Milk", quIdStock = 1)
+    private val shopping = WidgetShopping(
+        products = listOf(milk),
+        quantityUnits = listOf(
+            QuantityUnit(1, "Piece", namePlural = "Pieces"),
+            QuantityUnit(2, "Pack", namePlural = "Packs"),
+        ),
+        conversions = listOf(ResolvedQuantityUnitConversion(1, 1, 2, 0.5)),
+    )
+
+    private fun shownItems(data: WidgetShopping, listId: Int = 1) =
+        widgetShoppingItemsOf(data, listId, UserSettings(), "en", '.')
+
+    @Test
+    fun theShoppingWidgetShowsWhatIsLeftOnItsListByName() {
+        val data = shopping.copy(
+            items = listOf(
+                shoppingItem(1, note = "Zucchini"),
+                shoppingItem(2, productId = 1),
+                shoppingItem(3, note = "Bought", done = true),
+                shoppingItem(4, note = "Other list", listId = 2),
+            ),
+        )
+
+        assertEquals(listOf("Milk", "Zucchini"), shownItems(data).map { it.name })
+    }
+
+    @Test
+    fun anItemShowsItsAmountInItsUnitAndItsNote() {
+        val data = shopping.copy(
+            items = listOf(shoppingItem(1, 1, note = "Organic", amount = 4.0, quId = 2)),
+        )
+
+        assertEquals("2 Packs · Organic", shownItems(data).single().details)
+    }
+
+    @Test
+    fun aNoteWithoutProductIsTheItemsNameAndHasNoAmount() {
+        val data = shopping.copy(items = listOf(shoppingItem(1, note = "Candles", amount = 3.0)))
+
+        val item = shownItems(data).single()
+
+        assertEquals("Candles", item.name)
+        assertEquals(null, item.details)
+    }
+
+    @Test
+    fun anItemWhoseProductIsNotKnownYetWaitsForTheNextDownload() {
+        val data = shopping.copy(items = listOf(shoppingItem(1, productId = 99, note = "Note")))
+
+        assertTrue(shownItems(data).isEmpty())
+    }
+
+    @Test
+    fun theChoiceOfAListNeedsALoginAndTheFeature() {
+        val lists = listOf(ShoppingList(1, "Groceries"))
+
+        assertEquals(ShoppingListChoice.LoggedOut, shoppingListChoiceOf(false, true, lists))
+        assertEquals(ShoppingListChoice.NotAvailable, shoppingListChoiceOf(true, false, lists))
+        assertEquals(ShoppingListChoice.Lists(lists), shoppingListChoiceOf(true, true, lists))
+    }
+
+    @Test
+    fun theShoppingWidgetAsksForItsListAndCanAskAgain() {
+        val info = File("src/androidMain/res/xml/widget_shopping_info.xml").readText()
+
+        assertTrue("ShoppingListWidgetConfigureActivity" in info)
+        assertTrue("""android:widgetFeatures="reconfigurable"""" in info)
+        assertFalse("configuration_optional" in info)
     }
 }

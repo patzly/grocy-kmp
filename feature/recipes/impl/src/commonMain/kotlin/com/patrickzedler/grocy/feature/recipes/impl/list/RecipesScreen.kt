@@ -250,6 +250,7 @@ private fun LazyListScope.recipeItems(
         emptyListItem(
             // Without a filter an empty list means there are no recipes
             hasData = state.hasRecipes && isFiltered,
+            storedByStart = true,
             refresh = refresh,
             emptyText = { stringResource(Res.string.recipes_empty) },
             filteredEmptyText = { stringResource(Res.string.recipes_empty_filtered) },

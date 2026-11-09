@@ -48,7 +48,11 @@ import com.patrickzedler.grocy.core.design.component.rememberFormFocus
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.design.component.tryOpenUri
 import com.patrickzedler.grocy.core.network.ServerUrl
+import com.patrickzedler.grocy.core.network.areCertificatesSupported
 import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.resources.certificates_login_description
+import com.patrickzedler.grocy.core.resources.ic_rounded_key
+import com.patrickzedler.grocy.core.resources.settings_certificates
 import com.patrickzedler.grocy.core.resources.ic_rounded_dns
 import com.patrickzedler.grocy.core.resources.ic_rounded_key
 import com.patrickzedler.grocy.core.resources.login_manual_addon_slug
@@ -82,6 +86,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun LoginManualScreen(
     viewModel: LoginManualViewModel,
     onBackClick: () -> Unit,
+    onCertificatesClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val uriHandler = LocalUriHandler.current
@@ -140,6 +145,13 @@ internal fun LoginManualScreen(
                 )
             }
 
+            // A server that demands a client certificate answers nothing without it
+            if (areCertificatesSupported) {
+                segmentedGroup(key = "certificates") {
+                    CertificatesItem(enabled = isEditable, onClick = onCertificatesClick)
+                }
+            }
+
             if (!isHomeAssistant || viewModel.isHomeAssistantSupported) {
                 viewModel.error?.let { error ->
                     segmentedGroup(key = "error") {
@@ -157,6 +169,35 @@ internal fun LoginManualScreen(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun CertificatesItem(enabled: Boolean, onClick: () -> Unit) {
+    val haptic = LocalHapticFeedback.current
+    SegmentedListItem(
+        onClick = {
+            haptic.confirm()
+            onClick()
+        },
+        enabled = enabled,
+        shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
+        colors = SegmentedListDefaults.colors(),
+        modifier = Modifier.fillMaxWidth().clickCursor(enabled = enabled),
+        verticalAlignment = Alignment.CenterVertically,
+        leadingContent = {
+            LeadingTrailingContentWrapper {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_rounded_key),
+                    contentDescription = null,
+                )
+            }
+        },
+        supportingContent = {
+            Text(stringResource(Res.string.certificates_login_description))
+        },
+        content = { Text(stringResource(Res.string.settings_certificates)) },
+    )
 }
 
 private fun LazyListScope.grocyGroup(

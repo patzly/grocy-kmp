@@ -338,6 +338,7 @@ private fun LazyListScope.taskItems(
         emptyListItem(
             // Without a filter an empty list means there is nothing to do
             hasData = state.hasTasks && (state.filter.isActive || isSearching),
+            storedByStart = true,
             refresh = refresh,
             emptyText = { stringResource(Res.string.objects_empty) },
             filteredEmptyText = { stringResource(Res.string.objects_empty_filtered) },

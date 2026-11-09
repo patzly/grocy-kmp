@@ -23,8 +23,8 @@ internal fun DemoServerSwitcher(
     serverRepository: ServerRepository,
 ) = DemoServerSwitcher { server ->
     val connection = ServerConnection.Demo(server.url)
-    authRepository.verify(connection)
-    authRepository.saveLogin(connection)
+    val user = authRepository.verify(connection)
+    authRepository.saveLogin(connection, user)
     try {
         serverRepository.reloadConfiguration()
     } catch (_: GrocyApiException) {

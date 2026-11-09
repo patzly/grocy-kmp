@@ -648,7 +648,14 @@ class MasterDataRepository(
     suspend fun productPicture(fileName: String, maxWidth: Int): ByteArray =
         api.productPicture(requireConnection(), fileName, maxWidth)
 
-    /** Forgets the data of the server, e.g. on logout. */
+    /** True once a complete download worked since the login, so empty tables are really empty. */
+    val isEverythingDownloaded: Flow<Boolean> =
+        dao.observeServerValue(EVERYTHING_DOWNLOADED).map { it != null }
+
+    suspend fun markEverythingDownloaded() {
+        storeServerValue(EVERYTHING_DOWNLOADED, "true")
+    }
+
     /** A value the app keeps about the server, e.g. what it downloaded last; gone at logout. */
     suspend fun storedServerValue(key: String): String? = dao.observeServerValue(key).first()?.json
 
@@ -656,6 +663,7 @@ class MasterDataRepository(
         dao.upsertServerValue(ServerValueEntity(key, value))
     }
 
+    /** Forgets the data of the server, e.g. on logout. */
     suspend fun clear() {
         database.clearAllTables()
     }
@@ -726,6 +734,8 @@ class MasterDataRepository(
         const val NEW_PRODUCT_ID = NEW_OBJECT_ID
 
         // Grocy's entity names, e.g. of userfields
+        private const val EVERYTHING_DOWNLOADED = "everything_downloaded"
+
         const val PRODUCTS = "products"
         const val LOCATIONS = "locations"
         const val STORES = "shopping_locations"

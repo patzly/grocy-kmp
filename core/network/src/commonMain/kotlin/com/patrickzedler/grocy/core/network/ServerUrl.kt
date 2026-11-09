@@ -9,6 +9,9 @@ object ServerUrl {
         Http("http://"),
     }
 
+    /** The host of a [normalize]d address, as TLS connections name it. */
+    fun hostOf(url: String): String = Url(url).host.removeSurrounding("[", "]")
+
     private val SCHEME_REGEX = Regex("^[a-zA-Z][a-zA-Z0-9+.-]*://")
 
     /**

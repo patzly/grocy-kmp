@@ -4,6 +4,7 @@ import com.google.android.gms.wearable.DataEvent
 import com.google.android.gms.wearable.DataEventBuffer
 import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.WearableListenerService
+import com.patrickzedler.grocy.core.wear.WEAR_CERTIFICATES_KEY
 import com.patrickzedler.grocy.core.wear.WEAR_CONNECTION_KEY
 import com.patrickzedler.grocy.core.wear.WEAR_CONNECTION_PATH
 import kotlinx.coroutines.launch
@@ -18,13 +19,16 @@ class PhoneConnectionService : WearableListenerService() {
             .filter { it.dataItem.uri.path == WEAR_CONNECTION_PATH }
             .map { event ->
                 if (event.type == DataEvent.TYPE_CHANGED) {
-                    DataMapItem.fromDataItem(event.dataItem).dataMap.getString(WEAR_CONNECTION_KEY)
+                    val data = DataMapItem.fromDataItem(event.dataItem).dataMap
+                    data.getString(WEAR_CONNECTION_KEY) to data.getString(WEAR_CERTIFICATES_KEY)
                 } else {
-                    null
+                    null to null
                 }
             }
         graph.appScope.launch {
-            changes.forEach { graph.sync.onPhoneConnection(it) }
+            changes.forEach { (login, certificates) ->
+                graph.sync.onPhoneConnection(login, certificates)
+            }
         }
     }
 }

@@ -104,7 +104,7 @@ private fun DayHeader(
         Modifier
             .fillMaxWidth()
             .calendarPadding()
-            .padding(top = 4.dp, bottom = 8.dp),
+            .padding(top = HeaderTopPadding, bottom = 8.dp),
     ) {
         DayBadge(day, onClick = null, modifier = Modifier.width(HourLabelWidth))
         AllDayChips(
@@ -130,7 +130,7 @@ private fun WeekHeader(
         Modifier
             .fillMaxWidth()
             .calendarPadding()
-            .padding(bottom = 4.dp),
+            .padding(top = HeaderTopPadding, bottom = 4.dp),
     ) {
         Row(Modifier.fillMaxWidth()) {
             Spacer(Modifier.width(HourLabelWidth))
@@ -176,12 +176,13 @@ private fun AllDayChips(
     val shown = shownChips(wholeDay.size, limit)
     BoxWithConstraints(modifier.heightIn(max = AllDayMaxHeight)) {
         val showsIcon = maxWidth >= ChipIconMinWidth
+        val showsKind = maxWidth >= ChipKindMinWidth
         Column(
             verticalArrangement = Arrangement.spacedBy(ChipGap),
             modifier = Modifier.verticalScroll(rememberScrollState()),
         ) {
             wholeDay.take(shown).forEach { event ->
-                EventChip(event, event.name, colors, showsIcon, onEventClick)
+                EventChip(event, showsKind, colors, showsIcon, onEventClick)
             }
             if (shown < wholeDay.size) {
                 MoreChip(wholeDay.size - shown) {
@@ -236,6 +237,7 @@ private fun TimeGridBody(
                     DayEvents(
                         day = day,
                         showsIcon = maxWidth >= ChipIconMinWidth,
+                        showsKind = maxWidth >= ChipKindMinWidth,
                         colors = colors,
                         onEventClick = onEventClick,
                     )
@@ -293,6 +295,7 @@ internal fun ColumnLines(columns: Int) {
 private fun DayEvents(
     day: CalendarDay,
     showsIcon: Boolean,
+    showsKind: Boolean,
     colors: EventColors,
     onEventClick: (CalendarEvent) -> Unit,
 ) {
@@ -308,7 +311,7 @@ private fun DayEvents(
     timed.forEachIndexed { index, (_, event) ->
         EventChip(
             event = event,
-            text = event.name,
+            showsKind = showsKind,
             colors = colors,
             showsIcon = showsIcon,
             onClick = onEventClick,

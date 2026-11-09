@@ -18,4 +18,10 @@
   <string name="widget_sample_month">Kasım</string>
   <string name="widget_preview_tasks">Görevler</string>
   <string name="widget_preview_calendar">Takvim</string>
+  <string name="widget_shopping_label">Alışveriş listesi</string>
+  <string name="widget_shopping_description">Alışveriş listesinde satın alınacaklar</string>
+  <string name="widget_sample_groceries">Market</string>
+  <string name="widget_sample_bread">Ekmek</string>
+  <string name="widget_sample_eggs">Yumurta</string>
+  <string name="widget_sample_apples">Elma</string>
 </resources>

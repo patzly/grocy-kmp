@@ -18,4 +18,10 @@
   <string name="widget_sample_month">十一月</string>
   <string name="widget_preview_tasks">任務</string>
   <string name="widget_preview_calendar">日曆</string>
+  <string name="widget_shopping_label">購物清單</string>
+  <string name="widget_shopping_description">購物清單上尚待購買的項目</string>
+  <string name="widget_sample_groceries">雜貨</string>
+  <string name="widget_sample_bread">麵包</string>
+  <string name="widget_sample_eggs">雞蛋</string>
+  <string name="widget_sample_apples">蘋果</string>
 </resources>

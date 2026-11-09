@@ -1,7 +1,6 @@
 package com.patrickzedler.grocy.core.design.component
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.width
@@ -281,8 +280,7 @@ fun SearchableDropdownField(
             enabled = enabled,
             label = { Text(label) },
             trailingIcon = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    trailingAction?.invoke()
+                val arrow = @Composable {
                     DropdownArrow(
                         expanded = isMenuShown,
                         enabled = enabled,
@@ -294,6 +292,14 @@ fun SearchableDropdownField(
                             expanded = !expanded && justClosed != true
                         },
                     )
+                }
+                if (trailingAction != null) {
+                    TextFieldActions {
+                        trailingAction()
+                        arrow()
+                    }
+                } else {
+                    arrow()
                 }
             },
             supportingText = (if (showUnmatched) unmatchedText else supportingText)
@@ -374,7 +380,7 @@ private fun DropdownArrow(
     // A button of its own, so the field keeps its label as accessible name
     IconButton(
         onClick = onClick,
-        modifier = Modifier.clickCursor(enabled = enabled),
+        modifier = fieldActionSize().clickCursor(enabled = enabled),
         enabled = enabled,
     ) {
         Icon(

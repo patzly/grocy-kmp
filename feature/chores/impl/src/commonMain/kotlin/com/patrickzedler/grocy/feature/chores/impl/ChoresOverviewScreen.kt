@@ -346,6 +346,7 @@ private fun LazyListScope.choreItems(
         emptyListItem(
             // Without a filter an empty list means the server has no chores
             hasData = state.hasChores && (state.filter.isActive || isSearching),
+            storedByStart = true,
             refresh = refresh,
             emptyText = { stringResource(Res.string.objects_empty) },
             filteredEmptyText = { stringResource(Res.string.objects_empty_filtered) },

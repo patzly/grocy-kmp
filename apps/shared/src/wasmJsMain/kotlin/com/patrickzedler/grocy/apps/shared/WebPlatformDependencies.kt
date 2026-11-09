@@ -17,6 +17,7 @@ import com.patrickzedler.grocy.core.data.update.AppUpdater
 import com.patrickzedler.grocy.core.data.update.ServiceWorkerAppUpdater
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.network.GitHubReleases
+import com.patrickzedler.grocy.core.network.ClientKeySource
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.core.scanner.TextRecognizerFactory
 import kotlinx.coroutines.CoroutineScope
@@ -42,6 +43,8 @@ class WebPlatformDependencies(
     override val logReader: LogReader = BrowserErrorLog().apply { install() }
 
     override val unlockChecker: UnlockChecker? = null
+
+    override val clientKeys: ClientKeySource? = null
 
     override val barcodeDecoders: Map<ScannerEngine, BarcodeDecoderFactory> =
         mapOf(ScannerEngine.ZXING to BarcodeDecoderFactory.Zxing)

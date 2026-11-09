@@ -18,4 +18,10 @@
   <string name="widget_sample_month">11月</string>
   <string name="widget_preview_tasks">タスク一覧</string>
   <string name="widget_preview_calendar">カレンダー</string>
+  <string name="widget_shopping_label">買い物リスト</string>
+  <string name="widget_shopping_description">買い物リストの未購入の品目</string>
+  <string name="widget_sample_groceries">食料品</string>
+  <string name="widget_sample_bread">パン</string>
+  <string name="widget_sample_eggs">卵</string>
+  <string name="widget_sample_apples">りんご</string>
 </resources>

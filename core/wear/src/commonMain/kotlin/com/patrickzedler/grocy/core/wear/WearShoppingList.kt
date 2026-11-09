@@ -14,19 +14,16 @@ import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListGrouping
+import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingItemAmounts
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItemSync
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListStatus
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
-import com.patrickzedler.grocy.core.model.text.formatDecimal
 import com.patrickzedler.grocy.core.model.text.normalizedForSearch
 import com.patrickzedler.grocy.core.model.text.platformDecimalSeparator
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import kotlin.coroutines.cancellation.CancellationException
-import kotlin.math.ceil
-import kotlin.math.pow
-import kotlin.math.roundToLong
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.TimeMark
@@ -351,21 +348,25 @@ private data class RowGroups(val productGroup: String?, val store: String?)
 /** Builds the rows; what all of them need, looked up once. */
 private class RowBuilder(
     private val data: WearShoppingData,
-    private val language: String,
-    private val decimalSeparator: Char,
+    language: String,
+    decimalSeparator: Char,
 ) {
     private val products = data.names.products.associateBy { it.id }
     private val groups = data.names.productGroups.associateBy { it.id }
-    private val units = data.names.quantityUnits.associateBy { it.id }
     private val stores = data.names.stores.associateBy { it.id }
-    private val factors = data.names.conversions.associate {
-        Triple<Int?, Int?, Int?>(it.productId, it.fromQuId, it.toQuId) to it.factor
-    }
+    private val amounts = ShoppingItemAmounts(
+        products = data.names.products,
+        quantityUnits = data.names.quantityUnits,
+        conversions = data.names.conversions,
+        settings = data.userSettings,
+        language = language,
+        decimalSeparator = decimalSeparator,
+    )
 
     fun row(item: ShoppingListItem): WearRow {
         val product = item.productId?.let { products[it] }
         val note = item.note?.trim()?.ifEmpty { null }
-        val amount = item.takeIf { it.productId != null }?.let { amountText(it, product) }
+        val amount = amounts.of(item)
         return WearRow(
             item = WearShoppingItem(
                 id = item.id,
@@ -381,26 +382,6 @@ private class RowBuilder(
                 store = product?.storeId?.let { stores[it]?.name },
             ),
         )
-    }
-
-    // The amount is stored in the stock unit, the item's unit only shows it
-    private fun amountText(item: ShoppingListItem, product: Product?): String {
-        val decimals = data.userSettings.stockDecimalPlacesAmounts
-        val factor = product?.takeIf { item.quId != it.quIdStock }
-            ?.let { factors[Triple(it.id, it.quIdStock, item.quId)] }
-            ?: 1.0
-        val exact = roundTo(item.amount * factor, decimals)
-        val shown = if (data.userSettings.shoppingListRoundUp) ceil(exact) else exact
-        val unit = item.quId?.let { units[it] }
-        return listOfNotNull(
-            formatDecimal(shown, decimals, decimalSeparator),
-            unit?.nameFor(shown, language),
-        ).joinToString(" ")
-    }
-
-    private fun roundTo(value: Double, decimals: Int): Double {
-        val scale = 10.0.pow(decimals)
-        return (value * scale).roundToLong() / scale
     }
 }
 

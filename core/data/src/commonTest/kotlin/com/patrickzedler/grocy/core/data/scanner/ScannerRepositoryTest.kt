@@ -131,7 +131,8 @@ class ScannerRepositoryTest {
     }
 
     @Test
-    fun dueDatesAreScannedByDefaultWhereTextCanBeRead() = runTest {
+    fun dueDatesAreScannedByDefaultOnceUnlocked() = runTest {
+        checker.keyInstalled = true
         val repository = repository()
 
         assertEquals(true, repository.scanDueDates.value)
@@ -140,6 +141,7 @@ class ScannerRepositoryTest {
 
     @Test
     fun turnedOffDueDateScanningIsStoredAndHidesTheScanners() = runTest {
+        checker.keyInstalled = true
         val repository = repository()
 
         repository.setScanDueDates(false)
@@ -151,6 +153,24 @@ class ScannerRepositoryTest {
 
     @Test
     fun platformWithoutTextRecognitionScansNoDueDates() = runTest {
+        checker.keyInstalled = true
+
         assertFalse(repository(canReadText = false).scansDueDates.value)
+    }
+
+    @Test
+    fun withoutTheUnlockKeyDueDatesAreNotScanned() = runTest {
+        val repository = repository()
+
+        assertEquals(true, repository.scanDueDates.value)
+        assertFalse(repository.scansDueDates.value)
+    }
+
+    @Test
+    fun onceUnlockedDueDatesAreScannedWhicheverBarcodeEngineIsSelected() = runTest {
+        checker.keyInstalled = true
+        settingsStore.setScannerEngine(ScannerEngine.ZXING)
+
+        assertTrue(repository().scansDueDates.value)
     }
 }

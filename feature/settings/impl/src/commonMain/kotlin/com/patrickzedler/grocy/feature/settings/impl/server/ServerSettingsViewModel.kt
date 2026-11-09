@@ -12,6 +12,7 @@ import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.util.RefreshController
 import com.patrickzedler.grocy.core.data.util.RefreshState
 import com.patrickzedler.grocy.core.model.DemoServer
+import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import com.patrickzedler.grocy.feature.settings.impl.DemoServerSwitcher
 import kotlin.time.TimeSource
@@ -41,6 +42,9 @@ internal class ServerSettingsViewModel(
     val server: StateFlow<ServerState?> = serverRepository.server
         .filterNotNull()
         .stateIn(viewModelScope, SharingStarted.Eagerly, serverRepository.server.value)
+
+    /** The stored configuration, which a reload replaces; null until it is known. */
+    val config: StateFlow<ServerConfig?> = serverRepository.serverConfig
 
     /** True while the server's version is asked for, until then it may be unknown. */
     var isLoadingVersion by mutableStateOf(false)

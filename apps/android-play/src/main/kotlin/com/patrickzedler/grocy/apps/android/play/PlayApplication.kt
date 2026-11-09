@@ -45,6 +45,11 @@ class PlayApplication : Application(), AppGraphOwner {
         super.onCreate()
         registerActivityLifecycleCallbacks(activityTracker)
         // Zero click: whoever is logged in here is logged in on the paired watch too
-        PhoneConnectionPublisher(this, graph.connection, publisherScope).start()
+        PhoneConnectionPublisher(
+            context = this,
+            connection = graph.connection,
+            trustedCertificates = graph.trustedCertificates,
+            scope = publisherScope,
+        ).start()
     }
 }

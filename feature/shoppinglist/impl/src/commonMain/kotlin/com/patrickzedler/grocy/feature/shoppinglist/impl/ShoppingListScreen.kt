@@ -382,6 +382,7 @@ private fun LazyListScope.rows(
         emptyListItem(
             // Without a filter an empty list means nothing is on it
             hasData = state.hasData && (state.status != null || isSearching),
+            storedByStart = true,
             refresh = refresh,
             emptyText = { stringResource(Res.string.shopping_list_empty) },
             filteredEmptyText = { stringResource(Res.string.shopping_list_empty_filtered) },

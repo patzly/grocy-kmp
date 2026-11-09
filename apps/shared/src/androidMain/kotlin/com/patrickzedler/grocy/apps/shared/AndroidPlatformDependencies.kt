@@ -23,6 +23,8 @@ import com.patrickzedler.grocy.core.data.update.AppUpdater
 import com.patrickzedler.grocy.core.data.update.GitHubAppUpdater
 import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.network.GitHubReleases
+import com.patrickzedler.grocy.core.network.ClientKeySource
+import com.patrickzedler.grocy.core.network.KeyChainClientKeys
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.core.scanner.TextRecognizerFactory
 import com.patrickzedler.grocy.core.ui.hasLocalNetworkPermission
@@ -32,7 +34,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
 /**
- * [additionalBarcodeDecoders] and [textRecognizer] are engines an app module adds, e.g. ML Kit in
+ * [additionalBarcodeDecoders] and [additionalTextRecognizers] are engines an app module adds, e.g. ML Kit in
  * the Play app, which apps:shared must not depend on. [appUpdater] likewise replaces the GitHub updater it
  * gets, e.g. with Google Play's in-app updates.
  */
@@ -56,11 +58,14 @@ class AndroidPlatformDependencies(
 
     override val logReader: LogReader = LogcatReader()
 
+    override val clientKeys: ClientKeySource = KeyChainClientKeys(appContext)
+
     override val unlockChecker: UnlockChecker? =
         if (isPlayVariant) PackageManagerUnlockChecker(appContext) else null
 
     override val barcodeDecoders: Map<ScannerEngine, BarcodeDecoderFactory> =
         mapOf(ScannerEngine.ZXING to BarcodeDecoderFactory.Zxing) + additionalBarcodeDecoders
+
 
     // The default network of the device, also when it switches from one network to another
     override val networkAvailable: Flow<Unit> = callbackFlow {

@@ -25,8 +25,9 @@ internal val GrocyJson = Json {
  */
 fun createGrocyHttpClient(
     localNetwork: LocalNetworkGate? = null,
+    tls: TlsOptions? = null,
     proxy: suspend () -> NetworkProxy = { NetworkProxy.System },
-): HttpClient = platformHttpClient(proxy, localNetwork) { configureGrocyClient(proxy) }
+): HttpClient = platformHttpClient(proxy, localNetwork, tls) { configureGrocyClient(proxy) }
 
 /**
  * Same configuration as [createGrocyHttpClient] on a given engine, e.g. a mock in tests;

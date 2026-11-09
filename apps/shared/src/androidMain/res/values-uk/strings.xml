@@ -18,4 +18,10 @@
   <string name="widget_sample_month">Листопад</string>
   <string name="widget_preview_tasks">Завдання</string>
   <string name="widget_preview_calendar">Календар</string>
+  <string name="widget_shopping_label">Список покупок</string>
+  <string name="widget_shopping_description">Що залишилося купити зі списку покупок</string>
+  <string name="widget_sample_groceries">Продукти</string>
+  <string name="widget_sample_bread">Хліб</string>
+  <string name="widget_sample_eggs">Яйця</string>
+  <string name="widget_sample_apples">Яблука</string>
 </resources>

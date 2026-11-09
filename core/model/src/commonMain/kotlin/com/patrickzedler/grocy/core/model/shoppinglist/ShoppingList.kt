@@ -1,5 +1,15 @@
 package com.patrickzedler.grocy.core.model.shoppinglist
 
+import com.patrickzedler.grocy.core.model.masterdata.Product
+import com.patrickzedler.grocy.core.model.masterdata.QuantityUnit
+import com.patrickzedler.grocy.core.model.masterdata.ResolvedQuantityUnitConversion
+import com.patrickzedler.grocy.core.model.masterdata.nameFor
+import com.patrickzedler.grocy.core.model.server.UserSettings
+import com.patrickzedler.grocy.core.model.text.formatDecimal
+import kotlin.math.ceil
+import kotlin.math.pow
+import kotlin.math.roundToLong
+
 /**
  * One of Grocy's shopping lists; Grocy's first list has the id [DEFAULT_ID] and cannot be
  * deleted. [description] is the list's "Notes" as HTML, edited on the shopping list page.
@@ -77,4 +87,38 @@ fun shoppingListSummaryOf(
             )
         },
     )
+}
+
+/** The amount of shopping list items as Grocy shows it: in the item's unit, by the user's settings. */
+class ShoppingItemAmounts(
+    products: List<Product>,
+    quantityUnits: List<QuantityUnit>,
+    conversions: List<ResolvedQuantityUnitConversion>,
+    private val settings: UserSettings,
+    private val language: String,
+    private val decimalSeparator: Char,
+) {
+    private val products = products.associateBy { it.id }
+    private val units = quantityUnits.associateBy { it.id }
+    private val factors = conversions.associate {
+        Triple<Int?, Int?, Int?>(it.productId, it.fromQuId, it.toQuId) to it.factor
+    }
+
+    /** Null for items without a product, whose amount is a plain number nobody chose. */
+    fun of(item: ShoppingListItem): String? {
+        val productId = item.productId ?: return null
+        val decimals = settings.stockDecimalPlacesAmounts
+        val product = products[productId]
+        // The amount is stored in the stock unit, the item's unit only shows it
+        val factor = product?.takeIf { item.quId != it.quIdStock }
+            ?.let { factors[Triple(it.id, it.quIdStock, item.quId)] }
+            ?: 1.0
+        val scale = 10.0.pow(decimals)
+        val exact = (item.amount * factor * scale).roundToLong() / scale
+        val shown = if (settings.shoppingListRoundUp) ceil(exact) else exact
+        return listOfNotNull(
+            formatDecimal(shown, decimals, decimalSeparator),
+            item.quId?.let { units[it] }?.nameFor(shown, language),
+        ).joinToString(" ")
+    }
 }

@@ -5,6 +5,13 @@
     <item name="android:windowBackground">@color/green_theme_surface</item>
   </style>
 
+  <!-- The home screen stays visible behind what such an activity shows -->
+  <style name="Theme.Grocy.Translucent">
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowNoTitle">true</item>
+  </style>
+
   <style name="Theme.Grocy.Splash" parent="Theme.SplashScreen">
     <item name="windowSplashScreenBackground">@color/green_theme_surface</item>
     <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo_anim</item>

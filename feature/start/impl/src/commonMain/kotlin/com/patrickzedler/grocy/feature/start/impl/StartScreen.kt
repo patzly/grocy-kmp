@@ -15,8 +15,12 @@ import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -37,6 +41,7 @@ import com.patrickzedler.grocy.core.design.component.SupportingBulletList
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
+import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.model.batteries.BatteriesSummary
 import com.patrickzedler.grocy.core.model.chores.ChoresSummary
 import com.patrickzedler.grocy.core.model.server.ServerConfig
@@ -44,6 +49,7 @@ import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListSummary
 import com.patrickzedler.grocy.core.model.stock.StockSummary
 import com.patrickzedler.grocy.core.model.tasks.TasksSummary
 import com.patrickzedler.grocy.core.model.text.formatCurrency
+import com.patrickzedler.grocy.core.model.nextSession
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.app_name
 import com.patrickzedler.grocy.core.resources.batteries_overview_title
@@ -71,6 +77,8 @@ import com.patrickzedler.grocy.core.resources.meal_plan_title
 import com.patrickzedler.grocy.core.resources.recipes_title
 import com.patrickzedler.grocy.core.resources.shopping_list_list
 import com.patrickzedler.grocy.core.resources.shopping_list_list_with_count
+import com.patrickzedler.grocy.core.resources.objects_empty
+import com.patrickzedler.grocy.core.resources.recipes_empty
 import com.patrickzedler.grocy.core.resources.start_batteries_due_soon
 import com.patrickzedler.grocy.core.resources.start_batteries_due_today
 import com.patrickzedler.grocy.core.resources.start_batteries_overdue
@@ -102,14 +110,19 @@ import com.patrickzedler.grocy.core.resources.start_summary_intro_list
 import com.patrickzedler.grocy.core.resources.start_tasks_due_soon
 import com.patrickzedler.grocy.core.resources.start_tasks_due_today
 import com.patrickzedler.grocy.core.resources.start_tasks_overdue
+import com.patrickzedler.grocy.core.resources.stock_overview_empty
 import com.patrickzedler.grocy.core.resources.stock_overview_title
 import com.patrickzedler.grocy.core.resources.tasks_count
 import com.patrickzedler.grocy.core.resources.tasks_title
 import com.patrickzedler.grocy.core.ui.AppMenuDialogs
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
 import com.patrickzedler.grocy.core.ui.rememberAppMenu
+import com.patrickzedler.grocy.core.ui.sessions.SessionsDialog
+import com.patrickzedler.grocy.core.ui.sessions.SessionsViewModel
+import com.patrickzedler.grocy.core.ui.sessions.message
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
@@ -201,6 +214,8 @@ internal fun availableSections(config: ServerConfig?): List<StartSection> =
 @Composable
 internal fun StartScreen(
     viewModel: StartViewModel,
+    sessionsViewModel: SessionsViewModel,
+    onSessionSwitched: () -> Unit,
     isDemoServer: Boolean,
     isBesideDetail: Boolean,
     shownSection: StartSection?,
@@ -223,6 +238,40 @@ internal fun StartScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val appMenu = rememberAppMenu(onSettingsClick = onSettingsClick, onAboutClick = onAboutClick)
     AppMenuDialogs(appMenu)
+    val sessions by sessionsViewModel.sessions.collectAsStateWithLifecycle()
+    var isSessionsDialogOpen by rememberSaveable { mutableStateOf(false) }
+
+    // A swipe has no dialog to tell why it did not work
+    LaunchedEffect(sessionsViewModel.error, isSessionsDialogOpen) {
+        val error = sessionsViewModel.error ?: return@LaunchedEffect
+        if (isSessionsDialogOpen) return@LaunchedEffect
+        snackbarHostState.showNewestSnackbar(getString(error.message))
+        sessionsViewModel.onErrorShown()
+    }
+
+    if (isSessionsDialogOpen) {
+        SessionsDialog(
+            sessions = sessions,
+            current = sessions.firstOrNull(),
+            switching = sessionsViewModel.switching,
+            error = sessionsViewModel.error,
+            onSessionClick = { session ->
+                sessionsViewModel.switchTo(session) {
+                    isSessionsDialogOpen = false
+                    onSessionSwitched()
+                }
+            },
+            onRemoveSession = sessionsViewModel::remove,
+            onDismissRequest = {
+                isSessionsDialogOpen = false
+                sessionsViewModel.onErrorShown()
+            },
+            onLogoutClick = {
+                isSessionsDialogOpen = false
+                sessionsViewModel.logout()
+            },
+        )
+    }
 
     RefreshErrorEffect(
         error = refresh.error,
@@ -252,6 +301,18 @@ internal fun StartScreen(
         onUserentityClick = onUserentityClick,
         menuItems = appMenu.items,
         modifier = modifier,
+        logo = {
+            SessionLogoButton(
+                session = sessions.firstOrNull(),
+                next = nextSession(sessions),
+                isDialogOpen = isSessionsDialogOpen,
+                isSwitching = sessionsViewModel.switching != null,
+                onClick = { isSessionsDialogOpen = true },
+                onSwipeTo = { session ->
+                    sessionsViewModel.switchTo(session, onSwitched = onSessionSwitched)
+                },
+            )
+        },
     )
 }
 
@@ -277,12 +338,13 @@ private fun StartContent(
     onUserentityClick: (name: String) -> Unit,
     menuItems: List<AppBarMenuItem>,
     modifier: Modifier = Modifier,
+    logo: @Composable () -> Unit = { AppBarLogo() },
 ) {
     SegmentedListScreen(
         title = stringResource(Res.string.app_name),
         modifier = modifier,
         // No back button on the first screen, its place shows the logo
-        navigationIcon = { AppBarLogo() },
+        navigationIcon = logo,
         menuItems = menuItems,
         pane = ScreenPane.List.takeIf { isBesideDetail },
         snackbarHostState = snackbarHostState,
@@ -416,7 +478,9 @@ private fun stockSummary(summary: StockSummary, state: StartUiState): SectionSum
     val count = summary.productCount
     val value = summary.totalValue?.takeIf { count > 0 }
         ?.let { formatCurrency(it, state.currency, state.priceDecimals) }
-    val inStock = if (value != null) {
+    val inStock = if (count == 0) {
+        stringResource(Res.string.stock_overview_empty)
+    } else if (value != null) {
         pluralStringResource(Res.plurals.start_stock_in_stock_value, count, count, value)
     } else {
         pluralStringResource(Res.plurals.start_stock_in_stock, count, count)
@@ -504,7 +568,11 @@ private fun shoppingListSummary(summary: ShoppingListSummary): SectionSummary {
 @Composable
 private fun recipesSummary(summary: RecipesSummary, checksStock: Boolean): SectionSummary {
     val count = summary.count
-    val text = pluralStringResource(Res.plurals.start_recipes_count, count, count)
+    val text = if (count == 0) {
+        stringResource(Res.string.recipes_empty)
+    } else {
+        pluralStringResource(Res.plurals.start_recipes_count, count, count)
+    }
     val bullets = if (checksStock) {
         listOfNotNull(
             summary.enoughInStock.takeIf { it > 0 }?.let {
@@ -586,11 +654,15 @@ private fun tasksSummary(summary: TasksSummary, dueSoonDays: Int): SectionSummar
  */
 @Composable
 private fun batteriesSummary(summary: BatteriesSummary, dueSoonDays: Int): SectionSummary {
-    val text = pluralStringResource(
-        Res.plurals.masterdata_batteries_count,
-        summary.count,
-        summary.count,
-    )
+    val text = if (summary.count == 0) {
+        stringResource(Res.string.objects_empty)
+    } else {
+        pluralStringResource(
+            Res.plurals.masterdata_batteries_count,
+            summary.count,
+            summary.count,
+        )
+    }
     val bullets = listOfNotNull(
         summary.overdue.takeIf { it > 0 }?.let {
             pluralStringResource(Res.plurals.start_batteries_overdue, it, it)
@@ -620,7 +692,11 @@ private fun batteriesSummary(summary: BatteriesSummary, dueSoonDays: Int): Secti
 private fun equipmentSummary(count: Int): SectionSummary = SectionSummary(
     intro = stringResource(
         Res.string.start_summary_intro_end,
-        pluralStringResource(Res.plurals.equipment_count, count, count),
+        if (count == 0) {
+            stringResource(Res.string.objects_empty)
+        } else {
+            pluralStringResource(Res.plurals.equipment_count, count, count)
+        },
     ),
     bullets = emptyList(),
 )
@@ -631,11 +707,15 @@ private fun equipmentSummary(count: Int): SectionSummary = SectionSummary(
  */
 @Composable
 private fun choresSummary(summary: ChoresSummary, dueSoonDays: Int): SectionSummary {
-    val text = pluralStringResource(
-        Res.plurals.masterdata_chores_count,
-        summary.count,
-        summary.count,
-    )
+    val text = if (summary.count == 0) {
+        stringResource(Res.string.objects_empty)
+    } else {
+        pluralStringResource(
+            Res.plurals.masterdata_chores_count,
+            summary.count,
+            summary.count,
+        )
+    }
     val bullets = listOfNotNull(
         summary.overdue.takeIf { it > 0 }?.let {
             pluralStringResource(Res.plurals.start_chores_overdue, it, it)

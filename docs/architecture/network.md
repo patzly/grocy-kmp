@@ -27,6 +27,31 @@ API key placement and Home Assistant ingress. Moved from CLAUDE.md.
   only what Google Play Services download themselves (Play updates, ML Kit) and links opened in
   another app do not.
 
+## Certificates (Android)
+
+The watch only follows the trusted certificates, see `docs/features/wear.md`.
+
+- `CertificateSettings` (`CertificateRepository`, DataStore key `certificate_settings`, read at
+  app start): a client certificate's alias and the certificates the user trusted. Browsers decide
+  themselves, the category and the login's item are hidden there (`areCertificatesSupported`).
+  Not on the watch: Android's key store does not hand keys out, and it has no way to pick one.
+- `GrocyTls` applies `TlsOptions` to OkHttp and reads the settings at every handshake; a change
+  evicts pooled connections and TLS sessions. Nothing changes while the feature is unused: no
+  alias means no client certificate is ever offered and nothing tells the user about any.
+- Client certificates come from `KeyChain` (`KeyChainClientKeys`): the private key stays in
+  Android's key store, the user chooses it in the system's dialog
+  (`rememberClientCertificatePicker`), which grants the app its use. It is offered to whichever
+  server asks during the handshake, only one per device.
+- Self-signed servers: what the system trusts (also user CAs, `network_security_config.xml`)
+  stays trusted. On top `PinningTrustManager` accepts exactly the certificates the user trusted,
+  by SHA-256, `PinningHostnameVerifier` binds them to their host, which also allows certificates
+  whose name does not match (IP addresses). Never a "trust all".
+- The question only comes during a login (`AuthRepository.verify`, also switching sessions):
+  `CertificateTrustGate` holds it while `CertificatePrompt` shows subject, issuer, expiry and
+  fingerprint. Requests in the background never ask, so a network that intercepts TLS causes a
+  failed request instead of a question. A renewed certificate: Settings, Certificates, "Check
+  this server's certificate". `GrocyTlsTest` does real handshakes on the loopback device.
+
 ## Local network (Android 17)
 
 - Apps targeting Android 17 (SDK 37) reach the local network only with the runtime permission

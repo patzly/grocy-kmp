@@ -58,6 +58,7 @@ class MainActivity : ComponentActivity() {
         ) {
             intent.dataString?.let(graph::openDeepLink)
         }
+        systemSettingsRouteOf(intent.action, intent.categories)?.let(graph::openRoute)
         val kind = AndroidNotifier.openedKindOf(intent) ?: return
         graph.openNotification(kind)
     }

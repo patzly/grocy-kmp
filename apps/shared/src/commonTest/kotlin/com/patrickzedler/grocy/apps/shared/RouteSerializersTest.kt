@@ -53,6 +53,7 @@ import com.patrickzedler.grocy.feature.recipes.api.RecipesRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListFormRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListItemRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListRoute
+import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingModeRoute
 import com.patrickzedler.grocy.feature.start.api.StartRoute
 import com.patrickzedler.grocy.feature.stock.api.ConsumeRoute
 import com.patrickzedler.grocy.feature.stock.api.InventoryRoute
@@ -146,6 +147,7 @@ class RouteSerializersTest {
         TransferRoute(besideStart = true),
         InventoryRoute(besideStart = true),
         ShoppingListRoute(),
+        ShoppingModeRoute(listId = 2),
         ShoppingListRoute(listId = 2),
         ShoppingListItemRoute(),
         ShoppingListItemRoute(id = 5),

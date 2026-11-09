@@ -96,7 +96,7 @@ internal fun ScannerSettingsScreen(
                 showsUnlockHint = viewModel.showsUnlockHint(unlockState),
                 onEngineClick = viewModel::selectEngine,
                 onUnlockClick = { uriHandler.tryOpenUri(appVendingKey) },
-                scanDueDates = scanDueDates.takeIf { viewModel.showsDueDates },
+                scanDueDates = scanDueDates.takeIf { viewModel.showsDueDates(unlockState) },
                 onScanDueDatesChange = viewModel::setScanDueDates,
             )
         }

@@ -14,6 +14,9 @@ widgets, whose look the project owner chose, with Grocy's data and the app's col
   the rest; an icon where a day is wide enough. Previous and next step through the months
   (`MonthStepAction`, Glance's state of the widget), for the rest of the day (`shownMonthOf`). A tap
   on a day opens the calendar's day, on the title its month.
+- Event titles in the calendar list: from three columns (`NarrowWidth`) Grocy's whole title
+  ("Product due: Milk"), narrower only the name with the icon, so the kind never takes its place;
+  both wrap, a widget's list rows may differ in height.
 - Calendar list (`ScheduleWidget`, the class keeps its first name because the system knows placed
   widgets by it): today, also without events ("Nothing due today"), then every day with events
   (`scheduleRowsOf`), each event like a task of Google's widget with time and section below. Like
@@ -21,6 +24,14 @@ widgets, whose look the project owner chose, with Grocy's data and the app's col
   = `WidgetInset`), so do the titles and tasks of all widgets. A tap on an event opens what it is
   about (`routeOf` of the calendar), on a day the calendar's list. Narrow it writes the date short
   like Google ("5 Thu").
+- Shopping list (`ShoppingListWidget`): what is left to buy on one list by name
+  (`widgetShoppingItemsOf`), amount and note below. The title is the list's name and starts the
+  shopping mode with it, a tap on an item opens its form, "+" adds to the list. Which list is the
+  user's choice for each widget (`ShoppingListIdKey`, Glance's state of the widget):
+  `ShoppingListWidgetConfigureActivity` floats over the home screen when it is placed (without a
+  choice it is not placed) and from the widget's settings (`reconfigurable`). The activity is
+  exported for the launcher and only accepts this kind of widget. A list that no longer exists
+  (deleted, another account) makes the widget ask again.
 - Previews: from Android 15 on the picker shows the widgets themselves (`providePreview`, Glance's
   generated previews) with `sampleWidgetData`: tasks and events of every kind around today with
   Grocy's colors, the names translated Android resources (`widget_sample_*`), in the app's colors
@@ -61,13 +72,15 @@ restart):
   restart, an update of the app and a changed time, zone or language.
 - `WidgetRefreshWorker` (WorkManager, every 30 minutes, only with a network, batched by the system
   in Doze) asks Grocy's `system/db-changed-time` and downloads only when the server changed
-  something since or the day changed (`CalendarRepository.refreshIfChanged`): a check without news
-  is one small request. Using the API does not change that time (Grocy keeps it when it records
+  something since or the day changed (`WidgetDataRefresher`): a check without news is one small
+  request, shared by all widgets, and a change only downloads what placed widgets show. The
+  shopping list widget therefore adds no timer or wake up of its own: changes made elsewhere reach
+  it within about 30 minutes, changes in the app at once. Using the API does not change that time (Grocy keeps it when it records
   `last_used`).
 - A new language restarts the app; the first start in it redraws them.
 
 ## Testing
 
-`WidgetModelTest` (tasks, list, month, stepping, places, samples, midnight, manifest),
-`WidgetColorsTest`, `WidgetLinksTest`, `CalendarRepositoryTest` (refresh only on changes). How they
+`WidgetModelTest` (tasks, shopping list, list, month, stepping, places, samples, midnight, manifest),
+`WidgetColorsTest`, `WidgetLinksTest`, `WidgetDataRefresherTest` (refresh only on changes). How they
 look and behave on a launcher needs a device.

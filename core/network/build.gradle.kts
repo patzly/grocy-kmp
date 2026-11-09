@@ -21,5 +21,9 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.ktor.client.mock)
         }
+        getByName("androidHostTest").dependencies {
+            // Certificates for a real TLS server
+            implementation(libs.okhttp.tls)
+        }
     }
 }

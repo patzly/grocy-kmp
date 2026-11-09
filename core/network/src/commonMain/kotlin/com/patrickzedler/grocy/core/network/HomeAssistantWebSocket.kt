@@ -47,7 +47,7 @@ internal class WebSocketIngressSessionSource(
         } catch (e: CancellationException) {
             throw e
         } catch (e: Throwable) {
-            throw GrocyApiException.Unreachable(e)
+            throw connectionFailure(e)
         }
         val messages = object : WebSocketMessages {
             override suspend fun send(text: String) = session.send(Frame.Text(text))
@@ -64,7 +64,7 @@ internal class WebSocketIngressSessionSource(
                 IngressSessionHandshake(messages).run(connection)
             }
         } catch (e: TimeoutCancellationException) {
-            throw GrocyApiException.Unreachable(e)
+            throw connectionFailure(e)
         } finally {
             session.close()
         }

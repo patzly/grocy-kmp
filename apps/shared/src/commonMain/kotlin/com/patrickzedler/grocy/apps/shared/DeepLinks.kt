@@ -11,6 +11,7 @@ import com.patrickzedler.grocy.feature.equipment.api.EquipmentRoute
 import com.patrickzedler.grocy.feature.recipes.api.MealPlanRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipeRoute
 import com.patrickzedler.grocy.feature.recipes.api.RecipesRoute
+import com.patrickzedler.grocy.feature.settings.api.NotificationSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingModeRoute
@@ -70,7 +71,7 @@ internal object DeepLinks {
         "locationcontentsheet" -> LocationContentSheetRoute
         "spendings" -> StockSpendingsRoute
         "shoppinglist" -> ShoppingListRoute(id(LIST))
-        "shoppingmode" -> ShoppingModeRoute
+        "shoppingmode" -> ShoppingModeRoute()
         "recipes" -> RecipesRoute()
         "recipe" -> id(ID)?.let(::RecipeRoute)
         "mealplan" -> MealPlanRoute()
@@ -116,3 +117,7 @@ internal object DeepLinks {
     private const val BATTERY = "battery"
     private const val LIST = "list"
 }
+
+/** What goes on the back stack for an opened [route]: a settings page comes with its list. */
+internal fun openedRoutesOf(route: Route): List<Route> =
+    if (route is NotificationSettingsRoute) listOf(SettingsRoute, route) else listOf(route)

@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.data.credentials
 
 import com.patrickzedler.grocy.core.data.BrowserLocalStorage
 import com.patrickzedler.grocy.core.data.KeyValueStorage
+import com.patrickzedler.grocy.core.model.SavedSession
 import com.patrickzedler.grocy.core.model.ServerConnection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +35,19 @@ class WebCredentialStore internal constructor(
         state.value = null
     }
 
+    private val sessionsState = MutableStateFlow(
+        storage.get(SESSIONS_STORAGE_KEY)?.let(ServerConnectionCodec::decodeSessions).orEmpty(),
+    )
+
+    override val sessions: Flow<List<SavedSession>> = sessionsState.asStateFlow()
+
+    override suspend fun saveSessions(sessions: List<SavedSession>) {
+        storage.set(SESSIONS_STORAGE_KEY, ServerConnectionCodec.encodeSessions(sessions))
+        sessionsState.value = sessions
+    }
+
     internal companion object {
         const val STORAGE_KEY = "grocy.serverConnection"
+        const val SESSIONS_STORAGE_KEY = "grocy.savedSessions"
     }
 }

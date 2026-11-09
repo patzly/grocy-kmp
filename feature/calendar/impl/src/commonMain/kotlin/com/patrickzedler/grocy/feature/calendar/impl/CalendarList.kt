@@ -163,7 +163,7 @@ private fun ListNowLine() {
 }
 
 /**
- * An event of the list like one of Google's schedule: its icon and name, below them its time,
+ * An event of the list like one of Google's schedule: its icon and Grocy's title, below them its time,
  * section and who a chore is assigned to, all in its color; it moves to its chip of other views.
  */
 @Composable
@@ -204,19 +204,20 @@ private fun ListEventChip(
             }
             .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(verticalAlignment = Alignment.Top) {
             Icon(
                 painter = painterResource(event.kind.icon),
                 contentDescription = null,
                 tint = roles.content,
-                modifier = Modifier.size(ListChipIconSize),
+                // On the first line when a long title wraps
+                modifier = Modifier.padding(top = 3.dp).size(ListChipIconSize),
             )
             Spacer(Modifier.width(8.dp))
             Text(
-                text = event.name,
+                text = eventTitle(event),
                 style = MaterialTheme.typography.titleMedium,
                 color = roles.content,
-                maxLines = 1,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
         }

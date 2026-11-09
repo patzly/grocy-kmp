@@ -6,9 +6,10 @@ import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.js.Js
 
 // fetch() always goes through the browser's proxy settings, a page cannot choose another; the
-// browser asks for the local network itself
+// browser asks for the local network itself and handles every certificate
 internal actual fun platformHttpClient(
     proxy: suspend () -> NetworkProxy,
     localNetwork: LocalNetworkGate?,
+    tls: TlsOptions?,
     config: HttpClientConfig<*>.() -> Unit,
 ): HttpClient = HttpClient(Js, config)

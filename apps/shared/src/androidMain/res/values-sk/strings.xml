@@ -18,4 +18,10 @@
   <string name="widget_sample_month">November</string>
   <string name="widget_preview_tasks">Úlohy</string>
   <string name="widget_preview_calendar">Kalendár</string>
+  <string name="widget_shopping_label">Nákupný zoznam</string>
+  <string name="widget_shopping_description">Čo zostáva kúpiť z nákupného zoznamu</string>
+  <string name="widget_sample_groceries">Potraviny</string>
+  <string name="widget_sample_bread">Chlieb</string>
+  <string name="widget_sample_eggs">Vajcia</string>
+  <string name="widget_sample_apples">Jablká</string>
 </resources>

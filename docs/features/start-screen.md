@@ -63,6 +63,19 @@ meal plan dialog (`feature:recipes`, see `recipes.md`) and its meal plan with it
 (`feature:recipes`, see `meal-plan.md`) and its chores (`feature:chores`, see `chores.md`) and its tasks (`feature:tasks`, see `tasks.md`) and its batteries (`feature:batteries`, see
 `batteries.md`) and its equipment (`feature:equipment`, see `equipment.md`).
 
+The logo in the app bar (`SessionLogoButton`) turns into a 32.dp profile circle while pressed,
+hovered and with its dialog open: the first letter of the username, one of three container colors
+per account. A tap opens `SessionsDialog` (`core:ui`): who is logged in and the instance, Logout, the
+other sessions most recently used first, a bin at every item. On touch a swipe down moves the circle
+away and brings the next one from above, like the account particle of Google's apps; past half the way
+it opens that session. Swipes go round in a fixed order (`nextSession`), the last use would only ever
+lead back. The same dialog opens from "Saved sessions" of the login. See
+`docs/architecture/storage-and-variants.md`.
+
+A section without data says so once `markEverythingDownloaded` recorded that the start screen's
+download worked (`server_values`, gone with the data). Then every list it covers
+(`emptyListItem(storedByStart = true)`) shows its empty text at once instead of a loading indicator.
+
 The start screen's items use the segmented item's default text styles for title and supporting
 text. Items with buttons below their text (`SectionButtons`) keep 16.dp between the visible
 buttons and the item's bottom edge (`buttonsContentPadding`; Material's bottom padding is too

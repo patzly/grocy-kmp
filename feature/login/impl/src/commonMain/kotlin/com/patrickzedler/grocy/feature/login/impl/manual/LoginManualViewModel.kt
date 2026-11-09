@@ -79,11 +79,11 @@ internal class LoginManualViewModel(
         error = null
         viewModelScope.launch {
             try {
-                withMinimumDuration(MINIMUM_LOADING_DURATION) {
+                val user = withMinimumDuration(MINIMUM_LOADING_DURATION) {
                     authRepository.verify(connection)
                 }
                 // Saving switches the app to the start screen, see GrocyApp
-                authRepository.saveLogin(connection)
+                authRepository.saveLogin(connection, user)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {

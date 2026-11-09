@@ -33,6 +33,7 @@ import com.patrickzedler.grocy.core.design.component.HapticTooltipBox
 import com.patrickzedler.grocy.core.design.component.TextDialog
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
+import com.patrickzedler.grocy.core.design.component.fieldActionSize
 import com.patrickzedler.grocy.core.model.text.PrintedDueDate
 import com.patrickzedler.grocy.core.model.text.PrintedDueDateVotes
 import com.patrickzedler.grocy.core.model.text.formatDate
@@ -91,7 +92,7 @@ internal fun DateScanButton(
                 if (!isScannerOpen) focusManager.clearFocus()
                 onClick()
             },
-            modifier = Modifier.clickCursor(enabled = enabled),
+            modifier = fieldActionSize().clickCursor(enabled = enabled),
             enabled = enabled,
             shapes = IconButtonDefaults.shapes(),
         ) {

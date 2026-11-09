@@ -18,4 +18,10 @@
   <string name="widget_sample_month">Novembre</string>
   <string name="widget_preview_tasks">Compiti</string>
   <string name="widget_preview_calendar">Calendario</string>
+  <string name="widget_shopping_label">Lista della spesa</string>
+  <string name="widget_shopping_description">Cosa resta da comprare in una lista della spesa</string>
+  <string name="widget_sample_groceries">Spesa</string>
+  <string name="widget_sample_bread">Pane</string>
+  <string name="widget_sample_eggs">Uova</string>
+  <string name="widget_sample_apples">Mele</string>
 </resources>

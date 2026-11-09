@@ -51,6 +51,7 @@ import com.patrickzedler.grocy.core.design.appColorSchemes
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
 import com.patrickzedler.grocy.core.model.calendar.CalendarEventKind
+import com.patrickzedler.grocy.core.model.calendar.calendarEventTitle
 import com.patrickzedler.grocy.core.model.text.todayEpochDay
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.calendar_assigned_to
@@ -65,11 +66,15 @@ import com.patrickzedler.grocy.core.resources.calendar_previous
 import com.patrickzedler.grocy.core.resources.calendar_product_due
 import com.patrickzedler.grocy.core.resources.calendar_task_due
 import com.patrickzedler.grocy.core.resources.calendar_title
+import com.patrickzedler.grocy.core.resources.shopping_list_add_item
+import com.patrickzedler.grocy.core.resources.shopping_list_empty
+import com.patrickzedler.grocy.core.resources.shopping_list_list
 import com.patrickzedler.grocy.core.resources.task_create
 import com.patrickzedler.grocy.core.resources.tasks_title
 import com.patrickzedler.grocy.core.resources.widget_log_in
 import com.patrickzedler.grocy.core.resources.widget_no_tasks
 import com.patrickzedler.grocy.core.resources.widget_not_available
+import com.patrickzedler.grocy.core.resources.widget_shopping_choose_hint
 import kotlinx.coroutines.flow.first
 import org.jetbrains.compose.resources.getString
 
@@ -135,6 +140,10 @@ private fun sampleNamesOf(context: Context) = SampleNames(
     spaghetti = context.getString(R.string.widget_sample_spaghetti),
     lunch = context.getString(R.string.widget_sample_lunch),
     smokeDetector = context.getString(R.string.widget_sample_smoke_detector),
+    groceries = context.getString(R.string.widget_sample_groceries),
+    bread = context.getString(R.string.widget_sample_bread),
+    eggs = context.getString(R.string.widget_sample_eggs),
+    apples = context.getString(R.string.widget_sample_apples),
 )
 
 private fun widgetColorsOf(context: Context, appearance: AppearanceSettings): WidgetColors {
@@ -154,9 +163,17 @@ internal class WidgetTexts(
     val previous: String,
     val next: String,
     val createTask: String,
+    val shoppingList: String,
+    val addItem: String,
+    val shoppingListEmpty: String,
+    val chooseShoppingList: String,
     private val kinds: Map<CalendarEventKind, String>,
     private val assignedTo: String,
 ) {
+    /** Grocy's title of [event]. */
+    fun title(event: CalendarEvent): String =
+        calendarEventTitle(kinds[event.kind].orEmpty(), event.name)
+
     /** What Grocy's title says of [event], what the app's calendar tells screen readers. */
     fun description(event: CalendarEvent): String = listOfNotNull(
         event.time,
@@ -177,6 +194,10 @@ private suspend fun widgetTexts() = WidgetTexts(
     previous = getString(Res.string.calendar_previous),
     next = getString(Res.string.calendar_next),
     createTask = getString(Res.string.task_create),
+    shoppingList = getString(Res.string.shopping_list_list),
+    addItem = getString(Res.string.shopping_list_add_item),
+    shoppingListEmpty = getString(Res.string.shopping_list_empty),
+    chooseShoppingList = getString(Res.string.widget_shopping_choose_hint),
     kinds = mapOf(
         CalendarEventKind.PRODUCT to getString(Res.string.calendar_product_due),
         CalendarEventKind.TASK to getString(Res.string.calendar_task_due),

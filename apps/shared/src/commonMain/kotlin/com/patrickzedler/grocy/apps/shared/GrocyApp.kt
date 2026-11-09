@@ -30,6 +30,7 @@ import com.patrickzedler.grocy.core.navigation.rememberNavigator
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.core.forms.DateInputSettings
 import com.patrickzedler.grocy.core.forms.LocalDateInput
+import com.patrickzedler.grocy.core.forms.LocalEverythingDownloaded
 import com.patrickzedler.grocy.core.model.text.languageDateOrder
 import com.patrickzedler.grocy.core.scanner.LocalBarcodeDecoderFactory
 import com.patrickzedler.grocy.core.scanner.LocalTextRecognizerFactory
@@ -109,10 +110,13 @@ fun GrocyApp(
         val unlockState by graph.unlockRepository.unlockState.collectAsStateWithLifecycle()
         val behavior by graph.behaviorSettingsRepository.settings.collectAsStateWithLifecycle()
         val languageOrder = remember { languageDateOrder() }
+        val isEverythingDownloaded by graph.serverRepository.isEverythingDownloaded
+            .collectAsStateWithLifecycle()
 
         CompositionLocalProvider(
             LocalBarcodeDecoderFactory provides barcodeDecoderFactory,
             LocalTextRecognizerFactory provides graph.textRecognizer.takeIf { scansDueDates },
+            LocalEverythingDownloaded provides isEverythingDownloaded,
             LocalPointerKind provides pointerKind,
             LocalUnlockState provides unlockState,
             LocalDateInput provides DateInputSettings(
@@ -137,6 +141,7 @@ fun GrocyApp(
                 }
                 // Also before the login, whose first request may go into the local network
                 graph.localNetworkGate?.let { LocalNetworkPrompt(it) }
+                graph.certificateGate?.let { CertificatePrompt(it) }
             }
         }
     }
@@ -173,7 +178,9 @@ private fun GrocyNavigation(
     val openedRoute by graph.openedRoute.collectAsStateWithLifecycle()
     LaunchedEffect(openedRoute, isLoggedIn) {
         val route = openedRoute ?: return@LaunchedEffect
-        if (isLoggedIn && navigator.currentRoute != route) navigator.navigate(route)
+        if (isLoggedIn && navigator.currentRoute != route) {
+            navigator.navigateAll(openedRoutesOf(route))
+        }
         graph.routeOpened()
     }
 

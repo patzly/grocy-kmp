@@ -10,6 +10,8 @@ kotlin {
             api(projects.core.data)
             implementation(projects.core.design)
             implementation(projects.core.resources)
+            // SessionsViewModel, which the features create
+            api(libs.jetbrains.lifecycle.viewmodel.compose)
         }
         androidMain.dependencies {
             // The photo picker of rememberImagePicker

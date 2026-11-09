@@ -85,6 +85,7 @@ fun WearApp(graph: WearGraph) {
     graph.localNetworkGate?.let { WearLocalNetworkPrompt(it) }
 
     GrocyWearTheme {
+        WearCertificatePrompt(graph.certificateGate)
         AppScaffold {
             val navController = rememberSwipeDismissableNavController()
             val shopping = (state as? WearState.LoggedIn)?.shopping ?: WearShoppingState()

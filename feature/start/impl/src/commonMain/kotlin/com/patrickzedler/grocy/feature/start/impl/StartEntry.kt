@@ -14,6 +14,7 @@ import com.patrickzedler.grocy.core.navigation.showsDetailBesideList
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_home
 import com.patrickzedler.grocy.core.resources.start_select_hint
+import com.patrickzedler.grocy.core.ui.sessions.SessionsViewModel
 import com.patrickzedler.grocy.feature.about.api.AboutRoute
 import com.patrickzedler.grocy.feature.batteries.api.BatteriesOverviewRoute
 import com.patrickzedler.grocy.feature.batteries.api.BatteryTrackingRoute
@@ -74,6 +75,9 @@ fun EntryProviderScope<NavKey>.startEntry(
                     connection = dependencies.server.map { it?.connection },
                 )
             },
+            sessionsViewModel = viewModel { SessionsViewModel(dependencies.authRepository) },
+            // What is open beside the start screen belongs to the former session
+            onSessionSwitched = { navigator.replaceAll(StartRoute) },
             isDemoServer = server?.isDemo == true,
             isBesideDetail = isBesideDetail,
             shownSection = startSectionOf(navigator.currentRoute),
@@ -92,7 +96,7 @@ fun EntryProviderScope<NavKey>.startEntry(
             onShoppingListAddClick = { listId ->
                 navigator.navigateAll(shoppingListAddRoutes(listId, isBesideDetail))
             },
-            onShoppingModeClick = { navigator.navigate(ShoppingModeRoute) },
+            onShoppingModeClick = { navigator.navigate(ShoppingModeRoute()) },
             // In wide windows beside the chores overview, else a screen of its own
             onChoreTrackingClick = {
                 navigator.navigateAll(choreTrackingRoutes(isBesideDetail))

@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
  * List, status filter and table options are the shopping list's own.
  */
 internal class ShoppingModeViewModel(
+    listId: Int? = null,
     private val masterData: MasterDataRepository,
     private val stock: StockRepository,
     private val shoppingLists: ShoppingListRepository,
@@ -67,6 +68,7 @@ internal class ShoppingModeViewModel(
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), null)
 
     init {
+        listId?.let(shoppingLists::selectList)
         refresh()
     }
 
