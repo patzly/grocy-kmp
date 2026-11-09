@@ -8,6 +8,7 @@ import com.patrickzedler.grocy.core.data.log.BrowserErrorLog
 import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.notifications.NotificationAlarm
 import com.patrickzedler.grocy.core.data.notifications.Notifier
+import com.patrickzedler.grocy.core.data.notifications.ShoppingListPoller
 import com.patrickzedler.grocy.core.database.GrocyDatabase
 import com.patrickzedler.grocy.core.database.createGrocyDatabase
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
@@ -68,6 +69,11 @@ class WebPlatformDependencies(
         scope: CoroutineScope,
         onDue: suspend () -> Unit,
     ): NotificationAlarm = BrowserNotificationAlarm(scope, onDue)
+
+    override fun createShoppingListPoller(
+        scope: CoroutineScope,
+        onDue: suspend () -> Unit,
+    ): ShoppingListPoller = BrowserShoppingListPoller(scope, onDue)
 
     // Like every reload, the page keeps its back stack and history
     override fun restartApp() = reloadPage()

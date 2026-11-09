@@ -32,6 +32,7 @@ import com.patrickzedler.grocy.core.model.calendar.CalendarEvent
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.server.UserSettings
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListSummary
+import com.patrickzedler.grocy.core.model.start.StartLayout
 import com.patrickzedler.grocy.core.model.stock.ProductStockInfo
 import com.patrickzedler.grocy.core.model.stock.StockSummary
 import com.patrickzedler.grocy.core.model.stock.stockSummaryOf
@@ -54,6 +55,7 @@ import com.patrickzedler.grocy.core.resources.masterdata_userentities_count
 import com.patrickzedler.grocy.core.resources.masterdata_userfields_count
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -187,6 +189,8 @@ internal class StartViewModel(
     private val batteries: BatteriesRepository,
     private val equipment: EquipmentRepository,
     val serverConfig: StateFlow<ServerConfig?>,
+    /** How the user arranged the screen, null for the moment until it is read. */
+    val layout: StateFlow<StartLayout?> = MutableStateFlow(StartLayout.Default),
     calendarEvents: Flow<List<CalendarEvent>> = flowOf(emptyList()),
     private val today: () -> Long = ::todayEpochDay,
     private val now: () -> String = { grocyDateTimeOf(localNowMillis()) },

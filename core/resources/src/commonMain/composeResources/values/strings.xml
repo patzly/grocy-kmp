@@ -67,7 +67,7 @@
   <string name="msg_recommend">Grocy keeps track of groceries and household on your own Grocy server: %1$s</string>
   <string name="msg_feedback">Do you have any wishes, questions or errors? Contact us and let us help!\nOtherwise we would be very happy about a nice review in the Play Store.</string>
   <string name="msg_unlock">Support the development</string>
-  <string name="msg_unlock_description">The unlock app is a small purchase on Google Play that supports the development of Grocy. Once installed, you can also switch to the ML Kit barcode scanner.</string>
+  <string name="msg_unlock_description">The unlock app is a small purchase on Google Play that supports the development of Grocy. Once installed, you can also switch to the ML Kit barcode scanner. It also scans the due dates printed on packages, so you no longer have to decipher them yourself.</string>
 
   <!-- Login: choice -->
   <string name="login_choice_title">Welcome to Grocy</string>
@@ -1509,4 +1509,21 @@
   <string name="login_error_certificate">The server’s certificate is not trusted.</string>
   <string name="widget_shopping_choose">Choose a shopping list</string>
   <string name="widget_shopping_choose_hint">Tap to choose the shopping list to show</string>
+  <string name="start_layout">Start screen layout</string>
+  <string name="start_layout_description">Arrange, group or hide the items of the start screen</string>
+  <string name="start_layout_title">Arrange start screen</string>
+  <string name="start_layout_shown">On the start screen</string>
+  <string name="start_layout_available">Available</string>
+  <string name="start_layout_divider">Divider</string>
+  <string name="start_layout_divider_description">Starts a new group</string>
+  <string name="start_layout_drag">Drag to move</string>
+  <string name="start_layout_move_up">Move up</string>
+  <string name="start_layout_move_down">Move down</string>
+  <string name="start_layout_remove">Remove</string>
+  <string name="start_layout_reset">Reset to default</string>
+  <string name="notifications_shopping_when_added">When items are added</string>
+  <string name="notifications_shopping_when_checked_off">When items are checked off</string>
+  <string name="notifications_shopping_hint">Grocy cannot notify the app by itself, so the app looks for changes regularly. A notification can take a few minutes.</string>
+  <string name="notifications_shopping_added">Added: %1$s</string>
+  <string name="notifications_shopping_checked_off">Checked off: %1$s</string>
 </resources>

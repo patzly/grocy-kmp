@@ -11,9 +11,12 @@ import com.patrickzedler.grocy.core.model.notifications.NotificationKind
 import com.patrickzedler.grocy.core.model.notifications.NotificationKindSettings
 import com.patrickzedler.grocy.core.model.notifications.NotificationSettings
 import com.patrickzedler.grocy.core.model.notifications.NotificationTopic
+import com.patrickzedler.grocy.core.model.notifications.ShoppingListNotificationSettings
+import com.patrickzedler.grocy.core.model.notifications.ShoppingListNotificationType
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -23,6 +26,11 @@ internal class NotificationSettingsViewModel(
     private val repository: NotificationRepository,
     /** The features of the server: others have no settings here, they notify about nothing. */
     val serverConfig: StateFlow<ServerConfig?>,
+    /** Which changes of the shopping lists notify, read at app start. */
+    val shoppingListSettings: StateFlow<ShoppingListNotificationSettings?> =
+        MutableStateFlow(ShoppingListNotificationSettings()),
+    private val enableShoppingList: suspend (ShoppingListNotificationType, Boolean) -> Unit =
+        { _, _ -> },
 ) : ViewModel() {
 
     /** Read at app start, so the page shows the stored values in its first frame. */
@@ -36,6 +44,10 @@ internal class NotificationSettingsViewModel(
     /** Whose "Show now" is downloading the current state, which can take a moment. */
     var showingNow by mutableStateOf<NotificationKind?>(null)
         private set
+
+    fun setShoppingList(type: ShoppingListNotificationType, enabled: Boolean) {
+        viewModelScope.launch { enableShoppingList(type, enabled) }
+    }
 
     fun setEnabled(kind: NotificationKind, enabled: Boolean) =
         update(kind) { it.copy(enabled = enabled) }

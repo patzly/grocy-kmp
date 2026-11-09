@@ -57,6 +57,7 @@ import com.patrickzedler.grocy.core.resources.settings_contrast_high
 import com.patrickzedler.grocy.core.resources.settings_contrast_medium
 import com.patrickzedler.grocy.core.resources.settings_contrast_standard
 import com.patrickzedler.grocy.core.resources.settings_general
+import com.patrickzedler.grocy.core.resources.ic_rounded_dashboard_customize
 import com.patrickzedler.grocy.core.resources.settings_language
 import com.patrickzedler.grocy.core.resources.settings_language_system
 import com.patrickzedler.grocy.core.resources.settings_server_demo_keep
@@ -77,6 +78,8 @@ import com.patrickzedler.grocy.core.resources.settings_theme_dynamic
 import com.patrickzedler.grocy.core.resources.settings_theme_hue
 import com.patrickzedler.grocy.core.resources.settings_theme_light
 import com.patrickzedler.grocy.core.resources.settings_theme_static
+import com.patrickzedler.grocy.core.resources.start_layout
+import com.patrickzedler.grocy.core.resources.start_layout_description
 import com.patrickzedler.grocy.feature.settings.impl.QuestionDialog
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuActions
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuViewModel
@@ -100,6 +103,8 @@ internal fun GeneralSettingsScreen(
     val appearance by viewModel.appearance.collectAsStateWithLifecycle()
     val language by viewModel.language.collectAsStateWithLifecycle()
     var showLanguageDialog by rememberSaveable { mutableStateOf(false) }
+    var showStartLayoutDialog by rememberSaveable { mutableStateOf(false) }
+    val startLayout by viewModel.startLayout.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
     if (showLanguageDialog) {
@@ -108,6 +113,20 @@ internal fun GeneralSettingsScreen(
             onLanguageSelected = viewModel::selectLanguage,
             onDismissRequest = { showLanguageDialog = false },
         )
+    }
+
+    if (showStartLayoutDialog) {
+        startLayout?.let { layout ->
+            StartLayoutDialog(
+                layout = layout,
+                sections = viewModel.arrangeableSections(),
+                onSave = { edited ->
+                    showStartLayoutDialog = false
+                    viewModel.saveStartLayout(edited)
+                },
+                onDismissRequest = { showStartLayoutDialog = false },
+            )
+        }
     }
 
     viewModel.demoServerOffer?.let { offer ->
@@ -151,6 +170,7 @@ internal fun GeneralSettingsScreen(
                 language = language,
                 onLanguageClick = { showLanguageDialog = true },
                 onAppearanceChange = viewModel::updateAppearance,
+                onStartLayoutClick = { showStartLayoutDialog = true },
             )
         }
     }
@@ -161,6 +181,7 @@ private fun LazyListScope.generalSettings(
     language: String?,
     onLanguageClick: () -> Unit,
     onAppearanceChange: ((AppearanceSettings) -> AppearanceSettings) -> Unit,
+    onStartLayoutClick: () -> Unit,
 ) {
     segmentedGroup(key = "language") {
         LanguageItem(language = language, onClick = onLanguageClick)
@@ -179,6 +200,29 @@ private fun LazyListScope.generalSettings(
             count = 2,
         )
     }
+    segmentedGroup(key = "start_layout") {
+        StartLayoutItem(onClick = onStartLayoutClick)
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun StartLayoutItem(onClick: () -> Unit) {
+    val haptic = LocalHapticFeedback.current
+
+    SegmentedListItem(
+        onClick = {
+            haptic.confirm()
+            onClick()
+        },
+        shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
+        colors = SegmentedListDefaults.colors(),
+        modifier = Modifier.fillMaxWidth().clickCursor(),
+        verticalAlignment = Alignment.CenterVertically,
+        leadingContent = { SettingIcon(Res.drawable.ic_rounded_dashboard_customize) },
+        supportingContent = { Text(stringResource(Res.string.start_layout_description)) },
+        content = { Text(stringResource(Res.string.start_layout)) },
+    )
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -374,6 +418,7 @@ private fun GeneralSettingsPreview() {
                 language = null,
                 onLanguageClick = {},
                 onAppearanceChange = {},
+                onStartLayoutClick = {},
             )
         }
     }

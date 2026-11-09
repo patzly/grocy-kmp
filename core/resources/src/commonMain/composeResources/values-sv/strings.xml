@@ -45,7 +45,7 @@
   <string name="msg_recommend">Grocy håller koll på matvaror och hushåll på din egen Grocy-server: %1$s</string>
   <string name="msg_feedback">Har du önskemål eller frågor, eller har du hittat ett fel? Kontakta oss så hjälper vi gärna till!\nAnnars blir vi väldigt glada för ett fint omdöme i Play Store.</string>
   <string name="msg_unlock">Stöd utvecklingen</string>
-  <string name="msg_unlock_description">Upplåsningsappen är ett litet köp på Google Play som stöder utvecklingen av Grocy. När den är installerad kan du också byta till streckkodsskannern från ML Kit.</string>
+  <string name="msg_unlock_description">Upplåsningsappen är ett litet köp på Google Play som stöder utvecklingen av Grocy. När den är installerad kan du också byta till streckkodsskannern från ML Kit. Den skannar också bäst före-datum som är tryckta på förpackningar, så att du slipper tyda dem själv.</string>
 
   <!-- Login: choice -->
   <string name="login_choice_title">Välkommen till Grocy</string>
@@ -1481,4 +1481,21 @@
   <string name="login_error_certificate">Serverns certifikat är inte betrott.</string>
   <string name="widget_shopping_choose">Välj en inköpslista</string>
   <string name="widget_shopping_choose_hint">Tryck för att välja inköpslistan som ska visas</string>
+  <string name="start_layout">Startskärmens layout</string>
+  <string name="start_layout_description">Ordna, gruppera eller dölj objekten på startskärmen</string>
+  <string name="start_layout_title">Ordna startskärmen</string>
+  <string name="start_layout_shown">På startskärmen</string>
+  <string name="start_layout_available">Tillgängliga</string>
+  <string name="start_layout_divider">Avdelare</string>
+  <string name="start_layout_divider_description">Börjar en ny grupp</string>
+  <string name="start_layout_drag">Dra för att flytta</string>
+  <string name="start_layout_move_up">Flytta upp</string>
+  <string name="start_layout_move_down">Flytta ned</string>
+  <string name="start_layout_remove">Ta bort</string>
+  <string name="start_layout_reset">Återställ standard</string>
+  <string name="notifications_shopping_when_added">När varor läggs till</string>
+  <string name="notifications_shopping_when_checked_off">När varor bockas av</string>
+  <string name="notifications_shopping_hint">Grocy kan inte meddela appen själv, så appen letar regelbundet efter ändringar. En avisering kan ta några minuter.</string>
+  <string name="notifications_shopping_added">Tillagt: %1$s</string>
+  <string name="notifications_shopping_checked_off">Avbockat: %1$s</string>
 </resources>

@@ -5,6 +5,7 @@ import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.notifications.NotificationAlarm
 import com.patrickzedler.grocy.core.data.notifications.Notifier
+import com.patrickzedler.grocy.core.data.notifications.ShoppingListPoller
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.update.AppUpdater
 import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
@@ -67,6 +68,16 @@ interface PlatformDependencies {
      * [onDue] in [scope].
      */
     fun createNotificationAlarm(scope: CoroutineScope, onDue: suspend () -> Unit): NotificationAlarm
+
+    /**
+     * Looks for changes of the shopping lists while active: WorkManager on Android, which starts
+     * the app and calls [AppGraph.checkShoppingListChanges], a timer of the open page on the web
+     * that calls [onDue] in [scope].
+     */
+    fun createShoppingListPoller(
+        scope: CoroutineScope,
+        onDue: suspend () -> Unit,
+    ): ShoppingListPoller
 
     /**
      * Keeps the home screen widgets up to date with [dependencies] while the app runs in [scope];

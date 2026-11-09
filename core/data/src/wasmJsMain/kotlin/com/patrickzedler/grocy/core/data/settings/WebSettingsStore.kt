@@ -12,6 +12,7 @@ import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
 import com.patrickzedler.grocy.core.model.notifications.NotificationDeliveries
 import com.patrickzedler.grocy.core.model.notifications.NotificationSettings
+import com.patrickzedler.grocy.core.model.notifications.ShoppingListNotificationSettings
 import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
@@ -206,6 +207,34 @@ class WebSettingsStore internal constructor(
         tasksOverviewOptionsState.value = options
     }
 
+    private val shoppingListNotificationsState = MutableStateFlow(
+        ShoppingListNotificationSettings.of(storage.get(SHOPPING_LIST_NOTIFICATIONS)),
+    )
+
+    override val shoppingListNotifications: Flow<ShoppingListNotificationSettings> =
+        shoppingListNotificationsState.asStateFlow()
+
+    override suspend fun setShoppingListNotifications(settings: ShoppingListNotificationSettings) {
+        storage.set(SHOPPING_LIST_NOTIFICATIONS, settings.stored())
+        shoppingListNotificationsState.value = settings
+    }
+
+    override suspend fun readShoppingListNotificationNames(): String? =
+        storage.get(SHOPPING_LIST_NOTIFICATION_NAMES)
+
+    override suspend fun setShoppingListNotificationNames(names: String) {
+        storage.set(SHOPPING_LIST_NOTIFICATION_NAMES, names)
+    }
+
+    private val startLayoutState = MutableStateFlow(storage.get(START_LAYOUT))
+
+    override val startLayout: Flow<String?> = startLayoutState.asStateFlow()
+
+    override suspend fun setStartLayout(layout: String) {
+        storage.set(START_LAYOUT, layout)
+        startLayoutState.value = layout
+    }
+
     private val notificationSettingsState =
         MutableStateFlow(NotificationSettings.of(storage.get(NOTIFICATION_SETTINGS)))
 
@@ -339,5 +368,8 @@ class WebSettingsStore internal constructor(
         const val CALENDAR_VIEW = "grocy.calendarView"
         const val NOTIFICATION_SETTINGS = "grocy.notificationSettings"
         const val NOTIFICATION_DELIVERIES = "grocy.notificationDeliveries"
+        const val START_LAYOUT = "grocy.startLayout"
+        const val SHOPPING_LIST_NOTIFICATIONS = "grocy.shoppingListNotifications"
+        const val SHOPPING_LIST_NOTIFICATION_NAMES = "grocy.shoppingListNotificationNames"
     }
 }

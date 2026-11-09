@@ -5,7 +5,12 @@ package com.patrickzedler.grocy.apps.shared
 import com.patrickzedler.grocy.core.data.notifications.NotificationAlarm
 import com.patrickzedler.grocy.core.data.notifications.Notifier
 import com.patrickzedler.grocy.core.model.notifications.NotificationKind
+import com.patrickzedler.grocy.core.data.notifications.ShoppingListPoller
 import com.patrickzedler.grocy.core.model.notifications.NotificationSummary
+import com.patrickzedler.grocy.core.model.notifications.ShoppingListChangeNames
+import com.patrickzedler.grocy.core.network.GrocyApiException
+import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListRoute
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.js.Promise
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -34,6 +39,54 @@ internal class BrowserNotifier : Notifier {
 
     override suspend fun isShowing(kind: NotificationKind): Boolean =
         isBrowserNotificationShown(kind.name).await<JsBoolean>().toBoolean()
+
+    override suspend fun showShoppingListChanges(names: ShoppingListChangeNames): Boolean {
+        val body = shoppingListNotificationLines(names).joinToString("\n")
+        return showBrowserNotification(shoppingListNotificationTitle(), body, SHOPPING_LIST_TAG)
+            .await<JsBoolean>()
+            .toBoolean()
+    }
+
+    override suspend fun cancelShoppingListChanges() {
+        closeBrowserNotifications(SHOPPING_LIST_TAG).await<JsAny?>()
+    }
+
+    override suspend fun isShowingShoppingListChanges(): Boolean =
+        isBrowserNotificationShown(SHOPPING_LIST_TAG).await<JsBoolean>().toBoolean()
+}
+
+// Also what a tap on it tells the app, in the place of a kind's name
+private const val SHOPPING_LIST_TAG = "SHOPPING_LIST"
+
+/** While the page is open, also in the background: every minute one small request. */
+internal class BrowserShoppingListPoller(
+    private val scope: CoroutineScope,
+    private val onDue: suspend () -> Unit,
+) : ShoppingListPoller {
+
+    private var job: Job? = null
+
+    override fun setActive(active: Boolean) {
+        job?.cancel()
+        job = null
+        if (!active) return
+        job = scope.launch {
+            while (true) {
+                delay(CHECK_INTERVAL_MILLIS)
+                try {
+                    onDue()
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (_: GrocyApiException) {
+                    // The next round tries again
+                }
+            }
+        }
+    }
+
+    private companion object {
+        const val CHECK_INTERVAL_MILLIS = 60_000L
+    }
 }
 
 /**
@@ -75,6 +128,10 @@ internal class BrowserNotificationAlarm(
  */
 fun observeNotificationClicks(graph: AppGraph) {
     fun open(name: String?) {
+        if (name == SHOPPING_LIST_TAG) {
+            graph.openRoute(ShoppingListRoute())
+            return
+        }
         NotificationKind.entries.firstOrNull { it.name == name }?.let(graph::openNotification)
     }
     addNotificationClickListener { open(it.toString()) }

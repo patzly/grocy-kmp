@@ -45,7 +45,7 @@
   <string name="msg_recommend">Grocy tiene traccia della spesa e della casa sul tuo server Grocy: %1$s</string>
   <string name="msg_feedback">Hai desideri, domande o hai trovato un errore? Contattaci, saremo felici di aiutarti.\nAltrimenti ci farebbe molto piacere una bella recensione sul Play Store.</string>
   <string name="msg_unlock">Sostieni lo sviluppo</string>
-  <string name="msg_unlock_description">L’app di sblocco è un piccolo acquisto su Google Play che sostiene lo sviluppo di Grocy. Una volta installata, puoi anche passare allo scanner di codici a barre di ML Kit.</string>
+  <string name="msg_unlock_description">L’app di sblocco è un piccolo acquisto su Google Play che sostiene lo sviluppo di Grocy. Una volta installata, puoi anche passare allo scanner di codici a barre di ML Kit. Inoltre scansiona le date di scadenza stampate sulle confezioni, così non devi più decifrarle.</string>
 
   <!-- Login: choice -->
   <string name="login_choice_title">Ti diamo il benvenuto in Grocy</string>
@@ -1535,4 +1535,21 @@
   <string name="login_error_certificate">Il certificato del server non è attendibile.</string>
   <string name="widget_shopping_choose">Scegli una lista della spesa</string>
   <string name="widget_shopping_choose_hint">Tocca per scegliere la lista della spesa da mostrare</string>
+  <string name="start_layout">Disposizione della schermata iniziale</string>
+  <string name="start_layout_description">Ordina, raggruppa o nascondi gli elementi della schermata iniziale</string>
+  <string name="start_layout_title">Ordina la schermata iniziale</string>
+  <string name="start_layout_shown">Nella schermata iniziale</string>
+  <string name="start_layout_available">Disponibili</string>
+  <string name="start_layout_divider">Divisore</string>
+  <string name="start_layout_divider_description">Inizia un nuovo gruppo</string>
+  <string name="start_layout_drag">Trascina per spostare</string>
+  <string name="start_layout_move_up">Sposta su</string>
+  <string name="start_layout_move_down">Sposta giù</string>
+  <string name="start_layout_remove">Rimuovi</string>
+  <string name="start_layout_reset">Ripristina predefinito</string>
+  <string name="notifications_shopping_when_added">Quando vengono aggiunti articoli</string>
+  <string name="notifications_shopping_when_checked_off">Quando vengono spuntati articoli</string>
+  <string name="notifications_shopping_hint">Grocy non può avvisare l’app da solo, quindi l’app controlla regolarmente le modifiche. Una notifica può richiedere qualche minuto.</string>
+  <string name="notifications_shopping_added">Aggiunti: %1$s</string>
+  <string name="notifications_shopping_checked_off">Spuntati: %1$s</string>
 </resources>

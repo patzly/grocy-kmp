@@ -13,6 +13,7 @@ import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
 import com.patrickzedler.grocy.core.model.notifications.NotificationDeliveries
 import com.patrickzedler.grocy.core.model.notifications.NotificationSettings
+import com.patrickzedler.grocy.core.model.notifications.ShoppingListNotificationSettings
 import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
 import com.patrickzedler.grocy.core.model.scanner.ScannerForm
 import com.patrickzedler.grocy.core.data.unlock.UnlockChecker
@@ -144,6 +145,27 @@ class FakeSettingsStore(
 
     override suspend fun setTasksOverviewOptions(options: TasksOverviewOptions) {
         tasksOverviewOptions.value = options
+    }
+
+    override val shoppingListNotifications = MutableStateFlow(ShoppingListNotificationSettings())
+
+    override suspend fun setShoppingListNotifications(settings: ShoppingListNotificationSettings) {
+        shoppingListNotifications.value = settings
+    }
+
+    val shoppingListNotificationNames = MutableStateFlow<String?>(null)
+
+    override suspend fun readShoppingListNotificationNames(): String? =
+        shoppingListNotificationNames.value
+
+    override suspend fun setShoppingListNotificationNames(names: String) {
+        shoppingListNotificationNames.value = names
+    }
+
+    override val startLayout = MutableStateFlow<String?>(null)
+
+    override suspend fun setStartLayout(layout: String) {
+        startLayout.value = layout
     }
 
     override val notificationSettings = MutableStateFlow(notificationSettings)

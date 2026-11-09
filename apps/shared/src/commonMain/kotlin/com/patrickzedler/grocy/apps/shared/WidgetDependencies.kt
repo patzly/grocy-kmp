@@ -16,6 +16,7 @@ import com.patrickzedler.grocy.core.navigation.Route
 import com.patrickzedler.grocy.feature.calendar.api.CalendarRoute
 import com.patrickzedler.grocy.feature.calendar.impl.routeOf
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListItemRoute
+import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingModeRoute
 import com.patrickzedler.grocy.feature.tasks.api.TaskRoute
 import com.patrickzedler.grocy.feature.tasks.api.TasksRoute
@@ -49,6 +50,8 @@ internal object WidgetLinks {
     fun event(event: CalendarEvent): String =
         "$EVENT/${event.kind.name}/${isoDateOf(event.epochDay)}/${event.objectId ?: ""}"
 
+    fun shoppingList(): String = SHOPPING_LIST
+
     fun shoppingMode(listId: Int): String = "$SHOPPING_MODE/$listId"
 
     fun newShoppingItem(listId: Int): String = "$SHOPPING_NEW/$listId"
@@ -75,6 +78,7 @@ internal object WidgetLinks {
                 }
             }
             EVENT -> eventRouteOf(parts)
+            SHOPPING_LIST -> ShoppingListRoute().takeIf { parts.size == 1 }
             SHOPPING_MODE -> idOf(parts)?.let { ShoppingModeRoute(listId = it) }
             SHOPPING_NEW -> idOf(parts)?.let { ShoppingListItemRoute(listId = it, inList = false) }
             SHOPPING_ITEM -> idOf(parts)?.let { ShoppingListItemRoute(id = it, inList = false) }
@@ -97,6 +101,7 @@ internal object WidgetLinks {
     private const val TASK = "task"
     private const val CALENDAR = "calendar"
     private const val EVENT = "event"
+    private const val SHOPPING_LIST = "shopping_list"
     private const val SHOPPING_MODE = "shopping_mode"
     private const val SHOPPING_NEW = "shopping_new"
     private const val SHOPPING_ITEM = "shopping_item"

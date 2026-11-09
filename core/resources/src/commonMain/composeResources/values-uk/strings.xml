@@ -45,7 +45,7 @@
   <string name="msg_recommend">Grocy веде облік продуктів і домашнього господарства на вашому власному сервері Grocy: %1$s</string>
   <string name="msg_feedback">Маєте побажання, запитання чи знайшли помилку? Напишіть нам, ми радо допоможемо!\nА якщо все добре, будемо дуже раді гарному відгуку в Play Store.</string>
   <string name="msg_unlock">Підтримати розробку</string>
-  <string name="msg_unlock_description">Купуючи недорогий застосунок розблокування в Google Play, ви підтримуєте розробку Grocy. Після його встановлення можна також перейти на сканер штрихкодів ML Kit.</string>
+  <string name="msg_unlock_description">Купуючи недорогий застосунок розблокування в Google Play, ви підтримуєте розробку Grocy. Після його встановлення можна також перейти на сканер штрихкодів ML Kit. Він також сканує надруковані на упаковках терміни придатності, і їх більше не потрібно розбирати.</string>
 
   <!-- Login: choice -->
   <string name="login_choice_title">Ласкаво просимо до Grocy</string>
@@ -1587,4 +1587,21 @@
   <string name="login_error_certificate">Сертифікат сервера не є довіреним.</string>
   <string name="widget_shopping_choose">Виберіть список покупок</string>
   <string name="widget_shopping_choose_hint">Торкніться, щоб вибрати список покупок для показу</string>
+  <string name="start_layout">Розташування на головному екрані</string>
+  <string name="start_layout_description">Упорядковуйте, групуйте або приховуйте елементи головного екрана</string>
+  <string name="start_layout_title">Упорядкувати головний екран</string>
+  <string name="start_layout_shown">На головному екрані</string>
+  <string name="start_layout_available">Доступно</string>
+  <string name="start_layout_divider">Роздільник</string>
+  <string name="start_layout_divider_description">Починає нову групу</string>
+  <string name="start_layout_drag">Перетягніть, щоб перемістити</string>
+  <string name="start_layout_move_up">Перемістити вгору</string>
+  <string name="start_layout_move_down">Перемістити вниз</string>
+  <string name="start_layout_remove">Прибрати</string>
+  <string name="start_layout_reset">Скинути до типових</string>
+  <string name="notifications_shopping_when_added">Коли додають товари</string>
+  <string name="notifications_shopping_when_checked_off">Коли відмічають товари</string>
+  <string name="notifications_shopping_hint">Grocy не може сам сповістити застосунок, тому застосунок регулярно перевіряє зміни. Сповіщення може надійти за кілька хвилин.</string>
+  <string name="notifications_shopping_added">Додано: %1$s</string>
+  <string name="notifications_shopping_checked_off">Відмічено: %1$s</string>
 </resources>

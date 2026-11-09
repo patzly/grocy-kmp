@@ -1,5 +1,7 @@
 package com.patrickzedler.grocy.feature.start.impl
 
+import com.patrickzedler.grocy.core.model.start.StartLayout
+import com.patrickzedler.grocy.core.model.start.StartSection
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.navigation.DetailRoute
 import com.patrickzedler.grocy.feature.calendar.api.CalendarRoute
@@ -112,8 +114,8 @@ class StartSectionTest {
 
     @Test
     fun batteriesAndEquipmentFollowTheTasksInTheirGroup() {
-        val sections = availableSections(ServerConfig())
-            .filter { it.group == StartGroup.CHORES }
+        val sections = StartLayout.Default.groups(ServerConfig())
+            .first { StartSection.CHORES in it }
 
         assertEquals(
             listOf(
@@ -199,29 +201,6 @@ class StartSectionTest {
             availableSections(ServerConfig(recipes = false)),
         )
         assertFalse(StartSection.CHORES in availableSections(ServerConfig(chores = false)))
-    }
-
-    @Test
-    fun shoppingListSharesTheStockOverviewsGroup() {
-        assertEquals(StartSection.STOCK_OVERVIEW.group, StartSection.SHOPPING_LIST.group)
-        assertTrue(StartSection.MASTER_DATA.group != StartSection.STOCK_OVERVIEW.group)
-    }
-
-    @Test
-    fun recipesAreAGroupOfTheirOwnBetweenStockAndMasterData() {
-        assertEquals(
-            listOf(StartGroup.STOCK, StartGroup.RECIPES, StartGroup.CHORES, StartGroup.MASTER_DATA),
-            StartGroup.entries,
-        )
-        assertEquals(StartGroup.RECIPES, StartSection.RECIPES.group)
-        // Like Grocy's menu, the meal plan follows the recipes
-        assertEquals(StartGroup.RECIPES, StartSection.MEAL_PLAN.group)
-    }
-
-    @Test
-    fun choresAreAGroupOfTheirOwnBelowTheMealPlan() {
-        assertEquals(StartGroup.CHORES, StartSection.CHORES.group)
-        assertEquals(StartSection.MEAL_PLAN.ordinal + 1, StartSection.CHORES.ordinal)
     }
 
     @Test

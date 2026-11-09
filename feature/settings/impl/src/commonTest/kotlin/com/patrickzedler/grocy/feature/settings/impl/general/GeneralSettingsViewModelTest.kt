@@ -2,6 +2,11 @@ package com.patrickzedler.grocy.feature.settings.impl.general
 
 import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
+import com.patrickzedler.grocy.core.data.settings.StartLayoutRepository
+import com.patrickzedler.grocy.core.model.server.ServerConfig
+import com.patrickzedler.grocy.core.model.start.StartLayout
+import com.patrickzedler.grocy.core.model.start.StartLayoutEntry
+import com.patrickzedler.grocy.core.model.start.StartSection
 import com.patrickzedler.grocy.core.model.AppColor
 import com.patrickzedler.grocy.core.model.AppContrast
 import com.patrickzedler.grocy.core.model.AppTheme
@@ -55,6 +60,8 @@ class GeneralSettingsViewModelTest {
         Dispatchers.resetMain()
     }
 
+    private val serverConfig = MutableStateFlow<ServerConfig?>(ServerConfig())
+
     /** Like at app start, the stored appearance is read before the screen exists. */
     private fun TestScope.viewModel() = GeneralSettingsViewModel(
         AppearanceRepository(
@@ -69,6 +76,11 @@ class GeneralSettingsViewModelTest {
             }
             switchedTo += it
         },
+        startLayoutRepository = StartLayoutRepository(
+            settingsStore,
+            backgroundScope + UnconfinedTestDispatcher(testScheduler),
+        ),
+        serverConfig = serverConfig,
         systemLanguage = { systemLanguage },
     )
 
@@ -226,5 +238,28 @@ class GeneralSettingsViewModelTest {
 
     private companion object {
         val ownServer = ServerConnection.ApiKey("https://grocy.test", "k")
+    }
+
+    @Test
+    fun theDialogOffersOnlyWhatTheServerHas() = runTest(dispatcher) {
+        serverConfig.value = ServerConfig(calendar = false)
+
+        assertFalse(StartSection.CALENDAR in viewModel().arrangeableSections())
+    }
+
+    @Test
+    fun aSavedArrangementIsStoredAndKeepsWhatTheServerHides() = runTest(dispatcher) {
+        serverConfig.value = ServerConfig(calendar = false)
+        val viewModel = viewModel()
+        val recipes = StartLayoutEntry.Section(StartSection.RECIPES)
+        val edited = StartLayout(listOf(recipes))
+
+        viewModel.saveStartLayout(edited)
+        advanceUntilIdle()
+
+        val stored = StartLayout.of(settingsStore.startLayout.value)
+        assertTrue(recipes in stored.entries)
+        assertTrue(StartLayoutEntry.Section(StartSection.CALENDAR) in stored.entries)
+        assertFalse(StartLayoutEntry.Section(StartSection.STOCK_OVERVIEW) in stored.entries)
     }
 }

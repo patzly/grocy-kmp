@@ -235,13 +235,24 @@ private fun LazyListScope.serverSettings(
             isLoading = isCheckingVersion,
         )
     }
-    segmentedGroup(key = "actions") {
+    segmentedGroup(key = "logout") {
+        ActionItem(
+            title = stringResource(Res.string.settings_server_logout),
+            description = stringResource(Res.string.settings_server_logout_description),
+            icon = Res.drawable.ic_rounded_logout,
+            index = 0,
+            count = 1,
+            onClick = onLogoutClick,
+        )
+    }
+    segmentedGroup(key = "configuration") {
+        val count = if (config != null) 2 else 1
         ActionItem(
             title = stringResource(Res.string.settings_server_reload),
             description = stringResource(Res.string.settings_server_reload_description),
             icon = Res.drawable.ic_rounded_refresh,
             index = 0,
-            count = 2,
+            count = count,
             // A second tap would only repeat the running download
             onClick = { if (!isReloading) onReloadClick() },
             trailing = if (isReloading) {
@@ -250,27 +261,14 @@ private fun LazyListScope.serverSettings(
                 null
             },
         )
-        ActionItem(
-            title = stringResource(Res.string.settings_server_logout),
-            description = stringResource(Res.string.settings_server_logout_description),
-            icon = Res.drawable.ic_rounded_logout,
-            index = 1,
-            count = 2,
-            onClick = onLogoutClick,
-        )
-    }
-    // Long, so it comes after everything the user can do here
-    config?.let {
-        segmentedGroup(key = "config") {
-            ConfigItem(it)
-        }
+        config?.let { ConfigItem(it, index = 1, count = count) }
     }
 }
 
 /** What the loaded configuration turned on and off and its values; a reload updates it. */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun ConfigItem(config: ServerConfig) {
+private fun ConfigItem(config: ServerConfig, index: Int, count: Int) {
     val features = serverFeaturesOf(config)
     val enabled = features.filter { it.isEnabled }.map { stringResource(it.name) }
     val disabled = features.filterNot { it.isEnabled }.map { stringResource(it.name) }
@@ -284,7 +282,7 @@ private fun ConfigItem(config: ServerConfig) {
     )
     ListItem(
         modifier = Modifier.fillMaxWidth(),
-        shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
+        shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         colors = SegmentedListDefaults.colors(),
         verticalAlignment = Alignment.Top,
         leadingContent = { SettingIcon(Res.drawable.ic_rounded_tune) },

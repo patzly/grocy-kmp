@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.feature.recipes.impl.mealplan
 
+import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -112,6 +113,7 @@ internal class MealPlanViewModel(
     private val recipes: RecipesRepository,
     private val masterData: MasterDataRepository,
     private val stock: StockRepository,
+    private val shoppingLists: ShoppingListRepository? = null,
     private val scannerForms: ScannerFormsRepository? = null,
     initialDay: String? = null,
     private val today: () -> Long = ::todayEpochDay,
@@ -323,6 +325,8 @@ internal class MealPlanViewModel(
      */
     fun putOnShoppingList(recipeId: Int) = run(MealPlanAction.SHOPPING_LIST) {
         mealPlan.putMissingOnShoppingList(recipeId)
+        // Now, so the next look for changes does not take this for someone else's
+        shoppingLists?.let { ignoringServerErrors { it.refreshAfterOwnChange() } }
         MealPlanEvent.PutOnShoppingList
     }
 

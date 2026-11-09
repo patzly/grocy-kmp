@@ -1,5 +1,6 @@
 package com.patrickzedler.grocy.feature.start.impl
 
+import com.patrickzedler.grocy.core.model.start.StartSection
 import com.patrickzedler.grocy.core.data.batteries.BatteriesRepository
 import com.patrickzedler.grocy.feature.batteries.api.BatteriesOverviewRoute
 import com.patrickzedler.grocy.feature.batteries.api.BatteryTrackingRoute

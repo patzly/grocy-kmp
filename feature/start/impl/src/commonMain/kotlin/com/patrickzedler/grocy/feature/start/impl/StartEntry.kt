@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.patrickzedler.grocy.core.design.component.DetailPlaceholder
+import com.patrickzedler.grocy.core.model.start.StartSection
 import com.patrickzedler.grocy.core.navigation.DetailRoute
 import com.patrickzedler.grocy.core.navigation.Navigator
 import com.patrickzedler.grocy.core.navigation.Route
@@ -71,6 +72,7 @@ fun EntryProviderScope<NavKey>.startEntry(
                     batteries = dependencies.batteriesRepository,
                     equipment = dependencies.equipmentRepository,
                     serverConfig = dependencies.serverConfig,
+                    layout = dependencies.startLayoutRepository.layout,
                     calendarEvents = dependencies.calendarRepository.events,
                     connection = dependencies.server.map { it?.connection },
                 )

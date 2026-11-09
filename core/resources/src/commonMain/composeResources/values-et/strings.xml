@@ -45,7 +45,7 @@
   <string name="msg_recommend">Grocy peab arvet toidukaupade ja majapidamise üle sinu enda Grocy serveris: %1$s</string>
   <string name="msg_feedback">Kas sul on soove või küsimusi või leidsid vea? Võta meiega ühendust, aitame hea meelega!\nMuidu rõõmustaksime väga toreda arvustuse üle Play Store’is.</string>
   <string name="msg_unlock">Toeta arendust</string>
-  <string name="msg_unlock_description">Avamisrakendus on väike ost Google Plays, mis toetab Grocy arendust. Kui see on installitud, saad lülituda ka ML Kiti triipkoodi skännerile.</string>
+  <string name="msg_unlock_description">Avamisrakendus on väike ost Google Plays, mis toetab Grocy arendust. Kui see on installitud, saad lülituda ka ML Kiti triipkoodi skännerile. Samuti skännib see pakenditele trükitud parim enne kuupäevi, nii et sa ei pea neid enam ise välja lugema.</string>
 
   <!-- Login: choice -->
   <string name="login_choice_title">Tere tulemast Grocysse</string>
@@ -1482,4 +1482,21 @@
   <string name="login_error_certificate">Serveri sertifikaati ei usaldata.</string>
   <string name="widget_shopping_choose">Vali ostunimekiri</string>
   <string name="widget_shopping_choose_hint">Puuduta, et valida kuvatav ostunimekiri</string>
+  <string name="start_layout">Avakuva paigutus</string>
+  <string name="start_layout_description">Korralda, rühmita või peida avakuva üksusi</string>
+  <string name="start_layout_title">Korralda avakuva</string>
+  <string name="start_layout_shown">Avakuval</string>
+  <string name="start_layout_available">Saadaval</string>
+  <string name="start_layout_divider">Eraldaja</string>
+  <string name="start_layout_divider_description">Alustab uut rühma</string>
+  <string name="start_layout_drag">Lohista liigutamiseks</string>
+  <string name="start_layout_move_up">Liiguta üles</string>
+  <string name="start_layout_move_down">Liiguta alla</string>
+  <string name="start_layout_remove">Eemalda</string>
+  <string name="start_layout_reset">Lähtesta vaikeväärtusele</string>
+  <string name="notifications_shopping_when_added">Kui üksusi lisatakse</string>
+  <string name="notifications_shopping_when_checked_off">Kui üksusi märgitakse tehtuks</string>
+  <string name="notifications_shopping_hint">Grocy ei saa rakendust ise teavitada, seega otsib rakendus muudatusi regulaarselt. Teavitus võib võtta paar minutit.</string>
+  <string name="notifications_shopping_added">Lisatud: %1$s</string>
+  <string name="notifications_shopping_checked_off">Märgitud: %1$s</string>
 </resources>

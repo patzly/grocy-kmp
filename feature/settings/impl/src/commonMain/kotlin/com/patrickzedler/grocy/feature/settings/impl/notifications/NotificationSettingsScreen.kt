@@ -42,6 +42,8 @@ import com.patrickzedler.grocy.core.forms.clockTimeText
 import com.patrickzedler.grocy.core.model.notifications.NotificationKind
 import com.patrickzedler.grocy.core.model.notifications.NotificationSettings
 import com.patrickzedler.grocy.core.model.notifications.NotificationTopic
+import com.patrickzedler.grocy.core.model.notifications.ShoppingListNotificationSettings
+import com.patrickzedler.grocy.core.model.notifications.ShoppingListNotificationType
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.chores_status_due_soon
@@ -65,12 +67,16 @@ import com.patrickzedler.grocy.core.resources.notifications_exact
 import com.patrickzedler.grocy.core.resources.notifications_exact_hint
 import com.patrickzedler.grocy.core.resources.notifications_nothing
 import com.patrickzedler.grocy.core.resources.notifications_only_mine
+import com.patrickzedler.grocy.core.resources.notifications_shopping_hint
+import com.patrickzedler.grocy.core.resources.notifications_shopping_when_added
+import com.patrickzedler.grocy.core.resources.notifications_shopping_when_checked_off
 import com.patrickzedler.grocy.core.resources.notifications_show_failed
 import com.patrickzedler.grocy.core.resources.notifications_show_now
 import com.patrickzedler.grocy.core.resources.notifications_show_now_hint
 import com.patrickzedler.grocy.core.resources.notifications_time
 import com.patrickzedler.grocy.core.resources.product_group_stock
 import com.patrickzedler.grocy.core.resources.settings_notifications
+import com.patrickzedler.grocy.core.resources.shopping_list_list
 import com.patrickzedler.grocy.core.resources.stock_entry_due_soon
 import com.patrickzedler.grocy.core.resources.stock_entry_expired
 import com.patrickzedler.grocy.core.resources.stock_entry_overdue
@@ -100,16 +106,22 @@ internal fun NotificationSettingsScreen(
 ) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
     val config by viewModel.serverConfig.collectAsStateWithLifecycle()
+    val shoppingList by viewModel.shoppingListSettings.collectAsStateWithLifecycle()
     val access = rememberNotificationAccess()
     val snackbarHostState = remember { SnackbarHostState() }
 
     // Saved: the activity may be recreated while the system's question is open
     var pendingKind by rememberSaveable { mutableStateOf<NotificationKind?>(null) }
     var pendingShowNow by rememberSaveable { mutableStateOf<NotificationKind?>(null) }
+    var pendingShoppingList by rememberSaveable {
+        mutableStateOf<ShoppingListNotificationType?>(null)
+    }
     var timePickerKind by rememberSaveable { mutableStateOf<NotificationKind?>(null) }
 
-    LaunchedEffect(access.permission, pendingKind, pendingShowNow) {
+    LaunchedEffect(access.permission, pendingKind, pendingShowNow, pendingShoppingList) {
         if (access.permission != NotificationPermission.Granted) return@LaunchedEffect
+        pendingShoppingList?.let { viewModel.setShoppingList(it, true) }
+        pendingShoppingList = null
         pendingKind?.let { viewModel.setEnabled(it, true) }
         pendingShowNow?.let(viewModel::showNow)
         pendingKind = null
@@ -150,7 +162,13 @@ internal fun NotificationSettingsScreen(
         val current = settings
         val currentConfig = config
         if (current != null && currentConfig != null) {
-            notificationNotices(access, current, onRequest = ::requestAccess)
+            val shoppingListNotifications = shoppingList ?: ShoppingListNotificationSettings()
+            notificationNotices(
+                access = access,
+                settings = current,
+                isShoppingListOn = shoppingListNotifications.appliesTo(currentConfig),
+                onRequest = ::requestAccess,
+            )
             shownNotificationKinds(currentConfig).forEach { kind ->
                 notificationGroup(
                     kind = kind,
@@ -176,6 +194,19 @@ internal fun NotificationSettingsScreen(
                     onTimeClick = { timePickerKind = kind },
                 )
             }
+            if (currentConfig.stock && currentConfig.shoppingList) {
+                shoppingListGroup(
+                    settings = shoppingListNotifications,
+                    onChange = { type, enabled ->
+                        if (!enabled || access.permission == NotificationPermission.Granted) {
+                            viewModel.setShoppingList(type, enabled)
+                        } else {
+                            pendingShoppingList = type
+                            requestAccess()
+                        }
+                    },
+                )
+            }
         }
     }
 
@@ -197,9 +228,11 @@ internal fun NotificationSettingsScreen(
 private fun LazyListScope.notificationNotices(
     access: NotificationAccess,
     settings: NotificationSettings,
+    isShoppingListOn: Boolean,
     onRequest: () -> Unit,
 ) {
-    val anyEnabled = settings.enabledKinds.isNotEmpty()
+    val anyDailyEnabled = settings.enabledKinds.isNotEmpty()
+    val anyEnabled = anyDailyEnabled || isShoppingListOn
     val isGranted = access.permission == NotificationPermission.Granted
     if (access.permission == NotificationPermission.Denied || (anyEnabled && !isGranted)) {
         segmentedGroup(key = "blocked") {
@@ -232,7 +265,8 @@ private fun LazyListScope.notificationNotices(
             )
         }
     }
-    val showExact = anyEnabled && access.exactAlarmsBlocked
+    // Only the daily ones have a time to keep
+    val showExact = anyDailyEnabled && access.exactAlarmsBlocked
     val showBattery = anyEnabled && access.batteryOptimized
     if (showExact || showBattery) {
         segmentedGroup(key = "on_time") {
@@ -256,6 +290,30 @@ private fun LazyListScope.notificationNotices(
                 )
             }
         }
+    }
+}
+
+/** What others do on the shopping lists; there is nothing that gets due, so no time either. */
+private fun LazyListScope.shoppingListGroup(
+    settings: ShoppingListNotificationSettings,
+    onChange: (ShoppingListNotificationType, Boolean) -> Unit,
+) {
+    segmentedGroup(key = "shopping_list", title = Res.string.shopping_list_list) {
+        SegmentedSwitchItem(
+            headline = stringResource(Res.string.notifications_shopping_when_added),
+            supporting = stringResource(Res.string.notifications_shopping_hint),
+            checked = ShoppingListNotificationType.ADDED in settings,
+            onCheckedChange = { onChange(ShoppingListNotificationType.ADDED, it) },
+            index = 0,
+            count = 2,
+        )
+        SegmentedSwitchItem(
+            headline = stringResource(Res.string.notifications_shopping_when_checked_off),
+            checked = ShoppingListNotificationType.CHECKED_OFF in settings,
+            onCheckedChange = { onChange(ShoppingListNotificationType.CHECKED_OFF, it) },
+            index = 1,
+            count = 2,
+        )
     }
 }
 

@@ -45,7 +45,7 @@
   <string name="msg_recommend">עם Grocy אפשר לעקוב אחר מצרכים ומשק הבית בשרת Grocy משלך: %1$s</string>
   <string name="msg_feedback">יש לך משאלות, שאלות או שגיאות? אפשר לפנות אלינו ונשמח לעזור!\nאחרת נשמח מאוד לביקורת טובה ב־Play Store.</string>
   <string name="msg_unlock">תמיכה בפיתוח</string>
-  <string name="msg_unlock_description">אפליקציית ביטול הנעילה היא רכישה קטנה ב־Google Play שתומכת בפיתוח של Grocy. לאחר ההתקנה אפשר גם לעבור לסורק הברקודים של ML Kit.</string>
+  <string name="msg_unlock_description">אפליקציית ביטול הנעילה היא רכישה קטנה ב־Google Play שתומכת בפיתוח של Grocy. לאחר ההתקנה אפשר גם לעבור לסורק הברקודים של ML Kit. היא גם סורקת תאריכי תפוגה המודפסים על אריזות, כך שלא צריך לפענח אותם.</string>
 
   <!-- Login: choice -->
   <string name="login_choice_title">ברוכים הבאים ל־Grocy</string>
@@ -1535,4 +1535,21 @@
   <string name="login_error_certificate">האישור של השרת אינו מהימן.</string>
   <string name="widget_shopping_choose">בחירת רשימת קניות</string>
   <string name="widget_shopping_choose_hint">יש להקיש כדי לבחור את רשימת הקניות שתוצג</string>
+  <string name="start_layout">פריסת מסך הבית</string>
+  <string name="start_layout_description">סידור, קיבוץ או הסתרה של פריטי מסך הבית</string>
+  <string name="start_layout_title">סידור מסך הבית</string>
+  <string name="start_layout_shown">במסך הבית</string>
+  <string name="start_layout_available">זמינים</string>
+  <string name="start_layout_divider">קו מפריד</string>
+  <string name="start_layout_divider_description">מתחיל קבוצה חדשה</string>
+  <string name="start_layout_drag">יש לגרור כדי להזיז</string>
+  <string name="start_layout_move_up">העברה למעלה</string>
+  <string name="start_layout_move_down">העברה למטה</string>
+  <string name="start_layout_remove">הסרה</string>
+  <string name="start_layout_reset">איפוס לברירת המחדל</string>
+  <string name="notifications_shopping_when_added">כשמוסיפים פריטים</string>
+  <string name="notifications_shopping_when_checked_off">כשמסמנים פריטים</string>
+  <string name="notifications_shopping_hint">Grocy לא יכול להודיע לאפליקציה בעצמו, ולכן האפליקציה בודקת שינויים באופן קבוע. התראה עשויה להתעכב כמה דקות.</string>
+  <string name="notifications_shopping_added">נוספו: %1$s</string>
+  <string name="notifications_shopping_checked_off">סומנו: %1$s</string>
 </resources>

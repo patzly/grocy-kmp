@@ -10,6 +10,7 @@ import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.recipes.MealPlanRepository
 import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
 import com.patrickzedler.grocy.core.data.server.ServerState
+import com.patrickzedler.grocy.core.data.settings.StartLayoutRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
 import com.patrickzedler.grocy.core.model.server.ServerConfig
@@ -28,6 +29,9 @@ interface StartDependencies {
     val calendarRepository: CalendarRepository
     val stockRepository: StockRepository
     val shoppingListRepository: ShoppingListRepository
+
+    /** How the user arranged the screen, read at app start. */
+    val startLayoutRepository: StartLayoutRepository
 
     /** The stored server configuration, read at app start (null for the moment until then). */
     val serverConfig: StateFlow<ServerConfig?>

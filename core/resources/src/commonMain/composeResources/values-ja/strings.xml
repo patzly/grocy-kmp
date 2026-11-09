@@ -45,7 +45,7 @@
   <string name="msg_recommend">Grocyなら、ご自身のGrocyサーバーで食料品と家庭を管理できます：%1$s</string>
   <string name="msg_feedback">ご要望やご質問、不具合はありませんか？お気軽にご連絡ください。喜んでお手伝いします！\nそうでなければ、Play Storeで高評価をいただけるととても嬉しいです。</string>
   <string name="msg_unlock">開発をサポート</string>
-  <string name="msg_unlock_description">アンロックアプリはGoogle Playで購入できる少額のアプリで、Grocyの開発を支援します。インストールすると、ML Kitのバーコードスキャナーにも切り替えられます。</string>
+  <string name="msg_unlock_description">アンロックアプリはGoogle Playで購入できる少額のアプリで、Grocyの開発を支援します。インストールすると、ML Kitのバーコードスキャナーにも切り替えられます。 パッケージに印字された賞味期限もスキャンできるので、読み取る手間がなくなります。</string>
 
   <!-- Login: choice -->
   <string name="login_choice_title">Grocyへようこそ</string>
@@ -1429,4 +1429,21 @@
   <string name="login_error_certificate">サーバーの証明書は信頼されていません。</string>
   <string name="widget_shopping_choose">買い物リストを選択</string>
   <string name="widget_shopping_choose_hint">タップして表示する買い物リストを選択</string>
+  <string name="start_layout">スタート画面のレイアウト</string>
+  <string name="start_layout_description">スタート画面の項目を並べ替え、グループ化、非表示にします</string>
+  <string name="start_layout_title">スタート画面を並べ替え</string>
+  <string name="start_layout_shown">スタート画面に表示</string>
+  <string name="start_layout_available">利用可能</string>
+  <string name="start_layout_divider">区切り</string>
+  <string name="start_layout_divider_description">新しいグループを開始します</string>
+  <string name="start_layout_drag">ドラッグして移動</string>
+  <string name="start_layout_move_up">上へ移動</string>
+  <string name="start_layout_move_down">下へ移動</string>
+  <string name="start_layout_remove">削除</string>
+  <string name="start_layout_reset">デフォルトに戻す</string>
+  <string name="notifications_shopping_when_added">項目が追加されたとき</string>
+  <string name="notifications_shopping_when_checked_off">項目にチェックが付いたとき</string>
+  <string name="notifications_shopping_hint">Grocy からアプリには通知できないため、アプリが定期的に変更を確認します。通知まで数分かかることがあります。</string>
+  <string name="notifications_shopping_added">追加: %1$s</string>
+  <string name="notifications_shopping_checked_off">チェック済み: %1$s</string>
 </resources>

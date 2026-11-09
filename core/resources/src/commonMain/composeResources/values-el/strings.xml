@@ -45,7 +45,7 @@
   <string name="msg_recommend">Το Grocy παρακολουθεί τα τρόφιμα και το νοικοκυριό στον δικό σας διακομιστή Grocy: %1$s</string>
   <string name="msg_feedback">Έχετε επιθυμίες ή ερωτήσεις ή βρήκατε κάποιο σφάλμα; Επικοινωνήστε μαζί μας και θα σας βοηθήσουμε με χαρά!\nΔιαφορετικά, θα χαρούμε πολύ για μια καλή κριτική στο Play Store.</string>
   <string name="msg_unlock">Υποστήριξη της ανάπτυξης</string>
-  <string name="msg_unlock_description">Η εφαρμογή ξεκλειδώματος είναι μια μικρή αγορά στο Google Play που υποστηρίζει την ανάπτυξη του Grocy. Μόλις εγκατασταθεί, μπορείτε επίσης να μεταβείτε στον σαρωτή γραμμωτού κώδικα του ML Kit.</string>
+  <string name="msg_unlock_description">Η εφαρμογή ξεκλειδώματος είναι μια μικρή αγορά στο Google Play που υποστηρίζει την ανάπτυξη του Grocy. Μόλις εγκατασταθεί, μπορείτε επίσης να μεταβείτε στον σαρωτή γραμμωτού κώδικα του ML Kit. Επίσης σαρώνει τις ημερομηνίες λήξης που είναι τυπωμένες στις συσκευασίες, ώστε να μην χρειάζεται να τις αποκρυπτογραφείτε.</string>
 
   <!-- Login: choice -->
   <string name="login_choice_title">Καλώς ορίσατε στο Grocy</string>
@@ -1482,4 +1482,21 @@
   <string name="login_error_certificate">Το πιστοποιητικό του διακομιστή δεν είναι αξιόπιστο.</string>
   <string name="widget_shopping_choose">Επιλέξτε λίστα αγορών</string>
   <string name="widget_shopping_choose_hint">Πατήστε για να επιλέξετε τη λίστα αγορών που θα εμφανίζεται</string>
+  <string name="start_layout">Διάταξη αρχικής οθόνης</string>
+  <string name="start_layout_description">Τακτοποιήστε, ομαδοποιήστε ή κρύψτε τα στοιχεία της αρχικής οθόνης</string>
+  <string name="start_layout_title">Τακτοποίηση αρχικής οθόνης</string>
+  <string name="start_layout_shown">Στην αρχική οθόνη</string>
+  <string name="start_layout_available">Διαθέσιμα</string>
+  <string name="start_layout_divider">Διαχωριστικό</string>
+  <string name="start_layout_divider_description">Ξεκινά νέα ομάδα</string>
+  <string name="start_layout_drag">Σύρετε για μετακίνηση</string>
+  <string name="start_layout_move_up">Μετακίνηση πάνω</string>
+  <string name="start_layout_move_down">Μετακίνηση κάτω</string>
+  <string name="start_layout_remove">Αφαίρεση</string>
+  <string name="start_layout_reset">Επαναφορά προεπιλογής</string>
+  <string name="notifications_shopping_when_added">Όταν προστίθενται είδη</string>
+  <string name="notifications_shopping_when_checked_off">Όταν τσεκάρονται είδη</string>
+  <string name="notifications_shopping_hint">Το Grocy δεν μπορεί να ειδοποιήσει μόνο του την εφαρμογή, οπότε η εφαρμογή ελέγχει τακτικά για αλλαγές. Μια ειδοποίηση μπορεί να καθυστερήσει λίγα λεπτά.</string>
+  <string name="notifications_shopping_added">Προστέθηκαν: %1$s</string>
+  <string name="notifications_shopping_checked_off">Τσεκαρίστηκαν: %1$s</string>
 </resources>

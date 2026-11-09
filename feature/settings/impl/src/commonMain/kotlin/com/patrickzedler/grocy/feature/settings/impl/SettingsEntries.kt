@@ -97,6 +97,8 @@ fun EntryProviderScope<NavKey>.settingsEntries(
                     languageStore = dependencies.appLanguageStore,
                     server = dependencies.serverRepository.server,
                     demoServerSwitcher = dependencies.demoServerSwitcher(),
+                    startLayoutRepository = dependencies.startLayoutRepository,
+                    serverConfig = dependencies.serverRepository.serverConfig,
                 )
             },
             menuViewModel = settingsMenuViewModel(dependencies),
@@ -272,6 +274,8 @@ fun EntryProviderScope<NavKey>.settingsEntries(
                 NotificationSettingsViewModel(
                     repository = dependencies.notificationRepository,
                     serverConfig = dependencies.serverRepository.serverConfig,
+                    shoppingListSettings = dependencies.shoppingListNotifications.settings,
+                    enableShoppingList = dependencies.shoppingListNotifications::setEnabled,
                 )
             },
             menuViewModel = settingsMenuViewModel(dependencies),

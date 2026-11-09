@@ -45,7 +45,7 @@
   <string name="msg_recommend">Grocy zarządza zakupami spożywczymi i domem na Twoim własnym serwerze Grocy: %1$s</string>
   <string name="msg_feedback">Masz życzenia lub pytania albo trafił się błąd? Napisz do nas, chętnie pomożemy!\nPoza tym bardzo ucieszy nas miła ocena w Play Store.</string>
   <string name="msg_unlock">Wesprzyj rozwój</string>
-  <string name="msg_unlock_description">Aplikacja odblokowująca to drobny zakup w Google Play, który wspiera rozwój Grocy. Po jej zainstalowaniu możesz też przełączyć się na skaner kodów kreskowych ML Kit.</string>
+  <string name="msg_unlock_description">Aplikacja odblokowująca to drobny zakup w Google Play, który wspiera rozwój Grocy. Po jej zainstalowaniu możesz też przełączyć się na skaner kodów kreskowych ML Kit. Skanuje też daty ważności nadrukowane na opakowaniach, więc nie musisz ich już odczytywać.</string>
 
   <!-- Login: choice -->
   <string name="login_choice_title">Witaj w Grocy</string>
@@ -1588,4 +1588,21 @@
   <string name="login_error_certificate">Certyfikat serwera nie jest zaufany.</string>
   <string name="widget_shopping_choose">Wybierz listę zakupów</string>
   <string name="widget_shopping_choose_hint">Dotknij, aby wybrać listę zakupów do wyświetlenia</string>
+  <string name="start_layout">Układ ekranu startowego</string>
+  <string name="start_layout_description">Uporządkuj, grupuj lub ukryj elementy ekranu startowego</string>
+  <string name="start_layout_title">Uporządkuj ekran startowy</string>
+  <string name="start_layout_shown">Na ekranie startowym</string>
+  <string name="start_layout_available">Dostępne</string>
+  <string name="start_layout_divider">Separator</string>
+  <string name="start_layout_divider_description">Rozpoczyna nową grupę</string>
+  <string name="start_layout_drag">Przeciągnij, aby przenieść</string>
+  <string name="start_layout_move_up">Przenieś w górę</string>
+  <string name="start_layout_move_down">Przenieś w dół</string>
+  <string name="start_layout_remove">Usuń</string>
+  <string name="start_layout_reset">Przywróć domyślne</string>
+  <string name="notifications_shopping_when_added">Gdy produkty zostaną dodane</string>
+  <string name="notifications_shopping_when_checked_off">Gdy produkty zostaną odhaczone</string>
+  <string name="notifications_shopping_hint">Grocy nie może samo powiadomić aplikacji, więc aplikacja regularnie sprawdza zmiany. Powiadomienie może potrwać kilka minut.</string>
+  <string name="notifications_shopping_added">Dodano: %1$s</string>
+  <string name="notifications_shopping_checked_off">Odhaczono: %1$s</string>
 </resources>

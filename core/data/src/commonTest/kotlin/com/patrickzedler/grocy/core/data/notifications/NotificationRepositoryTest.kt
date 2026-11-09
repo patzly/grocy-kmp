@@ -8,6 +8,7 @@ import com.patrickzedler.grocy.core.model.notifications.NotificationKindSettings
 import com.patrickzedler.grocy.core.model.notifications.NotificationSection
 import com.patrickzedler.grocy.core.model.notifications.NotificationSettings
 import com.patrickzedler.grocy.core.model.notifications.NotificationSummary
+import com.patrickzedler.grocy.core.model.notifications.ShoppingListChangeNames
 import com.patrickzedler.grocy.core.model.notifications.NotificationTopic
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.testing.FakeSettingsStore
@@ -47,6 +48,12 @@ class NotificationRepositoryTest {
         }
 
         override suspend fun isShowing(kind: NotificationKind) = kind in showing
+
+        override suspend fun showShoppingListChanges(names: ShoppingListChangeNames) = true
+
+        override suspend fun cancelShoppingListChanges() = Unit
+
+        override suspend fun isShowingShoppingListChanges() = false
     }
 
     private class FakeAlarm : NotificationAlarm {

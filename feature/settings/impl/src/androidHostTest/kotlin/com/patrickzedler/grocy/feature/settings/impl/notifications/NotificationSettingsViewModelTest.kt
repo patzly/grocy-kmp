@@ -9,6 +9,8 @@ import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.notifications.NotificationKind
 import com.patrickzedler.grocy.core.model.notifications.NotificationKindSettings
 import com.patrickzedler.grocy.core.model.notifications.NotificationSummary
+import com.patrickzedler.grocy.core.model.notifications.ShoppingListChangeNames
+import com.patrickzedler.grocy.core.model.notifications.ShoppingListNotificationType
 import com.patrickzedler.grocy.core.model.notifications.NotificationTopic
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.testing.FakeSettingsStore
@@ -49,6 +51,12 @@ class NotificationSettingsViewModelTest {
             cancelled += kind
         }
         override suspend fun isShowing(kind: NotificationKind) = false
+
+        override suspend fun showShoppingListChanges(names: ShoppingListChangeNames) = true
+
+        override suspend fun cancelShoppingListChanges() = Unit
+
+        override suspend fun isShowingShoppingListChanges() = false
     }
 
     private val alarm = object : NotificationAlarm {
@@ -56,7 +64,10 @@ class NotificationSettingsViewModelTest {
         override fun cancel() = Unit
     }
 
-    private fun viewModel(scope: TestScope) = NotificationSettingsViewModel(
+    private fun viewModel(
+        scope: TestScope,
+        enableShoppingList: suspend (ShoppingListNotificationType, Boolean) -> Unit = { _, _ -> },
+    ) = NotificationSettingsViewModel(
         repository = NotificationRepository(
             settingsStore = store,
             connection = MutableStateFlow<ServerConnection?>(null),
@@ -76,6 +87,7 @@ class NotificationSettingsViewModelTest {
             now = { 20_000 * 86_400_000L },
         ),
         serverConfig = MutableStateFlow(ServerConfig()),
+        enableShoppingList = enableShoppingList,
     )
 
     @Test
@@ -206,5 +218,16 @@ class NotificationSettingsViewModelTest {
         assertTrue(canNotifyOnlyMine(NotificationKind.CHORES, ServerConfig()))
         assertTrue(canNotifyOnlyMine(NotificationKind.TASKS, unassigned))
         assertFalse(canNotifyOnlyMine(NotificationKind.STOCK, ServerConfig()))
+    }
+
+    @Test
+    fun switchingAShoppingListNotificationOnReachesTheRepository() = runTest(dispatcher) {
+        val calls = mutableListOf<Pair<ShoppingListNotificationType, Boolean>>()
+        val viewModel = viewModel(this) { type, enabled -> calls += type to enabled }
+
+        viewModel.setShoppingList(ShoppingListNotificationType.ADDED, true)
+        advanceUntilIdle()
+
+        assertEquals(listOf(ShoppingListNotificationType.ADDED to true), calls)
     }
 }

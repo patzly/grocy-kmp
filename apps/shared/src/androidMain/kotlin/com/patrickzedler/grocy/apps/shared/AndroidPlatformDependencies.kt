@@ -14,6 +14,7 @@ import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.notifications.NotificationAlarm
 import com.patrickzedler.grocy.core.data.notifications.Notifier
+import com.patrickzedler.grocy.core.data.notifications.ShoppingListPoller
 import com.patrickzedler.grocy.core.database.GrocyDatabase
 import com.patrickzedler.grocy.core.database.createGrocyDatabase
 import com.patrickzedler.grocy.core.data.settings.AndroidSettingsStore
@@ -101,6 +102,11 @@ class AndroidPlatformDependencies(
         scope: CoroutineScope,
         onDue: suspend () -> Unit,
     ): NotificationAlarm = AndroidNotificationAlarm(appContext)
+
+    override fun createShoppingListPoller(
+        scope: CoroutineScope,
+        onDue: suspend () -> Unit,
+    ): ShoppingListPoller = WorkManagerShoppingListPoller(appContext)
 
     override fun startWidgetUpdates(dependencies: WidgetDependencies, scope: CoroutineScope) {
         WidgetUpdates.start(appContext, dependencies, scope)

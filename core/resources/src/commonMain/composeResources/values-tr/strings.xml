@@ -45,7 +45,7 @@
   <string name="msg_recommend">Grocy, kendi Grocy sunucunuzda gıdaları ve ev işlerini takip eder: %1$s</string>
   <string name="msg_feedback">Dilekleriniz veya sorularınız mı var, ya da bir hata mı buldunuz? Bize ulaşın, memnuniyetle yardımcı olalım!\nAksi takdirde Play Store’da güzel bir değerlendirmeye çok seviniriz.</string>
   <string name="msg_unlock">Geliştirmeyi destekleyin</string>
-  <string name="msg_unlock_description">Kilit açma uygulaması, Google Play’de Grocy’nin geliştirilmesini destekleyen küçük bir satın alımdır. Yüklendikten sonra ML Kit barkod okuyucusuna da geçebilirsiniz.</string>
+  <string name="msg_unlock_description">Kilit açma uygulaması, Google Play’de Grocy’nin geliştirilmesini destekleyen küçük bir satın alımdır. Yüklendikten sonra ML Kit barkod okuyucusuna da geçebilirsiniz. Ayrıca ambalajlara basılı son kullanma tarihlerini tarar, böylece onları çözmeye çalışmanız gerekmez.</string>
 
   <!-- Login: choice -->
   <string name="login_choice_title">Grocy’ye hoş geldiniz</string>
@@ -1481,4 +1481,21 @@
   <string name="login_error_certificate">Sunucunun sertifikası güvenilir değil.</string>
   <string name="widget_shopping_choose">Bir alışveriş listesi seçin</string>
   <string name="widget_shopping_choose_hint">Gösterilecek alışveriş listesini seçmek için dokunun</string>
+  <string name="start_layout">Başlangıç ekranı düzeni</string>
+  <string name="start_layout_description">Başlangıç ekranındaki öğeleri düzenleyin, gruplayın veya gizleyin</string>
+  <string name="start_layout_title">Başlangıç ekranını düzenle</string>
+  <string name="start_layout_shown">Başlangıç ekranında</string>
+  <string name="start_layout_available">Kullanılabilir</string>
+  <string name="start_layout_divider">Ayırıcı</string>
+  <string name="start_layout_divider_description">Yeni bir grup başlatır</string>
+  <string name="start_layout_drag">Taşımak için sürükleyin</string>
+  <string name="start_layout_move_up">Yukarı taşı</string>
+  <string name="start_layout_move_down">Aşağı taşı</string>
+  <string name="start_layout_remove">Kaldır</string>
+  <string name="start_layout_reset">Varsayılana sıfırla</string>
+  <string name="notifications_shopping_when_added">Öğeler eklendiğinde</string>
+  <string name="notifications_shopping_when_checked_off">Öğeler işaretlendiğinde</string>
+  <string name="notifications_shopping_hint">Grocy uygulamayı kendisi bilgilendiremez, bu yüzden uygulama düzenli olarak değişiklikleri kontrol eder. Bildirim birkaç dakika sürebilir.</string>
+  <string name="notifications_shopping_added">Eklendi: %1$s</string>
+  <string name="notifications_shopping_checked_off">İşaretlendi: %1$s</string>
 </resources>

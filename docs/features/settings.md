@@ -91,9 +91,9 @@ scene, and the page's back button) returns to the products in one step). The oth
 - Certificates (`CertificateSettingsRoute`, `CertificatesScreen`, also from the manual login,
   since a server demanding a client certificate cannot be reached without): the client certificate
   and the trusted servers' certificates, see `docs/architecture/network.md`.
-- The last group is one item "Current server configuration" (`serverFeaturesOf`), long, so it comes
-  after everything the user can do here: enabled and disabled features and values as bullet lists,
-  following `ServerRepository.serverConfig`, so a reload shows at once. Logging out no longer asks:
+- Below the version "Logout" as a group of its own, then "Reload configuration" with "Current
+  server configuration" below it in one group (`serverFeaturesOf`): enabled and disabled features
+  and values as bullet lists, following `ServerRepository.serverConfig`, so a reload shows at once. Logging out no longer asks:
   the session stays and opens again with a tap.
 - Android's app info links here: `MainActivity`'s `APPLICATION_PREFERENCES` filter adds an item for
   the settings, the `NOTIFICATION_PREFERENCES` category one on its notification page for the

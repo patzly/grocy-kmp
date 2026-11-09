@@ -45,7 +45,7 @@
   <string name="msg_recommend">A Grocy nyilvántartja az élelmiszereket és a háztartást a saját Grocy szervereden: %1$s</string>
   <string name="msg_feedback">Kívánságod vagy kérdésed van, esetleg hibát találtál? Írj nekünk, szívesen segítünk!\nEgyébként nagyon örülnénk egy kedves értékelésnek a Play Store-ban.</string>
   <string name="msg_unlock">A fejlesztés támogatása</string>
-  <string name="msg_unlock_description">A feloldó alkalmazás egy kis vásárlás a Google Playen, amely a Grocy fejlesztését támogatja. Ha telepítve van, átválthatsz az ML Kit vonalkódolvasójára is.</string>
+  <string name="msg_unlock_description">A feloldó alkalmazás egy kis vásárlás a Google Playen, amely a Grocy fejlesztését támogatja. Ha telepítve van, átválthatsz az ML Kit vonalkódolvasójára is. A csomagolásra nyomtatott lejárati dátumokat is beolvassa, így nem kell többé kibetűzni őket.</string>
 
   <!-- Login: choice -->
   <string name="login_choice_title">Üdvözöl a Grocy</string>
@@ -1482,4 +1482,21 @@
   <string name="login_error_certificate">A szerver tanúsítványa nem megbízható.</string>
   <string name="widget_shopping_choose">Válasszon bevásárlólistát</string>
   <string name="widget_shopping_choose_hint">Koppintson a megjelenítendő bevásárlólista kiválasztásához</string>
+  <string name="start_layout">Kezdőképernyő elrendezése</string>
+  <string name="start_layout_description">A kezdőképernyő elemeinek rendezése, csoportosítása vagy elrejtése</string>
+  <string name="start_layout_title">Kezdőképernyő rendezése</string>
+  <string name="start_layout_shown">A kezdőképernyőn</string>
+  <string name="start_layout_available">Elérhető</string>
+  <string name="start_layout_divider">Elválasztó</string>
+  <string name="start_layout_divider_description">Új csoportot kezd</string>
+  <string name="start_layout_drag">Húzd az áthelyezéshez</string>
+  <string name="start_layout_move_up">Mozgatás fel</string>
+  <string name="start_layout_move_down">Mozgatás le</string>
+  <string name="start_layout_remove">Eltávolítás</string>
+  <string name="start_layout_reset">Alapértelmezés visszaállítása</string>
+  <string name="notifications_shopping_when_added">Amikor tételeket adnak hozzá</string>
+  <string name="notifications_shopping_when_checked_off">Amikor tételeket kipipálnak</string>
+  <string name="notifications_shopping_hint">A Grocy magától nem tudja értesíteni az alkalmazást, ezért az alkalmazás rendszeresen keresi a változásokat. Egy értesítés néhány percig is tarthat.</string>
+  <string name="notifications_shopping_added">Hozzáadva: %1$s</string>
+  <string name="notifications_shopping_checked_off">Kipipálva: %1$s</string>
 </resources>

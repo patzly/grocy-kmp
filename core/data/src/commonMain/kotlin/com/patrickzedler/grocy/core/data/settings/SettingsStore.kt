@@ -14,6 +14,7 @@ import com.patrickzedler.grocy.core.model.network.CertificateSettings
 import com.patrickzedler.grocy.core.model.network.NetworkSettings
 import com.patrickzedler.grocy.core.model.notifications.NotificationDeliveries
 import com.patrickzedler.grocy.core.model.notifications.NotificationSettings
+import com.patrickzedler.grocy.core.model.notifications.ShoppingListNotificationSettings
 import com.patrickzedler.grocy.core.model.recipes.RecipesOptions
 import com.patrickzedler.grocy.core.model.scanner.ScannerForm
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListOptions
@@ -85,6 +86,21 @@ interface SettingsStore {
     val tasksOverviewOptions: Flow<TasksOverviewOptions>
 
     suspend fun setTasksOverviewOptions(options: TasksOverviewOptions)
+
+    /** How the user arranged the start screen ([StartLayout.stored]), null for the default. */
+    val startLayout: Flow<String?>
+
+    suspend fun setStartLayout(layout: String)
+
+    /** Which changes of the shopping lists notify the user. */
+    val shoppingListNotifications: Flow<ShoppingListNotificationSettings>
+
+    suspend fun setShoppingListNotifications(settings: ShoppingListNotificationSettings)
+
+    /** What the shopping list notification last told, as the repository wrote it. */
+    suspend fun readShoppingListNotificationNames(): String?
+
+    suspend fun setShoppingListNotificationNames(names: String)
 
     /** Which notifications the user turned on, none until changed. */
     val notificationSettings: Flow<NotificationSettings>

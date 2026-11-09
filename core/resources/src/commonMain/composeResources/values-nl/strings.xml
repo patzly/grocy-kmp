@@ -45,7 +45,7 @@
   <string name="msg_recommend">Grocy houdt boodschappen en huishouden bij op je eigen Grocy-server: %1$s</string>
   <string name="msg_feedback">Heb je wensen of vragen, of heb je een fout gevonden? Neem contact met ons op, we helpen je graag!\nAnders zijn we heel blij met een leuke beoordeling in de Play Store.</string>
   <string name="msg_unlock">Ondersteun de ontwikkeling</string>
-  <string name="msg_unlock_description">De ontgrendel-app is een kleine aankoop op Google Play die de ontwikkeling van Grocy ondersteunt. Als die geïnstalleerd is, kun je ook overschakelen naar de streepjescodescanner van ML Kit.</string>
+  <string name="msg_unlock_description">De ontgrendel-app is een kleine aankoop op Google Play die de ontwikkeling van Grocy ondersteunt. Als die geïnstalleerd is, kun je ook overschakelen naar de streepjescodescanner van ML Kit. Ook scant de app de houdbaarheidsdatums die op verpakkingen staan, zodat je ze niet meer hoeft te ontcijferen.</string>
 
   <!-- Login: choice -->
   <string name="login_choice_title">Welkom bij Grocy</string>
@@ -1482,4 +1482,21 @@
   <string name="login_error_certificate">Het certificaat van de server wordt niet vertrouwd.</string>
   <string name="widget_shopping_choose">Kies een boodschappenlijst</string>
   <string name="widget_shopping_choose_hint">Tik om de boodschappenlijst te kiezen die wordt getoond</string>
+  <string name="start_layout">Indeling van het startscherm</string>
+  <string name="start_layout_description">Items van het startscherm ordenen, groeperen of verbergen</string>
+  <string name="start_layout_title">Startscherm ordenen</string>
+  <string name="start_layout_shown">Op het startscherm</string>
+  <string name="start_layout_available">Beschikbaar</string>
+  <string name="start_layout_divider">Scheidingslijn</string>
+  <string name="start_layout_divider_description">Begint een nieuwe groep</string>
+  <string name="start_layout_drag">Sleep om te verplaatsen</string>
+  <string name="start_layout_move_up">Omhoog</string>
+  <string name="start_layout_move_down">Omlaag</string>
+  <string name="start_layout_remove">Verwijderen</string>
+  <string name="start_layout_reset">Standaard herstellen</string>
+  <string name="notifications_shopping_when_added">Als er items worden toegevoegd</string>
+  <string name="notifications_shopping_when_checked_off">Als er items worden afgevinkt</string>
+  <string name="notifications_shopping_hint">Grocy kan de app niet zelf waarschuwen, dus de app zoekt regelmatig naar wijzigingen. Een melding kan een paar minuten duren.</string>
+  <string name="notifications_shopping_added">Toegevoegd: %1$s</string>
+  <string name="notifications_shopping_checked_off">Afgevinkt: %1$s</string>
 </resources>

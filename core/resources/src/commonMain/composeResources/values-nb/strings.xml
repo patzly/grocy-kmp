@@ -45,7 +45,7 @@
   <string name="msg_recommend">Grocy holder oversikt over dagligvarer og husholdning på din egen Grocy-server: %1$s</string>
   <string name="msg_feedback">Har du ønsker eller spørsmål, eller har du funnet en feil? Kontakt oss, så hjelper vi gjerne!\nEllers blir vi veldig glade for en fin vurdering i Play Store.</string>
   <string name="msg_unlock">Støtt utviklingen</string>
-  <string name="msg_unlock_description">Opplåsingsappen er et lite kjøp på Google Play som støtter utviklingen av Grocy. Når den er installert, kan du også bytte til strekkodeskanneren fra ML Kit.</string>
+  <string name="msg_unlock_description">Opplåsingsappen er et lite kjøp på Google Play som støtter utviklingen av Grocy. Når den er installert, kan du også bytte til strekkodeskanneren fra ML Kit. Den skanner også holdbarhetsdatoer som er trykt på pakninger, så du slipper å tyde dem selv.</string>
 
   <!-- Login: choice -->
   <string name="login_choice_title">Velkommen til Grocy</string>
@@ -1482,4 +1482,21 @@
   <string name="login_error_certificate">Serverens sertifikat er ikke klarert.</string>
   <string name="widget_shopping_choose">Velg en handleliste</string>
   <string name="widget_shopping_choose_hint">Trykk for å velge handlelisten som skal vises</string>
+  <string name="start_layout">Oppsett av startskjermen</string>
+  <string name="start_layout_description">Ordne, grupper eller skjul elementene på startskjermen</string>
+  <string name="start_layout_title">Ordne startskjermen</string>
+  <string name="start_layout_shown">På startskjermen</string>
+  <string name="start_layout_available">Tilgjengelig</string>
+  <string name="start_layout_divider">Skillelinje</string>
+  <string name="start_layout_divider_description">Starter en ny gruppe</string>
+  <string name="start_layout_drag">Dra for å flytte</string>
+  <string name="start_layout_move_up">Flytt opp</string>
+  <string name="start_layout_move_down">Flytt ned</string>
+  <string name="start_layout_remove">Fjern</string>
+  <string name="start_layout_reset">Tilbakestill til standard</string>
+  <string name="notifications_shopping_when_added">Når varer legges til</string>
+  <string name="notifications_shopping_when_checked_off">Når varer krysses av</string>
+  <string name="notifications_shopping_hint">Grocy kan ikke varsle appen selv, så appen ser etter endringer jevnlig. Et varsel kan ta noen minutter.</string>
+  <string name="notifications_shopping_added">Lagt til: %1$s</string>
+  <string name="notifications_shopping_checked_off">Krysset av: %1$s</string>
 </resources>

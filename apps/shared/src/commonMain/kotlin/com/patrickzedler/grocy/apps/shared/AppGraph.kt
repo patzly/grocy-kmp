@@ -35,7 +35,9 @@ import com.patrickzedler.grocy.core.data.recipes.RecipesRepository
 import com.patrickzedler.grocy.core.data.settings.RecipesOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ShoppingListOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ShoppingModeSettingsRepository
+import com.patrickzedler.grocy.core.data.settings.StartLayoutRepository
 import com.patrickzedler.grocy.core.data.settings.StockOverviewOptionsRepository
+import com.patrickzedler.grocy.core.data.notifications.ShoppingListNotificationRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.widget.WidgetDataRefresher
 import com.patrickzedler.grocy.core.data.stock.StockRepository
@@ -109,6 +111,9 @@ class AppGraph(
 
     /** The client certificate and the trusted servers, only where the app may decide them. */
     private val certificateRepository = CertificateRepository(platform.settingsStore, appScope)
+
+    /** How the user arranged the start screen, read at app start for its first frame. */
+    private val startLayoutRepository = StartLayoutRepository(platform.settingsStore, appScope)
 
     /** The servers' certificates the user trusts, for the Play app, which hands them to a watch. */
     val trustedCertificates: Flow<List<TrustedCertificate>>
@@ -358,6 +363,26 @@ class AppGraph(
         )
     }
 
+    /** What others do on the shopping lists; WorkManager or the open page asks it to look. */
+    private val shoppingListNotifications: ShoppingListNotificationRepository by lazy {
+        ShoppingListNotificationRepository(
+            settingsStore = platform.settingsStore,
+            connection = platform.credentialStore.connection,
+            serverConfig = masterDataRepository.serverConfig,
+            api = grocyApi,
+            shopping = shoppingListRepository,
+            masterData = masterDataRepository,
+            notifier = platform.notifier,
+            poller = platform.createShoppingListPoller(appScope) {
+                shoppingListNotifications.check()
+            },
+            scope = appScope,
+        )
+    }
+
+    /** Looks whether others changed a shopping list, see [ShoppingListNotificationRepository]. */
+    internal suspend fun checkShoppingListChanges() = shoppingListNotifications.check()
+
     private val mutableOpenedNotification = MutableStateFlow<NotificationKind?>(null)
 
     /** The notification the user opened, until the navigation showed its feature. */
@@ -426,6 +451,8 @@ class AppGraph(
     }
 
     internal val settingsDependencies: SettingsDependencies = object : SettingsDependencies {
+        override val startLayoutRepository: StartLayoutRepository
+            get() = this@AppGraph.startLayoutRepository
         override val settingsStore: SettingsStore
             get() = platform.settingsStore
         override val appearanceRepository: AppearanceRepository
@@ -453,6 +480,8 @@ class AppGraph(
             get() = shoppingModeSettingsRepository
         override val notificationRepository: NotificationRepository
             get() = this@AppGraph.notificationRepository
+        override val shoppingListNotifications: ShoppingListNotificationRepository
+            get() = this@AppGraph.shoppingListNotifications
 
         override fun restartApp() = platform.restartApp()
 
@@ -461,6 +490,8 @@ class AppGraph(
     }
 
     internal val startDependencies: StartDependencies = object : StartDependencies {
+        override val startLayoutRepository: StartLayoutRepository
+            get() = this@AppGraph.startLayoutRepository
         override val authRepository: AuthRepository
             get() = this@AppGraph.authRepository
         override val calendarRepository: CalendarRepository
@@ -642,6 +673,7 @@ class AppGraph(
         shoppingListRepository.sendPendingInBackground()
         // Catches up what was missed while the app could not run and keeps the alarm set
         notificationRepository.start()
+        shoppingListNotifications.start()
         platform.startWidgetUpdates(widgetDependencies, appScope)
         // Orbot starts Tor by itself if the user allows it there, else requests fail until then
         appScope.launch {

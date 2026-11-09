@@ -162,6 +162,8 @@ internal class ShoppingListViewModel(
         refresh()
     }
 
+    fun setOnScreen(shown: Boolean) = shoppingLists.setListOnScreen(shown)
+
     fun refresh() = refreshController.refresh()
 
     fun onErrorShown() = refreshController.onErrorShown()

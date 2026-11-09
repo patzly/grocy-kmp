@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemDefaults
@@ -46,36 +47,20 @@ import com.patrickzedler.grocy.core.model.batteries.BatteriesSummary
 import com.patrickzedler.grocy.core.model.chores.ChoresSummary
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListSummary
+import com.patrickzedler.grocy.core.model.start.StartLayout
+import com.patrickzedler.grocy.core.model.start.StartSection
 import com.patrickzedler.grocy.core.model.stock.StockSummary
 import com.patrickzedler.grocy.core.model.tasks.TasksSummary
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.model.nextSession
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.app_name
-import com.patrickzedler.grocy.core.resources.batteries_overview_title
-import com.patrickzedler.grocy.core.resources.chores_overview_title
 import com.patrickzedler.grocy.core.resources.equipment_count
-import com.patrickzedler.grocy.core.resources.equipment_title
-import com.patrickzedler.grocy.core.resources.ic_rounded_battery_0_bar
-import com.patrickzedler.grocy.core.resources.ic_rounded_build
 import com.patrickzedler.grocy.core.resources.calendar_events_today
 import com.patrickzedler.grocy.core.resources.calendar_nothing_today
-import com.patrickzedler.grocy.core.resources.calendar_title
-import com.patrickzedler.grocy.core.resources.ic_rounded_calendar_month
-import com.patrickzedler.grocy.core.resources.ic_rounded_date_range
-import com.patrickzedler.grocy.core.resources.ic_rounded_checklist
-import com.patrickzedler.grocy.core.resources.ic_rounded_cleaning_services
-import com.patrickzedler.grocy.core.resources.ic_rounded_database
 import com.patrickzedler.grocy.core.resources.ic_rounded_dataset
-import com.patrickzedler.grocy.core.resources.ic_rounded_kitchen
-import com.patrickzedler.grocy.core.resources.ic_rounded_menu_book
-import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_cart
 import com.patrickzedler.grocy.core.resources.masterdata_batteries_count
 import com.patrickzedler.grocy.core.resources.masterdata_chores_count
-import com.patrickzedler.grocy.core.resources.masterdata_title
-import com.patrickzedler.grocy.core.resources.meal_plan_title
-import com.patrickzedler.grocy.core.resources.recipes_title
-import com.patrickzedler.grocy.core.resources.shopping_list_list
 import com.patrickzedler.grocy.core.resources.shopping_list_list_with_count
 import com.patrickzedler.grocy.core.resources.objects_empty
 import com.patrickzedler.grocy.core.resources.recipes_empty
@@ -111,93 +96,21 @@ import com.patrickzedler.grocy.core.resources.start_tasks_due_soon
 import com.patrickzedler.grocy.core.resources.start_tasks_due_today
 import com.patrickzedler.grocy.core.resources.start_tasks_overdue
 import com.patrickzedler.grocy.core.resources.stock_overview_empty
-import com.patrickzedler.grocy.core.resources.stock_overview_title
 import com.patrickzedler.grocy.core.resources.tasks_count
-import com.patrickzedler.grocy.core.resources.tasks_title
 import com.patrickzedler.grocy.core.ui.AppMenuDialogs
 import com.patrickzedler.grocy.core.ui.RefreshErrorEffect
+import com.patrickzedler.grocy.core.ui.icon
 import com.patrickzedler.grocy.core.ui.rememberAppMenu
 import com.patrickzedler.grocy.core.ui.sessions.SessionsDialog
 import com.patrickzedler.grocy.core.ui.sessions.SessionsViewModel
 import com.patrickzedler.grocy.core.ui.sessions.message
+import com.patrickzedler.grocy.core.ui.title
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
-
-/** The groups of the start screen's sections, in their order. */
-internal enum class StartGroup { STOCK, RECIPES, CHORES, MASTER_DATA }
-
-/** The sections of the start screen, in their order, grouped by [group]. */
-internal enum class StartSection(
-    val title: StringResource,
-    val icon: DrawableResource,
-    val group: StartGroup,
-    /** Hidden while the server turned the feature off, like Grocy's menu. */
-    val isAvailable: (ServerConfig) -> Boolean = { true },
-) {
-    STOCK_OVERVIEW(
-        Res.string.stock_overview_title,
-        Res.drawable.ic_rounded_kitchen,
-        StartGroup.STOCK,
-        { it.stock },
-    ),
-    SHOPPING_LIST(
-        Res.string.shopping_list_list,
-        Res.drawable.ic_rounded_shopping_cart,
-        StartGroup.STOCK,
-        { it.stock && it.shoppingList },
-    ),
-    RECIPES(
-        Res.string.recipes_title,
-        Res.drawable.ic_rounded_menu_book,
-        StartGroup.RECIPES,
-        { it.recipes },
-    ),
-    MEAL_PLAN(
-        Res.string.meal_plan_title,
-        Res.drawable.ic_rounded_calendar_month,
-        StartGroup.RECIPES,
-        { it.recipes && it.recipesMealPlan },
-    ),
-    CHORES(
-        Res.string.chores_overview_title,
-        Res.drawable.ic_rounded_cleaning_services,
-        StartGroup.CHORES,
-        { it.chores },
-    ),
-    TASKS(
-        Res.string.tasks_title,
-        Res.drawable.ic_rounded_checklist,
-        StartGroup.CHORES,
-        { it.tasks },
-    ),
-    BATTERIES(
-        Res.string.batteries_overview_title,
-        Res.drawable.ic_rounded_battery_0_bar,
-        StartGroup.CHORES,
-        { it.batteries },
-    ),
-    EQUIPMENT(
-        Res.string.equipment_title,
-        Res.drawable.ic_rounded_build,
-        StartGroup.CHORES,
-        { it.equipment },
-    ),
-    CALENDAR(
-        Res.string.calendar_title,
-        Res.drawable.ic_rounded_date_range,
-        StartGroup.CHORES,
-        { it.calendar },
-    ),
-    MASTER_DATA(
-        Res.string.masterdata_title,
-        Res.drawable.ic_rounded_database,
-        StartGroup.MASTER_DATA,
-    ),
-}
 
 /** The sections [config] allows, all of them until the configuration is read. */
 internal fun availableSections(config: ServerConfig?): List<StartSection> =
@@ -235,6 +148,7 @@ internal fun StartScreen(
     val refresh by viewModel.refresh.collectAsStateWithLifecycle()
     val config by viewModel.serverConfig.collectAsStateWithLifecycle()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val layout by viewModel.layout.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val appMenu = rememberAppMenu(onSettingsClick = onSettingsClick, onAboutClick = onAboutClick)
     AppMenuDialogs(appMenu)
@@ -281,7 +195,8 @@ internal fun StartScreen(
     )
 
     StartContent(
-        sections = availableSections(config),
+        // Nothing for the moment until the arrangement is read, instead of the default jumping
+        groups = layout?.groups(config).orEmpty(),
         stockActions = StockAction.entries.filter { config?.let(it.isAvailable) != false },
         isDemoServer = isDemoServer,
         state = state,
@@ -318,7 +233,7 @@ internal fun StartScreen(
 
 @Composable
 private fun StartContent(
-    sections: List<StartSection>,
+    groups: List<List<StartSection>>,
     stockActions: List<StockAction>,
     isDemoServer: Boolean,
     state: StartUiState?,
@@ -357,26 +272,31 @@ private fun StartContent(
                 DemoServerWarning(onClick = onDemoWarningClick)
             }
         }
-        sections.groupBy { it.group }.forEach { (group, groupSections) ->
-            // Like Grocy's sidebar: the user's own entities right above the master data
-            val userentities = state?.sidebarUserentities.orEmpty()
-            if (group == StartGroup.MASTER_DATA && userentities.isNotEmpty()) {
-                segmentedGroup(key = "userentities") {
-                    userentities.forEachIndexed { index, userentity ->
-                        PageItem(
-                            icon = Res.drawable.ic_rounded_dataset,
-                            title = userentity.caption,
-                            summary = userentity.description?.ifBlank { null }
-                                ?.let { SectionSummary(intro = it, bullets = emptyList()) },
-                            index = index,
-                            count = userentities.size,
-                            onClick = { onUserentityClick(userentity.name) },
-                            selected = false.takeIf { isBesideDetail },
-                        )
-                    }
+        // Like Grocy's sidebar: the user's own entities right above the master data
+        val userentities = state?.sidebarUserentities.orEmpty()
+        val userentitiesPlace = groups.indexOfFirst { StartSection.MASTER_DATA in it }
+            .takeIf { it >= 0 } ?: groups.size
+        fun LazyListScope.userentityGroup() {
+            if (userentities.isEmpty()) return
+            segmentedGroup(key = "userentities") {
+                userentities.forEachIndexed { index, userentity ->
+                    PageItem(
+                        icon = Res.drawable.ic_rounded_dataset,
+                        title = userentity.caption,
+                        summary = userentity.description?.ifBlank { null }
+                            ?.let { SectionSummary(intro = it, bullets = emptyList()) },
+                        index = index,
+                        count = userentities.size,
+                        onClick = { onUserentityClick(userentity.name) },
+                        selected = false.takeIf { isBesideDetail },
+                    )
                 }
             }
-            segmentedGroup(key = group.name) {
+        }
+        groups.forEachIndexed { groupIndex, groupSections ->
+            if (groupIndex == userentitiesPlace) userentityGroup()
+            // By its first section, so the list keeps its place when the arrangement changes
+            segmentedGroup(key = groupSections.first().name) {
                 groupSections.forEachIndexed { index, section ->
                     SectionItem(
                         section = section,
@@ -415,6 +335,7 @@ private fun StartContent(
                 }
             }
         }
+        if (userentitiesPlace == groups.size) userentityGroup()
     }
 }
 
@@ -891,7 +812,7 @@ private val ButtonsBottomSpacing = 16.dp
 private fun StartScreenPreview() {
     GrocyTheme {
         StartContent(
-            sections = StartSection.entries,
+            groups = StartLayout.Default.groups(null),
             stockActions = StockAction.entries,
             isDemoServer = true,
             state = null,

@@ -5,6 +5,7 @@ import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.log.LogReader
 import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.data.notifications.NotificationRepository
+import com.patrickzedler.grocy.core.data.notifications.ShoppingListNotificationRepository
 import com.patrickzedler.grocy.core.data.scanner.ScannerRepository
 import com.patrickzedler.grocy.core.data.server.ServerRepository
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
@@ -13,6 +14,7 @@ import com.patrickzedler.grocy.core.data.settings.CertificateRepository
 import com.patrickzedler.grocy.core.data.settings.NetworkSettingsRepository
 import com.patrickzedler.grocy.core.data.settings.SettingsStore
 import com.patrickzedler.grocy.core.data.settings.ShoppingModeSettingsRepository
+import com.patrickzedler.grocy.core.data.settings.StartLayoutRepository
 import com.patrickzedler.grocy.core.data.unlock.UnlockRepository
 
 interface SettingsDependencies {
@@ -42,11 +44,17 @@ interface SettingsDependencies {
     /** The daily notifications per feature and when they come. */
     val notificationRepository: NotificationRepository
 
+    /** Which changes of the shopping lists notify the user. */
+    val shoppingListNotifications: ShoppingListNotificationRepository
+
     /** Tor and the HTTP proxy, read at app start; a process keeps those it started with. */
     val networkSettings: NetworkSettingsRepository
 
     /** The client certificate and the trusted servers' certificates. */
     val certificateRepository: CertificateRepository
+
+    /** How the user arranged the start screen, read at app start. */
+    val startLayoutRepository: StartLayoutRepository
 
     /** After the configuration or the network settings changed, so everything uses them. */
     fun restartApp()

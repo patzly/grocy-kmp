@@ -45,7 +45,7 @@
   <string name="msg_recommend">Grocy spravuje potraviny a domácnost na vašem vlastním serveru Grocy: %1$s</string>
   <string name="msg_feedback">Máte přání, dotazy nebo jste narazili na chybu? Ozvěte se nám, rádi pomůžeme!\nJinak nás moc potěší pěkné hodnocení v Play Store.</string>
   <string name="msg_unlock">Podpořit vývoj</string>
-  <string name="msg_unlock_description">Odemykací aplikace je drobný nákup na Google Play, kterým podpoříte vývoj Grocy. Po její instalaci můžete také přepnout na skener čárových kódů ML Kit.</string>
+  <string name="msg_unlock_description">Odemykací aplikace je drobný nákup na Google Play, kterým podpoříte vývoj Grocy. Po její instalaci můžete také přepnout na skener čárových kódů ML Kit. Také naskenuje data spotřeby vytištěná na obalech, takže je už nemusíte luštit.</string>
 
   <!-- Login: choice -->
   <string name="login_choice_title">Vítejte v Grocy</string>
@@ -1592,4 +1592,21 @@ Po zaškrtnutí nebude brán zřetel na množství produktu v nákupním seznamu
   <string name="login_error_certificate">Certifikát serveru není důvěryhodný.</string>
   <string name="widget_shopping_choose">Vyberte nákupní seznam</string>
   <string name="widget_shopping_choose_hint">Klepnutím vyberte nákupní seznam k zobrazení</string>
+  <string name="start_layout">Rozvržení úvodní obrazovky</string>
+  <string name="start_layout_description">Uspořádejte, seskupte nebo skryjte položky úvodní obrazovky</string>
+  <string name="start_layout_title">Uspořádat úvodní obrazovku</string>
+  <string name="start_layout_shown">Na úvodní obrazovce</string>
+  <string name="start_layout_available">Dostupné</string>
+  <string name="start_layout_divider">Oddělovač</string>
+  <string name="start_layout_divider_description">Začíná novou skupinu</string>
+  <string name="start_layout_drag">Přesuňte tažením</string>
+  <string name="start_layout_move_up">Posunout nahoru</string>
+  <string name="start_layout_move_down">Posunout dolů</string>
+  <string name="start_layout_remove">Odebrat</string>
+  <string name="start_layout_reset">Obnovit výchozí</string>
+  <string name="notifications_shopping_when_added">Když se položky přidají</string>
+  <string name="notifications_shopping_when_checked_off">Když se položky odškrtnou</string>
+  <string name="notifications_shopping_hint">Grocy nemůže aplikaci upozornit samo, proto aplikace pravidelně hledá změny. Oznámení může trvat několik minut.</string>
+  <string name="notifications_shopping_added">Přidáno: %1$s</string>
+  <string name="notifications_shopping_checked_off">Odškrtnuto: %1$s</string>
 </resources>

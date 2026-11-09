@@ -5,9 +5,12 @@ import com.patrickzedler.grocy.core.data.masterdata.MasterDataRepository
 import com.patrickzedler.grocy.core.database.GrocyDatabase
 import com.patrickzedler.grocy.core.database.PendingShoppingListDoneEntity
 import com.patrickzedler.grocy.core.database.PendingShoppingListNotesEntity
+import com.patrickzedler.grocy.core.database.ServerValueEntity
 import com.patrickzedler.grocy.core.database.toEntity
 import com.patrickzedler.grocy.core.database.toModel
 import com.patrickzedler.grocy.core.model.ServerConnection
+import com.patrickzedler.grocy.core.model.notifications.ShoppingListChanges
+import com.patrickzedler.grocy.core.model.notifications.shoppingListChangesOf
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItem
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItemSync
@@ -31,6 +34,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -111,6 +115,19 @@ class ShoppingListRepository(
     /** How many items each list has and how many are not done, e.g. for the start screen. */
     val summary: Flow<ShoppingListSummary> = combine(lists, items, ::shoppingListSummaryOf)
 
+    /**
+     * Told about what downloads brought that this device did not do itself, after they are
+     * stored. Not while a list is on the screen, the user sees it there.
+     */
+    var onRemoteChanges: (suspend (ShoppingListChanges) -> Unit)? = null
+
+    private val listScreens = MutableStateFlow(0)
+
+    /** A screen that shows a shopping list came to the front ([shown]) or left it. */
+    fun setListOnScreen(shown: Boolean) {
+        listScreens.update { it + if (shown) 1 else -1 }
+    }
+
     private val mutableSelectedListId = MutableStateFlow<Int?>(null)
 
     /**
@@ -155,7 +172,12 @@ class ShoppingListRepository(
      * @throws GrocyApiException e.g. [GrocyApiException.Unreachable] when offline; the stored
      *   lists stay as they were.
      */
-    suspend fun refresh(): Unit = mutex.withLock {
+    suspend fun refresh() = refresh(announces = true)
+
+    /** [refresh] after this device changed the lists through the server, e.g. from a recipe. */
+    suspend fun refreshAfterOwnChange() = refresh(announces = false)
+
+    private suspend fun refresh(announces: Boolean): Unit = mutex.withLock {
         val connection = requireConnection()
         sendPending(connection)
         val (lists, items) = coroutineScope {
@@ -163,10 +185,12 @@ class ShoppingListRepository(
             val items = async { api.shoppingListItems(connection) }
             lists.await() to items.await()
         }
+        val changes = remoteChanges(items).takeIf { announces }
         database.withWriteTransaction {
             storeLists(lists)
             storeItems(items)
         }
+        announce(changes)
     }
 
     /**
@@ -177,7 +201,9 @@ class ShoppingListRepository(
         val connection = requireConnection()
         sendPending(connection)
         val items = api.shoppingListItems(connection)
+        val changes = remoteChanges(items)
         database.withWriteTransaction { storeItems(items) }
+        announce(changes)
     }
 
     /**
@@ -295,9 +321,33 @@ class ShoppingListRepository(
     }
 
     /** Downloads the items again, e.g. after a change on the server. */
-    private suspend fun refreshItems(): Unit = mutex.withLock {
+    private suspend fun refreshItems(announces: Boolean = true): Unit = mutex.withLock {
         val items = api.shoppingListItems(requireConnection())
+        val changes = remoteChanges(items).takeIf { announces }
         database.withWriteTransaction { storeItems(items) }
+        announce(changes)
+    }
+
+    // Nothing before the first download of these items: everything would count as added
+    private suspend fun remoteChanges(items: List<ShoppingListItem>): ShoppingListChanges? {
+        if (onRemoteChanges == null) return null
+        val isFirst = masterDataDao.observeServerValue(ITEMS_DOWNLOADED).first() == null
+        val changes = if (isFirst) {
+            null
+        } else {
+            shoppingListChangesOf(
+                stored = dao.observeItems().first().map { it.toModel() },
+                downloaded = items,
+                pendingDone = dao.pendingDone().map { it.itemId }.toSet(),
+            )
+        }
+        if (isFirst) masterDataDao.upsertServerValue(ServerValueEntity(ITEMS_DOWNLOADED, "true"))
+        return changes
+    }
+
+    private suspend fun announce(changes: ShoppingListChanges?) {
+        if (changes == null || changes.isEmpty || listScreens.value > 0) return
+        onRemoteChanges?.invoke(changes)
     }
 
     /** Replaces the stored items by [items] with the check offs still to send on top. */
@@ -423,13 +473,14 @@ class ShoppingListRepository(
      * it, so a failed download must not report it as failed, which would invite repeating it.
      */
     private suspend fun afterChange() {
-        ignoringServerErrors { refreshItems() }
+        ignoringServerErrors { refreshItems(announces = false) }
     }
 
     private suspend fun requireConnection(): ServerConnection =
         connection() ?: throw GrocyApiException.Unauthorized()
 
     companion object {
+        private const val ITEMS_DOWNLOADED = "shopping_list_items_downloaded"
         /** Grocy's entity of the lists, e.g. of their userfields. */
         const val SHOPPING_LISTS = "shopping_lists"
 

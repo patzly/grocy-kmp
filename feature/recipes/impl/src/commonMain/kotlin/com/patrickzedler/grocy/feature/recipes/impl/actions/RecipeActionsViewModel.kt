@@ -139,7 +139,7 @@ internal class RecipeActionsViewModel(
         if (status == RecipeStatus.NOT_ENOUGH_IN_STOCK) {
             recipes.addMissingProductsToShoppingList(id, excludedProductIds = emptyList())
             // The shopping list shows them next time, offline too
-            ignoringServerErrors { shoppingLists.refresh() }
+            ignoringServerErrors { shoppingLists.refreshAfterOwnChange() }
         }
         RecipeActionEvent.PutOnShoppingList
     }

@@ -23,6 +23,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
@@ -125,6 +126,11 @@ internal fun ShoppingListScreen(
     isBesideDetail: Boolean = false,
     isShown: Boolean = true,
 ) {
+    // What happens on the list needs no notification while the user is looking at it
+    LifecycleStartEffect(viewModel) {
+        viewModel.setOnScreen(true)
+        onStopOrDispose { viewModel.setOnScreen(false) }
+    }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val refresh by viewModel.refresh.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }

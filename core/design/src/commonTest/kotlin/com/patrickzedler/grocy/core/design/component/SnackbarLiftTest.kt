@@ -55,4 +55,26 @@ class SnackbarLiftTest {
         assertEquals(624.dp, snackbarMaxWidth(ScreenPane.Single))
         assertEquals(624.dp, snackbarMaxWidth(null))
     }
+
+    @Test
+    fun aToolbarStaysWhereItIsWithoutAKeyboard() {
+        assertEquals(0, toolbarKeyboardShift(0, 48, isPane = false, paneMargin = 16))
+    }
+
+    @Test
+    fun aToolbarRisesByWhatTheKeyboardCoversAboveTheNavigationBar() {
+        assertEquals(-252, toolbarKeyboardShift(300, 48, isPane = false, paneMargin = 16))
+    }
+
+    @Test
+    fun aToolbarFollowsAKeyboardThatIsStillComingUp() {
+        assertEquals(0, toolbarKeyboardShift(30, 48, isPane = false, paneMargin = 16))
+        assertEquals(-12, toolbarKeyboardShift(60, 48, isPane = false, paneMargin = 16))
+    }
+
+    @Test
+    fun aPanesSurfaceEndsAboveTheKeyboardSoOnlyItsMarginIsTakenBack() {
+        assertEquals(16, toolbarKeyboardShift(300, 48, isPane = true, paneMargin = 16))
+        assertEquals(5, toolbarKeyboardShift(53, 48, isPane = true, paneMargin = 16))
+    }
 }

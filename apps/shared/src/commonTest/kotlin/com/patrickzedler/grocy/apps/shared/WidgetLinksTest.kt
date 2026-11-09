@@ -11,6 +11,7 @@ import com.patrickzedler.grocy.feature.recipes.api.RecipeRoute
 import com.patrickzedler.grocy.feature.settings.api.NotificationSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.SettingsRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListItemRoute
+import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingListRoute
 import com.patrickzedler.grocy.feature.shoppinglist.api.ShoppingModeRoute
 import com.patrickzedler.grocy.feature.tasks.api.TaskRoute
 import com.patrickzedler.grocy.feature.tasks.api.TasksRoute
@@ -55,6 +56,7 @@ class WidgetLinksTest {
 
     @Test
     fun theShoppingListWidgetsLinksOpenTheirPages() {
+        assertEquals(ShoppingListRoute(), WidgetLinks.routeOfLink(WidgetLinks.shoppingList()))
         assertEquals(
             ShoppingModeRoute(listId = 2),
             WidgetLinks.routeOfLink(WidgetLinks.shoppingMode(2)),

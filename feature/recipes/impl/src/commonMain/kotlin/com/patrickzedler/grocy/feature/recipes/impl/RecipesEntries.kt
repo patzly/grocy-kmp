@@ -179,6 +179,7 @@ fun EntryProviderScope<NavKey>.recipesEntries(
                     recipes = recipes,
                     masterData = masterData,
                     stock = dependencies.stockRepository,
+                    shoppingLists = dependencies.shoppingListRepository,
                     scannerForms = dependencies.scannerForms,
                     initialDay = route.start,
                 )

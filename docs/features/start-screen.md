@@ -63,6 +63,16 @@ meal plan dialog (`feature:recipes`, see `recipes.md`) and its meal plan with it
 (`feature:recipes`, see `meal-plan.md`) and its chores (`feature:chores`, see `chores.md`) and its tasks (`feature:tasks`, see `tasks.md`) and its batteries (`feature:batteries`, see
 `batteries.md`) and its equipment (`feature:equipment`, see `equipment.md`).
 
+The order and groups are the user's (General settings, "Start screen layout"): `StartLayout`
+(`core:model`, stored as text by `StartLayoutRepository`) is a list of sections and dividers, a divider
+starts a new group. `StartLayoutDialog` edits a `StartLayoutDraft` in one `LazyColumn`, so a held row
+survives going from "On the start screen" to "Available"; the drag handle feeds `DragInteraction`s into
+Material's `SegmentedListItem`, which takes its dragged shape, color and elevation from them. The first
+available row is always a divider. Dropped on the available rows a row is removed. Up, down and remove
+are also in each row's menu and accessibility actions. Sections the server hides are not offered and
+keep their place (`withHiddenFrom`). The user's entities stay right above the master data, at the end
+without them. A section a future version adds stays available until added.
+
 The logo in the app bar (`SessionLogoButton`) turns into a 32.dp profile circle while pressed,
 hovered and with its dialog open: the first letter of the username, one of three container colors
 per account. A tap opens `SessionsDialog` (`core:ui`): who is logged in and the instance, Logout, the

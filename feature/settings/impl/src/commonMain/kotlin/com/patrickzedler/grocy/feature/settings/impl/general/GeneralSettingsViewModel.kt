@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.language.AppLanguageStore
 import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.settings.AppearanceRepository
+import com.patrickzedler.grocy.core.data.settings.StartLayoutRepository
 import com.patrickzedler.grocy.core.model.AppLanguages
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.DemoServer
@@ -15,6 +16,9 @@ import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.demoServerFor
 import com.patrickzedler.grocy.core.model.demoServerOf
 import com.patrickzedler.grocy.core.model.resolveAppLanguage
+import com.patrickzedler.grocy.core.model.server.ServerConfig
+import com.patrickzedler.grocy.core.model.start.StartLayout
+import com.patrickzedler.grocy.core.model.start.StartSection
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import com.patrickzedler.grocy.feature.settings.impl.DemoServerSwitcher
 import kotlinx.coroutines.flow.StateFlow
@@ -36,6 +40,8 @@ internal class GeneralSettingsViewModel(
     private val languageStore: AppLanguageStore,
     private val server: StateFlow<ServerState?>,
     private val demoServerSwitcher: DemoServerSwitcher,
+    private val startLayoutRepository: StartLayoutRepository,
+    private val serverConfig: StateFlow<ServerConfig?>,
     private val systemLanguage: () -> String? = ::systemLanguageTag,
 ) : ViewModel() {
 
@@ -43,6 +49,24 @@ internal class GeneralSettingsViewModel(
     val appearance: StateFlow<AppearanceSettings?> = appearanceRepository.appearance
 
     val language: StateFlow<String?> = languageStore.language
+
+    /** Read at app start like [appearance]. */
+    val startLayout: StateFlow<StartLayout?> = startLayoutRepository.layout
+
+    /** The sections the dialog offers: what the server has. */
+    fun arrangeableSections(): List<StartSection> {
+        val config = serverConfig.value
+        return StartSection.entries.filter { config == null || it.isAvailable(config) }
+    }
+
+    /** Stores [layout] of [arrangeableSections]; what the server hides keeps its place. */
+    fun saveStartLayout(layout: StartLayout) {
+        val shown = arrangeableSections().toSet()
+        val previous = startLayout.value ?: StartLayout.Default
+        viewModelScope.launch {
+            startLayoutRepository.save(layout.withHiddenFrom(previous) { it !in shown })
+        }
+    }
 
     /** Asked after a language was chosen on a demo, until answered. */
     var demoServerOffer by mutableStateOf<DemoServerOffer?>(null)

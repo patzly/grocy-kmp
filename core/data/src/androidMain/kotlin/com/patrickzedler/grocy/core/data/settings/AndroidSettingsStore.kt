@@ -19,6 +19,7 @@ import com.patrickzedler.grocy.core.model.chores.ChoresJournalOptions
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewOptions
 import com.patrickzedler.grocy.core.model.notifications.NotificationDeliveries
 import com.patrickzedler.grocy.core.model.notifications.NotificationSettings
+import com.patrickzedler.grocy.core.model.notifications.ShoppingListNotificationSettings
 import com.patrickzedler.grocy.core.model.tasks.TasksOverviewOptions
 import com.patrickzedler.grocy.core.model.AppearanceSettings
 import com.patrickzedler.grocy.core.model.ScannerEngine
@@ -189,6 +190,29 @@ class AndroidSettingsStore(
         dataStore.edit { it[TASKS_OVERVIEW_OPTIONS] = options.stored() }
     }
 
+    override val shoppingListNotifications: Flow<ShoppingListNotificationSettings> = preferences
+        .map { ShoppingListNotificationSettings.of(it[SHOPPING_LIST_NOTIFICATIONS]) }
+        .distinctUntilChanged()
+
+    override suspend fun setShoppingListNotifications(settings: ShoppingListNotificationSettings) {
+        dataStore.edit { it[SHOPPING_LIST_NOTIFICATIONS] = settings.stored() }
+    }
+
+    override suspend fun readShoppingListNotificationNames(): String? =
+        preferences.first()[SHOPPING_LIST_NOTIFICATION_NAMES]
+
+    override suspend fun setShoppingListNotificationNames(names: String) {
+        dataStore.edit { it[SHOPPING_LIST_NOTIFICATION_NAMES] = names }
+    }
+
+    override val startLayout: Flow<String?> = preferences
+        .map { it[START_LAYOUT] }
+        .distinctUntilChanged()
+
+    override suspend fun setStartLayout(layout: String) {
+        dataStore.edit { it[START_LAYOUT] = layout }
+    }
+
     override val notificationSettings: Flow<NotificationSettings> = preferences
         .map { NotificationSettings.of(it[NOTIFICATION_SETTINGS]) }
         .distinctUntilChanged()
@@ -340,5 +364,9 @@ class AndroidSettingsStore(
         val NETWORK_HTTP_PROXY_PORT = intPreferencesKey("network_http_proxy_port")
         val NOTIFICATION_SETTINGS = stringPreferencesKey("notification_settings")
         val NOTIFICATION_DELIVERIES = stringPreferencesKey("notification_deliveries")
+        val START_LAYOUT = stringPreferencesKey("start_layout")
+        val SHOPPING_LIST_NOTIFICATIONS = stringPreferencesKey("shopping_list_notifications")
+        val SHOPPING_LIST_NOTIFICATION_NAMES =
+            stringPreferencesKey("shopping_list_notification_names")
     }
 }

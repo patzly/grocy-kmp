@@ -45,7 +45,7 @@
   <string name="msg_recommend">Grocy 在您自己的 Grocy 服务器上管理食品和家务：%1$s</string>
   <string name="msg_feedback">您有任何愿望、问题或遇到错误吗？请联系我们，我们很乐意帮忙！\n如果没有，我们非常期待您在 Play Store 留下好评。</string>
   <string name="msg_unlock">支持开发</string>
-  <string name="msg_unlock_description">解锁应用是 Google Play 上的一笔小额购买，用于支持 Grocy 的开发。安装后，您还可以切换到 ML Kit 条码扫描器。</string>
+  <string name="msg_unlock_description">解锁应用是 Google Play 上的一笔小额购买，用于支持 Grocy 的开发。安装后，您还可以切换到 ML Kit 条码扫描器。 它还能扫描包装上印刷的保质期，您无需再费力辨认。</string>
 
   <!-- Login: choice -->
   <string name="login_choice_title">欢迎使用 Grocy</string>
@@ -1428,4 +1428,21 @@
   <string name="login_error_certificate">服务器的证书不受信任。</string>
   <string name="widget_shopping_choose">选择购物清单</string>
   <string name="widget_shopping_choose_hint">点按以选择要显示的购物清单</string>
+  <string name="start_layout">开始屏幕布局</string>
+  <string name="start_layout_description">排列、分组或隐藏开始屏幕的项目</string>
+  <string name="start_layout_title">排列开始屏幕</string>
+  <string name="start_layout_shown">在开始屏幕上</string>
+  <string name="start_layout_available">可用</string>
+  <string name="start_layout_divider">分隔线</string>
+  <string name="start_layout_divider_description">开始新的分组</string>
+  <string name="start_layout_drag">拖动以移动</string>
+  <string name="start_layout_move_up">上移</string>
+  <string name="start_layout_move_down">下移</string>
+  <string name="start_layout_remove">移除</string>
+  <string name="start_layout_reset">恢复默认</string>
+  <string name="notifications_shopping_when_added">添加物品时</string>
+  <string name="notifications_shopping_when_checked_off">勾选物品时</string>
+  <string name="notifications_shopping_hint">Grocy 无法主动通知应用，因此应用会定期检查更改。通知可能需要几分钟。</string>
+  <string name="notifications_shopping_added">已添加：%1$s</string>
+  <string name="notifications_shopping_checked_off">已勾选：%1$s</string>
 </resources>

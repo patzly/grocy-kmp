@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.patrickzedler.grocy.core.data.util.RefreshState
@@ -82,6 +83,11 @@ internal fun ShoppingModeScreen(
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // What happens on the list needs no notification while the user is looking at it
+    LifecycleStartEffect(viewModel) {
+        viewModel.setOnScreen(true)
+        onStopOrDispose { viewModel.setOnScreen(false) }
+    }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val refresh by viewModel.refresh.collectAsStateWithLifecycle()
     val settings by viewModel.settings.collectAsStateWithLifecycle()

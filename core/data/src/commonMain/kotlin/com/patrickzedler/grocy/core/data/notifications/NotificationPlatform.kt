@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.core.data.notifications
 
 import com.patrickzedler.grocy.core.model.notifications.NotificationKind
 import com.patrickzedler.grocy.core.model.notifications.NotificationSummary
+import com.patrickzedler.grocy.core.model.notifications.ShoppingListChangeNames
 
 /** Shows notifications the way the platform does; at most one per kind at a time. */
 interface Notifier {
@@ -15,6 +16,17 @@ interface Notifier {
 
     /** Whether the one of [kind] is still there, not dismissed by the user. */
     suspend fun isShowing(kind: NotificationKind): Boolean
+
+    /**
+     * Tells what others did on the shopping lists, replacing what it told before. Returns false
+     * when the platform did not take it.
+     */
+    suspend fun showShoppingListChanges(names: ShoppingListChangeNames): Boolean
+
+    suspend fun cancelShoppingListChanges()
+
+    /** Whether the one about the shopping lists is still there, not dismissed by the user. */
+    suspend fun isShowingShoppingListChanges(): Boolean
 }
 
 /** Wakes the app so [NotificationRepository.check] runs at a time. */

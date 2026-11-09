@@ -4,6 +4,7 @@ import com.patrickzedler.grocy.core.model.notifications.NotificationKind
 import com.patrickzedler.grocy.core.model.notifications.NotificationSection
 import com.patrickzedler.grocy.core.model.notifications.NotificationSummary
 import com.patrickzedler.grocy.core.model.notifications.NotificationTopic
+import com.patrickzedler.grocy.core.model.notifications.ShoppingListChangeNames
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.masterdata_batteries
 import com.patrickzedler.grocy.core.resources.masterdata_chores
@@ -11,6 +12,9 @@ import com.patrickzedler.grocy.core.resources.meal_plan_title
 import com.patrickzedler.grocy.core.resources.notifications_meal_plan_today
 import com.patrickzedler.grocy.core.resources.notifications_names_and
 import com.patrickzedler.grocy.core.resources.notifications_names_more
+import com.patrickzedler.grocy.core.resources.notifications_shopping_added
+import com.patrickzedler.grocy.core.resources.shopping_list_list
+import com.patrickzedler.grocy.core.resources.notifications_shopping_checked_off
 import com.patrickzedler.grocy.core.resources.notifications_sentence_names
 import com.patrickzedler.grocy.core.resources.notifications_stale
 import com.patrickzedler.grocy.core.resources.product_group_stock
@@ -54,6 +58,21 @@ internal suspend fun notificationTitleOf(kind: NotificationKind): String = getSt
         NotificationKind.MEAL_PLAN -> Res.string.meal_plan_title
     },
 )
+
+/** The channel's and notification's name for the changes of the shopping lists. */
+internal suspend fun shoppingListNotificationTitle(): String =
+    getString(Res.string.shopping_list_list)
+
+/** A line each for what others added and checked off, with up to a few of their names. */
+internal suspend fun shoppingListNotificationLines(names: ShoppingListChangeNames): List<String> =
+    buildList {
+        if (names.added.isNotEmpty()) {
+            add(getString(Res.string.notifications_shopping_added, namesOf(names.added)))
+        }
+        if (names.checkedOff.isNotEmpty()) {
+            add(getString(Res.string.notifications_shopping_checked_off, namesOf(names.checkedOff)))
+        }
+    }
 
 /** Says [summary] with the sentences of the start screen, Grocy's messages above its tables. */
 internal suspend fun notificationTextOf(summary: NotificationSummary): NotificationText {

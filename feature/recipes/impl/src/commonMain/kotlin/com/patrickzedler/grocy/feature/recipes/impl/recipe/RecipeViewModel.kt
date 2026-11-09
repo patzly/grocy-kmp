@@ -270,7 +270,7 @@ internal class RecipeViewModel(
         }
         if (error == null) {
             // The shopping list shows them next time, offline too
-            ignoringServerErrors { shoppingLists.refresh() }
+            ignoringServerErrors { shoppingLists.refreshAfterOwnChange() }
             RecipeEvent.MissingAdded
         } else {
             RecipeEvent.AddMissingFailed(error)

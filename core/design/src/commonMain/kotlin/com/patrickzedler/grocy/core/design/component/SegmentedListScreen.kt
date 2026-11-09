@@ -196,6 +196,9 @@ fun SegmentedListScreen(
         isPane = shownPane != null,
     )
 
+    val keyboardInsets = WindowInsets.keyboard
+    val navigationBarInsets = WindowInsets.navigationBars
+
     Scaffold(
         modifier = modifier
             .then(
@@ -339,7 +342,13 @@ fun SegmentedListScreen(
                             toolbarOffset = state.offset,
                             offsetLimit = state.offsetLimit,
                         )
-                        IntOffset(x = 0, y = -lift)
+                        val keyboardLift = if (floatingToolbar != null) {
+                            (keyboardInsets.getBottom(this) - navigationBarInsets.getBottom(this))
+                                .coerceAtLeast(0)
+                        } else {
+                            0
+                        }
+                        IntOffset(x = 0, y = -lift - keyboardLift)
                     },
                     snackbar = { data ->
                         ScreenSnackbar(data, maxWidth = snackbarMaxWidth(shownPane))
@@ -399,6 +408,18 @@ fun SegmentedListScreen(
                             .windowInsetsPadding(WindowInsets.navigationBars)
                             // The bar itself, not its layout, the screen offset above the bottom
                             .offset(y = -(FloatingToolbarDefaults.ScreenOffset - ToolbarBarInset))
+                            // Read during placement, in step with the keyboard's animation
+                            .offset {
+                                IntOffset(
+                                    x = 0,
+                                    y = toolbarKeyboardShift(
+                                        keyboard = keyboardInsets.getBottom(this),
+                                        navigationBar = navigationBarInsets.getBottom(this),
+                                        isPane = shownPane != null,
+                                        paneMargin = PaneMargin.roundToPx(),
+                                    ),
+                                )
+                            }
                             .zIndex(1f),
                     )
                 }
@@ -574,6 +595,21 @@ internal fun snackbarSpace(hasToolbar: Boolean, isPane: Boolean): Dp {
     if (!hasToolbar) return 0.dp
     val toolbarSpace = with(FloatingToolbarDefaults) { ScreenOffset + ContainerSize }
     return toolbarSpace + SnackbarToolbarGap + if (isPane) PaneMargin else 0.dp
+}
+
+/**
+ * How far a floating toolbar moves down (negative: up) so it keeps the screen offset above a
+ * keyboard: it rests above the navigation bar and the keyboard's height includes that. A pane's
+ * surface already ends the [paneMargin] above the keyboard, which would count twice.
+ */
+internal fun toolbarKeyboardShift(
+    keyboard: Int,
+    navigationBar: Int,
+    isPane: Boolean,
+    paneMargin: Int,
+): Int {
+    val aboveBar = (keyboard - navigationBar).coerceAtLeast(0)
+    return if (isPane) aboveBar.coerceAtMost(paneMargin) else -aboveBar
 }
 
 // Material lays a toolbar with FAB out 80 dp high and centers its 64 dp bar in it

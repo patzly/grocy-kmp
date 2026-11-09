@@ -6,7 +6,8 @@ sentences), each opens the feature's page.
 
 - Kinds (`NotificationKind`, `core:model`): stock, chores, tasks, batteries, meal plan, each with
   a channel of its own on Android. A kind's settings are only shown and it only notifies while the
-  server has the feature (`isAvailable`). Shopping lists have nothing that gets due.
+  server has the feature (`isAvailable`). Shopping lists have nothing that gets due, see below for
+  what they tell.
 - Settings (`NotificationSettingsRoute`, category Notifications): on or off, the time, what it
   tells about (`NotificationTopic`: due soon, overdue, expired, below min. stock; overdue, due
   today, due soon; due soon of chores, tasks and batteries off by default), "Only what is assigned to
@@ -32,6 +33,21 @@ sentences), each opens the feature's page.
   is stored, computed for today and marked as last known state, and tries again every 15 minutes,
   8 times, updating it without alerting anew (a dismissed one stays away; one that had nothing to
   tell alerts once something turns up). Nothing to tell shows nothing and removes yesterday's.
+
+## Shopping lists
+
+Like Bring: what others added or checked off (two switches, off until wanted, the permission is
+asked for then; `ShoppingListNotificationSettings`). Grocy has no push, so `ShoppingListPoller` looks
+regularly: on Android WorkManager every 15 minutes with a network, batched in Doze
+(`ShoppingListChangesWorker`), on the web every minute while the page is open. A look is one small
+request (`db-changed-time`), the lists are only downloaded after a change.
+
+Every download of the app is compared with what is stored (`shoppingListChangesOf`,
+`ShoppingListRepository.onRemoteChanges`). This device stores its own changes at once and refreshes
+with `announces = false` after bulk actions, so only what happened elsewhere shows up, whoever did
+it; Grocy does not record who. Nothing is told for the first download of an account, nor while a
+list is on the screen. Everything a look finds is one notification; one still showing grows
+(`ShoppingListChangeNames`, stored) instead of a second coming. Deleted items tell nothing.
 
 ## Android
 
@@ -67,6 +83,6 @@ once; both read the deliveries from `localStorage` before notifying. A tap reach
 ## Testing
 
 `NotificationSettingsTest`, `NotificationScheduleTest`, `NotificationSummaryTest` (`core:model`),
-`NotificationRepositoryTest` with fakes, `RepositoryNotificationDataSourceTest` on
+`ShoppingListNotificationsTest`, `ShoppingListNotificationRepositoryTest`, `NotificationRepositoryTest` with fakes, `RepositoryNotificationDataSourceTest` on
 `FakeGrocyServer`, `NotificationSettingsViewModelTest`, `NotificationAlarmTest` (clock changes, the
 manifest). Whether the system really fires an alarm in Doze needs a device.
