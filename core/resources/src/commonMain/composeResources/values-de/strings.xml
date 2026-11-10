@@ -136,8 +136,28 @@
   <string name="about_privacy_description">Wie deine Daten verarbeitet werden</string>
 
   <!-- Help -->
-  <string name="help_placeholder">Platzhalterfrage</string>
-  <string name="help_placeholder_answer">Platzhalterantwort.</string>
+  <string name="help_grocy">Was ist Grocy?</string>
+  <string name="help_grocy_answer">Grocy ist kostenlose Software für deine Lebensmittel und deinen Haushalt: Bestand, Einkaufszettel, Rezepte, Hausarbeiten und mehr. Sie läuft als dein eigener Grocy-Server, der all deine Daten speichert. Diese App verbindet sich mit diesem Server, du brauchst also einen, um sie zu nutzen.</string>
+  <string name="help_hosting">Wie bekomme ich meinen eigenen Grocy-Server?</string>
+  <string name="help_hosting_answer">Am einfachsten mit PikaPods (pikapods.com): Konto erstellen, Grocy hinzufügen, und dein Server läuft in etwa zwei Minuten, ganz ohne Serverkenntnisse. PikaPods kümmert sich für eine kleine monatliche Gebühr um Updates und Backups. Wenn du schon Home Assistant nutzt, kannst du stattdessen dessen Grocy-Add-on installieren. Alle anderen Wege, etwa Docker auf deinem eigenen Server oder NAS, erklärt Grocys Website grocy.info.</string>
+  <string name="help_demo">Kann ich es ohne Server ausprobieren?</string>
+  <string name="help_demo_answer">Ja, wähle beim Anmelden „Demo-Server“. Das ist Grocys öffentliche Demo mit Beispieldaten. Alles, was du dort eingibst, sehen alle, bis die Demo sich einmal am Tag zurücksetzt. Gib dort also nichts Persönliches ein.</string>
+  <string name="help_address">Welche Adresse gebe ich ein?</string>
+  <string name="help_address_answer">Die Adresse, mit der du Grocy im Browser öffnest, zum Beispiel https://grocy.example.com. Bei PikaPods steht sie bei deinem Pod. Eine Adresse deines Heimnetzes wie http://192.168.1.10 funktioniert nur, solange du mit diesem Netz verbunden bist.</string>
+  <string name="help_api_key">Woher bekomme ich einen API-Schlüssel?</string>
+  <string name="help_api_key_answer">Öffne in Grocy im Browser „API-Schlüssel verwalten“ im Einstellungsmenü oben rechts und füge einen Schlüssel hinzu. Er gibt dieser App Zugriff auf deine Daten, ohne dein Passwort. Scanne beim Anmelden seinen QR-Code oder füge den Schlüssel ein.</string>
+  <string name="help_connection">Warum verbindet sich die App nicht mit meinem Server?</string>
+  <string name="help_connection_answer">Prüfe, ob die Adresse Grocy in einem Browser auf diesem Gerät öffnet, samt http oder https und Port. Unterwegs muss dein Server aus dem Internet erreichbar sein. Die Webversion dieser App braucht https, weil Browser dort einfaches http blockieren, und sie zeigt einen falschen API-Schlüssel als nicht erreichbaren Server.</string>
+  <string name="help_offline">Funktioniert die App ohne Internet?</string>
+  <string name="help_offline_answer">Sie zeigt deine Daten so, wie sie zuletzt heruntergeladen wurden. Einträge des Einkaufszettels kannst du auch ohne Verbindung abhaken, sie werden gesendet, sobald du wieder online bist. Alles, was deinen Bestand ändert, etwa Einkauf oder Verbrauch, braucht eine Verbindung, damit dein Server es immer richtig berechnet.</string>
+  <string name="help_features">Warum fehlen manche Funktionen?</string>
+  <string name="help_features_answer">Die App zeigt, was auf deinem Grocy-Server eingeschaltet ist. Sind zum Beispiel Hausarbeiten oder Batterien in Grocys Konfiguration ausgeschaltet, sind sie auch hier ausgeblendet. Was eingeschaltet ist, siehst du unter Einstellungen › Server › Serverkonfiguration.</string>
+  <string name="help_scanning">Wie scanne ich Barcodes?</string>
+  <string name="help_scanning_answer">Formulare wie Einkauf oder Verbrauch haben einen Barcode-Scanner. Kennt Grocy einen Barcode noch nicht, kannst du ihn einem Produkt zuordnen oder ein neues anlegen, und offene Produktdatenbanken wie Open Food Facts können Name, Bild und mehr ausfüllen.</string>
+  <string name="help_household">Kann mein Haushalt Grocy gemeinsam nutzen?</string>
+  <string name="help_household_answer">Ja, alle verbinden sich mit demselben Grocy-Server, am besten jeweils mit eigenem Grocy-Benutzer und API-Schlüssel. Bestand, Einkaufszettel und Hausarbeiten sind dann für alle gleich.</string>
+  <string name="help_problems">Wo kann ich ein Problem melden?</string>
+  <string name="help_problems_answer">Unter Über kannst du ein neues Issue auf GitHub eröffnen, um Fehler zu melden oder Funktionen vorzuschlagen, oder den Entwickler per E-Mail kontaktieren.</string>
 
 
   <!-- Updates -->

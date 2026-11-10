@@ -136,8 +136,28 @@
   <string name="about_privacy_description">Kuidas sinu andmeid töödeldakse</string>
 
   <!-- Help -->
-  <string name="help_placeholder">Kohatäitjaküsimus</string>
-  <string name="help_placeholder_answer">Kohatäitjavastus.</string>
+  <string name="help_grocy">Mis on Grocy?</string>
+  <string name="help_grocy_answer">Grocy on tasuta tarkvara sinu toiduainete ja majapidamise jaoks: laoseis, ostunimekirjad, retseptid, majapidamistööd ja muu. See töötab sinu enda Grocy serverina, mis salvestab kõik sinu andmed. See rakendus ühendub selle serveriga, seega vajad selle kasutamiseks serverit.</string>
+  <string name="help_hosting">Kuidas saan oma Grocy serveri?</string>
+  <string name="help_hosting_answer">Kõige lihtsam on PikaPods (pikapods.com): loo konto, lisa Grocy ja sinu server töötab umbes kahe minutiga, ilma igasuguste serveriteadmisteta. PikaPods hoolitseb väikese kuutasu eest uuenduste ja varukoopiate eest. Kui kasutad juba Home Assistanti, saad selle asemel paigaldada selle Grocy lisandmooduli. Kõiki teisi võimalusi, näiteks Dockerit oma serveris või NAS-is, selgitab Grocy veebileht grocy.info.</string>
+  <string name="help_demo">Kas saan proovida ilma serverita?</string>
+  <string name="help_demo_answer">Jah, vali sisselogimisel „Demoserver“. See on Grocy avalik demo näidisandmetega. Kõik, mis sa sinna sisestad, on kõigile nähtav, kuni demo kord päevas lähtestub, seega ära sisesta midagi isiklikku.</string>
+  <string name="help_address">Millise aadressi sisestan?</string>
+  <string name="help_address_answer">Aadressi, millega avad Grocy brauseris, näiteks https://grocy.example.com. PikaPodsis on see näha sinu podi juures. Koduvõrgu aadress, näiteks http://192.168.1.10, töötab ainult siis, kui oled selle võrguga ühendatud.</string>
+  <string name="help_api_key">Kust saan API võtme?</string>
+  <string name="help_api_key_answer">Ava brauseris Grocys paremal üleval seadete menüüs „Halda API võtmeid“ ja lisa võti. See annab sellele rakendusele juurdepääsu sinu andmetele ilma sinu paroolita. Sisselogimisel skänni selle QR-kood või kleebi võti.</string>
+  <string name="help_connection">Miks rakendus ei ühendu minu serveriga?</string>
+  <string name="help_connection_answer">Kontrolli, et aadress avab Grocy selle seadme brauseris, koos http või https ja pordiga. Kodust eemal peab server olema internetist kättesaadav. Selle rakenduse veebiversioon vajab https-i, sest brauserid blokeerivad seal tavalise http, ja näitab vale API võtit kättesaamatu serverina.</string>
+  <string name="help_offline">Kas rakendus töötab ilma internetita?</string>
+  <string name="help_offline_answer">See näitab sinu andmeid nii, nagu need viimati alla laaditi. Ostunimekirja kaupu saad ära märkida ka ilma ühenduseta, need saadetakse kohe, kui oled jälle võrgus. Kõik, mis muudab laoseisu, näiteks ostmine või tarbimine, vajab ühendust, et server arvutaks selle alati õigesti.</string>
+  <string name="help_features">Miks mõned funktsioonid puuduvad?</string>
+  <string name="help_features_answer">Rakendus näitab seda, mis on sinu Grocy serveris sisse lülitatud. Kui näiteks majapidamistööd või patareid on Grocy seadistuses välja lülitatud, on need ka siin peidetud. Mis on sisse lülitatud, näed jaotises Seaded › Server › Serveri seadistus.</string>
+  <string name="help_scanning">Kuidas ribakoode skännida?</string>
+  <string name="help_scanning_answer">Vormidel nagu Osta või Tarbi on ribakoodiskänner. Kui Grocy ribakoodi veel ei tunne, saad selle tootele määrata või uue toote luua, ja avatud tooteandmebaasid nagu Open Food Facts saavad täita nime, pildi ja muu.</string>
+  <string name="help_household">Kas mu leibkond saab Grocyt koos kasutada?</string>
+  <string name="help_household_answer">Jah, kõik ühenduvad samasse Grocy serverisse, ideaalis igaüks oma Grocy kasutaja ja API võtmega. Siis on laoseis, ostunimekirjad ja majapidamistööd kõigile samad.</string>
+  <string name="help_problems">Kus saan probleemist teatada?</string>
+  <string name="help_problems_answer">Jaotises Teave saad GitHubis avada uue probleemi, et teatada vigadest või soovida funktsioone, või võtta arendajaga e-posti teel ühendust.</string>
 
 
   <!-- Updates -->

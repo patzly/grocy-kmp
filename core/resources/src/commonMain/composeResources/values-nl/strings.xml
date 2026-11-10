@@ -136,8 +136,28 @@
   <string name="about_privacy_description">Hoe je gegevens worden verwerkt</string>
 
   <!-- Help -->
-  <string name="help_placeholder">Voorbeeldvraag</string>
-  <string name="help_placeholder_answer">Voorbeeldantwoord.</string>
+  <string name="help_grocy">Wat is Grocy?</string>
+  <string name="help_grocy_answer">Grocy is gratis software voor je boodschappen en huishouden: voorraad, boodschappenlijsten, recepten, klusjes en meer. Het draait als je eigen Grocy-server, die al je gegevens opslaat. Deze app maakt verbinding met die server, dus je hebt er een nodig om de app te gebruiken.</string>
+  <string name="help_hosting">Hoe kom ik aan mijn eigen Grocy-server?</string>
+  <string name="help_hosting_answer">Het makkelijkst is PikaPods (pikapods.com): maak een account aan, voeg Grocy toe en je server draait binnen ongeveer twee minuten, zonder enige serverkennis. PikaPods zorgt voor een klein maandelijks bedrag voor updates en back-ups. Gebruik je al Home Assistant, dan kun je in plaats daarvan de Grocy-add-on installeren. Alle andere manieren, bijvoorbeeld Docker op je eigen server of NAS, legt de website van Grocy, grocy.info, uit.</string>
+  <string name="help_demo">Kan ik het zonder server proberen?</string>
+  <string name="help_demo_answer">Ja, kies bij het inloggen “Demoserver”. Dat is de openbare demo van Grocy met voorbeeldgegevens. Alles wat je daar invoert, is voor iedereen zichtbaar tot de demo één keer per dag wordt teruggezet, dus voer niets persoonlijks in.</string>
+  <string name="help_address">Welk adres voer ik in?</string>
+  <string name="help_address_answer">Het adres waarmee je Grocy in de browser opent, bijvoorbeeld https://grocy.example.com. Bij PikaPods staat het bij je pod. Een adres van je thuisnetwerk, zoals http://192.168.1.10, werkt alleen zolang je met dat netwerk verbonden bent.</string>
+  <string name="help_api_key">Waar krijg ik een API-sleutel?</string>
+  <string name="help_api_key_answer">Open in Grocy in de browser “Beheer API sleutels” in het instellingenmenu rechtsboven en voeg een sleutel toe. Die geeft deze app toegang tot je gegevens zonder je wachtwoord. Scan bij het inloggen de QR-code of plak de sleutel.</string>
+  <string name="help_connection">Waarom maakt de app geen verbinding met mijn server?</string>
+  <string name="help_connection_answer">Controleer of het adres Grocy opent in een browser op dit apparaat, inclusief http of https en de poort. Buiten de deur moet je server bereikbaar zijn vanaf internet. De webversie van deze app heeft https nodig, omdat browsers daar gewoon http blokkeren, en toont een verkeerde API-sleutel als een onbereikbare server.</string>
+  <string name="help_offline">Werkt de app zonder internet?</string>
+  <string name="help_offline_answer">Hij toont je gegevens zoals ze het laatst zijn gedownload. Je kunt items op de boodschappenlijst ook zonder verbinding afvinken; ze worden verstuurd zodra je weer online bent. Alles wat je voorraad verandert, zoals aankopen of verbruiken, heeft een verbinding nodig, zodat je server het altijd juist berekent.</string>
+  <string name="help_features">Waarom ontbreken sommige functies?</string>
+  <string name="help_features_answer">De app toont wat er op je Grocy-server is ingeschakeld. Zijn bijvoorbeeld klusjes of batterijen uitgeschakeld in de configuratie van Grocy, dan zijn ze hier ook verborgen. Wat is ingeschakeld, zie je onder Instellingen › Server › Serverconfiguratie.</string>
+  <string name="help_scanning">Hoe scan ik barcodes?</string>
+  <string name="help_scanning_answer">Formulieren zoals Aankoop of Verbruiken hebben een barcodescanner. Kent Grocy een barcode nog niet, dan kun je hem aan een product koppelen of een nieuw product aanmaken, en open productdatabases zoals Open Food Facts kunnen naam, afbeelding en meer invullen.</string>
+  <string name="help_household">Kan mijn huishouden Grocy samen gebruiken?</string>
+  <string name="help_household_answer">Ja, iedereen maakt verbinding met dezelfde Grocy-server, het liefst ieder met een eigen Grocy-gebruiker en API-sleutel. Voorraad, boodschappenlijsten en klusjes zijn dan voor iedereen hetzelfde.</string>
+  <string name="help_problems">Waar kan ik een probleem melden?</string>
+  <string name="help_problems_answer">Onder Over kun je een nieuwe issue openen op GitHub om bugs te melden of functies aan te vragen, of de ontwikkelaar per e-mail benaderen.</string>
 
 
   <!-- Updates -->

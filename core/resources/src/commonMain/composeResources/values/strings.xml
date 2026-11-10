@@ -162,8 +162,28 @@
   <string name="about_privacy_description">How your data is being processed</string>
 
   <!-- Help -->
-  <string name="help_placeholder">Placeholder question</string>
-  <string name="help_placeholder_answer">Placeholder answer.</string>
+  <string name="help_grocy">What is Grocy?</string>
+  <string name="help_grocy_answer">Grocy is free software for your groceries and household: stock, shopping lists, recipes, chores and more. It runs as your own Grocy server, which stores all your data. This app connects to that server, so you need one to use it.</string>
+  <string name="help_hosting">How do I get my own Grocy server?</string>
+  <string name="help_hosting_answer">The easiest way is PikaPods (pikapods.com): create an account, add Grocy and your server runs in about two minutes, without any server knowledge. PikaPods takes care of updates and backups for a small monthly fee. If you already use Home Assistant, you can install its Grocy add-on instead. Grocy’s website grocy.info explains all other ways, for example Docker on your own server or NAS.</string>
+  <string name="help_demo">Can I try it without a server?</string>
+  <string name="help_demo_answer">Yes, choose “Demo server” when you log in. It is Grocy’s public demo with sample data. Everything you enter there is visible to everyone until the demo resets once a day, so do not enter anything personal.</string>
+  <string name="help_address">Which address do I enter?</string>
+  <string name="help_address_answer">The address you open Grocy with in the browser, for example https://grocy.example.com. On PikaPods, it is shown on your pod. An address of your home network, like http://192.168.1.10, only works while you are connected to that network.</string>
+  <string name="help_api_key">Where do I get an API key?</string>
+  <string name="help_api_key_answer">In Grocy in the browser, open “Manage API keys” in the settings menu at the top right and add a key. It gives this app access to your data without your password. When you log in, scan its QR code or paste the key.</string>
+  <string name="help_connection">Why can’t the app connect to my server?</string>
+  <string name="help_connection_answer">Check that the address opens Grocy in a browser on this device, including http or https and the port. Away from home, your server must be reachable from the internet. The web version of this app needs https, because browsers block plain http there, and it shows a wrong API key as an unreachable server.</string>
+  <string name="help_offline">Does the app work without internet?</string>
+  <string name="help_offline_answer">It shows your data as it was last downloaded. You can check off shopping list items without a connection, they are sent as soon as you are online again. Everything that changes your stock, like purchasing or consuming, needs a connection, so your server always calculates it correctly.</string>
+  <string name="help_features">Why are some features missing?</string>
+  <string name="help_features_answer">The app shows what is turned on in your Grocy server. If, for example, chores or batteries are turned off in Grocy’s configuration, they are hidden here too. You can see what is turned on under Settings › Server › Server configuration.</string>
+  <string name="help_scanning">How do I scan barcodes?</string>
+  <string name="help_scanning_answer">Forms like Purchase or Consume have a barcode scanner. If Grocy does not know a barcode yet, you can assign it to a product or create a new one, and open product databases like Open Food Facts can fill in its name, picture and more.</string>
+  <string name="help_household">Can my household use Grocy together?</string>
+  <string name="help_household_answer">Yes, everyone connects to the same Grocy server, ideally each with their own Grocy user and API key. Stock, shopping lists and chores are then the same for everyone.</string>
+  <string name="help_problems">Where can I report a problem?</string>
+  <string name="help_problems_answer">Under About, you can open a new issue on GitHub to report bugs or request features, or contact the developer by email.</string>
 
   <!-- Licenses -->
   <string name="license_author_google" translatable="false">Google</string>

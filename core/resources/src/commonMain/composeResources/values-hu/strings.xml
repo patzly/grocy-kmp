@@ -136,8 +136,28 @@
   <string name="about_privacy_description">Hogyan kezeljük az adataidat</string>
 
   <!-- Help -->
-  <string name="help_placeholder">Helyőrző kérdés</string>
-  <string name="help_placeholder_answer">Helyőrző válasz.</string>
+  <string name="help_grocy">Mi az a Grocy?</string>
+  <string name="help_grocy_answer">A Grocy ingyenes szoftver az élelmiszereidhez és a háztartásodhoz: készlet, bevásárlólisták, receptek, házimunkák és még sok más. A saját Grocy szervereden fut, amely az összes adatodat tárolja. Ez az alkalmazás ehhez a szerverhez csatlakozik, így a használatához szükséged van egyre.</string>
+  <string name="help_hosting">Hogyan jutok saját Grocy szerverhez?</string>
+  <string name="help_hosting_answer">A legegyszerűbb a PikaPods (pikapods.com): hozz létre egy fiókot, add hozzá a Grocyt, és a szervered nagyjából két perc alatt fut, mindenféle szerverismeret nélkül. A PikaPods kis havi díjért gondoskodik a frissítésekről és a biztonsági mentésekről. Ha már használod a Home Assistantot, helyette telepítheted annak Grocy kiegészítőjét. Minden más módot, például a Dockert saját szerveren vagy NAS-on, a Grocy weboldala, a grocy.info ismertet.</string>
+  <string name="help_demo">Kipróbálhatom szerver nélkül?</string>
+  <string name="help_demo_answer">Igen, bejelentkezéskor válaszd a „Demószerver” lehetőséget. Ez a Grocy nyilvános demója mintaadatokkal. Mindent, amit ott megadsz, mindenki lát, amíg a demó naponta egyszer vissza nem áll, ezért ne adj meg ott semmi személyeset.</string>
+  <string name="help_address">Milyen címet adjak meg?</string>
+  <string name="help_address_answer">Azt a címet, amellyel a Grocyt a böngészőben megnyitod, például https://grocy.example.com. A PikaPodson a pododnál látható. Az otthoni hálózatod címe, például http://192.168.1.10, csak akkor működik, ha ahhoz a hálózathoz csatlakozol.</string>
+  <string name="help_api_key">Honnan szerzek API kulcsot?</string>
+  <string name="help_api_key_answer">A böngészőben a Grocyban nyisd meg a jobb felső beállítások menüben az „API kulcsok kezelése” oldalt, és adj hozzá egy kulcsot. Ez hozzáférést ad ennek az alkalmazásnak az adataidhoz a jelszavad nélkül. Bejelentkezéskor olvasd be a QR-kódját, vagy illeszd be a kulcsot.</string>
+  <string name="help_connection">Miért nem csatlakozik az alkalmazás a szerveremhez?</string>
+  <string name="help_connection_answer">Ellenőrizd, hogy a cím megnyitja-e a Grocyt egy böngészőben ezen az eszközön, a http-vel vagy https-sel és a porttal együtt. Otthonon kívül a szerverednek elérhetőnek kell lennie az internetről. Az alkalmazás webes változatához https kell, mert a böngészők ott letiltják a sima http-t, és a hibás API kulcsot elérhetetlen szerverként mutatja.</string>
+  <string name="help_offline">Működik az alkalmazás internet nélkül?</string>
+  <string name="help_offline_answer">Az adataidat úgy mutatja, ahogy legutóbb letöltődtek. A bevásárlólista tételeit kapcsolat nélkül is kipipálhatod, és elküldi őket, amint újra online vagy. Minden, ami a készletet módosítja, például a vásárlás vagy a felhasználás, kapcsolatot igényel, hogy a szervered mindig helyesen számolja ki.</string>
+  <string name="help_features">Miért hiányzik néhány funkció?</string>
+  <string name="help_features_answer">Az alkalmazás azt mutatja, ami a Grocy szervereden be van kapcsolva. Ha például a házimunkák vagy az elemek ki vannak kapcsolva a Grocy konfigurációjában, itt is rejtve maradnak. Hogy mi van bekapcsolva, a Beállítások › Szerver › Szerverkonfiguráció alatt látod.</string>
+  <string name="help_scanning">Hogyan olvasok be vonalkódokat?</string>
+  <string name="help_scanning_answer">Az olyan űrlapokon, mint a Vásárlás vagy a Felhasználás, van vonalkódolvasó. Ha a Grocy még nem ismer egy vonalkódot, hozzárendelheted egy termékhez vagy újat hozhatsz létre, és a nyílt termékadatbázisok, például az Open Food Facts, kitölthetik a nevét, képét és még sok mást.</string>
+  <string name="help_household">Használhatja a háztartásom közösen a Grocyt?</string>
+  <string name="help_household_answer">Igen, mindenki ugyanahhoz a Grocy szerverhez csatlakozik, ideális esetben mindenki saját Grocy felhasználóval és API kulccsal. Így a készlet, a bevásárlólisták és a házimunkák mindenkinél ugyanazok.</string>
+  <string name="help_problems">Hol jelenthetek be egy problémát?</string>
+  <string name="help_problems_answer">A Névjegy alatt új hibajegyet nyithatsz a GitHubon hibák bejelentéséhez vagy funkciók kéréséhez, vagy e-mailben felveheted a kapcsolatot a fejlesztővel.</string>
 
 
   <!-- Updates -->

@@ -136,8 +136,28 @@
   <string name="about_privacy_description">Jak przetwarzane są Twoje dane</string>
 
   <!-- Help -->
-  <string name="help_placeholder">Przykładowe pytanie</string>
-  <string name="help_placeholder_answer">Przykładowa odpowiedź.</string>
+  <string name="help_grocy">Czym jest Grocy?</string>
+  <string name="help_grocy_answer">Grocy to darmowe oprogramowanie do zarządzania zakupami i domem: zapasy, listy zakupów, przepisy, obowiązki i więcej. Działa jako Twój własny serwer Grocy, który przechowuje wszystkie Twoje dane. Ta aplikacja łączy się z tym serwerem, więc do korzystania z niej potrzebujesz serwera.</string>
+  <string name="help_hosting">Jak zdobyć własny serwer Grocy?</string>
+  <string name="help_hosting_answer">Najprościej przez PikaPods (pikapods.com): utwórz konto, dodaj Grocy, a serwer działa po około dwóch minutach, bez żadnej wiedzy o serwerach. PikaPods za niewielką miesięczną opłatą dba o aktualizacje i kopie zapasowe. Jeśli korzystasz już z Home Assistant, możesz zamiast tego zainstalować jego dodatek Grocy. Wszystkie inne sposoby, na przykład Docker na własnym serwerze lub NAS, opisuje strona Grocy grocy.info.</string>
+  <string name="help_demo">Czy mogę wypróbować bez serwera?</string>
+  <string name="help_demo_answer">Tak, przy logowaniu wybierz „Serwer demo”. To publiczne demo Grocy z przykładowymi danymi. Wszystko, co tam wpiszesz, widzą wszyscy, dopóki demo nie zresetuje się raz dziennie, więc nie wpisuj tam nic osobistego.</string>
+  <string name="help_address">Jaki adres mam wpisać?</string>
+  <string name="help_address_answer">Adres, pod którym otwierasz Grocy w przeglądarce, na przykład https://grocy.example.com. W PikaPods jest widoczny przy Twoim podzie. Adres sieci domowej, taki jak http://192.168.1.10, działa tylko wtedy, gdy jesteś z nią połączony.</string>
+  <string name="help_api_key">Skąd wziąć klucz API?</string>
+  <string name="help_api_key_answer">W Grocy w przeglądarce otwórz „Zarządzaj kluczami API” w menu ustawień w prawym górnym rogu i dodaj klucz. Daje on tej aplikacji dostęp do Twoich danych bez Twojego hasła. Przy logowaniu zeskanuj jego kod QR lub wklej klucz.</string>
+  <string name="help_connection">Dlaczego aplikacja nie łączy się z moim serwerem?</string>
+  <string name="help_connection_answer">Sprawdź, czy adres otwiera Grocy w przeglądarce na tym urządzeniu, łącznie z http lub https i portem. Poza domem serwer musi być dostępny z internetu. Wersja webowa tej aplikacji wymaga https, bo przeglądarki blokują tam zwykłe http, a błędny klucz API pokazuje jako nieosiągalny serwer.</string>
+  <string name="help_offline">Czy aplikacja działa bez internetu?</string>
+  <string name="help_offline_answer">Pokazuje Twoje dane tak, jak zostały ostatnio pobrane. Pozycje listy zakupów możesz odhaczać także bez połączenia; zostaną wysłane, gdy tylko znów będziesz online. Wszystko, co zmienia zapasy, jak zakup czy zużycie, wymaga połączenia, aby serwer zawsze poprawnie to obliczył.</string>
+  <string name="help_features">Dlaczego brakuje niektórych funkcji?</string>
+  <string name="help_features_answer">Aplikacja pokazuje to, co jest włączone na Twoim serwerze Grocy. Jeśli na przykład obowiązki lub baterie są wyłączone w konfiguracji Grocy, tutaj też są ukryte. Co jest włączone, zobaczysz w Ustawienia › Serwer › Konfiguracja serwera.</string>
+  <string name="help_scanning">Jak skanować kody kreskowe?</string>
+  <string name="help_scanning_answer">Formularze takie jak Zakup czy Zużyj mają skaner kodów kreskowych. Jeśli Grocy nie zna jeszcze kodu, możesz przypisać go do produktu lub utworzyć nowy, a otwarte bazy produktów, takie jak Open Food Facts, mogą uzupełnić nazwę, zdjęcie i więcej.</string>
+  <string name="help_household">Czy cały mój dom może używać Grocy razem?</string>
+  <string name="help_household_answer">Tak, wszyscy łączą się z tym samym serwerem Grocy, najlepiej każdy z własnym użytkownikiem Grocy i kluczem API. Zapasy, listy zakupów i obowiązki są wtedy dla wszystkich takie same.</string>
+  <string name="help_problems">Gdzie mogę zgłosić problem?</string>
+  <string name="help_problems_answer">W sekcji O aplikacji możesz utworzyć nowe zgłoszenie na GitHubie, aby zgłosić błędy lub zaproponować funkcje, albo skontaktować się z deweloperem e-mailem.</string>
 
 
   <!-- Updates -->

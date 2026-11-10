@@ -136,8 +136,28 @@
   <string name="about_privacy_description">Como seus dados são tratados</string>
 
   <!-- Help -->
-  <string name="help_placeholder">Pergunta de exemplo</string>
-  <string name="help_placeholder_answer">Resposta de exemplo.</string>
+  <string name="help_grocy">O que é o Grocy?</string>
+  <string name="help_grocy_answer">O Grocy é um software gratuito para suas compras e sua casa: estoque, listas de compras, receitas, tarefas domésticas e mais. Ele funciona como seu próprio servidor Grocy, que guarda todos os seus dados. Este app se conecta a esse servidor, então você precisa de um para usá-lo.</string>
+  <string name="help_hosting">Como consigo meu próprio servidor Grocy?</string>
+  <string name="help_hosting_answer">O jeito mais fácil é o PikaPods (pikapods.com): crie uma conta, adicione o Grocy e seu servidor fica pronto em cerca de dois minutos, sem nenhum conhecimento de servidores. O PikaPods cuida das atualizações e dos backups por uma pequena taxa mensal. Se você já usa o Home Assistant, pode instalar o complemento Grocy dele. Todas as outras formas, como Docker no seu próprio servidor ou NAS, estão explicadas no site do Grocy, grocy.info.</string>
+  <string name="help_demo">Posso testar sem servidor?</string>
+  <string name="help_demo_answer">Sim, escolha “Servidor de demonstração” ao entrar. É a demonstração pública do Grocy com dados de exemplo. Tudo o que você digitar lá fica visível para todos até a demonstração ser redefinida uma vez por dia, então não digite nada pessoal.</string>
+  <string name="help_address">Qual endereço devo digitar?</string>
+  <string name="help_address_answer">O endereço com que você abre o Grocy no navegador, por exemplo https://grocy.example.com. No PikaPods, ele aparece no seu pod. Um endereço da sua rede doméstica, como http://192.168.1.10, só funciona enquanto você estiver conectado a ela.</string>
+  <string name="help_api_key">Onde consigo uma chave de API?</string>
+  <string name="help_api_key_answer">No Grocy no navegador, abra “Organizar Chaves do API” no menu de configurações no canto superior direito e adicione uma chave. Ela dá a este app acesso aos seus dados sem a sua senha. Ao entrar, leia o QR code dela ou cole a chave.</string>
+  <string name="help_connection">Por que o app não se conecta ao meu servidor?</string>
+  <string name="help_connection_answer">Verifique se o endereço abre o Grocy em um navegador neste dispositivo, incluindo http ou https e a porta. Fora de casa, seu servidor precisa estar acessível pela internet. A versão web deste app precisa de https, porque os navegadores bloqueiam http simples ali, e mostra uma chave de API errada como um servidor inacessível.</string>
+  <string name="help_offline">O app funciona sem internet?</string>
+  <string name="help_offline_answer">Ele mostra seus dados como foram baixados pela última vez. Você pode marcar itens da lista de compras sem conexão; eles são enviados assim que você voltar a ficar online. Tudo o que muda seu estoque, como comprar ou consumir, precisa de conexão, para que seu servidor sempre calcule corretamente.</string>
+  <string name="help_features">Por que faltam alguns recursos?</string>
+  <string name="help_features_answer">O app mostra o que está ativado no seu servidor Grocy. Se, por exemplo, tarefas domésticas ou baterias estiverem desativadas na configuração do Grocy, elas também ficam ocultas aqui. Você vê o que está ativado em Configurações › Servidor › Configuração do servidor.</string>
+  <string name="help_scanning">Como escaneio códigos de barras?</string>
+  <string name="help_scanning_answer">Formulários como Comprar ou Consumir têm um leitor de código de barras. Se o Grocy ainda não conhece um código, você pode atribuí-lo a um produto ou criar um novo, e bancos de dados abertos de produtos como o Open Food Facts podem preencher nome, imagem e mais.</string>
+  <string name="help_household">Minha casa pode usar o Grocy em conjunto?</string>
+  <string name="help_household_answer">Sim, todos se conectam ao mesmo servidor Grocy, de preferência cada um com seu próprio usuário do Grocy e sua chave de API. Assim o estoque, as listas de compras e as tarefas domésticas são os mesmos para todos.</string>
+  <string name="help_problems">Onde posso relatar um problema?</string>
+  <string name="help_problems_answer">Em Sobre, você pode abrir uma nova issue no GitHub para relatar erros ou pedir recursos, ou entrar em contato com o desenvolvedor por e-mail.</string>
 
 
   <!-- Updates -->

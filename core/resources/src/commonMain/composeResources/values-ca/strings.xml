@@ -136,8 +136,28 @@
   <string name="about_privacy_description">Com es tracten les teves dades</string>
 
   <!-- Help -->
-  <string name="help_placeholder">Pregunta d’exemple</string>
-  <string name="help_placeholder_answer">Resposta d’exemple.</string>
+  <string name="help_grocy">Què és Grocy?</string>
+  <string name="help_grocy_answer">Grocy és programari gratuït per als teus queviures i la teva llar: estoc, llistes de la compra, receptes, feines de casa i més. Funciona com el teu propi servidor de Grocy, que desa totes les teves dades. Aquesta aplicació s’hi connecta, així que en necessites un per fer-la servir.</string>
+  <string name="help_hosting">Com aconsegueixo el meu propi servidor de Grocy?</string>
+  <string name="help_hosting_answer">La manera més fàcil és PikaPods (pikapods.com): crea un compte, afegeix Grocy i el servidor funciona en uns dos minuts, sense cap coneixement de servidors. PikaPods s’encarrega de les actualitzacions i les còpies de seguretat per una petita quota mensual. Si ja fas servir Home Assistant, pots instal·lar-hi el complement de Grocy. El web de Grocy, grocy.info, explica totes les altres maneres, per exemple Docker al teu propi servidor o NAS.</string>
+  <string name="help_demo">Puc provar-ho sense servidor?</string>
+  <string name="help_demo_answer">Sí, tria «Servidor de demostració» en iniciar la sessió. És la demostració pública de Grocy amb dades d’exemple. Tot el que hi introdueixis és visible per a tothom fins que la demostració es restableix un cop al dia, així que no hi posis res personal.</string>
+  <string name="help_address">Quina adreça he d’introduir?</string>
+  <string name="help_address_answer">L’adreça amb què obres Grocy al navegador, per exemple https://grocy.example.com. A PikaPods es mostra al teu pod. Una adreça de la xarxa de casa, com http://192.168.1.10, només funciona mentre hi estàs connectat.</string>
+  <string name="help_api_key">On aconsegueixo una clau de l’API?</string>
+  <string name="help_api_key_answer">A Grocy al navegador, obre «Gestiona les claus de l’API» al menú de configuració de dalt a la dreta i afegeix una clau. Dona accés a les teves dades a aquesta aplicació sense la teva contrasenya. En iniciar la sessió, escaneja’n el codi QR o enganxa la clau.</string>
+  <string name="help_connection">Per què l’aplicació no es connecta al meu servidor?</string>
+  <string name="help_connection_answer">Comprova que l’adreça obre Grocy en un navegador d’aquest dispositiu, amb http o https i el port. Fora de casa, el servidor ha de ser accessible des d’internet. La versió web d’aquesta aplicació necessita https, perquè els navegadors hi bloquegen l’http simple, i mostra una clau de l’API incorrecta com un servidor inaccessible.</string>
+  <string name="help_offline">L’aplicació funciona sense internet?</string>
+  <string name="help_offline_answer">Mostra les teves dades tal com es van baixar per última vegada. Pots marcar elements de la llista de la compra sense connexió; s’envien tan bon punt tornes a estar en línia. Tot el que canvia l’estoc, com comprar o consumir, necessita connexió, perquè el servidor ho calculi sempre correctament.</string>
+  <string name="help_features">Per què falten algunes funcions?</string>
+  <string name="help_features_answer">L’aplicació mostra el que està activat al teu servidor de Grocy. Si, per exemple, les feines de casa o les bateries estan desactivades a la configuració de Grocy, aquí també s’amaguen. Pots veure què està activat a Configuració › Servidor › Configuració del servidor.</string>
+  <string name="help_scanning">Com escanejo codis de barres?</string>
+  <string name="help_scanning_answer">Formularis com Compra o Consum tenen un escàner de codis de barres. Si Grocy encara no coneix un codi, el pots assignar a un producte o crear-ne un de nou, i bases de dades obertes com Open Food Facts en poden omplir el nom, la imatge i més.</string>
+  <string name="help_household">Pot fer servir Grocy tota la meva llar?</string>
+  <string name="help_household_answer">Sí, tothom es connecta al mateix servidor de Grocy, idealment cadascú amb el seu propi usuari de Grocy i clau de l’API. Així l’estoc, les llistes de la compra i les feines de casa són els mateixos per a tothom.</string>
+  <string name="help_problems">On puc informar d’un problema?</string>
+  <string name="help_problems_answer">A Quant a, pots obrir una incidència nova a GitHub per informar d’errors o demanar funcions, o contactar amb el desenvolupador per correu electrònic.</string>
 
 
   <!-- Updates -->

@@ -136,8 +136,28 @@
   <string name="about_privacy_description">您的数据如何被处理</string>
 
   <!-- Help -->
-  <string name="help_placeholder">占位问题</string>
-  <string name="help_placeholder_answer">占位答案。</string>
+  <string name="help_grocy">Grocy 是什么？</string>
+  <string name="help_grocy_answer">Grocy 是一款用于管理食品和家务的免费软件：库存、购物清单、菜谱、家务等。它作为你自己的 Grocy 服务器运行，保存你的所有数据。本应用连接到该服务器，因此使用前需要有一台服务器。</string>
+  <string name="help_hosting">如何拥有自己的 Grocy 服务器？</string>
+  <string name="help_hosting_answer">最简单的方式是 PikaPods（pikapods.com）：创建账户，添加 Grocy，大约两分钟服务器就能运行，无需任何服务器知识。PikaPods 只收取少量月费，负责更新和备份。如果你已在使用 Home Assistant，也可以安装它的 Grocy 加载项。其他所有方式，例如在自己的服务器或 NAS 上使用 Docker，都在 Grocy 官网 grocy.info 上有说明。</string>
+  <string name="help_demo">没有服务器可以试用吗？</string>
+  <string name="help_demo_answer">可以，登录时选择“演示服务器”。这是 Grocy 带有示例数据的公开演示。你在其中输入的所有内容在演示每天重置一次之前对所有人可见，所以请勿输入任何个人信息。</string>
+  <string name="help_address">应该输入哪个地址？</string>
+  <string name="help_address_answer">你在浏览器中打开 Grocy 时使用的地址，例如 https://grocy.example.com。在 PikaPods 上，它显示在你的 Pod 中。家庭网络的地址（如 http://192.168.1.10）只有在连接该网络时才能使用。</string>
+  <string name="help_api_key">在哪里获取 API 密钥？</string>
+  <string name="help_api_key_answer">在浏览器中的 Grocy 里，打开右上角设置菜单中的“管理 API 密钥”并添加一个密钥。它让本应用无需你的密码即可访问你的数据。登录时扫描其 QR 码或粘贴密钥。</string>
+  <string name="help_connection">为什么应用无法连接到我的服务器？</string>
+  <string name="help_connection_answer">请检查该地址（包括 http 或 https 以及端口）能否在本设备的浏览器中打开 Grocy。不在家时，你的服务器必须能从互联网访问。本应用的网页版需要 https，因为浏览器会在那里阻止普通 http；它还会把错误的 API 密钥显示为无法访问的服务器。</string>
+  <string name="help_offline">没有网络时应用能用吗？</string>
+  <string name="help_offline_answer">它会显示上次下载时的数据。没有网络时也可以勾选购物清单中的项目，重新联网后会立即发送。采购、消耗等所有改变库存的操作都需要联网，这样服务器才能始终正确计算。</string>
+  <string name="help_features">为什么缺少某些功能？</string>
+  <string name="help_features_answer">应用会显示你的 Grocy 服务器上已开启的功能。例如，如果在 Grocy 的配置中关闭了家务或电池，这里也会隐藏它们。你可以在 设置 › 服务器 › 服务器配置 中查看开启了哪些功能。</string>
+  <string name="help_scanning">如何扫描条码？</string>
+  <string name="help_scanning_answer">采购、消耗等表单都带有条码扫描器。如果 Grocy 还不认识某个条码，你可以将其分配给某个产品或新建产品，Open Food Facts 等开放产品数据库可以填写名称、图片等信息。</string>
+  <string name="help_household">家里人可以一起使用 Grocy 吗？</string>
+  <string name="help_household_answer">可以，所有人连接到同一台 Grocy 服务器，最好每人使用自己的 Grocy 用户和 API 密钥。这样库存、购物清单和家务对所有人都是一样的。</string>
+  <string name="help_problems">在哪里报告问题？</string>
+  <string name="help_problems_answer">在“关于”中，你可以在 GitHub 上新建 Issue 来报告错误或请求功能，也可以通过电子邮件联系开发者。</string>
 
 
   <!-- Updates -->

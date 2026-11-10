@@ -136,8 +136,28 @@
   <string name="about_privacy_description">Come vengono trattati i tuoi dati</string>
 
   <!-- Help -->
-  <string name="help_placeholder">Domanda segnaposto</string>
-  <string name="help_placeholder_answer">Risposta segnaposto.</string>
+  <string name="help_grocy">Che cos’è Grocy?</string>
+  <string name="help_grocy_answer">Grocy è un software gratuito per la tua spesa e la tua casa: scorte, liste della spesa, ricette, faccende e altro. Funziona come il tuo server Grocy, che salva tutti i tuoi dati. Questa app si collega a quel server, quindi te ne serve uno per usarla.</string>
+  <string name="help_hosting">Come ottengo il mio server Grocy?</string>
+  <string name="help_hosting_answer">Il modo più semplice è PikaPods (pikapods.com): crea un account, aggiungi Grocy e il tuo server è pronto in circa due minuti, senza alcuna conoscenza dei server. PikaPods si occupa di aggiornamenti e backup per un piccolo canone mensile. Se usi già Home Assistant, puoi installare invece il suo componente aggiuntivo Grocy. Tutti gli altri modi, per esempio Docker sul tuo server o NAS, sono spiegati sul sito di Grocy, grocy.info.</string>
+  <string name="help_demo">Posso provarlo senza un server?</string>
+  <string name="help_demo_answer">Sì, scegli «Server demo» quando accedi. È la demo pubblica di Grocy con dati di esempio. Tutto ciò che inserisci lì è visibile a tutti finché la demo non si azzera una volta al giorno, quindi non inserire nulla di personale.</string>
+  <string name="help_address">Quale indirizzo devo inserire?</string>
+  <string name="help_address_answer">L’indirizzo con cui apri Grocy nel browser, per esempio https://grocy.example.com. Su PikaPods è mostrato nel tuo pod. Un indirizzo della rete di casa, come http://192.168.1.10, funziona solo finché sei connesso a quella rete.</string>
+  <string name="help_api_key">Dove ottengo una chiave API?</string>
+  <string name="help_api_key_answer">In Grocy nel browser, apri «Gestisci le chiavi API» nel menu delle impostazioni in alto a destra e aggiungi una chiave. Dà a questa app accesso ai tuoi dati senza la tua password. Quando accedi, scansiona il suo codice QR o incolla la chiave.</string>
+  <string name="help_connection">Perché l’app non si collega al mio server?</string>
+  <string name="help_connection_answer">Controlla che l’indirizzo apra Grocy in un browser su questo dispositivo, con http o https e la porta. Fuori casa, il server deve essere raggiungibile da internet. La versione web di questa app richiede https, perché lì i browser bloccano l’http semplice, e mostra una chiave API errata come un server non raggiungibile.</string>
+  <string name="help_offline">L’app funziona senza internet?</string>
+  <string name="help_offline_answer">Mostra i tuoi dati come sono stati scaricati l’ultima volta. Puoi spuntare gli articoli della lista della spesa anche senza connessione; vengono inviati appena torni online. Tutto ciò che modifica le scorte, come acquistare o consumare, richiede una connessione, così il server lo calcola sempre correttamente.</string>
+  <string name="help_features">Perché mancano alcune funzioni?</string>
+  <string name="help_features_answer">L’app mostra ciò che è attivo sul tuo server Grocy. Se, per esempio, faccende o batterie sono disattivate nella configurazione di Grocy, sono nascoste anche qui. Puoi vedere cosa è attivo in Impostazioni › Server › Configurazione del server.</string>
+  <string name="help_scanning">Come scansiono i codici a barre?</string>
+  <string name="help_scanning_answer">Moduli come Acquista o Consuma hanno uno scanner di codici a barre. Se Grocy non conosce ancora un codice, puoi assegnarlo a un prodotto o crearne uno nuovo, e database di prodotti aperti come Open Food Facts possono compilarne nome, immagine e altro.</string>
+  <string name="help_household">La mia famiglia può usare Grocy insieme?</string>
+  <string name="help_household_answer">Sì, tutti si collegano allo stesso server Grocy, idealmente ognuno con il proprio utente Grocy e la propria chiave API. Così scorte, liste della spesa e faccende sono le stesse per tutti.</string>
+  <string name="help_problems">Dove posso segnalare un problema?</string>
+  <string name="help_problems_answer">In Informazioni puoi aprire una nuova segnalazione su GitHub per segnalare bug o chiedere funzioni, oppure contattare lo sviluppatore via e-mail.</string>
 
 
   <!-- Updates -->

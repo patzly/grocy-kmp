@@ -38,19 +38,50 @@ import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.dialogListScrollbar
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_close
-import com.patrickzedler.grocy.core.resources.help_placeholder
-import com.patrickzedler.grocy.core.resources.help_placeholder_answer
+import com.patrickzedler.grocy.core.resources.help_address
+import com.patrickzedler.grocy.core.resources.help_address_answer
+import com.patrickzedler.grocy.core.resources.help_api_key
+import com.patrickzedler.grocy.core.resources.help_api_key_answer
+import com.patrickzedler.grocy.core.resources.help_connection
+import com.patrickzedler.grocy.core.resources.help_connection_answer
+import com.patrickzedler.grocy.core.resources.help_demo
+import com.patrickzedler.grocy.core.resources.help_demo_answer
+import com.patrickzedler.grocy.core.resources.help_features
+import com.patrickzedler.grocy.core.resources.help_features_answer
+import com.patrickzedler.grocy.core.resources.help_grocy
+import com.patrickzedler.grocy.core.resources.help_grocy_answer
+import com.patrickzedler.grocy.core.resources.help_hosting
+import com.patrickzedler.grocy.core.resources.help_hosting_answer
+import com.patrickzedler.grocy.core.resources.help_household
+import com.patrickzedler.grocy.core.resources.help_household_answer
+import com.patrickzedler.grocy.core.resources.help_offline
+import com.patrickzedler.grocy.core.resources.help_offline_answer
+import com.patrickzedler.grocy.core.resources.help_problems
+import com.patrickzedler.grocy.core.resources.help_problems_answer
+import com.patrickzedler.grocy.core.resources.help_scanning
+import com.patrickzedler.grocy.core.resources.help_scanning_answer
 import com.patrickzedler.grocy.core.resources.title_help
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
-private class HelpItem(
+internal class HelpItem(
     val question: StringResource,
     val answer: StringResource,
 )
 
-private val HelpItems = listOf(
-    HelpItem(Res.string.help_placeholder, Res.string.help_placeholder_answer),
+/** From the first steps (what Grocy is, hosting, logging in) to everyday questions. */
+internal val HelpItems = listOf(
+    HelpItem(Res.string.help_grocy, Res.string.help_grocy_answer),
+    HelpItem(Res.string.help_hosting, Res.string.help_hosting_answer),
+    HelpItem(Res.string.help_demo, Res.string.help_demo_answer),
+    HelpItem(Res.string.help_address, Res.string.help_address_answer),
+    HelpItem(Res.string.help_api_key, Res.string.help_api_key_answer),
+    HelpItem(Res.string.help_connection, Res.string.help_connection_answer),
+    HelpItem(Res.string.help_offline, Res.string.help_offline_answer),
+    HelpItem(Res.string.help_features, Res.string.help_features_answer),
+    HelpItem(Res.string.help_scanning, Res.string.help_scanning_answer),
+    HelpItem(Res.string.help_household, Res.string.help_household_answer),
+    HelpItem(Res.string.help_problems, Res.string.help_problems_answer),
 )
 
 @Composable

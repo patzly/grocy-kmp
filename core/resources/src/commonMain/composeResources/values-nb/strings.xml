@@ -136,8 +136,28 @@
   <string name="about_privacy_description">Hvordan dataene dine behandles</string>
 
   <!-- Help -->
-  <string name="help_placeholder">Plassholderspørsmål</string>
-  <string name="help_placeholder_answer">Plassholdersvar.</string>
+  <string name="help_grocy">Hva er Grocy?</string>
+  <string name="help_grocy_answer">Grocy er gratis programvare for dagligvarene og husholdningen din: beholdning, handlelister, oppskrifter, husarbeid og mer. Den kjører som din egen Grocy-server, som lagrer alle dataene dine. Denne appen kobler til den serveren, så du trenger en for å bruke den.</string>
+  <string name="help_hosting">Hvordan får jeg min egen Grocy-server?</string>
+  <string name="help_hosting_answer">Det enkleste er PikaPods (pikapods.com): opprett en konto, legg til Grocy, og serveren din kjører på omtrent to minutter, helt uten serverkunnskap. PikaPods tar seg av oppdateringer og sikkerhetskopier for en liten månedlig avgift. Bruker du allerede Home Assistant, kan du i stedet installere Grocy-tillegget der. Alle andre måter, for eksempel Docker på din egen server eller NAS, forklares på Grocys nettsted grocy.info.</string>
+  <string name="help_demo">Kan jeg prøve uten server?</string>
+  <string name="help_demo_answer">Ja, velg «Demoserver» når du logger inn. Det er Grocys offentlige demo med eksempeldata. Alt du skriver inn der, er synlig for alle til demoen tilbakestilles én gang om dagen, så ikke skriv inn noe personlig.</string>
+  <string name="help_address">Hvilken adresse skal jeg skrive inn?</string>
+  <string name="help_address_answer">Adressen du åpner Grocy med i nettleseren, for eksempel https://grocy.example.com. På PikaPods vises den på poden din. En adresse i hjemmenettverket, som http://192.168.1.10, fungerer bare mens du er koblet til det nettverket.</string>
+  <string name="help_api_key">Hvor får jeg en API-nøkkel?</string>
+  <string name="help_api_key_answer">I Grocy i nettleseren åpner du «Administrer API-nøkler» i innstillingsmenyen øverst til høyre og legger til en nøkkel. Den gir denne appen tilgang til dataene dine uten passordet ditt. Når du logger inn, skanner du QR-koden eller limer inn nøkkelen.</string>
+  <string name="help_connection">Hvorfor kobler ikke appen til serveren min?</string>
+  <string name="help_connection_answer">Sjekk at adressen åpner Grocy i en nettleser på denne enheten, med http eller https og porten. Borte fra hjemmet må serveren være tilgjengelig fra internett. Nettversjonen av denne appen trenger https, fordi nettlesere blokkerer vanlig http der, og den viser en feil API-nøkkel som en server som ikke kan nås.</string>
+  <string name="help_offline">Fungerer appen uten internett?</string>
+  <string name="help_offline_answer">Den viser dataene dine slik de sist ble lastet ned. Du kan krysse av varer på handlelisten uten tilkobling; de sendes så snart du er på nett igjen. Alt som endrer beholdningen, som innkjøp eller forbruk, trenger tilkobling, slik at serveren alltid beregner det riktig.</string>
+  <string name="help_features">Hvorfor mangler noen funksjoner?</string>
+  <string name="help_features_answer">Appen viser det som er slått på i Grocy-serveren din. Er for eksempel husarbeid eller batterier slått av i Grocys konfigurasjon, er de skjult her også. Hva som er slått på, ser du under Innstillinger › Server › Serverkonfigurasjon.</string>
+  <string name="help_scanning">Hvordan skanner jeg strekkoder?</string>
+  <string name="help_scanning_answer">Skjemaer som Innkjøp eller Forbruk har en strekkodeskanner. Kjenner ikke Grocy en strekkode ennå, kan du knytte den til et produkt eller opprette et nytt, og åpne produktdatabaser som Open Food Facts kan fylle inn navn, bilde og mer.</string>
+  <string name="help_household">Kan husholdningen min bruke Grocy sammen?</string>
+  <string name="help_household_answer">Ja, alle kobler til den samme Grocy-serveren, helst hver med sin egen Grocy-bruker og API-nøkkel. Da er beholdning, handlelister og husarbeid det samme for alle.</string>
+  <string name="help_problems">Hvor kan jeg melde fra om et problem?</string>
+  <string name="help_problems_answer">Under Om kan du opprette en ny sak på GitHub for å melde feil eller ønske funksjoner, eller kontakte utvikleren på e-post.</string>
 
 
   <!-- Updates -->

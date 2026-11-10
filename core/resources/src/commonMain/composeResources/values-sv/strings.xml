@@ -136,8 +136,28 @@
   <string name="about_privacy_description">Hur dina uppgifter behandlas</string>
 
   <!-- Help -->
-  <string name="help_placeholder">Platshållarfråga</string>
-  <string name="help_placeholder_answer">Platshållarsvar.</string>
+  <string name="help_grocy">Vad är Grocy?</string>
+  <string name="help_grocy_answer">Grocy är gratis programvara för dina livsmedel och ditt hushåll: lager, inköpslistor, recept, sysslor och mer. Den körs som din egen Grocy-server, som sparar all din data. Den här appen ansluter till servern, så du behöver en för att använda den.</string>
+  <string name="help_hosting">Hur får jag en egen Grocy-server?</string>
+  <string name="help_hosting_answer">Enklast är PikaPods (pikapods.com): skapa ett konto, lägg till Grocy och din server är igång på ungefär två minuter, helt utan serverkunskaper. PikaPods sköter uppdateringar och säkerhetskopior för en liten månadsavgift. Använder du redan Home Assistant kan du i stället installera dess Grocy-tillägg. Alla andra sätt, till exempel Docker på din egen server eller NAS, förklaras på Grocys webbplats grocy.info.</string>
+  <string name="help_demo">Kan jag prova utan server?</string>
+  <string name="help_demo_answer">Ja, välj ”Demoserver” när du loggar in. Det är Grocys offentliga demo med exempeldata. Allt du anger där syns för alla tills demon återställs en gång om dagen, så ange inget personligt.</string>
+  <string name="help_address">Vilken adress ska jag ange?</string>
+  <string name="help_address_answer">Adressen du öppnar Grocy med i webbläsaren, till exempel https://grocy.example.com. På PikaPods visas den vid din pod. En adress i ditt hemnätverk, som http://192.168.1.10, fungerar bara medan du är ansluten till det nätverket.</string>
+  <string name="help_api_key">Var får jag en API-nyckel?</string>
+  <string name="help_api_key_answer">Öppna ”Hantera API-nycklar” i inställningsmenyn uppe till höger i Grocy i webbläsaren och lägg till en nyckel. Den ger den här appen åtkomst till din data utan ditt lösenord. Skanna dess QR-kod när du loggar in eller klistra in nyckeln.</string>
+  <string name="help_connection">Varför ansluter inte appen till min server?</string>
+  <string name="help_connection_answer">Kontrollera att adressen öppnar Grocy i en webbläsare på den här enheten, inklusive http eller https och porten. Hemifrån måste din server vara nåbar från internet. Webbversionen av den här appen behöver https, eftersom webbläsare blockerar vanlig http där, och den visar en felaktig API-nyckel som en server som inte går att nå.</string>
+  <string name="help_offline">Fungerar appen utan internet?</string>
+  <string name="help_offline_answer">Den visar din data som den senast laddades ner. Du kan bocka av varor på inköpslistan utan anslutning; de skickas så snart du är online igen. Allt som ändrar ditt lager, som inköp eller förbrukning, kräver anslutning, så att din server alltid räknar rätt.</string>
+  <string name="help_features">Varför saknas vissa funktioner?</string>
+  <string name="help_features_answer">Appen visar det som är påslaget på din Grocy-server. Är till exempel sysslor eller batterier avstängda i Grocys konfiguration döljs de här också. Vad som är påslaget ser du under Inställningar › Server › Serverkonfiguration.</string>
+  <string name="help_scanning">Hur skannar jag streckkoder?</string>
+  <string name="help_scanning_answer">Formulär som Inköp eller Förbruka har en streckkodsläsare. Känner Grocy inte till en streckkod än kan du koppla den till en produkt eller skapa en ny, och öppna produktdatabaser som Open Food Facts kan fylla i namn, bild och mer.</string>
+  <string name="help_household">Kan mitt hushåll använda Grocy tillsammans?</string>
+  <string name="help_household_answer">Ja, alla ansluter till samma Grocy-server, helst var och en med en egen Grocy-användare och API-nyckel. Då är lager, inköpslistor och sysslor desamma för alla.</string>
+  <string name="help_problems">Var kan jag rapportera ett problem?</string>
+  <string name="help_problems_answer">Under Om kan du skapa ett nytt ärende på GitHub för att rapportera fel eller önska funktioner, eller kontakta utvecklaren via e-post.</string>
 
 
   <!-- Updates -->

@@ -136,8 +136,28 @@
   <string name="about_privacy_description">Verilerinizin nasıl işlendiği</string>
 
   <!-- Help -->
-  <string name="help_placeholder">Yer tutucu soru</string>
-  <string name="help_placeholder_answer">Yer tutucu yanıt.</string>
+  <string name="help_grocy">Grocy nedir?</string>
+  <string name="help_grocy_answer">Grocy, yiyecekleriniz ve eviniz için ücretsiz bir yazılımdır: stok, alışveriş listeleri, tarifler, ev işleri ve daha fazlası. Tüm verilerinizi saklayan kendi Grocy sunucunuz olarak çalışır. Bu uygulama o sunucuya bağlanır, bu yüzden kullanmak için bir sunucuya ihtiyacınız var.</string>
+  <string name="help_hosting">Kendi Grocy sunucumu nasıl edinirim?</string>
+  <string name="help_hosting_answer">En kolay yol PikaPods’tur (pikapods.com): bir hesap oluşturun, Grocy’yi ekleyin ve sunucunuz hiçbir sunucu bilgisi gerektirmeden yaklaşık iki dakikada çalışır. PikaPods küçük bir aylık ücret karşılığında güncellemeleri ve yedeklemeleri üstlenir. Zaten Home Assistant kullanıyorsanız, bunun yerine onun Grocy eklentisini kurabilirsiniz. Kendi sunucunuzda veya NAS’ta Docker gibi diğer tüm yollar Grocy’nin web sitesi grocy.info’da anlatılır.</string>
+  <string name="help_demo">Sunucu olmadan deneyebilir miyim?</string>
+  <string name="help_demo_answer">Evet, giriş yaparken “Demo sunucu”yu seçin. Bu, örnek verilerle Grocy’nin herkese açık demosudur. Oraya girdiğiniz her şey, demo günde bir kez sıfırlanana kadar herkes tarafından görülebilir; bu yüzden kişisel hiçbir şey girmeyin.</string>
+  <string name="help_address">Hangi adresi girmeliyim?</string>
+  <string name="help_address_answer">Grocy’yi tarayıcıda açtığınız adres, örneğin https://grocy.example.com. PikaPods’ta pod’unuzda gösterilir. http://192.168.1.10 gibi ev ağınızın adresi yalnızca o ağa bağlıyken çalışır.</string>
+  <string name="help_api_key">API anahtarını nereden alırım?</string>
+  <string name="help_api_key_answer">Tarayıcıda Grocy’de sağ üstteki ayarlar menüsünden “API anahtarlarını yönet”i açın ve bir anahtar ekleyin. Bu anahtar, bu uygulamaya şifreniz olmadan verilerinize erişim verir. Giriş yaparken QR kodunu okutun veya anahtarı yapıştırın.</string>
+  <string name="help_connection">Uygulama neden sunucuma bağlanmıyor?</string>
+  <string name="help_connection_answer">Adresin, http veya https ve bağlantı noktası dahil, bu cihazdaki bir tarayıcıda Grocy’yi açtığını kontrol edin. Evden uzaktayken sunucunuza internetten erişilebilmelidir. Bu uygulamanın web sürümü https gerektirir, çünkü tarayıcılar orada düz http’yi engeller; ayrıca yanlış bir API anahtarını erişilemeyen bir sunucu olarak gösterir.</string>
+  <string name="help_offline">Uygulama internetsiz çalışır mı?</string>
+  <string name="help_offline_answer">Verilerinizi en son indirildikleri haliyle gösterir. Alışveriş listesindeki ürünleri bağlantı olmadan da işaretleyebilirsiniz; yeniden çevrimiçi olduğunuzda gönderilirler. Satın alma veya tüketme gibi stoğunuzu değiştiren her şey, sunucunuzun her zaman doğru hesaplaması için bağlantı gerektirir.</string>
+  <string name="help_features">Bazı özellikler neden eksik?</string>
+  <string name="help_features_answer">Uygulama, Grocy sunucunuzda açık olanları gösterir. Örneğin ev işleri veya piller Grocy yapılandırmasında kapalıysa burada da gizlenir. Nelerin açık olduğunu Ayarlar › Sunucu › Sunucu yapılandırması altında görebilirsiniz.</string>
+  <string name="help_scanning">Barkodları nasıl tararım?</string>
+  <string name="help_scanning_answer">Satın al veya Tüket gibi formlarda bir barkod tarayıcı bulunur. Grocy bir barkodu henüz tanımıyorsa onu bir ürüne atayabilir veya yeni bir ürün oluşturabilirsiniz; Open Food Facts gibi açık ürün veritabanları adını, resmini ve daha fazlasını doldurabilir.</string>
+  <string name="help_household">Evdeki herkes Grocy’yi birlikte kullanabilir mi?</string>
+  <string name="help_household_answer">Evet, herkes aynı Grocy sunucusuna bağlanır, ideal olarak her biri kendi Grocy kullanıcısı ve API anahtarıyla. Böylece stok, alışveriş listeleri ve ev işleri herkes için aynıdır.</string>
+  <string name="help_problems">Bir sorunu nereye bildirebilirim?</string>
+  <string name="help_problems_answer">Hakkında bölümünden hataları bildirmek veya özellik istemek için GitHub’da yeni bir sorun kaydı açabilir ya da geliştiriciyle e-posta ile iletişime geçebilirsiniz.</string>
 
 
   <!-- Updates -->

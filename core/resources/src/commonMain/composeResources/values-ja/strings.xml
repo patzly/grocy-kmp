@@ -136,8 +136,28 @@
   <string name="about_privacy_description">データの取り扱いについて</string>
 
   <!-- Help -->
-  <string name="help_placeholder">仮の質問</string>
-  <string name="help_placeholder_answer">仮の回答です。</string>
+  <string name="help_grocy">Grocyとは？</string>
+  <string name="help_grocy_answer">Grocyは食料品と家庭を管理する無料のソフトウェアです。在庫、買い物リスト、レシピ、家事などを扱えます。すべてのデータを保存する自分専用のGrocyサーバーとして動作します。このアプリはそのサーバーに接続するため、利用にはサーバーが必要です。</string>
+  <string name="help_hosting">自分のGrocyサーバーはどう用意しますか？</string>
+  <string name="help_hosting_answer">最も簡単なのはPikaPods（pikapods.com）です。アカウントを作成してGrocyを追加すれば、サーバーの知識がなくても約2分で動き始めます。PikaPodsは少額の月額料金で更新とバックアップを引き受けます。すでにHome Assistantを使っている場合は、代わりにそのGrocyアドオンをインストールできます。自分のサーバーやNASでのDockerなど、その他の方法はGrocyのウェブサイトgrocy.infoで説明されています。</string>
+  <string name="help_demo">サーバーなしで試せますか？</string>
+  <string name="help_demo_answer">はい、ログイン時に「デモサーバー」を選んでください。サンプルデータ入りのGrocyの公開デモです。入力した内容は1日1回デモがリセットされるまで誰にでも見えるため、個人的な情報は入力しないでください。</string>
+  <string name="help_address">どのアドレスを入力しますか？</string>
+  <string name="help_address_answer">ブラウザでGrocyを開くときのアドレスです。例：https://grocy.example.com。PikaPodsではポッドに表示されます。http://192.168.1.10 のような自宅ネットワークのアドレスは、そのネットワークに接続している間だけ使えます。</string>
+  <string name="help_api_key">APIキーはどこで入手しますか？</string>
+  <string name="help_api_key_answer">ブラウザのGrocyで、右上の設定メニューから「APIキー管理」を開き、キーを追加します。キーがあれば、このアプリはパスワードなしでデータにアクセスできます。ログイン時にそのQRコードをスキャンするか、キーを貼り付けてください。</string>
+  <string name="help_connection">アプリがサーバーに接続できないのはなぜですか？</string>
+  <string name="help_connection_answer">このデバイスのブラウザで、httpまたはhttpsとポートを含めたそのアドレスでGrocyが開けるか確認してください。外出先では、サーバーにインターネットからアクセスできる必要があります。このアプリのウェブ版ではhttpsが必要です。ブラウザが通常のhttpをブロックするためです。また、誤ったAPIキーは接続できないサーバーとして表示されます。</string>
+  <string name="help_offline">インターネットなしでも使えますか？</string>
+  <string name="help_offline_answer">最後にダウンロードした時点のデータを表示します。買い物リストの項目は接続がなくてもチェックでき、オンラインに戻るとすぐ送信されます。購入や消費など在庫を変更する操作は、サーバーが常に正しく計算できるよう接続が必要です。</string>
+  <string name="help_features">一部の機能がないのはなぜですか？</string>
+  <string name="help_features_answer">アプリはGrocyサーバーで有効になっている機能を表示します。たとえば家事や電池がGrocyの設定で無効になっていると、ここでも非表示になります。有効な機能は 設定 › サーバー › サーバー設定 で確認できます。</string>
+  <string name="help_scanning">バーコードはどうスキャンしますか？</string>
+  <string name="help_scanning_answer">購入や消費などのフォームにバーコードスキャナーがあります。Grocyがまだ知らないバーコードは、製品に割り当てるか新しい製品を作成できます。Open Food Factsなどのオープンな製品データベースが名前や画像などを入力してくれます。</string>
+  <string name="help_household">家族みんなでGrocyを使えますか？</string>
+  <string name="help_household_answer">はい、全員が同じGrocyサーバーに接続します。できればそれぞれ自分のGrocyユーザーとAPIキーを使ってください。そうすれば在庫、買い物リスト、家事は全員で共通になります。</string>
+  <string name="help_problems">問題はどこで報告できますか？</string>
+  <string name="help_problems_answer">「アプリについて」から、GitHubで新しいIssueを作成してバグの報告や機能の要望ができます。メールで開発者に連絡することもできます。</string>
 
 
   <!-- Updates -->

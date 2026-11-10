@@ -136,8 +136,28 @@
   <string name="about_privacy_description">Ako sa spracúvajú vaše údaje</string>
 
   <!-- Help -->
-  <string name="help_placeholder">Zástupná otázka</string>
-  <string name="help_placeholder_answer">Zástupná odpoveď.</string>
+  <string name="help_grocy">Čo je Grocy?</string>
+  <string name="help_grocy_answer">Grocy je bezplatný softvér pre vaše potraviny a domácnosť: zásoby, nákupné zoznamy, recepty, povinnosti a ďalšie. Beží ako váš vlastný server Grocy, ktorý ukladá všetky vaše údaje. Táto aplikácia sa pripája k tomuto serveru, takže ho na používanie potrebujete.</string>
+  <string name="help_hosting">Ako získam vlastný server Grocy?</string>
+  <string name="help_hosting_answer">Najjednoduchšie je PikaPods (pikapods.com): vytvorte si účet, pridajte Grocy a server beží asi za dve minúty, bez akýchkoľvek znalostí serverov. PikaPods sa za malý mesačný poplatok stará o aktualizácie a zálohy. Ak už používate Home Assistant, môžete namiesto toho nainštalovať jeho doplnok Grocy. Všetky ďalšie spôsoby, napríklad Docker na vlastnom serveri alebo NAS, vysvetľuje web Grocy grocy.info.</string>
+  <string name="help_demo">Môžem to vyskúšať bez servera?</string>
+  <string name="help_demo_answer">Áno, pri prihlásení zvoľte „Demo server“. Je to verejné demo Grocy s ukážkovými údajmi. Všetko, čo tam zadáte, vidí každý, kým sa demo raz denne neobnoví, preto tam nezadávajte nič osobné.</string>
+  <string name="help_address">Akú adresu mám zadať?</string>
+  <string name="help_address_answer">Adresu, ktorou otvárate Grocy v prehliadači, napríklad https://grocy.example.com. Na PikaPods ju nájdete pri svojom pode. Adresa domácej siete ako http://192.168.1.10 funguje len vtedy, keď ste k tejto sieti pripojení.</string>
+  <string name="help_api_key">Kde získam API kľúč?</string>
+  <string name="help_api_key_answer">V Grocy v prehliadači otvorte „Spravovať API kľúče“ v ponuke nastavení vpravo hore a pridajte kľúč. Dáva tejto aplikácii prístup k vašim údajom bez vášho hesla. Pri prihlásení naskenujte jeho QR kód alebo kľúč vložte.</string>
+  <string name="help_connection">Prečo sa aplikácia nepripojí k môjmu serveru?</string>
+  <string name="help_connection_answer">Overte, či adresa otvorí Grocy v prehliadači na tomto zariadení, vrátane http alebo https a portu. Mimo domova musí byť server dostupný z internetu. Webová verzia tejto aplikácie potrebuje https, pretože prehliadače tam obyčajné http blokujú, a nesprávny API kľúč zobrazí ako nedostupný server.</string>
+  <string name="help_offline">Funguje aplikácia bez internetu?</string>
+  <string name="help_offline_answer">Zobrazuje vaše údaje tak, ako boli naposledy stiahnuté. Položky nákupného zoznamu môžete odškrtávať aj bez pripojenia, odošlú sa, len čo budete znova online. Všetko, čo mení zásoby, napríklad nákup alebo spotreba, potrebuje pripojenie, aby to server vždy správne vypočítal.</string>
+  <string name="help_features">Prečo niektoré funkcie chýbajú?</string>
+  <string name="help_features_answer">Aplikácia zobrazuje, čo je na vašom serveri Grocy zapnuté. Ak sú napríklad povinnosti alebo batérie v konfigurácii Grocy vypnuté, sú skryté aj tu. Čo je zapnuté, uvidíte v Nastavenia › Server › Konfigurácia servera.</string>
+  <string name="help_scanning">Ako skenujem čiarové kódy?</string>
+  <string name="help_scanning_answer">Formuláre ako Nakúpiť alebo Spotrebovať majú skener čiarových kódov. Ak Grocy kód ešte nepozná, môžete ho priradiť k produktu alebo vytvoriť nový, a otvorené databázy produktov ako Open Food Facts môžu vyplniť názov, obrázok a ďalšie.</string>
+  <string name="help_household">Môže Grocy používať celá domácnosť?</string>
+  <string name="help_household_answer">Áno, všetci sa pripájajú k rovnakému serveru Grocy, ideálne každý s vlastným používateľom Grocy a API kľúčom. Zásoby, nákupné zoznamy a povinnosti sú potom pre všetkých rovnaké.</string>
+  <string name="help_problems">Kde môžem nahlásiť problém?</string>
+  <string name="help_problems_answer">V časti O aplikácii môžete založiť nové issue na GitHube a nahlásiť chyby alebo navrhnúť funkcie, alebo vývojára kontaktovať e-mailom.</string>
 
 
   <!-- Updates -->

@@ -136,8 +136,28 @@
   <string name="about_privacy_description">איך הנתונים שלך מעובדים</string>
 
   <!-- Help -->
-  <string name="help_placeholder">שאלה לדוגמה</string>
-  <string name="help_placeholder_answer">תשובה לדוגמה.</string>
+  <string name="help_grocy">מה זה Grocy?</string>
+  <string name="help_grocy_answer">Grocy היא תוכנה חינמית למצרכים ולמשק הבית: מלאי, רשימות קניות, מתכונים, מטלות ועוד. היא פועלת כשרת Grocy משלך, ששומר את כל הנתונים שלך. האפליקציה הזו מתחברת לשרת הזה, ולכן צריך שרת כדי להשתמש בה.</string>
+  <string name="help_hosting">איך משיגים שרת Grocy משלי?</string>
+  <string name="help_hosting_answer">הדרך הקלה ביותר היא PikaPods ‏(pikapods.com): יוצרים חשבון, מוסיפים את Grocy והשרת פועל תוך כשתי דקות, בלי שום ידע בשרתים. PikaPods דואגת לעדכונים ולגיבויים תמורת תשלום חודשי קטן. מי שכבר משתמש ב־Home Assistant יכול להתקין במקום זאת את תוסף ה־Grocy שלו. כל הדרכים האחרות, למשל Docker בשרת משלך או ב־NAS, מוסברות באתר של Grocy‏ grocy.info.</string>
+  <string name="help_demo">אפשר לנסות בלי שרת?</string>
+  <string name="help_demo_answer">כן, יש לבחור „שרת הדגמה” בעת ההתחברות. זו ההדגמה הציבורית של Grocy עם נתונים לדוגמה. כל מה שמוזן שם גלוי לכולם עד שההדגמה מתאפסת פעם ביום, לכן אין להזין שם שום דבר אישי.</string>
+  <string name="help_address">איזו כתובת יש להזין?</string>
+  <string name="help_address_answer">הכתובת שבה פותחים את Grocy בדפדפן, למשל https://grocy.example.com. ב־PikaPods היא מוצגת ב־pod שלך. כתובת של הרשת הביתית, כמו http://192.168.1.10, עובדת רק כל עוד מחוברים לרשת הזו.</string>
+  <string name="help_api_key">איפה משיגים מפתח API?</string>
+  <string name="help_api_key_answer">ב־Grocy בדפדפן יש לפתוח את „ניהול מפתחות API” בתפריט ההגדרות שלמעלה ולהוסיף מפתח. הוא נותן לאפליקציה הזו גישה לנתונים שלך בלי הסיסמה שלך. בעת ההתחברות יש לסרוק את קוד ה־QR שלו או להדביק את המפתח.</string>
+  <string name="help_connection">למה האפליקציה לא מתחברת לשרת שלי?</string>
+  <string name="help_connection_answer">יש לבדוק שהכתובת פותחת את Grocy בדפדפן במכשיר הזה, כולל http או https והפורט. מחוץ לבית, השרת חייב להיות נגיש מהאינטרנט. גרסת האינטרנט של האפליקציה הזו צריכה https, כי דפדפנים חוסמים שם http פשוט, והיא מציגה מפתח API שגוי כשרת שאינו נגיש.</string>
+  <string name="help_offline">האם האפליקציה עובדת בלי אינטרנט?</string>
+  <string name="help_offline_answer">היא מציגה את הנתונים כפי שהורדו בפעם האחרונה. אפשר לסמן פריטים ברשימת הקניות גם בלי חיבור, והם נשלחים ברגע שחוזרים לרשת. כל מה שמשנה את המלאי, כמו רכישה או צריכה, צריך חיבור, כדי שהשרת תמיד יחשב אותו נכון.</string>
+  <string name="help_features">למה חסרות תכונות מסוימות?</string>
+  <string name="help_features_answer">האפליקציה מציגה את מה שמופעל בשרת ה־Grocy שלך. אם, למשל, מטלות או סוללות כבויות בתצורה של Grocy, הן מוסתרות גם כאן. מה מופעל אפשר לראות תחת הגדרות › שרת › תצורת השרת.</string>
+  <string name="help_scanning">איך סורקים ברקודים?</string>
+  <string name="help_scanning_answer">בטפסים כמו רכישה או צריכה יש סורק ברקודים. אם Grocy עדיין לא מכיר ברקוד, אפשר לשייך אותו למוצר או ליצור מוצר חדש, ומאגרי מוצרים פתוחים כמו Open Food Facts יכולים למלא את השם, התמונה ועוד.</string>
+  <string name="help_household">האם כל משק הבית יכול להשתמש ב־Grocy יחד?</string>
+  <string name="help_household_answer">כן, כולם מתחברים לאותו שרת Grocy, רצוי כל אחד עם משתמש Grocy ומפתח API משלו. כך המלאי, רשימות הקניות והמטלות זהים לכולם.</string>
+  <string name="help_problems">איפה אפשר לדווח על בעיה?</string>
+  <string name="help_problems_answer">תחת אודות אפשר לפתוח דיווח חדש ב־GitHub כדי לדווח על באגים או לבקש תכונות, או ליצור קשר עם המפתח בדוא״ל.</string>
 
 
   <!-- Updates -->

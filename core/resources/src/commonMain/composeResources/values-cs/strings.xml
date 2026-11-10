@@ -136,8 +136,28 @@
   <string name="about_privacy_description">Jak jsou zpracovávána vaše data</string>
 
   <!-- Help -->
-  <string name="help_placeholder">Zástupná otázka</string>
-  <string name="help_placeholder_answer">Zástupná odpověď.</string>
+  <string name="help_grocy">Co je Grocy?</string>
+  <string name="help_grocy_answer">Grocy je bezplatný software pro vaše potraviny a domácnost: zásoby, nákupní seznamy, recepty, povinnosti a další. Běží jako váš vlastní server Grocy, který ukládá všechna vaše data. Tato aplikace se k tomuto serveru připojuje, takže ho k používání potřebujete.</string>
+  <string name="help_hosting">Jak získám vlastní server Grocy?</string>
+  <string name="help_hosting_answer">Nejjednodušší je PikaPods (pikapods.com): vytvořte si účet, přidejte Grocy a server běží asi za dvě minuty, bez jakékoli znalosti serverů. PikaPods se za malý měsíční poplatek stará o aktualizace a zálohy. Pokud už používáte Home Assistant, můžete místo toho nainstalovat jeho doplněk Grocy. Všechny další způsoby, například Docker na vlastním serveru nebo NAS, vysvětluje web Grocy grocy.info.</string>
+  <string name="help_demo">Mohu to vyzkoušet bez serveru?</string>
+  <string name="help_demo_answer">Ano, při přihlášení zvolte „Demo server“. Je to veřejné demo Grocy s ukázkovými daty. Vše, co tam zadáte, vidí každý, dokud se demo jednou denně neobnoví, proto tam nezadávejte nic osobního.</string>
+  <string name="help_address">Jakou adresu mám zadat?</string>
+  <string name="help_address_answer">Adresu, kterou otevíráte Grocy v prohlížeči, například https://grocy.example.com. Na PikaPods ji najdete u svého podu. Adresa domácí sítě jako http://192.168.1.10 funguje jen, dokud jste k této síti připojeni.</string>
+  <string name="help_api_key">Kde získám API klíč?</string>
+  <string name="help_api_key_answer">V Grocy v prohlížeči otevřete „Spravovat API klíče“ v nabídce nastavení vpravo nahoře a přidejte klíč. Dává této aplikaci přístup k vašim datům bez vašeho hesla. Při přihlášení naskenujte jeho QR kód nebo klíč vložte.</string>
+  <string name="help_connection">Proč se aplikace nepřipojí k mému serveru?</string>
+  <string name="help_connection_answer">Ověřte, že adresa otevře Grocy v prohlížeči na tomto zařízení, včetně http nebo https a portu. Mimo domov musí být server dostupný z internetu. Webová verze této aplikace potřebuje https, protože prohlížeče tam prosté http blokují, a nesprávný API klíč zobrazí jako nedostupný server.</string>
+  <string name="help_offline">Funguje aplikace bez internetu?</string>
+  <string name="help_offline_answer">Zobrazuje vaše data tak, jak byla naposledy stažena. Položky nákupního seznamu můžete odškrtávat i bez připojení, odešlou se, jakmile budete znovu online. Vše, co mění zásoby, například nákup nebo spotřeba, potřebuje připojení, aby to server vždy správně spočítal.</string>
+  <string name="help_features">Proč některé funkce chybí?</string>
+  <string name="help_features_answer">Aplikace zobrazuje, co je na vašem serveru Grocy zapnuté. Pokud jsou například povinnosti nebo baterie v konfiguraci Grocy vypnuté, jsou skryté i zde. Co je zapnuté, uvidíte v Nastavení › Server › Konfigurace serveru.</string>
+  <string name="help_scanning">Jak skenuji čárové kódy?</string>
+  <string name="help_scanning_answer">Formuláře jako Nakoupit nebo Spotřebovat mají skener čárových kódů. Pokud Grocy kód ještě nezná, můžete ho přiřadit k produktu nebo vytvořit nový, a otevřené databáze produktů jako Open Food Facts mohou vyplnit název, obrázek a další.</string>
+  <string name="help_household">Může Grocy používat celá domácnost?</string>
+  <string name="help_household_answer">Ano, všichni se připojují ke stejnému serveru Grocy, ideálně každý s vlastním uživatelem Grocy a API klíčem. Zásoby, nákupní seznamy a povinnosti jsou pak pro všechny stejné.</string>
+  <string name="help_problems">Kde mohu nahlásit problém?</string>
+  <string name="help_problems_answer">V části O aplikaci můžete založit nové issue na GitHubu a nahlásit chyby nebo navrhnout funkce, nebo vývojáře kontaktovat e-mailem.</string>
 
 
   <!-- Updates -->
