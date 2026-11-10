@@ -145,6 +145,7 @@ class AndroidSettingsStore(
                 syncIntervalSeconds = it[SHOPPING_MODE_SYNC_INTERVAL],
                 keepScreenOn = it[SHOPPING_MODE_KEEP_SCREEN_ON],
                 doneItemsLast = it[SHOPPING_MODE_DONE_LAST],
+                unknownProductAsNote = it[SHOPPING_LIST_UNKNOWN_AS_NOTE],
             )
         }
         .distinctUntilChanged()
@@ -155,6 +156,7 @@ class AndroidSettingsStore(
             it[SHOPPING_MODE_SYNC_INTERVAL] = settings.syncIntervalSeconds
             it[SHOPPING_MODE_KEEP_SCREEN_ON] = settings.keepScreenOn
             it[SHOPPING_MODE_DONE_LAST] = settings.doneItemsLast
+            it[SHOPPING_LIST_UNKNOWN_AS_NOTE] = settings.unknownProductAsNote
         }
     }
 
@@ -344,6 +346,7 @@ class AndroidSettingsStore(
         val SHOPPING_MODE_SYNC_INTERVAL = intPreferencesKey("shopping_mode_sync_interval")
         val SHOPPING_MODE_KEEP_SCREEN_ON = booleanPreferencesKey("shopping_mode_keep_screen_on")
         val SHOPPING_MODE_DONE_LAST = booleanPreferencesKey("shopping_mode_done_last")
+        val SHOPPING_LIST_UNKNOWN_AS_NOTE = booleanPreferencesKey("shopping_list_unknown_as_note")
         val RECIPES_FIELDS = stringPreferencesKey("recipes_fields")
         val RECIPES_GROUPING = stringPreferencesKey("recipes_grouping")
         val RECIPES_SORT = stringPreferencesKey("recipes_sort")

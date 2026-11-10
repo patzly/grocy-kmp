@@ -1,7 +1,7 @@
 package com.patrickzedler.grocy.feature.settings.impl
 
 import com.patrickzedler.grocy.core.resources.Res
-import com.patrickzedler.grocy.core.resources.shopping_mode
+import com.patrickzedler.grocy.core.resources.shopping_list_list
 import com.patrickzedler.grocy.core.resources.shopping_mode_settings
 import com.patrickzedler.grocy.feature.settings.api.GeneralSettingsRoute
 import com.patrickzedler.grocy.feature.settings.api.GrocySettingsPage
@@ -27,17 +27,16 @@ class SettingsCategoryTest {
     fun categoriesWithPageOpenIt() {
         assertEquals(GeneralSettingsRoute, SettingsCategory.GENERAL.route)
         assertEquals(ServerSettingsRoute, SettingsCategory.SERVER.route)
-        assertEquals(GrocySettingsRoute, SettingsCategory.GROCY.route)
         assertEquals(NetworkSettingsRoute, SettingsCategory.NETWORK.route)
         assertEquals(ScannerSettingsRoute, SettingsCategory.SCANNER.route)
         assertEquals(NotificationSettingsRoute, SettingsCategory.NOTIFICATIONS.route)
-        assertEquals(ShoppingModeSettingsRoute(), SettingsCategory.SHOPPING_MODE.route)
+        assertEquals(ShoppingModeSettingsRoute(), SettingsCategory.SHOPPING_LIST.route)
     }
 
     @Test
-    fun shoppingModeIsNamedWithoutSettingsInsideTheSettings() {
-        assertEquals(Res.string.shopping_mode, SettingsCategory.SHOPPING_MODE.title)
-        assertEquals(Res.string.shopping_mode, shoppingModeSettingsTitle(inSettings = true))
+    fun theShoppingListHasItsPageInsideTheSettings() {
+        assertEquals(Res.string.shopping_list_list, SettingsCategory.SHOPPING_LIST.title)
+        assertEquals(Res.string.shopping_list_list, shoppingModeSettingsTitle(inSettings = true))
         assertEquals(
             Res.string.shopping_mode_settings,
             shoppingModeSettingsTitle(inSettings = false),
@@ -48,11 +47,11 @@ class SettingsCategoryTest {
     fun shownPageMarksItsCategory() {
         assertEquals(SettingsCategory.GENERAL, settingsCategoryOf(GeneralSettingsRoute))
         assertEquals(SettingsCategory.SERVER, settingsCategoryOf(ServerSettingsRoute))
-        assertEquals(SettingsCategory.GROCY, settingsCategoryOf(GrocySettingsRoute))
+        assertEquals(SettingsCategory.SERVER, settingsCategoryOf(GrocySettingsRoute))
         assertEquals(SettingsCategory.NETWORK, settingsCategoryOf(NetworkSettingsRoute))
         assertEquals(SettingsCategory.SCANNER, settingsCategoryOf(ScannerSettingsRoute))
         assertEquals(
-            SettingsCategory.SHOPPING_MODE,
+            SettingsCategory.SHOPPING_LIST,
             settingsCategoryOf(ShoppingModeSettingsRoute()),
         )
     }
@@ -60,14 +59,14 @@ class SettingsCategoryTest {
     @Test
     fun pageOpenedFromACategoryMarksIt() {
         assertEquals(
-            SettingsCategory.GROCY,
+            SettingsCategory.SERVER,
             settingsCategoryOf(StockSettingsRoute(inSettings = true)),
         )
         assertEquals(
-            SettingsCategory.GROCY,
+            SettingsCategory.SERVER,
             settingsCategoryOf(GrocySettingsPageRoute(GrocySettingsPage.TASKS)),
         )
-        assertEquals(SettingsCategory.GROCY, settingsCategoryOf(UserSettingsRoute))
+        assertEquals(SettingsCategory.SERVER, settingsCategoryOf(UserSettingsRoute))
     }
 
     @Test
@@ -86,7 +85,7 @@ class SettingsCategoryTest {
 
         assertEquals(
             categories.indexOf(SettingsCategory.NOTIFICATIONS) + 1,
-            categories.indexOf(SettingsCategory.SHOPPING_MODE),
+            categories.indexOf(SettingsCategory.SHOPPING_LIST),
         )
     }
 }

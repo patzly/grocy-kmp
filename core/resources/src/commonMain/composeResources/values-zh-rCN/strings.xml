@@ -43,7 +43,7 @@
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy 在您自己的 Grocy 服务器上管理食品和家务：%1$s</string>
-  <string name="msg_feedback">您有任何愿望、问题或遇到错误吗？请联系我们，我们很乐意帮忙！\n如果没有，我们非常期待您在 Play Store 留下好评。</string>
+  <string name="msg_feedback">您有任何愿望、问题或遇到错误吗？请联系我，我很乐意帮忙！\n如果没有，我非常期待您在 Play Store 留下好评。</string>
   <string name="msg_unlock">支持开发</string>
   <string name="msg_unlock_description">解锁应用是 Google Play 上的一笔小额购买，用于支持 Grocy 的开发。安装后，您还可以切换到 ML Kit 条码扫描器。 它还能扫描包装上印刷的保质期，您无需再费力辨认。</string>
 
@@ -160,7 +160,6 @@
     <item quantity="other">库存中有 %1$d 个产品，总价值%2$s</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s：</string>
-  <string name="start_summary_intro_end">%1$s。</string>
   <string name="start_list_join">%1$s、%2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="other">%1$d 个产品将在%2$s到期。</item>
@@ -952,6 +951,8 @@
   <string name="shopping_list_item_not_booked">%1$s 未加入库存。跳过它并继续下一个产品，还是取消？</string>
   <string name="booking_shopping_list_hint">请检查信息并确认购买。之后该产品将从购物清单中移除。</string>
   <string name="shopping_mode">购物模式</string>
+  <string name="shopping_list_unknown_as_note">将未知商品保存为备注</string>
+  <string name="shopping_list_unknown_as_note_hint">如果输入的内容与任何商品都不匹配，条目会以该文字作为备注保存，只需输入并保存即可</string>
   <string name="shopping_mode_settings">购物模式设置</string>
   <string name="shopping_mode_auto_sync">自动同步</string>
   <string name="shopping_mode_auto_sync_hint">定期重新加载清单，让一起购物的每个人都能看到其他人勾选了什么</string>
@@ -1391,7 +1392,8 @@
   <string name="sessions_open">显示会话</string>
   <string name="sessions_profile">已登录为 %1$s</string>
   <string name="sessions_switch_next">切换到下一个会话</string>
-  <string name="settings_server_config">当前服务器配置</string>
+  <string name="settings_server_config">服务器配置</string>
+  <string name="settings_server_grocy">Grocy 服务器</string>
   <string name="settings_server_config_enabled">已启用</string>
   <string name="settings_server_config_disabled">已禁用</string>
   <string name="settings_server_config_values">值</string>

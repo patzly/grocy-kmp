@@ -28,11 +28,11 @@
   <string name="action_recommend">Aanbevelen</string>
   <string name="action_recommend_description">Vertel je vrienden over Grocy</string>
   <string name="action_rate">Beoordelen op Google Play</string>
-  <string name="action_rate_description">Motiveer de ontwikkelaars</string>
+  <string name="action_rate_description">Motiveer de ontwikkelaar</string>
   <string name="action_support">Ondersteun de ontwikkeling</string>
   <string name="action_support_description">Koop de ontgrendel-app</string>
   <string name="action_email">E-mail sturen</string>
-  <string name="action_email_description">Neem contact op met de ontwikkelaars</string>
+  <string name="action_email_description">Neem contact op met de ontwikkelaar</string>
   <string name="action_issue">Nieuwe issue openen op GitHub</string>
   <string name="action_issue_description">Meld bugs of vraag een functie aan</string>
   <string name="action_send_feedback">Feedback sturen</string>
@@ -43,7 +43,7 @@
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy houdt boodschappen en huishouden bij op je eigen Grocy-server: %1$s</string>
-  <string name="msg_feedback">Heb je wensen of vragen, of heb je een fout gevonden? Neem contact met ons op, we helpen je graag!\nAnders zijn we heel blij met een leuke beoordeling in de Play Store.</string>
+  <string name="msg_feedback">Heb je wensen of vragen, of heb je een fout gevonden? Neem contact met me op, ik help je graag!\nAnders ben ik heel blij met een leuke beoordeling in de Play Store.</string>
   <string name="msg_unlock">Ondersteun de ontwikkeling</string>
   <string name="msg_unlock_description">De ontgrendel-app is een kleine aankoop op Google Play die de ontwikkeling van Grocy ondersteunt. Als die geïnstalleerd is, kun je ook overschakelen naar de streepjescodescanner van ML Kit. Ook scant de app de houdbaarheidsdatums die op verpakkingen staan, zodat je ze niet meer hoeft te ontcijferen.</string>
 
@@ -162,7 +162,6 @@
     <item quantity="other">Je hebt %1$d producten op voorraad met een waarde van %2$s</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s:</string>
-  <string name="start_summary_intro_end">%1$s.</string>
   <string name="start_list_join">%1$s, %2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="one">%1$d product gaat %2$s over datum.</item>
@@ -981,6 +980,8 @@
   <string name="shopping_list_item_not_booked">%1$s is niet aan de voorraad toegevoegd. Overslaan en doorgaan met het volgende item, of annuleren?</string>
   <string name="booking_shopping_list_hint">Controleer de gegevens en bevestig de aankoop. Daarna wordt het item van de boodschappenlijst verwijderd.</string>
   <string name="shopping_mode">Winkelmodus</string>
+  <string name="shopping_list_unknown_as_note">Onbekende producten als notitie opslaan</string>
+  <string name="shopping_list_unknown_as_note_hint">Als wat je typt bij geen enkel product past, wordt het item met die tekst als notitie opgeslagen, dus je hoeft alleen te typen en op te slaan</string>
   <string name="shopping_mode_settings">Instellingen winkelmodus</string>
   <string name="shopping_mode_auto_sync">Automatisch synchroniseren</string>
   <string name="shopping_mode_auto_sync_hint">Laadt de lijst regelmatig opnieuw, zodat iedereen die samen boodschappen doet ziet wat de anderen hebben afgevinkt</string>
@@ -1445,7 +1446,8 @@
   <string name="sessions_open">Sessies tonen</string>
   <string name="sessions_profile">Ingelogd als %1$s</string>
   <string name="sessions_switch_next">Naar de volgende sessie wisselen</string>
-  <string name="settings_server_config">Huidige serverconfiguratie</string>
+  <string name="settings_server_config">Serverconfiguratie</string>
+  <string name="settings_server_grocy">Grocy-server</string>
   <string name="settings_server_config_enabled">Ingeschakeld</string>
   <string name="settings_server_config_disabled">Uitgeschakeld</string>
   <string name="settings_server_config_values">Waarden</string>

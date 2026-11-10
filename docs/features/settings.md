@@ -3,11 +3,12 @@
 The settings categories and pages, appearance and language. Moved from CLAUDE.md.
 
 Settings plan: the overview lists the categories General (language, theme, contrast), Server
-(server URL, Grocy version, reload configuration, logout), Grocy settings (loaded from the
-server, Grocy's "Settings" menu), Network (loading timeout, Tor with Orbot, HTTP proxy), Behavior
+(server URL and logout; a group "Grocy" with the version and Grocy's settings, loaded from the
+server, its "Settings" menu; the server configuration, a dialog, and reloading it; on Android a
+group "Certificates"), Network (loading timeout, Tor with Orbot, HTTP proxy), Behavior
 (navigation, date and keyboard settings, Open Food Facts / Open Beauty Facts), Scanner (engine,
 front camera, 2D formats, barcode formats, external scanners), Notifications (per feature)
-and Shopping mode (`storefront`) as one group (`SettingsCategory`), then "Backup and restore" and "Reset all" as a second group.
+and Shopping list (`shopping_cart`) as one group (`SettingsCategory`), then "Backup and restore" and "Reset all" as a second group.
 Built so far: the overview, General (language, theme, contrast), Server, Network (Android only,
 see below; the loading timeout of the plan is not built), Behavior
 (`BehaviorSettingsRoute`: `BehaviorSettings`, kept on the device in `SettingsStore`, DataStore
@@ -30,7 +31,10 @@ scanners of due date fields when off, see `docs/architecture/scanner.md`), Notif
 with `inSettings = false`, which is then titled "Shopping mode settings": auto sync with its
 interval in seconds, at least
 `ShoppingModeSettings.MIN_SYNC_INTERVAL_SECONDS`, saved once typing pauses and only when valid,
-"Keep screen on" and "Show checked items at the bottom"; kept on the device in `SettingsStore`
+"Keep screen on" and "Show checked items at the bottom", in the settings below the heading "Shopping
+mode" and a group of its own above it with "Save unknown products as notes", off by default: text of
+a new item's product field that names no product becomes its note, an exact name stays the product
+(`ShoppingListItemFormState.unknownProductAsNote`); kept on the device in `SettingsStore`
 (DataStore keys `shopping_mode_*`, `grocy.shoppingMode*` on the web), read at app start by
 `ShoppingModeSettingsRepository`), Grocy settings
 (`GrocySettingsRoute`, the wrench icon of Grocy's menu: a note that Grocy keeps them for the user

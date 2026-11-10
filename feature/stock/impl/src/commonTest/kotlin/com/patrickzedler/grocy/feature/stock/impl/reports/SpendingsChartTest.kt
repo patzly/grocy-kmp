@@ -4,6 +4,7 @@ import com.patrickzedler.grocy.core.model.stock.SpendingsRow
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class SpendingsChartTest {
 
@@ -51,5 +52,46 @@ class SpendingsChartTest {
     fun smallSharesKeepADecimal() {
         assertEquals("4.5", percentText(0.045, '.'))
         assertEquals("33", percentText(1.0 / 3, '.'))
+    }
+
+    @Test
+    fun slicesCoverTheirShareOfTheCircle() {
+        assertEquals(listOf(270f, 90f), sliceSweeps(listOf(3.0, 1.0)))
+    }
+
+    @Test
+    fun aTinySliceKeepsARoundedShapeAndTheCircleStaysFull() {
+        val sweeps = sliceSweeps(listOf(1000.0, 500.0, 0.01))
+
+        assertEquals(6f, sweeps[2])
+        assertEquals(360f, sweeps.sum(), 0.01f)
+        assertEquals(2f, sweeps[0] / sweeps[1], 0.01f)
+    }
+
+    @Test
+    fun tapsFollowTheEnlargedSlices() {
+        val chart = spendingsChartOf(rows(1000.0, 0.01))
+
+        assertEquals(1, sliceAt(chart, 357f))
+    }
+
+    @Test
+    fun largeSlicesKeepTheFullCorner() {
+        assertEquals(16f, sliceCornerRadius(16f, 150f, 100f, 4f, 1.5f))
+    }
+
+    @Test
+    fun aCornerIsAtMostHalfTheRing() {
+        assertEquals(10f, sliceCornerRadius(16f, 120f, 100f, 4f, 1.5f))
+    }
+
+    @Test
+    fun narrowSlicesGetSmallerCornersThatStillFit() {
+        val sweep = 0.1f
+
+        val corner = sliceCornerRadius(16f, 150f, 100f, 4f, sweep)
+
+        assertTrue(corner in 0f..16f)
+        assertTrue(corner < 16f)
     }
 }

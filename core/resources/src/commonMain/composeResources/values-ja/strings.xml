@@ -160,7 +160,6 @@
     <item quantity="other">在庫に %1$d 件の物品があり、合計価格は %2$s です</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s：</string>
-  <string name="start_summary_intro_end">%1$s。</string>
   <string name="start_list_join">%1$s、%2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="other">%1$d 件の物品が%2$s期限を迎えます。</item>
@@ -953,6 +952,8 @@
   <string name="shopping_list_item_not_booked">%1$s はストックに追加されませんでした。スキップして次の項目に進みますか、それともキャンセルしますか？</string>
   <string name="booking_shopping_list_hint">内容を確認して購入を確定してください。その後、項目は買い物リストから削除されます。</string>
   <string name="shopping_mode">買い物モード</string>
+  <string name="shopping_list_unknown_as_note">不明な商品をメモとして保存</string>
+  <string name="shopping_list_unknown_as_note_hint">入力内容がどの商品にも一致しない場合、そのテキストをメモとして項目を保存します。入力して保存するだけです</string>
   <string name="shopping_mode_settings">買い物モードの設定</string>
   <string name="shopping_mode_auto_sync">自動同期</string>
   <string name="shopping_mode_auto_sync_hint">リストを定期的に再読み込みし、一緒に買い物をしている全員が他の人のチェックを確認できるようにします</string>
@@ -1392,7 +1393,8 @@
   <string name="sessions_open">セッションを表示</string>
   <string name="sessions_profile">%1$s としてログイン中</string>
   <string name="sessions_switch_next">次のセッションに切り替え</string>
-  <string name="settings_server_config">現在のサーバー設定</string>
+  <string name="settings_server_config">サーバー設定</string>
+  <string name="settings_server_grocy">Grocyサーバー</string>
   <string name="settings_server_config_enabled">有効</string>
   <string name="settings_server_config_disabled">無効</string>
   <string name="settings_server_config_values">値</string>

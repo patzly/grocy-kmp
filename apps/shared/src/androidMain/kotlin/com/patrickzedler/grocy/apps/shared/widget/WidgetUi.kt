@@ -69,6 +69,7 @@ import com.patrickzedler.grocy.core.resources.calendar_title
 import com.patrickzedler.grocy.core.resources.shopping_list_add_item
 import com.patrickzedler.grocy.core.resources.shopping_list_empty
 import com.patrickzedler.grocy.core.resources.shopping_list_list
+import com.patrickzedler.grocy.core.resources.shopping_list_mark_done
 import com.patrickzedler.grocy.core.resources.task_create
 import com.patrickzedler.grocy.core.resources.tasks_title
 import com.patrickzedler.grocy.core.resources.widget_log_in
@@ -167,6 +168,7 @@ internal class WidgetTexts(
     val addItem: String,
     val shoppingListEmpty: String,
     val chooseShoppingList: String,
+    val checkOff: String,
     private val kinds: Map<CalendarEventKind, String>,
     private val assignedTo: String,
 ) {
@@ -198,6 +200,7 @@ private suspend fun widgetTexts() = WidgetTexts(
     addItem = getString(Res.string.shopping_list_add_item),
     shoppingListEmpty = getString(Res.string.shopping_list_empty),
     chooseShoppingList = getString(Res.string.widget_shopping_choose_hint),
+    checkOff = getString(Res.string.shopping_list_mark_done),
     kinds = mapOf(
         CalendarEventKind.PRODUCT to getString(Res.string.calendar_product_due),
         CalendarEventKind.TASK to getString(Res.string.calendar_task_due),

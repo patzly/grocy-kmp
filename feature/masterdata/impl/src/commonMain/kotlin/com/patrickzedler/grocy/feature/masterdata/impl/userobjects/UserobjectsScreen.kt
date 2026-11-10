@@ -37,6 +37,7 @@ import com.patrickzedler.grocy.core.forms.emptyListItem
 import com.patrickzedler.grocy.core.forms.objectActionItems
 import com.patrickzedler.grocy.core.forms.searchItem
 import com.patrickzedler.grocy.core.forms.showSearchAtTop
+import com.patrickzedler.grocy.core.forms.showsPullIndicator
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_add
 import com.patrickzedler.grocy.core.resources.action_scroll_to_top
@@ -101,7 +102,7 @@ internal fun UserobjectsScreen(
         listState = listState,
         snackbarHostState = snackbarHostState,
         // The first download shows its own indicator in the empty list
-        isRefreshing = refresh.isRefreshing && state?.hasObjects == true,
+        isRefreshing = refresh.showsPullIndicator(state?.hasObjects == true),
         onRefresh = viewModel::refresh,
         itemSpacing = ListItemDefaults.SegmentedGap,
         floatingToolbar = { scrollBehavior, toolbarModifier ->

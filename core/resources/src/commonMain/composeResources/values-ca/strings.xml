@@ -28,11 +28,11 @@
   <string name="action_recommend">Recomanar</string>
   <string name="action_recommend_description">Parla de Grocy als teus amics</string>
   <string name="action_rate">Valorar a Google Play</string>
-  <string name="action_rate_description">Motiva els desenvolupadors</string>
+  <string name="action_rate_description">Motiva el desenvolupador</string>
   <string name="action_support">Donar suport al desenvolupament</string>
   <string name="action_support_description">Compra l’aplicació de desbloqueig</string>
   <string name="action_email">Enviar un correu electrònic</string>
-  <string name="action_email_description">Contacta amb els desenvolupadors</string>
+  <string name="action_email_description">Contacta amb el desenvolupador</string>
   <string name="action_issue">Obrir una incidència nova a GitHub</string>
   <string name="action_issue_description">Informa d’errors o demana una funció</string>
   <string name="action_send_feedback">Enviar comentaris</string>
@@ -43,7 +43,7 @@
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy gestiona la compra i la llar al teu propi servidor Grocy: %1$s</string>
-  <string name="msg_feedback">Tens desitjos, preguntes o has trobat un error? Contacta’ns i t’ajudarem de gust.\nSi no, ens faria molta il·lusió una bona valoració a Play Store.</string>
+  <string name="msg_feedback">Tens desitjos, preguntes o has trobat un error? Contacta’m i t’ajudaré de gust.\nSi no, em faria molta il·lusió una bona valoració a Play Store.</string>
   <string name="msg_unlock">Donar suport al desenvolupament</string>
   <string name="msg_unlock_description">L’aplicació de desbloqueig és una petita compra a Google Play que dona suport al desenvolupament de Grocy. Un cop instal·lada, també pots canviar a l’escàner de codis de barres d’ML Kit. També escaneja les dates de caducitat impreses als envasos, perquè no les hagis de desxifrar.</string>
 
@@ -164,7 +164,6 @@
     <item quantity="other">Tens %1$d productes en estoc amb un valor de %2$s</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s:</string>
-  <string name="start_summary_intro_end">%1$s.</string>
   <string name="start_list_join">%1$s, %2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="one">%1$d producte caduca %2$s.</item>
@@ -1009,6 +1008,8 @@
   <string name="shopping_list_item_not_booked">%1$s no s'ha afegit a les existències. Vols ometre'l i continuar amb el següent element, o cancel·lar?</string>
   <string name="booking_shopping_list_hint">Comprova les dades i confirma la compra. Després, l'element s'elimina de la llista de la compra.</string>
   <string name="shopping_mode">Mode compra</string>
+  <string name="shopping_list_unknown_as_note">Desa els productes desconeguts com a notes</string>
+  <string name="shopping_list_unknown_as_note_hint">Si el que has escrit no coincideix amb cap producte, l’element es desa amb aquest text com a nota, així només cal escriure i desar</string>
   <string name="shopping_mode_settings">Configuració del mode compra</string>
   <string name="shopping_mode_auto_sync">Sincronització automàtica</string>
   <string name="shopping_mode_auto_sync_hint">Torna a carregar la llista regularment perquè tothom que compra junt vegi el que han marcat els altres</string>
@@ -1498,7 +1499,8 @@
   <string name="sessions_open">Mostra les sessions</string>
   <string name="sessions_profile">Sessió iniciada com a %1$s</string>
   <string name="sessions_switch_next">Canvia a la sessió següent</string>
-  <string name="settings_server_config">Configuració actual del servidor</string>
+  <string name="settings_server_config">Configuració del servidor</string>
+  <string name="settings_server_grocy">Servidor Grocy</string>
   <string name="settings_server_config_enabled">Activat</string>
   <string name="settings_server_config_disabled">Desactivat</string>
   <string name="settings_server_config_values">Valors</string>

@@ -4,6 +4,11 @@ import com.patrickzedler.grocy.core.model.start.StartLayout
 import com.patrickzedler.grocy.core.model.start.StartSection
 import com.patrickzedler.grocy.core.model.server.ServerConfig
 import com.patrickzedler.grocy.core.navigation.DetailRoute
+import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.resources.calendar_nothing_today
+import com.patrickzedler.grocy.core.resources.objects_empty
+import com.patrickzedler.grocy.core.resources.recipes_empty
+import com.patrickzedler.grocy.core.resources.stock_overview_empty
 import com.patrickzedler.grocy.feature.calendar.api.CalendarRoute
 import com.patrickzedler.grocy.feature.chores.api.ChoreTrackingRoute
 import com.patrickzedler.grocy.feature.chores.api.ChoresOverviewRoute
@@ -28,6 +33,14 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class StartSectionTest {
+
+    @Test
+    fun sectionsWithoutDataSayWhatTheySayWhenEmpty() {
+        assertEquals(Res.string.recipes_empty, placeholderOf(StartSection.RECIPES))
+        assertEquals(Res.string.stock_overview_empty, placeholderOf(StartSection.STOCK_OVERVIEW))
+        assertEquals(Res.string.objects_empty, placeholderOf(StartSection.TASKS))
+        assertEquals(Res.string.calendar_nothing_today, placeholderOf(StartSection.CALENDAR))
+    }
 
     @Test
     fun sectionsOpenTheirPage() {

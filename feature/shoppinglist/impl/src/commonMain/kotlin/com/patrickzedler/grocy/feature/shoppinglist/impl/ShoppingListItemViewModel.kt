@@ -59,6 +59,8 @@ internal class ShoppingListItemFormState(
     val done: Boolean,
     /** The product's scanner and where the focus goes around it. */
     val scanner: ScannerFieldState = ScannerFieldState(),
+    /** Text in the product field that names no product is saved as the note, without asking. */
+    private val unknownProductAsNote: Boolean = false,
 ) : ObjectFormState<ShoppingListItemValues> {
 
     var productId by mutableStateOf(initialProductId)
@@ -75,16 +77,22 @@ internal class ShoppingListItemFormState(
 
     var isProductUnmatched by mutableStateOf(false)
 
+    /** What the product field holds that names no product, empty without such text. */
+    var unmatchedProductText by mutableStateOf("")
+
     override val hasUnmatchedChoices: Boolean
-        get() = inputs.hasUnmatchedChoices || isProductUnmatched
+        get() = inputs.hasUnmatchedChoices || (isProductUnmatched && !unknownProductAsNote)
 
     override fun values() = ShoppingListItemValues(
         listId = inputs.listId,
         productId = productId,
         amount = inputs.amount.text.toString(),
         quId = inputs.quId,
-        note = inputs.note.text.toString(),
+        note = noteOf(inputs.note.text.toString()),
     )
+
+    private fun noteOf(typed: String): String =
+        if (unknownProductAsNote) noteWithUnknownProduct(typed, unmatchedProductText) else typed
 
     /** Chooses product [id] (none for null) with its units, starting with its purchase unit. */
     fun selectProduct(id: Int?) {
@@ -127,6 +135,8 @@ internal class ShoppingListItemFormState(
     fun onTextSubmitted(text: String, hasSuggestion: Boolean): Boolean {
         if (scanner.isOpen) return false
         val product = productForCode(text)
+        // The text stays in the field and is saved as the note
+        if (product == null && unknownProductAsNote) return true
         if (product == null) {
             val used = unknownProduct
                 .onTextWithoutProduct(text, hasSuggestion, allProducts, barcodes)
@@ -181,6 +191,10 @@ internal class ShoppingListItemFormState(
     }
 }
 
+/** The [note] with the [unknownProduct] text above it, which then names the item. */
+internal fun noteWithUnknownProduct(note: String, unknownProduct: String): String =
+    listOf(unknownProduct, note).filter { it.isNotBlank() }.joinToString("\n")
+
 /**
  * Grocy's item form: edits item [id] or creates one on list [presetListId] (Grocy's `list`),
  * with product [presetProductId] preselected if given. Saving is online only; like Grocy's
@@ -196,6 +210,7 @@ internal class ShoppingListItemViewModel(
     private val scanner: (hasValue: Boolean) -> ScannerFieldState = {
         ScannerFieldState(hasValue = it)
     },
+    private val unknownProductAsNote: () -> Boolean = { false },
 ) : ObjectFormViewModel<ShoppingListItemValues, ShoppingListItemFormState>(id, masterData) {
 
     /** The server's barcode plugin, which Grocy's question offers. */
@@ -265,6 +280,7 @@ internal class ShoppingListItemViewModel(
                     it.requestFocus(FormFocusTarget.NEXT_FIELD)
                 }
             },
+            unknownProductAsNote = item == null && unknownProductAsNote(),
         )
         viewModelScope.launch {
             combine(

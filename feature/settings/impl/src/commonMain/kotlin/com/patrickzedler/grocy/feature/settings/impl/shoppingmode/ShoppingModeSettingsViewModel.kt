@@ -68,6 +68,8 @@ internal class ShoppingModeSettingsViewModel(
 
     fun setDoneItemsLast(doneItemsLast: Boolean) = update { it.copy(doneItemsLast = doneItemsLast) }
 
+    fun setUnknownProductAsNote(asNote: Boolean) = update { it.copy(unknownProductAsNote = asNote) }
+
     private fun update(transform: (ShoppingModeSettings) -> ShoppingModeSettings) {
         viewModelScope.launch { repository.update(transform) }
     }

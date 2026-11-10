@@ -53,6 +53,7 @@ class ShoppingListItemViewModelTest {
         id: Int? = null,
         listId: Int? = null,
         productId: Int? = null,
+        unknownProductAsNote: Boolean = false,
     ): ShoppingListItemViewModel {
         environment.repository.refresh()
         environment.shoppingListRepository.refresh()
@@ -63,6 +64,7 @@ class ShoppingListItemViewModelTest {
             masterData = environment.repository,
             shoppingLists = environment.shoppingListRepository,
             decimalSeparator = '.',
+            unknownProductAsNote = { unknownProductAsNote },
         ).also { advanceUntilIdle() }
     }
 
@@ -312,5 +314,65 @@ class ShoppingListItemViewModelTest {
 
             assertEquals(ObjectFormEvent.Offline, awaitItem())
         }
+    }
+
+    private fun ShoppingListItemFormState.typeUnknownProduct(text: String) {
+        isProductUnmatched = true
+        unmatchedProductText = text
+    }
+
+    @Test
+    fun anUnknownProductIsRefusedWithoutTheSetting() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        viewModel.form.typeUnknownProduct("Zucchini")
+
+        assertFalse(viewModel.save())
+    }
+
+    @Test
+    fun anUnknownProductIsSavedAsTheNoteWithTheSetting() = runTest(dispatcher) {
+        val viewModel = viewModel(unknownProductAsNote = true)
+        viewModel.form.typeUnknownProduct("Zucchini")
+
+        assertTrue(viewModel.save())
+        advanceUntilIdle()
+
+        val body = createdBody()
+        assertEquals("Zucchini", body.getValue("note").jsonPrimitive.content)
+        assertEquals(JsonNull, body.getValue("product_id"))
+    }
+
+    @Test
+    fun aKnownProductStaysTheProductWithTheSetting() = runTest(dispatcher) {
+        val viewModel = viewModel(unknownProductAsNote = true)
+        viewModel.form.selectProduct(1)
+
+        assertTrue(viewModel.save())
+        advanceUntilIdle()
+
+        assertEquals(1, createdBody().getValue("product_id").jsonPrimitive.int)
+    }
+
+    @Test
+    fun theSettingAsksNothingAboutTypedText() = runTest(dispatcher) {
+        val viewModel = viewModel(unknownProductAsNote = true)
+
+        assertTrue(viewModel.form.onTextSubmitted("Zucchini", hasSuggestion = false))
+
+        assertNull(viewModel.form.unknownProduct.input)
+    }
+
+    @Test
+    fun theSettingOnlyAppliesToNewItems() = runTest(dispatcher) {
+        val viewModel = viewModel(id = 5, unknownProductAsNote = true)
+        viewModel.form.typeUnknownProduct("Zucchini")
+
+        assertFalse(viewModel.save())
+    }
+
+    @Test
+    fun theUnknownProductComesAboveATypedNote() {
+        assertEquals("Zucchini\nOrganic", noteWithUnknownProduct("Organic", "Zucchini"))
+        assertEquals("Organic", noteWithUnknownProduct("Organic", ""))
     }
 }

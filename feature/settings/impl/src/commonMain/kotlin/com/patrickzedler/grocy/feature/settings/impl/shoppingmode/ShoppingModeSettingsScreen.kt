@@ -11,6 +11,9 @@ import com.patrickzedler.grocy.core.design.component.SegmentedSwitchItem
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingModeSettings
 import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.resources.shopping_list_list
+import com.patrickzedler.grocy.core.resources.shopping_list_unknown_as_note
+import com.patrickzedler.grocy.core.resources.shopping_list_unknown_as_note_hint
 import com.patrickzedler.grocy.core.resources.shopping_mode
 import com.patrickzedler.grocy.core.resources.shopping_mode_auto_sync
 import com.patrickzedler.grocy.core.resources.shopping_mode_auto_sync_hint
@@ -51,26 +54,39 @@ internal fun ShoppingModeSettingsScreen(
         pane = pane,
     ) {
         // Empty for the moment until the stored settings are read
-        settings?.let { shoppingModeSettings(viewModel, it) }
+        settings?.let { shoppingModeSettings(viewModel, it, inSettings) }
     }
 }
 
-/** In the settings "settings" is clear, opened from the shopping mode the name needs it. */
+/** In the settings it is the shopping list's page, from the shopping mode only that one's. */
 internal fun shoppingModeSettingsTitle(inSettings: Boolean): StringResource =
-    if (inSettings) Res.string.shopping_mode else Res.string.shopping_mode_settings
+    if (inSettings) Res.string.shopping_list_list else Res.string.shopping_mode_settings
 
 private fun LazyListScope.shoppingModeSettings(
     viewModel: ShoppingModeSettingsViewModel,
     settings: ShoppingModeSettings,
+    inSettings: Boolean,
 ) {
-    segmentedGroup(key = "sync") {
+    if (inSettings) {
+        segmentedGroup(key = "items") {
+            SegmentedSwitchItem(
+                headline = stringResource(Res.string.shopping_list_unknown_as_note),
+                supporting = stringResource(Res.string.shopping_list_unknown_as_note_hint),
+                checked = settings.unknownProductAsNote,
+                onCheckedChange = viewModel::setUnknownProductAsNote,
+                index = 0,
+                count = 1,
+            )
+        }
+    }
+    segmentedGroup(key = "shopping_mode", title = Res.string.shopping_mode.takeIf { inSettings }) {
         SegmentedSwitchItem(
             headline = stringResource(Res.string.shopping_mode_auto_sync),
             supporting = stringResource(Res.string.shopping_mode_auto_sync_hint),
             checked = settings.autoSync,
             onCheckedChange = viewModel::setAutoSync,
             index = 0,
-            count = 2,
+            count = 4,
         )
         SettingNumberItem(
             label = stringResource(Res.string.shopping_mode_sync_interval),
@@ -78,25 +94,23 @@ private fun LazyListScope.shoppingModeSettings(
             stepper = NumberStepper(min = MinSyncInterval),
             error = viewModel.syncIntervalError,
             index = 1,
-            count = 2,
+            count = 4,
             enabled = settings.autoSync,
         )
-    }
-    segmentedGroup(key = "display") {
         SegmentedSwitchItem(
             headline = stringResource(Res.string.shopping_mode_keep_screen_on),
             supporting = stringResource(Res.string.shopping_mode_keep_screen_on_hint),
             checked = settings.keepScreenOn,
             onCheckedChange = viewModel::setKeepScreenOn,
-            index = 0,
-            count = 2,
+            index = 2,
+            count = 4,
         )
         SegmentedSwitchItem(
             headline = stringResource(Res.string.shopping_mode_done_last),
             checked = settings.doneItemsLast,
             onCheckedChange = viewModel::setDoneItemsLast,
-            index = 1,
-            count = 2,
+            index = 3,
+            count = 4,
         )
     }
 }

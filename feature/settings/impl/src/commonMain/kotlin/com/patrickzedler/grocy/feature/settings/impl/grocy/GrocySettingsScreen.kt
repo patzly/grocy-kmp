@@ -78,6 +78,8 @@ internal fun GrocySettingsScreen(
         onBackClick = onBackClick,
         modifier = modifier,
         pane = pane,
+        // Opened from the server settings, also beside the categories
+        hasBackButton = true,
     ) {
         // Shown while the configuration is unknown, Grocy's defaults have every feature on
         grocySettings(config ?: ServerConfig(), links)

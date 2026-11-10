@@ -49,6 +49,7 @@ import com.patrickzedler.grocy.core.forms.actionMessage
 import com.patrickzedler.grocy.core.forms.emptyListItem
 import com.patrickzedler.grocy.core.forms.searchItem
 import com.patrickzedler.grocy.core.forms.showSearchAtTop
+import com.patrickzedler.grocy.core.forms.showsPullIndicator
 import com.patrickzedler.grocy.core.model.stock.StockTransactionType
 import com.patrickzedler.grocy.core.model.text.epochDayOf
 import com.patrickzedler.grocy.core.model.text.formatDate
@@ -181,7 +182,7 @@ internal fun StockJournalScreen(
         ),
         menuItems = menuItems,
         snackbarHostState = snackbarHostState,
-        isRefreshing = refresh.isRefreshing && state?.hasBookings == true,
+        isRefreshing = refresh.showsPullIndicator(state?.hasBookings == true),
         onRefresh = viewModel::refresh,
         listState = listState,
         itemSpacing = ListItemDefaults.SegmentedGap,

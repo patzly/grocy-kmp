@@ -48,6 +48,7 @@ import com.patrickzedler.grocy.core.forms.actionMessage
 import com.patrickzedler.grocy.core.forms.emptyListItem
 import com.patrickzedler.grocy.core.forms.searchItem
 import com.patrickzedler.grocy.core.forms.showSearchAtTop
+import com.patrickzedler.grocy.core.forms.showsPullIndicator
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingList
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.productcard.LabelPrintEffect
@@ -169,7 +170,7 @@ internal fun ShoppingListScreen(
         listState = listState,
         snackbarHostState = snackbarHostState,
         // The first download shows its own indicator in the empty list
-        isRefreshing = refresh.isRefreshing && current?.hasData == true,
+        isRefreshing = refresh.showsPullIndicator(current?.hasData == true, storedByStart = true),
         onRefresh = viewModel::refresh,
         // Every item is an item of its group, the group spacing follows the filters
         itemSpacing = ListItemDefaults.SegmentedGap,

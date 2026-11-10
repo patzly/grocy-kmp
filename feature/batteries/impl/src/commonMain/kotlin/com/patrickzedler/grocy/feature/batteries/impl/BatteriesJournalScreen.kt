@@ -55,6 +55,7 @@ import com.patrickzedler.grocy.core.forms.emptyListItem
 import com.patrickzedler.grocy.core.forms.labelled
 import com.patrickzedler.grocy.core.forms.searchItem
 import com.patrickzedler.grocy.core.forms.showSearchAtTop
+import com.patrickzedler.grocy.core.forms.showsPullIndicator
 import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalField
 import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalGrouping
 import com.patrickzedler.grocy.core.model.batteries.BatteriesJournalSortField
@@ -170,7 +171,7 @@ internal fun BatteriesJournalScreen(
         menuItems = menuItems,
         pane = ScreenPane.Detail.takeIf { isBesideList },
         snackbarHostState = snackbarHostState,
-        isRefreshing = refresh.isRefreshing && state?.hasCycles == true,
+        isRefreshing = refresh.showsPullIndicator(state?.hasCycles == true),
         onRefresh = viewModel::refresh,
         listState = listState,
         itemSpacing = ListItemDefaults.SegmentedGap,

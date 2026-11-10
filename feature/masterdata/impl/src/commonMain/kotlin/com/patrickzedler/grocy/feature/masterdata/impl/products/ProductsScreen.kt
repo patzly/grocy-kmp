@@ -49,6 +49,7 @@ import com.patrickzedler.grocy.core.forms.emptyListItem
 import com.patrickzedler.grocy.core.forms.objectActionItems
 import com.patrickzedler.grocy.core.forms.searchItem
 import com.patrickzedler.grocy.core.forms.showSearchAtTop
+import com.patrickzedler.grocy.core.forms.showsPullIndicator
 import com.patrickzedler.grocy.core.productcard.LabelPrintEffect
 import com.patrickzedler.grocy.core.productcard.ProductOverviewHost
 import com.patrickzedler.grocy.core.productcard.StockPageActions
@@ -188,7 +189,7 @@ private fun ProductsContent(
         listState = listState,
         snackbarHostState = snackbarHostState,
         // The first download shows its own indicator in the empty list
-        isRefreshing = refresh.isRefreshing && state?.hasProducts == true,
+        isRefreshing = refresh.showsPullIndicator(state?.hasProducts == true, storedByStart = true),
         onRefresh = onRetryClick,
         // Every product is an item of one large group, the group spacing follows the filters
         itemSpacing = ListItemDefaults.SegmentedGap,

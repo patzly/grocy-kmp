@@ -28,11 +28,11 @@
   <string name="action_recommend">Rekommendera</string>
   <string name="action_recommend_description">Berätta för dina vänner om Grocy</string>
   <string name="action_rate">Betygsätt på Google Play</string>
-  <string name="action_rate_description">Motivera utvecklarna</string>
+  <string name="action_rate_description">Motivera utvecklaren</string>
   <string name="action_support">Stöd utvecklingen</string>
   <string name="action_support_description">Köp upplåsningsappen</string>
   <string name="action_email">Skicka e-post</string>
-  <string name="action_email_description">Kontakta utvecklarna</string>
+  <string name="action_email_description">Kontakta utvecklaren</string>
   <string name="action_issue">Skapa nytt ärende på GitHub</string>
   <string name="action_issue_description">Rapportera buggar eller önska en funktion</string>
   <string name="action_send_feedback">Skicka feedback</string>
@@ -43,7 +43,7 @@
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy håller koll på matvaror och hushåll på din egen Grocy-server: %1$s</string>
-  <string name="msg_feedback">Har du önskemål eller frågor, eller har du hittat ett fel? Kontakta oss så hjälper vi gärna till!\nAnnars blir vi väldigt glada för ett fint omdöme i Play Store.</string>
+  <string name="msg_feedback">Har du önskemål eller frågor, eller har du hittat ett fel? Kontakta mig så hjälper jag gärna till!\nAnnars blir jag väldigt glad för ett fint omdöme i Play Store.</string>
   <string name="msg_unlock">Stöd utvecklingen</string>
   <string name="msg_unlock_description">Upplåsningsappen är ett litet köp på Google Play som stöder utvecklingen av Grocy. När den är installerad kan du också byta till streckkodsskannern från ML Kit. Den skannar också bäst före-datum som är tryckta på förpackningar, så att du slipper tyda dem själv.</string>
 
@@ -162,7 +162,6 @@
     <item quantity="other">Du har %1$d produkter i lager med ett värde av %2$s</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s:</string>
-  <string name="start_summary_intro_end">%1$s.</string>
   <string name="start_list_join">%1$s, %2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="one">%1$d produkt förfaller %2$s.</item>
@@ -980,6 +979,8 @@
   <string name="shopping_list_item_not_booked">%1$s lades inte till i lagret. Hoppa över den och fortsätta med nästa vara, eller avbryta?</string>
   <string name="booking_shopping_list_hint">Kontrollera uppgifterna och bekräfta köpet. Varan tas sedan bort från inköpslistan.</string>
   <string name="shopping_mode">Handlingsläge</string>
+  <string name="shopping_list_unknown_as_note">Spara okända produkter som anteckningar</string>
+  <string name="shopping_list_unknown_as_note_hint">Om det du skrev inte matchar någon produkt sparas objektet med texten som anteckning, så du kan bara skriva och spara</string>
   <string name="shopping_mode_settings">Inställningar för handlingsläge</string>
   <string name="shopping_mode_auto_sync">Automatisk synkronisering</string>
   <string name="shopping_mode_auto_sync_hint">Laddar om listan regelbundet så att alla som handlar tillsammans ser vad de andra har bockat av</string>
@@ -1444,7 +1445,8 @@
   <string name="sessions_open">Visa sessioner</string>
   <string name="sessions_profile">Inloggad som %1$s</string>
   <string name="sessions_switch_next">Byt till nästa session</string>
-  <string name="settings_server_config">Aktuell serverkonfiguration</string>
+  <string name="settings_server_config">Serverkonfiguration</string>
+  <string name="settings_server_grocy">Grocy-server</string>
   <string name="settings_server_config_enabled">Aktiverat</string>
   <string name="settings_server_config_disabled">Inaktiverat</string>
   <string name="settings_server_config_values">Värden</string>

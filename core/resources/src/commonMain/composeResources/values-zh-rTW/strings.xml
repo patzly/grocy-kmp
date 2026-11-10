@@ -28,11 +28,11 @@
   <string name="action_recommend">推薦</string>
   <string name="action_recommend_description">向朋友推薦 Grocy</string>
   <string name="action_rate">在 Google Play 上評分</string>
-  <string name="action_rate_description">給開發人員一點鼓勵</string>
+  <string name="action_rate_description">給開發者一點鼓勵</string>
   <string name="action_support">支持開發</string>
   <string name="action_support_description">購買解鎖應用程式</string>
   <string name="action_email">傳送電子郵件</string>
-  <string name="action_email_description">聯絡開發人員</string>
+  <string name="action_email_description">聯絡開發者</string>
   <string name="action_issue">在 GitHub 上建立新 Issue</string>
   <string name="action_issue_description">回報錯誤或提出功能需求</string>
   <string name="action_send_feedback">傳送意見回饋</string>
@@ -43,7 +43,7 @@
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy 在您自己的 Grocy 伺服器上管理食品雜貨與家務：%1$s</string>
-  <string name="msg_feedback">您有任何期望、問題或遇到錯誤嗎？歡迎與我們聯絡，我們很樂意協助！\n若沒有，也非常歡迎您在 Play Store 給我們好評。</string>
+  <string name="msg_feedback">您有任何期望、問題或遇到錯誤嗎？歡迎與我聯絡，我很樂意協助！\n若沒有，也非常歡迎您在 Play Store 給我好評。</string>
   <string name="msg_unlock">支持開發</string>
   <string name="msg_unlock_description">解鎖應用程式是 Google Play 上的小額購買，用來支持 Grocy 的開發。安裝後，您也可以改用 ML Kit 條碼掃描器。 它也能掃描包裝上印製的有效期限，您不必再費力辨識。</string>
 
@@ -160,7 +160,6 @@
     <item quantity="other">庫存中有 %1$d 個物品，總價 %2$s</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s：</string>
-  <string name="start_summary_intro_end">%1$s。</string>
   <string name="start_list_join">%1$s、%2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="other">%1$d 個物品將在%2$s到期。</item>
@@ -952,6 +951,8 @@
   <string name="shopping_list_item_not_booked">%1$s 未加入庫存。要略過並繼續下一個項目，還是取消？</string>
   <string name="booking_shopping_list_hint">請檢查資料並確認購買。之後此項目會從購物清單中移除。</string>
   <string name="shopping_mode">購物模式</string>
+  <string name="shopping_list_unknown_as_note">將未知商品儲存為備註</string>
+  <string name="shopping_list_unknown_as_note_hint">如果輸入的內容與任何商品都不符，項目會以該文字作為備註儲存，只要輸入並儲存即可</string>
   <string name="shopping_mode_settings">購物模式設定</string>
   <string name="shopping_mode_auto_sync">自動同步</string>
   <string name="shopping_mode_auto_sync_hint">定期重新載入清單，讓一起購物的每個人都能看到其他人勾選了什麼</string>
@@ -1391,7 +1392,8 @@
   <string name="sessions_open">顯示工作階段</string>
   <string name="sessions_profile">已登入為 %1$s</string>
   <string name="sessions_switch_next">切換到下一個工作階段</string>
-  <string name="settings_server_config">目前的伺服器設定</string>
+  <string name="settings_server_config">伺服器設定</string>
+  <string name="settings_server_grocy">Grocy 伺服器</string>
   <string name="settings_server_config_enabled">已啟用</string>
   <string name="settings_server_config_disabled">已停用</string>
   <string name="settings_server_config_values">值</string>

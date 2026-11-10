@@ -62,6 +62,7 @@ import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuViewModel
 import com.patrickzedler.grocy.feature.settings.impl.SettingsScaffold
 import com.patrickzedler.grocy.feature.settings.impl.SettingsScaffoldContent
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -87,16 +88,7 @@ internal fun CertificatesScreen(
         onPicked = viewModel::setClientAlias,
     )
 
-    LaunchedEffect(viewModel.checkResult) {
-        val message = when (viewModel.checkResult) {
-            CertificateCheck.TRUSTED -> Res.string.certificates_check_ok
-            CertificateCheck.FAILED -> Res.string.certificates_check_failed
-            null -> return@LaunchedEffect
-        }
-        // Cleared afterwards, a new key would cancel the snackbar while it shows
-        snackbarHostState.showNewestSnackbar(getString(message))
-        viewModel.onCheckResultShown()
-    }
+    CertificateCheckEffect(viewModel, snackbarHostState)
 
     SettingsScaffold(
         title = stringResource(Res.string.settings_certificates),
@@ -122,6 +114,70 @@ internal fun CertificatesScreen(
     }
 }
 
+/** Tells how the check of the server's certificate went. */
+@Composable
+internal fun CertificateCheckEffect(
+    viewModel: CertificatesViewModel,
+    snackbarHostState: SnackbarHostState,
+) {
+    LaunchedEffect(viewModel.checkResult) {
+        val message = when (viewModel.checkResult) {
+            CertificateCheck.TRUSTED -> Res.string.certificates_check_ok
+            CertificateCheck.FAILED -> Res.string.certificates_check_failed
+            null -> return@LaunchedEffect
+        }
+        // Cleared afterwards, a new key would cancel the snackbar while it shows
+        snackbarHostState.showNewestSnackbar(getString(message))
+        viewModel.onCheckResultShown()
+    }
+}
+
+/** Everything about certificates as one group of the server settings, below their [title]. */
+internal fun LazyListScope.certificateGroup(
+    title: StringResource,
+    settings: CertificateSettings,
+    canCheckServer: Boolean,
+    isChecking: Boolean,
+    onClientClick: () -> Unit,
+    onClientRemove: () -> Unit,
+    onTrustedRemove: (TrustedCertificate) -> Unit,
+    onCheckClick: () -> Unit,
+) {
+    segmentedGroup(key = "certificates", title = title) {
+        val count = 1 + trustedItemCount(settings, canCheckServer)
+        ClientItem(settings.clientAlias, onClientClick, onClientRemove, index = 0, count = count)
+        TrustedItems(
+            settings,
+            canCheckServer,
+            isChecking,
+            firstIndex = 1,
+            count,
+            onTrustedRemove,
+            onCheckClick,
+        )
+    }
+}
+
+private fun trustedItemCount(settings: CertificateSettings, canCheckServer: Boolean): Int =
+    settings.trusted.size.coerceAtLeast(1) + if (canCheckServer) 1 else 0
+
+@Composable
+private fun TrustedItems(
+    settings: CertificateSettings,
+    canCheckServer: Boolean,
+    isChecking: Boolean,
+    firstIndex: Int,
+    count: Int,
+    onTrustedRemove: (TrustedCertificate) -> Unit,
+    onCheckClick: () -> Unit,
+) {
+    if (settings.trusted.isEmpty()) EmptyItem(firstIndex, count)
+    settings.trusted.forEachIndexed { index, trusted ->
+        TrustedItem(trusted, firstIndex + index, count) { onTrustedRemove(trusted) }
+    }
+    if (canCheckServer) CheckItem(index = count - 1, count = count, isChecking, onCheckClick)
+}
+
 private fun LazyListScope.certificates(
     settings: CertificateSettings,
     canCheckServer: Boolean,
@@ -132,32 +188,37 @@ private fun LazyListScope.certificates(
     onCheckClick: () -> Unit,
 ) {
     segmentedGroup(key = "client") {
-        ClientItem(settings.clientAlias, onClientClick, onClientRemove)
+        ClientItem(settings.clientAlias, onClientClick, onClientRemove, index = 0, count = 1)
     }
     segmentedGroup(key = "trusted", title = Res.string.certificates_trusted) {
-        val count = settings.trusted.size.coerceAtLeast(1) + if (canCheckServer) 1 else 0
-        if (settings.trusted.isEmpty()) {
-            EmptyItem(count)
-        }
-        settings.trusted.forEachIndexed { index, trusted ->
-            TrustedItem(trusted, index, count) { onTrustedRemove(trusted) }
-        }
-        if (canCheckServer) {
-            CheckItem(index = count - 1, count = count, isChecking, onCheckClick)
-        }
+        TrustedItems(
+            settings,
+            canCheckServer,
+            isChecking,
+            firstIndex = 0,
+            count = trustedItemCount(settings, canCheckServer),
+            onTrustedRemove,
+            onCheckClick,
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun ClientItem(alias: String?, onClick: () -> Unit, onRemove: () -> Unit) {
+private fun ClientItem(
+    alias: String?,
+    onClick: () -> Unit,
+    onRemove: () -> Unit,
+    index: Int,
+    count: Int,
+) {
     val haptic = LocalHapticFeedback.current
     SegmentedListItem(
         onClick = {
             haptic.confirm()
             onClick()
         },
-        shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
+        shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         colors = SegmentedListDefaults.colors(),
         modifier = Modifier.fillMaxWidth().clickCursor(),
         verticalAlignment = Alignment.CenterVertically,
@@ -176,10 +237,10 @@ private fun ClientItem(alias: String?, onClick: () -> Unit, onRemove: () -> Unit
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun EmptyItem(count: Int) {
+private fun EmptyItem(index: Int, count: Int) {
     ListItem(
         modifier = Modifier.fillMaxWidth(),
-        shapes = ListItemDefaults.segmentedShapes(index = 0, count = count),
+        shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         colors = SegmentedListDefaults.colors(),
         content = { Text(stringResource(Res.string.certificates_trusted_empty)) },
     )

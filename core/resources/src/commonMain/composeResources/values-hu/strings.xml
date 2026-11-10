@@ -28,11 +28,11 @@
   <string name="action_recommend">Ajánlás</string>
   <string name="action_recommend_description">Mesélj a barátaidnak a Grocyról</string>
   <string name="action_rate">Értékelés a Google Playen</string>
-  <string name="action_rate_description">Motiváld a fejlesztőket</string>
+  <string name="action_rate_description">Motiváld a fejlesztőt</string>
   <string name="action_support">A fejlesztés támogatása</string>
   <string name="action_support_description">Vásárold meg a feloldó alkalmazást</string>
   <string name="action_email">E-mail küldése</string>
-  <string name="action_email_description">Vedd fel a kapcsolatot a fejlesztőkkel</string>
+  <string name="action_email_description">Vedd fel a kapcsolatot a fejlesztővel</string>
   <string name="action_issue">Új hibajegy nyitása a GitHubon</string>
   <string name="action_issue_description">Jelents hibát, vagy kérj új funkciót</string>
   <string name="action_send_feedback">Visszajelzés küldése</string>
@@ -43,7 +43,7 @@
 
   <!-- Messages -->
   <string name="msg_recommend">A Grocy nyilvántartja az élelmiszereket és a háztartást a saját Grocy szervereden: %1$s</string>
-  <string name="msg_feedback">Kívánságod vagy kérdésed van, esetleg hibát találtál? Írj nekünk, szívesen segítünk!\nEgyébként nagyon örülnénk egy kedves értékelésnek a Play Store-ban.</string>
+  <string name="msg_feedback">Kívánságod vagy kérdésed van, esetleg hibát találtál? Írj nekem, szívesen segítek!\nEgyébként nagyon örülnék egy kedves értékelésnek a Play Store-ban.</string>
   <string name="msg_unlock">A fejlesztés támogatása</string>
   <string name="msg_unlock_description">A feloldó alkalmazás egy kis vásárlás a Google Playen, amely a Grocy fejlesztését támogatja. Ha telepítve van, átválthatsz az ML Kit vonalkódolvasójára is. A csomagolásra nyomtatott lejárati dátumokat is beolvassa, így nem kell többé kibetűzni őket.</string>
 
@@ -162,7 +162,6 @@
     <item quantity="other">%1$d terméked van készleten %2$s értékben</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s:</string>
-  <string name="start_summary_intro_end">%1$s.</string>
   <string name="start_list_join">%1$s, %2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="one">%1$d termék %2$s esedékes.</item>
@@ -981,6 +980,8 @@
   <string name="shopping_list_item_not_booked">%1$s nem került készletre. Kihagyod, és folytatod a következő tétellel, vagy megszakítod?</string>
   <string name="booking_shopping_list_hint">Ellenőrizd az adatokat, és erősítsd meg a vásárlást. Ezután a tétel lekerül a bevásárlólistáról.</string>
   <string name="shopping_mode">Bevásárló mód</string>
+  <string name="shopping_list_unknown_as_note">Ismeretlen termékek mentése megjegyzésként</string>
+  <string name="shopping_list_unknown_as_note_hint">Ha a beírt szöveg egyetlen termékkel sem egyezik, a tétel ezzel a szöveggel, megjegyzésként mentődik, így elég beírni és menteni</string>
   <string name="shopping_mode_settings">Bevásárló mód beállításai</string>
   <string name="shopping_mode_auto_sync">Automatikus szinkronizálás</string>
   <string name="shopping_mode_auto_sync_hint">Rendszeresen újratölti a listát, így mindenki, aki együtt vásárol, látja, mit pipáltak ki a többiek</string>
@@ -1445,7 +1446,8 @@
   <string name="sessions_open">Munkamenetek megjelenítése</string>
   <string name="sessions_profile">Bejelentkezve mint %1$s</string>
   <string name="sessions_switch_next">Váltás a következő munkamenetre</string>
-  <string name="settings_server_config">Jelenlegi szerverkonfiguráció</string>
+  <string name="settings_server_config">Szerverkonfiguráció</string>
+  <string name="settings_server_grocy">Grocy szerver</string>
   <string name="settings_server_config_enabled">Engedélyezve</string>
   <string name="settings_server_config_disabled">Letiltva</string>
   <string name="settings_server_config_values">Értékek</string>

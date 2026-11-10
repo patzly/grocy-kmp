@@ -90,7 +90,6 @@ import com.patrickzedler.grocy.core.resources.start_stock_one_on_list
 import com.patrickzedler.grocy.core.resources.start_stock_overdue
 import com.patrickzedler.grocy.core.resources.start_stock_some_on_lists
 import com.patrickzedler.grocy.core.resources.start_stock_within_days
-import com.patrickzedler.grocy.core.resources.start_summary_intro_end
 import com.patrickzedler.grocy.core.resources.start_summary_intro_list
 import com.patrickzedler.grocy.core.resources.start_tasks_due_soon
 import com.patrickzedler.grocy.core.resources.start_tasks_due_today
@@ -300,7 +299,7 @@ private fun StartContent(
                 groupSections.forEachIndexed { index, section ->
                     SectionItem(
                         section = section,
-                        summary = state?.let { sectionSummary(section, it) },
+                        summary = sectionSummary(section, state),
                         index = index,
                         count = groupSections.size,
                         onClick = { onSectionClick(section) },
@@ -355,8 +354,29 @@ internal fun startsAtTop(bullets: List<String>, hasButtons: Boolean): Boolean =
 /** What a section tells about its data: an introduction and a list, both optional. */
 private class SectionSummary(val intro: String?, val bullets: List<String>)
 
+/** The text of [section], its [placeholderOf] while its data is not there, e.g. after a switch. */
 @Composable
-private fun sectionSummary(section: StartSection, state: StartUiState): SectionSummary? =
+private fun sectionSummary(section: StartSection, state: StartUiState?): SectionSummary =
+    state?.let { knownSectionSummary(section, it) }
+        ?: SectionSummary(stringResource(placeholderOf(section)), emptyList())
+
+/** What a section without data says, so its buttons never move up to its title. */
+internal fun placeholderOf(section: StartSection): StringResource = when (section) {
+    StartSection.STOCK_OVERVIEW -> Res.string.stock_overview_empty
+    StartSection.SHOPPING_LIST -> Res.string.start_shopping_list_nothing
+    StartSection.RECIPES -> Res.string.recipes_empty
+    StartSection.MEAL_PLAN -> Res.string.start_meal_plan_nothing
+    StartSection.CALENDAR -> Res.string.calendar_nothing_today
+    StartSection.CHORES,
+    StartSection.TASKS,
+    StartSection.BATTERIES,
+    StartSection.EQUIPMENT,
+    StartSection.MASTER_DATA,
+    -> Res.string.objects_empty
+}
+
+@Composable
+private fun knownSectionSummary(section: StartSection, state: StartUiState): SectionSummary? =
     when (section) {
         StartSection.STOCK_OVERVIEW -> state.stock?.let { stockSummary(it, state) }
         StartSection.SHOPPING_LIST -> state.shoppingLists?.let { shoppingListSummary(it) }
@@ -443,7 +463,7 @@ private fun stockSummary(summary: StockSummary, state: StartUiState): SectionSum
         if (summary.belowMinStockCount > 0) add(belowMinStock(summary))
     }
     val intro = if (bullets.isEmpty()) {
-        stringResource(Res.string.start_summary_intro_end, inStock)
+        inStock
     } else {
         stringResource(Res.string.start_summary_intro_list, inStock)
     }
@@ -459,10 +479,7 @@ private fun shoppingListSummary(summary: ShoppingListSummary): SectionSummary {
     val count = summary.undoneCount
     if (count == 0) {
         return SectionSummary(
-            intro = stringResource(
-                Res.string.start_summary_intro_end,
-                stringResource(Res.string.start_shopping_list_nothing),
-            ),
+            intro = stringResource(Res.string.start_shopping_list_nothing),
             bullets = emptyList(),
         )
     }
@@ -470,7 +487,7 @@ private fun shoppingListSummary(summary: ShoppingListSummary): SectionSummary {
     val lists = summary.lists.filter { it.undoneCount > 0 }
     if (lists.size < 2) {
         return SectionSummary(
-            intro = stringResource(Res.string.start_summary_intro_end, text),
+            intro = text,
             bullets = emptyList(),
         )
     }
@@ -510,7 +527,7 @@ private fun recipesSummary(summary: RecipesSummary, checksStock: Boolean): Secti
         emptyList()
     }
     val intro = if (bullets.isEmpty()) {
-        stringResource(Res.string.start_summary_intro_end, text)
+        text
     } else {
         stringResource(Res.string.start_summary_intro_list, text)
     }
@@ -522,10 +539,7 @@ private fun recipesSummary(summary: RecipesSummary, checksStock: Boolean): Secti
 private fun mealPlanSummary(today: List<String>): SectionSummary =
     if (today.isEmpty()) {
         SectionSummary(
-            stringResource(
-                Res.string.start_summary_intro_end,
-                stringResource(Res.string.start_meal_plan_nothing),
-            ),
+            stringResource(Res.string.start_meal_plan_nothing),
             emptyList(),
         )
     } else {
@@ -544,7 +558,11 @@ private fun mealPlanSummary(today: List<String>): SectionSummary =
  */
 @Composable
 private fun tasksSummary(summary: TasksSummary, dueSoonDays: Int): SectionSummary {
-    val text = pluralStringResource(Res.plurals.tasks_count, summary.count, summary.count)
+    val text = if (summary.count == 0) {
+        stringResource(Res.string.objects_empty)
+    } else {
+        pluralStringResource(Res.plurals.tasks_count, summary.count, summary.count)
+    }
     val bullets = listOfNotNull(
         summary.overdue.takeIf { it > 0 }?.let {
             pluralStringResource(Res.plurals.start_tasks_overdue, it, it)
@@ -562,7 +580,7 @@ private fun tasksSummary(summary: TasksSummary, dueSoonDays: Int): SectionSummar
         },
     )
     val intro = if (bullets.isEmpty()) {
-        stringResource(Res.string.start_summary_intro_end, text)
+        text
     } else {
         stringResource(Res.string.start_summary_intro_list, text)
     }
@@ -601,7 +619,7 @@ private fun batteriesSummary(summary: BatteriesSummary, dueSoonDays: Int): Secti
         },
     )
     val intro = if (bullets.isEmpty()) {
-        stringResource(Res.string.start_summary_intro_end, text)
+        text
     } else {
         stringResource(Res.string.start_summary_intro_list, text)
     }
@@ -611,14 +629,11 @@ private fun batteriesSummary(summary: BatteriesSummary, dueSoonDays: Int): Secti
 /** How many pieces of equipment there are. */
 @Composable
 private fun equipmentSummary(count: Int): SectionSummary = SectionSummary(
-    intro = stringResource(
-        Res.string.start_summary_intro_end,
-        if (count == 0) {
-            stringResource(Res.string.objects_empty)
-        } else {
-            pluralStringResource(Res.plurals.equipment_count, count, count)
-        },
-    ),
+    intro = if (count == 0) {
+        stringResource(Res.string.objects_empty)
+    } else {
+        pluralStringResource(Res.plurals.equipment_count, count, count)
+    },
     bullets = emptyList(),
 )
 
@@ -657,7 +672,7 @@ private fun choresSummary(summary: ChoresSummary, dueSoonDays: Int): SectionSumm
         },
     )
     val intro = if (bullets.isEmpty()) {
-        stringResource(Res.string.start_summary_intro_end, text)
+        text
     } else {
         stringResource(Res.string.start_summary_intro_list, text)
     }

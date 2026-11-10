@@ -56,6 +56,7 @@ import com.patrickzedler.grocy.core.forms.emptyListItem
 import com.patrickzedler.grocy.core.forms.labelled
 import com.patrickzedler.grocy.core.forms.searchItem
 import com.patrickzedler.grocy.core.forms.showSearchAtTop
+import com.patrickzedler.grocy.core.forms.showsPullIndicator
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalField
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalGrouping
 import com.patrickzedler.grocy.core.model.chores.ChoresJournalSortField
@@ -181,7 +182,7 @@ internal fun ChoresJournalScreen(
         menuItems = menuItems,
         pane = ScreenPane.Detail.takeIf { isBesideList },
         snackbarHostState = snackbarHostState,
-        isRefreshing = refresh.isRefreshing && state?.hasExecutions == true,
+        isRefreshing = refresh.showsPullIndicator(state?.hasExecutions == true),
         onRefresh = viewModel::refresh,
         listState = listState,
         itemSpacing = ListItemDefaults.SegmentedGap,

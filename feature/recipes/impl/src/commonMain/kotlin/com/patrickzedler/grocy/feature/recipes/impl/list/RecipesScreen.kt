@@ -43,6 +43,7 @@ import com.patrickzedler.grocy.core.design.component.insetItems
 import com.patrickzedler.grocy.core.forms.emptyListItem
 import com.patrickzedler.grocy.core.forms.searchItem
 import com.patrickzedler.grocy.core.forms.showSearchAtTop
+import com.patrickzedler.grocy.core.forms.showsPullIndicator
 import com.patrickzedler.grocy.core.model.recipes.RecipesView
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_add
@@ -134,7 +135,10 @@ internal fun RecipesScreen(
             listState = listState,
             snackbarHostState = snackbarHostState,
             // The first download shows its own indicator in the empty list
-            isRefreshing = refresh.isRefreshing && current?.hasRecipes == true,
+            isRefreshing = refresh.showsPullIndicator(
+                current?.hasRecipes == true,
+                storedByStart = true,
+            ),
             onRefresh = viewModel::refresh,
             // Every recipe is an item of its group, the group spacing follows the filters
             itemSpacing = ListItemDefaults.SegmentedGap,

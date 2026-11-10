@@ -64,6 +64,7 @@ import com.patrickzedler.grocy.core.forms.label
 import com.patrickzedler.grocy.core.forms.labelled
 import com.patrickzedler.grocy.core.forms.searchItem
 import com.patrickzedler.grocy.core.forms.showSearchAtTop
+import com.patrickzedler.grocy.core.forms.showsPullIndicator
 import com.patrickzedler.grocy.core.model.equipment.Equipment
 import com.patrickzedler.grocy.core.model.equipment.EquipmentField
 import com.patrickzedler.grocy.core.model.equipment.EquipmentGrouping
@@ -164,7 +165,10 @@ internal fun EquipmentScreen(
         listState = listState,
         snackbarHostState = snackbarHostState,
         // The first download shows its own indicator in the empty list
-        isRefreshing = refresh.isRefreshing && state?.hasEquipment == true,
+        isRefreshing = refresh.showsPullIndicator(
+            state?.hasEquipment == true,
+            storedByStart = true,
+        ),
         onRefresh = viewModel::refresh,
         itemSpacing = ListItemDefaults.SegmentedGap,
         floatingToolbar = { scrollBehavior, toolbarModifier ->

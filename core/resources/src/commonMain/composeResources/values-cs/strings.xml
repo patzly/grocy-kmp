@@ -43,7 +43,7 @@
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy spravuje potraviny a domácnost na vašem vlastním serveru Grocy: %1$s</string>
-  <string name="msg_feedback">Máte přání, dotazy nebo jste narazili na chybu? Ozvěte se nám, rádi pomůžeme!\nJinak nás moc potěší pěkné hodnocení v Play Store.</string>
+  <string name="msg_feedback">Máte přání, dotazy nebo jste narazili na chybu? Ozvěte se mi, rád pomůžu!\nJinak mě moc potěší pěkné hodnocení v Play Store.</string>
   <string name="msg_unlock">Podpořit vývoj</string>
   <string name="msg_unlock_description">Odemykací aplikace je drobný nákup na Google Play, kterým podpoříte vývoj Grocy. Po její instalaci můžete také přepnout na skener čárových kódů ML Kit. Také naskenuje data spotřeby vytištěná na obalech, takže je už nemusíte luštit.</string>
 
@@ -166,7 +166,6 @@
     <item quantity="other">Máte na skladě %1$d produktů v hodnotě %2$s</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s:</string>
-  <string name="start_summary_intro_end">%1$s.</string>
   <string name="start_list_join">%1$s, %2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="one">%1$d produkt je třeba spotřebovat %2$s.</item>
@@ -1040,6 +1039,8 @@
   <string name="shopping_list_item_not_booked">%1$s nebylo přidáno do zásob. Přeskočit a pokračovat další položkou, nebo zrušit?</string>
   <string name="booking_shopping_list_hint">Zkontrolujte údaje a potvrďte nákup. Položka se pak odebere z nákupního seznamu.</string>
   <string name="shopping_mode">Nákupní režim</string>
+  <string name="shopping_list_unknown_as_note">Ukládat neznámé produkty jako poznámky</string>
+  <string name="shopping_list_unknown_as_note_hint">Pokud zadaný text neodpovídá žádnému produktu, položka se uloží s tímto textem jako poznámkou, takže stačí napsat a uložit</string>
   <string name="shopping_mode_settings">Nastavení nákupního režimu</string>
   <string name="shopping_mode_auto_sync">Automatická synchronizace</string>
   <string name="shopping_mode_auto_sync_hint">Pravidelně znovu načítá seznam, aby všichni, kdo nakupují společně, viděli, co ostatní odškrtli</string>
@@ -1555,7 +1556,8 @@ Po zaškrtnutí nebude brán zřetel na množství produktu v nákupním seznamu
   <string name="sessions_open">Zobrazit relace</string>
   <string name="sessions_profile">Přihlášen jako %1$s</string>
   <string name="sessions_switch_next">Přepnout na další relaci</string>
-  <string name="settings_server_config">Aktuální konfigurace serveru</string>
+  <string name="settings_server_config">Konfigurace serveru</string>
+  <string name="settings_server_grocy">Server Grocy</string>
   <string name="settings_server_config_enabled">Zapnuto</string>
   <string name="settings_server_config_disabled">Vypnuto</string>
   <string name="settings_server_config_values">Hodnoty</string>

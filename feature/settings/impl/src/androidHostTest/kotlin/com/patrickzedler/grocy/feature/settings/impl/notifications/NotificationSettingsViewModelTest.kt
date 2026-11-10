@@ -190,6 +190,20 @@ class NotificationSettingsViewModelTest {
     }
 
     @Test
+    fun kindsFollowTheStartScreensDefaultOrder() {
+        assertEquals(
+            listOf(
+                NotificationKind.STOCK,
+                NotificationKind.MEAL_PLAN,
+                NotificationKind.CHORES,
+                NotificationKind.TASKS,
+                NotificationKind.BATTERIES,
+            ),
+            shownNotificationKinds(ServerConfig()),
+        )
+    }
+
+    @Test
     fun batteriesHideWithTheirFeatureAndAreAssignedToNobody() {
         val shown = shownNotificationKinds(ServerConfig(batteries = false))
 

@@ -26,7 +26,9 @@ widgets, whose look the project owner chose, with Grocy's data and the app's col
   like Google ("5 Thu").
 - Shopping list (`ShoppingListWidget`): what is left to buy on one list by name
   (`widgetShoppingItemsOf`), amount and note below. The title is the list's name and starts the
-  shopping mode with it, a tap on an item opens its form, "+" adds to the list. Which list is the
+  shopping mode with it, a tap on an item opens its form, the checkbox at its end checks it off
+  (`CheckOffShoppingItemAction`, `ShoppingListRepository.setDone`: offline too, queued like the
+  app's, the item then leaves the widget), "+" adds to the list. Which list is the
   user's choice for each widget (`ShoppingListIdKey`, Glance's state of the widget):
   `ShoppingListWidgetConfigureActivity` floats over the home screen when it is placed (without a
   choice it is not placed) and from the widget's settings (`reconfigurable`). The activity is

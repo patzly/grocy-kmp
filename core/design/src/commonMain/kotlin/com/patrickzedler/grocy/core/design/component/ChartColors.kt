@@ -79,6 +79,36 @@ internal const val CHART_MIN_CHROMA = 36.0
 private const val GRAPHIC_CONTRAST = 3.0
 private const val HIGH_GRAPHIC_CONTRAST = 4.5
 
+/** Series told apart by hue alone and the color of what is left over ([other]). */
+data class EqualToneChartColors(val series: List<Color>, val other: Color)
+
+/**
+ * Colors of a chart whose parts are meant to weigh the same: every color has primary's tone, in
+ * grayscale they are one gray. A list beside the chart has to tell the parts apart for whoever
+ * cannot tell these hues apart.
+ */
+@Composable
+fun rememberEqualToneChartColors(): EqualToneChartColors {
+    val primary = MaterialTheme.colorScheme.primary
+    return remember(primary) { equalToneChartColorsOf(primary) }
+}
+
+/** Primary's chroma and tone around the whole hue circle; [other] has its tone without color. */
+internal fun equalToneChartColorsOf(primary: Color): EqualToneChartColors {
+    val hct = primary.toHct()
+    return EqualToneChartColors(
+        series = List(CHART_COLOR_COUNT) { position ->
+            val hue = (hct.hue + position * EQUAL_TONE_HUE_STEP) % FULL_HUE_CIRCLE
+            Hct.from(hue, hct.chroma, hct.tone).toColor()
+        },
+        other = Hct.from(hct.hue, 0.0, hct.tone).toColor(),
+    )
+}
+
+// 3 of 8 parts of the circle: all hues get used and neighbours are far apart, also last and first
+private const val EQUAL_TONE_HUE_STEP = 135.0
+private const val FULL_HUE_CIRCLE = 360.0
+
 /** The shape of a series' points, so series differ without telling their colors apart. */
 enum class ChartMarker { Circle, Square, Diamond, Triangle }
 

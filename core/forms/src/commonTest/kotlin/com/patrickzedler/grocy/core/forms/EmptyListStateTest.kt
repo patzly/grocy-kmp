@@ -25,4 +25,16 @@ class EmptyListStateTest {
     fun aFilteredListHasItsDataAlready() {
         assertTrue(isEmptyListKnown(true, storedByStart = false, isEverythingDownloaded = false))
     }
+
+    @Test
+    fun anEmptyListIsKnownOnceItsOwnDownloadWorked() {
+        assertTrue(
+            isEmptyListKnown(
+                false,
+                storedByStart = false,
+                isEverythingDownloaded = false,
+                loadedOnce = true,
+            ),
+        )
+    }
 }

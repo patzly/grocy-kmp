@@ -43,6 +43,7 @@ import com.patrickzedler.grocy.core.forms.ItemButtons
 import com.patrickzedler.grocy.core.forms.actionMessage
 import com.patrickzedler.grocy.core.forms.emptyListItem
 import com.patrickzedler.grocy.core.forms.filterGapItem
+import com.patrickzedler.grocy.core.forms.showsPullIndicator
 import com.patrickzedler.grocy.core.model.stock.DueStatus
 import com.patrickzedler.grocy.core.model.stock.StockEntry
 import com.patrickzedler.grocy.core.model.text.formatCurrency
@@ -130,7 +131,7 @@ internal fun StockEntriesScreen(
         navigationIcon = { NavigateBackButton(onClick = onBackClick) },
         menuItems = menuItems,
         snackbarHostState = snackbarHostState,
-        isRefreshing = refresh.isRefreshing && state?.hasEntries == true,
+        isRefreshing = refresh.showsPullIndicator(state?.hasEntries == true),
         onRefresh = viewModel::refresh,
         itemSpacing = ListItemDefaults.SegmentedGap,
     ) {

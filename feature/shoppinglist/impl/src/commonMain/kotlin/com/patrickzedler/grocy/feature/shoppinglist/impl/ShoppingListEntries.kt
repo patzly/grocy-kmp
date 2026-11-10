@@ -140,6 +140,10 @@ fun EntryProviderScope<NavKey>.shoppingListEntries(
                         dependencies.scannerForms
                             .fieldState(ScannerForm.SHOPPING_LIST_ITEM, hasValue = it)
                     },
+                    unknownProductAsNote = {
+                        dependencies.shoppingModeSettings.settings.value
+                            ?.unknownProductAsNote == true
+                    },
                 )
             },
             frame = formFrame(

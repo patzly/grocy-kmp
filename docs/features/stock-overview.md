@@ -76,7 +76,8 @@ Stock overview (`stockoverview/` of `feature:stock`, it opens the product overvi
   `/stockreports/spendings`. Chips: "Group by" product, product group or store; the date
   range with Grocy's presets (today ... last year, default this month, `SpendingsRange`) and
   "Custom range" with Material's date range picker; the product group (All, the groups,
-  Ungrouped) only while grouped by product; "Clear filter". Below a doughnut of the totals with
+  Ungrouped) only while grouped by product; "Clear filter". Below a doughnut (slices with the extra small corner radius, 4dp gaps, all colors of primary's tone and chroma around the hue
+circle, `rememberEqualToneChartColors`; at least 6 degrees per slice, `sliceSweeps`) of the totals with
   the total in the middle, then Grocy's table as list (name, product group, total, share).
 - Grocy's API does not expose its `products_price_history` view, so the app rebuilds it from
   the stock journal (`pricedPurchasesOf`, core:model, after migrations 0224/0230/0239): purchases,

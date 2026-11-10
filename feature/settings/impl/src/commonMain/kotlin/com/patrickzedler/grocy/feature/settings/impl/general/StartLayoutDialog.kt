@@ -1,7 +1,6 @@
 package com.patrickzedler.grocy.feature.settings.impl.general
 
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +29,7 @@ import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -45,10 +45,13 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.LocalPinnableContainer
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.patrickzedler.grocy.core.design.component.AppBarMenuItem
@@ -94,7 +97,7 @@ private const val KEY_SHOWN = "shown"
 private const val KEY_AVAILABLE = "available"
 
 /** What the dialog's one list shows, so a row dragged from one group to the other stays itself. */
-private sealed interface DialogRow {
+internal sealed interface DialogRow {
     val key: String
 
     data object Reset : DialogRow {
@@ -113,17 +116,53 @@ private sealed interface DialogRow {
     }
 }
 
-private fun dialogRowsOf(draft: StartLayoutDraft): List<DialogRow> = buildList {
+/** A row held over the available rows: where it stands among them while it is held. */
+internal data class HeldInAvailable(val key: String, val slot: Int)
+
+/**
+ * The rows of [draft], with the [held] row following the finger through the available rows, so
+ * it never leaves the screen; released there it returns to its place among them or is removed.
+ */
+internal fun dialogRowsOf(
+    draft: StartLayoutDraft,
+    held: HeldInAvailable? = null,
+): List<DialogRow> = buildList {
+    val row = (draft.shown + draft.available).firstOrNull { it.key == held?.key }
+    val shown = draft.shown.filter { it != row }
+    val available = draft.available.filter { it != row }.let { others ->
+        if (row == null || held == null) {
+            others
+        } else {
+            others.take(held.slot) + row + others.drop(held.slot)
+        }
+    }
     add(DialogRow.Reset)
     add(DialogRow.Heading(KEY_SHOWN))
-    draft.shown.forEachIndexed { index, row ->
-        add(DialogRow.Movable(row, index, draft.shown.size, isShown = true))
+    shown.forEachIndexed { index, item ->
+        add(DialogRow.Movable(item, index, shown.size, isShown = true))
     }
     add(DialogRow.Heading(KEY_AVAILABLE))
-    val available = draft.available
-    available.forEachIndexed { index, row ->
-        add(DialogRow.Movable(row, index, available.size, isShown = false))
+    available.forEachIndexed { index, item ->
+        add(DialogRow.Movable(item, index, available.size, isShown = false))
     }
+}
+
+/**
+ * Pixels per second to scroll the list for a row held at [top]: none until it reaches the [edge]
+ * nearest the viewport's end, then rising gently to [maxSpeed], so a row can still be placed there.
+ */
+internal fun edgeScrollSpeed(
+    top: Float,
+    rowSize: Int,
+    viewportStart: Int,
+    viewportEnd: Int,
+    edge: Float,
+    maxSpeed: Float,
+): Float {
+    val intoStart = (viewportStart + edge - top) / edge
+    val intoEnd = (top + rowSize - (viewportEnd - edge)) / edge
+    fun speedOf(into: Float) = into.coerceIn(0f, 1f).let { it * it * maxSpeed }
+    return if (intoStart > intoEnd) 0f - speedOf(intoStart) else speedOf(intoEnd)
 }
 
 private fun draftSaver(sections: List<StartSection>) = Saver<StartLayoutDraft, String>(
@@ -162,90 +201,160 @@ internal fun StartLayoutDialog(
 private class RowDrag(
     private val listState: LazyListState,
     private val haptic: HapticFeedback,
+    private val density: Density,
     var draft: StartLayoutDraft,
     var onDraftChange: (StartLayoutDraft) -> Unit,
 ) {
     var key by mutableStateOf<String?>(null)
         private set
 
-    private var top by mutableFloatStateOf(0f)
+    // Where the finger holds the row, it may leave the list while the row stays visible in it
+    private var heldTop by mutableFloatStateOf(0f)
+    private var heldSize = 0
+    private var pickedUpTop = 0f
+    private var draftBefore = draft
+    private var mayScrollUp = false
+    private var mayScrollDown = false
+
+    /** Where the row stands among the available rows while it is held over them. */
+    var held by mutableStateOf<HeldInAvailable?>(null)
+        private set
 
     private fun item(key: String?) = listState.layoutInfo.visibleItemsInfo.firstOrNull {
         it.key == key
     }
 
+    private val top: Float
+        get() {
+            val info = listState.layoutInfo
+            val half = heldSize / 2f
+            return heldTop.coerceIn(
+                info.viewportStartOffset - half,
+                (info.viewportEndOffset - half).coerceAtLeast(info.viewportStartOffset - half),
+            )
+        }
+
     /** How far the row is held away from its place in the list. */
     fun translationOf(rowKey: String): Float =
         if (rowKey == key) item(rowKey)?.let { top - it.offset } ?: 0f else 0f
 
-    private val isOverAvailable: Boolean
-        get() {
-            val row = item(key) ?: return false
-            val heading = item(KEY_AVAILABLE) ?: return false
-            return top + row.size / 2f >= heading.offset
-        }
-
     fun start(rowKey: String) {
-        top = item(rowKey)?.offset?.toFloat() ?: return
+        val row = item(rowKey) ?: return
+        heldTop = row.offset.toFloat()
+        heldSize = row.size
+        pickedUpTop = heldTop
+        draftBefore = draft
+        held = HeldInAvailable(rowKey, draft.available.indexOfFirst { it.key == rowKey })
+            .takeIf { !draft.isShown(rowKey) }
+        mayScrollUp = false
+        mayScrollDown = false
         key = rowKey
         haptic.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
     }
 
     fun moveBy(amount: Float) {
-        top += amount
+        heldTop += amount
+        // Only towards where it was carried: a row picked up at an edge must not start the list
+        val slop = with(density) { ScrollArmDistance.toPx() }
+        if (heldTop < pickedUpTop - slop) mayScrollUp = true
+        if (heldTop > pickedUpTop + slop) mayScrollDown = true
         follow()
     }
 
     /** Keeps the held row in its place while the list scrolls below it, at the list's ends. */
     suspend fun scrollAtEnds() {
+        var previous = withFrameNanos { it }
         while (key != null) {
-            withFrameNanos {}
-            val row = item(key) ?: continue
+            val now = withFrameNanos { it }
+            val seconds = (now - previous) / NANOS_PER_SECOND
+            previous = now
             val info = listState.layoutInfo
-            val speed = when {
-                top < info.viewportStartOffset + EDGE_PX -> -SCROLL_PX
-                top + row.size > info.viewportEndOffset - EDGE_PX -> SCROLL_PX
-                else -> 0f
+            val speed = edgeScrollSpeed(
+                top = top,
+                rowSize = heldSize,
+                viewportStart = info.viewportStartOffset,
+                viewportEnd = info.viewportEndOffset,
+                edge = with(density) { ScrollEdge.toPx() },
+                maxSpeed = with(density) { MaxScrollSpeed.toPx() },
+            )
+            val isAllowed = if (speed < 0f) mayScrollUp else mayScrollDown
+            if (speed != 0f && isAllowed && listState.dispatchRawDelta(speed * seconds) != 0f) {
+                follow()
             }
-            if (speed != 0f && listState.scrollBy(speed) != 0f) follow()
         }
     }
 
+    private fun isBelowAvailableHeading(center: Float, rows: List<DialogRow>): Boolean {
+        val heading = item(KEY_AVAILABLE)
+            ?: return listState.firstVisibleItemIndex >
+                rows.indexOfFirst { it.key == KEY_AVAILABLE }
+        return center >= heading.offset + heading.size / 2f
+    }
+
+    private fun middlesOf(others: List<String>): Map<String, Float> =
+        others.mapNotNull { other ->
+            item(other)?.let { other to it.offset + it.size / 2f }
+        }.toMap()
+
     private fun follow() {
         val current = key ?: return
-        val row = item(current) ?: return
-        val new = if (isOverAvailable) {
-            // Stays a row of the list until released, removing it now would end the gesture
-            if (draft.isShown(current)) draft.placed(current, draft.shown.lastIndex) else draft
-        } else {
-            val others = draft.shown.map { it.key }.filter { it != current }
-            val middles = others.mapNotNull { other ->
-                item(other)?.let { other to it.offset + it.size / 2f }
-            }.toMap()
-            val index = dropIndex(others, middles, top + row.size / 2f)
-                ?: if (others.isEmpty()) 0 else return
-            draft.placed(current, index)
+        val rows = dialogRowsOf(draft, held)
+        // Positions from before the last change would move the row a second time
+        val laidOut = item(current)?.index
+        if (laidOut != null && laidOut != rows.indexOfFirst { it.key == current }) return
+        val center = top + heldSize / 2f
+        if (isBelowAvailableHeading(center, rows)) {
+            val others = draft.available.map { it.key }.filter { it != current }
+            val slot = dropIndex(others, middlesOf(others), center) ?: held?.slot ?: 0
+            update(draft, HeldInAvailable(current, slot))
+            return
         }
-        if (new != draft) {
-            draft = new
-            onDraftChange(new)
-            haptic.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
-        }
+        val others = draft.shown.map { it.key }.filter { it != current }
+        val index = dropIndex(others, middlesOf(others), center)
+            ?: if (others.isEmpty()) 0 else return
+        update(draft.placed(current, index), held = null)
+    }
+
+    private fun update(new: StartLayoutDraft, held: HeldInAvailable?) {
+        if (new == draft && held == this.held) return
+        // The list would otherwise follow its first row by key and push the held row out of view
+        listState.requestScrollToItem(
+            listState.firstVisibleItemIndex,
+            listState.firstVisibleItemScrollOffset,
+        )
+        // Going on within the available rows changes nothing that will be saved
+        val isTick = new != draft || (held == null) != (this.held == null)
+        this.held = held
+        draft = new
+        onDraftChange(new)
+        if (isTick) haptic.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
     }
 
     fun end() {
         val current = key ?: return
-        if (isOverAvailable && draft.isShown(current)) {
+        if (held != null && draft.isShown(current)) {
             draft = draft.removed(current)
             onDraftChange(draft)
         }
+        held = null
         key = null
         haptic.performHapticFeedback(HapticFeedbackType.GestureEnd)
     }
 
+    /** The gesture was taken away, e.g. by the system: nothing the user did not finish counts. */
+    fun cancel() {
+        if (key == null) return
+        draft = draftBefore
+        onDraftChange(draft)
+        held = null
+        key = null
+    }
+
     private companion object {
-        const val EDGE_PX = 96f
-        const val SCROLL_PX = 12f
+        const val NANOS_PER_SECOND = 1_000_000_000f
+        val ScrollEdge = 56.dp
+        val MaxScrollSpeed = 320.dp
+        val ScrollArmDistance = 12.dp
     }
 }
 
@@ -260,7 +369,10 @@ private fun StartLayoutDialogContent(
 ) {
     val haptic = LocalHapticFeedback.current
     val listState = rememberLazyListState()
-    val drag = remember(listState) { RowDrag(listState, haptic, draft, onDraftChange) }
+    val density = LocalDensity.current
+    val drag = remember(listState, density) {
+        RowDrag(listState, haptic, density, draft, onDraftChange)
+    }
     drag.draft = draft
     drag.onDraftChange = onDraftChange
     LaunchedEffect(drag.key) { drag.scrollAtEnds() }
@@ -299,7 +411,7 @@ private fun StartLayoutDialogContent(
             contentPadding = PaddingValues(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
         ) {
-            items(dialogRowsOf(draft), key = { it.key }) { row ->
+            items(dialogRowsOf(draft, drag.held), key = { it.key }) { row ->
                 when (row) {
                     DialogRow.Reset -> ResetButton(
                         enabled = draft.toLayout() != defaultDraft.toLayout(),
@@ -359,6 +471,12 @@ private fun LazyItemScope.MovableRow(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isDragged = drag.key == row.key
+    // Stays composed wherever the list scrolls it, losing it would end the gesture
+    val pinnableContainer = LocalPinnableContainer.current
+    DisposableEffect(isDragged, pinnableContainer) {
+        val handle = if (isDragged) pinnableContainer?.pin() else null
+        onDispose { handle?.release() }
+    }
     val moveUp = stringResource(Res.string.start_layout_move_up)
     val moveDown = stringResource(Res.string.start_layout_move_down)
     val remove = stringResource(Res.string.start_layout_remove)
@@ -488,10 +606,9 @@ private fun DragHandle(
             .clickCursor()
             .padding(end = 4.dp)
             .pointerInput(key) {
-                fun finish() {
+                fun release() {
                     start?.let { interactionSource.tryEmit(DragInteraction.Stop(it)) }
                     start = null
-                    drag.end()
                 }
                 detectDragGestures(
                     onDragStart = {
@@ -500,8 +617,14 @@ private fun DragHandle(
                         interactionSource.tryEmit(interaction)
                         drag.start(key)
                     },
-                    onDragEnd = ::finish,
-                    onDragCancel = ::finish,
+                    onDragEnd = {
+                        release()
+                        drag.end()
+                    },
+                    onDragCancel = {
+                        release()
+                        drag.cancel()
+                    },
                     onDrag = { change, amount ->
                         change.consume()
                         drag.moveBy(amount.y)

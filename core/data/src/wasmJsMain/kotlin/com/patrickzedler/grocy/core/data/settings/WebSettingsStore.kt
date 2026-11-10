@@ -151,6 +151,8 @@ class WebSettingsStore internal constructor(
             syncIntervalSeconds = storage.get(SHOPPING_MODE_SYNC_INTERVAL)?.toIntOrNull(),
             keepScreenOn = storage.get(SHOPPING_MODE_KEEP_SCREEN_ON)?.toBooleanStrictOrNull(),
             doneItemsLast = storage.get(SHOPPING_MODE_DONE_LAST)?.toBooleanStrictOrNull(),
+            unknownProductAsNote = storage.get(SHOPPING_LIST_UNKNOWN_AS_NOTE)
+                ?.toBooleanStrictOrNull(),
         ),
     )
 
@@ -162,6 +164,7 @@ class WebSettingsStore internal constructor(
         storage.set(SHOPPING_MODE_SYNC_INTERVAL, settings.syncIntervalSeconds.toString())
         storage.set(SHOPPING_MODE_KEEP_SCREEN_ON, settings.keepScreenOn.toString())
         storage.set(SHOPPING_MODE_DONE_LAST, settings.doneItemsLast.toString())
+        storage.set(SHOPPING_LIST_UNKNOWN_AS_NOTE, settings.unknownProductAsNote.toString())
         shoppingModeSettingsState.value = settings
     }
 
@@ -353,6 +356,7 @@ class WebSettingsStore internal constructor(
         const val SHOPPING_MODE_SYNC_INTERVAL = "grocy.shoppingModeSyncInterval"
         const val SHOPPING_MODE_KEEP_SCREEN_ON = "grocy.shoppingModeKeepScreenOn"
         const val SHOPPING_MODE_DONE_LAST = "grocy.shoppingModeDoneLast"
+        const val SHOPPING_LIST_UNKNOWN_AS_NOTE = "grocy.shoppingListUnknownAsNote"
         const val RECIPES_FIELDS = "grocy.recipesFields"
         const val RECIPES_GROUPING = "grocy.recipesGrouping"
         const val RECIPES_SORT = "grocy.recipesSort"

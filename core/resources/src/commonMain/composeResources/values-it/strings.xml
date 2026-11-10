@@ -28,11 +28,11 @@
   <string name="action_recommend">Consiglia</string>
   <string name="action_recommend_description">Parla di Grocy ai tuoi amici</string>
   <string name="action_rate">Valuta su Google Play</string>
-  <string name="action_rate_description">Motiva gli sviluppatori</string>
+  <string name="action_rate_description">Motiva lo sviluppatore</string>
   <string name="action_support">Sostieni lo sviluppo</string>
   <string name="action_support_description">Acquista l’app di sblocco</string>
   <string name="action_email">Invia email</string>
-  <string name="action_email_description">Contatta gli sviluppatori</string>
+  <string name="action_email_description">Contatta lo sviluppatore</string>
   <string name="action_issue">Apri una nuova segnalazione su GitHub</string>
   <string name="action_issue_description">Segnala bug o richiedi una funzione</string>
   <string name="action_send_feedback">Invia feedback</string>
@@ -43,7 +43,7 @@
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy tiene traccia della spesa e della casa sul tuo server Grocy: %1$s</string>
-  <string name="msg_feedback">Hai desideri, domande o hai trovato un errore? Contattaci, saremo felici di aiutarti.\nAltrimenti ci farebbe molto piacere una bella recensione sul Play Store.</string>
+  <string name="msg_feedback">Hai desideri, domande o hai trovato un errore? Contattami, sarò felice di aiutarti.\nAltrimenti mi farebbe molto piacere una bella recensione sul Play Store.</string>
   <string name="msg_unlock">Sostieni lo sviluppo</string>
   <string name="msg_unlock_description">L’app di sblocco è un piccolo acquisto su Google Play che sostiene lo sviluppo di Grocy. Una volta installata, puoi anche passare allo scanner di codici a barre di ML Kit. Inoltre scansiona le date di scadenza stampate sulle confezioni, così non devi più decifrarle.</string>
 
@@ -164,7 +164,6 @@
     <item quantity="other">Hai %1$d prodotti in dispensa per un valore di %2$s</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s:</string>
-  <string name="start_summary_intro_end">%1$s.</string>
   <string name="start_list_join">%1$s, %2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="one">%1$d prodotto scade %2$s.</item>
@@ -1009,6 +1008,8 @@
   <string name="shopping_list_item_not_booked">%1$s non è stato aggiunto alla dispensa. Saltarlo e continuare con il prossimo elemento, o annullare?</string>
   <string name="booking_shopping_list_hint">Controlla i dati e conferma l'acquisto. L'elemento viene poi rimosso dalla lista della spesa.</string>
   <string name="shopping_mode">Modalità spesa</string>
+  <string name="shopping_list_unknown_as_note">Salva i prodotti sconosciuti come note</string>
+  <string name="shopping_list_unknown_as_note_hint">Se ciò che hai digitato non corrisponde a nessun prodotto, l’elemento viene salvato con quel testo come nota, così basta digitare e salvare</string>
   <string name="shopping_mode_settings">Impostazioni della modalità spesa</string>
   <string name="shopping_mode_auto_sync">Sincronizzazione automatica</string>
   <string name="shopping_mode_auto_sync_hint">Ricarica regolarmente la lista, così chi fa la spesa insieme vede cosa hanno spuntato gli altri</string>
@@ -1498,7 +1499,8 @@
   <string name="sessions_open">Mostra sessioni</string>
   <string name="sessions_profile">Accesso effettuato come %1$s</string>
   <string name="sessions_switch_next">Passa alla sessione successiva</string>
-  <string name="settings_server_config">Configurazione attuale del server</string>
+  <string name="settings_server_config">Configurazione del server</string>
+  <string name="settings_server_grocy">Server Grocy</string>
   <string name="settings_server_config_enabled">Attivate</string>
   <string name="settings_server_config_disabled">Disattivate</string>
   <string name="settings_server_config_values">Valori</string>

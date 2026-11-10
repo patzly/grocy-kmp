@@ -117,9 +117,11 @@ fun EntryProviderScope<NavKey>.settingsEntries(
                     demoServerSwitcher = dependencies.demoServerSwitcher(),
                 )
             },
+            certificatesViewModel = certificatesViewModel(dependencies),
             menuViewModel = settingsMenuViewModel(dependencies),
             menuActions = menuActions,
             onBackClick = navigator::goBack,
+            onGrocySettingsClick = { navigator.navigate(GrocySettingsRoute) },
             onRestart = dependencies::restartApp,
             pane = ScreenPane.Detail.takeIf { showsDetailBesideList() },
         )
@@ -211,13 +213,7 @@ fun EntryProviderScope<NavKey>.settingsEntries(
 
     entry<CertificateSettingsRoute>(metadata = detailPaneMetadata(SettingsRoute)) {
         CertificatesScreen(
-            viewModel = viewModel {
-                CertificatesViewModel(
-                    repository = dependencies.certificateRepository,
-                    server = dependencies.serverRepository.server,
-                    authRepository = dependencies.authRepository,
-                )
-            },
+            viewModel = certificatesViewModel(dependencies),
             menuViewModel = settingsMenuViewModel(dependencies),
             menuActions = menuActions,
             onBackClick = navigator::goBack,
@@ -299,25 +295,35 @@ internal val SettingsCategory.route: DetailRoute
     get() = when (this) {
         SettingsCategory.GENERAL -> GeneralSettingsRoute
         SettingsCategory.SERVER -> ServerSettingsRoute
-        SettingsCategory.GROCY -> GrocySettingsRoute
         SettingsCategory.NETWORK -> NetworkSettingsRoute
-        SettingsCategory.CERTIFICATES -> CertificateSettingsRoute
         SettingsCategory.BEHAVIOR -> BehaviorSettingsRoute
         SettingsCategory.SCANNER -> ScannerSettingsRoute
         SettingsCategory.NOTIFICATIONS -> NotificationSettingsRoute
-        SettingsCategory.SHOPPING_MODE -> ShoppingModeSettingsRoute()
+        SettingsCategory.SHOPPING_LIST -> ShoppingModeSettingsRoute()
     }
 
 /** The category whose page [route] is or was opened from, null for other routes. */
 internal fun settingsCategoryOf(route: NavKey): SettingsCategory? = when {
-    route is StockSettingsRoute && route.inSettings -> SettingsCategory.GROCY
-    route is GrocySettingsPageRoute || route == UserSettingsRoute -> SettingsCategory.GROCY
+    route is StockSettingsRoute && route.inSettings -> SettingsCategory.SERVER
+    route is GrocySettingsPageRoute -> SettingsCategory.SERVER
+    route == GrocySettingsRoute || route == UserSettingsRoute -> SettingsCategory.SERVER
+    route == CertificateSettingsRoute -> SettingsCategory.SERVER
     else -> SettingsCategory.entries.firstOrNull { it.route == route }
 }
 
 @Composable
 private fun settingsMenuViewModel(dependencies: SettingsDependencies): SettingsMenuViewModel =
     viewModel { SettingsMenuViewModel(dependencies.unlockRepository) }
+
+@Composable
+private fun certificatesViewModel(dependencies: SettingsDependencies): CertificatesViewModel =
+    viewModel {
+        CertificatesViewModel(
+            repository = dependencies.certificateRepository,
+            server = dependencies.serverRepository.server,
+            authRepository = dependencies.authRepository,
+        )
+    }
 
 private fun SettingsDependencies.demoServerSwitcher() =
     DemoServerSwitcher(authRepository, serverRepository)

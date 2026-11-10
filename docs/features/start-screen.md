@@ -68,7 +68,13 @@ The order and groups are the user's (General settings, "Start screen layout"): `
 starts a new group. `StartLayoutDialog` edits a `StartLayoutDraft` in one `LazyColumn`, so a held row
 survives going from "On the start screen" to "Available"; the drag handle feeds `DragInteraction`s into
 Material's `SegmentedListItem`, which takes its dragged shape, color and elevation from them. The first
-available row is always a divider. Dropped on the available rows a row is removed. Up, down and remove
+available row is always a divider. A row held below the available heading already stands among those
+rows at the finger (`dialogRowsOf`, `HeldInAvailable`), so it never leaves the screen, and is removed
+when released; a cancelled gesture restores the draft. What keeps a
+drag reliable: `requestScrollToItem` before every change (the list otherwise follows its first row by
+key and pushes the held row out of composition), the held row is pinned, no second move before the
+layout of the last one, and the list only scrolls towards where the row was carried, ramping up near
+its edges (`edgeScrollSpeed`). Up, down and remove
 are also in each row's menu and accessibility actions. Sections the server hides are not offered and
 keep their place (`withHiddenFrom`). The user's entities stay right above the master data, at the end
 without them. A section a future version adds stays available until added.
@@ -81,6 +87,9 @@ away and brings the next one from above, like the account particle of Google's a
 it opens that session. Swipes go round in a fixed order (`nextSession`), the last use would only ever
 lead back. The same dialog opens from "Saved sessions" of the login. See
 `docs/architecture/storage-and-variants.md`.
+
+A section whose data is not there yet (e.g. right after switching accounts) shows what it says when
+empty (`placeholderOf`), so a text always stands between its title and buttons.
 
 A section without data says so once `markEverythingDownloaded` recorded that the start screen's
 download worked (`server_values`, gone with the data). Then every list it covers

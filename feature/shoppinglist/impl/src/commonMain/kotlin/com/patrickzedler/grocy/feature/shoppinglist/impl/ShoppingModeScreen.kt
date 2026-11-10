@@ -52,6 +52,7 @@ import com.patrickzedler.grocy.core.forms.ChipSize
 import com.patrickzedler.grocy.core.forms.LocalChipSize
 import com.patrickzedler.grocy.core.forms.emptyListItem
 import com.patrickzedler.grocy.core.forms.filterGapItem
+import com.patrickzedler.grocy.core.forms.showsPullIndicator
 import com.patrickzedler.grocy.core.model.shoppinglist.ShoppingListItemSync
 import com.patrickzedler.grocy.core.model.text.formatCurrency
 import com.patrickzedler.grocy.core.resources.Res
@@ -134,7 +135,7 @@ internal fun ShoppingModeScreen(
         ),
         snackbarHostState = snackbarHostState,
         // The first download shows its own indicator in the empty list
-        isRefreshing = refresh.isRefreshing && current?.hasData == true,
+        isRefreshing = refresh.showsPullIndicator(current?.hasData == true, storedByStart = true),
         onRefresh = viewModel::refresh,
         itemSpacing = ListItemDefaults.SegmentedGap,
     ) {

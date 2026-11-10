@@ -28,11 +28,11 @@
   <string name="action_recommend">Tavsiye et</string>
   <string name="action_recommend_description">Grocy’yi arkadaşlarınıza anlatın</string>
   <string name="action_rate">Google Play’de puan ver</string>
-  <string name="action_rate_description">Geliştiricileri motive edin</string>
+  <string name="action_rate_description">Geliştiriciyi motive edin</string>
   <string name="action_support">Geliştirmeyi destekle</string>
   <string name="action_support_description">Kilit açma uygulamasını satın alın</string>
   <string name="action_email">E-posta gönder</string>
-  <string name="action_email_description">Geliştiricilerle iletişime geçin</string>
+  <string name="action_email_description">Geliştiriciyle iletişime geçin</string>
   <string name="action_issue">GitHub’da yeni sorun kaydı aç</string>
   <string name="action_issue_description">Hata bildirin veya özellik isteyin</string>
   <string name="action_send_feedback">Geri bildirim gönder</string>
@@ -43,7 +43,7 @@
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy, kendi Grocy sunucunuzda gıdaları ve ev işlerini takip eder: %1$s</string>
-  <string name="msg_feedback">Dilekleriniz veya sorularınız mı var, ya da bir hata mı buldunuz? Bize ulaşın, memnuniyetle yardımcı olalım!\nAksi takdirde Play Store’da güzel bir değerlendirmeye çok seviniriz.</string>
+  <string name="msg_feedback">Dilekleriniz veya sorularınız mı var, ya da bir hata mı buldunuz? Bana ulaşın, memnuniyetle yardımcı olayım!\nAksi takdirde Play Store’da güzel bir değerlendirmeye çok sevinirim.</string>
   <string name="msg_unlock">Geliştirmeyi destekleyin</string>
   <string name="msg_unlock_description">Kilit açma uygulaması, Google Play’de Grocy’nin geliştirilmesini destekleyen küçük bir satın alımdır. Yüklendikten sonra ML Kit barkod okuyucusuna da geçebilirsiniz. Ayrıca ambalajlara basılı son kullanma tarihlerini tarar, böylece onları çözmeye çalışmanız gerekmez.</string>
 
@@ -162,7 +162,6 @@
     <item quantity="other">Stokta %2$s değerinde %1$d ürünün var</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s:</string>
-  <string name="start_summary_intro_end">%1$s.</string>
   <string name="start_list_join">%1$s, %2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="one">%1$d ürünün süresi %2$s doluyor.</item>
@@ -980,6 +979,8 @@
   <string name="shopping_list_item_not_booked">%1$s stoğa eklenmedi. Atlayıp sonraki ürünle devam edilsin mi, yoksa iptal mi edilsin?</string>
   <string name="booking_shopping_list_hint">Bilgileri kontrol edin ve satın almayı onaylayın. Ürün ardından alışveriş listesinden kaldırılır.</string>
   <string name="shopping_mode">Alışveriş modu</string>
+  <string name="shopping_list_unknown_as_note">Bilinmeyen ürünleri not olarak kaydet</string>
+  <string name="shopping_list_unknown_as_note_hint">Yazdığınız hiçbir ürünle eşleşmezse öğe bu metin not olarak kaydedilir, böylece yazıp kaydetmeniz yeterli olur</string>
   <string name="shopping_mode_settings">Alışveriş modu ayarları</string>
   <string name="shopping_mode_auto_sync">Otomatik eşitleme</string>
   <string name="shopping_mode_auto_sync_hint">Listeyi düzenli olarak yeniden yükler, böylece birlikte alışveriş yapan herkes diğerlerinin neleri işaretlediğini görür</string>
@@ -1444,7 +1445,8 @@
   <string name="sessions_open">Oturumları göster</string>
   <string name="sessions_profile">%1$s olarak giriş yapıldı</string>
   <string name="sessions_switch_next">Sonraki oturuma geç</string>
-  <string name="settings_server_config">Geçerli sunucu yapılandırması</string>
+  <string name="settings_server_config">Sunucu yapılandırması</string>
+  <string name="settings_server_grocy">Grocy sunucusu</string>
   <string name="settings_server_config_enabled">Etkin</string>
   <string name="settings_server_config_disabled">Devre dışı</string>
   <string name="settings_server_config_values">Değerler</string>

@@ -143,7 +143,17 @@ internal fun isEmptyListKnown(
     hasData: Boolean,
     storedByStart: Boolean,
     isEverythingDownloaded: Boolean,
-): Boolean = hasData || (storedByStart && isEverythingDownloaded)
+    loadedOnce: Boolean = false,
+): Boolean = hasData || loadedOnce || (storedByStart && isEverythingDownloaded)
+
+/**
+ * Whether the pull to refresh indicator shows the running download: always, except while an empty
+ * list waits for its first one, which [emptyListItem] shows in place of the list.
+ */
+@Composable
+fun RefreshState.showsPullIndicator(hasData: Boolean, storedByStart: Boolean = false): Boolean =
+    isRefreshing &&
+        isEmptyListKnown(hasData, storedByStart, LocalEverythingDownloaded.current, loadedOnce)
 
 /**
  * What an empty list shows instead of its items: the first download, its failure, or that
@@ -162,7 +172,12 @@ fun LazyListScope.emptyListItem(
     storedByStart: Boolean = false,
 ) {
     insetItem(key = "empty state") {
-        val isKnown = isEmptyListKnown(hasData, storedByStart, LocalEverythingDownloaded.current)
+        val isKnown = isEmptyListKnown(
+            hasData,
+            storedByStart,
+            LocalEverythingDownloaded.current,
+            refresh.loadedOnce,
+        )
         when {
             !isKnown && refresh.isRefreshing -> Box(
                 Modifier.fillMaxWidth().padding(32.dp),

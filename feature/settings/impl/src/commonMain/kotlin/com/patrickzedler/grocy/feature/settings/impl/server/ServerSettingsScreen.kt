@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -14,6 +15,7 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,6 +40,8 @@ import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.DemoServerWarning
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ScreenPane
+import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
+import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.SupportingBulletList
 import com.patrickzedler.grocy.core.design.component.TextDialog
@@ -48,14 +52,19 @@ import com.patrickzedler.grocy.core.design.component.showNewestSnackbar
 import com.patrickzedler.grocy.core.design.withTabularNumbers
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.model.server.ServerConfig
+import com.patrickzedler.grocy.core.network.areCertificatesSupported
 import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.resources.action_close
 import com.patrickzedler.grocy.core.resources.action_later
 import com.patrickzedler.grocy.core.resources.action_restart
+import com.patrickzedler.grocy.core.resources.ic_rounded_build
 import com.patrickzedler.grocy.core.resources.ic_rounded_dns
 import com.patrickzedler.grocy.core.resources.ic_rounded_info
 import com.patrickzedler.grocy.core.resources.ic_rounded_logout
 import com.patrickzedler.grocy.core.resources.ic_rounded_refresh
 import com.patrickzedler.grocy.core.resources.ic_rounded_tune
+import com.patrickzedler.grocy.core.resources.settings_certificates
+import com.patrickzedler.grocy.core.resources.settings_grocy
 import com.patrickzedler.grocy.core.resources.settings_server
 import com.patrickzedler.grocy.core.resources.settings_server_config
 import com.patrickzedler.grocy.core.resources.settings_server_config_barcode_plugin
@@ -66,6 +75,7 @@ import com.patrickzedler.grocy.core.resources.settings_server_config_energy_unit
 import com.patrickzedler.grocy.core.resources.settings_server_config_grocycode
 import com.patrickzedler.grocy.core.resources.settings_server_config_values
 import com.patrickzedler.grocy.core.resources.settings_server_demo_switch_failed
+import com.patrickzedler.grocy.core.resources.settings_server_grocy
 import com.patrickzedler.grocy.core.resources.settings_server_logout
 import com.patrickzedler.grocy.core.resources.settings_server_logout_description
 import com.patrickzedler.grocy.core.resources.settings_server_reload
@@ -88,6 +98,10 @@ import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuActions
 import com.patrickzedler.grocy.feature.settings.impl.SettingsMenuViewModel
 import com.patrickzedler.grocy.feature.settings.impl.SettingsScaffold
 import com.patrickzedler.grocy.feature.settings.impl.SettingsScaffoldContent
+import com.patrickzedler.grocy.feature.settings.impl.certificates.CertificateCheckEffect
+import com.patrickzedler.grocy.feature.settings.impl.certificates.CertificatesViewModel
+import com.patrickzedler.grocy.feature.settings.impl.certificates.certificateGroup
+import com.patrickzedler.grocy.feature.settings.impl.certificates.rememberClientCertificatePicker
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
@@ -96,9 +110,11 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun ServerSettingsScreen(
     viewModel: ServerSettingsViewModel,
+    certificatesViewModel: CertificatesViewModel,
     menuViewModel: SettingsMenuViewModel,
     menuActions: SettingsMenuActions,
     onBackClick: () -> Unit,
+    onGrocySettingsClick: () -> Unit,
     onRestart: () -> Unit,
     modifier: Modifier = Modifier,
     pane: ScreenPane? = null,
@@ -108,6 +124,15 @@ internal fun ServerSettingsScreen(
     val config by viewModel.config.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     var showDemoServerDialog by rememberSaveable { mutableStateOf(false) }
+    var showConfigDialog by rememberSaveable { mutableStateOf(false) }
+    val certificates by certificatesViewModel.settings.collectAsStateWithLifecycle()
+    val checkableServer by certificatesViewModel.checkableServer.collectAsStateWithLifecycle()
+    val pickCertificate = rememberClientCertificatePicker(
+        currentAlias = certificates?.clientAlias,
+        onPicked = certificatesViewModel::setClientAlias,
+    )
+
+    CertificateCheckEffect(certificatesViewModel, snackbarHostState)
 
     LaunchedEffect(viewModel.error) {
         val message = when (viewModel.error) {
@@ -153,6 +178,10 @@ internal fun ServerSettingsScreen(
         }
     }
 
+    if (showConfigDialog) {
+        config?.let { ServerConfigDialog(it, onDismissRequest = { showConfigDialog = false }) }
+    }
+
     viewModel.versionCheck?.let { check ->
         VersionCheckDialog(check = check, onDismissRequest = viewModel::onVersionCheckShown)
     }
@@ -179,7 +208,24 @@ internal fun ServerSettingsScreen(
                 onVersionClick = viewModel::checkGrocyVersion,
                 onReloadClick = viewModel::reloadConfiguration,
                 onLogoutClick = viewModel::logout,
+                onGrocySettingsClick = onGrocySettingsClick,
+                onConfigClick = { showConfigDialog = true },
             )
+        }
+        // Android only, a browser keeps its certificates to itself
+        if (areCertificatesSupported) {
+            certificates?.let {
+                certificateGroup(
+                    title = Res.string.settings_certificates,
+                    settings = it,
+                    canCheckServer = checkableServer != null,
+                    isChecking = certificatesViewModel.isChecking,
+                    onClientClick = pickCertificate,
+                    onClientRemove = { certificatesViewModel.setClientAlias(null) },
+                    onTrustedRemove = certificatesViewModel::remove,
+                    onCheckClick = certificatesViewModel::checkServer,
+                )
+            }
         }
     }
 }
@@ -196,6 +242,8 @@ private fun LazyListScope.serverSettings(
     onVersionClick: () -> Unit,
     onReloadClick: () -> Unit,
     onLogoutClick: () -> Unit,
+    onGrocySettingsClick: () -> Unit,
+    onConfigClick: () -> Unit,
 ) {
     if (server.isDemo) {
         segmentedGroup(key = "demo") {
@@ -217,6 +265,16 @@ private fun LazyListScope.serverSettings(
             },
             isLoading = isSwitchingDemoServer,
         )
+        ActionItem(
+            title = stringResource(Res.string.settings_server_logout),
+            description = stringResource(Res.string.settings_server_logout_description),
+            icon = Res.drawable.ic_rounded_logout,
+            index = 1,
+            count = 2,
+            onClick = onLogoutClick,
+        )
+    }
+    segmentedGroup(key = "grocy", title = Res.string.settings_server_grocy) {
         ValueItem(
             title = stringResource(Res.string.settings_server_version),
             value = server.grocyVersion ?: stringResource(
@@ -227,31 +285,37 @@ private fun LazyListScope.serverSettings(
                 },
             ),
             icon = Res.drawable.ic_rounded_info,
-            index = 1,
+            index = 0,
             count = 2,
             isNumber = server.grocyVersion != null,
             // A second tap would only repeat the running check
             onClick = { if (!isCheckingVersion) onVersionClick() },
             isLoading = isCheckingVersion,
         )
-    }
-    segmentedGroup(key = "logout") {
         ActionItem(
-            title = stringResource(Res.string.settings_server_logout),
-            description = stringResource(Res.string.settings_server_logout_description),
-            icon = Res.drawable.ic_rounded_logout,
-            index = 0,
-            count = 1,
-            onClick = onLogoutClick,
+            title = stringResource(Res.string.settings_grocy),
+            icon = Res.drawable.ic_rounded_build,
+            index = 1,
+            count = 2,
+            onClick = onGrocySettingsClick,
         )
     }
     segmentedGroup(key = "configuration") {
         val count = if (config != null) 2 else 1
+        if (config != null) {
+            ActionItem(
+                title = stringResource(Res.string.settings_server_config),
+                icon = Res.drawable.ic_rounded_tune,
+                index = 0,
+                count = count,
+                onClick = onConfigClick,
+            )
+        }
         ActionItem(
             title = stringResource(Res.string.settings_server_reload),
             description = stringResource(Res.string.settings_server_reload_description),
             icon = Res.drawable.ic_rounded_refresh,
-            index = 0,
+            index = count - 1,
             count = count,
             // A second tap would only repeat the running download
             onClick = { if (!isReloading) onReloadClick() },
@@ -261,14 +325,13 @@ private fun LazyListScope.serverSettings(
                 null
             },
         )
-        config?.let { ConfigItem(it, index = 1, count = count) }
     }
 }
 
 /** What the loaded configuration turned on and off and its values; a reload updates it. */
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun ConfigItem(config: ServerConfig, index: Int, count: Int) {
+private fun ServerConfigDialog(config: ServerConfig, onDismissRequest: () -> Unit) {
+    val haptic = LocalHapticFeedback.current
     val features = serverFeaturesOf(config)
     val enabled = features.filter { it.isEnabled }.map { stringResource(it.name) }
     val disabled = features.filterNot { it.isEnabled }.map { stringResource(it.name) }
@@ -280,13 +343,22 @@ private fun ConfigItem(config: ServerConfig, index: Int, count: Int) {
             stringResource(Res.string.settings_server_config_barcode_plugin, it)
         },
     )
-    ListItem(
-        modifier = Modifier.fillMaxWidth(),
-        shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
-        colors = SegmentedListDefaults.colors(),
-        verticalAlignment = Alignment.Top,
-        leadingContent = { SettingIcon(Res.drawable.ic_rounded_tune) },
-        supportingContent = {
+    ScrollableAlertDialog(onDismissRequest = onDismissRequest) {
+        ScrollableAlertDialogContent(
+            title = { Text(stringResource(Res.string.settings_server_config)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        haptic.confirm()
+                        onDismissRequest()
+                    },
+                    modifier = Modifier.clickCursor(),
+                    shapes = ButtonDefaults.shapes(),
+                ) {
+                    Text(stringResource(Res.string.action_close))
+                }
+            },
+        ) {
             Column(verticalArrangement = Arrangement.spacedBy(ConfigListSpacing)) {
                 if (enabled.isNotEmpty()) {
                     SupportingBulletList(
@@ -305,9 +377,8 @@ private fun ConfigItem(config: ServerConfig, index: Int, count: Int) {
                     bullets = values,
                 )
             }
-        },
-        content = { Text(stringResource(Res.string.settings_server_config)) },
-    )
+        }
+    }
 }
 
 private val ConfigListSpacing = 8.dp
@@ -378,11 +449,11 @@ private fun ValueItem(
 @Composable
 private fun ActionItem(
     title: String,
-    description: String,
     icon: DrawableResource,
     index: Int,
     count: Int,
     onClick: () -> Unit,
+    description: String? = null,
     trailing: (@Composable () -> Unit)? = null,
 ) {
     val haptic = LocalHapticFeedback.current
@@ -398,7 +469,7 @@ private fun ActionItem(
         verticalAlignment = Alignment.CenterVertically,
         leadingContent = { SettingIcon(icon) },
         trailingContent = trailing,
-        supportingContent = { Text(description) },
+        supportingContent = description?.let { { Text(it) } },
         content = { Text(title) },
     )
 }
@@ -482,6 +553,8 @@ private fun ServerSettingsDemoPreview() {
                 onVersionClick = {},
                 onReloadClick = {},
                 onLogoutClick = {},
+                onGrocySettingsClick = {},
+                onConfigClick = {},
             )
         }
     }

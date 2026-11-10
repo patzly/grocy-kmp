@@ -28,11 +28,11 @@
   <string name="action_recommend">Recommander</string>
   <string name="action_recommend_description">Parlez de Grocy à vos amis</string>
   <string name="action_rate">Noter sur Google Play</string>
-  <string name="action_rate_description">Motivez les développeurs</string>
+  <string name="action_rate_description">Motivez le développeur</string>
   <string name="action_support">Soutenir le développement</string>
   <string name="action_support_description">Achetez l’application de déverrouillage</string>
   <string name="action_email">Envoyer un e-mail</string>
-  <string name="action_email_description">Contactez les développeurs</string>
+  <string name="action_email_description">Contactez le développeur</string>
   <string name="action_issue">Ouvrir un ticket sur GitHub</string>
   <string name="action_issue_description">Signalez un bug ou demandez une fonctionnalité</string>
   <string name="action_send_feedback">Envoyer des commentaires</string>
@@ -43,7 +43,7 @@
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy gère les courses et le foyer sur votre propre serveur Grocy : %1$s</string>
-  <string name="msg_feedback">Vous avez des souhaits, des questions ou avez trouvé une erreur ? Contactez-nous, nous serons ravis de vous aider !\nSinon, un avis sympathique sur le Play Store nous ferait très plaisir.</string>
+  <string name="msg_feedback">Vous avez des souhaits, des questions ou avez trouvé une erreur ? Contactez-moi, je serai ravi de vous aider !\nSinon, un avis sympathique sur le Play Store me ferait très plaisir.</string>
   <string name="msg_unlock">Soutenir le développement</string>
   <string name="msg_unlock_description">L’application de déverrouillage est un petit achat sur Google Play qui soutient le développement de Grocy. Une fois qu’elle est installée, vous pouvez aussi passer au scanner de codes-barres ML Kit. Elle scanne aussi les dates de péremption imprimées sur les emballages, pour vous éviter de les déchiffrer.</string>
 
@@ -164,7 +164,6 @@
     <item quantity="other">Vous avez %1$d produits en stock d'une valeur de %2$s</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s :</string>
-  <string name="start_summary_intro_end">%1$s.</string>
   <string name="start_list_join">%1$s, %2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="one">%1$d produit arrive à échéance %2$s.</item>
@@ -1009,6 +1008,8 @@
   <string name="shopping_list_item_not_booked">%1$s n'a pas été ajouté au stock. Ignorer ce produit et passer au suivant, ou annuler ?</string>
   <string name="booking_shopping_list_hint">Vérifiez les informations et confirmez l'achat. Le produit est ensuite retiré de la liste de courses.</string>
   <string name="shopping_mode">Mode courses</string>
+  <string name="shopping_list_unknown_as_note">Enregistrer les produits inconnus comme notes</string>
+  <string name="shopping_list_unknown_as_note_hint">Si le texte saisi ne correspond à aucun produit, l’article est enregistré avec ce texte comme note : il suffit de taper et d’enregistrer</string>
   <string name="shopping_mode_settings">Paramètres du mode courses</string>
   <string name="shopping_mode_auto_sync">Synchronisation automatique</string>
   <string name="shopping_mode_auto_sync_hint">Recharge régulièrement la liste pour que tous ceux qui font les courses ensemble voient ce que les autres ont coché</string>
@@ -1498,7 +1499,8 @@
   <string name="sessions_open">Afficher les sessions</string>
   <string name="sessions_profile">Connecté en tant que %1$s</string>
   <string name="sessions_switch_next">Passer à la session suivante</string>
-  <string name="settings_server_config">Configuration actuelle du serveur</string>
+  <string name="settings_server_config">Configuration du serveur</string>
+  <string name="settings_server_grocy">Serveur Grocy</string>
   <string name="settings_server_config_enabled">Activé</string>
   <string name="settings_server_config_disabled">Désactivé</string>
   <string name="settings_server_config_values">Valeurs</string>

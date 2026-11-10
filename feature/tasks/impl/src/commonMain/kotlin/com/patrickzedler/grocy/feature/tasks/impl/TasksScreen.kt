@@ -47,6 +47,7 @@ import com.patrickzedler.grocy.core.forms.emptyListItem
 import com.patrickzedler.grocy.core.forms.label
 import com.patrickzedler.grocy.core.forms.searchItem
 import com.patrickzedler.grocy.core.forms.showSearchAtTop
+import com.patrickzedler.grocy.core.forms.showsPullIndicator
 import com.patrickzedler.grocy.core.model.masterdata.TableColumn
 import com.patrickzedler.grocy.core.model.tasks.TaskDueStatus
 import com.patrickzedler.grocy.core.model.tasks.TasksOverviewField
@@ -169,7 +170,7 @@ internal fun TasksScreen(
         listState = listState,
         snackbarHostState = snackbarHostState,
         // The first download shows its own indicator in the empty list
-        isRefreshing = refresh.isRefreshing && state?.hasTasks == true,
+        isRefreshing = refresh.showsPullIndicator(state?.hasTasks == true, storedByStart = true),
         onRefresh = viewModel::refresh,
         itemSpacing = ListItemDefaults.SegmentedGap,
         floatingToolbar = { scrollBehavior, toolbarModifier ->

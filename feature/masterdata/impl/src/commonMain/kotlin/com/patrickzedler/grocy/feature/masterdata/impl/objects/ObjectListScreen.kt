@@ -66,6 +66,7 @@ import com.patrickzedler.grocy.core.forms.emptyListItem
 import com.patrickzedler.grocy.core.forms.objectActionItems
 import com.patrickzedler.grocy.core.forms.searchItem
 import com.patrickzedler.grocy.core.forms.showSearchAtTop
+import com.patrickzedler.grocy.core.forms.showsPullIndicator
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_add
 import com.patrickzedler.grocy.core.resources.action_more_options
@@ -205,7 +206,7 @@ private fun ObjectListContent(
         listState = listState,
         snackbarHostState = snackbarHostState,
         // The first download shows its own indicator in the empty list
-        isRefreshing = refresh.isRefreshing && state?.hasObjects == true,
+        isRefreshing = refresh.showsPullIndicator(state?.hasObjects == true, storedByStart = true),
         onRefresh = actions.onRefresh,
         // Every object is an item of one large group, the group spacing follows the filters
         itemSpacing = ListItemDefaults.SegmentedGap,

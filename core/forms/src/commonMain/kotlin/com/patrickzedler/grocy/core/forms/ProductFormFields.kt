@@ -322,6 +322,7 @@ fun DropdownItem(
     textResetKey: Any? = null,
     onKeyboardNext: (() -> Unit)? = null,
     onFocusChange: (Boolean) -> Unit = {},
+    onUnmatchedTextChange: (String) -> Unit = {},
 ) {
     SegmentedContainer(index = index, count = count, modifier = modifier) {
         SearchableDropdownField(
@@ -343,6 +344,7 @@ fun DropdownItem(
             textResetKey = textResetKey,
             onKeyboardNext = onKeyboardNext,
             onFocusChange = onFocusChange,
+            onUnmatchedTextChange = onUnmatchedTextChange,
         )
         HintText(hint)
         // Belongs to the field, e.g. the scanner of its scan action

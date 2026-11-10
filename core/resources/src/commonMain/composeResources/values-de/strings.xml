@@ -28,11 +28,11 @@
   <string name="action_recommend">Weiterempfehlen</string>
   <string name="action_recommend_description">Erzähl deinen Freunden von Grocy</string>
   <string name="action_rate">Auf Google Play bewerten</string>
-  <string name="action_rate_description">Motiviere die Entwickler</string>
+  <string name="action_rate_description">Motiviere den Entwickler</string>
   <string name="action_support">Entwicklung unterstützen</string>
   <string name="action_support_description">Kaufe die Freischalt-App</string>
   <string name="action_email">E-Mail senden</string>
-  <string name="action_email_description">Kontaktiere die Entwickler</string>
+  <string name="action_email_description">Kontaktiere den Entwickler</string>
   <string name="action_issue">Neues Issue auf GitHub eröffnen</string>
   <string name="action_issue_description">Fehler melden oder Funktion wünschen</string>
   <string name="action_send_feedback">Feedback senden</string>
@@ -43,7 +43,7 @@
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy verwaltet Lebensmittel und Haushalt auf deinem eigenen Grocy-Server: %1$s</string>
-  <string name="msg_feedback">Hast du Wünsche, Fragen oder einen Fehler gefunden? Melde dich bei uns, wir helfen gerne!\nAnsonsten freuen wir uns sehr über eine nette Bewertung im Play Store.</string>
+  <string name="msg_feedback">Hast du Wünsche, Fragen oder einen Fehler gefunden? Melde dich bei mir, ich helfe gerne!\nAnsonsten freue ich mich sehr über eine nette Bewertung im Play Store.</string>
   <string name="msg_unlock">Entwicklung unterstützen</string>
   <string name="msg_unlock_description">Die Freischalt-App ist ein kleiner Kauf auf Google Play, der die Entwicklung von Grocy unterstützt. Ist sie installiert, kannst du auch zum Barcodescanner von ML Kit wechseln. Außerdem kannst du damit aufgedruckte Mindesthaltbarkeitsdaten scannen und musst sie nicht mehr mühsam entziffern.</string>
 
@@ -162,7 +162,6 @@
     <item quantity="other">Du hast %1$d Produkte im Bestand im Wert von %2$s</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s:</string>
-  <string name="start_summary_intro_end">%1$s.</string>
   <string name="start_list_join">%1$s, %2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="one">%1$d Produkt ist %2$s fällig.</item>
@@ -981,6 +980,8 @@
   <string name="shopping_list_item_not_booked">%1$s wurde nicht zum Bestand hinzugefügt. Überspringen und mit dem nächsten Eintrag weitermachen oder abbrechen?</string>
   <string name="booking_shopping_list_hint">Prüfe die Angaben und bestätige den Einkauf. Danach wird der Eintrag vom Einkaufszettel entfernt.</string>
   <string name="shopping_mode">Einkaufsmodus</string>
+  <string name="shopping_list_unknown_as_note">Unbekannte Produkte als Notiz speichern</string>
+  <string name="shopping_list_unknown_as_note_hint">Passt das Eingegebene zu keinem Produkt, wird der Eintrag mit diesem Text als Notiz gespeichert, du kannst also einfach tippen und speichern</string>
   <string name="shopping_mode_settings">Einstellungen des Einkaufsmodus</string>
   <string name="shopping_mode_auto_sync">Automatisch synchronisieren</string>
   <string name="shopping_mode_auto_sync_hint">Lädt die Liste regelmäßig neu, damit alle, die gemeinsam einkaufen, sehen, was die anderen abgehakt haben</string>
@@ -1445,7 +1446,8 @@
   <string name="sessions_open">Sitzungen anzeigen</string>
   <string name="sessions_profile">Angemeldet als %1$s</string>
   <string name="sessions_switch_next">Zur nächsten Sitzung wechseln</string>
-  <string name="settings_server_config">Aktuelle Serverkonfiguration</string>
+  <string name="settings_server_config">Serverkonfiguration</string>
+  <string name="settings_server_grocy">Grocy-Server</string>
   <string name="settings_server_config_enabled">Aktiviert</string>
   <string name="settings_server_config_disabled">Deaktiviert</string>
   <string name="settings_server_config_values">Werte</string>

@@ -28,11 +28,11 @@
   <string name="action_recommend">Odporučiť</string>
   <string name="action_recommend_description">Povedzte priateľom o Grocy</string>
   <string name="action_rate">Ohodnotiť na Google Play</string>
-  <string name="action_rate_description">Motivujte vývojárov</string>
+  <string name="action_rate_description">Motivujte vývojára</string>
   <string name="action_support">Podporiť vývoj</string>
   <string name="action_support_description">Kúpte si odomykaciu aplikáciu</string>
   <string name="action_email">Poslať e-mail</string>
-  <string name="action_email_description">Kontaktujte vývojárov</string>
+  <string name="action_email_description">Kontaktujte vývojára</string>
   <string name="action_issue">Založiť nové issue na GitHube</string>
   <string name="action_issue_description">Nahláste chyby alebo navrhnite funkciu</string>
   <string name="action_send_feedback">Odoslať spätnú väzbu</string>
@@ -43,7 +43,7 @@
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy spravuje potraviny a domácnosť na vašom vlastnom serveri Grocy: %1$s</string>
-  <string name="msg_feedback">Máte priania, otázky alebo ste narazili na chybu? Ozvite sa nám, radi pomôžeme!\nInak nás veľmi poteší pekné hodnotenie v Play Store.</string>
+  <string name="msg_feedback">Máte priania, otázky alebo ste narazili na chybu? Ozvite sa mi, rád pomôžem!\nInak ma veľmi poteší pekné hodnotenie v Play Store.</string>
   <string name="msg_unlock">Podporiť vývoj</string>
   <string name="msg_unlock_description">Odomykacia aplikácia je malý nákup na Google Play, ktorým podporíte vývoj Grocy. Po jej inštalácii môžete prepnúť aj na skener čiarových kódov ML Kit. Naskenuje aj dátumy spotreby vytlačené na obaloch, takže ich už nemusíte lúštiť.</string>
 
@@ -166,7 +166,6 @@
     <item quantity="other">Máte na sklade %1$d výrobkov v hodnote %2$s</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s:</string>
-  <string name="start_summary_intro_end">%1$s.</string>
   <string name="start_list_join">%1$s, %2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="one">%1$d výrobok treba spotrebovať %2$s.</item>
@@ -1037,6 +1036,8 @@
   <string name="shopping_list_item_not_booked">%1$s nebolo pridané do zásob. Preskočiť a pokračovať ďalšou položkou, alebo zrušiť?</string>
   <string name="booking_shopping_list_hint">Skontrolujte údaje a potvrďte nákup. Položka sa potom odstráni z nákupného zoznamu.</string>
   <string name="shopping_mode">Nákupný režim</string>
+  <string name="shopping_list_unknown_as_note">Ukladať neznáme produkty ako poznámky</string>
+  <string name="shopping_list_unknown_as_note_hint">Ak zadaný text nezodpovedá žiadnemu produktu, položka sa uloží s týmto textom ako poznámkou, takže stačí napísať a uložiť</string>
   <string name="shopping_mode_settings">Nastavenia nákupného režimu</string>
   <string name="shopping_mode_auto_sync">Automatická synchronizácia</string>
   <string name="shopping_mode_auto_sync_hint">Pravidelne znova načítava zoznam, aby všetci, ktorí nakupujú spolu, videli, čo ostatní odškrtli</string>
@@ -1551,7 +1552,8 @@
   <string name="sessions_open">Zobraziť relácie</string>
   <string name="sessions_profile">Prihlásený ako %1$s</string>
   <string name="sessions_switch_next">Prepnúť na ďalšiu reláciu</string>
-  <string name="settings_server_config">Aktuálna konfigurácia servera</string>
+  <string name="settings_server_config">Konfigurácia servera</string>
+  <string name="settings_server_grocy">Server Grocy</string>
   <string name="settings_server_config_enabled">Zapnuté</string>
   <string name="settings_server_config_disabled">Vypnuté</string>
   <string name="settings_server_config_values">Hodnoty</string>

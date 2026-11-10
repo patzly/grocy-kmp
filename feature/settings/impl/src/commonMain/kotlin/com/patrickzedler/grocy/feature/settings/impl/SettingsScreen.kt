@@ -21,33 +21,28 @@ import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.segmentedGroup
-import com.patrickzedler.grocy.core.network.areCertificatesSupported
 import com.patrickzedler.grocy.core.network.isProxySupported
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.ic_rounded_barcode_scanner
-import com.patrickzedler.grocy.core.resources.ic_rounded_build
 import com.patrickzedler.grocy.core.resources.ic_rounded_design_services
 import com.patrickzedler.grocy.core.resources.ic_rounded_host
-import com.patrickzedler.grocy.core.resources.ic_rounded_key
 import com.patrickzedler.grocy.core.resources.ic_rounded_network_manage
 import com.patrickzedler.grocy.core.resources.ic_rounded_notifications
 import com.patrickzedler.grocy.core.resources.ic_rounded_reset_settings
 import com.patrickzedler.grocy.core.resources.ic_rounded_settings_backup_restore
-import com.patrickzedler.grocy.core.resources.ic_rounded_storefront
+import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_cart
 import com.patrickzedler.grocy.core.resources.ic_rounded_tune
 import com.patrickzedler.grocy.core.resources.settings_backup
 import com.patrickzedler.grocy.core.resources.settings_backup_description
 import com.patrickzedler.grocy.core.resources.settings_behavior
-import com.patrickzedler.grocy.core.resources.settings_certificates
 import com.patrickzedler.grocy.core.resources.settings_general
-import com.patrickzedler.grocy.core.resources.settings_grocy
 import com.patrickzedler.grocy.core.resources.settings_network
 import com.patrickzedler.grocy.core.resources.settings_notifications
 import com.patrickzedler.grocy.core.resources.settings_reset
 import com.patrickzedler.grocy.core.resources.settings_reset_description
 import com.patrickzedler.grocy.core.resources.settings_scanner
 import com.patrickzedler.grocy.core.resources.settings_server
-import com.patrickzedler.grocy.core.resources.shopping_mode
+import com.patrickzedler.grocy.core.resources.shopping_list_list
 import com.patrickzedler.grocy.core.resources.title_settings
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
@@ -69,19 +64,10 @@ internal enum class SettingsCategory(
         title = Res.string.settings_server,
         icon = Res.drawable.ic_rounded_host,
     ),
-    GROCY(
-        title = Res.string.settings_grocy,
-        icon = Res.drawable.ic_rounded_build,
-    ),
     NETWORK(
         title = Res.string.settings_network,
         icon = Res.drawable.ic_rounded_network_manage,
         isAvailable = isProxySupported,
-    ),
-    CERTIFICATES(
-        title = Res.string.settings_certificates,
-        icon = Res.drawable.ic_rounded_key,
-        isAvailable = areCertificatesSupported,
     ),
     BEHAVIOR(
         title = Res.string.settings_behavior,
@@ -95,9 +81,9 @@ internal enum class SettingsCategory(
         title = Res.string.settings_notifications,
         icon = Res.drawable.ic_rounded_notifications,
     ),
-    SHOPPING_MODE(
-        title = Res.string.shopping_mode,
-        icon = Res.drawable.ic_rounded_storefront,
+    SHOPPING_LIST(
+        title = Res.string.shopping_list_list,
+        icon = Res.drawable.ic_rounded_shopping_cart,
     ),
 }
 

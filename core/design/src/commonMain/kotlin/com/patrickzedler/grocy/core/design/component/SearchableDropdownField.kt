@@ -91,6 +91,7 @@ data class DropdownOption(
  * @param onKeyboardNext replaces going on to the next field, e.g. for a field whose next field
  *   only takes the focus after a choice.
  * @param onFocusChange whether the field has the focus.
+ * @param onUnmatchedTextChange the typed text naming no option, empty without such text.
  */
 @Composable
 fun SearchableDropdownField(
@@ -113,6 +114,7 @@ fun SearchableDropdownField(
     textResetKey: Any? = null,
     onKeyboardNext: (() -> Unit)? = null,
     onFocusChange: (Boolean) -> Unit = {},
+    onUnmatchedTextChange: (String) -> Unit = {},
 ) {
     val haptic = LocalHapticFeedback.current
     val focusManager = LocalFocusManager.current
@@ -161,6 +163,9 @@ fun SearchableDropdownField(
         }
     }
     LaunchedEffect(isUnmatched) { currentOnUnmatchedChange(isUnmatched) }
+    LaunchedEffect(isUnmatched, textState.text) {
+        onUnmatchedTextChange(if (isUnmatched) textState.text.toString().trim() else "")
+    }
     LaunchedEffect(textState) {
         snapshotFlow { textState.text.toString() }.collect { text ->
             if (text == writtenText) return@collect

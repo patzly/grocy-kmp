@@ -223,6 +223,23 @@ class StartViewModelTest {
     }
 
     @Test
+    fun aReloadKeepsTheShownSummariesUntilTheNewOnesAreThere() = runTest(dispatcher) {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+        val shown = mutableListOf<StartUiState?>()
+        backgroundScope.launch { viewModel.state.collect { shown += it } }
+
+        viewModel.refresh()
+        advanceUntilIdle()
+
+        // Never a moment without text, which would show the placeholders
+        assertTrue(shown.isNotEmpty())
+        assertTrue(
+            shown.all { it?.recipes != null && it.stock != null && it.shoppingLists != null },
+        )
+    }
+
+    @Test
     fun recipesSectionNeedsTheRecipesFeature() = runTest(dispatcher) {
         config.value = ServerConfig(recipes = false)
         val viewModel = viewModel()

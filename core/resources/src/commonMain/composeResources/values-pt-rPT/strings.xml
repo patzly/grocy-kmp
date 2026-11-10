@@ -28,11 +28,11 @@
   <string name="action_recommend">Recomendar</string>
   <string name="action_recommend_description">Fale do Grocy aos seus amigos</string>
   <string name="action_rate">Avaliar no Google Play</string>
-  <string name="action_rate_description">Motive os programadores</string>
+  <string name="action_rate_description">Motive o programador</string>
   <string name="action_support">Apoiar o desenvolvimento</string>
   <string name="action_support_description">Compre a aplicação de desbloqueio</string>
   <string name="action_email">Enviar email</string>
-  <string name="action_email_description">Contacte os programadores</string>
+  <string name="action_email_description">Contacte o programador</string>
   <string name="action_issue">Abrir nova issue no GitHub</string>
   <string name="action_issue_description">Comunique erros ou peça uma funcionalidade</string>
   <string name="action_send_feedback">Enviar feedback</string>
@@ -43,7 +43,7 @@
 
   <!-- Messages -->
   <string name="msg_recommend">O Grocy gere as compras e a casa no seu próprio servidor Grocy: %1$s</string>
-  <string name="msg_feedback">Tem desejos, perguntas ou encontrou um erro? Contacte-nos, teremos todo o gosto em ajudar.\nCaso contrário, ficaríamos muito contentes com uma boa avaliação na Play Store.</string>
+  <string name="msg_feedback">Tem desejos, perguntas ou encontrou um erro? Contacte-me, terei todo o gosto em ajudar.\nCaso contrário, ficaria muito contente com uma boa avaliação na Play Store.</string>
   <string name="msg_unlock">Apoiar o desenvolvimento</string>
   <string name="msg_unlock_description">A aplicação de desbloqueio é uma pequena compra no Google Play que apoia o desenvolvimento do Grocy. Depois de a instalar, também pode mudar para o leitor de códigos de barras do ML Kit. Também lê as datas de validade impressas nas embalagens, para não ter de as decifrar.</string>
 
@@ -164,7 +164,6 @@
     <item quantity="other">Tem %1$d produtos em stock com um valor de %2$s</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s:</string>
-  <string name="start_summary_intro_end">%1$s.</string>
   <string name="start_list_join">%1$s, %2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="one">%1$d produto termina o prazo %2$s.</item>
@@ -1009,6 +1008,8 @@
   <string name="shopping_list_item_not_booked">%1$s não foi adicionado ao stock. Ignorar e continuar com o item seguinte, ou cancelar?</string>
   <string name="booking_shopping_list_hint">Verifique os dados e confirme a compra. Depois, o item é removido da lista de compras.</string>
   <string name="shopping_mode">Modo de compras</string>
+  <string name="shopping_list_unknown_as_note">Guardar produtos desconhecidos como notas</string>
+  <string name="shopping_list_unknown_as_note_hint">Se o que escreveu não corresponder a nenhum produto, o item é guardado com esse texto como nota, por isso basta escrever e guardar</string>
   <string name="shopping_mode_settings">Definições do modo de compras</string>
   <string name="shopping_mode_auto_sync">Sincronização automática</string>
   <string name="shopping_mode_auto_sync_hint">Recarrega a lista regularmente, para que todos os que fazem compras juntos vejam o que os outros marcaram</string>
@@ -1498,7 +1499,8 @@
   <string name="sessions_open">Mostrar sessões</string>
   <string name="sessions_profile">Sessão iniciada como %1$s</string>
   <string name="sessions_switch_next">Mudar para a sessão seguinte</string>
-  <string name="settings_server_config">Configuração atual do servidor</string>
+  <string name="settings_server_config">Configuração do servidor</string>
+  <string name="settings_server_grocy">Servidor Grocy</string>
   <string name="settings_server_config_enabled">Ativado</string>
   <string name="settings_server_config_disabled">Desativado</string>
   <string name="settings_server_config_values">Valores</string>

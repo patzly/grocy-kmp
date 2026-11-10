@@ -40,11 +40,11 @@
   <string name="action_recommend">Recommend</string>
   <string name="action_recommend_description">Tell your friends about Grocy</string>
   <string name="action_rate">Rate on Google Play</string>
-  <string name="action_rate_description">Motivate the developers</string>
+  <string name="action_rate_description">Motivate the developer</string>
   <string name="action_support">Support the development</string>
   <string name="action_support_description">Buy the unlock app</string>
   <string name="action_email">Send email</string>
-  <string name="action_email_description">Contact the developers</string>
+  <string name="action_email_description">Contact the developer</string>
   <string name="action_issue">Open new issue on GitHub</string>
   <string name="action_issue_description">Report bugs or request a feature</string>
   <string name="action_send_feedback">Send feedback</string>
@@ -65,7 +65,7 @@
   <string name="msg_unsaved_changes">Unsaved changes</string>
   <string name="msg_unsaved_changes_description">Save your changes before leaving, or discard them?</string>
   <string name="msg_recommend">Grocy keeps track of groceries and household on your own Grocy server: %1$s</string>
-  <string name="msg_feedback">Do you have any wishes, questions or errors? Contact us and let us help!\nOtherwise we would be very happy about a nice review in the Play Store.</string>
+  <string name="msg_feedback">Do you have any wishes, questions or errors? Contact me and let me help!\nOtherwise I would be very happy about a nice review in the Play Store.</string>
   <string name="msg_unlock">Support the development</string>
   <string name="msg_unlock_description">The unlock app is a small purchase on Google Play that supports the development of Grocy. Once installed, you can also switch to the ML Kit barcode scanner. It also scans the due dates printed on packages, so you no longer have to decipher them yourself.</string>
 
@@ -194,7 +194,6 @@
     <item quantity="other">You have %1$d products in stock with a value of %2$s</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s:</string>
-  <string name="start_summary_intro_end">%1$s.</string>
   <string name="start_list_join">%1$s, %2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="one">%1$d product is due %2$s.</item>
@@ -1000,6 +999,8 @@
   <string name="shopping_list_item_not_booked">%1$s was not added to stock. Skip it and go on with the next item, or cancel?</string>
   <string name="booking_shopping_list_hint">Check the details and confirm the purchase. The item is then removed from the shopping list.</string>
   <string name="shopping_mode">Shopping mode</string>
+  <string name="shopping_list_unknown_as_note">Save unknown products as notes</string>
+  <string name="shopping_list_unknown_as_note_hint">If what you typed matches no product, the item is saved with it as its note, so you can just type and save</string>
   <string name="shopping_mode_settings">Shopping mode settings</string>
   <string name="shopping_mode_auto_sync">Auto sync</string>
   <string name="shopping_mode_auto_sync_hint">Reloads the list regularly, so everyone shopping together sees what the others checked off</string>
@@ -1470,7 +1471,8 @@
   <string name="sessions_open">Show sessions</string>
   <string name="sessions_profile">Logged in as %1$s</string>
   <string name="sessions_switch_next">Switch to the next session</string>
-  <string name="settings_server_config">Current server configuration</string>
+  <string name="settings_server_config">Server configuration</string>
+  <string name="settings_server_grocy">Grocy server</string>
   <string name="settings_server_config_enabled">Enabled</string>
   <string name="settings_server_config_disabled">Disabled</string>
   <string name="settings_server_config_values">Values</string>

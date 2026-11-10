@@ -193,19 +193,20 @@ internal fun NotificationSettingsScreen(
                     },
                     onTimeClick = { timePickerKind = kind },
                 )
-            }
-            if (currentConfig.stock && currentConfig.shoppingList) {
-                shoppingListGroup(
-                    settings = shoppingListNotifications,
-                    onChange = { type, enabled ->
-                        if (!enabled || access.permission == NotificationPermission.Granted) {
-                            viewModel.setShoppingList(type, enabled)
-                        } else {
-                            pendingShoppingList = type
-                            requestAccess()
-                        }
-                    },
-                )
+                // Right below the stock, like on the start screen
+                if (kind == NotificationKind.STOCK && currentConfig.shoppingList) {
+                    shoppingListGroup(
+                        settings = shoppingListNotifications,
+                        onChange = { type, enabled ->
+                            if (!enabled || access.permission == NotificationPermission.Granted) {
+                                viewModel.setShoppingList(type, enabled)
+                            } else {
+                                pendingShoppingList = type
+                                requestAccess()
+                            }
+                        },
+                    )
+                }
             }
         }
     }
@@ -286,6 +287,7 @@ private fun LazyListScope.notificationNotices(
                     text = Res.string.notifications_battery_hint,
                     index = count - 1,
                     count = count,
+                    isError = true,
                     onClick = access::openBatterySettings,
                 )
             }

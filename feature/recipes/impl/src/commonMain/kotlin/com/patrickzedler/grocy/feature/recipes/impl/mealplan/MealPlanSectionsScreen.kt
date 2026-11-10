@@ -26,6 +26,7 @@ import com.patrickzedler.grocy.core.forms.ListDetailItem
 import com.patrickzedler.grocy.core.forms.actionMessage
 import com.patrickzedler.grocy.core.forms.emptyListItem
 import com.patrickzedler.grocy.core.forms.labelled
+import com.patrickzedler.grocy.core.forms.showsPullIndicator
 import com.patrickzedler.grocy.core.model.recipes.MealPlanSection
 import com.patrickzedler.grocy.core.resources.Res
 import com.patrickzedler.grocy.core.resources.action_add
@@ -100,7 +101,7 @@ internal fun MealPlanSectionsScreen(
         menuItems = menuItems,
         listState = listState,
         snackbarHostState = snackbarHostState,
-        isRefreshing = refresh.isRefreshing && !current.isNullOrEmpty(),
+        isRefreshing = refresh.showsPullIndicator(!current.isNullOrEmpty(), storedByStart = true),
         onRefresh = viewModel::refresh,
         itemSpacing = ListItemDefaults.SegmentedGap,
         floatingToolbar = { scrollBehavior, toolbarModifier ->

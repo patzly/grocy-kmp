@@ -27,6 +27,7 @@ import com.patrickzedler.grocy.core.design.withTabularNumbers
 import com.patrickzedler.grocy.core.forms.FilterChipRow
 import com.patrickzedler.grocy.core.forms.ToggleFilterChip
 import com.patrickzedler.grocy.core.forms.emptyListItem
+import com.patrickzedler.grocy.core.forms.showsPullIndicator
 import com.patrickzedler.grocy.core.productcard.ProductOverviewHost
 import com.patrickzedler.grocy.core.productcard.StockPageActions
 import com.patrickzedler.grocy.core.resources.Res
@@ -68,7 +69,7 @@ internal fun LocationContentSheetScreen(
         navigationIcon = { NavigateBackButton(onClick = onBackClick) },
         menuItems = menuItems,
         snackbarHostState = snackbarHostState,
-        isRefreshing = refresh.isRefreshing && state?.hasStock == true,
+        isRefreshing = refresh.showsPullIndicator(state?.hasStock == true),
         onRefresh = viewModel::refresh,
     ) {
         val current = state ?: return@SegmentedListScreen

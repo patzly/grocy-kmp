@@ -122,4 +122,45 @@ class ChartColorsTest {
     fun hueDistanceGoesTheShortWayRound() {
         assertTrue(abs(hueDistance(350.0, 10.0) - 20.0) < 0.001)
     }
+
+    @Test
+    fun equalToneColorsAreOneGrayInEveryTheme() {
+        listOf(false, true).forEach { isDark ->
+            (0 until 360 step 30).forEach { hue ->
+                val primary = primary(hue.toFloat(), isDark)
+                val colors = equalToneChartColorsOf(primary)
+
+                (colors.series + colors.other).forEach { color ->
+                    assertTrue(abs(color.toHct().tone - primary.toHct().tone) < 0.5, "$hue")
+                }
+            }
+        }
+    }
+
+    @Test
+    fun equalToneColorsUseTheWholeHueCircleAndKeepNeighboursApart() {
+        val series = equalToneChartColorsOf(primary(154f)).series
+
+        assertEquals(CHART_COLOR_COUNT, series.toSet().size)
+        (series + series.first()).zipWithNext().forEach { (a, b) ->
+            assertTrue(hueDistance(hueOf(a), hueOf(b)) > 90.0)
+        }
+    }
+
+    @Test
+    fun equalToneColorsTakeTheFirstHueAndChromaFromPrimary() {
+        val primary = primary(154f)
+
+        val first = equalToneChartColorsOf(primary).series.first()
+
+        assertTrue(hueDistance(hueOf(first), hueOf(primary)) < 2.0)
+        assertTrue(abs(first.toHct().chroma - primary.toHct().chroma) < 2.0)
+    }
+
+    @Test
+    fun whatIsLeftOverHasNoColor() {
+        val other = equalToneChartColorsOf(primary(154f)).other
+
+        assertTrue(abs(other.red - other.green) < 0.01f && abs(other.green - other.blue) < 0.01f)
+    }
 }

@@ -28,11 +28,11 @@
   <string name="action_recommend">Σύσταση</string>
   <string name="action_recommend_description">Πείτε στους φίλους σας για το Grocy</string>
   <string name="action_rate">Βαθμολογία στο Google Play</string>
-  <string name="action_rate_description">Δώστε κίνητρο στους προγραμματιστές</string>
+  <string name="action_rate_description">Δώστε κίνητρο στον προγραμματιστή</string>
   <string name="action_support">Υποστήριξη της ανάπτυξης</string>
   <string name="action_support_description">Αγοράστε την εφαρμογή ξεκλειδώματος</string>
   <string name="action_email">Αποστολή email</string>
-  <string name="action_email_description">Επικοινωνήστε με τους προγραμματιστές</string>
+  <string name="action_email_description">Επικοινωνήστε με τον προγραμματιστή</string>
   <string name="action_issue">Νέο ζήτημα στο GitHub</string>
   <string name="action_issue_description">Αναφέρετε σφάλματα ή ζητήστε μια λειτουργία</string>
   <string name="action_send_feedback">Αποστολή σχολίων</string>
@@ -43,7 +43,7 @@
 
   <!-- Messages -->
   <string name="msg_recommend">Το Grocy παρακολουθεί τα τρόφιμα και το νοικοκυριό στον δικό σας διακομιστή Grocy: %1$s</string>
-  <string name="msg_feedback">Έχετε επιθυμίες ή ερωτήσεις ή βρήκατε κάποιο σφάλμα; Επικοινωνήστε μαζί μας και θα σας βοηθήσουμε με χαρά!\nΔιαφορετικά, θα χαρούμε πολύ για μια καλή κριτική στο Play Store.</string>
+  <string name="msg_feedback">Έχετε επιθυμίες ή ερωτήσεις ή βρήκατε κάποιο σφάλμα; Επικοινωνήστε μαζί μου και θα σας βοηθήσω με χαρά!\nΔιαφορετικά, θα χαρώ πολύ για μια καλή κριτική στο Play Store.</string>
   <string name="msg_unlock">Υποστήριξη της ανάπτυξης</string>
   <string name="msg_unlock_description">Η εφαρμογή ξεκλειδώματος είναι μια μικρή αγορά στο Google Play που υποστηρίζει την ανάπτυξη του Grocy. Μόλις εγκατασταθεί, μπορείτε επίσης να μεταβείτε στον σαρωτή γραμμωτού κώδικα του ML Kit. Επίσης σαρώνει τις ημερομηνίες λήξης που είναι τυπωμένες στις συσκευασίες, ώστε να μην χρειάζεται να τις αποκρυπτογραφείτε.</string>
 
@@ -162,7 +162,6 @@
     <item quantity="other">Έχετε %1$d προϊόντα σε απόθεμα με αξία %2$s</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s:</string>
-  <string name="start_summary_intro_end">%1$s.</string>
   <string name="start_list_join">%1$s, %2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="one">%1$d προϊόν λήγει %2$s.</item>
@@ -981,6 +980,8 @@
   <string name="shopping_list_item_not_booked">Το %1$s δεν προστέθηκε στο απόθεμα. Παράλειψη και συνέχεια με το επόμενο είδος ή ακύρωση;</string>
   <string name="booking_shopping_list_hint">Ελέγξτε τα στοιχεία και επιβεβαιώστε την αγορά. Στη συνέχεια το είδος αφαιρείται από τη λίστα με τα ψώνια.</string>
   <string name="shopping_mode">Λειτουργία αγορών</string>
+  <string name="shopping_list_unknown_as_note">Αποθήκευση άγνωστων προϊόντων ως σημειώσεων</string>
+  <string name="shopping_list_unknown_as_note_hint">Αν αυτό που πληκτρολογήσατε δεν αντιστοιχεί σε κανένα προϊόν, το στοιχείο αποθηκεύεται με αυτό ως σημείωση, οπότε αρκεί να πληκτρολογήσετε και να αποθηκεύσετε</string>
   <string name="shopping_mode_settings">Ρυθμίσεις λειτουργίας αγορών</string>
   <string name="shopping_mode_auto_sync">Αυτόματος συγχρονισμός</string>
   <string name="shopping_mode_auto_sync_hint">Φορτώνει ξανά τη λίστα τακτικά, ώστε όλοι όσοι ψωνίζουν μαζί να βλέπουν τι έχουν τσεκάρει οι άλλοι</string>
@@ -1445,7 +1446,8 @@
   <string name="sessions_open">Εμφάνιση συνεδριών</string>
   <string name="sessions_profile">Συνδεδεμένος ως %1$s</string>
   <string name="sessions_switch_next">Μετάβαση στην επόμενη συνεδρία</string>
-  <string name="settings_server_config">Τρέχουσα διαμόρφωση διακομιστή</string>
+  <string name="settings_server_config">Διαμόρφωση διακομιστή</string>
+  <string name="settings_server_grocy">Διακομιστής Grocy</string>
   <string name="settings_server_config_enabled">Ενεργά</string>
   <string name="settings_server_config_disabled">Ανενεργά</string>
   <string name="settings_server_config_values">Τιμές</string>

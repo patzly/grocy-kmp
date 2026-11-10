@@ -134,6 +134,7 @@ private fun ProductItem(
         selectedId = form.productId,
         onSelectedIdChange = form::selectProduct,
         onUnmatchedChange = { form.isProductUnmatched = it },
+        onUnmatchedTextChange = { form.unmatchedProductText = it },
         error = if (form.unknownProduct.isNotOffered) {
             stringResource(Res.string.booking_not_in_stock)
         } else {

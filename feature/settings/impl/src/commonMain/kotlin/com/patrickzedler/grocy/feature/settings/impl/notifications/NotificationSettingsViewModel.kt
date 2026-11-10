@@ -88,7 +88,16 @@ internal class NotificationSettingsViewModel(
 
 /** The features [config] has, the only ones with settings here. */
 internal fun shownNotificationKinds(config: ServerConfig): List<NotificationKind> =
-    NotificationKind.entries.filter { it.isAvailable(config) }
+    NotificationOrder.filter { it.isAvailable(config) }
+
+// Like the start screen's default arrangement
+private val NotificationOrder = listOf(
+    NotificationKind.STOCK,
+    NotificationKind.MEAL_PLAN,
+    NotificationKind.CHORES,
+    NotificationKind.TASKS,
+    NotificationKind.BATTERIES,
+)
 
 /** What can be chosen a notification tells about: Grocy's meal plan has only one thing to tell. */
 internal fun shownNotificationTopics(

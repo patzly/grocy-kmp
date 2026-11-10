@@ -42,6 +42,7 @@ import com.patrickzedler.grocy.core.forms.emptyListItem
 import com.patrickzedler.grocy.core.forms.label
 import com.patrickzedler.grocy.core.forms.searchItem
 import com.patrickzedler.grocy.core.forms.showSearchAtTop
+import com.patrickzedler.grocy.core.forms.showsPullIndicator
 import com.patrickzedler.grocy.core.model.chores.ChoreDueStatus
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewField
 import com.patrickzedler.grocy.core.model.chores.ChoresOverviewGrouping
@@ -167,7 +168,7 @@ internal fun ChoresOverviewScreen(
         listState = listState,
         snackbarHostState = snackbarHostState,
         // The first download shows its own indicator in the empty list
-        isRefreshing = refresh.isRefreshing && state?.hasChores == true,
+        isRefreshing = refresh.showsPullIndicator(state?.hasChores == true, storedByStart = true),
         onRefresh = viewModel::refresh,
         itemSpacing = ListItemDefaults.SegmentedGap,
         floatingToolbar = { scrollBehavior, toolbarModifier ->

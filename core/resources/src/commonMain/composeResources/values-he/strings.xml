@@ -28,11 +28,11 @@
   <string name="action_recommend">המלצה</string>
   <string name="action_recommend_description">לספר לחברים על Grocy</string>
   <string name="action_rate">דירוג ב־Google Play</string>
-  <string name="action_rate_description">לעודד את המפתחים</string>
+  <string name="action_rate_description">לעודד את המפתח</string>
   <string name="action_support">תמיכה בפיתוח</string>
   <string name="action_support_description">רכישת אפליקציית ביטול הנעילה</string>
   <string name="action_email">שליחת אימייל</string>
-  <string name="action_email_description">יצירת קשר עם המפתחים</string>
+  <string name="action_email_description">יצירת קשר עם המפתח</string>
   <string name="action_issue">פתיחת דיווח חדש ב־GitHub</string>
   <string name="action_issue_description">דיווח על באגים או בקשת תכונה</string>
   <string name="action_send_feedback">שליחת משוב</string>
@@ -43,7 +43,7 @@
 
   <!-- Messages -->
   <string name="msg_recommend">עם Grocy אפשר לעקוב אחר מצרכים ומשק הבית בשרת Grocy משלך: %1$s</string>
-  <string name="msg_feedback">יש לך משאלות, שאלות או שגיאות? אפשר לפנות אלינו ונשמח לעזור!\nאחרת נשמח מאוד לביקורת טובה ב־Play Store.</string>
+  <string name="msg_feedback">יש לך משאלות, שאלות או שגיאות? אפשר לפנות אליי ואשמח לעזור!\nאחרת אשמח מאוד לביקורת טובה ב־Play Store.</string>
   <string name="msg_unlock">תמיכה בפיתוח</string>
   <string name="msg_unlock_description">אפליקציית ביטול הנעילה היא רכישה קטנה ב־Google Play שתומכת בפיתוח של Grocy. לאחר ההתקנה אפשר גם לעבור לסורק הברקודים של ML Kit. היא גם סורקת תאריכי תפוגה המודפסים על אריזות, כך שלא צריך לפענח אותם.</string>
 
@@ -164,7 +164,6 @@
     <item quantity="other">יש לך %1$d מוצרים במלאי בשווי %2$s</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s:</string>
-  <string name="start_summary_intro_end">%1$s.</string>
   <string name="start_list_join">%1$s, %2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="one">מועד הסיום של %1$d מוצר מגיע %2$s.</item>
@@ -1009,6 +1008,8 @@
   <string name="shopping_list_item_not_booked">%1$s לא נוסף למלאי. לדלג עליו ולהמשיך לפריט הבא, או לבטל?</string>
   <string name="booking_shopping_list_hint">יש לבדוק את הפרטים ולאשר את הקנייה. לאחר מכן הפריט יוסר מרשימת הקניות.</string>
   <string name="shopping_mode">מצב קניות</string>
+  <string name="shopping_list_unknown_as_note">שמירת מוצרים לא מוכרים כהערות</string>
+  <string name="shopping_list_unknown_as_note_hint">אם מה שהקלדת לא תואם לאף מוצר, הפריט נשמר עם הטקסט כהערה, כך שאפשר פשוט להקליד ולשמור</string>
   <string name="shopping_mode_settings">הגדרות מצב קניות</string>
   <string name="shopping_mode_auto_sync">סנכרון אוטומטי</string>
   <string name="shopping_mode_auto_sync_hint">טוען מחדש את הרשימה באופן קבוע, כדי שכל מי שקונה יחד יראה מה האחרים סימנו</string>
@@ -1498,7 +1499,8 @@
   <string name="sessions_open">הצגת הפעלות</string>
   <string name="sessions_profile">מחובר בתור %1$s</string>
   <string name="sessions_switch_next">מעבר להפעלה הבאה</string>
-  <string name="settings_server_config">תצורת השרת הנוכחית</string>
+  <string name="settings_server_config">תצורת השרת</string>
+  <string name="settings_server_grocy">שרת Grocy</string>
   <string name="settings_server_config_enabled">מופעל</string>
   <string name="settings_server_config_disabled">מושבת</string>
   <string name="settings_server_config_values">ערכים</string>

@@ -28,11 +28,11 @@
   <string name="action_recommend">Рекомендувати</string>
   <string name="action_recommend_description">Розкажіть друзям про Grocy</string>
   <string name="action_rate">Оцінити в Google Play</string>
-  <string name="action_rate_description">Підтримайте розробників</string>
+  <string name="action_rate_description">Підтримайте розробника</string>
   <string name="action_support">Підтримати розробку</string>
   <string name="action_support_description">Придбайте застосунок розблокування</string>
   <string name="action_email">Надіслати лист</string>
-  <string name="action_email_description">Зв’яжіться з розробниками</string>
+  <string name="action_email_description">Зв’яжіться з розробником</string>
   <string name="action_issue">Створити issue на GitHub</string>
   <string name="action_issue_description">Повідомте про помилку або запропонуйте функцію</string>
   <string name="action_send_feedback">Надіслати відгук</string>
@@ -43,7 +43,7 @@
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy веде облік продуктів і домашнього господарства на вашому власному сервері Grocy: %1$s</string>
-  <string name="msg_feedback">Маєте побажання, запитання чи знайшли помилку? Напишіть нам, ми радо допоможемо!\nА якщо все добре, будемо дуже раді гарному відгуку в Play Store.</string>
+  <string name="msg_feedback">Маєте побажання, запитання чи знайшли помилку? Напишіть мені, я радо допоможу!\nА якщо все добре, буду дуже радий гарному відгуку в Play Store.</string>
   <string name="msg_unlock">Підтримати розробку</string>
   <string name="msg_unlock_description">Купуючи недорогий застосунок розблокування в Google Play, ви підтримуєте розробку Grocy. Після його встановлення можна також перейти на сканер штрихкодів ML Kit. Він також сканує надруковані на упаковках терміни придатності, і їх більше не потрібно розбирати.</string>
 
@@ -166,7 +166,6 @@
     <item quantity="other">У вас у запасі %1$d продукту на суму %2$s</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s:</string>
-  <string name="start_summary_intro_end">%1$s.</string>
   <string name="start_list_join">%1$s, %2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="one">%1$d продукт треба спожити %2$s.</item>
@@ -1036,6 +1035,8 @@
   <string name="shopping_list_item_not_booked">%1$s не додано у наявність. Пропустити й перейти до наступного елемента чи скасувати?</string>
   <string name="booking_shopping_list_hint">Перевірте дані й підтвердьте покупку. Після цього елемент буде видалено зі списку покупок.</string>
   <string name="shopping_mode">Режим покупок</string>
+  <string name="shopping_list_unknown_as_note">Зберігати невідомі продукти як нотатки</string>
+  <string name="shopping_list_unknown_as_note_hint">Якщо введений текст не збігається з жодним продуктом, позицію буде збережено з цим текстом як нотаткою, тож достатньо ввести й зберегти</string>
   <string name="shopping_mode_settings">Налаштування режиму покупок</string>
   <string name="shopping_mode_auto_sync">Автосинхронізація</string>
   <string name="shopping_mode_auto_sync_hint">Регулярно оновлює список, щоб усі, хто робить покупки разом, бачили, що позначили інші</string>
@@ -1550,7 +1551,8 @@
   <string name="sessions_open">Показати сеанси</string>
   <string name="sessions_profile">Вхід виконано як %1$s</string>
   <string name="sessions_switch_next">Перейти до наступного сеансу</string>
-  <string name="settings_server_config">Поточна конфігурація сервера</string>
+  <string name="settings_server_config">Конфігурація сервера</string>
+  <string name="settings_server_grocy">Сервер Grocy</string>
   <string name="settings_server_config_enabled">Увімкнено</string>
   <string name="settings_server_config_disabled">Вимкнено</string>
   <string name="settings_server_config_values">Значення</string>

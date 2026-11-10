@@ -28,11 +28,11 @@
   <string name="action_recommend">Soovita</string>
   <string name="action_recommend_description">Räägi sõpradele Grocyst</string>
   <string name="action_rate">Hinda Google Plays</string>
-  <string name="action_rate_description">Motiveeri arendajaid</string>
+  <string name="action_rate_description">Motiveeri arendajat</string>
   <string name="action_support">Toeta arendust</string>
   <string name="action_support_description">Osta avamisrakendus</string>
   <string name="action_email">Saada e-kiri</string>
-  <string name="action_email_description">Võta arendajatega ühendust</string>
+  <string name="action_email_description">Võta arendajaga ühendust</string>
   <string name="action_issue">Ava GitHubis uus probleem</string>
   <string name="action_issue_description">Teata vigadest või soovi uut funktsiooni</string>
   <string name="action_send_feedback">Saada tagasisidet</string>
@@ -43,7 +43,7 @@
 
   <!-- Messages -->
   <string name="msg_recommend">Grocy peab arvet toidukaupade ja majapidamise üle sinu enda Grocy serveris: %1$s</string>
-  <string name="msg_feedback">Kas sul on soove või küsimusi või leidsid vea? Võta meiega ühendust, aitame hea meelega!\nMuidu rõõmustaksime väga toreda arvustuse üle Play Store’is.</string>
+  <string name="msg_feedback">Kas sul on soove või küsimusi või leidsid vea? Võta minuga ühendust, aitan hea meelega!\nMuidu rõõmustaksin väga toreda arvustuse üle Play Store’is.</string>
   <string name="msg_unlock">Toeta arendust</string>
   <string name="msg_unlock_description">Avamisrakendus on väike ost Google Plays, mis toetab Grocy arendust. Kui see on installitud, saad lülituda ka ML Kiti triipkoodi skännerile. Samuti skännib see pakenditele trükitud parim enne kuupäevi, nii et sa ei pea neid enam ise välja lugema.</string>
 
@@ -162,7 +162,6 @@
     <item quantity="other">Sul on laos %1$d toodet väärtusega %2$s</item>
   </plurals>
   <string name="start_summary_intro_list">%1$s:</string>
-  <string name="start_summary_intro_end">%1$s.</string>
   <string name="start_list_join">%1$s, %2$s</string>
   <plurals name="start_stock_due_soon">
     <item quantity="one">%1$d toode aegub %2$s.</item>
@@ -981,6 +980,8 @@
   <string name="shopping_list_item_not_booked">%1$s ei lisatud varudesse. Kas jätta see vahele ja jätkata järgmise tootega või tühistada?</string>
   <string name="booking_shopping_list_hint">Kontrolli andmeid ja kinnita ost. Seejärel eemaldatakse toode ostunimekirjast.</string>
   <string name="shopping_mode">Poerežiim</string>
+  <string name="shopping_list_unknown_as_note">Salvesta tundmatud tooted märkmetena</string>
+  <string name="shopping_list_unknown_as_note_hint">Kui sisestatu ei vasta ühelegi tootele, salvestatakse kirje selle tekstiga märkmena, nii et piisab kirjutamisest ja salvestamisest</string>
   <string name="shopping_mode_settings">Poerežiimi seaded</string>
   <string name="shopping_mode_auto_sync">Automaatne sünkroonimine</string>
   <string name="shopping_mode_auto_sync_hint">Laadib nimekirja regulaarselt uuesti, et kõik koos poes käijad näeksid, mida teised on ära märkinud</string>
@@ -1445,7 +1446,8 @@
   <string name="sessions_open">Kuva seansid</string>
   <string name="sessions_profile">Sisse logitud kasutajana %1$s</string>
   <string name="sessions_switch_next">Lülitu järgmisele seansile</string>
-  <string name="settings_server_config">Serveri praegune seadistus</string>
+  <string name="settings_server_config">Serveri seadistus</string>
+  <string name="settings_server_grocy">Grocy server</string>
   <string name="settings_server_config_enabled">Lubatud</string>
   <string name="settings_server_config_disabled">Keelatud</string>
   <string name="settings_server_config_values">Väärtused</string>
