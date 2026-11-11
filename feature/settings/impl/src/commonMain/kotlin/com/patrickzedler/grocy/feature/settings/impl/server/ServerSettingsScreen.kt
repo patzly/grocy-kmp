@@ -1,7 +1,5 @@
 package com.patrickzedler.grocy.feature.settings.impl.server
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
@@ -38,12 +36,12 @@ import com.patrickzedler.grocy.core.data.server.ServerState
 import com.patrickzedler.grocy.core.data.util.RefreshError
 import com.patrickzedler.grocy.core.design.GrocyTheme
 import com.patrickzedler.grocy.core.design.component.DemoServerWarning
+import com.patrickzedler.grocy.core.design.component.FormattedText
 import com.patrickzedler.grocy.core.design.component.LeadingTrailingContentWrapper
 import com.patrickzedler.grocy.core.design.component.ScreenPane
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
-import com.patrickzedler.grocy.core.design.component.SupportingBulletList
 import com.patrickzedler.grocy.core.design.component.TextDialog
 import com.patrickzedler.grocy.core.design.component.clickCursor
 import com.patrickzedler.grocy.core.design.component.confirm
@@ -343,6 +341,13 @@ private fun ServerConfigDialog(config: ServerConfig, onDismissRequest: () -> Uni
             stringResource(Res.string.settings_server_config_barcode_plugin, it)
         },
     )
+    val markup = serverConfigMarkup(
+        listOf(
+            stringResource(Res.string.settings_server_config_enabled) to enabled,
+            stringResource(Res.string.settings_server_config_disabled) to disabled,
+            stringResource(Res.string.settings_server_config_values) to values,
+        ),
+    )
     ScrollableAlertDialog(onDismissRequest = onDismissRequest) {
         ScrollableAlertDialogContent(
             title = { Text(stringResource(Res.string.settings_server_config)) },
@@ -359,29 +364,10 @@ private fun ServerConfigDialog(config: ServerConfig, onDismissRequest: () -> Uni
                 }
             },
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(ConfigListSpacing)) {
-                if (enabled.isNotEmpty()) {
-                    SupportingBulletList(
-                        intro = stringResource(Res.string.settings_server_config_enabled),
-                        bullets = enabled,
-                    )
-                }
-                if (disabled.isNotEmpty()) {
-                    SupportingBulletList(
-                        intro = stringResource(Res.string.settings_server_config_disabled),
-                        bullets = disabled,
-                    )
-                }
-                SupportingBulletList(
-                    intro = stringResource(Res.string.settings_server_config_values),
-                    bullets = values,
-                )
-            }
+            FormattedText(text = markup, isDialog = true)
         }
     }
 }
-
-private val ConfigListSpacing = 8.dp
 
 /** A value of the server, clickable if [onClick] is given, with a loading indicator at its end. */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)

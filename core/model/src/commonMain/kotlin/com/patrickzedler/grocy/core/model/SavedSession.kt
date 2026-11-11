@@ -76,12 +76,16 @@ fun sessionsAfterLogin(
 }
 
 /**
- * The session a swipe goes to from the current one ([sessions] starts with it), null without
- * another. The order must not follow the last use: a swipe would only ever return to the session
- * before, and a third one could never be reached.
+ * The session a swipe goes to from [from] (the current one, [sessions] starts with it, or the
+ * one being opened), null without another. The order must not follow the last use: a swipe would
+ * only ever return to the session before, and a third one could never be reached.
  */
-fun nextSession(sessions: List<SavedSession>): SavedSession? {
+fun nextSession(
+    sessions: List<SavedSession>,
+    from: SavedSession? = sessions.firstOrNull(),
+): SavedSession? {
     if (sessions.size < 2) return null
     val cycle = sessions.sortedBy { "${it.connection.serverUrl}\n${it.userId}\n${it.username}" }
-    return cycle[(cycle.indexOf(sessions.first()) + 1) % cycle.size]
+    val index = cycle.indexOfFirst { it.connection == from?.connection }
+    return cycle[(index + 1) % cycle.size]
 }

@@ -214,7 +214,8 @@ private fun UnlockItem(onClick: () -> Unit) {
         shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
         colors = SegmentedListDefaults.colors(),
         modifier = Modifier.fillMaxWidth().clickCursor(),
-        verticalAlignment = Alignment.CenterVertically,
+        // Its text always takes several lines, so the icon stays beside the title
+        verticalAlignment = Alignment.Top,
         leadingContent = {
             LeadingTrailingContentWrapper {
                 Icon(

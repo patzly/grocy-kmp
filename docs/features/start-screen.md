@@ -81,11 +81,14 @@ without them. A section a future version adds stays available until added.
 
 The logo in the app bar (`SessionLogoButton`) turns into a 32.dp profile circle while pressed,
 hovered and with its dialog open: the first letter of the username, one of three container colors
-per account. A tap opens `SessionsDialog` (`core:ui`): who is logged in and the instance, Logout, the
+per account, outlined in `outlineVariant` (the circles in the dialog have none). A tap opens
+`SessionsDialog` (`core:ui`) at once: who is logged in and the instance, Logout, the
 other sessions most recently used first, a bin at every item. On touch a swipe down moves the circle
 away and brings the next one from above, like the account particle of Google's apps; past half the way
 it opens that session. Swipes go round in a fixed order (`nextSession`), the last use would only ever
-lead back. The same dialog opens from "Saved sessions" of the login. See
+lead back. While one opens, the circle already shows it and the next swipe goes on from it; the last
+choice wins (`SessionsViewModel.switchTo` gives a running switch up, a login it already started
+still completes). The same dialog opens from "Saved sessions" of the login. See
 `docs/architecture/storage-and-variants.md`.
 
 A section whose data is not there yet (e.g. right after switching accounts) shows what it says when

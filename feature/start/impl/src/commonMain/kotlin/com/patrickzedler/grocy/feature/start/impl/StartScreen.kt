@@ -216,11 +216,12 @@ internal fun StartScreen(
         menuItems = appMenu.items,
         modifier = modifier,
         logo = {
+            // The session being opened already, so a further swipe goes on from it
+            val shown = sessionsViewModel.switching ?: sessions.firstOrNull()
             SessionLogoButton(
-                session = sessions.firstOrNull(),
-                next = nextSession(sessions),
+                session = shown,
+                next = nextSession(sessions, from = shown),
                 isDialogOpen = isSessionsDialogOpen,
-                isSwitching = sessionsViewModel.switching != null,
                 onClick = { isSessionsDialogOpen = true },
                 onSwipeTo = { session ->
                     sessionsViewModel.switchTo(session, onSwitched = onSessionSwitched)

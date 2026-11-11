@@ -49,6 +49,7 @@ import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialog
 import com.patrickzedler.grocy.core.design.component.ScrollableAlertDialogContent
 import com.patrickzedler.grocy.core.design.component.SegmentedListDefaults
 import com.patrickzedler.grocy.core.design.component.clickCursor
+import com.patrickzedler.grocy.core.design.component.smallIconButtonSize
 import com.patrickzedler.grocy.core.design.component.confirm
 import com.patrickzedler.grocy.core.design.component.dialogListScrollbar
 import com.patrickzedler.grocy.core.model.SavedSession
@@ -368,7 +369,9 @@ private fun RemoveButton(enabled: Boolean, onClick: () -> Unit) {
         IconButton(
             onClick = onClick,
             enabled = enabled,
-            modifier = Modifier.clickCursor(enabled = enabled),
+            // Narrow like the overflow buttons of list items, it shares the row with the text
+            modifier = smallIconButtonSize(IconButtonDefaults.IconButtonWidthOption.Narrow)
+                .clickCursor(enabled = enabled),
             shapes = IconButtonDefaults.shapes(),
         ) {
             Icon(

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.patrickzedler.grocy.core.data.auth.AuthRepository
 import com.patrickzedler.grocy.core.model.SavedSession
 import com.patrickzedler.grocy.core.network.GrocyApiException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -42,13 +43,26 @@ class SessionsViewModel(
         }
     }
 
-    /** Logs in to [session] and then calls [onSwitched]; the current login stays if it fails. */
+    private var switchJob: Job? = null
+
+    /**
+     * Logs in to [session] and then calls [onSwitched]; the current login stays if it fails.
+     * The last choice wins: a switch still running is given up for it, so choosing another
+     * session (or the open one again) while one loads never ends in the one chosen before.
+     */
     fun switchTo(session: SavedSession, onSwitched: () -> Unit = {}) {
-        if (switching != null) return
+        if (switching?.connection == session.connection) return
+        val previous = switchJob
+        previous?.cancel()
         switching = session
         error = null
-        viewModelScope.launch {
+        switchJob = viewModelScope.launch {
             try {
+                // Its login is never cut in half, so it may still finish
+                previous?.join()
+                // Back to the open session before another one was stored: nothing to load
+                val open = authRepository.sessions.first().firstOrNull()
+                if (open?.connection == session.connection) return@launch
                 authRepository.switchTo(session)
                 // Until the list has followed, the profile would show the former session again
                 sessions.first { it.firstOrNull()?.connection == session.connection }
@@ -63,7 +77,8 @@ class SessionsViewModel(
                     else -> SessionError.FAILED
                 }
             } finally {
-                switching = null
+                // A later choice has taken over already
+                if (switching === session) switching = null
             }
         }
     }

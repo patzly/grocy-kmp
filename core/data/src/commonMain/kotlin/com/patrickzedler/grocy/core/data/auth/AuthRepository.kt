@@ -10,10 +10,12 @@ import com.patrickzedler.grocy.core.model.sessionsOf
 import com.patrickzedler.grocy.core.network.GrocyApi
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import com.patrickzedler.grocy.core.network.ServerUrl
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 /**
  * @param keepsSessions a logout keeps the login for later; the watch, which shows no list of
@@ -81,7 +83,8 @@ class AuthRepository(
      */
     suspend fun switchTo(session: SavedSession) {
         val user = verify(session.connection)
-        saveLogin(session.connection, user)
+        // Cancelled after the check, the login still completes: never cleared data without it
+        withContext(NonCancellable) { saveLogin(session.connection, user) }
     }
 
     /** Back to the login; the session stays kept for later, see [removeSession]. */

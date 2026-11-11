@@ -97,6 +97,16 @@ class SavedSessionTest {
     }
 
     @Test
+    fun aSwipeWhileOneOpensGoesOnFromIt() {
+        val sessions = listOf(anna, ben, demo)
+        val opening = nextSession(sessions)!!
+
+        val next = nextSession(sessions, from = opening)
+
+        assertEquals(nextSession(listOf(opening) + sessions.filterNot { it == opening }), next)
+    }
+
+    @Test
     fun aSingleSessionHasNoNext() {
         assertNull(nextSession(listOf(anna)))
     }

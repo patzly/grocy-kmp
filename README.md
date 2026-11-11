@@ -47,6 +47,7 @@ Grocy's web frontend works in any browser and covers everything. Grocy KMP shows
 * **New products filled in** from Open Food Facts and its sister databases
 * **Several accounts and servers**, switched with one swipe
 * **Material 3 Expressive** design with dynamic colors, dark mode and layouts for every screen size, from phones to desktops
+* **Accessibility** in every screen: labels for screen readers, headings, announced errors, large touch targets and full keyboard and mouse support
 
 ## Features
 
@@ -66,6 +67,7 @@ Grocy's web frontend works in any browser and covers everything. Grocy KMP shows
 * Several accounts and servers, quick switching between them
 * Layouts for phones, foldables, tablets and desktops
 * Dark mode and dynamic color support
+* Accessible with screen readers, keyboard and mouse
 * No ads or analytics
 
 ## Unlock app

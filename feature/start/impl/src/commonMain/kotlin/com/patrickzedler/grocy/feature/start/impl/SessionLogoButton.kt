@@ -3,6 +3,7 @@ package com.patrickzedler.grocy.feature.start.impl
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -14,6 +15,7 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ripple
@@ -77,7 +79,6 @@ internal fun SessionLogoButton(
     session: SavedSession?,
     next: SavedSession?,
     isDialogOpen: Boolean,
-    isSwitching: Boolean,
     onClick: () -> Unit,
     onSwipeTo: (SavedSession) -> Unit,
     modifier: Modifier = Modifier,
@@ -87,7 +88,6 @@ internal fun SessionLogoButton(
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     val isHovered by interactionSource.collectIsHoveredAsState()
-    var isOpening by remember { mutableStateOf(false) }
     var isDragging by remember { mutableStateOf(false) }
     // Counted up by every swipe: the circle stays for a moment afterwards, to be read
     var swipes by remember { mutableIntStateOf(0) }
@@ -105,13 +105,13 @@ internal fun SessionLogoButton(
         delay(PROFILE_HOLD_MILLIS)
         isHolding = false
     }
-    // Done or failed: the circle of the session that is now current is back in the middle
-    LaunchedEffect(isSwitching, session?.connection) {
-        if (!isSwitching && !isDragging && offset.value != 0f) offset.snapTo(0f)
+    // Another session shown (chosen, opened or failed): its circle is back in the middle
+    LaunchedEffect(session?.connection) {
+        if (!isDragging && offset.value != 0f) offset.snapTo(0f)
     }
 
     val showsProfile = session != null &&
-        (isPressed || isHovered || isOpening || isDialogOpen || isDragging || isHolding)
+        (isPressed || isHovered || isDialogOpen || isDragging || isHolding)
     val transition = updateTransition(showsProfile, label = "profile")
     val logoScale by transition.animateFloat({ spatial }, label = "logo scale") {
         if (it) HIDDEN_SCALE else 1f
@@ -131,14 +131,14 @@ internal fun SessionLogoButton(
     val nextLabel = stringResource(Res.string.sessions_switch_next)
     val open = {
         haptic.confirm()
-        scope.launch {
-            isOpening = true
-            delay(PROFILE_REVEAL_MILLIS)
-            onClick()
-            isOpening = false
-        }
-        Unit
+        // At once: the open dialog keeps the circle, which grows in behind its scrim
+        onClick()
     }
+    val outline = Modifier.border(
+        width = ProfileOutlineWidth,
+        color = MaterialTheme.colorScheme.outlineVariant,
+        shape = CircleShape,
+    )
 
     Box(
         contentAlignment = Alignment.Center,
@@ -230,7 +230,7 @@ internal fun SessionLogoButton(
                         alpha = profileAlpha * progress
                         scaleX = profileScale
                         scaleY = profileScale
-                    },
+                    }.then(outline),
                 )
             }
             SessionAvatar(
@@ -241,7 +241,7 @@ internal fun SessionLogoButton(
                     alpha = profileAlpha * (1f - progress)
                     scaleX = profileScale
                     scaleY = profileScale
-                },
+                }.then(outline),
             )
         }
     }
@@ -251,11 +251,10 @@ private const val SWIPE_RESISTANCE = 0.6f
 private const val SWIPE_COMMIT_FRACTION = 0.5f
 private const val HIDDEN_SCALE = 0.5f
 
-// Long enough to see the circle before the dialog's scrim covers it
-private const val PROFILE_REVEAL_MILLIS = 180L
 private const val PROFILE_HOLD_MILLIS = 1_400L
 
 private val SwipeDistance = 40.dp
+private val ProfileOutlineWidth = 1.dp
 private val LogoButtonSize = 48.dp
 
 // Keeps the logo where it was without this button around it: 16.dp, it is 30.dp wide

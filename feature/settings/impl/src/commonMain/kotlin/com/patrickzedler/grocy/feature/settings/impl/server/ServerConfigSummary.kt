@@ -67,3 +67,13 @@ internal fun serverFeaturesOf(config: ServerConfig): List<ServerFeature> = listO
 /** What the configuration calls its Grocycodes. */
 internal fun grocycodeTypeOf(config: ServerConfig): String =
     if (config.grocycode2D) "DataMatrix (2D)" else "Code 128 (1D)"
+
+/**
+ * The configuration as `FormattedText` markup: each part a headline over its bullet list, parts
+ * without entries left out.
+ */
+internal fun serverConfigMarkup(parts: List<Pair<String, List<String>>>): String =
+    parts.filter { (_, entries) -> entries.isNotEmpty() }
+        .joinToString("\n\n") { (title, entries) ->
+            "### $title\n\n" + entries.joinToString("\n") { "- $it" }
+        }
