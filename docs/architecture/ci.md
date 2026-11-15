@@ -6,8 +6,7 @@ Workflows, signing and reproducible builds. Moved from CLAUDE.md.
   reports on failure.
 - `nightly.yml` (daily 02:00 UTC, skipped without new commits): signed nightly APKs for FOSS and
   Play, web app deployed to `grocy-nightly.patrickzedler.com` (build id = commit SHA, see
-  `docs/architecture/updates.md`; GitHub Pages only keeps `deploy/github-pages`, which points the
-  former address there and retires the worker installed at it), a reproducibility check that
+  `docs/architecture/updates.md`), a reproducibility check that
   builds the unsigned FOSS release twice and compares bytes, then replaces the `nightly` GitHub release.
 - `release.yml` (tag `v*`, must equal `v` + `grocy.versionName`): job `web` builds the web app
   (build id = tag commit, no version suffix); job `release` runs `allTests`, then signed FOSS APK,
