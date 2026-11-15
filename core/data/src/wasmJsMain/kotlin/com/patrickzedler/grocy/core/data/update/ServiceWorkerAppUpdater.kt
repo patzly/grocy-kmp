@@ -68,7 +68,7 @@ class ServiceWorkerAppUpdater(private val buildId: String) : AppUpdater {
 @JsFun("() => 'serviceWorker' in navigator && window.isSecureContext")
 private external fun isServiceWorkerSupported(): Boolean
 
-// no-store: the HTTP cache of the host (GitHub Pages: 10 minutes) must not hide a new version
+// no-store: the HTTP cache of the browser or host must not hide a new version
 @JsFun("() => fetch('precache.json', { cache: 'no-store' }).then((r) => r.ok ? r.text() : null)")
 private external fun fetchPrecacheManifest(): Promise<JsString?>
 

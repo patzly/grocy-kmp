@@ -14,10 +14,25 @@ self.addEventListener('install', (event) => {
             throw new Error(`Server has build ${manifest.buildId}, not ${build}`);
         }
         const cache = await caches.open(cacheName);
-        // no-cache revalidates, so files the browser already has are not downloaded again
-        await cache.addAll(manifest.files.map((file) => new Request(file, { cache: 'no-cache' })));
+        await Promise.all(manifest.files.map(async (file) => {
+            // no-cache revalidates, so files the browser already has are not downloaded again
+            const response = await fetch(new Request(file, { cache: 'no-cache' }));
+            if (!response.ok) throw new Error(`${file}: ${response.status}`);
+            await cache.put(file, unredirected(response));
+        }));
     })());
 });
+
+// Cloudflare Pages redirects index.html to the directory, and browsers refuse a redirected
+// response as answer to a navigation, which would break offline starts
+function unredirected(response) {
+    if (!response.redirected) return response;
+    return new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers,
+    });
+}
 
 self.addEventListener('activate', (event) => {
     event.waitUntil((async () => {

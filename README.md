@@ -28,11 +28,30 @@ The Wear OS app is installed from Google Play on your watch; it takes the login 
 
 ### Web app
 
-The web app runs in every current browser, without installing anything: open **[patzly.github.io/grocy-kmp](https://patzly.github.io/grocy-kmp/)** and log in.
+The web app runs in every current browser, without installing anything: open **[grocy.patrickzedler.com](https://grocy.patrickzedler.com/)** and log in. The newest development state runs at [grocy-nightly.patrickzedler.com](https://grocy-nightly.patrickzedler.com/), with its own logins and data.
 
 To use it like an app, install it from the browser: in Chrome or Edge with "Install" in the address bar or the menu, on Android with "Add to home screen", in Safari on iPhone or iPad with "Share" › "Add to Home Screen". It then opens in its own window, starts without loading the app again and updates itself after asking you.
 
 Your Grocy server must be reachable with `https`, because browsers block plain `http` requests from a secure page. Logging in through Home Assistant ingress is not possible in browsers; assign a port to the Grocy add-on instead.
+
+The web app only delivers its files: your browser talks to your Grocy server directly, your data never passes through the server of the web app.
+
+#### Hosting the web app yourself
+
+If you run Grocy on your own server, you can serve the web app from it too. Every release comes as a Docker image for `amd64` and `arm64`, an nginx without root rights on port 8080:
+
+```yaml
+services:
+  grocy-kmp-web:
+    image: ghcr.io/patzly/grocy-kmp-web:latest
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+```
+
+Without Docker, unpack `Grocy-web-<version>.zip` of a [release](https://github.com/patzly/grocy-kmp/releases) into any static web server. It needs no configuration; only very old servers lack the type `application/wasm` for `.wasm` files.
+
+Put it behind your reverse proxy with `https`, like Grocy itself: browsers allow the camera, installing and offline use only on secure pages. A path below Grocy's own address, e.g. `https://grocy.example.com/app/`, works too and keeps everything on one address. Updates come with a new image or ZIP; installed web apps notice them by themselves.
 
 ## Why Grocy KMP?
 

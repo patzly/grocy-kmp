@@ -1,0 +1,6 @@
+# Only the image's two inputs, not the build's intermediates of several gigabytes
+*
+!docker/nginx.conf
+!build/dist/wasmJs/productionExecutable
+# Source maps help no one using the app
+build/dist/wasmJs/productionExecutable/**/*.map

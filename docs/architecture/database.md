@@ -23,7 +23,7 @@ Schema history and the web database driver. Moved from CLAUDE.md.
 - Android: `BundledSQLiteDriver`, file `grocy.db`. Web: `WebWorkerSQLiteDriver` with the worker
   `core/database/web-worker/worker.js` (npm package `grocy-sqlite-worker` on top of
   `@sqlite.org/sqlite-wasm`, androidx's message protocol). It stores the database in OPFS with
-  the "opfs-sahpool" VFS, which needs no COOP/COEP headers (GitHub Pages); a second tab or a
+  the "opfs-sahpool" VFS, which needs no COOP/COEP headers (static hosts like Cloudflare Pages); a second tab or a
   browser without OPFS gets an in-memory database that the app fills from the server again.
   Webpack bundles worker and `sqlite3.wasm`, `precache.json` lists them for offline use.
 
