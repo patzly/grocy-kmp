@@ -79,9 +79,10 @@ are also in each row's menu and accessibility actions. Sections the server hides
 keep their place (`withHiddenFrom`). The user's entities stay right above the master data, at the end
 without them. A section a future version adds stays available until added.
 
-The logo in the app bar (`SessionLogoButton`) turns into a 32.dp profile circle while pressed,
+The logo in the app bar (`SessionLogoButton`) turns into a 32.dp profile circle (a 150 ms crossfade,
+no scaling) while pressed,
 hovered and with its dialog open: the first letter of the username, one of three container colors
-per account, outlined in `outlineVariant` (the circles in the dialog have none). A tap opens
+per account, outlined in `outline` (the circles in the dialog have none). A tap opens
 `SessionsDialog` (`core:ui`) at once: who is logged in and the instance, Logout, the
 other sessions most recently used first, a bin at every item. On touch a swipe down moves the circle
 away and brings the next one from above, like the account particle of Google's apps; past half the way

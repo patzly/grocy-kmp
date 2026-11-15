@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -86,6 +85,7 @@ import com.patrickzedler.grocy.core.resources.grocycode_product
 import com.patrickzedler.grocy.core.resources.ic_rounded_add_shopping_cart
 import com.patrickzedler.grocy.core.resources.ic_rounded_calculate
 import com.patrickzedler.grocy.core.resources.ic_rounded_delete
+import com.patrickzedler.grocy.core.resources.ic_rounded_description
 import com.patrickzedler.grocy.core.resources.ic_rounded_edit
 import com.patrickzedler.grocy.core.resources.ic_rounded_history
 import com.patrickzedler.grocy.core.resources.ic_rounded_hourglass_empty
@@ -96,6 +96,7 @@ import com.patrickzedler.grocy.core.resources.ic_rounded_no_photography
 import com.patrickzedler.grocy.core.resources.ic_rounded_payments
 import com.patrickzedler.grocy.core.resources.ic_rounded_sell
 import com.patrickzedler.grocy.core.resources.ic_rounded_shopping_cart
+import com.patrickzedler.grocy.core.resources.product_description
 import com.patrickzedler.grocy.core.resources.product_edit
 import com.patrickzedler.grocy.core.resources.product_location
 import com.patrickzedler.grocy.core.resources.product_overview
@@ -221,9 +222,6 @@ private fun ProductOverviewContent(
             if (state == null) {
                 SegmentedGroup { OverviewItem(row = nameRow, index = 0, count = 1) }
                 return@Column
-            }
-            if (state.description.isNotEmpty()) {
-                DescriptionItem(state.description)
             }
             OverviewGroups(state, details, nameRow)
             when {
@@ -390,47 +388,76 @@ private fun ActionButton(
     }
 }
 
+/** The product's description right below its name, long ones shortened until shown in full. */
 @Composable
-private fun DescriptionItem(text: String) {
+private fun DescriptionItem(text: String, index: Int, count: Int) {
     val haptic = LocalHapticFeedback.current
     var isExpanded by rememberSaveable { mutableStateOf(false) }
     var isOverflowing by remember { mutableStateOf(false) }
 
-    // The button keeps as much room below it as above it, not the item's padding on top of that
-    val padding =
-        if (isOverflowing) DescriptionPaddingWithButton else SegmentedListDefaults.ContainerPadding
-    SegmentedContainer(index = 0, count = 1, contentPadding = padding) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = if (isExpanded) Int.MAX_VALUE else COLLAPSED_DESCRIPTION_LINES,
-            overflow = TextOverflow.Ellipsis,
-            onTextLayout = { if (!isExpanded) isOverflowing = it.hasVisualOverflow },
-            modifier = Modifier.fillMaxWidth().animateContentSize(),
-        )
-        if (isOverflowing) {
-            FilledTonalButton(
-                onClick = {
-                    haptic.confirm()
-                    isExpanded = !isExpanded
-                },
-                modifier = Modifier.padding(vertical = 4.dp).clickCursor(),
-                shapes = ButtonDefaults.shapes(),
-            ) {
-                Text(
-                    stringResource(
-                        if (isExpanded) {
-                            Res.string.product_overview_show_less
-                        } else {
-                            Res.string.product_overview_show_more
-                        },
-                    ),
+    ListItem(
+        modifier = Modifier.fillMaxWidth(),
+        leadingContent = {
+            LeadingTrailingContentWrapper {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_rounded_description),
+                    contentDescription = null,
                 )
             }
-        }
-    }
+        },
+        overlineContent = { Text(stringResource(Res.string.product_description)) },
+        shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
+        colors = SegmentedListDefaults.colors(),
+        content = {
+            Column {
+                Text(
+                    text = text,
+                    maxLines = if (isExpanded) Int.MAX_VALUE else COLLAPSED_DESCRIPTION_LINES,
+                    overflow = TextOverflow.Ellipsis,
+                    onTextLayout = { if (!isExpanded) isOverflowing = it.hasVisualOverflow },
+                    modifier = Modifier.fillMaxWidth().animateContentSize(),
+                )
+                if (isOverflowing) {
+                    FilledTonalButton(
+                        onClick = {
+                            haptic.confirm()
+                            isExpanded = !isExpanded
+                        },
+                        modifier = Modifier.padding(top = 8.dp).clickCursor(),
+                        shapes = ButtonDefaults.shapes(),
+                    ) {
+                        Text(
+                            stringResource(
+                                if (isExpanded) {
+                                    Res.string.product_overview_show_less
+                                } else {
+                                    Res.string.product_overview_show_more
+                                },
+                            ),
+                        )
+                    }
+                }
+            }
+        },
+    )
 }
+
+/** Where the [rows] of the first group stand among its [count] items. */
+internal class GroupPlaces(val rows: List<Int>, val count: Int)
+
+/**
+ * The first group of the overview: the name, then the description if there is one, then the
+ * other [rows] of the stock (the name counts among [rows]).
+ */
+internal fun firstGroupPlaces(rows: Int, hasDescription: Boolean): GroupPlaces {
+    val shift = if (hasDescription) 1 else 0
+    return GroupPlaces(
+        rows = List(rows) { if (it == 0) 0 else it + shift },
+        count = rows + shift,
+    )
+}
+
+internal const val DESCRIPTION_PLACE = 1
 
 /** One value of the overview, its label small above it. */
 private class OverviewRow(
@@ -559,13 +586,28 @@ private fun OverviewGroups(
         )
     }
 
+    val description = state.description.takeIf { it.isNotEmpty() }
     Column(
         verticalArrangement = Arrangement.spacedBy(SegmentedListDefaults.GroupSpacing),
     ) {
-        listOf(stock, history).filter { it.isNotEmpty() }.forEach { rows ->
+        // The name leads the first group, the description follows it as one of its items
+        SegmentedGroup {
+            val places = firstGroupPlaces(rows = stock.size, hasDescription = description != null)
+            stock.forEachIndexed { index, row ->
+                OverviewItem(row = row, index = places.rows[index], count = places.count)
+                if (index == 0 && description != null) {
+                    DescriptionItem(
+                        text = description,
+                        index = DESCRIPTION_PLACE,
+                        count = places.count,
+                    )
+                }
+            }
+        }
+        if (history.isNotEmpty()) {
             SegmentedGroup {
-                rows.forEachIndexed { index, row ->
-                    OverviewItem(row = row, index = index, count = rows.size)
+                history.forEachIndexed { index, row ->
+                    OverviewItem(row = row, index = index, count = history.size)
                 }
             }
         }
@@ -728,7 +770,6 @@ internal fun String.fill(vararg args: String): String =
 private const val SEPARATOR = " · "
 private const val COLLAPSED_DESCRIPTION_LINES = 3
 
-private val DescriptionPaddingWithButton = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp)
 private val IndicatorSize = 40.dp
 private val MaxPictureHeight = 320.dp
 private val PlaceholderHeight = 160.dp

@@ -2,6 +2,7 @@ package com.patrickzedler.grocy.feature.start.impl
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -95,7 +96,8 @@ internal fun SessionLogoButton(
     val offset = remember { Animatable(0f) }
     val distance = with(LocalDensity.current) { SwipeDistance.toPx() }
     val spatial = MaterialTheme.motionScheme.defaultSpatialSpec<Float>()
-    val effects = MaterialTheme.motionScheme.defaultEffectsSpec<Float>()
+    // A quick crossfade in place, the logo and the circle never grow or shrink
+    val fade = tween<Float>(durationMillis = FADE_MILLIS)
     val currentNext by rememberUpdatedState(next)
     val currentOnSwipeTo by rememberUpdatedState(onSwipeTo)
 
@@ -113,16 +115,10 @@ internal fun SessionLogoButton(
     val showsProfile = session != null &&
         (isPressed || isHovered || isDialogOpen || isDragging || isHolding)
     val transition = updateTransition(showsProfile, label = "profile")
-    val logoScale by transition.animateFloat({ spatial }, label = "logo scale") {
-        if (it) HIDDEN_SCALE else 1f
-    }
-    val logoAlpha by transition.animateFloat({ effects }, label = "logo alpha") {
+    val logoAlpha by transition.animateFloat({ fade }, label = "logo alpha") {
         if (it) 0f else 1f
     }
-    val profileScale by transition.animateFloat({ spatial }, label = "profile scale") {
-        if (it) 1f else HIDDEN_SCALE
-    }
-    val profileAlpha by transition.animateFloat({ effects }, label = "profile alpha") {
+    val profileAlpha by transition.animateFloat({ fade }, label = "profile alpha") {
         if (it) 1f else 0f
     }
 
@@ -136,7 +132,7 @@ internal fun SessionLogoButton(
     }
     val outline = Modifier.border(
         width = ProfileOutlineWidth,
-        color = MaterialTheme.colorScheme.outlineVariant,
+        color = MaterialTheme.colorScheme.outline,
         shape = CircleShape,
     )
 
@@ -214,8 +210,6 @@ internal fun SessionLogoButton(
     ) {
         GrocyLogo(
             modifier = Modifier.graphicsLayer {
-                scaleX = logoScale
-                scaleY = logoScale
                 alpha = logoAlpha
             },
         )
@@ -228,8 +222,6 @@ internal fun SessionLogoButton(
                         val progress = (offset.value / distance).coerceIn(0f, 1f)
                         translationY = offset.value - distance
                         alpha = profileAlpha * progress
-                        scaleX = profileScale
-                        scaleY = profileScale
                     }.then(outline),
                 )
             }
@@ -239,8 +231,6 @@ internal fun SessionLogoButton(
                     val progress = (offset.value / distance).coerceIn(0f, 1f)
                     translationY = offset.value
                     alpha = profileAlpha * (1f - progress)
-                    scaleX = profileScale
-                    scaleY = profileScale
                 }.then(outline),
             )
         }
@@ -249,7 +239,7 @@ internal fun SessionLogoButton(
 
 private const val SWIPE_RESISTANCE = 0.6f
 private const val SWIPE_COMMIT_FRACTION = 0.5f
-private const val HIDDEN_SCALE = 0.5f
+private const val FADE_MILLIS = 150
 
 private const val PROFILE_HOLD_MILLIS = 1_400L
 

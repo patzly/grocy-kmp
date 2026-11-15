@@ -19,7 +19,7 @@ pages and the shopping list show it through `ProductOverviewHost`, whose ViewMod
   value as text, the product name first in the stock group (with the loading indicator of a
   download over stored values), hidden like in Grocy by feature flag (prices: stock value, last/average price and
   price history; location: default location; best before dates: average shelf life),
-  description (three lines, "Show more"), picture (1200 px, offline the stored list picture)
+  the description as item right below the name (three lines, "Show more"), picture (1200 px, offline the stored list picture)
   and the price history. `ProductOverviewViewModel` is one per product list (`show`/`hide`, kept
   across rotations), every opening downloads `/stock/products/{id}` plus its price history
   (`MasterDataRepository.refreshProductOverview`, stored as JSON in `product_overviews`, so the
