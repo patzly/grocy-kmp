@@ -4,7 +4,7 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)  [![Release](https://img.shields.io/github/v/release/patzly/grocy-kmp?label=Release)](https://github.com/patzly/grocy-kmp/releases)  [![APK Downloads](https://img.shields.io/github/downloads/patzly/grocy-kmp/total.svg?label=APK%20Downloads)](https://github.com/patzly/grocy-kmp/releases)
 
-> **🤖 This project is developed with the help of AI.** Grocy KMP is a very large undertaking: a complete client for every part of Grocy on phones, tablets, watches and the web. I wouldn't have the time to build it alone, and without AI it would have cost at least several years of my spare time. Every change is still planned, reviewed and tested by me.
+> This project is developed with the help of AI. Grocy KMP is a very large undertaking: a complete client for every part of Grocy on phones, tablets, watches and the web. I wouldn't have the time to build it alone, and without AI it would have cost at least several years of my spare time. Every change is still planned, reviewed and tested by me.
 
 Grocy KMP is an open-source client for [Grocy](https://grocy.info/) ([source code](https://github.com/grocy/grocy)), a self-hosted grocery and household management solution for your home.
 
@@ -108,7 +108,7 @@ Connections can also go through an HTTP proxy or Tor.
 
 ## Contribution
 
-If you run into a bug or miss a feature, please [open an issue](https://github.com/patzly/grocy-kmp/issues) in this repository. If you have a good knowledge of Kotlin and Compose, pull requests are highly appreciated!
+If you run into a bug or miss a feature, please [open an issue](https://github.com/patzly/grocy-kmp/issues) in this repository.
 
 Like the grocy project, Grocy KMP can be translated, too. The main language is English, but I also maintain the German translation because it's my mother tongue.
 You can help translate this project at [Transifex](https://app.transifex.com/patzly/grocy-kmp), if your language is incomplete, contains typos or is not available yet.
