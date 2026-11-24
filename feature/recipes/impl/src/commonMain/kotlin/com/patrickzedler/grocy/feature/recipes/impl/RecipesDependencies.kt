@@ -7,6 +7,7 @@ import com.patrickzedler.grocy.core.data.settings.RecipesOptionsRepository
 import com.patrickzedler.grocy.core.data.settings.ScannerFormsRepository
 import com.patrickzedler.grocy.core.data.shoppinglist.ShoppingListRepository
 import com.patrickzedler.grocy.core.data.stock.StockRepository
+import com.patrickzedler.grocy.core.network.RecipeImportApi
 
 /** What Grocy's recipes need from the app. */
 interface RecipesDependencies {
@@ -29,4 +30,7 @@ interface RecipesDependencies {
 
     /** Whether the ingredient and meal plan forms open with their scanner. */
     val scannerForms: ScannerFormsRepository
+
+    /** Reads recipes of recipe sites; null where pages of other sites cannot be read (web). */
+    val recipeImport: RecipeImportApi?
 }

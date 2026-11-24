@@ -69,6 +69,22 @@
       </intent-filter>
     </activity>
 
+    <!--
+        "Import recipe" in the share sheet of browsers and recipe apps: a shared recipe page opens
+        as new recipe (MainActivity, sharedRecipeLinkOf); its own label tells what it does
+    -->
+    <activity-alias
+      android:name="com.patrickzedler.grocy.apps.shared.ImportRecipe"
+      android:exported="true"
+      android:label="@string/share_import_recipe"
+      android:targetActivity="com.patrickzedler.grocy.apps.shared.MainActivity">
+      <intent-filter>
+        <action android:name="android.intent.action.SEND" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <data android:mimeType="text/plain" />
+      </intent-filter>
+    </activity-alias>
+
     <!-- Floats over the home screen when a shopping list widget is placed or reconfigured -->
     <activity
       android:name="com.patrickzedler.grocy.apps.shared.widget.ShoppingListWidgetConfigureActivity"

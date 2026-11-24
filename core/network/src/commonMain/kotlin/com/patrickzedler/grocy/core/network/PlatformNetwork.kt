@@ -18,6 +18,12 @@ internal expect val sendApiKeyAsQueryParameter: Boolean
 expect val isHomeAssistantIngressSupported: Boolean
 
 /**
+ * Whether recipes can be imported from recipe sites. Browsers cannot: the sites send no CORS
+ * headers, so a web app may not read their pages.
+ */
+expect val isRecipeImportSupported: Boolean
+
+/**
  * Whether the app can choose a proxy or Tor for its requests. Browsers cannot: fetch() always uses
  * the browser's proxy settings.
  */

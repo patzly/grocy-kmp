@@ -58,6 +58,8 @@ import com.patrickzedler.grocy.core.model.ScannerEngine
 import com.patrickzedler.grocy.core.model.network.TrustedCertificate
 import com.patrickzedler.grocy.core.model.ServerConnection
 import com.patrickzedler.grocy.core.network.ProductFactsApi
+import com.patrickzedler.grocy.core.network.RecipeImportApi
+import com.patrickzedler.grocy.core.network.isRecipeImportSupported
 import com.patrickzedler.grocy.core.scanner.BarcodeDecoderFactory
 import com.patrickzedler.grocy.core.scanner.TextRecognizerFactory
 import com.patrickzedler.grocy.feature.about.impl.AboutDependencies
@@ -300,12 +302,15 @@ class AppGraph(
     internal val behaviorSettingsRepository =
         BehaviorSettingsRepository(platform.settingsStore, appScope)
 
+    // Names the app to the product databases and recipe sites it asks
+    private val externalUserAgent: String
+        get() = "GrocyKMP/${platform.versionName} (https://github.com/$GITHUB_REPOSITORY)"
+
     private val productFactsRepository by lazy {
         ProductFactsRepository(
             api = ProductFactsApi(
                 httpClient = httpClient,
-                userAgent = "GrocyKMP/${platform.versionName} " +
-                    "(https://github.com/$GITHUB_REPOSITORY)",
+                userAgent = externalUserAgent,
             ),
             enabledSources = {
                 behaviorSettingsRepository.settings.value?.productFactsSources.orEmpty()
@@ -569,6 +574,9 @@ class AppGraph(
     }
 
     internal val recipesDependencies: RecipesDependencies = object : RecipesDependencies {
+        override val recipeImport: RecipeImportApi? by lazy {
+            RecipeImportApi(httpClient, externalUserAgent).takeIf { isRecipeImportSupported }
+        }
         override val scannerForms: ScannerFormsRepository
             get() = scannerFormsRepository
         override val masterDataRepository: MasterDataRepository

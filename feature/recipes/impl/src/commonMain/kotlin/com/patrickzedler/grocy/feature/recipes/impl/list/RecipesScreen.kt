@@ -17,6 +17,9 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -46,6 +49,8 @@ import com.patrickzedler.grocy.core.forms.showSearchAtTop
 import com.patrickzedler.grocy.core.forms.showsPullIndicator
 import com.patrickzedler.grocy.core.model.recipes.RecipesView
 import com.patrickzedler.grocy.core.resources.Res
+import com.patrickzedler.grocy.core.resources.recipe_import
+import com.patrickzedler.grocy.core.resources.ic_rounded_add_link
 import com.patrickzedler.grocy.core.resources.action_add
 import com.patrickzedler.grocy.core.resources.action_scroll_to_top
 import com.patrickzedler.grocy.core.resources.action_search
@@ -80,6 +85,8 @@ internal class RecipesLinks(
     val onAddClick: () -> Unit,
     /** Gets the copies and deletions, e.g. to open the copy or close a deleted recipe. */
     val onActionDone: (RecipeActionEvent) -> Unit,
+    /** A new recipe from the recipe page at the address; null where import is impossible. */
+    val onImportClick: ((url: String) -> Unit)? = null,
 )
 
 /**
@@ -122,6 +129,17 @@ internal fun RecipesScreen(
     RecipeActionsHost(actions, snackbarHostState, links.onActionDone)
     val downloadGrocycode = rememberRecipeGrocycodeDownload(snackbarHostState) {
         current?.config?.grocycode2D ?: true
+    }
+    var showsImportDialog by rememberSaveable { mutableStateOf(false) }
+    val onImport = links.onImportClick
+    if (showsImportDialog && onImport != null) {
+        RecipeImportDialog(
+            onImport = { url ->
+                showsImportDialog = false
+                onImport(url)
+            },
+            onDismissRequest = { showsImportDialog = false },
+        )
     }
 
     // The gallery fits as many cards in a row as the pane's width allows
@@ -185,6 +203,14 @@ internal fun RecipesScreen(
                         contentDescription = stringResource(Res.string.action_search),
                         onClick = { scope.showSearchAtTop(listState, viewModel::showSearch) },
                     )
+                    // Next to "Add": another way to a new recipe
+                    if (onImport != null) {
+                        FloatingToolbarIconButton(
+                            painter = painterResource(Res.drawable.ic_rounded_add_link),
+                            contentDescription = stringResource(Res.string.recipe_import),
+                            onClick = { showsImportDialog = true },
+                        )
+                    }
                 }
             },
         ) {

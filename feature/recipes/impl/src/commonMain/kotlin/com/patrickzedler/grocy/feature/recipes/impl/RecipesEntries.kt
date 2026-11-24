@@ -100,6 +100,9 @@ fun EntryProviderScope<NavKey>.recipesEntries(
                         else -> Unit
                     }
                 },
+                onImportClick = dependencies.recipeImport?.let {
+                    { url -> navigator.openDetail(RecipeFormRoute(importUrl = url)) }
+                },
             ),
             menuItems = appMenuItems(),
             onBackClick = { navigator.goBack(from = route) },
@@ -217,6 +220,8 @@ fun EntryProviderScope<NavKey>.recipesEntries(
                     recipes = recipes,
                     language = language,
                     scannerForms = dependencies.scannerForms,
+                    importUrl = route.importUrl,
+                    importer = dependencies.recipeImport,
                 )
             },
             frame = formFrame(

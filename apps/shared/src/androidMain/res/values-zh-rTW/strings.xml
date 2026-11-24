@@ -24,4 +24,5 @@
   <string name="widget_sample_bread">麵包</string>
   <string name="widget_sample_eggs">雞蛋</string>
   <string name="widget_sample_apples">蘋果</string>
+  <string name="share_import_recipe">匯入食譜</string>
 </resources>

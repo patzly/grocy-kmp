@@ -3,6 +3,7 @@ package com.patrickzedler.grocy.core.data.recipes
 import com.patrickzedler.grocy.core.data.masterdata.PictureChange
 import com.patrickzedler.grocy.core.database.createInMemoryGrocyDatabase
 import com.patrickzedler.grocy.core.model.ServerConnection
+import com.patrickzedler.grocy.core.model.recipes.RecipeIngredient
 import com.patrickzedler.grocy.core.network.GrocyApiException
 import com.patrickzedler.grocy.core.testing.FakeGrocyServer
 import com.patrickzedler.grocy.core.testing.MasterDataJson
@@ -74,6 +75,46 @@ class RecipesRepositoryTest {
         assertEquals("""{"desired_servings":6.0}""", (put.body as TextContent).text)
         assertTrue("/api/objects/recipes_pos_resolved" in server.requestedPaths)
     }
+
+    @Test
+    fun severalIngredientsAreSavedAndDownloadedOnce() = runTest {
+        server.respond(
+            "/api/objects/recipes_pos/${MasterDataJson.CREATED_ID}",
+            body = MasterDataJson.PANCAKES_MILK,
+        )
+        val saved = mutableListOf<Int>()
+
+        repository.saveIngredients(listOf(ingredient(), ingredient())) { saved += it }
+
+        assertEquals(listOf(0, 1), saved)
+        assertEquals(2, server.requestsTo("/api/objects/recipes_pos", HttpMethod.Post).size)
+        assertEquals(1, server.requestedPaths.count { it == "/api/recipes/fulfillment" })
+    }
+
+    @Test
+    fun ingredientsAfterOneTheServerRefusesAreNotSent() = runTest {
+        server.respond(
+            "/api/objects/recipes_pos",
+            HttpStatusCode.BadRequest,
+            method = HttpMethod.Post,
+        )
+        val saved = mutableListOf<Int>()
+
+        assertFailsWith<GrocyApiException> {
+            repository.saveIngredients(listOf(ingredient(), ingredient())) { saved += it }
+        }
+
+        assertTrue(saved.isEmpty())
+        assertEquals(1, server.requestsTo("/api/objects/recipes_pos", HttpMethod.Post).size)
+    }
+
+    private fun ingredient() = RecipeIngredient(
+        id = 0,
+        recipeId = 1,
+        productId = 1,
+        amount = 2.0,
+        quId = 1,
+    )
 
     @Test
     fun aFailedDownloadAfterAChangeNeverFailsTheChange() = runTest {

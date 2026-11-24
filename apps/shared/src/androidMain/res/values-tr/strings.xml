@@ -24,4 +24,5 @@
   <string name="widget_sample_bread">Ekmek</string>
   <string name="widget_sample_eggs">Yumurta</string>
   <string name="widget_sample_apples">Elma</string>
+  <string name="share_import_recipe">Tarifi içe aktar</string>
 </resources>

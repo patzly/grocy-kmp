@@ -24,4 +24,5 @@
   <string name="widget_sample_bread">לחם</string>
   <string name="widget_sample_eggs">ביצים</string>
   <string name="widget_sample_apples">תפוחים</string>
+  <string name="share_import_recipe">ייבוא מתכון</string>
 </resources>

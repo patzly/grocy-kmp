@@ -74,7 +74,9 @@ internal fun IngredientDialog(
                 Res.string.recipe_ingredient_edit
             },
         ),
-        subtitle = stringResource(Res.string.recipe_ingredient_of, state.recipeName),
+        // An imported line shows what the site wrote, so its product and amount can be checked
+        subtitle = state.importedText
+            ?: stringResource(Res.string.recipe_ingredient_of, state.recipeName),
         isSaving = state.isSaving,
         error = state.error?.saveMessage(),
         onSave = onSave,

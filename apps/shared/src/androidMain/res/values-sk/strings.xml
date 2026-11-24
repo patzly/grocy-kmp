@@ -24,4 +24,5 @@
   <string name="widget_sample_bread">Chlieb</string>
   <string name="widget_sample_eggs">Vajcia</string>
   <string name="widget_sample_apples">Jablká</string>
+  <string name="share_import_recipe">Importovať recept</string>
 </resources>

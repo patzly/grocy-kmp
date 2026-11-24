@@ -207,6 +207,29 @@ class RecipesRepository(
         return id
     }
 
+    /**
+     * Creates [ingredients] one after another and downloads what the server computes once at
+     * the end, also after a failure; [onSaved] gets the index of each one the server took.
+     *
+     * @throws GrocyApiException at the first one the server does not take; later ones are not
+     *   sent.
+     */
+    suspend fun saveIngredients(
+        ingredients: List<RecipeIngredient>,
+        onSaved: (index: Int) -> Unit = {},
+    ) {
+        val connection = requireConnection()
+        try {
+            ingredients.forEachIndexed { index, ingredient ->
+                val id = api.saveRecipeIngredient(connection, ingredient)
+                dao.upsertIngredient(api.recipeIngredient(connection, id).toEntity())
+                onSaved(index)
+            }
+        } finally {
+            afterChange()
+        }
+    }
+
     suspend fun deleteIngredient(id: Int) {
         api.deleteObject(requireConnection(), INGREDIENTS, id)
         dao.deleteIngredient(id)

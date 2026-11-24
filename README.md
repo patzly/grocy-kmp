@@ -63,6 +63,7 @@ Grocy's web frontend works in any browser and covers everything. Grocy KMP shows
 * **Notifications** every day about due products, chores, tasks and batteries
 * **Home screen widgets** and a **Wear OS app** with a tile for the shopping list
 * **NFC tags and QR codes** with `grocy://` links, e.g. one at the pantry that opens Consume for a product, or one at the washing machine that tracks a chore
+* **Recipe import** from Chefkoch, Allrecipes, BBC Good Food and most other recipe sites, by link or the share menu of your browser, with ingredients matched to your products, nutrition facts and times included
 * **New products filled in** from Open Food Facts and its sister databases
 * **Several accounts and servers**, switched with one swipe
 * **Material 3 Expressive** design with dynamic colors, dark mode and layouts for every screen size, from phones to desktops
@@ -74,7 +75,7 @@ Grocy's web frontend works in any browser and covers everything. Grocy KMP shows
 * Stock overview with reports, stock entries and stock journal
 * Purchase, consume, transfer and inventory
 * Shopping lists with offline support and in-store shopping mode
-* Recipes with their cards and the meal plan
+* Recipes with their cards and the meal plan, imported from Chefkoch, Allrecipes and most other recipe sites (Android)
 * Chores, tasks, batteries, equipment and calendar
 * Editing of all master data, including userfields and userentities
 * Fast barcode scanning, also of Grocycodes

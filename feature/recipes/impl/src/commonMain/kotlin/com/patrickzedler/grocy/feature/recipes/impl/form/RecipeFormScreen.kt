@@ -71,6 +71,7 @@ import com.patrickzedler.grocy.core.resources.product_picture_will_upload
 import com.patrickzedler.grocy.core.resources.products_configure_userfields
 import com.patrickzedler.grocy.core.resources.recipe_create
 import com.patrickzedler.grocy.core.resources.recipe_edit
+import com.patrickzedler.grocy.core.resources.recipe_import_add_failed
 import com.patrickzedler.grocy.core.resources.recipe_included_recipes
 import com.patrickzedler.grocy.core.resources.recipe_ingredient_delete_question
 import com.patrickzedler.grocy.core.resources.recipe_ingredient_variable_amount
@@ -116,6 +117,19 @@ internal fun RecipeFormScreen(
 
     RelatedDialogs(viewModel, snackbarHostState, onOpenProduct)
     val form = (viewModel.load as? ObjectFormLoad.Ready)?.form
+    val importTexts = rememberImportTexts()
+    // The recipe site's page fills the form once it stands
+    LaunchedEffect(form != null) {
+        if (form != null && viewModel.canImport) viewModel.startImport(importTexts)
+    }
+    val importAddError = viewModel.importAddError
+    LaunchedEffect(importAddError) {
+        importAddError ?: return@LaunchedEffect
+        snackbarHostState.showNewestSnackbar(
+            importAddError.actionMessage(Res.string.recipe_import_add_failed),
+        )
+        viewModel.onImportAddErrorShown()
+    }
     if (showPictureDialog && form != null) {
         PictureDialog(
             savedFileName = form.original?.pictureFileName,
@@ -144,6 +158,9 @@ internal fun RecipeFormScreen(
             )
         },
     ) { state ->
+        importStatusGroup(viewModel.importState, viewModel.importHost) {
+            viewModel.startImport(importTexts)
+        }
         generalGroup(state, viewModel)
         // After the userfields, like Grocy's right column; only a saved recipe has them
         relatedGroups(viewModel, related)
@@ -276,6 +293,15 @@ private fun LazyListScope.relatedGroups(viewModel: RecipeFormViewModel, related:
             onClick = { viewModel.openIngredient() },
         )
     }
+    // Right below the ingredients they become
+    importLinesGroup(
+        lines = viewModel.importLines,
+        canAdd = canAdd,
+        isAdding = viewModel.isAddingImportLines,
+        onLineClick = viewModel::openImportLine,
+        onLeaveOut = viewModel::removeImportLine,
+        onAddReadyClick = viewModel::addReadyImportLines,
+    )
     segmentedGroup(key = "nestings", title = Res.string.recipe_included_recipes) {
         val count = related.nestings.size + 1
         val delete = stringResource(Res.string.action_delete)

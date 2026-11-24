@@ -1,6 +1,13 @@
 package com.patrickzedler.grocy.feature.recipes.impl.form
 
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import com.patrickzedler.grocy.core.forms.ObjectFormLoad
+import com.patrickzedler.grocy.core.model.recipes.ImportTexts
+import com.patrickzedler.grocy.core.model.recipes.importedPreparation
+import com.patrickzedler.grocy.core.network.RecipeImportApi
+import com.patrickzedler.grocy.core.network.RecipeImportException
+import io.ktor.http.Url
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -82,7 +89,10 @@ internal class IngredientDialogState(
     val showsStockOptions: Boolean,
     val showsPriceFactor: Boolean,
     /** The product's scanner, as it was left in the last new ingredient. */
-    val scanner: ScannerFieldState = ScannerFieldState(hasValue = id != MasterDataRepository.NEW_OBJECT_ID),
+    val scanner: ScannerFieldState =
+        ScannerFieldState(hasValue = id != MasterDataRepository.NEW_OBJECT_ID),
+    /** The recipe site's line this ingredient is made from, shown above the fields. */
+    val importedText: String? = null,
 ) {
     var products by mutableStateOf(products)
         private set
@@ -273,6 +283,9 @@ internal class RecipeFormViewModel(
     private val language: String,
     private val decimalSeparator: Char = platformDecimalSeparator(),
     private val scannerForms: ScannerFormsRepository? = null,
+    /** The recipe site's page a new recipe is filled from. */
+    private val importUrl: String? = null,
+    private val importer: RecipeImportApi? = null,
 ) : ObjectFormViewModel<RecipeFormValues, RecipeFormState>(id, repository) {
 
     override val userfieldEntity: String = RecipesRepository.RECIPES
@@ -295,6 +308,30 @@ internal class RecipeFormViewModel(
     /** Why removing an ingredient or included recipe failed, shown once. */
     var relatedDeleteError by mutableStateOf<ChangeError?>(null)
         private set
+
+    /** Reading the recipe site's page; null without import. */
+    var importState by mutableStateOf<RecipeImportState?>(null)
+        private set
+
+    /** The site's ingredient lines that are no ingredient yet, in the site's order. */
+    var importLines by mutableStateOf<List<ImportLine>>(emptyList())
+        private set
+
+    var isAddingImportLines by mutableStateOf(false)
+        private set
+
+    /** Why adding the proposed ingredients stopped, shown once. */
+    var importAddError by mutableStateOf<ChangeError?>(null)
+        private set
+
+    val canImport: Boolean
+        get() = importUrl != null && importer != null
+
+    /** The recipe site the form is filled from, "chefkoch.de". */
+    val importHost: String = importUrl?.let(::hostOf).orEmpty()
+
+    // The imported line the open ingredient dialog is made from
+    private var dialogImportKey: Int? = null
 
     val related: StateFlow<RecipeRelated> = snapshotFlow { objectId }
         .flatMapLatest { recipeId ->
@@ -371,6 +408,7 @@ internal class RecipeFormViewModel(
     /** Opens Grocy's ingredient form of ingredient [id], or of a new one without. */
     fun openIngredient(id: Int? = null) {
         val recipeId = objectId.takeUnless { isNew } ?: return
+        dialogImportKey = null
         viewModelScope.launch {
             val original = id?.let { ingredientId ->
                 recipes.ingredients.first().firstOrNull { it.id == ingredientId }
@@ -438,7 +476,12 @@ internal class RecipeFormViewModel(
             }
             form.isSaving = false
             if (error == null) {
-                if (ingredientDialog === form) ingredientDialog = null
+                if (ingredientDialog === form) {
+                    ingredientDialog = null
+                    // The line is an ingredient now
+                    dialogImportKey?.let(::removeImportLine)
+                    dialogImportKey = null
+                }
             } else {
                 form.error = error
             }
@@ -446,8 +489,129 @@ internal class RecipeFormViewModel(
     }
 
     fun dismissIngredient() {
-        if (ingredientDialog?.isSaving != true) ingredientDialog = null
+        if (ingredientDialog?.isSaving != true) {
+            ingredientDialog = null
+            dialogImportKey = null
+        }
     }
+
+    /**
+     * Reads the recipe site's page and fills the new recipe's form with it: name, servings,
+     * picture and as preparation everything else the site tells ([importedPreparation]); its
+     * ingredient lines become [importLines]. Fields typed meanwhile are kept.
+     */
+    fun startImport(texts: ImportTexts) {
+        val url = importUrl ?: return
+        val importer = importer ?: return
+        // Once, a failed one again through its retry
+        if (importState != null && importState !is RecipeImportState.Failed) return
+        importState = RecipeImportState.Loading
+        viewModelScope.launch {
+            val recipe = try {
+                importer.recipe(url)
+            } catch (e: RecipeImportException) {
+                importState = RecipeImportState.Failed(e.failure)
+                return@launch
+            }
+            val picture = recipe.imageUrl?.let { imageUrl ->
+                importer.picture(imageUrl)?.let { PictureChange.Replace(it, pictureName(imageUrl)) }
+            }
+            val form = loadedForm()
+            if (form != null) {
+                if (form.name.text.isBlank()) form.name.setTextAndPlaceCursorAtEnd(recipe.name)
+                recipe.servings?.let { form.baseServings.setTextAndPlaceCursorAtEnd(it.toString()) }
+                if (form.preparation.text.isBlank()) {
+                    form.preparation.setTextAndPlaceCursorAtEnd(importedPreparation(recipe, texts))
+                }
+                if (picture != null && form.picture == PictureChange.Keep) form.picture = picture
+            }
+            importLines = importLinesOf(
+                lines = recipe.ingredients,
+                products = repository.products.first(),
+                units = repository.quantityUnits.first(),
+                conversions = repository.resolvedQuantityUnitConversions.first(),
+                decimals = amountDecimals,
+                decimalSeparator = decimalSeparator,
+            )
+            importState = RecipeImportState.Done
+        }
+    }
+
+    /** Opens the ingredient form with what was proposed for the imported line [key]. */
+    fun openImportLine(key: Int) {
+        val recipeId = objectId.takeUnless { isNew } ?: return
+        val line = importLines.firstOrNull { it.key == key } ?: return
+        viewModelScope.launch {
+            val products = repository.products.first()
+            ingredientDialog = IngredientDialogState(
+                id = MasterDataRepository.NEW_OBJECT_ID,
+                original = null,
+                initial = line.toFormValues(),
+                recipeName = recipes.recipe(recipeId).first()?.name.orEmpty(),
+                products = products.filter { it.active },
+                allProducts = products,
+                barcodes = repository.productBarcodes.first(),
+                allUnits = repository.quantityUnits.first(),
+                conversions = repository.resolvedQuantityUnitConversions.first(),
+                decimals = amountDecimals,
+                showsStockOptions = config.stock,
+                showsPriceFactor = config.stockPriceTracking,
+                // The proposal is chosen, the product field shows it without scanning
+                scanner = ScannerFieldState(hasValue = true),
+                importedText = line.line.text,
+            )
+            dialogImportKey = key
+        }
+    }
+
+    /** Leaves the imported line [key] out; the preparation still has it as the site wrote it. */
+    fun removeImportLine(key: Int) {
+        importLines = importLines.filterNot { it.key == key }
+    }
+
+    /** Adds every imported line that is [ImportLine.isReady] as ingredient at once. */
+    fun addReadyImportLines() {
+        val recipeId = objectId.takeUnless { isNew } ?: return
+        if (isAddingImportLines) return
+        val ready = importLines.filter { it.isReady }
+        if (ready.isEmpty()) return
+        isAddingImportLines = true
+        importAddError = null
+        viewModelScope.launch {
+            val products = repository.products.first()
+            val units = repository.quantityUnits.first()
+            val conversions = repository.resolvedQuantityUnitConversions.first()
+            val supportsRoundUp = recipes.ingredients.first().any { it.roundUp != null }
+            val ingredients = ready.map { line ->
+                val product = products.first { it.id == line.productId }
+                line.toFormValues()
+                    .copy(notCheckStockFulfillment = product.notCheckStockFulfillmentForRecipes)
+                    .toIngredient(
+                        id = MasterDataRepository.NEW_OBJECT_ID,
+                        recipeId = recipeId,
+                        units = productAmountUnits(
+                            productId = product.id,
+                            destinationQuId = product.quIdStock,
+                            resolved = conversions,
+                            units = units,
+                        ),
+                        original = null,
+                        supportsRoundUp = supportsRoundUp,
+                        decimals = amountDecimals,
+                    )
+            }
+            importAddError = changeErrorOf {
+                recipes.saveIngredients(ingredients) { index -> removeImportLine(ready[index].key) }
+            }
+            isAddingImportLines = false
+        }
+    }
+
+    fun onImportAddErrorShown() {
+        importAddError = null
+    }
+
+    private fun loadedForm(): RecipeFormState? = (load as? ObjectFormLoad.Ready)?.form
 
     /** Opens Grocy's included recipe form of inclusion [id], or of a new one without. */
     fun openNesting(id: Int? = null) {
@@ -579,3 +743,20 @@ internal class RecipeFormViewModel(
         const val DEFAULT_DECIMALS = 4
     }
 }
+
+/** The site of [url] without "www.", the address itself where it has none. */
+internal fun hostOf(url: String): String =
+    runCatching { Url(url.trim()).host }.getOrNull()?.removePrefix("www.")?.ifEmpty { null } ?: url
+
+/** A file name for the picture at [url]: its own, with an extension Grocy shows. */
+internal fun pictureName(url: String): String {
+    val name = url.substringBefore('?').substringBefore('#').substringAfterLast('/')
+    val known = name.substringAfterLast('.', "").lowercase() in PICTURE_EXTENSIONS
+    return when {
+        name.isBlank() -> "recipe.jpg"
+        known -> name
+        else -> "$name.jpg"
+    }
+}
+
+private val PICTURE_EXTENSIONS = setOf("jpg", "jpeg", "png", "webp", "gif")

@@ -28,4 +28,6 @@
   <string name="widget_sample_bread">Bread</string>
   <string name="widget_sample_eggs">Eggs</string>
   <string name="widget_sample_apples">Apples</string>
+  <!-- The share sheet target that imports a shared recipe page -->
+  <string name="share_import_recipe">Import recipe</string>
 </resources>

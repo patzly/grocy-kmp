@@ -9,7 +9,8 @@ scanner, scanning printed due dates (Play app), update checks, the start screen,
 Network with Tor, HTTP proxy and the local network permission on Android, Behavior, Scanner),
 Grocy's stock overview with its reports (location content sheet, spendings) and scan page,
 master data with all their forms, the stock bookings,
-the shopping list and its shopping mode, the recipes with their cards and forms, the meal plan, the
+the shopping list and its shopping mode, the recipes with their cards and forms and the import from
+recipe sites (Android), the meal plan, the
 chores with their tracking and journal, the tasks, the batteries with their tracking and journal,
 the equipment with its manuals, the calendar, the daily notifications, new products filled in from open product
 databases, the home screen widgets (task list, calendar month and list), `grocy://` deep links

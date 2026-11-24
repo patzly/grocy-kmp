@@ -24,4 +24,5 @@
   <string name="widget_sample_bread">Chléb</string>
   <string name="widget_sample_eggs">Vejce</string>
   <string name="widget_sample_apples">Jablka</string>
+  <string name="share_import_recipe">Importovat recept</string>
 </resources>

@@ -24,4 +24,5 @@
   <string name="widget_sample_bread">Brød</string>
   <string name="widget_sample_eggs">Egg</string>
   <string name="widget_sample_apples">Epler</string>
+  <string name="share_import_recipe">Importer oppskrift</string>
 </resources>

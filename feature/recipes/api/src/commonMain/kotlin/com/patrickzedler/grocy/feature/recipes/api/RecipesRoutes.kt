@@ -29,10 +29,13 @@ data class RecipeRoute(val id: Int) : DetailRoute
 @SerialName("recipes/recipe/preparation")
 data class RecipePreparationRoute(val id: Int) : Route
 
-/** Grocy's recipe form: edits recipe [id], or creates a recipe without. */
+/**
+ * Grocy's recipe form: edits recipe [id], or creates a recipe without; a new one is filled from
+ * the recipe site's page at [importUrl] if given (Android only, see `isRecipeImportSupported`).
+ */
 @Serializable
 @SerialName("recipes/edit")
-data class RecipeFormRoute(val id: Int? = null) : DetailRoute
+data class RecipeFormRoute(val id: Int? = null, val importUrl: String? = null) : DetailRoute
 
 /**
  * Grocy's "Meal plan" from the week of [start] ("YYYY-MM-DD", Grocy's `/mealplan?start=`), the

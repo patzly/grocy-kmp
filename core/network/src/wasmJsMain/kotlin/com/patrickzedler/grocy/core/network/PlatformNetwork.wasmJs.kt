@@ -6,6 +6,8 @@ internal actual val sendApiKeyAsQueryParameter: Boolean = true
 
 actual val isHomeAssistantIngressSupported: Boolean = false
 
+actual val isRecipeImportSupported: Boolean = false
+
 actual val isProxySupported: Boolean = false
 
 actual val areCertificatesSupported: Boolean = false

@@ -24,4 +24,5 @@
   <string name="widget_sample_bread">Pain</string>
   <string name="widget_sample_eggs">Œufs</string>
   <string name="widget_sample_apples">Pommes</string>
+  <string name="share_import_recipe">Importer la recette</string>
 </resources>

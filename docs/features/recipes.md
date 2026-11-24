@@ -101,6 +101,38 @@ Grocy's recipes page, its recipe card and its recipe form (`feature:recipes`).
   recipe is saved, a created recipe becomes its edit form like "Save & continue"), the picture
   (`PictureDialog` of `core:forms`, shared with the product form, applied on saving) and the
   grocycode. The form has no copy or delete, like Grocy's (`objectActionsOf`).
+- Import from recipe sites (Android only: browsers may not read other sites' pages,
+  `isRecipeImportSupported`; `RecipesDependencies.recipeImport` is null on the web): the list's
+  toolbar has "Import recipe" (`ic_rounded_add_link`, `RecipeImportDialog`: the address, the
+  keyboard at once, an address that is no http(s) page says so), and "Import recipe" in Android's
+  share sheet (an `activity-alias` of `MainActivity` for `SEND text/plain`, `sharedRecipeLinkOf`
+  takes the first http(s) address of the shared text) opens the same: `RecipeFormRoute(importUrl)`,
+  a new recipe's form. `RecipeImportApi` (`core:network`) reads the page with the app's own user
+  agent, no credentials, at most 10 MB, and its picture (an image, at most 15 MB);
+  `parseRecipePage` takes the schema.org `Recipe` the page embeds as JSON-LD for search engines
+  (Chefkoch, Allrecipes, BBC Good Food, Kitchen Stories, Marmiton and most others; in lists,
+  `@graph`, `mainEntity`, values pointing elsewhere by `@id` followed, the page's `og:image`
+  without picture, entities and tags as plain text, Chefkoch's "Name von <author>" without the
+  author). No AI: the sites describe their recipes this way on purpose, so it is exact.
+  `startImport` (`RecipeFormViewModel`, once the form stands; the screen passes the words,
+  `rememberImportTexts`) fills what is still empty: name, servings (the yield's first number),
+  the picture, and as preparation `importedPreparation` (`core:model`): description, the
+  ingredients as the site wrote them, the steps (numbered, or under the site's headlines), times,
+  nutrition per serving ("30.03 grams fat" becomes "30.03 g", `nutritionValue`), category,
+  cuisine, author and the source; Grocy has no fields of its own for them. Its status is an item
+  above the form (reading, failed with "Try again", "Filled in from …").
+- Imported ingredients (`importLinesOf`, `ImportLine`): every line taken apart by
+  `parseIngredientLine` (`core:model`: amount with decimal comma, fractions also as "½", ranges
+  as their larger end, units of several languages and Grocy's own unit names, "de"/"of" after the
+  unit left out, comma and brackets as note, "Ei(er)" as plural), the product proposed by
+  `suggestProduct` (same name, singular/plural, all of the product's words; else, not confident,
+  found inside or with typos), the unit by `matchUnit` among the units the product converts into,
+  without unit its stock unit. They follow the ingredients list as "Ingredients of the recipe
+  page" once saved: a tap opens the ingredient dialog with the proposal and the note (the site's
+  line as subtitle), saved it leaves the list; the menu leaves a line out; "Add all proposed (n)"
+  adds the ready ones (confident product, amount, unit) in one go
+  (`RecipesRepository.saveIngredients`: one download at the end, also after a failure). Products
+  that do not exist yet are created from the ingredient dialog's question as usual.
 - Ingredient dialog: product, "Only check if any amount is in stock" (then every unit and
   the amount as typed), amount (0 allowed otherwise, like Grocy's picker) and unit (the units
   the product's stock unit converts into, its stock unit when a product is chosen; the amount

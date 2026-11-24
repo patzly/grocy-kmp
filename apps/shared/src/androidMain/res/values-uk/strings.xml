@@ -24,4 +24,5 @@
   <string name="widget_sample_bread">Хліб</string>
   <string name="widget_sample_eggs">Яйця</string>
   <string name="widget_sample_apples">Яблука</string>
+  <string name="share_import_recipe">Імпортувати рецепт</string>
 </resources>

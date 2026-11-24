@@ -11,6 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.patrickzedler.grocy.apps.shared.widget.WIDGET_LINK_EXTRA
+import com.patrickzedler.grocy.feature.recipes.api.RecipeFormRoute
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -59,6 +60,12 @@ class MainActivity : ComponentActivity() {
             intent.dataString?.let(graph::openDeepLink)
         }
         systemSettingsRouteOf(intent.action, intent.categories)?.let(graph::openRoute)
+        // A recipe page shared from a browser or recipe app becomes a new recipe
+        if (intent.action == Intent.ACTION_SEND) {
+            sharedRecipeLinkOf(intent.getStringExtra(Intent.EXTRA_TEXT))?.let { link ->
+                graph.openRoute(RecipeFormRoute(importUrl = link))
+            }
+        }
         val kind = AndroidNotifier.openedKindOf(intent) ?: return
         graph.openNotification(kind)
     }

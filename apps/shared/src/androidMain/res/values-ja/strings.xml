@@ -24,4 +24,5 @@
   <string name="widget_sample_bread">パン</string>
   <string name="widget_sample_eggs">卵</string>
   <string name="widget_sample_apples">りんご</string>
+  <string name="share_import_recipe">レシピをインポート</string>
 </resources>

@@ -24,4 +24,5 @@
   <string name="widget_sample_bread">Kenyér</string>
   <string name="widget_sample_eggs">Tojás</string>
   <string name="widget_sample_apples">Alma</string>
+  <string name="share_import_recipe">Recept importálása</string>
 </resources>

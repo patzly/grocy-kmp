@@ -24,4 +24,5 @@
   <string name="widget_sample_bread">Ψωμί</string>
   <string name="widget_sample_eggs">Αυγά</string>
   <string name="widget_sample_apples">Μήλα</string>
+  <string name="share_import_recipe">Εισαγωγή συνταγής</string>
 </resources>
